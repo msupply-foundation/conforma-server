@@ -194,15 +194,24 @@ DECLARE
     rev_assignment_id integer;
     stage_number integer;
     prev_status varchar;
+    level_num integer;
+    is_last_level boolean;
+    is_final_decision boolean;
 BEGIN
     SELECT
         r.application_id,
         r.reviewer_id,
         r.review_assignment_id,
-        r.stage_number INTO app_id,
+        r.stage_number,
+        r.level_number,
+        r.is_last_level,
+        r.is_final_decision INTO app_id,
         reviewer_id,
         rev_assignment_id,
-        stage_number
+        stage_number,
+        level_num,
+        is_last_level,
+        is_final_decision
     FROM
         review r
     WHERE
@@ -221,7 +230,7 @@ BEGIN
                     AND prev_status IS NULL THEN
                     'Started'
                 WHEN NEW.status = 'DRAFT'
-                    AND prev_status = 'PENDING' THEN
+                    AND prev_status = 'CHANGES_REQUESTED' THEN
                     'Re-started'
                 ELSE
                     NEW.status::varchar
@@ -238,18 +247,18 @@ BEGIN
                                         SELECT
                                             template_id FROM application
                                         WHERE
-                                            id = app_id))), 'sections', (
-                                    SELECT
-                                        json_agg(t)
-                                        FROM (
-                                            SELECT
-                                                title, code, "index" FROM template_section
-                                            WHERE
-                                                id = ANY (ARRAY ( SELECT DISTINCT
-                                                            template_section_id FROM review_question_assignment_section
-                                                        WHERE
-                                                            review_assignment_id = rev_assignment_id))
-                                                ORDER BY "index") t))));
+                                            id = app_id)))), 'sections', (
+                                SELECT
+                                    json_agg(t)
+                                    FROM (
+                                        SELECT
+                                            title, code, "index" FROM template_section
+                                        WHERE
+                                            id = ANY (ARRAY ( SELECT DISTINCT
+                                                        template_section_id FROM review_question_assignment_section
+                                                    WHERE
+                                                        review_assignment_id = rev_assignment_id))
+                                            ORDER BY "index") t), 'level', level_num, 'isLastLeve', is_last_level, 'finalDecision', is_final_decision));
     RETURN NEW;
 END;
 $application_event$
