@@ -324,9 +324,9 @@ BEGIN
         NEW
     END;
     status = CASE WHEN TG_OP = 'DELETE' THEN
-        'REVOKED'
+        'Revoked'
     ELSE
-        'GRANTED'
+        'Granted'
     END;
     SELECT DISTINCT
         "userId",
