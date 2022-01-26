@@ -120,10 +120,6 @@ class DBConnect {
 
   public getUserOrgPermissionNames = PostgresDB.getUserOrgPermissionNames
 
-  public joinPermissionNameToUser = PostgresDB.joinPermissionNameToUser
-
-  public joinPermissionNameToUserOrg = PostgresDB.joinPermissionNameToUserOrg
-
   public getNumReviewLevels = PostgresDB.getNumReviewLevels
 
   public getReviewStageAndLevel = PostgresDB.getReviewStageAndLevel

@@ -20,3 +20,7 @@ CREATE UNIQUE INDEX unique_user_permission ON permission_join (user_id, permissi
 WHERE
     organisation_id IS NULL;
 
+CREATE UNIQUE INDEX unique_org_permission ON permission_join (organisation_id, permission_name_id)
+WHERE
+    user_id IS NULL;
+
