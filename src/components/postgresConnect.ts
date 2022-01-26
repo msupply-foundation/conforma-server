@@ -728,64 +728,19 @@ class PostgresDB {
   }
 
   public getUserOrgPermissionNames = async (userId: number, orgId: number | null | undefined) => {
+    // Only consider userId = NULL when orgId is present (can't both be NULL)
+    const userMatch = `("userId" = $1 ${orgId ? 'OR "userId" IS NULL' : ''})`
     const orgMatch = `"orgId" ${orgId ? '= $2' : 'IS NULL'}`
     const text = `
       SELECT "permissionNameId" as id,
       "permissionName" FROM permissions_all
-      WHERE "userId" = $1
+      WHERE ${userMatch}
       AND ${orgMatch}`
     const values: number[] = [userId]
     if (orgId) values.push(orgId)
     try {
       const result = await this.query({ text, values })
       return result.rows
-    } catch (err) {
-      console.log(err.message)
-      throw err
-    }
-  }
-
-  public joinPermissionNameToUser = async (username: string, permissionName: string) => {
-    const text = `
-    insert into permission_join (user_id, permission_name_id) 
-    values (
-        (select id from "user" where username = $1),
-        (select id from permission_name where name = $2))
-    ON CONFLICT (user_id, permission_name_id)
-      WHERE organisation_id IS NULL
-    DO
-    		UPDATE SET (user_id, is_active) = ((select id from "user" where username = $1), true)
-    returning id
-    `
-    try {
-      const result = await this.query({ text, values: [username, permissionName] })
-      return result.rows[0].id
-    } catch (err) {
-      console.log(err.message)
-      throw err
-    }
-  }
-
-  public joinPermissionNameToUserOrg = async (
-    username: string,
-    org: string | number,
-    permissionName: string
-  ) => {
-    const text = `
-    INSERT INTO permission_join (user_id, organisation_id, permission_name_id) 
-    values (
-        (select id from "user" where username = $1),
-        ${typeof org === 'number' ? '$2' : '(select id from organisation where name = $2)'},
-        (select id from permission_name where name = $3))
-    ON CONFLICT (user_id, organisation_id, permission_name_id)
-      WHERE organisation_id IS NOT NULL
-    DO
-    		UPDATE SET (user_id, is_active) = ((select id from "user" where username = $1), true)
-    RETURNING id
-    `
-    try {
-      const result = await this.query({ text, values: [username, org, permissionName] })
-      return result.rows[0].id
     } catch (err) {
       console.log(err.message)
       throw err
