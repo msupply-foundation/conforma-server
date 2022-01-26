@@ -321,16 +321,17 @@ Creates a link between a user and an organisation -- i.e. user is a "member" of 
 
 ### Grant Permissions
 
-Grants permission to user/org -- i.e. creates `permission_join` from user/org to permission name. If org not provided, the permission will be granted to the user only.
+Grants permission to user/org -- i.e. creates `permission_join` from user/org to permission name.
 
 - _Action Code:_ **`grantPermissions`**
 
-| Input parameters<br />(\*required) <br/> | Output properties   |
-| ---------------------------------------- | ------------------- |
-| `username`                               | `permissionJoinIds` |
-| `permissionNames`\* [Array of names]     | `permissionNames`   |
-| `orgName`                                |                     |
-| `orgId`                                  |                     |
+| Input parameters<br />(\*required) <br/> | Output properties                                                                    |
+| ---------------------------------------- | ------------------------------------------------------------------------------------ |
+| `username`  or `userId`                  | `grantedPermissions: { permissionJoinId, permissionNameId, permissionName } [Array]` |
+| `orgName`  or `orgId`                    |                                                                                      |
+| `permissionNames`\* [Array of names]     |                                                                                      |
+
+It is possible to grant a permission to just a user (i.e. user acting without an organisation) or just an organisation (i.e. all members of org). In these cases the "username"/"userId" or "orgName"/"orgId" must be *explicitly* set to `null` -- if either is simply `undefined` the action will return a "Fail" result.
 
 ---
 
@@ -342,13 +343,14 @@ Revokes permissions from to user/org -- i.e. sets the `is_active` field to `fals
 
 | Input parameters<br />(\*required) <br/> | Output properties                                                                    |
 | ---------------------------------------- | ------------------------------------------------------------------------------------ |
-| `username`                               | `revokedPermissions: { permissionJoinId, permissionNameId, permissionName } [Array]` |
+| `username` or `userId`                   | `revokedPermissions: { permissionJoinId, permissionNameId, permissionName } [Array]` |
+| `orgName` or `orgId`                     |                                                                                      |
 | `permissionNames`\* [Array of names]     |                                                                                      |
-| `orgName`                                |                                                                                      |
-| `orgId`                                  |                                                                                      |
 | `isRemovingPermission` (default: `true`) |                                                                                      |
 
 The `isRemovingPermission` parameter specifies whether or not the `permission_join` record should be _deleted_ (the default behaviour) or just set to inactive (which would mean the user can still _view_ their applications but not create new ones, or submit existing). _**NOTE**: This functionality not actually implemented yet in policies/front-end, so only full removal should be used currently -- TO-DO_
+
+See [Grant Permissions](#grant-permissions) above regarding acting on user-only or org-only permission joins.
 
 ---
 
