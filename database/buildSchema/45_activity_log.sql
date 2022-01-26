@@ -234,7 +234,7 @@ BEGIN
                     'Re-started'
                 ELSE
                     NEW.status::varchar
-                END), app_id, TG_TABLE_NAME, NEW.id, json_build_object('prevStatus', prev_status, 'status', NEW.status, 'reviewer', json_build_object('id', reviewer_id, 'name', (
+                END), app_id, TG_TABLE_NAME, NEW.id, json_build_object('prevStatus', prev_status, 'status', NEW.status, 'reviewId', NEW.review_id, 'reviewer', json_build_object('id', reviewer_id, 'name', (
                         SELECT
                             full_name FROM "user"
                         WHERE
