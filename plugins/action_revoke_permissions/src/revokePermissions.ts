@@ -44,8 +44,6 @@ const revokePermissions = async ({ applicationData, parameters, DBConnect }: Act
     const permissions = await dbCommon.getPermissionIdsFromNames(permissionNames)
     const permissionIds = permissions.map((p: { id: number; name: string }) => p.id)
 
-    console.log('permissionIds', permissionIds)
-
     const outputObject = {
       status: ActionQueueStatus.Success,
       error_log: '',
