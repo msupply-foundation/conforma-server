@@ -1,3 +1,4 @@
+import { identity } from 'lodash'
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginInput } from '../../types'
 import databaseMethods from './databaseMethods'
@@ -42,6 +43,7 @@ const grantPermissions = async ({ applicationData, parameters, DBConnect }: Acti
       }
 
     const permissions = await db.getPermissionIdsFromNames(permissionNames)
+    console.log(permissions)
 
     const outputObject = {
       status: ActionQueueStatus.Success,
@@ -59,24 +61,23 @@ const grantPermissions = async ({ applicationData, parameters, DBConnect }: Acti
       )}`
     )
 
-    const permissionJoinIds = []
-    const outputNames = []
+    const grantedPermissions = []
 
-    for (const { id: permissionId, name: permissionName } of permissions) {
+    for (const { id: permissionNameId, name: permissionName } of permissions) {
       const permissionJoinId =
         orgId && userId
           ? // Both user and org
-            await db.joinPermissionToUserOrg(userId, orgId, permissionId)
+            await db.joinPermissionToUserOrg(userId, orgId, permissionNameId)
           : userId
           ? // User only, no org
-            await db.joinPermissionToUser(userId, permissionId)
+            await db.joinPermissionToUser(userId, permissionNameId)
           : // Org only, no user
-            orgId && (await db.joinPermissionToOrg(orgId, permissionId))
-      permissionJoinIds.push(permissionJoinId)
-      if (permissionJoinId) outputNames.push(permissionName)
+            orgId && (await db.joinPermissionToOrg(orgId, permissionNameId))
+      if (permissionJoinId)
+        grantedPermissions.push({ permissionName, permissionNameId, permissionJoinId })
     }
 
-    outputObject.output = { permissionJoinIds, permissionNames: outputNames }
+    outputObject.output = { grantedPermissions }
     return outputObject
   } catch (error) {
     console.log(error)

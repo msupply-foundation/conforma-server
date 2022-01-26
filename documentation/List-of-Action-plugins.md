@@ -325,11 +325,11 @@ Grants permission to user/org -- i.e. creates `permission_join` from user/org to
 
 - _Action Code:_ **`grantPermissions`**
 
-| Input parameters<br />(\*required) <br/> | Output properties   |
-| ---------------------------------------- | ------------------- |
-| `username`  or `userId`                  | `permissionJoinIds` |
-| `orgName`  or `orgId`                    | `permissionJoinIds` |
-| `permissionNames`\* [Array of names]     | `permissionNames`   |
+| Input parameters<br />(\*required) <br/> | Output properties                                                                    |
+| ---------------------------------------- | ------------------------------------------------------------------------------------ |
+| `username`  or `userId`                  | `grantedPermissions: { permissionJoinId, permissionNameId, permissionName } [Array]` |
+| `orgName`  or `orgId`                    |                                                                                      |
+| `permissionNames`\* [Array of names]     |                                                                                      |
 
 It is possible to grant a permission to just a user (i.e. user acting without an organisation) or just an organisation (i.e. all members of org). In these cases the "username"/"userId" or "orgName"/"orgId" must be *explicitly* set to `null` -- if either is simply `undefined` the action will return a "Fail" result.
 
