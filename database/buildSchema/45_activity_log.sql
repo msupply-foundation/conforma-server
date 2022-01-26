@@ -191,7 +191,7 @@ CREATE OR REPLACE FUNCTION public.review_status_activity_log ()
 DECLARE
     app_id integer;
     reviewer_id integer;
-    rev_assignment_id integer;
+    assignment_id integer;
     stage_number integer;
     prev_status varchar;
     level_num integer;
@@ -207,7 +207,7 @@ BEGIN
         r.is_last_level,
         r.is_final_decision INTO app_id,
         reviewer_id,
-        rev_assignment_id,
+        assignment_id,
         stage_number,
         level_num,
         is_last_level,
@@ -257,7 +257,7 @@ BEGIN
                                             id = ANY (ARRAY ( SELECT DISTINCT
                                                         template_section_id FROM review_question_assignment_section
                                                     WHERE
-                                                        review_assignment_id = rev_assignment_id))
+                                                        review_assignment_id = assignment_id))
                                             ORDER BY "index") t), 'level', level_num, 'isLastLeve', is_last_level, 'finalDecision', is_final_decision));
     RETURN NEW;
 END;
