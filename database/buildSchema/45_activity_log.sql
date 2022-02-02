@@ -79,20 +79,7 @@ BEGIN
             application_id = app_id
             AND is_current = TRUE);
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
-        VALUES ('STATUS', (
-                CASE WHEN NEW.status = 'DRAFT'
-                    AND prev_status IS NULL THEN
-                    'Started'
-                WHEN NEW.status = 'SUBMITTED'
-                    AND prev_status = 'COMPLETED' THEN
-                    'New Stage'
-                WHEN NEW.status = 'DRAFT'
-                    AND prev_status = 'CHANGES_REQUIRED' THEN
-                    'Re-started'
-                    -- HOW TO RECOGNISE "RE-SUBMITTED" CASE ?
-                ELSE
-                    NEW.status::varchar
-                END), app_id, TG_TABLE_NAME, NEW.id, json_build_object('prevStatus', prev_status, 'status', NEW.status));
+        VALUES ('STATUS', NEW.status, app_id, TG_TABLE_NAME, NEW.id, json_build_object('prevStatus', prev_status, 'status', NEW.status));
     RETURN NEW;
 END;
 $application_event$
@@ -225,16 +212,7 @@ BEGIN
             review_id = NEW.review_id
             AND is_current = TRUE);
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
-        VALUES ('REVIEW', (
-                CASE WHEN NEW.status = 'DRAFT'
-                    AND prev_status IS NULL THEN
-                    'Started'
-                WHEN NEW.status = 'DRAFT'
-                    AND prev_status = 'CHANGES_REQUESTED' THEN
-                    'Re-started'
-                ELSE
-                    NEW.status::varchar
-                END), app_id, TG_TABLE_NAME, NEW.id, json_build_object('prevStatus', prev_status, 'status', NEW.status, 'reviewId', NEW.review_id, 'reviewer', json_build_object('id', reviewer_id, 'name', (
+        VALUES ('REVIEW', NEW.status, app_id, TG_TABLE_NAME, NEW.id, json_build_object('prevStatus', prev_status, 'status', NEW.status, 'reviewId', NEW.review_id, 'reviewer', json_build_object('id', reviewer_id, 'name', (
                         SELECT
                             full_name FROM "user"
                         WHERE
