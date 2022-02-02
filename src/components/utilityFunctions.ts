@@ -41,16 +41,16 @@ export const makeFolder = (folderPath: string) => {
 // specified to determine which to keep, otherwise it will return the first one.
 // Preserves the order of the original input array
 // TO-DO: Allow custom comparitor function
-type basicObject = { [key: string]: any }
-type indexObject = { [key: string]: number }
+type BasicObject = { [key: string]: any }
+type IndexObject = { [key: string]: number }
 export const getDistinctObjects = (
-  objectArray: basicObject[],
+  objectArray: BasicObject[],
   matchProperty: string,
   priorityProperty: string | null = null
 ) => {
   const distinctValues = new Set()
-  const highestPriorityIndexRecord: indexObject = {}
-  const outputArray: basicObject[] = []
+  const highestPriorityIndexRecord: IndexObject = {}
+  const outputArray: BasicObject[] = []
   objectArray.forEach((item) => {
     if (!(matchProperty in item)) throw new Error('matchProperty not found on Object')
     const value = item[matchProperty]
@@ -67,4 +67,17 @@ export const getDistinctObjects = (
     }
   })
   return outputArray
+}
+
+// Given an object, returns a new object with all keys removed whose values
+// return false when passed into the 2nd parameter function. Can be use (for
+// example) to remove keys with null or undefined values (the default)
+// Eg. {one: 1, two: null, three: undefined} => {one: 1}
+type FilterFunction = (x: any) => boolean
+export const filterObject = (
+  inputObj: BasicObject,
+  filterFunction: FilterFunction = (x) => x != null
+) => {
+  const filtered = Object.entries(inputObj).filter(([_, value]) => filterFunction(value))
+  return Object.fromEntries(filtered)
 }

@@ -41,6 +41,8 @@ interface GeneratePDFInput {
   applicationSerial?: string
   applicationResponseId?: number
   subFolder?: string
+  description?: string
+  isOutputDoc?: boolean
 }
 
 export async function generatePDF({
@@ -52,6 +54,8 @@ export async function generatePDF({
   applicationSerial,
   applicationResponseId,
   subFolder,
+  description,
+  isOutputDoc,
 }: GeneratePDFInput) {
   // Existing Carbone Template properties
   const templateFileInfo = await getFilePath(fileId)
@@ -82,6 +86,8 @@ export async function generatePDF({
         templateId,
         applicationSerial,
         applicationResponseId,
+        description,
+        isOutputDoc,
         filePath: outputFilePath,
         thumbnailPath: PDF_THUMBNAIL,
         mimetype: PDF_MIMETYPE,

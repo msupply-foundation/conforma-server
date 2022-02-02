@@ -1,4 +1,4 @@
-import { objectKeysToCamelCase, objectKeysToSnakeCase } from './utilityFunctions'
+import { objectKeysToCamelCase, objectKeysToSnakeCase, filterObject } from './utilityFunctions'
 
 test('Convert object to camelCase', () => {
   expect(objectKeysToCamelCase({ snake_key_1: 1, otherCaseKey: 2 })).toEqual({
@@ -12,5 +12,34 @@ test('Convert object to snake_case', () => {
     camel_case_1: 1,
     upper_case: 2,
     title_case: 3,
+  })
+})
+const testObject = {
+  one: 1,
+  twoString: 'two',
+  zero: 0,
+  falseValue: false,
+  nullValue: null,
+  undefinedValue: undefined,
+  arrayValue: [1, 2, 'three'],
+  objectValue: { one: 1, two: 'two', nullValue: null },
+}
+test('Filter object using default filter function', () => {
+  expect(filterObject(testObject)).toEqual({
+    one: 1,
+    twoString: 'two',
+    zero: 0,
+    falseValue: false,
+    arrayValue: [1, 2, 'three'],
+    objectValue: { one: 1, two: 'two', nullValue: null },
+  })
+})
+
+test('Filter object using custom filter for any falsy value', () => {
+  expect(filterObject(testObject, (x) => x)).toEqual({
+    one: 1,
+    twoString: 'two',
+    arrayValue: [1, 2, 'three'],
+    objectValue: { one: 1, two: 'two', nullValue: null },
   })
 })
