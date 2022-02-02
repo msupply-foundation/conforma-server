@@ -236,7 +236,7 @@ BEGIN
                                                         template_section_id FROM review_question_assignment_section
                                                     WHERE
                                                         review_assignment_id = assignment_id))
-                                            ORDER BY "index") t), 'level', level_num, 'isLastLeve', is_last_level, 'finalDecision', is_final_decision));
+                                            ORDER BY "index") t), 'level', level_num, 'isLastLevel', is_last_level, 'finalDecision', is_final_decision));
     RETURN NEW;
 END;
 $application_event$
