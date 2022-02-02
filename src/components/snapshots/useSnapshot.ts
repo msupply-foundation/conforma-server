@@ -6,6 +6,7 @@ import insertData from '../../../database/insertData'
 import updateRowPolicies from '../../../database/updateRowPolicies'
 import { SnapshotOperation, ExportAndImportOptions, ObjectRecord } from '../exportAndImport/types'
 import importFromJson from '../exportAndImport/importFromJson'
+import { triggerTables } from './triggerTables'
 
 import {
   DEFAULT_SNAPSHOT_NAME,
@@ -44,6 +45,11 @@ const useSnapshot: SnapshotOperation = async ({
       execSync(`rm -rf ${FILES_FOLDER}/*`)
     }
 
+    // Prevent triggers from running while we insert data
+    triggerTables.forEach((table) => {
+      execSync(`psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} DISABLE TRIGGER ALL"`)
+    })
+
     console.log('inserting from snapshot ... ')
     const insertedRecords = await importFromJson(
       snapshotObject,
@@ -51,6 +57,11 @@ const useSnapshot: SnapshotOperation = async ({
       options.shouldReInitialise
     )
     console.log('inserting from snapshot ... done')
+
+    // Re-enable triggers
+    triggerTables.forEach((table) => {
+      execSync(`psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} ENABLE TRIGGER ALL"`)
+    })
 
     await copyFiles(snapshotFolder, insertedRecords.file)
 

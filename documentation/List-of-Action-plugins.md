@@ -384,7 +384,7 @@ Should be run whenever an application or review is submitted or re-submitted, an
 
 ### Update Review Assignments
 
-When a reviewer self-assigns themselves to a review_assignment (i.e. its status changes from "Available for self-assignment" to "Assigned") the other review assignment records pertaining to that review/stage/level are marked as "Self-assigned by another" so that no other reviewer can start a review for the same thing.
+When a reviewer self-assigns themselves to a review_assignment (i.e. its status changes from "Available" to "Assigned") the other review assignment records pertaining to that review/stage/level are marked as "is_locked = true" so that no other reviewer can start a review for the same thing.
 
 - _Action Code:_ **`updateReviewAssignmentsStatus`**
 
