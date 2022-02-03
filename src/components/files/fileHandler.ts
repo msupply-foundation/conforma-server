@@ -100,6 +100,7 @@ export async function registerFileInDB({
   user_id,
   application_response_id,
   description,
+  application_note_id,
   is_output_doc = false,
   mimetype,
 }: any) {
@@ -113,6 +114,7 @@ export async function registerFileInDB({
         application_serial,
         application_response_id,
         description,
+        application_note_id,
         is_output_doc,
         file_path,
         thumbnail_path,
