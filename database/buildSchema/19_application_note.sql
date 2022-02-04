@@ -6,6 +6,5 @@ CREATE TABLE public.application_note (
     org_id integer REFERENCES public.organisation (id) ON DELETE CASCADE NOT NULL,
     timestamp timestamptz DEFAULT CURRENT_TIMESTAMP,
     comment varchar NOT NULL
-    -- files integer REFERENCES public.file (id) ON DELETE CASCADE NOT NULL
 );
 
