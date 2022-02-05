@@ -613,6 +613,7 @@ Here is a summary of the core actions and the triggers that launch them:
 - Trim Responses (removes Null responses and unchanged ones if re-submission)
 - Generate Review Assignments (for first level reviewers)
 - Update Reviews (statuses)
+- Cleanup Files
 
 #### On Application Restart (i.e. after "Changes Requested"):
 
