@@ -14,7 +14,7 @@ CREATE TABLE public.file (
     thumbnail_path varchar,
     mimetype varchar,
     submitted boolean DEFAULT FALSE,
-    timestamp timestamptz DEFAULT CURRENT_TIMESTAMP
+    timestamp timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Function to Notify server of File deletion
