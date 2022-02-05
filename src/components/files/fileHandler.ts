@@ -9,7 +9,7 @@ import DBConnect from '../databaseConnect'
 import createThumbnail from './createThumbnails'
 import { FilePayload } from '../../types'
 
-export const { filesFolder, imagesFolder } = config
+export const { filesFolder, imagesFolder, genericThumbnailsFolderName } = config
 export const filesPath = path.join(getAppEntryPointDir(), filesFolder)
 
 interface HttpQueryParameters {
@@ -22,14 +22,19 @@ export function createFilesFolder() {
   } catch {
     // Folder already exists
   }
-  // Move generic thumbnails to files root
+  try {
+    fs.mkdirSync(path.join(getAppEntryPointDir(), filesFolder, genericThumbnailsFolderName))
+  } catch {
+    // Folder already exists
+  }
+  // Move generic thumbnails to files/generics subfolder
   fs.readdir(
     path.join(getAppEntryPointDir(), imagesFolder, 'generic_file_thumbnails'),
     (_, files) => {
       files.forEach((file) =>
         fs.copyFile(
           path.join(getAppEntryPointDir(), imagesFolder, 'generic_file_thumbnails', file),
-          path.join(getAppEntryPointDir(), filesFolder, file),
+          path.join(getAppEntryPointDir(), filesFolder, genericThumbnailsFolderName, file),
           () => {}
         )
       )
