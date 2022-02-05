@@ -25,6 +25,7 @@
   - [Generate Document](#generate-document)
   - [Send Notification](#send-notification)
   - [Schedule Action](#schedule-action)
+  - [Clean Up Files](#clean-up-files)
 - [Core Actions](#core-actions)
     - [On Application Create:](#on-application-create)
     - [On Application Submit](#on-application-submit)
@@ -576,6 +577,23 @@ The `cancel` parameter is a way to prevent a previously scheduled event from occ
 
 Note: the `duration` value can be *either* a number (representing time in weeks) or a [Luxon duration object](https://moment.github.io/luxon/api-docs/index.html#duration).
 
+
+---
+
+### Clean Up Files
+
+Action to remove files no longer connected to application responses -- for example, when an applicant uploaded files then removed them from their response before submission. Should be run on application submission to "clean up" files that are no longer required in the system
+
+- _Action Code:_ **`cleanupFiles`**
+
+| Input parameters<br />(\*required) <br/> | Output properties |
+| ---------------------------------------- | ----------------- |
+| `applicationId`                          | `deletedFiles`    |
+| `applicationSerial`                      | `submittedFiles`  |
+
+Can supply *either* `applicationId` or `applicationSerial`, although this can be inferred from `applicationData` if neither is supplied.
+
+Note: There is a database trigger/postgres listener to automatically delete files when their database record is deleted, so we only need to delete the records, not the files themselves.
 
 ---
 

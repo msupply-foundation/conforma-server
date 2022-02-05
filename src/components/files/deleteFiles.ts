@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+const fsPromises = fs.promises
 import config from '../../config'
 import { getAppEntryPointDir } from '../utilityFunctions'
 
@@ -18,10 +19,10 @@ interface FileDetail {
 export const deleteFile = async (file: FileDetail) => {
   const { filePath, thumbnailPath, originalFilename } = file
   try {
-    await fs.unlink(path.join(filesPath, filePath), () => {})
+    await fsPromises.unlink(path.join(filesPath, filePath))
     // Don't delete generic (shared) thumbnail files
     if (!thumbnailPath.match(genericThumbnailsFolderName))
-      await fs.unlink(path.join(filesPath, thumbnailPath), () => {})
+      await fsPromises.unlink(path.join(filesPath, thumbnailPath))
     console.log(`File deleted: ${originalFilename}`)
   } catch (err) {
     console.log(err)
