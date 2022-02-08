@@ -151,6 +151,8 @@ class DBConnect {
   public getReviewDataFromAssignment = GraphQLdb.getReviewDataFromAssignment
 
   public isInternalOrg = GraphQLdb.isInternalOrg
+
+  public getAllApplicationTriggers = GraphQLdb.getAllApplicationTriggers
 }
 
 const dbConnectInstance = DBConnect.Instance
