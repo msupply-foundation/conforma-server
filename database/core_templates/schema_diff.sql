@@ -1,6 +1,6 @@
 /*************************************************/
 /*** SCRIPT AUTHOR: application-manager-server ***/
-/***    CREATED ON: 2022-02-03T23:23:07.200Z   ***/
+/***    CREATED ON: 2022-02-08T23:07:25.718Z   ***/
 /*************************************************/
 
 --- BEGIN ALTER TABLE "public"."organisation" ---
