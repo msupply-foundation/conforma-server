@@ -1,5 +1,5 @@
-import databaseConnect from './databaseConnect'
-import { Trigger } from '../generated/graphql'
+import databaseConnect from '../databaseConnect'
+import { Trigger } from '../../generated/graphql'
 
 interface TriggerError {
   type: 'trigger' | 'timeout' | 'apollo'
