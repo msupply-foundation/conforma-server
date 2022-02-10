@@ -28,7 +28,11 @@ import { routeRunAction, routeGetApplicationData } from './components/actions/ru
 import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
 import snapshotRoutes from './components/snapshots/routes'
-import { routeGetLanguageFile } from './components/localisation/routes'
+import {
+  routeGetLanguageFile,
+  routeEnableLanguage,
+  routeInstallLanguage,
+} from './components/localisation/routes'
 import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
 require('dotenv').config()
 
@@ -109,6 +113,8 @@ const startServer = async () => {
         server.get('/updateRowPolicies', routeUpdateRowPolicies)
         server.post('/run-action', routeRunAction)
         server.get('/get-application-data', routeGetApplicationData)
+        server.post('/enable-language', routeEnableLanguage)
+        server.post('/install-language', routeInstallLanguage)
         done()
       },
       { prefix: '/admin' }
