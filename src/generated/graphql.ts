@@ -1617,27 +1617,14 @@ export type ApplicationNote = Node & {
   userId: Scalars['Int'];
   orgId: Scalars['Int'];
   timestamp?: Maybe<Scalars['Datetime']>;
-  comment: Scalars['String'];
+  comment?: Maybe<Scalars['String']>;
+  files?: Maybe<Scalars['JSON']>;
   /** Reads a single `Application` that is related to this `ApplicationNote`. */
   application?: Maybe<Application>;
   /** Reads a single `User` that is related to this `ApplicationNote`. */
   user?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `ApplicationNote`. */
   org?: Maybe<Organisation>;
-  /** Reads and enables pagination through a set of `File`. */
-  files: FilesConnection;
-};
-
-
-export type ApplicationNoteFilesArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<FilesOrderBy>>;
-  condition?: Maybe<FileCondition>;
-  filter?: Maybe<FileFilter>;
 };
 
 /** The `application` to be created by this mutation. */
@@ -1679,11 +1666,11 @@ export type ApplicationNoteApplicationIdFkeyApplicationNoteCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  comment: Scalars['String'];
+  comment?: Maybe<Scalars['String']>;
+  files?: Maybe<Scalars['JSON']>;
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `ApplicationNoteInput` mutation. */
@@ -1757,6 +1744,8 @@ export type ApplicationNoteCondition = {
   timestamp?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `comment` field. */
   comment?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `files` field. */
+  files?: Maybe<Scalars['JSON']>;
 };
 
 /** A filter to be used against `ApplicationNote` object types. All fields are combined with a logical ‘and.’ */
@@ -1773,10 +1762,8 @@ export type ApplicationNoteFilter = {
   timestamp?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `comment` field. */
   comment?: Maybe<StringFilter>;
-  /** Filter by the object’s `files` relation. */
-  files?: Maybe<ApplicationNoteToManyFileFilter>;
-  /** Some related `files` exist. */
-  filesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `files` field. */
+  files?: Maybe<JsonFilter>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
   /** Filter by the object’s `user` relation. */
@@ -1798,11 +1785,11 @@ export type ApplicationNoteInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  comment: Scalars['String'];
+  comment?: Maybe<Scalars['String']>;
+  files?: Maybe<Scalars['JSON']>;
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -1862,32 +1849,17 @@ export type ApplicationNoteOnApplicationNoteForApplicationNoteUserIdFkeyUsingApp
   id: Scalars['Int'];
 };
 
-/** The globally unique `ID` look up for the row to update. */
-export type ApplicationNoteOnFileForFileApplicationNoteIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `file` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `file` being updated. */
-  patch: FilePatch;
-};
-
-/** The fields on `applicationNote` to look up the row to update. */
-export type ApplicationNoteOnFileForFileApplicationNoteIdFkeyUsingApplicationNotePkeyUpdate = {
-  /** An object where the defined keys will be set on the `applicationNote` being updated. */
-  patch: UpdateApplicationNoteOnFileForFileApplicationNoteIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
 /** The `applicationNote` to be created by this mutation. */
 export type ApplicationNoteOrgIdFkeyApplicationNoteCreateInput = {
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  comment: Scalars['String'];
+  comment?: Maybe<Scalars['String']>;
+  files?: Maybe<Scalars['JSON']>;
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `organisation` in the `ApplicationNoteInput` mutation. */
@@ -1966,10 +1938,10 @@ export type ApplicationNotePatch = {
   orgId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   comment?: Maybe<Scalars['String']>;
+  files?: Maybe<Scalars['JSON']>;
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `ApplicationNote` values. */
@@ -2009,19 +1981,11 @@ export enum ApplicationNotesOrderBy {
   TimestampDesc = 'TIMESTAMP_DESC',
   CommentAsc = 'COMMENT_ASC',
   CommentDesc = 'COMMENT_DESC',
+  FilesAsc = 'FILES_ASC',
+  FilesDesc = 'FILES_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
-
-/** A filter to be used against many `File` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationNoteToManyFileFilter = {
-  /** Every related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<FileFilter>;
-  /** Some related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<FileFilter>;
-  /** No related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<FileFilter>;
-};
 
 /** The `applicationNote` to be created by this mutation. */
 export type ApplicationNoteUserIdFkeyApplicationNoteCreateInput = {
@@ -2029,11 +1993,11 @@ export type ApplicationNoteUserIdFkeyApplicationNoteCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  comment: Scalars['String'];
+  comment?: Maybe<Scalars['String']>;
+  files?: Maybe<Scalars['JSON']>;
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `user` in the `ApplicationNoteInput` mutation. */
@@ -5469,8 +5433,6 @@ export type CreateFilePayload = {
   applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
-  /** Reads a single `ApplicationNote` that is related to this `File`. */
-  applicationNote?: Maybe<ApplicationNote>;
   /** An edge for our `File`. May be used by Relay 1. */
   fileEdge?: Maybe<FilesEdge>;
 };
@@ -7682,8 +7644,6 @@ export type DeleteFilePayload = {
   applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
-  /** Reads a single `ApplicationNote` that is related to this `File`. */
-  applicationNote?: Maybe<ApplicationNote>;
   /** An edge for our `File`. May be used by Relay 1. */
   fileEdge?: Maybe<FilesEdge>;
 };
@@ -10068,13 +10028,12 @@ export type File = Node & {
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc: Scalars['Boolean'];
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
-  timestamp: Scalars['Datetime'];
+  timestamp?: Maybe<Scalars['Datetime']>;
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
   /** Reads a single `Template` that is related to this `File`. */
@@ -10083,89 +10042,6 @@ export type File = Node & {
   applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
-  /** Reads a single `ApplicationNote` that is related to this `File`. */
-  applicationNote?: Maybe<ApplicationNote>;
-};
-
-/** The `applicationNote` to be created by this mutation. */
-export type FileApplicationNoteIdFkeyApplicationNoteCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  orgId?: Maybe<Scalars['Int']>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  comment: Scalars['String'];
-  applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
-  userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
-  organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
-};
-
-/** The `file` to be created by this mutation. */
-export type FileApplicationNoteIdFkeyFileCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  uniqueId: Scalars['String'];
-  originalFilename: Scalars['String'];
-  userId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  applicationSerial?: Maybe<Scalars['String']>;
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  description?: Maybe<Scalars['String']>;
-  isOutputDoc?: Maybe<Scalars['Boolean']>;
-  filePath: Scalars['String'];
-  thumbnailPath?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
-  submitted?: Maybe<Scalars['Boolean']>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  userToUserId?: Maybe<FileUserIdFkeyInput>;
-  templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
-  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
-  applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
-};
-
-/** Input for the nested mutation of `applicationNote` in the `FileInput` mutation. */
-export type FileApplicationNoteIdFkeyInput = {
-  /** The primary key(s) for `applicationNote` for the far side of the relationship. */
-  connectById?: Maybe<ApplicationNoteApplicationNotePkeyConnect>;
-  /** The primary key(s) for `applicationNote` for the far side of the relationship. */
-  connectByNodeId?: Maybe<ApplicationNoteNodeIdConnect>;
-  /** The primary key(s) for `applicationNote` for the far side of the relationship. */
-  deleteById?: Maybe<ApplicationNoteApplicationNotePkeyDelete>;
-  /** The primary key(s) for `applicationNote` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<ApplicationNoteNodeIdDelete>;
-  /** The primary key(s) and patch data for `applicationNote` for the far side of the relationship. */
-  updateById?: Maybe<ApplicationNoteOnFileForFileApplicationNoteIdFkeyUsingApplicationNotePkeyUpdate>;
-  /** The primary key(s) and patch data for `applicationNote` for the far side of the relationship. */
-  updateByNodeId?: Maybe<FileOnFileForFileApplicationNoteIdFkeyNodeIdUpdate>;
-  /** A `ApplicationNoteInput` object that will be created and connected to this object. */
-  create?: Maybe<FileApplicationNoteIdFkeyApplicationNoteCreateInput>;
-};
-
-/** Input for the nested mutation of `file` in the `ApplicationNoteInput` mutation. */
-export type FileApplicationNoteIdFkeyInverseInput = {
-  /** Flag indicating whether all other `file` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  connectById?: Maybe<Array<FileFilePkeyConnect>>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  connectByUniqueId?: Maybe<Array<FileFileUniqueIdKeyConnect>>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<FileNodeIdConnect>>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  deleteById?: Maybe<Array<FileFilePkeyDelete>>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  deleteByUniqueId?: Maybe<Array<FileFileUniqueIdKeyDelete>>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<FileNodeIdDelete>>;
-  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
-  updateById?: Maybe<Array<FileOnFileForFileApplicationNoteIdFkeyUsingFilePkeyUpdate>>;
-  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
-  updateByUniqueId?: Maybe<Array<FileOnFileForFileApplicationNoteIdFkeyUsingFileUniqueIdKeyUpdate>>;
-  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ApplicationNoteOnFileForFileApplicationNoteIdFkeyNodeIdUpdate>>;
-  /** A `FileInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<FileApplicationNoteIdFkeyFileCreateInput>>;
 };
 
 /** The `applicationResponse` to be created by this mutation. */
@@ -10195,7 +10071,6 @@ export type FileApplicationResponseIdFkeyFileCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -10206,7 +10081,6 @@ export type FileApplicationResponseIdFkeyFileCreateInput = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** Input for the nested mutation of `applicationResponse` in the `FileInput` mutation. */
@@ -10295,7 +10169,6 @@ export type FileApplicationSerialFkeyFileCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -10306,7 +10179,6 @@ export type FileApplicationSerialFkeyFileCreateInput = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** Input for the nested mutation of `application` in the `FileInput` mutation. */
@@ -10377,8 +10249,6 @@ export type FileCondition = {
   applicationResponseId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `description` field. */
   description?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `applicationNoteId` field. */
-  applicationNoteId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `isOutputDoc` field. */
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `filePath` field. */
@@ -10431,8 +10301,6 @@ export type FileFilter = {
   applicationResponseId?: Maybe<IntFilter>;
   /** Filter by the object’s `description` field. */
   description?: Maybe<StringFilter>;
-  /** Filter by the object’s `applicationNoteId` field. */
-  applicationNoteId?: Maybe<IntFilter>;
   /** Filter by the object’s `isOutputDoc` field. */
   isOutputDoc?: Maybe<BooleanFilter>;
   /** Filter by the object’s `filePath` field. */
@@ -10461,10 +10329,6 @@ export type FileFilter = {
   applicationResponse?: Maybe<ApplicationResponseFilter>;
   /** A related `applicationResponse` exists. */
   applicationResponseExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `applicationNote` relation. */
-  applicationNote?: Maybe<ApplicationNoteFilter>;
-  /** A related `applicationNote` exists. */
-  applicationNoteExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<FileFilter>>;
   /** Checks for any expressions in this list. */
@@ -10483,7 +10347,6 @@ export type FileInput = {
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -10494,7 +10357,6 @@ export type FileInput = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -10507,28 +10369,6 @@ export type FileNodeIdConnect = {
 export type FileNodeIdDelete = {
   /** The globally unique `ID` which identifies a single `file` to be deleted. */
   nodeId: Scalars['ID'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type FileOnFileForFileApplicationNoteIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `applicationNote` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `applicationNote` being updated. */
-  patch: ApplicationNotePatch;
-};
-
-/** The fields on `file` to look up the row to update. */
-export type FileOnFileForFileApplicationNoteIdFkeyUsingFilePkeyUpdate = {
-  /** An object where the defined keys will be set on the `file` being updated. */
-  patch: UpdateFileOnFileForFileApplicationNoteIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** The fields on `file` to look up the row to update. */
-export type FileOnFileForFileApplicationNoteIdFkeyUsingFileUniqueIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `file` being updated. */
-  patch: UpdateFileOnFileForFileApplicationNoteIdFkeyPatch;
-  uniqueId: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -10629,7 +10469,6 @@ export type FilePatch = {
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -10640,7 +10479,6 @@ export type FilePatch = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** A connection to a list of `File` values. */
@@ -10684,8 +10522,6 @@ export enum FilesOrderBy {
   ApplicationResponseIdDesc = 'APPLICATION_RESPONSE_ID_DESC',
   DescriptionAsc = 'DESCRIPTION_ASC',
   DescriptionDesc = 'DESCRIPTION_DESC',
-  ApplicationNoteIdAsc = 'APPLICATION_NOTE_ID_ASC',
-  ApplicationNoteIdDesc = 'APPLICATION_NOTE_ID_DESC',
   IsOutputDocAsc = 'IS_OUTPUT_DOC_ASC',
   IsOutputDocDesc = 'IS_OUTPUT_DOC_DESC',
   FilePathAsc = 'FILE_PATH_ASC',
@@ -10711,7 +10547,6 @@ export type FileTemplateIdFkeyFileCreateInput = {
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -10722,7 +10557,6 @@ export type FileTemplateIdFkeyFileCreateInput = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** Input for the nested mutation of `template` in the `FileInput` mutation. */
@@ -10806,7 +10640,6 @@ export type FileUserIdFkeyFileCreateInput = {
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -10817,7 +10650,6 @@ export type FileUserIdFkeyFileCreateInput = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** Input for the nested mutation of `user` in the `FileInput` mutation. */
@@ -29724,10 +29556,10 @@ export type UpdateApplicationNoteOnApplicationNoteForApplicationNoteApplicationI
   orgId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   comment?: Maybe<Scalars['String']>;
+  files?: Maybe<Scalars['JSON']>;
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `applicationNote` being updated. */
@@ -29737,10 +29569,10 @@ export type UpdateApplicationNoteOnApplicationNoteForApplicationNoteOrgIdFkeyPat
   userId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   comment?: Maybe<Scalars['String']>;
+  files?: Maybe<Scalars['JSON']>;
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `applicationNote` being updated. */
@@ -29750,24 +29582,10 @@ export type UpdateApplicationNoteOnApplicationNoteForApplicationNoteUserIdFkeyPa
   orgId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   comment?: Maybe<Scalars['String']>;
+  files?: Maybe<Scalars['JSON']>;
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
-};
-
-/** An object where the defined keys will be set on the `applicationNote` being updated. */
-export type UpdateApplicationNoteOnFileForFileApplicationNoteIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  orgId?: Maybe<Scalars['Int']>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  comment?: Maybe<Scalars['String']>;
-  applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
-  userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
-  organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
-  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** The output of our update `ApplicationNote` mutation. */
@@ -30826,29 +30644,6 @@ export type UpdateFileInput = {
 };
 
 /** An object where the defined keys will be set on the `file` being updated. */
-export type UpdateFileOnFileForFileApplicationNoteIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  uniqueId?: Maybe<Scalars['String']>;
-  originalFilename?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  applicationSerial?: Maybe<Scalars['String']>;
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  description?: Maybe<Scalars['String']>;
-  isOutputDoc?: Maybe<Scalars['Boolean']>;
-  filePath?: Maybe<Scalars['String']>;
-  thumbnailPath?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
-  submitted?: Maybe<Scalars['Boolean']>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  userToUserId?: Maybe<FileUserIdFkeyInput>;
-  templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
-  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
-  applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
-};
-
-/** An object where the defined keys will be set on the `file` being updated. */
 export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   uniqueId?: Maybe<Scalars['String']>;
@@ -30857,7 +30652,6 @@ export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
   templateId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -30868,7 +30662,6 @@ export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** An object where the defined keys will be set on the `file` being updated. */
@@ -30880,7 +30673,6 @@ export type UpdateFileOnFileForFileApplicationSerialFkeyPatch = {
   templateId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -30891,7 +30683,6 @@ export type UpdateFileOnFileForFileApplicationSerialFkeyPatch = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** An object where the defined keys will be set on the `file` being updated. */
@@ -30903,7 +30694,6 @@ export type UpdateFileOnFileForFileTemplateIdFkeyPatch = {
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -30914,7 +30704,6 @@ export type UpdateFileOnFileForFileTemplateIdFkeyPatch = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** An object where the defined keys will be set on the `file` being updated. */
@@ -30926,7 +30715,6 @@ export type UpdateFileOnFileForFileUserIdFkeyPatch = {
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
-  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -30937,7 +30725,6 @@ export type UpdateFileOnFileForFileUserIdFkeyPatch = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** The output of our update `File` mutation. */
@@ -30960,8 +30747,6 @@ export type UpdateFilePayload = {
   applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
-  /** Reads a single `ApplicationNote` that is related to this `File`. */
-  applicationNote?: Maybe<ApplicationNote>;
   /** An edge for our `File`. May be used by Relay 1. */
   fileEdge?: Maybe<FilesEdge>;
 };
@@ -37650,7 +37435,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ApplicationNote'] | ResolversTypes['File'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['ReviewResponse'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['OrganisationApplicationJoin'] | ResolversTypes['UserOrganisationApplicationJoin'] | ResolversTypes['UserApplicationJoin'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['Verification'] | ResolversTypes['ActivityLog'] | ResolversTypes['LicenceApplicationJoin'] | ResolversTypes['Licence'] | ResolversTypes['ProductApplicationJoin'] | ResolversTypes['Product'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['LookupTableAdministrationRoute'] | ResolversTypes['LookupTableContainer'] | ResolversTypes['LookupTableCountryname'] | ResolversTypes['LookupTableDosageForm'] | ResolversTypes['LookupTableIngredient'] | ResolversTypes['LookupTableTestAddNewLookupTable'] | ResolversTypes['LookupTableTherapeuticCategory'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayColumnDefinition'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ApplicationNote'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['ReviewResponse'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['OrganisationApplicationJoin'] | ResolversTypes['UserOrganisationApplicationJoin'] | ResolversTypes['File'] | ResolversTypes['UserApplicationJoin'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['Verification'] | ResolversTypes['ActivityLog'] | ResolversTypes['LicenceApplicationJoin'] | ResolversTypes['Licence'] | ResolversTypes['ProductApplicationJoin'] | ResolversTypes['Product'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['LookupTableAdministrationRoute'] | ResolversTypes['LookupTableContainer'] | ResolversTypes['LookupTableCountryname'] | ResolversTypes['LookupTableDosageForm'] | ResolversTypes['LookupTableIngredient'] | ResolversTypes['LookupTableTestAddNewLookupTable'] | ResolversTypes['LookupTableTherapeuticCategory'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayColumnDefinition'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -37725,8 +37510,6 @@ export type ResolversTypes = {
   ApplicationStatus: ApplicationStatus;
   ApplicationToManyApplicationNoteFilter: ApplicationToManyApplicationNoteFilter;
   ApplicationNoteFilter: ApplicationNoteFilter;
-  ApplicationNoteToManyFileFilter: ApplicationNoteToManyFileFilter;
-  FileFilter: FileFilter;
   OrganisationFilter: OrganisationFilter;
   OrganisationToManyUserOrganisationFilter: OrganisationToManyUserOrganisationFilter;
   OrganisationToManyPermissionJoinFilter: OrganisationToManyPermissionJoinFilter;
@@ -37773,6 +37556,7 @@ export type ResolversTypes = {
   ReviewToManyNotificationFilter: ReviewToManyNotificationFilter;
   NotificationFilter: NotificationFilter;
   ApplicationToManyFileFilter: ApplicationToManyFileFilter;
+  FileFilter: FileFilter;
   ApplicationToManyNotificationFilter: ApplicationToManyNotificationFilter;
   ApplicationToManyVerificationFilter: ApplicationToManyVerificationFilter;
   VerificationFilter: VerificationFilter;
@@ -37875,11 +37659,6 @@ export type ResolversTypes = {
   ApplicationNoteCondition: ApplicationNoteCondition;
   ApplicationNotesConnection: ResolverTypeWrapper<ApplicationNotesConnection>;
   ApplicationNote: ResolverTypeWrapper<ApplicationNote>;
-  FilesOrderBy: FilesOrderBy;
-  FileCondition: FileCondition;
-  FilesConnection: ResolverTypeWrapper<FilesConnection>;
-  File: ResolverTypeWrapper<File>;
-  FilesEdge: ResolverTypeWrapper<FilesEdge>;
   ApplicationNotesEdge: ResolverTypeWrapper<ApplicationNotesEdge>;
   ReviewAssignmentsOrderBy: ReviewAssignmentsOrderBy;
   ReviewAssignmentCondition: ReviewAssignmentCondition;
@@ -37948,6 +37727,11 @@ export type ResolversTypes = {
   UserOrganisationApplicationJoin: ResolverTypeWrapper<UserOrganisationApplicationJoin>;
   UserOrganisationApplicationJoinsEdge: ResolverTypeWrapper<UserOrganisationApplicationJoinsEdge>;
   UserOrganisationsEdge: ResolverTypeWrapper<UserOrganisationsEdge>;
+  FilesOrderBy: FilesOrderBy;
+  FileCondition: FileCondition;
+  FilesConnection: ResolverTypeWrapper<FilesConnection>;
+  File: ResolverTypeWrapper<File>;
+  FilesEdge: ResolverTypeWrapper<FilesEdge>;
   UserApplicationJoinsOrderBy: UserApplicationJoinsOrderBy;
   UserApplicationJoinCondition: UserApplicationJoinCondition;
   UserApplicationJoinsConnection: ResolverTypeWrapper<UserApplicationJoinsConnection>;
@@ -38635,21 +38419,9 @@ export type ResolversTypes = {
   FileApplicationResponseIdFkeyInverseInput: FileApplicationResponseIdFkeyInverseInput;
   FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate;
   updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
-  FileApplicationNoteIdFkeyInput: FileApplicationNoteIdFkeyInput;
-  ApplicationNoteOnFileForFileApplicationNoteIdFkeyUsingApplicationNotePkeyUpdate: ApplicationNoteOnFileForFileApplicationNoteIdFkeyUsingApplicationNotePkeyUpdate;
-  updateApplicationNoteOnFileForFileApplicationNoteIdFkeyPatch: UpdateApplicationNoteOnFileForFileApplicationNoteIdFkeyPatch;
-  FileApplicationNoteIdFkeyInverseInput: FileApplicationNoteIdFkeyInverseInput;
-  FileOnFileForFileApplicationNoteIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationNoteIdFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileApplicationNoteIdFkeyPatch: UpdateFileOnFileForFileApplicationNoteIdFkeyPatch;
-  FileOnFileForFileApplicationNoteIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationNoteIdFkeyUsingFileUniqueIdKeyUpdate;
-  ApplicationNoteOnFileForFileApplicationNoteIdFkeyNodeIdUpdate: ApplicationNoteOnFileForFileApplicationNoteIdFkeyNodeIdUpdate;
-  FilePatch: FilePatch;
-  FileApplicationNoteIdFkeyFileCreateInput: FileApplicationNoteIdFkeyFileCreateInput;
-  FileOnFileForFileApplicationNoteIdFkeyNodeIdUpdate: FileOnFileForFileApplicationNoteIdFkeyNodeIdUpdate;
-  ApplicationNotePatch: ApplicationNotePatch;
-  FileApplicationNoteIdFkeyApplicationNoteCreateInput: FileApplicationNoteIdFkeyApplicationNoteCreateInput;
   FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate;
   ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
+  FilePatch: FilePatch;
   FileApplicationResponseIdFkeyFileCreateInput: FileApplicationResponseIdFkeyFileCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
   ApplicationResponsePatch: ApplicationResponsePatch;
@@ -39049,6 +38821,7 @@ export type ResolversTypes = {
   ApplicationNoteOnApplicationNoteForApplicationNoteOrgIdFkeyNodeIdUpdate: ApplicationNoteOnApplicationNoteForApplicationNoteOrgIdFkeyNodeIdUpdate;
   ApplicationNoteOrgIdFkeyOrganisationCreateInput: ApplicationNoteOrgIdFkeyOrganisationCreateInput;
   OrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyNodeIdUpdate: OrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyNodeIdUpdate;
+  ApplicationNotePatch: ApplicationNotePatch;
   ApplicationNoteOrgIdFkeyApplicationNoteCreateInput: ApplicationNoteOrgIdFkeyApplicationNoteCreateInput;
   OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationNameKeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationNameKeyUpdate;
   OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate;
@@ -39767,7 +39540,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ApplicationNote'] | ResolversParentTypes['File'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['OrganisationApplicationJoin'] | ResolversParentTypes['UserOrganisationApplicationJoin'] | ResolversParentTypes['UserApplicationJoin'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['Verification'] | ResolversParentTypes['ActivityLog'] | ResolversParentTypes['LicenceApplicationJoin'] | ResolversParentTypes['Licence'] | ResolversParentTypes['ProductApplicationJoin'] | ResolversParentTypes['Product'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['LookupTableAdministrationRoute'] | ResolversParentTypes['LookupTableContainer'] | ResolversParentTypes['LookupTableCountryname'] | ResolversParentTypes['LookupTableDosageForm'] | ResolversParentTypes['LookupTableIngredient'] | ResolversParentTypes['LookupTableTestAddNewLookupTable'] | ResolversParentTypes['LookupTableTherapeuticCategory'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayColumnDefinition'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ApplicationNote'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['OrganisationApplicationJoin'] | ResolversParentTypes['UserOrganisationApplicationJoin'] | ResolversParentTypes['File'] | ResolversParentTypes['UserApplicationJoin'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['Verification'] | ResolversParentTypes['ActivityLog'] | ResolversParentTypes['LicenceApplicationJoin'] | ResolversParentTypes['Licence'] | ResolversParentTypes['ProductApplicationJoin'] | ResolversParentTypes['Product'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['LookupTableAdministrationRoute'] | ResolversParentTypes['LookupTableContainer'] | ResolversParentTypes['LookupTableCountryname'] | ResolversParentTypes['LookupTableDosageForm'] | ResolversParentTypes['LookupTableIngredient'] | ResolversParentTypes['LookupTableTestAddNewLookupTable'] | ResolversParentTypes['LookupTableTherapeuticCategory'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayColumnDefinition'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -39828,8 +39601,6 @@ export type ResolversParentTypes = {
   ApplicationStatusFilter: ApplicationStatusFilter;
   ApplicationToManyApplicationNoteFilter: ApplicationToManyApplicationNoteFilter;
   ApplicationNoteFilter: ApplicationNoteFilter;
-  ApplicationNoteToManyFileFilter: ApplicationNoteToManyFileFilter;
-  FileFilter: FileFilter;
   OrganisationFilter: OrganisationFilter;
   OrganisationToManyUserOrganisationFilter: OrganisationToManyUserOrganisationFilter;
   OrganisationToManyPermissionJoinFilter: OrganisationToManyPermissionJoinFilter;
@@ -39873,6 +39644,7 @@ export type ResolversParentTypes = {
   ReviewToManyNotificationFilter: ReviewToManyNotificationFilter;
   NotificationFilter: NotificationFilter;
   ApplicationToManyFileFilter: ApplicationToManyFileFilter;
+  FileFilter: FileFilter;
   ApplicationToManyNotificationFilter: ApplicationToManyNotificationFilter;
   ApplicationToManyVerificationFilter: ApplicationToManyVerificationFilter;
   VerificationFilter: VerificationFilter;
@@ -39963,10 +39735,6 @@ export type ResolversParentTypes = {
   ApplicationNoteCondition: ApplicationNoteCondition;
   ApplicationNotesConnection: ApplicationNotesConnection;
   ApplicationNote: ApplicationNote;
-  FileCondition: FileCondition;
-  FilesConnection: FilesConnection;
-  File: File;
-  FilesEdge: FilesEdge;
   ApplicationNotesEdge: ApplicationNotesEdge;
   ReviewAssignmentCondition: ReviewAssignmentCondition;
   ReviewAssignmentsConnection: ReviewAssignmentsConnection;
@@ -40022,6 +39790,10 @@ export type ResolversParentTypes = {
   UserOrganisationApplicationJoin: UserOrganisationApplicationJoin;
   UserOrganisationApplicationJoinsEdge: UserOrganisationApplicationJoinsEdge;
   UserOrganisationsEdge: UserOrganisationsEdge;
+  FileCondition: FileCondition;
+  FilesConnection: FilesConnection;
+  File: File;
+  FilesEdge: FilesEdge;
   UserApplicationJoinCondition: UserApplicationJoinCondition;
   UserApplicationJoinsConnection: UserApplicationJoinsConnection;
   UserApplicationJoin: UserApplicationJoin;
@@ -40669,21 +40441,9 @@ export type ResolversParentTypes = {
   FileApplicationResponseIdFkeyInverseInput: FileApplicationResponseIdFkeyInverseInput;
   FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate;
   updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
-  FileApplicationNoteIdFkeyInput: FileApplicationNoteIdFkeyInput;
-  ApplicationNoteOnFileForFileApplicationNoteIdFkeyUsingApplicationNotePkeyUpdate: ApplicationNoteOnFileForFileApplicationNoteIdFkeyUsingApplicationNotePkeyUpdate;
-  updateApplicationNoteOnFileForFileApplicationNoteIdFkeyPatch: UpdateApplicationNoteOnFileForFileApplicationNoteIdFkeyPatch;
-  FileApplicationNoteIdFkeyInverseInput: FileApplicationNoteIdFkeyInverseInput;
-  FileOnFileForFileApplicationNoteIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationNoteIdFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileApplicationNoteIdFkeyPatch: UpdateFileOnFileForFileApplicationNoteIdFkeyPatch;
-  FileOnFileForFileApplicationNoteIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationNoteIdFkeyUsingFileUniqueIdKeyUpdate;
-  ApplicationNoteOnFileForFileApplicationNoteIdFkeyNodeIdUpdate: ApplicationNoteOnFileForFileApplicationNoteIdFkeyNodeIdUpdate;
-  FilePatch: FilePatch;
-  FileApplicationNoteIdFkeyFileCreateInput: FileApplicationNoteIdFkeyFileCreateInput;
-  FileOnFileForFileApplicationNoteIdFkeyNodeIdUpdate: FileOnFileForFileApplicationNoteIdFkeyNodeIdUpdate;
-  ApplicationNotePatch: ApplicationNotePatch;
-  FileApplicationNoteIdFkeyApplicationNoteCreateInput: FileApplicationNoteIdFkeyApplicationNoteCreateInput;
   FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate;
   ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
+  FilePatch: FilePatch;
   FileApplicationResponseIdFkeyFileCreateInput: FileApplicationResponseIdFkeyFileCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
   ApplicationResponsePatch: ApplicationResponsePatch;
@@ -41083,6 +40843,7 @@ export type ResolversParentTypes = {
   ApplicationNoteOnApplicationNoteForApplicationNoteOrgIdFkeyNodeIdUpdate: ApplicationNoteOnApplicationNoteForApplicationNoteOrgIdFkeyNodeIdUpdate;
   ApplicationNoteOrgIdFkeyOrganisationCreateInput: ApplicationNoteOrgIdFkeyOrganisationCreateInput;
   OrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyNodeIdUpdate: OrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyNodeIdUpdate;
+  ApplicationNotePatch: ApplicationNotePatch;
   ApplicationNoteOrgIdFkeyApplicationNoteCreateInput: ApplicationNoteOrgIdFkeyApplicationNoteCreateInput;
   OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationNameKeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationNameKeyUpdate;
   OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate;
@@ -42034,11 +41795,11 @@ export type ApplicationNoteResolvers<ContextType = any, ParentType extends Resol
   userId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   orgId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   timestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
-  comment?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  comment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  files?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   org?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
-  files?: Resolver<ResolversTypes['FilesConnection'], ParentType, ContextType, RequireFields<ApplicationNoteFilesArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -42439,7 +42200,6 @@ export type CreateFilePayloadResolvers<ContextType = any, ParentType extends Res
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
-  applicationNote?: Resolver<Maybe<ResolversTypes['ApplicationNote']>, ParentType, ContextType>;
   fileEdge?: Resolver<Maybe<ResolversTypes['FilesEdge']>, ParentType, ContextType, RequireFields<CreateFilePayloadFileEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -42976,7 +42736,6 @@ export type DeleteFilePayloadResolvers<ContextType = any, ParentType extends Res
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
-  applicationNote?: Resolver<Maybe<ResolversTypes['ApplicationNote']>, ParentType, ContextType>;
   fileEdge?: Resolver<Maybe<ResolversTypes['FilesEdge']>, ParentType, ContextType, RequireFields<DeleteFilePayloadFileEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -43476,18 +43235,16 @@ export type FileResolvers<ContextType = any, ParentType extends ResolversParentT
   applicationSerial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   applicationResponseId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  applicationNoteId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   isOutputDoc?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   filePath?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   thumbnailPath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   mimetype?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   submitted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  timestamp?: Resolver<ResolversTypes['Datetime'], ParentType, ContextType>;
+  timestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
-  applicationNote?: Resolver<Maybe<ResolversTypes['ApplicationNote']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -44078,7 +43835,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ApplicationNote' | 'File' | 'ReviewAssignment' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'ReviewQuestionAssignment' | 'ReviewResponse' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'OrganisationApplicationJoin' | 'UserOrganisationApplicationJoin' | 'UserApplicationJoin' | 'TriggerSchedule' | 'Verification' | 'ActivityLog' | 'LicenceApplicationJoin' | 'Licence' | 'ProductApplicationJoin' | 'Product' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'Counter' | 'ElementTypePlugin' | 'LookupTable' | 'LookupTableAdministrationRoute' | 'LookupTableContainer' | 'LookupTableCountryname' | 'LookupTableDosageForm' | 'LookupTableIngredient' | 'LookupTableTestAddNewLookupTable' | 'LookupTableTherapeuticCategory' | 'OutcomeDisplay' | 'OutcomeDisplayColumnDefinition', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ApplicationNote' | 'ReviewAssignment' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'ReviewQuestionAssignment' | 'ReviewResponse' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'OrganisationApplicationJoin' | 'UserOrganisationApplicationJoin' | 'File' | 'UserApplicationJoin' | 'TriggerSchedule' | 'Verification' | 'ActivityLog' | 'LicenceApplicationJoin' | 'Licence' | 'ProductApplicationJoin' | 'Product' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'Counter' | 'ElementTypePlugin' | 'LookupTable' | 'LookupTableAdministrationRoute' | 'LookupTableContainer' | 'LookupTableCountryname' | 'LookupTableDosageForm' | 'LookupTableIngredient' | 'LookupTableTestAddNewLookupTable' | 'LookupTableTherapeuticCategory' | 'OutcomeDisplay' | 'OutcomeDisplayColumnDefinition', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -45421,7 +45178,6 @@ export type UpdateFilePayloadResolvers<ContextType = any, ParentType extends Res
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
-  applicationNote?: Resolver<Maybe<ResolversTypes['ApplicationNote']>, ParentType, ContextType>;
   fileEdge?: Resolver<Maybe<ResolversTypes['FilesEdge']>, ParentType, ContextType, RequireFields<UpdateFilePayloadFileEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
