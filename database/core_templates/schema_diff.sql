@@ -1,6 +1,6 @@
 /*************************************************/
 /*** SCRIPT AUTHOR: application-manager-server ***/
-/***    CREATED ON: 2022-02-09T04:27:09.509Z   ***/
+/***    CREATED ON: 2022-02-10T07:26:53.998Z   ***/
 /*************************************************/
 
 --- BEGIN ALTER TABLE "public"."organisation" ---
@@ -8,22 +8,6 @@
 ALTER TABLE IF EXISTS "public"."organisation" ADD COLUMN IF NOT EXISTS "registration_documentation" jsonb NULL  ;
 
 --- END ALTER TABLE "public"."organisation" ---
-
---- BEGIN CREATE TABLE "public"."organisation_application_join" ---
-
-CREATE TABLE IF NOT EXISTS "public"."organisation_application_join" (
-	"id" serial NOT NULL  ,
-	"application_id" int4 NOT NULL  ,
-	"organisation_id" int4 NOT NULL  ,
-	CONSTRAINT "organisation_application_join_pkey" PRIMARY KEY (id) ,
-	CONSTRAINT "organisation_application_join_application_id_fkey" FOREIGN KEY (application_id) REFERENCES application(id) ON DELETE CASCADE ,
-	CONSTRAINT "organisation_application_join_organisation_id_fkey" FOREIGN KEY (organisation_id) REFERENCES organisation(id) ON DELETE CASCADE 
-);
-
-ALTER TABLE IF EXISTS "public"."organisation_application_join" OWNER TO postgres;
-
-
---- END CREATE TABLE "public"."organisation_application_join" ---
 
 --- BEGIN CREATE TABLE "public"."user_application_join" ---
 
@@ -40,6 +24,22 @@ ALTER TABLE IF EXISTS "public"."user_application_join" OWNER TO postgres;
 
 
 --- END CREATE TABLE "public"."user_application_join" ---
+
+--- BEGIN CREATE TABLE "public"."organisation_application_join" ---
+
+CREATE TABLE IF NOT EXISTS "public"."organisation_application_join" (
+	"id" serial NOT NULL  ,
+	"application_id" int4 NOT NULL  ,
+	"organisation_id" int4 NOT NULL  ,
+	CONSTRAINT "organisation_application_join_pkey" PRIMARY KEY (id) ,
+	CONSTRAINT "organisation_application_join_application_id_fkey" FOREIGN KEY (application_id) REFERENCES application(id) ON DELETE CASCADE ,
+	CONSTRAINT "organisation_application_join_organisation_id_fkey" FOREIGN KEY (organisation_id) REFERENCES organisation(id) ON DELETE CASCADE 
+);
+
+ALTER TABLE IF EXISTS "public"."organisation_application_join" OWNER TO postgres;
+
+
+--- END CREATE TABLE "public"."organisation_application_join" ---
 
 --- BEGIN CREATE SEQUENCE "public"."organisation_application_join_id_seq" ---
 
