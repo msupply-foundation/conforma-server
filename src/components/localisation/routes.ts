@@ -1,5 +1,5 @@
 import path from 'path'
-import { mkdirSync, readFileSync, writeFile } from 'fs'
+import { mkdirSync, rmdirSync, readFileSync, writeFile } from 'fs'
 import { promisify } from 'util'
 import { getAppEntryPointDir } from '../../components/utilityFunctions'
 import { combineRequestParams } from '../../components/utilityFunctions'
@@ -26,10 +26,10 @@ export const routeGetLanguageFile = async (request: any, reply: any) => {
 
 export const routeEnableLanguage = async (request: any, reply: any) => {
   const { code, enabled } = combineRequestParams(request)
-  const languageOptions = JSON.parse(
+  const languageOptions: LanguageOption[] = JSON.parse(
     readFileSync(path.join(getAppEntryPointDir(), '../localisation/languages.json'), 'utf8')
   )
-  const index = languageOptions.findIndex((language: LanguageOption) => language.code === code)
+  const index = languageOptions.findIndex((language) => language.code === code)
   if (index === -1) return reply.send({ success: false, message: 'Code not recognised' })
 
   const changedLanguage = {
@@ -38,6 +38,13 @@ export const routeEnableLanguage = async (request: any, reply: any) => {
       enabled === 'true' ? true : enabled === 'false' ? false : !languageOptions[index].enabled,
   }
   languageOptions[index] = changedLanguage
+
+  if (
+    languageOptions.filter((language) => {
+      language.enabled
+    }).length === 0
+  )
+    return reply.send({ success: false, message: 'At least one language must remain enable' })
 
   // Write file back
   try {
@@ -93,6 +100,38 @@ export const routeInstallLanguage = async (request: any, reply: any) => {
     return reply.send({ success: true, message })
   } catch (err) {
     return reply.send({ sucess: false, message: 'Problem installing language:' + err.message })
+  }
+}
+
+export const routeRemoveLanguage = async (request: any, reply: any) => {
+  const { code } = combineRequestParams(request)
+  const languageOptions = JSON.parse(
+    readFileSync(path.join(getAppEntryPointDir(), '../localisation/languages.json'), 'utf8')
+  )
+
+  const newLanguageOptions = languageOptions.filter(
+    (language: LanguageOption) => language.code !== code
+  )
+  if (newLanguageOptions.length === languageOptions.length)
+    return reply.send({ success: false, message: 'Code not recognised' })
+  if (newLanguageOptions.length === 0)
+    return reply.send({ success: false, message: 'At least one language must remain installed' })
+
+  // Write options file and delete language file
+  try {
+    await writeFilePromise(
+      path.join(getAppEntryPointDir(), '../localisation/languages.json'),
+      JSON.stringify(newLanguageOptions, null, 2)
+    )
+    await rmdirSync(path.join(getAppEntryPointDir(), `../localisation/${code}`), {
+      recursive: true,
+    })
+    return reply.send({ success: true, data: newLanguageOptions })
+  } catch (err) {
+    return reply.send({
+      sucess: false,
+      message: 'Problem uninstalling language:' + err.message,
+    })
   }
 }
 

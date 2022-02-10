@@ -32,6 +32,7 @@ import {
   routeGetLanguageFile,
   routeEnableLanguage,
   routeInstallLanguage,
+  routeRemoveLanguage,
 } from './components/localisation/routes'
 import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
 require('dotenv').config()
@@ -115,6 +116,8 @@ const startServer = async () => {
         server.get('/get-application-data', routeGetApplicationData)
         server.post('/enable-language', routeEnableLanguage)
         server.post('/install-language', routeInstallLanguage)
+        done()
+        server.post('/remove-language', routeRemoveLanguage)
         done()
       },
       { prefix: '/admin' }
