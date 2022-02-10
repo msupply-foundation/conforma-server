@@ -158,7 +158,7 @@ BEGIN
                                                 id = ANY (ARRAY ( SELECT DISTINCT
                                                     template_section_id FROM review_question_assignment_section
                                                 WHERE
-                                                    review_assignment_id = NEW.id)) ORDER BY INDEX) t), 'review_level', NEW.level_number));
+                                                    review_assignment_id = NEW.id)) ORDER BY INDEX) t), 'reviewLevel', NEW.level_number));
     RETURN NULL;
 END;
 $application_event$
