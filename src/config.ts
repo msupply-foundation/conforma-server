@@ -24,6 +24,7 @@ const config: { [key: string]: any } = {
   imagesFolder: '../images',
   databaseFolder: '../database',
   localisationsFolder: '../localisation',
+  genericThumbnailsFolderName: '_generic_thumbnails',
   // In production postgraphile is started with -q and -i /postgraphile/...
   nodeModulesFolder:
     process.env.NODE_ENV === 'production' ? '../../node_modules' : '../node_modules',

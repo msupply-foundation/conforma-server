@@ -1,5 +1,6 @@
 import { processTrigger, executeAction } from './actions/triggersAndActions'
 import { actionLibrary } from './pluginsConnect'
+import { deleteFile } from './files/deleteFiles'
 import config from '../config'
 import { Client, Pool, QueryResult } from 'pg'
 import {
@@ -38,6 +39,7 @@ class PostgresDB {
     listener.connect()
     listener.query('LISTEN trigger_notifications')
     listener.query('LISTEN action_notifications')
+    listener.query('LISTEN file_notifications')
     listener.on('notification', async ({ channel, payload }) => {
       if (!payload) {
         console.log(`Notification ${channel} received with no payload!`)
@@ -59,6 +61,8 @@ class PostgresDB {
           } finally {
             break
           }
+        case 'file_notifications':
+          deleteFile(payloadObject)
       }
     })
   }
