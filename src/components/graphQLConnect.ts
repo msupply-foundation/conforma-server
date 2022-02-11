@@ -112,6 +112,39 @@ class GraphQLdb {
     }
     // Not implemented yet -- needs more data in DB
   }
+
+  public getAllApplicationTriggers = async (serial: string) => {
+    const data = await this.gqlQuery(
+      `
+      query getTriggers($serial: String!) {
+        applicationBySerial(serial: $serial) {
+          reviewAssignments {
+            nodes {
+              id
+              trigger
+            }
+          }
+          reviews {
+            nodes {
+              id
+              trigger
+            }
+          }
+          verifications {
+            nodes {
+              id
+              trigger
+            }
+          }
+          applicationId: id
+          applicationTrigger: trigger
+        }
+      }
+      `,
+      { serial }
+    )
+    return data?.applicationBySerial || null
+  }
 }
 
 const graphqlDBInstance = GraphQLdb.Instance
