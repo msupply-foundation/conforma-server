@@ -15,10 +15,10 @@ if ! [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
 else
     yarn version $VERSION_ARG
     git push --tags
-    # printf "Switching to front-end repo...\n"
-    # cd ${FRONT_END_PATH}
-    # yarn version $VERSION_ARG
-    # git push
+    printf "Switching to front-end repo...\n"
+    cd ${FRONT_END_PATH}
+    yarn version $VERSION_ARG
+    git push
 fi
 
 # Bump version
