@@ -1,6 +1,6 @@
 {
   "name": "application-manager-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "server.js",
   "license": "MIT",
   "repository": {
@@ -58,7 +58,8 @@
     "postinstall": "node ./utils/pluginScripts/yarnInstallPlugins.js",
     "snapshot": "ts-node ./database/snapshotCLI.ts",
     "dockerise": "cd docker && ./dockerise.sh",
-    "docker_run": "cd docker && ./run.sh"
+    "docker_run": "cd docker && ./run.sh",
+    "migrate": "ts-node ./database/migrationScript.ts --migrate"
   },
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^6.0.0",
