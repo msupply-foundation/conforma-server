@@ -27,6 +27,45 @@ const databaseMethods = {
       throw err
     }
   },
+  getIncompleteReviewAssignments: async () => {
+    const data = await DBConnect.gqlQuery(`
+      query getIncompleteReviewAssignments {
+        reviewAssignments(
+          condition: { status: ASSIGNED }
+          filter: { assignedSections: { equalTo: [] } }
+        ) {
+          nodes {
+            id
+            assignedSections
+            reviewQuestionAssignments {
+              nodes {
+                templateElement {
+                  section {
+                    id
+                    code
+                  }
+                }
+              }
+            }
+          }
+        }
+      }`)
+    return data?.reviewAssignments?.nodes
+  },
+  addAssignedSections: async (sectionAssignments: any) => {
+    try {
+      sectionAssignments.forEach(async (sa: any) => {
+        const text = `
+        UPDATE review_assignment
+        SET assigned_sections = $1
+        WHERE id = $2
+        `
+        await DBConnect.query({ text, values: [sa.assignedSections, sa.id] })
+      })
+    } catch (err) {
+      throw err
+    }
+  },
 }
 
 export default databaseMethods
