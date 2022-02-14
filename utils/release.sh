@@ -1,3 +1,8 @@
-tag=$(ts-node './release.ts')
+ts-node './utils/release.ts'
 
-echo "TAG: $tag"
+tag=$(cat tag)
+rm tag
+
+if [ "$tag" != "" ]; then
+    cd docker && ./dockerise.sh $tag push
+fi

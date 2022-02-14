@@ -1,5 +1,6 @@
 require('dotenv').config()
 import readlineSync from 'readline-sync'
+import { writeFileSync } from 'fs'
 import { promisify } from 'util'
 import { exec as execCallback, spawn } from 'child_process'
 
@@ -33,7 +34,7 @@ const release = async () => {
 
   console.log(`\nPushing tag ${tag} to Github...`)
   try {
-    await exec(`git push origin v${tag}`)
+    await exec(`git push origin ${tag}`)
   } catch {
     exitWithError('Problem pushing tag!')
   }
@@ -56,11 +57,11 @@ const release = async () => {
   if (userRespondsYes()) {
     return tag
   }
-  return null
+  return ''
 }
 
 release().then((tag) => {
-  return tag // To be used by shell script
+  writeFileSync('tag', tag) // To be used by shell script
 })
 
 function exitWithError(error: string) {
