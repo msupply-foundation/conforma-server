@@ -61,7 +61,6 @@
     "snapshot": "ts-node ./database/snapshotCLI.ts",
     "dockerise": "cd docker && ./dockerise.sh",
     "docker_run": "cd docker && ./run.sh",
-    "migrate": "ts-node ./database/migrationScript.ts --migrate",
     "release": "./utils/release.sh"
   },
   "dependencies": {

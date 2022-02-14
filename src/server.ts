@@ -148,6 +148,9 @@ const startServer = async () => {
       console.error(err)
       process.exit(1)
     }
+    console.log(
+      `\n-------------------------\n|                       |\n|    CONFORMA v${config.version}    |\n|                       |\n-------------------------\n`
+    )
     console.log(`Server listening at ${address}`)
   })
 
@@ -158,5 +161,4 @@ const startServer = async () => {
   //  - etc...
 }
 
-migrationScript()
 startServer()
