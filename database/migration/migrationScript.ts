@@ -1,24 +1,31 @@
 import config from '../../src/config'
+import DB from './databaseMethods'
+import { compare } from 'compare-versions'
 
 // Script for updating existing data after a new version includes schema changes
 
 const { version } = config
 
-const migrationScript = () => {
-  console.log('config', config)
-  if (version === 'dev') {
-    console.log(
-      'In dev mode -- no migration by default (Run `yarn migrate` to manually upgrade database)'
-    )
-    return
+const migrationScript = async () => {
+  let databaseVersion: string
+  try {
+    databaseVersion = (await DB.getDatabaseVersion()).value
+    if (compare(databaseVersion, version, '>=')) return
+  } catch (err) {
+    throw err
   }
-  console.log('Migrating data')
 
-  // v b2.0.0
+  if (compare(databaseVersion, '0.2.0', '<')) {
+    // Upgrade to 0.2.0
+    console.log("We'll need to upgrade!")
+  }
+
+  // Finally, set the database version to the current version
+  DB.setDatabaseVersion(version)
 }
 
 if (process.argv[2] === '--migrate') {
-  console.log("We're migrating")
+  // For running migrationScript.ts manually using `yarn migrate`
   migrationScript()
 }
 
