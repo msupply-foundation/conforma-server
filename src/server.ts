@@ -157,5 +157,4 @@ const startServer = async () => {
   //  - etc...
 }
 
-migrationScript()
 startServer()
