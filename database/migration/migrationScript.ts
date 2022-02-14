@@ -1,5 +1,4 @@
-import DBConnect from '../src/components/databaseConnect'
-import config from '../src/config'
+import config from '../../src/config'
 
 // Script for updating existing data after a new version includes schema changes
 

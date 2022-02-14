@@ -31,7 +31,7 @@ import snapshotRoutes from './components/snapshots/routes'
 import { routeGetLanguageFile } from './components/localisation/routes'
 import { routeTriggers } from './components/other/routeTriggers'
 import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
-import migrationScript from '../database/migrationScript'
+import migrationScript from '../database/migration/migrationScript'
 require('dotenv').config()
 
 // Fastify server
