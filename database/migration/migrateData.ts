@@ -9,22 +9,27 @@ const simulatedVersion: string | undefined = process.argv[3]
 
 const migrateData = async () => {
   let databaseVersion: string
-  // We can specify a version when running manually, otherwise it will perform
-  // ALL migration steps
-  if (isManualMigration) databaseVersion = simulatedVersion ?? '0.0.0'
-  else {
-    try {
-      databaseVersion = (await DB.getDatabaseVersion()).value
-      // No migration
-      if (semverCompare(databaseVersion, version) >= 0) return
-    } catch (err) {
-      // Nothing version in database yet, so run all migration
-      databaseVersion = '0.0.0'
-    }
+
+  try {
+    databaseVersion = (await DB.getDatabaseVersion()).value
+    // No migration if database version matches current version, but we still
+    // proceed if this is a manual migration
+    if (semverCompare(databaseVersion, version) >= 0 && !isManualMigration) return
+  } catch (err) {
+    // Nothing version in database yet, so run all migration
+    databaseVersion = '0.0.0'
   }
 
+  // A specific database version can be provided when running manually
+  if (isManualMigration && simulatedVersion) databaseVersion = simulatedVersion
+
+  const databaseVersionLessThan = (version: string) =>
+    semverCompare(databaseVersion, version) === -1
+
+  // VERSION-SPECIFIC MIGRATION CODE BEGINS HERE
+
   // v0.2.0
-  if (semverCompare(databaseVersion, '0.2.0') === -1) {
+  if (databaseVersionLessThan('0.2.0')) {
     console.log('Migrating to v0.2.0...')
 
     // Add "assigned_sections" column to schema
@@ -69,8 +74,8 @@ const migrateData = async () => {
   if (!isManualMigration) DB.setDatabaseVersion(version)
 }
 
+// For running migrationScript.ts manually using `yarn migrate`
 if (isManualMigration) {
-  // For running migrationScript.ts manually using `yarn migrate`
   console.log('Running migration script...')
   migrateData().then(() => {
     console.log('Done!\n')
