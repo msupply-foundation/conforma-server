@@ -38,7 +38,7 @@ As long as the new migration code has a version check higher than the current ve
 
 If we wish to manually migrate from data that was created in a lower version than we're currently working, we can supply the optional `<version>` argument and the script will run as though that were the saved database version.
 
-An advantage of having to run the migration script manually during development is that partially-written migration code won't be executed when we don't want it to when saving changes that cause a server restart.
+An advantage of having to run the migration script manually during development is that partially-written migration code won't be executed when we don't want it to when saving changes that cause a server restart. And when the data *has* been migrated, the script won't attempt to run the migration again when the server restarts.
 
 ## Guidelines for modifying `migrateData.ts`
 
