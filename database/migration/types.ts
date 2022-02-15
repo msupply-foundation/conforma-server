@@ -1,4 +1,4 @@
 export interface AssignedSections {
   id: number
-  assignedSections: string[]
+  assignedSections: string[] | Set<string>
 }

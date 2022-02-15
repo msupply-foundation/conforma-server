@@ -1,45 +1,61 @@
 import config from '../../src/config'
 import DB from './databaseMethods'
 import { AssignedSections } from './types'
-import semverInc from 'semver/functions/inc'
 import semverCompare from 'semver/functions/compare'
 
 let { version } = config
-let isManualMigration: Boolean = process.argv[2] === '--migrate'
+const isManualMigration: Boolean = process.argv[2] === '--migrate'
+const simulatedVersion: string | undefined = process.argv[3]
 
 const migrateData = async () => {
   let databaseVersion: string
-  try {
-    databaseVersion = (await DB.getDatabaseVersion()).value
-    // No migration
-    if (semverCompare(databaseVersion, version) >= 0) return
-  } catch (err) {
-    // Nothing version in database yet, so run all migration
-    databaseVersion = '0.0.0'
+  // We can specify a version when running manually, otherwise it will perform
+  // ALL migration steps
+  if (isManualMigration) databaseVersion = simulatedVersion ?? '0.0.0'
+  else {
+    try {
+      databaseVersion = (await DB.getDatabaseVersion()).value
+      // No migration
+      if (semverCompare(databaseVersion, version) >= 0) return
+    } catch (err) {
+      // Nothing version in database yet, so run all migration
+      databaseVersion = '0.0.0'
+    }
   }
-
-  // When running manually, we want to temporarily bump the current version so
-  // the latest migration changes will run
-  if (isManualMigration) version = semverInc(version, 'patch')
 
   // v0.2.0
   if (semverCompare(databaseVersion, '0.2.0') === -1) {
-    // Add "assigned_sections" column to schema
-
-    // Rebuild "assigned sections" for existing review_assignments
     console.log('Migrating to v0.2.0...')
+
+    // Add "assigned_sections" column to schema
+    try {
+      await DB.addAssignedSectionsColumn()
+    } catch (err) {
+      console.log('Problem altering schema:', err.message, '\n')
+      // Continue anyway, it's probably because schema change is already done
+    }
+
+    // Create missing "assigned sections" for existing review_assignments
     try {
       const reviewAssignments = await DB.getIncompleteReviewAssignments()
       const reviewAssignmentsWithSections: AssignedSections[] = []
+      let currentReviewAssignment = { id: 0, assignedSections: new Set() }
       reviewAssignments.forEach((ra: any) => {
-        const assignedSections = new Set()
-        ra.reviewQuestionAssignments.nodes.forEach((rqa: any) =>
-          assignedSections.add(rqa.templateElement.section.code)
-        )
-        reviewAssignmentsWithSections.push({
-          id: ra.id,
-          assignedSections: [...assignedSections] as string[],
-        })
+        if (ra.id === currentReviewAssignment.id)
+          currentReviewAssignment.assignedSections.add(ra.code)
+        else {
+          if (currentReviewAssignment.id !== 0)
+            reviewAssignmentsWithSections.push({
+              id: currentReviewAssignment.id,
+              assignedSections: [...currentReviewAssignment.assignedSections] as string[],
+            })
+          currentReviewAssignment = { id: ra.id, assignedSections: new Set([ra.code]) }
+        }
+      })
+      // Don't forget about the last one
+      reviewAssignmentsWithSections.push({
+        id: currentReviewAssignment.id,
+        assignedSections: [...currentReviewAssignment.assignedSections] as string[],
       })
       await DB.addAssignedSections(reviewAssignmentsWithSections)
     } catch (err) {

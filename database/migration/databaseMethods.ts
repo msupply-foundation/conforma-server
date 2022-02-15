@@ -1,4 +1,5 @@
 import DBConnect from '../../src/components/databaseConnect'
+import { AssignedSections } from './types'
 
 const databaseMethods = {
   getDatabaseVersion: async () => {
@@ -27,41 +28,43 @@ const databaseMethods = {
       throw err
     }
   },
-  getIncompleteReviewAssignments: async () => {
-    const data = await DBConnect.gqlQuery(`
-      query getIncompleteReviewAssignments {
-        reviewAssignments(
-          condition: { status: ASSIGNED }
-          filter: { assignedSections: { equalTo: [] } }
-        ) {
-          nodes {
-            id
-            assignedSections
-            reviewQuestionAssignments {
-              nodes {
-                templateElement {
-                  section {
-                    id
-                    code
-                  }
-                }
-              }
-            }
-          }
-        }
-      }`)
-    return data?.reviewAssignments?.nodes
-  },
-  addAssignedSections: async (sectionAssignments: any) => {
+  addAssignedSectionsColumn: async () => {
+    const text = `ALTER TABLE review_assignment
+        ADD COLUMN assigned_sections varchar[] DEFAULT array[]::varchar[];`
     try {
-      sectionAssignments.forEach(async (sa: any) => {
+      await DBConnect.query({ text })
+    } catch (err) {
+      throw err
+    }
+  },
+  getIncompleteReviewAssignments: async () => {
+    const text = `
+      SELECT ra.id, status, assigned_sections, ts.code FROM review_assignment ra
+      JOIN review_question_assignment rqa ON 
+      ra.id = rqa.review_assignment_id
+      JOIN template_element te ON rqa.template_element_id = te.id
+      JOIN template_section ts ON te.section_id = ts.id
+      WHERE status <> 'AVAILABLE'
+      AND assigned_sections = '{}'
+      ORDER BY ra.id
+    `
+    try {
+      const result = await DBConnect.query({ text })
+      return result.rows
+    } catch (err) {
+      throw err
+    }
+  },
+  addAssignedSections: async (sectionAssignments: AssignedSections[]) => {
+    try {
+      for (const sa of sectionAssignments) {
         const text = `
         UPDATE review_assignment
         SET assigned_sections = $1
         WHERE id = $2
         `
         await DBConnect.query({ text, values: [sa.assignedSections, sa.id] })
-      })
+      }
     } catch (err) {
       throw err
     }
