@@ -3,7 +3,7 @@ import DB from './databaseMethods'
 import { AssignedSections } from './types'
 import semverCompare from 'semver/functions/compare'
 
-let { version } = config
+const { version } = config
 const isManualMigration: Boolean = process.argv[2] === '--migrate'
 const simulatedVersion: string | undefined = process.argv[3]
 
@@ -23,6 +23,7 @@ const migrateData = async () => {
   // A specific database version can be provided when running manually
   if (isManualMigration && simulatedVersion) databaseVersion = simulatedVersion
 
+  // Comparison function using semver parser
   const databaseVersionLessThan = (version: string) =>
     semverCompare(databaseVersion, version) === -1
 
