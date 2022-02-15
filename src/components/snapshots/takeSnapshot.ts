@@ -13,6 +13,7 @@ import {
   DEFAULT_OPTIONS_NAME,
   SNAPSHOT_FILE_NAME,
   OPTIONS_FILE_NAME,
+  INFO_FILE_NAME,
   PG_DIFF_CONFIG_FILE_NAME,
   PG_SCHEMA_DIFF_FILE_NAME,
   ROOT_FOLDER,
@@ -24,6 +25,8 @@ import {
   PG_DFF_JS_LOCATION,
 } from './constants'
 import { getBaseFiles, getDirectoryFromPath } from './useSnapshot'
+import config from '../../config'
+import { DateTime } from 'luxon'
 const asyncRimRaf = promisify(rimraf)
 
 const takeSnapshot: SnapshotOperation = async ({
@@ -65,6 +68,12 @@ const takeSnapshot: SnapshotOperation = async ({
     // Copy prefs
     if (options?.includePrefs) execSync(`cp '${PREFERENCES_FILE}' '${newSnapshotFolder}'`)
 
+    // Save snapshot info (version, timestamp, etc)
+    await fs.writeFile(
+      path.join(newSnapshotFolder, `${INFO_FILE_NAME}.json`),
+      JSON.stringify(getSnapshotInfo(), null, ' ')
+    )
+
     await zipSnapshot(newSnapshotFolder, snapshotName)
 
     return { success: true, message: `created snapshot ${snapshotName}` }
@@ -105,6 +114,13 @@ const zipSnapshot = async (snapshotFolder: string, snapshotName: string) => {
       resolve('done')
     })
   )
+}
+
+const getSnapshotInfo = () => {
+  return {
+    timestamp: DateTime.now().toISOTime(),
+    version: config.version,
+  }
 }
 
 const getSchemaDiff = async (newSnapshotFolder: string) => {
