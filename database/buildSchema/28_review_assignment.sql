@@ -70,7 +70,7 @@ CREATE TRIGGER review_assignment_trigger
 
 -- TRIGGER (Listener) on review_assignment table: To set status accordingly to assignedSections
 CREATE TRIGGER review_assignment_trigger2
-    AFTER UPDATE OF trigger ON public.review_assignment
+    AFTER UPDATE OF assigned_sections ON public.review_assignment
     FOR EACH ROW
     WHEN (NEW.assigned_sections = '{}' AND NEW.status = 'ASSIGNED')
     EXECUTE FUNCTION public.unassign_review_without_sections ();
