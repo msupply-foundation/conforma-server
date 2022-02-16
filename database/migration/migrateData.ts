@@ -16,7 +16,7 @@ const migrateData = async () => {
     // proceed if this is a manual migration
     if (semverCompare(databaseVersion, version) >= 0 && !isManualMigration) return
   } catch (err) {
-    // Nothing version in database yet, so run all migration
+    // No version in database yet, so run all migration
     databaseVersion = '0.0.0'
   }
 

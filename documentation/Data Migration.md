@@ -23,7 +23,7 @@ When loading a [snapshot](Snapshots.md), the schema will be loaded based on the 
 When the server reloads, the migration script will run and may run into the following issues:
 
 1. Schema modifications are already done. This will cause schema-modifying commands in the migration script to fail. However, this is not a problem -- the script just reports this error and continues. (Other errors, such as data modification problems, *will* throw an error and stop the server.)
-2. There may be data in the snapshot that cannot be loaded as the schema has already changed. Currently, the snapshot loading script just skips past these, so in this case, that data won't be migrated. In future we should integrate a migration script into the snapshot loading process, but this will be tricky since it'll require modification of the raw snapshot.json file before insertion. Either that, or we'd need to run a *reverse* migration script to downgrade the database before loading the snapshot, then let the migration script run as normal. [Issue to discuss](https://github.com/openmsupply/application-manager-server/issues/658)
+2. There may be data in the snapshot that cannot be loaded as the schema has already changed. Currently, the snapshot loading script just skips past these, so in this case, that data won't be migrated. In future we should integrate a migration script into the snapshot loading process, but the exact procedure to implement this is still under discussion. [Issue to discuss](https://github.com/openmsupply/application-manager-server/issues/658)
 
 ## 3. Migrating data in development environment
 
