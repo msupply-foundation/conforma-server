@@ -33,7 +33,7 @@ CREATE TABLE public.review_assignment (
     application_id integer REFERENCES public.application (id) ON DELETE CASCADE NOT NULL,
     template_id integer GENERATED ALWAYS AS (public.review_assignment_template_id (application_id)) STORED REFERENCES public.template (id) ON DELETE CASCADE,
     allowed_sections varchar[] DEFAULT NULL,
-    assigned_sections varchar[] DEFAULT array[]::varchar[],
+    assigned_sections varchar[] DEFAULT ARRAY[] ::varchar[],
     TRIGGER public.trigger,
     time_updated timestamptz DEFAULT CURRENT_TIMESTAMP,
     level_number integer,
