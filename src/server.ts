@@ -34,6 +34,7 @@ import {
   routeInstallLanguage,
   routeRemoveLanguage,
 } from './components/localisation/routes'
+import { routeTriggers } from './components/other/routeTriggers'
 import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
 require('dotenv').config()
 
@@ -132,6 +133,7 @@ const startServer = async () => {
     server.get('/outcomes', routeOutcomes)
     server.get('/outcomes/table/:tableName', routeOutcomesTable)
     server.get('/outcomes/table/:tableName/item/:id', routeOutcomesDetail)
+    server.get('/check-triggers', routeTriggers)
 
     // File upload endpoint
     server.post('/upload', async function (request: any, reply) {
