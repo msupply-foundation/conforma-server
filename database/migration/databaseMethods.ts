@@ -1,5 +1,4 @@
 import DBConnect from '../../src/components/databaseConnect'
-import { AssignedSections } from './types'
 
 const databaseMethods = {
   getDatabaseVersion: async () => {
@@ -55,7 +54,7 @@ const databaseMethods = {
       throw err
     }
   },
-  addAssignedSections: async (sectionAssignments: AssignedSections[]) => {
+  addAssignedSections: async (sectionAssignments: { id: number; assignedSections: string[] }[]) => {
     try {
       for (const sa of sectionAssignments) {
         const text = `

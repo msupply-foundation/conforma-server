@@ -1,6 +1,6 @@
 import config from '../../src/config'
 import DB from './databaseMethods'
-import { AssignedSections } from './types'
+import { ReviewAssignmentsWithSections } from './types'
 import semverCompare from 'semver/functions/compare'
 
 const { version } = config
@@ -44,26 +44,20 @@ const migrateData = async () => {
     // Create missing "assigned sections" for existing review_assignments
     try {
       const reviewAssignments = await DB.getIncompleteReviewAssignments()
-      const reviewAssignmentsWithSections: AssignedSections[] = []
-      let currentReviewAssignment = { id: 0, assignedSections: new Set() }
+      const reviewAssignmentsWithSections: ReviewAssignmentsWithSections = {}
+
       reviewAssignments.forEach((ra: any) => {
-        if (ra.id === currentReviewAssignment.id)
-          currentReviewAssignment.assignedSections.add(ra.code)
-        else {
-          if (currentReviewAssignment.id !== 0)
-            reviewAssignmentsWithSections.push({
-              id: currentReviewAssignment.id,
-              assignedSections: [...currentReviewAssignment.assignedSections] as string[],
-            })
-          currentReviewAssignment = { id: ra.id, assignedSections: new Set([ra.code]) }
-        }
+        const idKey = String(ra.id)
+        if (!reviewAssignmentsWithSections[idKey]) reviewAssignmentsWithSections[idKey] = new Set()
+        reviewAssignmentsWithSections[idKey].add(ra.code)
       })
-      // Don't forget about the last one
-      reviewAssignmentsWithSections.push({
-        id: currentReviewAssignment.id,
-        assignedSections: [...currentReviewAssignment.assignedSections] as string[],
-      })
-      await DB.addAssignedSections(reviewAssignmentsWithSections)
+
+      await DB.addAssignedSections(
+        Object.entries(reviewAssignmentsWithSections).map(([idKey, assignedSections]) => ({
+          id: Number(idKey),
+          assignedSections: [...assignedSections],
+        }))
+      )
     } catch (err) {
       throw err
     }

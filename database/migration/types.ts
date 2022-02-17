@@ -1,4 +1,3 @@
-export interface AssignedSections {
-  id: number
-  assignedSections: string[] | Set<string>
+export interface ReviewAssignmentsWithSections {
+  [key: string]: Set<string>
 }
