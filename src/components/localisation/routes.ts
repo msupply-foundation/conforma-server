@@ -4,7 +4,6 @@ import { promisify } from 'util'
 import { getAppEntryPointDir } from '../../components/utilityFunctions'
 import { combineRequestParams } from '../../components/utilityFunctions'
 import config from '../../config'
-import { type } from 'os'
 
 const { localisationsFolder } = config
 
