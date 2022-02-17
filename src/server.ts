@@ -147,6 +147,7 @@ const startServer = async () => {
       console.error(err)
       process.exit(1)
     }
+    console.log(generateAsciiHeader(config.version))
     console.log(`Server listening at ${address}`)
   })
 
@@ -158,3 +159,19 @@ const startServer = async () => {
 }
 
 startServer()
+
+function generateAsciiHeader(version: string) {
+  // Should look like:
+  // -------------------------
+  // |                       |
+  // |    CONFORMA v0.2.1    |
+  // |                       |
+  // -------------------------
+  const name = `CONFORMA v${version}`
+  const pad = name.length % 2 === 0 ? 0 : 1
+  const outerLine = '-'.repeat(28 + pad)
+  const innerLine = '|' + ' '.repeat(26 + pad) + '|'
+  const nameGap = ' '.repeat((27 + pad) / 2 - (name.length + pad) / 2)
+  const nameLine = `|${nameGap}${name}${nameGap}|`
+  return `\n${outerLine}\n${innerLine}\n${nameLine}\n${innerLine}\n${outerLine}\n`
+}
