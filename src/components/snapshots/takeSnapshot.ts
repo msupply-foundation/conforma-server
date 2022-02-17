@@ -21,12 +21,15 @@ import {
   SNAPSHOT_OPTIONS_FOLDER,
   FILES_FOLDER,
   LOCALISATION_FOLDER,
+  SCHEMA_FILE_NAME,
   PREFERENCES_FILE,
   PG_DFF_JS_LOCATION,
+  DATABASE_FOLDER,
 } from './constants'
 import { getBaseFiles, getDirectoryFromPath } from './useSnapshot'
 import config from '../../config'
 import { DateTime } from 'luxon'
+import { SchemaColumnsOrderBy } from '../../generated/graphql'
 const asyncRimRaf = promisify(rimraf)
 
 const takeSnapshot: SnapshotOperation = async ({
@@ -67,6 +70,15 @@ const takeSnapshot: SnapshotOperation = async ({
 
     // Copy prefs
     if (options?.includePrefs) execSync(`cp '${PREFERENCES_FILE}' '${newSnapshotFolder}'`)
+
+    // Copy schema build scripts
+    if (options?.shouldReInitialise)
+      execSync(
+        `cat ${DATABASE_FOLDER}/buildSchema/*.sql >> ${newSnapshotFolder}/${SCHEMA_FILE_NAME}.sql`
+      )
+    // execSync(
+    //   `cp -r '${DATABASE_FOLDER}/buildSchema' '${newSnapshotFolder}/${SCHEMA_FOLDER_NAME}'`
+    // )
 
     // Save snapshot info (version, timestamp, etc)
     await fs.writeFile(
