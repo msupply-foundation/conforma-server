@@ -1,5 +1,6 @@
 import prefs from '../preferences.json'
 require('dotenv').config()
+import { version } from '../package.json'
 const isProductionBuild = process.env.NODE_ENV === 'production'
 const serverPrefs: { [key: string]: any } = prefs.server
 
@@ -14,6 +15,7 @@ const config: { [key: string]: any } = {
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 20000,
   },
+  version,
   // In production postgraphile is started with -q and -i /postgraphile/...
   graphQLendpoint: isProductionBuild
     ? 'http://localhost:5000/postgraphile/graphql'
