@@ -1,6 +1,6 @@
 {
   "name": "application-manager-server",
-  "version": "0.1.0",
+  "version": "0.1.1-0",
   "main": "server.js",
   "license": "MIT",
   "repository": {
@@ -30,6 +30,7 @@
     "@types/pluralize": "^0.0.29",
     "@types/readline-sync": "^1.4.4",
     "@types/rimraf": "^3.0.0",
+    "@types/semver": "^7.3.9",
     "@types/sharp": "^0.27.1",
     "jest": "^26.4.0",
     "markdown-toc": "^1.2.0",
@@ -61,7 +62,8 @@
     "snapshot": "ts-node ./database/snapshotCLI.ts",
     "dockerise": "cd docker && ./dockerise.sh",
     "docker_run": "cd docker && ./run.sh",
-    "release": "./utils/release.sh"
+    "release": "./utils/release.sh",
+    "migrate": "ts-node ./database/migration/migrateData.ts --migrate"
   },
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^6.0.0",
@@ -91,6 +93,7 @@
     "pluralize": "^8.0.0",
     "postgraphile": "^4.8.0",
     "postgraphile-plugin-connection-filter": "^2.0.0",
+    "semver": "^7.3.5",
     "sharp": "^0.29.3"
   }
 }
