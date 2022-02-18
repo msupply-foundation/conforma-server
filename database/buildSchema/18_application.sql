@@ -53,4 +53,5 @@ CREATE TRIGGER outcome_trigger
     AFTER UPDATE OF outcome ON public.application
     FOR EACH ROW
     WHEN (OLD.outcome = 'PENDING' AND NEW.outcome <> 'PENDING')
-    EXECUTE FUNCTION public.outcome_changed ()
+    EXECUTE FUNCTION public.outcome_changed ();
+

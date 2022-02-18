@@ -55,4 +55,5 @@ CREATE TRIGGER application_status_history_trigger
   AFTER INSERT OR UPDATE OF is_current ON public.application_status_history
   FOR EACH ROW
   WHEN (NEW.is_current = TRUE)
-  EXECUTE FUNCTION public.status_is_current_update ()
+  EXECUTE FUNCTION public.status_is_current_update ();
+

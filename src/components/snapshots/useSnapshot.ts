@@ -19,6 +19,7 @@ import {
   SNAPSHOT_OPTIONS_FOLDER,
   LOCALISATION_FOLDER,
   PREFERENCES_FILE,
+  SCHEMA_FILE_NAME,
 } from './constants'
 
 const useSnapshot: SnapshotOperation = async ({
@@ -137,8 +138,14 @@ const initialiseDatabase = async (
 ) => {
   const databaseName = 'tmf_app_manager'
 
+  // Check if the snapshot has its own schema script
+  const initScript = fsSync.existsSync(path.join(snapshotFolder, `${SCHEMA_FILE_NAME}.sql`))
+    ? `${path.join(snapshotFolder, SCHEMA_FILE_NAME)}.sql`
+    : ''
+
   console.log('initialising database ... ')
-  execSync(`./database/initialise_database.sh ${databaseName}`, { cwd: ROOT_FOLDER })
+
+  execSync(`./database/initialise_database.sh ${databaseName} ${initScript}`, { cwd: ROOT_FOLDER })
   console.log('initialising database ... done')
 
   const diffFile = path.join(snapshotFolder, `${PG_SCHEMA_DIFF_FILE_NAME}.sql`)
