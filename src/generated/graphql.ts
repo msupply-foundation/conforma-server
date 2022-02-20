@@ -21058,7 +21058,7 @@ export type ReviewAssignment = Node & {
   applicationId: Scalars['Int'];
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
-  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections: Array<Maybe<Scalars['String']>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -45094,7 +45094,7 @@ export type ReviewAssignmentResolvers<ContextType = any, ParentType extends Reso
   applicationId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   allowedSections?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
-  assignedSections?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  assignedSections?: Resolver<Array<Maybe<ResolversTypes['String']>>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
   timeUpdated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   levelNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;

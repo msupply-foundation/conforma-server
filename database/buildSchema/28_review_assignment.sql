@@ -33,7 +33,7 @@ CREATE TABLE public.review_assignment (
     application_id integer REFERENCES public.application (id) ON DELETE CASCADE NOT NULL,
     template_id integer GENERATED ALWAYS AS (public.review_assignment_template_id (application_id)) STORED REFERENCES public.template (id) ON DELETE CASCADE,
     allowed_sections varchar[] DEFAULT NULL,
-    assigned_sections varchar[] DEFAULT NULL,
+    assigned_sections varchar[] DEFAULT array[]::varchar[] NOT NULL,
     TRIGGER public.trigger,
     time_updated timestamptz DEFAULT CURRENT_TIMESTAMP,
     level_number integer,
@@ -53,7 +53,7 @@ CREATE OR REPLACE FUNCTION public.empty_assigned_sections ()
         UPDATE
             public.review_assignment
         SET
-            assigned_sections = NULL
+            assigned_sections = '{}'
         WHERE
             id = NEW.id;
         RETURN NULL;
