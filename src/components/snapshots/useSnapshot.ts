@@ -86,12 +86,12 @@ const useSnapshot: SnapshotOperation = async ({
 
     // Update serials
     console.log('running serial update ... ')
-    execSync('./database/update_serials.sh', { cwd: ROOT_FOLDER })
+    execSync('./database/update_serials.sh', { cwd: ROOT_FOLDER, stdio: 'inherit' })
     console.log('running serial update ... done')
 
     // Migrate database to latest version
     console.log('Migrating database (if required)...)')
-    execSync('yarn migrate')
+    execSync('yarn migrate', { stdio: 'inherit' })
 
     // Regenerate row level policies
     await updateRowPolicies()
@@ -149,7 +149,10 @@ const initialiseDatabase = async (
 
   console.log('initialising database ... ')
 
-  execSync(`./database/initialise_database.sh ${databaseName} ${initScript}`, { cwd: ROOT_FOLDER })
+  execSync(`./database/initialise_database.sh ${databaseName} ${initScript}`, {
+    cwd: ROOT_FOLDER,
+    stdio: 'inherit',
+  })
   console.log('initialising database ... done')
 
   const diffFile = path.join(snapshotFolder, `${PG_SCHEMA_DIFF_FILE_NAME}.sql`)
