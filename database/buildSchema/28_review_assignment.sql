@@ -70,7 +70,7 @@ CREATE TRIGGER review_assignment_trigger
 
 -- TRIGGER (Listener) on review_assignment table: Set assignedSections to Null when changing status to AVAILABLE
 CREATE TRIGGER review_assignment_trigger2
-    AFTER UPDATE OF trigger ON public.review_assignment
+    AFTER UPDATE OF status ON public.review_assignment
     FOR EACH ROW
     WHEN (NEW.status = 'AVAILABLE')
     EXECUTE FUNCTION public.empty_assigned_sections ();
