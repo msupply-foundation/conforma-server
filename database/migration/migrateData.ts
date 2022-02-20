@@ -29,13 +29,33 @@ const migrateData = async () => {
 
   // VERSION-SPECIFIC MIGRATION CODE BEGINS HERE
 
+  // v0.1.0
+  if (databaseVersionLessThan('0.1.0')) {
+    console.log('Migrating to 0.1.0...')
+    // Create "system_info" table
+    try {
+      await DB.rawQuery(`
+      CREATE TABLE public.system_info (
+        id serial PRIMARY KEY,
+        name varchar NOT NULL,
+        value jsonb DEFAULT '{}',
+        timestamp timestamptz DEFAULT CURRENT_TIMESTAMP
+      );
+    `)
+    } catch (err) {
+      console.log('Problem altering schema:', err.message, '\n')
+      // Continue anyway, it's probably because schema change is already done
+    }
+  }
+
   // v0.2.0
   if (databaseVersionLessThan('0.2.0')) {
     console.log('Migrating to v0.2.0...')
 
     // Add "assigned_sections" column to schema
     try {
-      await DB.addAssignedSectionsColumn()
+      await DB.rawQuery(`ALTER TABLE review_assignment
+        ADD COLUMN assigned_sections varchar[] DEFAULT array[]::varchar[];`)
     } catch (err) {
       console.log('Problem altering schema:', err.message, '\n')
       // Continue anyway, it's probably because schema change is already done
@@ -66,7 +86,7 @@ const migrateData = async () => {
   // Other version migrations continue here...
 
   // Finally, set the database version to the current version
-  if (!isManualMigration) DB.setDatabaseVersion(version)
+  if (databaseVersionLessThan(version)) await DB.setDatabaseVersion(version)
 }
 
 // For running migrationScript.ts manually using `yarn migrate`

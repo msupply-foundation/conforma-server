@@ -1,6 +1,15 @@
 import DBConnect from '../../src/components/databaseConnect'
 
 const databaseMethods = {
+  // Use this method when there's no variables to parse, save making loads of
+  // methods for minor schema alterations
+  rawQuery: async (query: string) => {
+    try {
+      await DBConnect.query({ text: query })
+    } catch (err) {
+      throw err
+    }
+  },
   getDatabaseVersion: async () => {
     const text = `SELECT name, value, timestamp
       FROM system_info
@@ -17,6 +26,7 @@ const databaseMethods = {
     }
   },
   setDatabaseVersion: async (version: string) => {
+    console.log('Setting...')
     const text = `
       INSERT INTO system_info (name, value)
       VALUES('version', $1)

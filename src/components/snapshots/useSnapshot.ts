@@ -89,6 +89,10 @@ const useSnapshot: SnapshotOperation = async ({
     execSync('./database/update_serials.sh', { cwd: ROOT_FOLDER })
     console.log('running serial update ... done')
 
+    // Migrate database to latest version
+    console.log('Migrating database (if required)...)')
+    execSync('yarn migrate')
+
     // Regenerate row level policies
     await updateRowPolicies()
 
