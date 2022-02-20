@@ -26,7 +26,6 @@ const databaseMethods = {
     }
   },
   setDatabaseVersion: async (version: string) => {
-    console.log('Setting...')
     const text = `
       INSERT INTO system_info (name, value)
       VALUES('version', $1)
