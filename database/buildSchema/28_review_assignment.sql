@@ -68,7 +68,7 @@ CREATE TRIGGER review_assignment_trigger
     WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
     EXECUTE FUNCTION public.add_event_to_trigger_queue ();
 
--- TRIGGER (Listener) on review_assignment table: Set assignedSections to Null when changing status to AVAILABLE
+-- TRIGGER (Listener) on review_assignment table: Set assignedSections to [] when changing status to AVAILABLE
 CREATE TRIGGER review_assignment_trigger2
     AFTER UPDATE OF status ON public.review_assignment
     FOR EACH ROW
