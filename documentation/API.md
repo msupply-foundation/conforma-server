@@ -203,6 +203,30 @@ GET: `/user-permissions?username=<username>&orgId=<orgId>`
 End point to get **another** user's granted permissions + all existing permissions on templates for a given organisation.
 Intended for use in template to view/edit antoher user's permissions -- client supplies `username` and `orgId`.
 
+#### Check Triggers
+
+GET: `/check-trigger?serial=<applicationSerial>`
+
+This endpoint is used by the front-end application loader to ensure that ALL triggers associated with an application (i.e. review assignments, reviews, verifications) are not runninng before the application data is fetched. This is so any mutations that cause Actions to run are all finished before any subsequent data is re-fetched, so the front-end shows all the changes.
+
+The front-end processes this data in the `useTriggers` hook.
+
+##### RESPONSE Body:
+
+```
+{
+    "status": "ready" | "processing" | "error",
+    "errors": // only present if status: "error"
+        [
+            {
+                "table": "application",
+                "id": 236,
+                "trigger": "ERROR"
+            }
+        ] 
+}
+```
+
 ##### usage
 
 GET: `/user-permissions?username=<username>` If no `orgId` is received the list should contain user-only permissions (the ones with organisation_id = NULL) for external users.

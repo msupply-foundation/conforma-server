@@ -1557,14 +1557,27 @@ export type ApplicationNote = Node & {
   userId: Scalars['Int'];
   orgId: Scalars['Int'];
   timestamp?: Maybe<Scalars['Datetime']>;
-  comment?: Maybe<Scalars['String']>;
-  files?: Maybe<Scalars['JSON']>;
+  comment: Scalars['String'];
   /** Reads a single `Application` that is related to this `ApplicationNote`. */
   application?: Maybe<Application>;
   /** Reads a single `User` that is related to this `ApplicationNote`. */
   user?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `ApplicationNote`. */
   org?: Maybe<Organisation>;
+  /** Reads and enables pagination through a set of `File`. */
+  files: FilesConnection;
+};
+
+
+export type ApplicationNoteFilesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<FilesOrderBy>>;
+  condition?: Maybe<FileCondition>;
+  filter?: Maybe<FileFilter>;
 };
 
 /** The `application` to be created by this mutation. */
@@ -1603,11 +1616,11 @@ export type ApplicationNoteApplicationIdFkeyApplicationNoteCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  comment?: Maybe<Scalars['String']>;
-  files?: Maybe<Scalars['JSON']>;
+  comment: Scalars['String'];
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
+  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `ApplicationNoteInput` mutation. */
@@ -1681,8 +1694,6 @@ export type ApplicationNoteCondition = {
   timestamp?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `comment` field. */
   comment?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `files` field. */
-  files?: Maybe<Scalars['JSON']>;
 };
 
 /** A filter to be used against `ApplicationNote` object types. All fields are combined with a logical ‘and.’ */
@@ -1699,8 +1710,10 @@ export type ApplicationNoteFilter = {
   timestamp?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `comment` field. */
   comment?: Maybe<StringFilter>;
-  /** Filter by the object’s `files` field. */
-  files?: Maybe<JsonFilter>;
+  /** Filter by the object’s `files` relation. */
+  files?: Maybe<ApplicationNoteToManyFileFilter>;
+  /** Some related `files` exist. */
+  filesExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
   /** Filter by the object’s `user` relation. */
@@ -1722,11 +1735,11 @@ export type ApplicationNoteInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  comment?: Maybe<Scalars['String']>;
-  files?: Maybe<Scalars['JSON']>;
+  comment: Scalars['String'];
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
+  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -1786,17 +1799,32 @@ export type ApplicationNoteOnApplicationNoteForApplicationNoteUserIdFkeyUsingApp
   id: Scalars['Int'];
 };
 
+/** The globally unique `ID` look up for the row to update. */
+export type ApplicationNoteOnFileForFileApplicationNoteIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `file` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `file` being updated. */
+  patch: FilePatch;
+};
+
+/** The fields on `applicationNote` to look up the row to update. */
+export type ApplicationNoteOnFileForFileApplicationNoteIdFkeyUsingApplicationNotePkeyUpdate = {
+  /** An object where the defined keys will be set on the `applicationNote` being updated. */
+  patch: UpdateApplicationNoteOnFileForFileApplicationNoteIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
 /** The `applicationNote` to be created by this mutation. */
 export type ApplicationNoteOrgIdFkeyApplicationNoteCreateInput = {
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  comment?: Maybe<Scalars['String']>;
-  files?: Maybe<Scalars['JSON']>;
+  comment: Scalars['String'];
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
+  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `organisation` in the `ApplicationNoteInput` mutation. */
@@ -1875,10 +1903,10 @@ export type ApplicationNotePatch = {
   orgId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   comment?: Maybe<Scalars['String']>;
-  files?: Maybe<Scalars['JSON']>;
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
+  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `ApplicationNote` values. */
@@ -1918,11 +1946,19 @@ export enum ApplicationNotesOrderBy {
   TimestampDesc = 'TIMESTAMP_DESC',
   CommentAsc = 'COMMENT_ASC',
   CommentDesc = 'COMMENT_DESC',
-  FilesAsc = 'FILES_ASC',
-  FilesDesc = 'FILES_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
+
+/** A filter to be used against many `File` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationNoteToManyFileFilter = {
+  /** Every related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<FileFilter>;
+  /** Some related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<FileFilter>;
+  /** No related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<FileFilter>;
+};
 
 /** The `applicationNote` to be created by this mutation. */
 export type ApplicationNoteUserIdFkeyApplicationNoteCreateInput = {
@@ -1930,11 +1966,11 @@ export type ApplicationNoteUserIdFkeyApplicationNoteCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  comment?: Maybe<Scalars['String']>;
-  files?: Maybe<Scalars['JSON']>;
+  comment: Scalars['String'];
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
+  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `user` in the `ApplicationNoteInput` mutation. */
@@ -5251,6 +5287,8 @@ export type CreateFilePayload = {
   applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
+  /** Reads a single `ApplicationNote` that is related to this `File`. */
+  applicationNote?: Maybe<ApplicationNote>;
   /** An edge for our `File`. May be used by Relay 1. */
   fileEdge?: Maybe<FilesEdge>;
 };
@@ -5884,6 +5922,39 @@ export type CreateReviewStatusHistoryPayload = {
 /** The output of our create `ReviewStatusHistory` mutation. */
 export type CreateReviewStatusHistoryPayloadReviewStatusHistoryEdgeArgs = {
   orderBy?: Maybe<Array<ReviewStatusHistoriesOrderBy>>;
+};
+
+/** All input for the create `SystemInfo` mutation. */
+export type CreateSystemInfoInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `SystemInfo` to be created by this mutation. */
+  systemInfo: SystemInfoInput;
+};
+
+/** The output of our create `SystemInfo` mutation. */
+export type CreateSystemInfoPayload = {
+  __typename?: 'CreateSystemInfoPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `SystemInfo` that was created by this mutation. */
+  systemInfo?: Maybe<SystemInfo>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `SystemInfo`. May be used by Relay 1. */
+  systemInfoEdge?: Maybe<SystemInfosEdge>;
+};
+
+
+/** The output of our create `SystemInfo` mutation. */
+export type CreateSystemInfoPayloadSystemInfoEdgeArgs = {
+  orderBy?: Maybe<Array<SystemInfosOrderBy>>;
 };
 
 /** All input for the create `TemplateAction` mutation. */
@@ -7054,6 +7125,8 @@ export type DeleteFilePayload = {
   applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
+  /** Reads a single `ApplicationNote` that is related to this `File`. */
+  applicationNote?: Maybe<ApplicationNote>;
   /** An edge for our `File`. May be used by Relay 1. */
   fileEdge?: Maybe<FilesEdge>;
 };
@@ -7946,6 +8019,50 @@ export type DeleteReviewStatusHistoryPayload = {
 /** The output of our delete `ReviewStatusHistory` mutation. */
 export type DeleteReviewStatusHistoryPayloadReviewStatusHistoryEdgeArgs = {
   orderBy?: Maybe<Array<ReviewStatusHistoriesOrderBy>>;
+};
+
+/** All input for the `deleteSystemInfoByNodeId` mutation. */
+export type DeleteSystemInfoByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `SystemInfo` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteSystemInfo` mutation. */
+export type DeleteSystemInfoInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `SystemInfo` mutation. */
+export type DeleteSystemInfoPayload = {
+  __typename?: 'DeleteSystemInfoPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `SystemInfo` that was deleted by this mutation. */
+  systemInfo?: Maybe<SystemInfo>;
+  deletedSystemInfoNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `SystemInfo`. May be used by Relay 1. */
+  systemInfoEdge?: Maybe<SystemInfosEdge>;
+};
+
+
+/** The output of our delete `SystemInfo` mutation. */
+export type DeleteSystemInfoPayloadSystemInfoEdgeArgs = {
+  orderBy?: Maybe<Array<SystemInfosOrderBy>>;
 };
 
 /** All input for the `deleteTemplateActionByNodeId` mutation. */
@@ -8898,12 +9015,13 @@ export type File = Node & {
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
+  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc: Scalars['Boolean'];
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
-  timestamp?: Maybe<Scalars['Datetime']>;
+  timestamp: Scalars['Datetime'];
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
   /** Reads a single `Template` that is related to this `File`. */
@@ -8912,6 +9030,89 @@ export type File = Node & {
   applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
+  /** Reads a single `ApplicationNote` that is related to this `File`. */
+  applicationNote?: Maybe<ApplicationNote>;
+};
+
+/** The `applicationNote` to be created by this mutation. */
+export type FileApplicationNoteIdFkeyApplicationNoteCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  comment: Scalars['String'];
+  applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
+  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
+};
+
+/** The `file` to be created by this mutation. */
+export type FileApplicationNoteIdFkeyFileCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  uniqueId: Scalars['String'];
+  originalFilename: Scalars['String'];
+  userId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  description?: Maybe<Scalars['String']>;
+  isOutputDoc?: Maybe<Scalars['Boolean']>;
+  filePath: Scalars['String'];
+  thumbnailPath?: Maybe<Scalars['String']>;
+  mimetype?: Maybe<Scalars['String']>;
+  submitted?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  userToUserId?: Maybe<FileUserIdFkeyInput>;
+  templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
+  applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
+  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `applicationNote` in the `FileInput` mutation. */
+export type FileApplicationNoteIdFkeyInput = {
+  /** The primary key(s) for `applicationNote` for the far side of the relationship. */
+  connectById?: Maybe<ApplicationNoteApplicationNotePkeyConnect>;
+  /** The primary key(s) for `applicationNote` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ApplicationNoteNodeIdConnect>;
+  /** The primary key(s) for `applicationNote` for the far side of the relationship. */
+  deleteById?: Maybe<ApplicationNoteApplicationNotePkeyDelete>;
+  /** The primary key(s) for `applicationNote` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ApplicationNoteNodeIdDelete>;
+  /** The primary key(s) and patch data for `applicationNote` for the far side of the relationship. */
+  updateById?: Maybe<ApplicationNoteOnFileForFileApplicationNoteIdFkeyUsingApplicationNotePkeyUpdate>;
+  /** The primary key(s) and patch data for `applicationNote` for the far side of the relationship. */
+  updateByNodeId?: Maybe<FileOnFileForFileApplicationNoteIdFkeyNodeIdUpdate>;
+  /** A `ApplicationNoteInput` object that will be created and connected to this object. */
+  create?: Maybe<FileApplicationNoteIdFkeyApplicationNoteCreateInput>;
+};
+
+/** Input for the nested mutation of `file` in the `ApplicationNoteInput` mutation. */
+export type FileApplicationNoteIdFkeyInverseInput = {
+  /** Flag indicating whether all other `file` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
+  connectById?: Maybe<Array<FileFilePkeyConnect>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
+  connectByUniqueId?: Maybe<Array<FileFileUniqueIdKeyConnect>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<FileNodeIdConnect>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
+  deleteById?: Maybe<Array<FileFilePkeyDelete>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
+  deleteByUniqueId?: Maybe<Array<FileFileUniqueIdKeyDelete>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<FileNodeIdDelete>>;
+  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
+  updateById?: Maybe<Array<FileOnFileForFileApplicationNoteIdFkeyUsingFilePkeyUpdate>>;
+  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
+  updateByUniqueId?: Maybe<Array<FileOnFileForFileApplicationNoteIdFkeyUsingFileUniqueIdKeyUpdate>>;
+  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ApplicationNoteOnFileForFileApplicationNoteIdFkeyNodeIdUpdate>>;
+  /** A `FileInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<FileApplicationNoteIdFkeyFileCreateInput>>;
 };
 
 /** The `applicationResponse` to be created by this mutation. */
@@ -8941,6 +9142,7 @@ export type FileApplicationResponseIdFkeyFileCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -8951,6 +9153,7 @@ export type FileApplicationResponseIdFkeyFileCreateInput = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
+  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** Input for the nested mutation of `applicationResponse` in the `FileInput` mutation. */
@@ -9036,6 +9239,7 @@ export type FileApplicationSerialFkeyFileCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
+  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -9046,6 +9250,7 @@ export type FileApplicationSerialFkeyFileCreateInput = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
+  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** Input for the nested mutation of `application` in the `FileInput` mutation. */
@@ -9116,6 +9321,8 @@ export type FileCondition = {
   applicationResponseId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `description` field. */
   description?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `applicationNoteId` field. */
+  applicationNoteId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `isOutputDoc` field. */
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `filePath` field. */
@@ -9168,6 +9375,8 @@ export type FileFilter = {
   applicationResponseId?: Maybe<IntFilter>;
   /** Filter by the object’s `description` field. */
   description?: Maybe<StringFilter>;
+  /** Filter by the object’s `applicationNoteId` field. */
+  applicationNoteId?: Maybe<IntFilter>;
   /** Filter by the object’s `isOutputDoc` field. */
   isOutputDoc?: Maybe<BooleanFilter>;
   /** Filter by the object’s `filePath` field. */
@@ -9196,6 +9405,10 @@ export type FileFilter = {
   applicationResponse?: Maybe<ApplicationResponseFilter>;
   /** A related `applicationResponse` exists. */
   applicationResponseExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `applicationNote` relation. */
+  applicationNote?: Maybe<ApplicationNoteFilter>;
+  /** A related `applicationNote` exists. */
+  applicationNoteExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<FileFilter>>;
   /** Checks for any expressions in this list. */
@@ -9214,6 +9427,7 @@ export type FileInput = {
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
+  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -9224,6 +9438,7 @@ export type FileInput = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
+  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -9236,6 +9451,28 @@ export type FileNodeIdConnect = {
 export type FileNodeIdDelete = {
   /** The globally unique `ID` which identifies a single `file` to be deleted. */
   nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type FileOnFileForFileApplicationNoteIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `applicationNote` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `applicationNote` being updated. */
+  patch: ApplicationNotePatch;
+};
+
+/** The fields on `file` to look up the row to update. */
+export type FileOnFileForFileApplicationNoteIdFkeyUsingFilePkeyUpdate = {
+  /** An object where the defined keys will be set on the `file` being updated. */
+  patch: UpdateFileOnFileForFileApplicationNoteIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The fields on `file` to look up the row to update. */
+export type FileOnFileForFileApplicationNoteIdFkeyUsingFileUniqueIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `file` being updated. */
+  patch: UpdateFileOnFileForFileApplicationNoteIdFkeyPatch;
+  uniqueId: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -9336,6 +9573,7 @@ export type FilePatch = {
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
+  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -9346,6 +9584,7 @@ export type FilePatch = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
+  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** A connection to a list of `File` values. */
@@ -9389,6 +9628,8 @@ export enum FilesOrderBy {
   ApplicationResponseIdDesc = 'APPLICATION_RESPONSE_ID_DESC',
   DescriptionAsc = 'DESCRIPTION_ASC',
   DescriptionDesc = 'DESCRIPTION_DESC',
+  ApplicationNoteIdAsc = 'APPLICATION_NOTE_ID_ASC',
+  ApplicationNoteIdDesc = 'APPLICATION_NOTE_ID_DESC',
   IsOutputDocAsc = 'IS_OUTPUT_DOC_ASC',
   IsOutputDocDesc = 'IS_OUTPUT_DOC_DESC',
   FilePathAsc = 'FILE_PATH_ASC',
@@ -9414,6 +9655,7 @@ export type FileTemplateIdFkeyFileCreateInput = {
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
+  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -9424,6 +9666,7 @@ export type FileTemplateIdFkeyFileCreateInput = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
+  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** Input for the nested mutation of `template` in the `FileInput` mutation. */
@@ -9507,6 +9750,7 @@ export type FileUserIdFkeyFileCreateInput = {
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
+  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -9517,6 +9761,7 @@ export type FileUserIdFkeyFileCreateInput = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
+  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** Input for the nested mutation of `user` in the `FileInput` mutation. */
@@ -9998,6 +10243,8 @@ export type Mutation = {
   createReviewResponse?: Maybe<CreateReviewResponsePayload>;
   /** Creates a single `ReviewStatusHistory`. */
   createReviewStatusHistory?: Maybe<CreateReviewStatusHistoryPayload>;
+  /** Creates a single `SystemInfo`. */
+  createSystemInfo?: Maybe<CreateSystemInfoPayload>;
   /** Creates a single `Template`. */
   createTemplate?: Maybe<CreateTemplatePayload>;
   /** Creates a single `TemplateAction`. */
@@ -10162,6 +10409,10 @@ export type Mutation = {
   updateReviewStatusHistoryByNodeId?: Maybe<UpdateReviewStatusHistoryPayload>;
   /** Updates a single `ReviewStatusHistory` using a unique key and a patch. */
   updateReviewStatusHistory?: Maybe<UpdateReviewStatusHistoryPayload>;
+  /** Updates a single `SystemInfo` using its globally unique id and a patch. */
+  updateSystemInfoByNodeId?: Maybe<UpdateSystemInfoPayload>;
+  /** Updates a single `SystemInfo` using a unique key and a patch. */
+  updateSystemInfo?: Maybe<UpdateSystemInfoPayload>;
   /** Updates a single `Template` using its globally unique id and a patch. */
   updateTemplateByNodeId?: Maybe<UpdateTemplatePayload>;
   /** Updates a single `Template` using a unique key and a patch. */
@@ -10366,6 +10617,10 @@ export type Mutation = {
   deleteReviewStatusHistoryByNodeId?: Maybe<DeleteReviewStatusHistoryPayload>;
   /** Deletes a single `ReviewStatusHistory` using a unique key. */
   deleteReviewStatusHistory?: Maybe<DeleteReviewStatusHistoryPayload>;
+  /** Deletes a single `SystemInfo` using its globally unique id. */
+  deleteSystemInfoByNodeId?: Maybe<DeleteSystemInfoPayload>;
+  /** Deletes a single `SystemInfo` using a unique key. */
+  deleteSystemInfo?: Maybe<DeleteSystemInfoPayload>;
   /** Deletes a single `Template` using its globally unique id. */
   deleteTemplateByNodeId?: Maybe<DeleteTemplatePayload>;
   /** Deletes a single `Template` using a unique key. */
@@ -10611,6 +10866,12 @@ export type MutationCreateReviewResponseArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateReviewStatusHistoryArgs = {
   input: CreateReviewStatusHistoryInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateSystemInfoArgs = {
+  input: CreateSystemInfoInput;
 };
 
 
@@ -11103,6 +11364,18 @@ export type MutationUpdateReviewStatusHistoryByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateReviewStatusHistoryArgs = {
   input: UpdateReviewStatusHistoryInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateSystemInfoByNodeIdArgs = {
+  input: UpdateSystemInfoByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateSystemInfoArgs = {
+  input: UpdateSystemInfoInput;
 };
 
 
@@ -11715,6 +11988,18 @@ export type MutationDeleteReviewStatusHistoryByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteReviewStatusHistoryArgs = {
   input: DeleteReviewStatusHistoryInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteSystemInfoByNodeIdArgs = {
+  input: DeleteSystemInfoByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteSystemInfoArgs = {
+  input: DeleteSystemInfoInput;
 };
 
 
@@ -15043,6 +15328,8 @@ export type Query = Node & {
   reviewStatusHistories?: Maybe<ReviewStatusHistoriesConnection>;
   /** Reads and enables pagination through a set of `SchemaColumn`. */
   schemaColumns?: Maybe<SchemaColumnsConnection>;
+  /** Reads and enables pagination through a set of `SystemInfo`. */
+  systemInfos?: Maybe<SystemInfosConnection>;
   /** Reads and enables pagination through a set of `Template`. */
   templates?: Maybe<TemplatesConnection>;
   /** Reads and enables pagination through a set of `TemplateAction`. */
@@ -15114,6 +15401,7 @@ export type Query = Node & {
   reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
   reviewResponse?: Maybe<ReviewResponse>;
   reviewStatusHistory?: Maybe<ReviewStatusHistory>;
+  systemInfo?: Maybe<SystemInfo>;
   template?: Maybe<Template>;
   templateAction?: Maybe<TemplateAction>;
   templateCategory?: Maybe<TemplateCategory>;
@@ -15218,6 +15506,8 @@ export type Query = Node & {
   reviewResponseByNodeId?: Maybe<ReviewResponse>;
   /** Reads a single `ReviewStatusHistory` using its globally unique `ID`. */
   reviewStatusHistoryByNodeId?: Maybe<ReviewStatusHistory>;
+  /** Reads a single `SystemInfo` using its globally unique `ID`. */
+  systemInfoByNodeId?: Maybe<SystemInfo>;
   /** Reads a single `Template` using its globally unique `ID`. */
   templateByNodeId?: Maybe<Template>;
   /** Reads a single `TemplateAction` using its globally unique `ID`. */
@@ -15726,6 +16016,19 @@ export type QuerySchemaColumnsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QuerySystemInfosArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<SystemInfosOrderBy>>;
+  condition?: Maybe<SystemInfoCondition>;
+  filter?: Maybe<SystemInfoFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryTemplatesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -16165,6 +16468,12 @@ export type QueryReviewResponseArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryReviewStatusHistoryArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySystemInfoArgs = {
   id: Scalars['Int'];
 };
 
@@ -16688,6 +16997,12 @@ export type QueryReviewStatusHistoryByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QuerySystemInfoByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryTemplateByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
@@ -16968,6 +17283,7 @@ export type ReviewAssignment = Node & {
   applicationId: Scalars['Int'];
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections: Array<Maybe<Scalars['String']>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17121,6 +17437,7 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   status: ReviewAssignmentStatus;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17198,6 +17515,7 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17606,6 +17924,7 @@ export type ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentCr
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17691,6 +18010,8 @@ export type ReviewAssignmentCondition = {
   templateId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `allowedSections` field. */
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `assignedSections` field. */
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
   /** Checks for equality with the object’s `timeUpdated` field. */
@@ -17735,6 +18056,8 @@ export type ReviewAssignmentFilter = {
   templateId?: Maybe<IntFilter>;
   /** Filter by the object’s `allowedSections` field. */
   allowedSections?: Maybe<StringListFilter>;
+  /** Filter by the object’s `assignedSections` field. */
+  assignedSections?: Maybe<StringListFilter>;
   /** Filter by the object’s `trigger` field. */
   trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `timeUpdated` field. */
@@ -17808,6 +18131,7 @@ export type ReviewAssignmentInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17880,6 +18204,7 @@ export type ReviewAssignmentLevelIdFkeyReviewAssignmentCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -18153,6 +18478,7 @@ export type ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -18187,6 +18513,7 @@ export type ReviewAssignmentPatch = {
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -18274,6 +18601,7 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -18365,6 +18693,8 @@ export enum ReviewAssignmentsOrderBy {
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
   AllowedSectionsAsc = 'ALLOWED_SECTIONS_ASC',
   AllowedSectionsDesc = 'ALLOWED_SECTIONS_DESC',
+  AssignedSectionsAsc = 'ASSIGNED_SECTIONS_ASC',
+  AssignedSectionsDesc = 'ASSIGNED_SECTIONS_DESC',
   TriggerAsc = 'TRIGGER_ASC',
   TriggerDesc = 'TRIGGER_DESC',
   TimeUpdatedAsc = 'TIME_UPDATED_ASC',
@@ -18437,6 +18767,7 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -18553,6 +18884,7 @@ export type ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput = {
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -19369,6 +19701,7 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -20586,6 +20919,7 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -21411,6 +21745,102 @@ export type StringListFilter = {
   /** Any array item is greater than or equal to the specified value. */
   anyGreaterThanOrEqualTo?: Maybe<Scalars['String']>;
 };
+
+export type SystemInfo = Node & {
+  __typename?: 'SystemInfo';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  value?: Maybe<Scalars['JSON']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+};
+
+/**
+ * A condition to be used against `SystemInfo` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type SystemInfoCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `value` field. */
+  value?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `timestamp` field. */
+  timestamp?: Maybe<Scalars['Datetime']>;
+};
+
+/** A filter to be used against `SystemInfo` object types. All fields are combined with a logical ‘and.’ */
+export type SystemInfoFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Filter by the object’s `value` field. */
+  value?: Maybe<JsonFilter>;
+  /** Filter by the object’s `timestamp` field. */
+  timestamp?: Maybe<DatetimeFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<SystemInfoFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<SystemInfoFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<SystemInfoFilter>;
+};
+
+/** An input for mutations affecting `SystemInfo` */
+export type SystemInfoInput = {
+  id?: Maybe<Scalars['Int']>;
+  name: Scalars['String'];
+  value?: Maybe<Scalars['JSON']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+};
+
+/** Represents an update to a `SystemInfo`. Fields that are set will be updated. */
+export type SystemInfoPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['JSON']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+};
+
+/** A connection to a list of `SystemInfo` values. */
+export type SystemInfosConnection = {
+  __typename?: 'SystemInfosConnection';
+  /** A list of `SystemInfo` objects. */
+  nodes: Array<Maybe<SystemInfo>>;
+  /** A list of edges which contains the `SystemInfo` and cursor to aid in pagination. */
+  edges: Array<SystemInfosEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `SystemInfo` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `SystemInfo` edge in the connection. */
+export type SystemInfosEdge = {
+  __typename?: 'SystemInfosEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `SystemInfo` at the end of the edge. */
+  node?: Maybe<SystemInfo>;
+};
+
+/** Methods to use when ordering `SystemInfo`. */
+export enum SystemInfosOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  ValueAsc = 'VALUE_ASC',
+  ValueDesc = 'VALUE_DESC',
+  TimestampAsc = 'TIMESTAMP_ASC',
+  TimestampDesc = 'TIMESTAMP_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
 
 export type Template = Node & {
   __typename?: 'Template';
@@ -25771,10 +26201,10 @@ export type UpdateApplicationNoteOnApplicationNoteForApplicationNoteApplicationI
   orgId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   comment?: Maybe<Scalars['String']>;
-  files?: Maybe<Scalars['JSON']>;
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
+  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `applicationNote` being updated. */
@@ -25784,10 +26214,10 @@ export type UpdateApplicationNoteOnApplicationNoteForApplicationNoteOrgIdFkeyPat
   userId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   comment?: Maybe<Scalars['String']>;
-  files?: Maybe<Scalars['JSON']>;
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
+  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `applicationNote` being updated. */
@@ -25797,10 +26227,24 @@ export type UpdateApplicationNoteOnApplicationNoteForApplicationNoteUserIdFkeyPa
   orgId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   comment?: Maybe<Scalars['String']>;
-  files?: Maybe<Scalars['JSON']>;
   applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
   userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
+  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `applicationNote` being updated. */
+export type UpdateApplicationNoteOnFileForFileApplicationNoteIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  comment?: Maybe<Scalars['String']>;
+  applicationToApplicationId?: Maybe<ApplicationNoteApplicationIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationNoteUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationNoteOrgIdFkeyInput>;
+  filesUsingId?: Maybe<FileApplicationNoteIdFkeyInverseInput>;
 };
 
 /** The output of our update `ApplicationNote` mutation. */
@@ -26715,13 +27159,14 @@ export type UpdateFileInput = {
 };
 
 /** An object where the defined keys will be set on the `file` being updated. */
-export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
+export type UpdateFileOnFileForFileApplicationNoteIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   uniqueId?: Maybe<Scalars['String']>;
   originalFilename?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
+  applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
@@ -26733,6 +27178,30 @@ export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
+  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `file` being updated. */
+export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  uniqueId?: Maybe<Scalars['String']>;
+  originalFilename?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  applicationNoteId?: Maybe<Scalars['Int']>;
+  isOutputDoc?: Maybe<Scalars['Boolean']>;
+  filePath?: Maybe<Scalars['String']>;
+  thumbnailPath?: Maybe<Scalars['String']>;
+  mimetype?: Maybe<Scalars['String']>;
+  submitted?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  userToUserId?: Maybe<FileUserIdFkeyInput>;
+  templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
+  applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
+  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** An object where the defined keys will be set on the `file` being updated. */
@@ -26744,6 +27213,7 @@ export type UpdateFileOnFileForFileApplicationSerialFkeyPatch = {
   templateId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
+  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -26754,6 +27224,7 @@ export type UpdateFileOnFileForFileApplicationSerialFkeyPatch = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
+  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** An object where the defined keys will be set on the `file` being updated. */
@@ -26765,6 +27236,7 @@ export type UpdateFileOnFileForFileTemplateIdFkeyPatch = {
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
+  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -26775,6 +27247,7 @@ export type UpdateFileOnFileForFileTemplateIdFkeyPatch = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
+  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** An object where the defined keys will be set on the `file` being updated. */
@@ -26786,6 +27259,7 @@ export type UpdateFileOnFileForFileUserIdFkeyPatch = {
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
+  applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -26796,6 +27270,7 @@ export type UpdateFileOnFileForFileUserIdFkeyPatch = {
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
+  applicationNoteToApplicationNoteId?: Maybe<FileApplicationNoteIdFkeyInput>;
 };
 
 /** The output of our update `File` mutation. */
@@ -26818,6 +27293,8 @@ export type UpdateFilePayload = {
   applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
+  /** Reads a single `ApplicationNote` that is related to this `File`. */
+  applicationNote?: Maybe<ApplicationNote>;
   /** An edge for our `File`. May be used by Relay 1. */
   fileEdge?: Maybe<FilesEdge>;
 };
@@ -27803,6 +28280,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignm
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -27836,6 +28314,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   status?: Maybe<ReviewAssignmentStatus>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -27869,6 +28348,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -27903,6 +28383,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFk
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -27935,6 +28416,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisat
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -27968,6 +28450,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -28001,6 +28484,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -28034,6 +28518,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateI
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -28068,6 +28553,7 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -28102,6 +28588,7 @@ export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAss
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -28765,6 +29252,53 @@ export type UpdateReviewStatusHistoryPayload = {
 /** The output of our update `ReviewStatusHistory` mutation. */
 export type UpdateReviewStatusHistoryPayloadReviewStatusHistoryEdgeArgs = {
   orderBy?: Maybe<Array<ReviewStatusHistoriesOrderBy>>;
+};
+
+/** All input for the `updateSystemInfoByNodeId` mutation. */
+export type UpdateSystemInfoByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `SystemInfo` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `SystemInfo` being updated. */
+  patch: SystemInfoPatch;
+};
+
+/** All input for the `updateSystemInfo` mutation. */
+export type UpdateSystemInfoInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `SystemInfo` being updated. */
+  patch: SystemInfoPatch;
+  id: Scalars['Int'];
+};
+
+/** The output of our update `SystemInfo` mutation. */
+export type UpdateSystemInfoPayload = {
+  __typename?: 'UpdateSystemInfoPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `SystemInfo` that was updated by this mutation. */
+  systemInfo?: Maybe<SystemInfo>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `SystemInfo`. May be used by Relay 1. */
+  systemInfoEdge?: Maybe<SystemInfosEdge>;
+};
+
+
+/** The output of our update `SystemInfo` mutation. */
+export type UpdateSystemInfoPayloadSystemInfoEdgeArgs = {
+  orderBy?: Maybe<Array<SystemInfosOrderBy>>;
 };
 
 /** All input for the `updateTemplateActionByNodeId` mutation. */
@@ -32447,7 +32981,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ApplicationNote'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['ReviewResponse'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['OrganisationApplicationJoin'] | ResolversTypes['File'] | ResolversTypes['UserApplicationJoin'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['Verification'] | ResolversTypes['ActivityLog'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayColumnDefinition'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ApplicationNote'] | ResolversTypes['File'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['ReviewResponse'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['OrganisationApplicationJoin'] | ResolversTypes['UserApplicationJoin'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['Verification'] | ResolversTypes['ActivityLog'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayColumnDefinition'] | ResolversTypes['SystemInfo'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -32533,6 +33067,8 @@ export type ResolversTypes = {
   ApplicationStatus: ApplicationStatus;
   ApplicationToManyApplicationNoteFilter: ApplicationToManyApplicationNoteFilter;
   ApplicationNoteFilter: ApplicationNoteFilter;
+  ApplicationNoteToManyFileFilter: ApplicationNoteToManyFileFilter;
+  FileFilter: FileFilter;
   ApplicationToManyApplicationStageHistoryFilter: ApplicationToManyApplicationStageHistoryFilter;
   ApplicationStageHistoryFilter: ApplicationStageHistoryFilter;
   ApplicationStageHistoryToManyApplicationStatusHistoryFilter: ApplicationStageHistoryToManyApplicationStatusHistoryFilter;
@@ -32561,7 +33097,6 @@ export type ResolversTypes = {
   ReviewToManyNotificationFilter: ReviewToManyNotificationFilter;
   NotificationFilter: NotificationFilter;
   ApplicationToManyFileFilter: ApplicationToManyFileFilter;
-  FileFilter: FileFilter;
   ApplicationToManyNotificationFilter: ApplicationToManyNotificationFilter;
   ApplicationToManyVerificationFilter: ApplicationToManyVerificationFilter;
   VerificationFilter: VerificationFilter;
@@ -32660,6 +33195,11 @@ export type ResolversTypes = {
   ApplicationNoteCondition: ApplicationNoteCondition;
   ApplicationNotesConnection: ResolverTypeWrapper<ApplicationNotesConnection>;
   ApplicationNote: ResolverTypeWrapper<ApplicationNote>;
+  FilesOrderBy: FilesOrderBy;
+  FileCondition: FileCondition;
+  FilesConnection: ResolverTypeWrapper<FilesConnection>;
+  File: ResolverTypeWrapper<File>;
+  FilesEdge: ResolverTypeWrapper<FilesEdge>;
   ApplicationNotesEdge: ResolverTypeWrapper<ApplicationNotesEdge>;
   ReviewAssignmentsOrderBy: ReviewAssignmentsOrderBy;
   ReviewAssignmentCondition: ReviewAssignmentCondition;
@@ -32723,11 +33263,6 @@ export type ResolversTypes = {
   OrganisationApplicationJoin: ResolverTypeWrapper<OrganisationApplicationJoin>;
   OrganisationApplicationJoinsEdge: ResolverTypeWrapper<OrganisationApplicationJoinsEdge>;
   UserOrganisationsEdge: ResolverTypeWrapper<UserOrganisationsEdge>;
-  FilesOrderBy: FilesOrderBy;
-  FileCondition: FileCondition;
-  FilesConnection: ResolverTypeWrapper<FilesConnection>;
-  File: ResolverTypeWrapper<File>;
-  FilesEdge: ResolverTypeWrapper<FilesEdge>;
   UserApplicationJoinsOrderBy: UserApplicationJoinsOrderBy;
   UserApplicationJoinCondition: UserApplicationJoinCondition;
   UserApplicationJoinsConnection: ResolverTypeWrapper<UserApplicationJoinsConnection>;
@@ -32869,6 +33404,12 @@ export type ResolversTypes = {
   SchemaColumnsConnection: ResolverTypeWrapper<SchemaColumnsConnection>;
   SchemaColumn: ResolverTypeWrapper<SchemaColumn>;
   SchemaColumnsEdge: ResolverTypeWrapper<SchemaColumnsEdge>;
+  SystemInfosOrderBy: SystemInfosOrderBy;
+  SystemInfoCondition: SystemInfoCondition;
+  SystemInfoFilter: SystemInfoFilter;
+  SystemInfosConnection: ResolverTypeWrapper<SystemInfosConnection>;
+  SystemInfo: ResolverTypeWrapper<SystemInfo>;
+  SystemInfosEdge: ResolverTypeWrapper<SystemInfosEdge>;
   TemplateCategoriesOrderBy: TemplateCategoriesOrderBy;
   TemplateCategoryCondition: TemplateCategoryCondition;
   TemplateCategoriesConnection: ResolverTypeWrapper<TemplateCategoriesConnection>;
@@ -33353,9 +33894,21 @@ export type ResolversTypes = {
   FileApplicationResponseIdFkeyInverseInput: FileApplicationResponseIdFkeyInverseInput;
   FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate;
   updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
+  FileApplicationNoteIdFkeyInput: FileApplicationNoteIdFkeyInput;
+  ApplicationNoteOnFileForFileApplicationNoteIdFkeyUsingApplicationNotePkeyUpdate: ApplicationNoteOnFileForFileApplicationNoteIdFkeyUsingApplicationNotePkeyUpdate;
+  updateApplicationNoteOnFileForFileApplicationNoteIdFkeyPatch: UpdateApplicationNoteOnFileForFileApplicationNoteIdFkeyPatch;
+  FileApplicationNoteIdFkeyInverseInput: FileApplicationNoteIdFkeyInverseInput;
+  FileOnFileForFileApplicationNoteIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationNoteIdFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileApplicationNoteIdFkeyPatch: UpdateFileOnFileForFileApplicationNoteIdFkeyPatch;
+  FileOnFileForFileApplicationNoteIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationNoteIdFkeyUsingFileUniqueIdKeyUpdate;
+  ApplicationNoteOnFileForFileApplicationNoteIdFkeyNodeIdUpdate: ApplicationNoteOnFileForFileApplicationNoteIdFkeyNodeIdUpdate;
+  FilePatch: FilePatch;
+  FileApplicationNoteIdFkeyFileCreateInput: FileApplicationNoteIdFkeyFileCreateInput;
+  FileOnFileForFileApplicationNoteIdFkeyNodeIdUpdate: FileOnFileForFileApplicationNoteIdFkeyNodeIdUpdate;
+  ApplicationNotePatch: ApplicationNotePatch;
+  FileApplicationNoteIdFkeyApplicationNoteCreateInput: FileApplicationNoteIdFkeyApplicationNoteCreateInput;
   FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate;
   ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
-  FilePatch: FilePatch;
   FileApplicationResponseIdFkeyFileCreateInput: FileApplicationResponseIdFkeyFileCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
   ApplicationResponsePatch: ApplicationResponsePatch;
@@ -33666,7 +34219,6 @@ export type ResolversTypes = {
   ApplicationNoteOnApplicationNoteForApplicationNoteOrgIdFkeyNodeIdUpdate: ApplicationNoteOnApplicationNoteForApplicationNoteOrgIdFkeyNodeIdUpdate;
   ApplicationNoteOrgIdFkeyOrganisationCreateInput: ApplicationNoteOrgIdFkeyOrganisationCreateInput;
   OrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyNodeIdUpdate: OrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyNodeIdUpdate;
-  ApplicationNotePatch: ApplicationNotePatch;
   ApplicationNoteOrgIdFkeyApplicationNoteCreateInput: ApplicationNoteOrgIdFkeyApplicationNoteCreateInput;
   OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationNameKeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationNameKeyUpdate;
   OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate;
@@ -33923,6 +34475,9 @@ export type ResolversTypes = {
   CreateReviewStatusHistoryInput: CreateReviewStatusHistoryInput;
   ReviewStatusHistoryInput: ReviewStatusHistoryInput;
   CreateReviewStatusHistoryPayload: ResolverTypeWrapper<CreateReviewStatusHistoryPayload>;
+  CreateSystemInfoInput: CreateSystemInfoInput;
+  SystemInfoInput: SystemInfoInput;
+  CreateSystemInfoPayload: ResolverTypeWrapper<CreateSystemInfoPayload>;
   CreateTemplateInput: CreateTemplateInput;
   TemplateInput: TemplateInput;
   CreateTemplatePayload: ResolverTypeWrapper<CreateTemplatePayload>;
@@ -34069,6 +34624,10 @@ export type ResolversTypes = {
   UpdateReviewStatusHistoryByNodeIdInput: UpdateReviewStatusHistoryByNodeIdInput;
   UpdateReviewStatusHistoryPayload: ResolverTypeWrapper<UpdateReviewStatusHistoryPayload>;
   UpdateReviewStatusHistoryInput: UpdateReviewStatusHistoryInput;
+  UpdateSystemInfoByNodeIdInput: UpdateSystemInfoByNodeIdInput;
+  SystemInfoPatch: SystemInfoPatch;
+  UpdateSystemInfoPayload: ResolverTypeWrapper<UpdateSystemInfoPayload>;
+  UpdateSystemInfoInput: UpdateSystemInfoInput;
   UpdateTemplateByNodeIdInput: UpdateTemplateByNodeIdInput;
   UpdateTemplatePayload: ResolverTypeWrapper<UpdateTemplatePayload>;
   UpdateTemplateInput: UpdateTemplateInput;
@@ -34214,6 +34773,9 @@ export type ResolversTypes = {
   DeleteReviewStatusHistoryByNodeIdInput: DeleteReviewStatusHistoryByNodeIdInput;
   DeleteReviewStatusHistoryPayload: ResolverTypeWrapper<DeleteReviewStatusHistoryPayload>;
   DeleteReviewStatusHistoryInput: DeleteReviewStatusHistoryInput;
+  DeleteSystemInfoByNodeIdInput: DeleteSystemInfoByNodeIdInput;
+  DeleteSystemInfoPayload: ResolverTypeWrapper<DeleteSystemInfoPayload>;
+  DeleteSystemInfoInput: DeleteSystemInfoInput;
   DeleteTemplateByNodeIdInput: DeleteTemplateByNodeIdInput;
   DeleteTemplatePayload: ResolverTypeWrapper<DeleteTemplatePayload>;
   DeleteTemplateInput: DeleteTemplateInput;
@@ -34271,7 +34833,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ApplicationNote'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['OrganisationApplicationJoin'] | ResolversParentTypes['File'] | ResolversParentTypes['UserApplicationJoin'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['Verification'] | ResolversParentTypes['ActivityLog'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayColumnDefinition'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ApplicationNote'] | ResolversParentTypes['File'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['OrganisationApplicationJoin'] | ResolversParentTypes['UserApplicationJoin'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['Verification'] | ResolversParentTypes['ActivityLog'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayColumnDefinition'] | ResolversParentTypes['SystemInfo'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -34342,6 +34904,8 @@ export type ResolversParentTypes = {
   ApplicationStatusFilter: ApplicationStatusFilter;
   ApplicationToManyApplicationNoteFilter: ApplicationToManyApplicationNoteFilter;
   ApplicationNoteFilter: ApplicationNoteFilter;
+  ApplicationNoteToManyFileFilter: ApplicationNoteToManyFileFilter;
+  FileFilter: FileFilter;
   ApplicationToManyApplicationStageHistoryFilter: ApplicationToManyApplicationStageHistoryFilter;
   ApplicationStageHistoryFilter: ApplicationStageHistoryFilter;
   ApplicationStageHistoryToManyApplicationStatusHistoryFilter: ApplicationStageHistoryToManyApplicationStatusHistoryFilter;
@@ -34368,7 +34932,6 @@ export type ResolversParentTypes = {
   ReviewToManyNotificationFilter: ReviewToManyNotificationFilter;
   NotificationFilter: NotificationFilter;
   ApplicationToManyFileFilter: ApplicationToManyFileFilter;
-  FileFilter: FileFilter;
   ApplicationToManyNotificationFilter: ApplicationToManyNotificationFilter;
   ApplicationToManyVerificationFilter: ApplicationToManyVerificationFilter;
   VerificationFilter: VerificationFilter;
@@ -34455,6 +35018,10 @@ export type ResolversParentTypes = {
   ApplicationNoteCondition: ApplicationNoteCondition;
   ApplicationNotesConnection: ApplicationNotesConnection;
   ApplicationNote: ApplicationNote;
+  FileCondition: FileCondition;
+  FilesConnection: FilesConnection;
+  File: File;
+  FilesEdge: FilesEdge;
   ApplicationNotesEdge: ApplicationNotesEdge;
   ReviewAssignmentCondition: ReviewAssignmentCondition;
   ReviewAssignmentsConnection: ReviewAssignmentsConnection;
@@ -34506,10 +35073,6 @@ export type ResolversParentTypes = {
   OrganisationApplicationJoin: OrganisationApplicationJoin;
   OrganisationApplicationJoinsEdge: OrganisationApplicationJoinsEdge;
   UserOrganisationsEdge: UserOrganisationsEdge;
-  FileCondition: FileCondition;
-  FilesConnection: FilesConnection;
-  File: File;
-  FilesEdge: FilesEdge;
   UserApplicationJoinCondition: UserApplicationJoinCondition;
   UserApplicationJoinsConnection: UserApplicationJoinsConnection;
   UserApplicationJoin: UserApplicationJoin;
@@ -34626,6 +35189,11 @@ export type ResolversParentTypes = {
   SchemaColumnsConnection: SchemaColumnsConnection;
   SchemaColumn: SchemaColumn;
   SchemaColumnsEdge: SchemaColumnsEdge;
+  SystemInfoCondition: SystemInfoCondition;
+  SystemInfoFilter: SystemInfoFilter;
+  SystemInfosConnection: SystemInfosConnection;
+  SystemInfo: SystemInfo;
+  SystemInfosEdge: SystemInfosEdge;
   TemplateCategoryCondition: TemplateCategoryCondition;
   TemplateCategoriesConnection: TemplateCategoriesConnection;
   TemplateCategoriesEdge: TemplateCategoriesEdge;
@@ -35106,9 +35674,21 @@ export type ResolversParentTypes = {
   FileApplicationResponseIdFkeyInverseInput: FileApplicationResponseIdFkeyInverseInput;
   FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate;
   updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
+  FileApplicationNoteIdFkeyInput: FileApplicationNoteIdFkeyInput;
+  ApplicationNoteOnFileForFileApplicationNoteIdFkeyUsingApplicationNotePkeyUpdate: ApplicationNoteOnFileForFileApplicationNoteIdFkeyUsingApplicationNotePkeyUpdate;
+  updateApplicationNoteOnFileForFileApplicationNoteIdFkeyPatch: UpdateApplicationNoteOnFileForFileApplicationNoteIdFkeyPatch;
+  FileApplicationNoteIdFkeyInverseInput: FileApplicationNoteIdFkeyInverseInput;
+  FileOnFileForFileApplicationNoteIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationNoteIdFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileApplicationNoteIdFkeyPatch: UpdateFileOnFileForFileApplicationNoteIdFkeyPatch;
+  FileOnFileForFileApplicationNoteIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationNoteIdFkeyUsingFileUniqueIdKeyUpdate;
+  ApplicationNoteOnFileForFileApplicationNoteIdFkeyNodeIdUpdate: ApplicationNoteOnFileForFileApplicationNoteIdFkeyNodeIdUpdate;
+  FilePatch: FilePatch;
+  FileApplicationNoteIdFkeyFileCreateInput: FileApplicationNoteIdFkeyFileCreateInput;
+  FileOnFileForFileApplicationNoteIdFkeyNodeIdUpdate: FileOnFileForFileApplicationNoteIdFkeyNodeIdUpdate;
+  ApplicationNotePatch: ApplicationNotePatch;
+  FileApplicationNoteIdFkeyApplicationNoteCreateInput: FileApplicationNoteIdFkeyApplicationNoteCreateInput;
   FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate;
   ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
-  FilePatch: FilePatch;
   FileApplicationResponseIdFkeyFileCreateInput: FileApplicationResponseIdFkeyFileCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
   ApplicationResponsePatch: ApplicationResponsePatch;
@@ -35419,7 +35999,6 @@ export type ResolversParentTypes = {
   ApplicationNoteOnApplicationNoteForApplicationNoteOrgIdFkeyNodeIdUpdate: ApplicationNoteOnApplicationNoteForApplicationNoteOrgIdFkeyNodeIdUpdate;
   ApplicationNoteOrgIdFkeyOrganisationCreateInput: ApplicationNoteOrgIdFkeyOrganisationCreateInput;
   OrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyNodeIdUpdate: OrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyNodeIdUpdate;
-  ApplicationNotePatch: ApplicationNotePatch;
   ApplicationNoteOrgIdFkeyApplicationNoteCreateInput: ApplicationNoteOrgIdFkeyApplicationNoteCreateInput;
   OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationNameKeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationNameKeyUpdate;
   OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate;
@@ -35676,6 +36255,9 @@ export type ResolversParentTypes = {
   CreateReviewStatusHistoryInput: CreateReviewStatusHistoryInput;
   ReviewStatusHistoryInput: ReviewStatusHistoryInput;
   CreateReviewStatusHistoryPayload: CreateReviewStatusHistoryPayload;
+  CreateSystemInfoInput: CreateSystemInfoInput;
+  SystemInfoInput: SystemInfoInput;
+  CreateSystemInfoPayload: CreateSystemInfoPayload;
   CreateTemplateInput: CreateTemplateInput;
   TemplateInput: TemplateInput;
   CreateTemplatePayload: CreateTemplatePayload;
@@ -35822,6 +36404,10 @@ export type ResolversParentTypes = {
   UpdateReviewStatusHistoryByNodeIdInput: UpdateReviewStatusHistoryByNodeIdInput;
   UpdateReviewStatusHistoryPayload: UpdateReviewStatusHistoryPayload;
   UpdateReviewStatusHistoryInput: UpdateReviewStatusHistoryInput;
+  UpdateSystemInfoByNodeIdInput: UpdateSystemInfoByNodeIdInput;
+  SystemInfoPatch: SystemInfoPatch;
+  UpdateSystemInfoPayload: UpdateSystemInfoPayload;
+  UpdateSystemInfoInput: UpdateSystemInfoInput;
   UpdateTemplateByNodeIdInput: UpdateTemplateByNodeIdInput;
   UpdateTemplatePayload: UpdateTemplatePayload;
   UpdateTemplateInput: UpdateTemplateInput;
@@ -35967,6 +36553,9 @@ export type ResolversParentTypes = {
   DeleteReviewStatusHistoryByNodeIdInput: DeleteReviewStatusHistoryByNodeIdInput;
   DeleteReviewStatusHistoryPayload: DeleteReviewStatusHistoryPayload;
   DeleteReviewStatusHistoryInput: DeleteReviewStatusHistoryInput;
+  DeleteSystemInfoByNodeIdInput: DeleteSystemInfoByNodeIdInput;
+  DeleteSystemInfoPayload: DeleteSystemInfoPayload;
+  DeleteSystemInfoInput: DeleteSystemInfoInput;
   DeleteTemplateByNodeIdInput: DeleteTemplateByNodeIdInput;
   DeleteTemplatePayload: DeleteTemplatePayload;
   DeleteTemplateInput: DeleteTemplateInput;
@@ -36254,11 +36843,11 @@ export type ApplicationNoteResolvers<ContextType = any, ParentType extends Resol
   userId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   orgId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   timestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
-  comment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  files?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  comment?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   org?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
+  files?: Resolver<ResolversTypes['FilesConnection'], ParentType, ContextType, RequireFields<ApplicationNoteFilesArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -36659,6 +37248,7 @@ export type CreateFilePayloadResolvers<ContextType = any, ParentType extends Res
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
+  applicationNote?: Resolver<Maybe<ResolversTypes['ApplicationNote']>, ParentType, ContextType>;
   fileEdge?: Resolver<Maybe<ResolversTypes['FilesEdge']>, ParentType, ContextType, RequireFields<CreateFilePayloadFileEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -36828,6 +37418,14 @@ export type CreateReviewStatusHistoryPayloadResolvers<ContextType = any, ParentT
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   reviewStatusHistoryEdge?: Resolver<Maybe<ResolversTypes['ReviewStatusHistoriesEdge']>, ParentType, ContextType, RequireFields<CreateReviewStatusHistoryPayloadReviewStatusHistoryEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateSystemInfoPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateSystemInfoPayload'] = ResolversParentTypes['CreateSystemInfoPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  systemInfo?: Resolver<Maybe<ResolversTypes['SystemInfo']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  systemInfoEdge?: Resolver<Maybe<ResolversTypes['SystemInfosEdge']>, ParentType, ContextType, RequireFields<CreateSystemInfoPayloadSystemInfoEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -37093,6 +37691,7 @@ export type DeleteFilePayloadResolvers<ContextType = any, ParentType extends Res
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
+  applicationNote?: Resolver<Maybe<ResolversTypes['ApplicationNote']>, ParentType, ContextType>;
   fileEdge?: Resolver<Maybe<ResolversTypes['FilesEdge']>, ParentType, ContextType, RequireFields<DeleteFilePayloadFileEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -37279,6 +37878,15 @@ export type DeleteReviewStatusHistoryPayloadResolvers<ContextType = any, ParentT
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   reviewStatusHistoryEdge?: Resolver<Maybe<ResolversTypes['ReviewStatusHistoriesEdge']>, ParentType, ContextType, RequireFields<DeleteReviewStatusHistoryPayloadReviewStatusHistoryEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DeleteSystemInfoPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteSystemInfoPayload'] = ResolversParentTypes['DeleteSystemInfoPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  systemInfo?: Resolver<Maybe<ResolversTypes['SystemInfo']>, ParentType, ContextType>;
+  deletedSystemInfoNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  systemInfoEdge?: Resolver<Maybe<ResolversTypes['SystemInfosEdge']>, ParentType, ContextType, RequireFields<DeleteSystemInfoPayloadSystemInfoEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -37478,16 +38086,18 @@ export type FileResolvers<ContextType = any, ParentType extends ResolversParentT
   applicationSerial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   applicationResponseId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  applicationNoteId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   isOutputDoc?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   filePath?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   thumbnailPath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   mimetype?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   submitted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  timestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  timestamp?: Resolver<ResolversTypes['Datetime'], ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
+  applicationNote?: Resolver<Maybe<ResolversTypes['ApplicationNote']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -37587,6 +38197,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createReviewQuestionAssignment?: Resolver<Maybe<ResolversTypes['CreateReviewQuestionAssignmentPayload']>, ParentType, ContextType, RequireFields<MutationCreateReviewQuestionAssignmentArgs, 'input'>>;
   createReviewResponse?: Resolver<Maybe<ResolversTypes['CreateReviewResponsePayload']>, ParentType, ContextType, RequireFields<MutationCreateReviewResponseArgs, 'input'>>;
   createReviewStatusHistory?: Resolver<Maybe<ResolversTypes['CreateReviewStatusHistoryPayload']>, ParentType, ContextType, RequireFields<MutationCreateReviewStatusHistoryArgs, 'input'>>;
+  createSystemInfo?: Resolver<Maybe<ResolversTypes['CreateSystemInfoPayload']>, ParentType, ContextType, RequireFields<MutationCreateSystemInfoArgs, 'input'>>;
   createTemplate?: Resolver<Maybe<ResolversTypes['CreateTemplatePayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateArgs, 'input'>>;
   createTemplateAction?: Resolver<Maybe<ResolversTypes['CreateTemplateActionPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateActionArgs, 'input'>>;
   createTemplateCategory?: Resolver<Maybe<ResolversTypes['CreateTemplateCategoryPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateCategoryArgs, 'input'>>;
@@ -37669,6 +38280,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateReviewResponse?: Resolver<Maybe<ResolversTypes['UpdateReviewResponsePayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewResponseArgs, 'input'>>;
   updateReviewStatusHistoryByNodeId?: Resolver<Maybe<ResolversTypes['UpdateReviewStatusHistoryPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewStatusHistoryByNodeIdArgs, 'input'>>;
   updateReviewStatusHistory?: Resolver<Maybe<ResolversTypes['UpdateReviewStatusHistoryPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewStatusHistoryArgs, 'input'>>;
+  updateSystemInfoByNodeId?: Resolver<Maybe<ResolversTypes['UpdateSystemInfoPayload']>, ParentType, ContextType, RequireFields<MutationUpdateSystemInfoByNodeIdArgs, 'input'>>;
+  updateSystemInfo?: Resolver<Maybe<ResolversTypes['UpdateSystemInfoPayload']>, ParentType, ContextType, RequireFields<MutationUpdateSystemInfoArgs, 'input'>>;
   updateTemplateByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTemplatePayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateByNodeIdArgs, 'input'>>;
   updateTemplate?: Resolver<Maybe<ResolversTypes['UpdateTemplatePayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateArgs, 'input'>>;
   updateTemplateActionByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTemplateActionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateActionByNodeIdArgs, 'input'>>;
@@ -37771,6 +38384,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteReviewResponse?: Resolver<Maybe<ResolversTypes['DeleteReviewResponsePayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewResponseArgs, 'input'>>;
   deleteReviewStatusHistoryByNodeId?: Resolver<Maybe<ResolversTypes['DeleteReviewStatusHistoryPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewStatusHistoryByNodeIdArgs, 'input'>>;
   deleteReviewStatusHistory?: Resolver<Maybe<ResolversTypes['DeleteReviewStatusHistoryPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewStatusHistoryArgs, 'input'>>;
+  deleteSystemInfoByNodeId?: Resolver<Maybe<ResolversTypes['DeleteSystemInfoPayload']>, ParentType, ContextType, RequireFields<MutationDeleteSystemInfoByNodeIdArgs, 'input'>>;
+  deleteSystemInfo?: Resolver<Maybe<ResolversTypes['DeleteSystemInfoPayload']>, ParentType, ContextType, RequireFields<MutationDeleteSystemInfoArgs, 'input'>>;
   deleteTemplateByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTemplatePayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateByNodeIdArgs, 'input'>>;
   deleteTemplate?: Resolver<Maybe<ResolversTypes['DeleteTemplatePayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateArgs, 'input'>>;
   deleteTemplateActionByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTemplateActionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateActionByNodeIdArgs, 'input'>>;
@@ -37810,7 +38425,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ApplicationNote' | 'ReviewAssignment' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'ReviewQuestionAssignment' | 'ReviewResponse' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'OrganisationApplicationJoin' | 'File' | 'UserApplicationJoin' | 'TriggerSchedule' | 'Verification' | 'ActivityLog' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'Counter' | 'ElementTypePlugin' | 'LookupTable' | 'OutcomeDisplay' | 'OutcomeDisplayColumnDefinition', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ApplicationNote' | 'File' | 'ReviewAssignment' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'ReviewQuestionAssignment' | 'ReviewResponse' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'OrganisationApplicationJoin' | 'UserApplicationJoin' | 'TriggerSchedule' | 'Verification' | 'ActivityLog' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'Counter' | 'ElementTypePlugin' | 'LookupTable' | 'OutcomeDisplay' | 'OutcomeDisplayColumnDefinition' | 'SystemInfo', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -38159,6 +38774,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   reviewResponses?: Resolver<Maybe<ResolversTypes['ReviewResponsesConnection']>, ParentType, ContextType, RequireFields<QueryReviewResponsesArgs, 'orderBy'>>;
   reviewStatusHistories?: Resolver<Maybe<ResolversTypes['ReviewStatusHistoriesConnection']>, ParentType, ContextType, RequireFields<QueryReviewStatusHistoriesArgs, 'orderBy'>>;
   schemaColumns?: Resolver<Maybe<ResolversTypes['SchemaColumnsConnection']>, ParentType, ContextType, RequireFields<QuerySchemaColumnsArgs, 'orderBy'>>;
+  systemInfos?: Resolver<Maybe<ResolversTypes['SystemInfosConnection']>, ParentType, ContextType, RequireFields<QuerySystemInfosArgs, 'orderBy'>>;
   templates?: Resolver<Maybe<ResolversTypes['TemplatesConnection']>, ParentType, ContextType, RequireFields<QueryTemplatesArgs, 'orderBy'>>;
   templateActions?: Resolver<Maybe<ResolversTypes['TemplateActionsConnection']>, ParentType, ContextType, RequireFields<QueryTemplateActionsArgs, 'orderBy'>>;
   templateCategories?: Resolver<Maybe<ResolversTypes['TemplateCategoriesConnection']>, ParentType, ContextType, RequireFields<QueryTemplateCategoriesArgs, 'orderBy'>>;
@@ -38214,6 +38830,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   reviewQuestionAssignment?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignment']>, ParentType, ContextType, RequireFields<QueryReviewQuestionAssignmentArgs, 'id'>>;
   reviewResponse?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType, RequireFields<QueryReviewResponseArgs, 'id'>>;
   reviewStatusHistory?: Resolver<Maybe<ResolversTypes['ReviewStatusHistory']>, ParentType, ContextType, RequireFields<QueryReviewStatusHistoryArgs, 'id'>>;
+  systemInfo?: Resolver<Maybe<ResolversTypes['SystemInfo']>, ParentType, ContextType, RequireFields<QuerySystemInfoArgs, 'id'>>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType, RequireFields<QueryTemplateArgs, 'id'>>;
   templateAction?: Resolver<Maybe<ResolversTypes['TemplateAction']>, ParentType, ContextType, RequireFields<QueryTemplateActionArgs, 'id'>>;
   templateCategory?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType, RequireFields<QueryTemplateCategoryArgs, 'id'>>;
@@ -38289,6 +38906,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   reviewQuestionAssignmentByNodeId?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignment']>, ParentType, ContextType, RequireFields<QueryReviewQuestionAssignmentByNodeIdArgs, 'nodeId'>>;
   reviewResponseByNodeId?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType, RequireFields<QueryReviewResponseByNodeIdArgs, 'nodeId'>>;
   reviewStatusHistoryByNodeId?: Resolver<Maybe<ResolversTypes['ReviewStatusHistory']>, ParentType, ContextType, RequireFields<QueryReviewStatusHistoryByNodeIdArgs, 'nodeId'>>;
+  systemInfoByNodeId?: Resolver<Maybe<ResolversTypes['SystemInfo']>, ParentType, ContextType, RequireFields<QuerySystemInfoByNodeIdArgs, 'nodeId'>>;
   templateByNodeId?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType, RequireFields<QueryTemplateByNodeIdArgs, 'nodeId'>>;
   templateActionByNodeId?: Resolver<Maybe<ResolversTypes['TemplateAction']>, ParentType, ContextType, RequireFields<QueryTemplateActionByNodeIdArgs, 'nodeId'>>;
   templateCategoryByNodeId?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType, RequireFields<QueryTemplateCategoryByNodeIdArgs, 'nodeId'>>;
@@ -38345,6 +38963,7 @@ export type ReviewAssignmentResolvers<ContextType = any, ParentType extends Reso
   applicationId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   allowedSections?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  assignedSections?: Resolver<Array<Maybe<ResolversTypes['String']>>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
   timeUpdated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   levelNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -38611,6 +39230,29 @@ export type SchemaColumnsEdgeResolvers<ContextType = any, ParentType extends Res
 export interface SqlIdentifierScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['SqlIdentifier'], any> {
   name: 'SqlIdentifier';
 }
+
+export type SystemInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['SystemInfo'] = ResolversParentTypes['SystemInfo']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  value?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  timestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SystemInfosConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SystemInfosConnection'] = ResolversParentTypes['SystemInfosConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['SystemInfo']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['SystemInfosEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SystemInfosEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SystemInfosEdge'] = ResolversParentTypes['SystemInfosEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['SystemInfo']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export type TemplateResolvers<ContextType = any, ParentType extends ResolversParentTypes['Template'] = ResolversParentTypes['Template']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -39047,6 +39689,7 @@ export type UpdateFilePayloadResolvers<ContextType = any, ParentType extends Res
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
+  applicationNote?: Resolver<Maybe<ResolversTypes['ApplicationNote']>, ParentType, ContextType>;
   fileEdge?: Resolver<Maybe<ResolversTypes['FilesEdge']>, ParentType, ContextType, RequireFields<UpdateFilePayloadFileEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -39216,6 +39859,14 @@ export type UpdateReviewStatusHistoryPayloadResolvers<ContextType = any, ParentT
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   reviewStatusHistoryEdge?: Resolver<Maybe<ResolversTypes['ReviewStatusHistoriesEdge']>, ParentType, ContextType, RequireFields<UpdateReviewStatusHistoryPayloadReviewStatusHistoryEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UpdateSystemInfoPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateSystemInfoPayload'] = ResolversParentTypes['UpdateSystemInfoPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  systemInfo?: Resolver<Maybe<ResolversTypes['SystemInfo']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  systemInfoEdge?: Resolver<Maybe<ResolversTypes['SystemInfosEdge']>, ParentType, ContextType, RequireFields<UpdateSystemInfoPayloadSystemInfoEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -39596,6 +40247,7 @@ export type Resolvers<ContextType = any> = {
   CreateReviewQuestionAssignmentPayload?: CreateReviewQuestionAssignmentPayloadResolvers<ContextType>;
   CreateReviewResponsePayload?: CreateReviewResponsePayloadResolvers<ContextType>;
   CreateReviewStatusHistoryPayload?: CreateReviewStatusHistoryPayloadResolvers<ContextType>;
+  CreateSystemInfoPayload?: CreateSystemInfoPayloadResolvers<ContextType>;
   CreateTemplateActionPayload?: CreateTemplateActionPayloadResolvers<ContextType>;
   CreateTemplateCategoryPayload?: CreateTemplateCategoryPayloadResolvers<ContextType>;
   CreateTemplateElementPayload?: CreateTemplateElementPayloadResolvers<ContextType>;
@@ -39642,6 +40294,7 @@ export type Resolvers<ContextType = any> = {
   DeleteReviewQuestionAssignmentPayload?: DeleteReviewQuestionAssignmentPayloadResolvers<ContextType>;
   DeleteReviewResponsePayload?: DeleteReviewResponsePayloadResolvers<ContextType>;
   DeleteReviewStatusHistoryPayload?: DeleteReviewStatusHistoryPayloadResolvers<ContextType>;
+  DeleteSystemInfoPayload?: DeleteSystemInfoPayloadResolvers<ContextType>;
   DeleteTemplateActionPayload?: DeleteTemplateActionPayloadResolvers<ContextType>;
   DeleteTemplateCategoryPayload?: DeleteTemplateCategoryPayloadResolvers<ContextType>;
   DeleteTemplateElementPayload?: DeleteTemplateElementPayloadResolvers<ContextType>;
@@ -39736,6 +40389,9 @@ export type Resolvers<ContextType = any> = {
   SchemaColumnsConnection?: SchemaColumnsConnectionResolvers<ContextType>;
   SchemaColumnsEdge?: SchemaColumnsEdgeResolvers<ContextType>;
   SqlIdentifier?: GraphQLScalarType;
+  SystemInfo?: SystemInfoResolvers<ContextType>;
+  SystemInfosConnection?: SystemInfosConnectionResolvers<ContextType>;
+  SystemInfosEdge?: SystemInfosEdgeResolvers<ContextType>;
   Template?: TemplateResolvers<ContextType>;
   TemplateAction?: TemplateActionResolvers<ContextType>;
   TemplateActionsConnection?: TemplateActionsConnectionResolvers<ContextType>;
@@ -39797,6 +40453,7 @@ export type Resolvers<ContextType = any> = {
   UpdateReviewQuestionAssignmentPayload?: UpdateReviewQuestionAssignmentPayloadResolvers<ContextType>;
   UpdateReviewResponsePayload?: UpdateReviewResponsePayloadResolvers<ContextType>;
   UpdateReviewStatusHistoryPayload?: UpdateReviewStatusHistoryPayloadResolvers<ContextType>;
+  UpdateSystemInfoPayload?: UpdateSystemInfoPayloadResolvers<ContextType>;
   UpdateTemplateActionPayload?: UpdateTemplateActionPayloadResolvers<ContextType>;
   UpdateTemplateCategoryPayload?: UpdateTemplateCategoryPayloadResolvers<ContextType>;
   UpdateTemplateElementPayload?: UpdateTemplateElementPayloadResolvers<ContextType>;

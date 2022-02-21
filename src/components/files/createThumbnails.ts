@@ -1,3 +1,9 @@
+import config from '../../config'
+import path from 'path'
+import sharp from 'sharp'
+const { thumbnailMaxWidth, thumbnailMaxHeight } = config
+const { genericThumbnailsFolderName } = config
+
 // Maps file types (mimetype or ext) to generic
 // thumbnail files
 const genericThumbnails: { [key: string]: string } = {
@@ -9,11 +15,6 @@ const genericThumbnails: { [key: string]: string } = {
   msword: 'noun_word_3515287.png',
   file: 'noun_File_3764922.png',
 }
-
-import config from '../../config'
-import path from 'path'
-import sharp from 'sharp'
-const { thumbnailMaxWidth, thumbnailMaxHeight } = config
 
 interface ThumbnailInput {
   filesPath: string
@@ -70,7 +71,9 @@ const splitMimetype = (mimetype: string) => {
 
 const getGenericThumbnailPath = (mimetype: string) => {
   const { type, subtype } = splitMimetype(mimetype)
-  return genericThumbnails?.[subtype] || genericThumbnails?.[type] || genericThumbnails.file
+  const filename =
+    genericThumbnails?.[subtype] || genericThumbnails?.[type] || genericThumbnails.file
+  return path.join(genericThumbnailsFolderName, filename)
 }
 
 export default createThumbnail
