@@ -7,6 +7,8 @@ import updateRowPolicies from '../../../database/updateRowPolicies'
 import { SnapshotOperation, ExportAndImportOptions, ObjectRecord } from '../exportAndImport/types'
 import importFromJson from '../exportAndImport/importFromJson'
 import { triggerTables } from './triggerTables'
+import semverCompare from 'semver/functions/compare'
+import config from '../../../src/config'
 
 import {
   DEFAULT_SNAPSHOT_NAME,
@@ -20,6 +22,7 @@ import {
   LOCALISATION_FOLDER,
   PREFERENCES_FILE,
   SCHEMA_FILE_NAME,
+  INFO_FILE_NAME,
 } from './constants'
 
 const useSnapshot: SnapshotOperation = async ({
@@ -36,6 +39,21 @@ const useSnapshot: SnapshotOperation = async ({
     const snapshotRaw = await fs.readFile(path.join(snapshotFolder, `${SNAPSHOT_FILE_NAME}.json`), {
       encoding: 'utf-8',
     })
+
+    // Don't proceed if snapshot version higher than current installation
+    const infoFile = path.join(snapshotFolder, `${INFO_FILE_NAME}.json`)
+    console.log(`Checking snapshot version...`)
+    const snapshotVersion = fsSync.existsSync(infoFile)
+      ? JSON.parse(
+          await fs.readFile(infoFile, {
+            encoding: 'utf-8',
+          })
+        ).version
+      : '0.0.0'
+    if (semverCompare(snapshotVersion, config.version) === 1) {
+      throw `Snapshot was created with version: ${snapshotVersion}\n You can't install a snapshot created with a version newer than the current application version: ${config.version}`
+    }
+
     const snapshotObject = JSON.parse(snapshotRaw)
 
     if (options.shouldReInitialise) {
