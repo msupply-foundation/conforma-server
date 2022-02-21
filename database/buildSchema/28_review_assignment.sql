@@ -1,5 +1,4 @@
 -- review assignment
-
 -- FUNCTION to auto-add template_id to review_assignment
 CREATE OR REPLACE FUNCTION public.review_assignment_template_id (application_id int)
     RETURNS int
@@ -33,7 +32,7 @@ CREATE TABLE public.review_assignment (
     application_id integer REFERENCES public.application (id) ON DELETE CASCADE NOT NULL,
     template_id integer GENERATED ALWAYS AS (public.review_assignment_template_id (application_id)) STORED REFERENCES public.template (id) ON DELETE CASCADE,
     allowed_sections varchar[] DEFAULT NULL,
-    assigned_sections varchar[] DEFAULT ARRAY[] ::varchar[],
+    assigned_sections varchar[] DEFAULT ARRAY[] ::varchar[] NOT NULL,
     TRIGGER public.trigger,
     time_updated timestamptz DEFAULT CURRENT_TIMESTAMP,
     level_number integer,
@@ -46,18 +45,18 @@ CREATE TABLE public.review_assignment (
 );
 
 -- FUNCTION
-CREATE OR REPLACE FUNCTION public.unassign_review_without_sections ()
+CREATE OR REPLACE FUNCTION public.empty_assigned_sections ()
     RETURNS TRIGGER
-        AS $review_assignment_event$
-    BEGIN
-        UPDATE
-            public.review_assignment
-        SET
-            status = 'AVAILABLE'
-        WHERE
-            id = NEW.id;
-        RETURN NULL;
-    END;
+    AS $review_assignment_event$
+BEGIN
+    UPDATE
+        public.review_assignment
+    SET
+        assigned_sections = '{}'
+    WHERE
+        id = NEW.id;
+    RETURN NULL;
+END;
 $review_assignment_event$
 LANGUAGE plpgsql;
 
@@ -68,12 +67,12 @@ CREATE TRIGGER review_assignment_trigger
     WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
     EXECUTE FUNCTION public.add_event_to_trigger_queue ();
 
--- TRIGGER (Listener) on review_assignment table: To set status accordingly to assignedSections
+-- TRIGGER (Listener) on review_assignment table: Set assignedSections to [] when changing status to AVAILABLE
 CREATE TRIGGER review_assignment_trigger2
-    AFTER UPDATE OF assigned_sections ON public.review_assignment
+    AFTER UPDATE OF status ON public.review_assignment
     FOR EACH ROW
-    WHEN (NEW.assigned_sections = '{}' AND NEW.status = 'ASSIGNED')
-    EXECUTE FUNCTION public.unassign_review_without_sections ();
+    WHEN (NEW.status = 'AVAILABLE')
+    EXECUTE FUNCTION public.empty_assigned_sections ();
 
 CREATE UNIQUE INDEX unique_review_assignment_with_org ON review_assignment (reviewer_id, organisation_id, stage_number, application_id, level_number)
 WHERE
