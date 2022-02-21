@@ -75,13 +75,13 @@ BEGIN
                             review_assignment ra
                         WHERE
                             id = NEW.id)));
+        -- Above query gives error with empty arrays,
+        -- hence the following Delete all statement
         ELSEIF NEW.status = 'AVAILABLE' THEN
         DELETE FROM public.review_question_assignment
         WHERE review_assignment_id = NEW.id;
     END IF;
     RETURN NULL;
-    -- Case when assigned sections empty handled by review_assignment trigger
-    -- as this query doesn't work with empty arrays!
 END;
 $review_question_assignment_event$
 LANGUAGE plpgsql;

@@ -57,23 +57,55 @@ const migrateData = async () => {
     ) // CREATE OR REPLACE not working
     await DB.changeSchema('DROP FUNCTION unassign_review_without_sections')
 
-    await DB.changeSchema(`CREATE TRIGGER review_assignment_trigger2
-      AFTER INSERT OR UPDATE OF trigger ON public.review_assignment
-      FOR EACH ROW
-      WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
-      EXECUTE FUNCTION public.add_event_to_trigger_queue ();`)
-
-    await DB.changeSchema(`
-        CREATE OR REPLACE FUNCTION public.empty_assigned_sections ()
-          RETURNS TRIGGER AS $review_assignment_event$
+    await DB.changeSchema(` CREATE OR REPLACE FUNCTION public.empty_assigned_sections () RETURNS TRIGGER AS $review_assignment_event$
         BEGIN
-            UPDATE public.review_assignment
-            SET assigned_sections = '{}'
+            UPDATE public.review_assignment SET assigned_sections = '{}'
             WHERE id = NEW.id;
             RETURN NULL;
         END;
         $review_assignment_event$
         LANGUAGE plpgsql;`)
+
+    await DB.changeSchema(`CREATE TRIGGER review_assignment_trigger2
+    AFTER UPDATE OF status ON public.review_assignment
+    FOR EACH ROW WHEN (NEW.status = 'AVAILABLE')
+    EXECUTE FUNCTION public.empty_assigned_sections ();`)
+
+    // Also add trigger/function to delete question assignments
+    // - First add section code to review_question_assignments
+    await DB.changeSchema(`CREATE OR REPLACE FUNCTION public.rqa_template_section_code (template_element_id int)
+      RETURNS varchar AS $$
+    SELECT code FROM template_section
+    WHERE id = ( SELECT section_id FROM template_element WHERE id = $1);
+    $$
+    LANGUAGE SQL
+    IMMUTABLE;`)
+
+    await DB.changeSchema(`ALTER TABLE review_question_assignment ADD COLUMN
+      section_code varchar GENERATED ALWAYS AS (public.rqa_template_section_code (template_element_id)) STORED`)
+
+    await DB.changeSchema(`CREATE OR REPLACE FUNCTION public.delete_question_assignments ()
+        RETURNS TRIGGER
+        AS $review_question_assignment_event$
+    BEGIN
+        IF NEW.assigned_sections <> '{}' THEN
+            DELETE FROM public.review_question_assignment
+            WHERE review_assignment_id = NEW.id
+                AND NOT section_code = ANY (ARRAY ((SELECT assigned_sections
+                  FROM review_assignment ra WHERE id = NEW.id)));
+            ELSEIF NEW.status = 'AVAILABLE' THEN
+            DELETE FROM public.review_question_assignment
+            WHERE review_assignment_id = NEW.id;
+        END IF;
+        RETURN NULL;
+    END;
+    $review_question_assignment_event$
+    LANGUAGE plpgsql;`)
+
+    await DB.changeSchema(`CREATE TRIGGER review_question_assignment_trigger
+    AFTER UPDATE OF assigned_sections ON public.review_assignment
+    FOR EACH ROW
+    EXECUTE FUNCTION public.delete_question_assignments ();`)
 
     // Create missing "assigned sections" for existing review_assignments
     try {

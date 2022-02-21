@@ -18,12 +18,11 @@ For live servers, data migration after an upgrade should be an invisible process
 
 ## 2. Migrating data with snapshots
 
-When loading a [snapshot](Snapshots.md), the schema will be loaded based on the current version, not the schema the snapshot was taken with. The snapshot stores a `schema.diff` file, but this only reflects differences that were done to the schema while the server was running, e.g. from adding tables due to [outcomes](Outcomes-Display.md) or lookup tables. 
+From v0.2.0 onwards, whenever a [snapshot](Snapshots.md) is saved, a full database schema build script will be exported with the snapshot (`schema_init.sql`). Then, when the snapshot is loaded this saved script will be run to initialise the database. This ensures that the database schema will be restored to how it was when the snapshot was saved, to avoid any possible insertion errors due to schema incompatibility. 
 
-When the server reloads, the migration script will run and may run into the following issues:
+Once the snapshot insertion is complete, the migrateData script is called, which will then modify the database to bring it into line with the current app version.
 
-1. Schema modifications are already done. This will cause schema-modifying commands in the migration script to fail. However, this is not a problem -- the script just reports this error and continues. (Other errors, such as data modification problems, *will* throw an error and stop the server.)
-2. There may be data in the snapshot that cannot be loaded as the schema has already changed. Currently, the snapshot loading script just skips past these, so in this case, that data won't be migrated. In future we should integrate a migration script into the snapshot loading process, but the exact procedure to implement this is still under discussion. [Issue to discuss](https://github.com/openmsupply/application-manager-server/issues/658)
+(If no `schema_init` file is found when loading a snapshot (i.e. for older snapshots), then the current "buildSchema" scripts will be run.)
 
 ## 3. Migrating data in development environment
 
@@ -38,12 +37,13 @@ As long as the new migration code has a version check higher than the current ve
 
 If we wish to manually migrate from data that was created in a lower version than we're currently working, we can supply the optional `<version>` argument and the script will run as though that were the saved database version.
 
-An advantage of having to run the migration script manually during development is that partially-written migration code won't be executed when we don't want it to when saving changes that cause a server restart. And when the data *has* been migrated, the script won't attempt to run the migration again when the server restarts.
+An advantage of having to run the migration script manually during development is that partially-written migration code won't be executed when we don't want it to when saving changes that cause a server restart. And when the data *has* been migrated, the script won't attempt to run the migration again when the server restarts. (Although, for the most part there shouldn't be any negative effects from running the migration script repeatedly.)
 
 ## Guidelines for modifying `migrateData.ts`
 
 - Each version's migration code should follow linearly after the last. Look for the comment `// Other version migrations continue here...` for where to insert the next migration.
 - Database queries should be added to the "databaseMethods.ts" file and called from the main script.
+- For SQL statements that are just schema changes (i.e. they don't modify data), use the database method `changeSchema()`, and write the raw query as the function argument (see migrateData.ts for examples. The difference between this and other database methods is that this one *won't* throw an error on failure, as it's assumed that the error will be due to trying to modify something that already exists (i.e. you've already run the migration script).
 - Each migration block should be wrapped in an `if (databaseVersionLessThan(<version>))` block. For example:
   ```
   if (databaseVersionLessThan('0.2.0')) {

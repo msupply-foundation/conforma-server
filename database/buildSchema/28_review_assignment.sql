@@ -55,9 +55,6 @@ BEGIN
         assigned_sections = '{}'
     WHERE
         id = NEW.id;
-    -- Also delete all question assignments
-    -- DELETE FROM public.review_question_assignment
-    -- WHERE review_assignment_id = NEW.id;
     RETURN NULL;
 END;
 $review_assignment_event$
