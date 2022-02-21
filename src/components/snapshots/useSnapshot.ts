@@ -7,6 +7,8 @@ import updateRowPolicies from '../../../database/updateRowPolicies'
 import { SnapshotOperation, ExportAndImportOptions, ObjectRecord } from '../exportAndImport/types'
 import importFromJson from '../exportAndImport/importFromJson'
 import { triggerTables } from './triggerTables'
+import semverCompare from 'semver/functions/compare'
+import config from '../../../src/config'
 
 import {
   DEFAULT_SNAPSHOT_NAME,
@@ -19,6 +21,8 @@ import {
   SNAPSHOT_OPTIONS_FOLDER,
   LOCALISATION_FOLDER,
   PREFERENCES_FILE,
+  SCHEMA_FILE_NAME,
+  INFO_FILE_NAME,
 } from './constants'
 
 const useSnapshot: SnapshotOperation = async ({
@@ -35,6 +39,21 @@ const useSnapshot: SnapshotOperation = async ({
     const snapshotRaw = await fs.readFile(path.join(snapshotFolder, `${SNAPSHOT_FILE_NAME}.json`), {
       encoding: 'utf-8',
     })
+
+    // Don't proceed if snapshot version higher than current installation
+    const infoFile = path.join(snapshotFolder, `${INFO_FILE_NAME}.json`)
+    console.log(`Checking snapshot version...`)
+    const snapshotVersion = fsSync.existsSync(infoFile)
+      ? JSON.parse(
+          await fs.readFile(infoFile, {
+            encoding: 'utf-8',
+          })
+        ).version
+      : '0.0.0'
+    if (semverCompare(snapshotVersion, config.version) === 1) {
+      throw `Snapshot was created with version: ${snapshotVersion}\n You can't install a snapshot created with a version newer than the current application version: ${config.version}`
+    }
+
     const snapshotObject = JSON.parse(snapshotRaw)
 
     if (options.shouldReInitialise) {
@@ -85,8 +104,12 @@ const useSnapshot: SnapshotOperation = async ({
 
     // Update serials
     console.log('running serial update ... ')
-    execSync('./database/update_serials.sh', { cwd: ROOT_FOLDER })
+    execSync('./database/update_serials.sh', { cwd: ROOT_FOLDER, stdio: 'inherit' })
     console.log('running serial update ... done')
+
+    // Migrate database to latest version
+    console.log('Migrating database (if required)...)')
+    execSync('yarn migrate', { stdio: 'inherit' })
 
     // Regenerate row level policies
     await updateRowPolicies()
@@ -137,8 +160,17 @@ const initialiseDatabase = async (
 ) => {
   const databaseName = 'tmf_app_manager'
 
+  // Check if the snapshot has its own schema script
+  const initScript = fsSync.existsSync(path.join(snapshotFolder, `${SCHEMA_FILE_NAME}.sql`))
+    ? `${path.join(snapshotFolder, SCHEMA_FILE_NAME)}.sql`
+    : ''
+
   console.log('initialising database ... ')
-  execSync(`./database/initialise_database.sh ${databaseName}`, { cwd: ROOT_FOLDER })
+
+  execSync(`./database/initialise_database.sh ${databaseName} ${initScript}`, {
+    cwd: ROOT_FOLDER,
+    stdio: 'inherit',
+  })
   console.log('initialising database ... done')
 
   const diffFile = path.join(snapshotFolder, `${PG_SCHEMA_DIFF_FILE_NAME}.sql`)

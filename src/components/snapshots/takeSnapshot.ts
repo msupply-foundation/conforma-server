@@ -21,8 +21,10 @@ import {
   SNAPSHOT_OPTIONS_FOLDER,
   FILES_FOLDER,
   LOCALISATION_FOLDER,
+  SCHEMA_FILE_NAME,
   PREFERENCES_FILE,
   PG_DFF_JS_LOCATION,
+  DATABASE_FOLDER,
 } from './constants'
 import { getBaseFiles, getDirectoryFromPath } from './useSnapshot'
 import config from '../../config'
@@ -67,6 +69,12 @@ const takeSnapshot: SnapshotOperation = async ({
 
     // Copy prefs
     if (options?.includePrefs) execSync(`cp '${PREFERENCES_FILE}' '${newSnapshotFolder}'`)
+
+    // Copy schema build script
+    if (options?.shouldReInitialise)
+      execSync(
+        `cat ${DATABASE_FOLDER}/buildSchema/*.sql >> ${newSnapshotFolder}/${SCHEMA_FILE_NAME}.sql`
+      )
 
     // Save snapshot info (version, timestamp, etc)
     await fs.writeFile(

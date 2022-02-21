@@ -29,17 +29,51 @@ const migrateData = async () => {
 
   // VERSION-SPECIFIC MIGRATION CODE BEGINS HERE
 
+  // v0.1.0
+  if (databaseVersionLessThan('0.1.0')) {
+    console.log('Migrating to 0.1.0...')
+    // Create "system_info" table
+    await DB.changeSchema(`
+      CREATE TABLE public.system_info (
+        id serial PRIMARY KEY,
+        name varchar NOT NULL,
+        value jsonb DEFAULT '{}',
+        timestamp timestamptz DEFAULT CURRENT_TIMESTAMP
+      );
+    `)
+  }
+
   // v0.2.0
   if (databaseVersionLessThan('0.2.0')) {
     console.log('Migrating to v0.2.0...')
 
     // Add "assigned_sections" column to schema
-    try {
-      await DB.addAssignedSectionsColumn()
-    } catch (err) {
-      console.log('Problem altering schema:', err.message, '\n')
-      // Continue anyway, it's probably because schema change is already done
-    }
+    await DB.changeSchema(`ALTER TABLE review_assignment
+        ADD COLUMN assigned_sections varchar[] DEFAULT array[]::varchar[];`)
+
+    // Update or create review_assignment assigned_sections Trigger/Function
+    await DB.changeSchema(
+      'DROP TRIGGER IF EXISTS review_assignment_trigger2 ON public.review_assignment'
+    ) // CREATE OR REPLACE not working
+    await DB.changeSchema('DROP FUNCTION unassign_review_without_sections')
+
+    await DB.changeSchema(`CREATE TRIGGER review_assignment_trigger2
+      AFTER INSERT OR UPDATE OF trigger ON public.review_assignment
+      FOR EACH ROW
+      WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
+      EXECUTE FUNCTION public.add_event_to_trigger_queue ();`)
+
+    await DB.changeSchema(`
+        CREATE OR REPLACE FUNCTION public.empty_assigned_sections ()
+          RETURNS TRIGGER AS $review_assignment_event$
+        BEGIN
+            UPDATE public.review_assignment
+            SET assigned_sections = '{}'
+            WHERE id = NEW.id;
+            RETURN NULL;
+        END;
+        $review_assignment_event$
+        LANGUAGE plpgsql;`)
 
     // Create missing "assigned sections" for existing review_assignments
     try {
@@ -66,7 +100,7 @@ const migrateData = async () => {
   // Other version migrations continue here...
 
   // Finally, set the database version to the current version
-  if (!isManualMigration) DB.setDatabaseVersion(version)
+  if (databaseVersionLessThan(version)) await DB.setDatabaseVersion(version)
 }
 
 // For running migrationScript.ts manually using `yarn migrate`

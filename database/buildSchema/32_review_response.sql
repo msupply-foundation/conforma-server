@@ -99,4 +99,5 @@ LANGUAGE plpgsql;
 CREATE TRIGGER set_original_response_trigger
     BEFORE INSERT ON public.review_response
     FOR EACH ROW
-    EXECUTE FUNCTION set_original_response ()
+    EXECUTE FUNCTION set_original_response ();
+

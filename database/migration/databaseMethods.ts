@@ -1,6 +1,15 @@
 import DBConnect from '../../src/components/databaseConnect'
 
 const databaseMethods = {
+  // Use this method for schema changes, doesn't throw error, just prints
+  // message to console (for when schema is already changed)
+  changeSchema: async (query: string) => {
+    try {
+      await DBConnect.query({ text: query })
+    } catch (err) {
+      console.log('Problem altering schema:', err.message, '\n')
+    }
+  },
   getDatabaseVersion: async () => {
     const text = `SELECT name, value, timestamp
       FROM system_info
