@@ -1,5 +1,4 @@
 -- review assignment
-
 -- FUNCTION to auto-add template_id to review_assignment
 CREATE OR REPLACE FUNCTION public.review_assignment_template_id (application_id int)
     RETURNS int
@@ -33,7 +32,7 @@ CREATE TABLE public.review_assignment (
     application_id integer REFERENCES public.application (id) ON DELETE CASCADE NOT NULL,
     template_id integer GENERATED ALWAYS AS (public.review_assignment_template_id (application_id)) STORED REFERENCES public.template (id) ON DELETE CASCADE,
     allowed_sections varchar[] DEFAULT NULL,
-    assigned_sections varchar[] DEFAULT array[]::varchar[] NOT NULL,
+    assigned_sections varchar[] DEFAULT ARRAY[] ::varchar[] NOT NULL,
     TRIGGER public.trigger,
     time_updated timestamptz DEFAULT CURRENT_TIMESTAMP,
     level_number integer,
@@ -48,16 +47,19 @@ CREATE TABLE public.review_assignment (
 -- FUNCTION
 CREATE OR REPLACE FUNCTION public.empty_assigned_sections ()
     RETURNS TRIGGER
-        AS $review_assignment_event$
-    BEGIN
-        UPDATE
-            public.review_assignment
-        SET
-            assigned_sections = '{}'
-        WHERE
-            id = NEW.id;
-        RETURN NULL;
-    END;
+    AS $review_assignment_event$
+BEGIN
+    UPDATE
+        public.review_assignment
+    SET
+        assigned_sections = '{}'
+    WHERE
+        id = NEW.id;
+    -- Also delete all question assignments
+    -- DELETE FROM public.review_question_assignment
+    -- WHERE review_assignment_id = NEW.id;
+    RETURN NULL;
+END;
 $review_assignment_event$
 LANGUAGE plpgsql;
 
