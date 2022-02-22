@@ -201,7 +201,8 @@ The same as login endpoint, without the success field
 GET: `/user-permissions?username=<username>&orgId=<orgId>`
 
 End point to get **another** user's granted permissions + all existing permissions on templates for a given organisation.
-Intended for use in template to view/edit antoher user's permissions -- client supplies `username` and `orgId`.
+Intended for use in template to view/edit another user's permissions -- client supplies `username` and `orgId`.
+Either `username` or `orgId` can be omitted and the result will returned for that user without an org, or for that org without a user. For `orgId`, the values `null` or `0` are equivalent to omitting `orgId` and for `username` an empty string `""` can be used. This is useful in cases such as a template query where you're supplying an `orgId` and `username` parameter, but can't "turn off" the parameters when you want to omit either of them -- just use `orgId=null` or `username=""` to achieve the same thing.
 
 #### Check Triggers
 
