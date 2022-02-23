@@ -35,14 +35,15 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
       inputQuery.children.map((child: any) => evaluationExpressionInstance(child))
     )
   }
+  let result: any
   switch (inputQuery.operator) {
     case 'AND':
-      return childrenResolved.reduce((acc: boolean, child: boolean) => {
+      result = childrenResolved.reduce((acc: boolean, child: boolean) => {
         return acc && child
       }, true)
 
     case 'OR':
-      return childrenResolved.reduce((acc: boolean, child: boolean) => {
+      result = childrenResolved.reduce((acc: boolean, child: boolean) => {
         return acc || child
       }, false)
 
@@ -50,41 +51,53 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
       try {
         const str: string = childrenResolved[0]
         const re: RegExp = new RegExp(childrenResolved[1])
-        return re.test(str)
+        result = re.test(str)
       } catch {
         throw new Error('Problem with REGEX')
       }
 
     case '=':
-      return childrenResolved.every((child) => child == childrenResolved[0])
+      result = childrenResolved.every((child) => child == childrenResolved[0])
 
     case '!=':
-      return childrenResolved[0] != childrenResolved[1]
+      result = childrenResolved[0] != childrenResolved[1]
 
     case 'CONCAT':
     case '+':
-      if (childrenResolved.length === 0) return childrenResolved
+      if (childrenResolved.length === 0) {
+        result = childrenResolved
+        break
+      }
 
       // Reduce based on "type" if specified
-      if (inputQuery?.type === 'string')
-        return childrenResolved.reduce((acc, child) => acc.concat(child), '')
-      if (inputQuery?.type === 'array')
-        return childrenResolved.reduce((acc, child) => acc.concat(child), [])
+      if (inputQuery?.type === 'string') {
+        result = childrenResolved.reduce((acc, child) => acc.concat(child), '')
+        break
+      }
+      if (inputQuery?.type === 'array') {
+        result = childrenResolved.reduce((acc, child) => acc.concat(child), [])
+        break
+      }
 
       // Concatenate arrays/strings
-      if (childrenResolved.every((child) => typeof child === 'string' || Array.isArray(child)))
-        return childrenResolved.reduce((acc, child) => acc.concat(child))
+      if (childrenResolved.every((child) => typeof child === 'string' || Array.isArray(child))) {
+        result = childrenResolved.reduce((acc, child) => acc.concat(child))
+        break
+      }
 
       // Merge objects
       if (childrenResolved.every((child) => child instanceof Object && !Array.isArray(child))) {
-        return childrenResolved.reduce((acc, child) => ({ ...acc, ...child }), {})
+        {
+          result = childrenResolved.reduce((acc, child) => ({ ...acc, ...child }), {})
+          break
+        }
       }
 
       // Or just try to add any other types
-      return childrenResolved.reduce((acc: number, child: number) => acc + child)
+      result = childrenResolved.reduce((acc: number, child: number) => acc + child)
 
     case '?':
-      return childrenResolved[0] ? childrenResolved[1] : childrenResolved[2]
+      result = childrenResolved[0] ? childrenResolved[1] : childrenResolved[2]
 
     case 'objectProperties':
       if (Object.entries(params).length === 0)
@@ -93,7 +106,7 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
         const inputObject = params?.objects ? params.objects : {}
         const property = childrenResolved[0]
         const fallback = childrenResolved?.[1]
-        return extractProperty(inputObject, property, fallback)
+        result = extractProperty(inputObject, property, fallback)
       } catch {
         throw new Error('Problem evaluating object')
       }
@@ -113,7 +126,7 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
         .forEach(([param, replacement]) => {
           outputString = outputString.replace(new RegExp(`${param}`, 'g'), replacement ?? '')
         })
-      return outputString
+      result = outputString
 
     case 'POST':
     case 'GET':
@@ -159,34 +172,37 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
         throw new Error('Problem with API call')
       }
       try {
-        return extractAndSimplify(data, returnedProperty, "API - Can't resolve property")
+        result = extractAndSimplify(data, returnedProperty, "API - Can't resolve property")
       } catch {
         throw new Error('Problem parsing requested node from API result')
       }
 
     case 'pgSQL':
       if (!params.pgConnection) throw new Error('No Postgres database connection provided')
-      return processPgSQL(childrenResolved, inputQuery?.type as OutputType, params.pgConnection)
+      result = processPgSQL(childrenResolved, inputQuery?.type as OutputType, params.pgConnection)
 
     case 'graphQL':
       if (!params.graphQLConnection) throw new Error('No GraphQL database connection provided')
       const gqlHeaders = params?.headers ?? params.graphQLConnection.headers
-      return processGraphQL(childrenResolved, params.graphQLConnection, gqlHeaders)
+      result = processGraphQL(childrenResolved, params.graphQLConnection, gqlHeaders)
 
     case 'buildObject':
-      return buildObject(inputQuery as BuildObjectQuery, evaluationExpressionInstance)
+      result = buildObject(inputQuery as BuildObjectQuery, evaluationExpressionInstance)
 
     case 'objectFunctions':
       const inputObject = params?.objects ? params.objects : {}
       const funcName = childrenResolved[0]
       const args = childrenResolved.slice(1)
       const func = extractProperty(inputObject, funcName, 'Function not found') as Function
-      return await func(...args)
+      result = await func(...args)
+
+    default:
+      return 'No matching operators'
 
     // etc. for as many other operators as we want/need.
   }
 
-  return 'No matching operators'
+  return result
 }
 
 async function processPgSQL(queryArray: any[], queryType: string, connection: IConnection) {
