@@ -79,6 +79,7 @@ Each node in the tree is an either:
   type: <optional>
   operator: <string>
   children: [ <optional> ]
+  fallback: <optional>
 }
 ```
 

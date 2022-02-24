@@ -218,7 +218,7 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
     }
   } catch (err) {
     if (inputQuery?.fallback !== undefined) return inputQuery.fallback
-    else return err.errorMessage
+    else return err.message
   }
 
   if (!inputQuery?.type) return result
