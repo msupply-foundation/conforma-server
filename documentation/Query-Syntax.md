@@ -95,7 +95,7 @@ This expression would return the number **8** when evaluated. If `children` are 
 
 ## type
 
-The `type` property is optional in most cases, but some operators will return their results in a different format depending on the `type` (e.g. pgSQL -- see below). For *all* operators, the output will also be attempted to convert it to to the specified `type`. This can be useful, for example, when a number is required from a string output. Note: type conversion follows Javascript type conversion rules using `Number(), String(), Boolean()`.
+The `type` property is optional in most cases, but some operators will return their results in a different format depending on the `type` (e.g. pgSQL -- see below). For *all* operators, the evaluator will also attempt to convert it to to the specified `type`. This can be useful, for example, when a number is required from a string output. Note: type conversion follows Javascript type conversion rules using `Number(), String(), Boolean()`.
 
 Valid values:
 
