@@ -2,10 +2,18 @@ import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import databaseMethods, { DatabaseMethodsType } from './databaseMethods'
 import { DBConnectType } from '../../../src/components/databaseConnect'
+import { mapValues, get } from 'lodash'
 
 const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
-  const { tableName, matchField, matchValue, shouldCreateJoinTable = true, ...record } = parameters
+  const {
+    tableName,
+    matchField,
+    matchValue,
+    shouldCreateJoinTable = true,
+    data,
+    ...record
+  } = parameters
 
   const fieldToMatch = matchField ?? 'id'
   const valueToMatch = matchValue ?? record[fieldToMatch]
@@ -16,8 +24,14 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     if (record[key] === null) delete record[key]
   }
 
+  // Build full record
+  const fullRecord = {
+    ...record,
+    ...mapValues(data, (property) => get(applicationData, property, null)),
+  }
+
   try {
-    await createOrUpdateTable(DBConnect, db, tableName, record)
+    await createOrUpdateTable(DBConnect, db, tableName, fullRecord)
 
     let recordId = await db.getRecordId(tableName, fieldToMatch, valueToMatch)
     const isUpdate = recordId !== 0
@@ -25,12 +39,12 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     let result: any = {}
     if (isUpdate) {
       // UPDATE
-      console.log(`Updating ${tableName} record: ${JSON.stringify(record, null, 2)}`)
-      result = await db.updateRecord(tableName, recordId, record)
+      console.log(`Updating ${tableName} record: ${JSON.stringify(fullRecord, null, 2)}`)
+      result = await db.updateRecord(tableName, recordId, fullRecord)
     } else {
       // CREATE NEW
-      console.log(`Creating ${tableName} record: ${JSON.stringify(record, null, 2)}`)
-      result = await db.createRecord(tableName, record)
+      console.log(`Creating ${tableName} record: ${JSON.stringify(fullRecord, null, 2)}`)
+      result = await db.createRecord(tableName, fullRecord)
       recordId = result.recordId
     }
 
