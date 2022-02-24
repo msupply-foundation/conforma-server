@@ -101,7 +101,7 @@ Valid values:
 
 - string
 - number
-- boolean
+- boolean / bool
 - array
 
 # Operators
