@@ -36,188 +36,189 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
     )
   }
   let result: any
-  switch (inputQuery.operator) {
-    case 'AND':
-      result = childrenResolved.reduce((acc: boolean, child: boolean) => {
-        return acc && child
-      }, true)
-      break
-
-    case 'OR':
-      result = childrenResolved.reduce((acc: boolean, child: boolean) => {
-        return acc || child
-      }, false)
-      break
-
-    case 'REGEX':
-      try {
-        const str: string = childrenResolved[0]
-        const re: RegExp = new RegExp(childrenResolved[1])
-        result = re.test(str)
-      } catch {
-        throw new Error('Problem with REGEX')
-      }
-      break
-
-    case '=':
-      result = childrenResolved.every((child) => child == childrenResolved[0])
-      break
-
-    case '!=':
-      result = childrenResolved[0] != childrenResolved[1]
-      break
-
-    case 'CONCAT':
-    case '+':
-      if (childrenResolved.length === 0) {
-        result = childrenResolved
+  try {
+    switch (inputQuery.operator) {
+      case 'AND':
+        result = childrenResolved.reduce((acc: boolean, child: boolean) => acc && child, true)
         break
-      }
 
-      // Reduce based on "type" if specified
-      if (inputQuery?.type === 'string') {
-        result = childrenResolved.reduce((acc, child) => acc.concat(child), '')
+      case 'OR':
+        result = childrenResolved.reduce((acc: boolean, child: boolean) => acc || child, false)
         break
-      }
-      if (inputQuery?.type === 'array') {
-        result = childrenResolved.reduce((acc, child) => acc.concat(child), [])
-        break
-      }
 
-      // Concatenate arrays/strings
-      if (childrenResolved.every((child) => typeof child === 'string' || Array.isArray(child))) {
-        result = childrenResolved.reduce((acc, child) => acc.concat(child))
+      case 'REGEX':
+        try {
+          const str: string = childrenResolved[0]
+          const re: RegExp = new RegExp(childrenResolved[1])
+          result = re.test(str)
+        } catch {
+          throw new Error('Problem with REGEX')
+        }
         break
-      }
 
-      // Merge objects
-      if (childrenResolved.every((child) => child instanceof Object && !Array.isArray(child))) {
-        {
-          result = childrenResolved.reduce((acc, child) => ({ ...acc, ...child }), {})
+      case '=':
+        result = childrenResolved.every((child) => child == childrenResolved[0])
+        break
+
+      case '!=':
+        result = childrenResolved[0] != childrenResolved[1]
+        break
+
+      case 'CONCAT':
+      case '+':
+        if (childrenResolved.length === 0) {
+          result = childrenResolved
           break
         }
-      }
 
-      // Or just try to add any other types
-      result = childrenResolved.reduce((acc: number, child: number) => acc + child)
-      break
+        // Reduce based on "type" if specified
+        if (inputQuery?.type === 'string') {
+          result = childrenResolved.reduce((acc, child) => acc.concat(child), '')
+          break
+        }
+        if (inputQuery?.type === 'array') {
+          result = childrenResolved.reduce((acc, child) => acc.concat(child), [])
+          break
+        }
 
-    case '?':
-      result = childrenResolved[0] ? childrenResolved[1] : childrenResolved[2]
-      break
+        // Concatenate arrays/strings
+        if (childrenResolved.every((child) => typeof child === 'string' || Array.isArray(child))) {
+          result = childrenResolved.reduce((acc, child) => acc.concat(child))
+          break
+        }
 
-    case 'objectProperties':
-      if (Object.entries(params).length === 0)
-        return 'No parameters received for objectProperties node'
-      try {
+        // Merge objects
+        if (childrenResolved.every((child) => child instanceof Object && !Array.isArray(child))) {
+          {
+            result = childrenResolved.reduce((acc, child) => ({ ...acc, ...child }), {})
+            break
+          }
+        }
+
+        // Or just try to add any other types
+        result = childrenResolved.reduce((acc: number, child: number) => acc + child)
+        break
+
+      case '?':
+        result = childrenResolved[0] ? childrenResolved[1] : childrenResolved[2]
+        break
+
+      case 'objectProperties':
+        if (Object.entries(params).length === 0)
+          return 'No parameters received for objectProperties node'
+        try {
+          const inputObject = params?.objects ? params.objects : {}
+          const property = childrenResolved[0]
+          const fallback = childrenResolved?.[1]
+          result = extractProperty(inputObject, property, fallback)
+        } catch (err) {
+          throw err
+        }
+        break
+
+      case 'stringSubstitution':
+        const origString: string = childrenResolved[0]
+        const replacements = childrenResolved.slice(1)
+        const regex = /%([\d]+)/g // To-Do: handle escaping literal values
+        const parameters = (origString.match(regex) || []).sort(
+          (a, b) => Number(a.slice(1)) - Number(b.slice(1))
+        )
+        const uniqueParameters = new Set(parameters)
+        const replacementsObj = zipArraysToObject(Array.from(uniqueParameters), replacements)
+        let outputString = origString
+        Object.entries(replacementsObj)
+          .reverse()
+          .forEach(([param, replacement]) => {
+            outputString = outputString.replace(new RegExp(`${param}`, 'g'), replacement ?? '')
+          })
+        result = outputString
+        break
+
+      case 'POST':
+      case 'GET':
+      case 'API':
+        const { APIfetch } = params
+        const isPostRequest = inputQuery.operator === 'POST'
+        let urlWithQuery, returnedProperty, requestBody, headers
+        try {
+          const {
+            url,
+            headers: queryHeaders,
+            fieldNames,
+            values,
+            returnProperty,
+          } = assignChildNodesToQuery([
+            '', // Extra unused field for GET/POST (query)
+            ...childrenResolved,
+          ])
+          headers = queryHeaders ?? params?.headers
+          returnedProperty = returnProperty
+          urlWithQuery =
+            fieldNames.length > 0
+              ? `${url}?${fieldNames
+                  .map((field: string, index: number) => field + '=' + values[index])
+                  .join('&')}`
+              : url
+          requestBody = isPostRequest ? zipArraysToObject(fieldNames, values) : null
+        } catch {
+          throw new Error('Invalid API query')
+        }
+        let data
+        try {
+          data = isPostRequest
+            ? await fetchAPIrequest({
+                url: urlWithQuery,
+                APIfetch,
+                method: 'POST',
+                body: requestBody,
+                headers,
+              })
+            : await fetchAPIrequest({ url: urlWithQuery, APIfetch, headers })
+        } catch {
+          throw new Error('Problem with API call')
+        }
+        try {
+          result = extractAndSimplify(data, returnedProperty, "API - Can't resolve property")
+        } catch {
+          throw new Error('Problem parsing requested node from API result')
+        }
+        break
+
+      case 'pgSQL':
+        if (!params.pgConnection) throw new Error('No Postgres database connection provided')
+        result = await processPgSQL(
+          childrenResolved,
+          inputQuery?.type as OutputType,
+          params.pgConnection
+        )
+        break
+
+      case 'graphQL':
+        if (!params.graphQLConnection) throw new Error('No GraphQL database connection provided')
+        const gqlHeaders = params?.headers ?? params.graphQLConnection.headers
+        result = await processGraphQL(childrenResolved, params.graphQLConnection, gqlHeaders)
+        break
+
+      case 'buildObject':
+        result = buildObject(inputQuery as BuildObjectQuery, evaluationExpressionInstance)
+        break
+
+      case 'objectFunctions':
         const inputObject = params?.objects ? params.objects : {}
-        const property = childrenResolved[0]
-        const fallback = childrenResolved?.[1]
-        result = extractProperty(inputObject, property, fallback)
-      } catch {
-        throw new Error('Problem evaluating object')
-      }
-      break
+        const funcName = childrenResolved[0]
+        const args = childrenResolved.slice(1)
+        const func = extractProperty(inputObject, funcName, 'Function not found') as Function
+        result = await func(...args)
+        break
 
-    case 'stringSubstitution':
-      const origString: string = childrenResolved[0]
-      const replacements = childrenResolved.slice(1)
-      const regex = /%([\d]+)/g // To-Do: handle escaping literal values
-      const parameters = (origString.match(regex) || []).sort(
-        (a, b) => Number(a.slice(1)) - Number(b.slice(1))
-      )
-      const uniqueParameters = new Set(parameters)
-      const replacementsObj = zipArraysToObject(Array.from(uniqueParameters), replacements)
-      let outputString = origString
-      Object.entries(replacementsObj)
-        .reverse()
-        .forEach(([param, replacement]) => {
-          outputString = outputString.replace(new RegExp(`${param}`, 'g'), replacement ?? '')
-        })
-      result = outputString
-      break
+      default:
+        return 'No matching operators'
 
-    case 'POST':
-    case 'GET':
-    case 'API':
-      const { APIfetch } = params
-      const isPostRequest = inputQuery.operator === 'POST'
-      let urlWithQuery, returnedProperty, requestBody, headers
-      try {
-        const {
-          url,
-          headers: queryHeaders,
-          fieldNames,
-          values,
-          returnProperty,
-        } = assignChildNodesToQuery([
-          '', // Extra unused field for GET/POST (query)
-          ...childrenResolved,
-        ])
-        headers = queryHeaders ?? params?.headers
-        returnedProperty = returnProperty
-        urlWithQuery =
-          fieldNames.length > 0
-            ? `${url}?${fieldNames
-                .map((field: string, index: number) => field + '=' + values[index])
-                .join('&')}`
-            : url
-        requestBody = isPostRequest ? zipArraysToObject(fieldNames, values) : null
-      } catch {
-        throw new Error('Invalid API query')
-      }
-      let data
-      try {
-        data = isPostRequest
-          ? await fetchAPIrequest({
-              url: urlWithQuery,
-              APIfetch,
-              method: 'POST',
-              body: requestBody,
-              headers,
-            })
-          : await fetchAPIrequest({ url: urlWithQuery, APIfetch, headers })
-      } catch {
-        throw new Error('Problem with API call')
-      }
-      try {
-        result = extractAndSimplify(data, returnedProperty, "API - Can't resolve property")
-      } catch {
-        throw new Error('Problem parsing requested node from API result')
-      }
-      break
-
-    case 'pgSQL':
-      if (!params.pgConnection) throw new Error('No Postgres database connection provided')
-      result = await processPgSQL(
-        childrenResolved,
-        inputQuery?.type as OutputType,
-        params.pgConnection
-      )
-      break
-
-    case 'graphQL':
-      if (!params.graphQLConnection) throw new Error('No GraphQL database connection provided')
-      const gqlHeaders = params?.headers ?? params.graphQLConnection.headers
-      result = await processGraphQL(childrenResolved, params.graphQLConnection, gqlHeaders)
-      break
-
-    case 'buildObject':
-      result = buildObject(inputQuery as BuildObjectQuery, evaluationExpressionInstance)
-      break
-
-    case 'objectFunctions':
-      const inputObject = params?.objects ? params.objects : {}
-      const funcName = childrenResolved[0]
-      const args = childrenResolved.slice(1)
-      const func = extractProperty(inputObject, funcName, 'Function not found') as Function
-      result = await func(...args)
-      break
-
-    default:
-      return 'No matching operators'
-
-    // etc. for as many other operators as we want/need.
+      // etc. for as many other operators as we want/need.
+    }
+  } catch (err) {
+    if (inputQuery?.fallback !== undefined) return inputQuery.fallback
+    else return err.errorMessage
   }
 
   if (!inputQuery?.type) return result
@@ -300,27 +301,31 @@ async function processGraphQL(
     const data = await graphQLquery(url, query, variables, connection, headers)
     if (!data) throw new Error('GraphQL query problem')
     try {
-      return extractAndSimplify(data, returnProperty, "GraphQL - Can't resolve node")
+      return extractAndSimplify(data, returnProperty)
     } catch (err) {
-      throw new Error('GraphQL -- unable to retrieve node')
+      throw err
     }
   } catch (err) {
-    throw new Error(err.message)
+    throw err
   }
 }
 
 const extractAndSimplify = (
   data: BasicObject | BasicObject[],
   returnProperty: string | undefined,
-  fallback: any = "Can't resolve property"
+  fallback: any = undefined
 ) => {
-  const selectedProperty = returnProperty ? extractProperty(data, returnProperty, fallback) : data
-  if (Array.isArray(selectedProperty)) return selectedProperty.map((item) => simplifyObject(item))
-  if (returnProperty) {
-    if (selectedProperty === null) return null // GraphQL field can return null as valid result
-    return simplifyObject(selectedProperty)
+  try {
+    const selectedProperty = returnProperty ? extractProperty(data, returnProperty, fallback) : data
+    if (Array.isArray(selectedProperty)) return selectedProperty.map((item) => simplifyObject(item))
+    if (returnProperty) {
+      if (selectedProperty === null) return null // GraphQL field can return null as valid result
+      return simplifyObject(selectedProperty)
+    }
+    return selectedProperty
+  } catch (err) {
+    throw err
   }
-  return selectedProperty
 }
 
 const assignChildNodesToQuery = (childNodes: any[]) => {
@@ -354,16 +359,22 @@ const zipArraysToObject = (variableNames: string[], variableValues: any[]) => {
 const extractProperty = (
   data: BasicObject | BasicObject[],
   node: string | number | (string | number)[],
-  fallback: any = "Can't resolve object"
+  fallback: any = undefined
 ): BasicObject | string | number | boolean | BasicObject[] | Function => {
-  if (typeof data === 'undefined') return fallback
+  if (typeof data === 'undefined') {
+    if (fallback !== undefined) return fallback
+    else throw new Error('Object property not found')
+  }
   const propertyPathArray = Array.isArray(node) ? node : splitPropertyString(node as string)
 
   const currentProperty = propertyPathArray[0]
   if (Array.isArray(data)) {
     if (typeof currentProperty === 'number')
       if (propertyPathArray.length === 1)
-        return data?.[currentProperty] === undefined ? fallback : data[currentProperty]
+        if (data?.[currentProperty] === undefined) {
+          if (fallback !== undefined) return fallback
+          else throw new Error('Object property not found')
+        } else return data[currentProperty]
       else return extractProperty(data[currentProperty], propertyPathArray.slice(1), fallback)
     // If an array, extract the property from *each item*
     return data.map((item) => extractProperty(item, propertyPathArray, fallback))
@@ -371,7 +382,12 @@ const extractProperty = (
 
   if (propertyPathArray.length === 1)
     if (typeof currentProperty === 'number') return 'Object not index-able'
-    else return data?.[currentProperty] === undefined ? fallback : data[currentProperty]
+    else {
+      if (data?.[currentProperty] === undefined) {
+        if (fallback !== undefined) return fallback
+        else throw new Error('Object property not found')
+      } else return data[currentProperty]
+    }
   else return extractProperty(data?.[currentProperty], propertyPathArray.slice(1), fallback)
 }
 
