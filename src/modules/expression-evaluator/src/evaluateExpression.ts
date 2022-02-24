@@ -31,9 +31,14 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
   let childrenResolved: any[] = []
   // Recursive case
   if ('children' in inputQuery) {
-    childrenResolved = await Promise.all(
-      inputQuery.children.map((child: any) => evaluationExpressionInstance(child))
-    )
+    try {
+      childrenResolved = await Promise.all(
+        inputQuery.children.map((child: any) => evaluationExpressionInstance(child))
+      )
+    } catch (err) {
+      if (inputQuery?.fallback !== undefined) return inputQuery.fallback
+      else throw err
+    }
   }
   let result: any
   try {
@@ -186,11 +191,15 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
 
       case 'pgSQL':
         if (!params.pgConnection) throw new Error('No Postgres database connection provided')
-        result = await processPgSQL(
-          childrenResolved,
-          inputQuery?.type as OutputType,
-          params.pgConnection
-        )
+        try {
+          result = await processPgSQL(
+            childrenResolved,
+            inputQuery?.type as OutputType,
+            params.pgConnection
+          )
+        } catch (err) {
+          throw err
+        }
         break
 
       case 'graphQL':
@@ -218,7 +227,7 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
     }
   } catch (err) {
     if (inputQuery?.fallback !== undefined) return inputQuery.fallback
-    else return err.message
+    else throw err
   }
 
   if (!inputQuery?.type) return result
@@ -381,8 +390,10 @@ const extractProperty = (
   }
 
   if (propertyPathArray.length === 1)
-    if (typeof currentProperty === 'number') return 'Object not index-able'
-    else {
+    if (typeof currentProperty === 'number') {
+      if (fallback !== undefined) return fallback
+      else throw new Error('Object not index-able')
+    } else {
       if (data?.[currentProperty] === undefined) {
         if (fallback !== undefined) return fallback
         else throw new Error('Object property not found')

@@ -1276,3 +1276,61 @@ testData.listOfOrgs = {
     'organisations.nodes.name',
   ],
 }
+
+testData.nestedErrorQuery = {
+  operator: '+',
+  children: [
+    {
+      operator: 'objectProperties',
+      children: ['responses.user'],
+    },
+    ' ',
+    {
+      operator: 'objectProperties',
+      children: ['application.path'],
+    },
+  ],
+}
+
+testData.nestedSQLErrorWithFallback = {
+  operator: '+',
+  fallback: 'Ignore SQL problem',
+  children: [
+    'Text value',
+    {
+      operator: 'pgSQL',
+      children: ['Bad SQLquery'],
+    },
+  ],
+}
+
+testData.nestedFallback = {
+  operator: '+',
+  children: [
+    {
+      operator: 'objectProperties',
+      children: ['responses.user.id'],
+    },
+    ' ',
+    {
+      fallback: '<Not found>',
+      operator: 'objectProperties',
+      children: ['application.path'],
+    },
+  ],
+}
+
+testData.graphQLErrorWithFallback = {
+  operator: 'graphQL',
+  fallback: [],
+  children: [
+    'query getUsersOrgs($userId: Int!) {\n  user(id: $userId) {\n    username\n    userOrganisations {\n      nodes {\n        organisation {\n          name\n          id\n        }\n      }\n    }\n  }\n}\n',
+    '',
+    ['userId'],
+    {
+      operator: 'objectProperties',
+      children: ['responses.user.id'],
+    },
+    'user.username',
+  ],
+}
