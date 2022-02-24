@@ -183,7 +183,7 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
           throw new Error('Problem with API call')
         }
         try {
-          result = extractAndSimplify(data, returnedProperty, "API - Can't resolve property")
+          result = extractAndSimplify(data, returnedProperty)
         } catch {
           throw new Error('Problem parsing requested node from API result')
         }
@@ -216,7 +216,7 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
         const inputObject = params?.objects ? params.objects : {}
         const funcName = childrenResolved[0]
         const args = childrenResolved.slice(1)
-        const func = extractProperty(inputObject, funcName, 'Function not found') as Function
+        const func = extractProperty(inputObject, funcName) as Function
         result = await func(...args)
         break
 
