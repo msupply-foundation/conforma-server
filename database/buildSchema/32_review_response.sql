@@ -20,7 +20,6 @@ CREATE TABLE public.review_response (
     id serial PRIMARY KEY,
     comment varchar,
     decision public.review_response_decision,
-    review_question_assignment_id integer REFERENCES public.review_question_assignment (id) ON DELETE CASCADE,
     application_response_id integer REFERENCES public.application_response (id) ON DELETE CASCADE,
     review_response_link_id integer REFERENCES public.review_response (id) ON DELETE CASCADE,
     original_review_response_id integer REFERENCES public.review_response (id) ON DELETE CASCADE,
