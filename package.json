@@ -1,6 +1,6 @@
 {
   "name": "application-manager-server",
-  "version": "0.1.1-0",
+  "version": "0.2.0-0",
   "main": "server.js",
   "license": "MIT",
   "repository": {
@@ -68,7 +68,7 @@
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^6.0.0",
     "@openmsupply/deep-comparison": "^1.0.1",
-    "@openmsupply/expression-evaluator": "^1.9.5",
+    "@openmsupply/expression-evaluator": "^1.10.0",
     "adm-zip": "^0.5.5",
     "bcrypt": "^5.0.0",
     "carbone": "^3.2.3",

@@ -2,12 +2,20 @@ require('dotenv').config()
 import readlineSync from 'readline-sync'
 import { writeFileSync } from 'fs'
 import { promisify } from 'util'
-import { exec as execCallback, spawn } from 'child_process'
+import { exec as execCallback } from 'child_process'
 
 const exec = promisify(execCallback)
 const FRONT_END_PATH = process.env.FRONT_END_PATH
 
-const releaseTypes = ['--prerelease', '--patch', '--minor', '--major'] as const
+const releaseTypes = [
+  '--prerelease',
+  '--patch',
+  '--minor',
+  '--major',
+  '--preminor',
+  '--premajor',
+  '--prepatch',
+] as const
 type ReleaseType = typeof releaseTypes[number]
 
 const release = async () => {

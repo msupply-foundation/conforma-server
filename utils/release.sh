@@ -1,4 +1,4 @@
-ts-node './utils/release.ts'
+ts-node './utils/release.ts' $1
 
 tag=$(cat tag)
 rm tag
