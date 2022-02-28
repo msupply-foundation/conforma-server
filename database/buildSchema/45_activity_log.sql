@@ -134,31 +134,25 @@ BEGIN
                     'ERROR'
                 END), NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('status', NEW.status, 'reviewer', json_build_object('id', NEW.reviewer_id, 'name', (
                         SELECT
-                            full_name FROM "user"
+                            full_name
+                        FROM "user"
                         WHERE
                             id = NEW.reviewer_id), 'orgId', NEW.organisation_id, 'orgName', (
                             SELECT
-                                name FROM organisation
+                                name
+                            FROM organisation
                             WHERE
                                 id = NEW.organisation_id)), 'assigner', json_build_object('id', NEW.assigner_id, 'name', (
                                 SELECT
-                                    full_name FROM "user"
+                                    full_name
+                                FROM "user"
                                 WHERE
                                     id = NEW.assigner_id)), 'stage', json_build_object('number', NEW.stage_number, 'name', (
                                     SELECT
-                                        title FROM template_stage
+                                        title
+                                    FROM template_stage
                                     WHERE
-                                        id = NEW.stage_id)), 'sections', (
-                                    SELECT
-                                        json_agg(t)
-                                        FROM (
-                                            SELECT
-                                                title, code, INDEX FROM template_section
-                                            WHERE
-                                                id = ANY (ARRAY ( SELECT DISTINCT
-                                                    template_section_id FROM review_question_assignment_section
-                                                WHERE
-                                                    review_assignment_id = NEW.id)) ORDER BY INDEX) t), 'reviewLevel', NEW.level_number));
+                                        id = NEW.stage_id)), 'sections', NEW.assigned_sections, 'reviewLevel', NEW.level_number));
     RETURN NULL;
 END;
 $application_event$
@@ -214,29 +208,34 @@ BEGIN
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
         VALUES ('REVIEW', NEW.status, app_id, TG_TABLE_NAME, NEW.id, json_build_object('prevStatus', prev_status, 'status', NEW.status, 'reviewId', NEW.review_id, 'reviewer', json_build_object('id', reviewer_id, 'name', (
                         SELECT
-                            full_name FROM "user"
+                            full_name
+                        FROM "user"
                         WHERE
                             id = reviewer_id), 'stage', json_build_object('number', stage_number, 'name', (
                                 SELECT
-                                    title FROM public.template_stage
+                                    title
+                                FROM public.template_stage
                                 WHERE
                                     number = stage_number
                                     AND template_id = (
                                         SELECT
-                                            template_id FROM application
-                                        WHERE
-                                            id = app_id)))), 'sections', (
+                                            template_id
+                                        FROM application
+                                    WHERE
+                                        id = app_id)))), 'sections', (
+                            SELECT
+                                json_agg(t)
+                            FROM (
                                 SELECT
-                                    json_agg(t)
-                                    FROM (
-                                        SELECT
-                                            title, code, "index" FROM template_section
-                                        WHERE
-                                            id = ANY (ARRAY ( SELECT DISTINCT
-                                                        template_section_id FROM review_question_assignment_section
-                                                    WHERE
-                                                        review_assignment_id = assignment_id))
-                                            ORDER BY "index") t), 'level', level_num, 'isLastLevel', is_last_level, 'finalDecision', is_final_decision));
+                                    title, code, "index"
+                                FROM template_section
+                            WHERE
+                                id = ANY (ARRAY ( SELECT DISTINCT
+                                            template_section_id
+                                        FROM review_question_assignment_section
+                                    WHERE
+                                        review_assignment_id = assignment_id))
+                            ORDER BY "index") t), 'level', level_num, 'isLastLevel', is_last_level, 'finalDecision', is_final_decision));
     RETURN NEW;
 END;
 $application_event$
@@ -271,19 +270,22 @@ BEGIN
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
         VALUES ('REVIEW_DECISION', NEW.decision, app_id, TG_TABLE_NAME, NEW.id, json_build_object('reviewId', NEW.review_id, 'decision', NEW.decision, 'comment', NEW.comment, 'reviewer', json_build_object('id', reviewer_id, 'name', (
                         SELECT
-                            full_name FROM "user"
+                            full_name
+                        FROM "user"
                         WHERE
                             id = reviewer_id)), 'sections', (
                         SELECT
                             json_agg(t)
-                            FROM (
-                                SELECT
-                                    title, code, INDEX FROM template_section
-                                WHERE
-                                    id = ANY (ARRAY ( SELECT DISTINCT
-                                        template_section_id FROM review_question_assignment_section
-                                    WHERE
-                                        review_assignment_id = rev_assignment_id)) ORDER BY INDEX) t)));
+                        FROM (
+                            SELECT
+                                title, code, INDEX
+                            FROM template_section
+                            WHERE
+                                id = ANY (ARRAY ( SELECT DISTINCT
+                                    template_section_id
+                                FROM review_question_assignment_section
+                            WHERE
+                                review_assignment_id = rev_assignment_id)) ORDER BY INDEX) t)));
     RETURN NULL;
 END;
 $application_event$
@@ -341,7 +343,8 @@ BEGIN
     INSERT INTO public.activity_log (type, value, "table", record_id, details)
         VALUES ('PERMISSION', status, TG_TABLE_NAME, data.id, json_build_object('permission', json_build_object('id', permission_id, 'name', permission_name), 'user', json_build_object('id', user_id, 'username', username, 'name', (
                         SELECT
-                            full_name FROM "user"
+                            full_name
+                        FROM "user"
                         WHERE
                             id = user_id)), 'organisation', json_build_object('id', org_id, 'name', org_name), 'isActive', active));
     RETURN data;

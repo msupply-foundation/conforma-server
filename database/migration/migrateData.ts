@@ -128,12 +128,17 @@ const migrateData = async () => {
     }
 
     // DROP review_question_assignment and related views/fields
-    await DB.changeSchema(`DROP VIEW IF EXISTS public.review_question_assignment_section;`)
-    await DB.changeSchema(`DROP TABLE IF EXISTS public.review_question_assignment;`)
+    await DB.changeSchema(`ALTER TABLE review_response
+        DROP COLUMN review_question_assignment_id;`)
+    await DB.changeSchema(`DROP VIEW IF EXISTS
+      public.review_question_assignment_section;`)
+    await DB.changeSchema(`DROP TABLE IF EXISTS
+      public.review_question_assignment CASCADE;`)
 
-    // Redefine assigned questions
-
-    // Fix activity log
+    // Activity log - remove all references to review_question_assignment
+    await DB.changeSchema(
+      `CREATE OR REPLACE FUNCTION public.assignment_activity_log () RETURNS TRIGGER AS $application_event$ BEGIN INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details) VALUES ('ASSIGNMENT', ( CASE WHEN NEW.status = 'ASSIGNED' AND NEW.reviewer_id = NEW.assigner_id THEN 'Self-Assigned' WHEN NEW.status = 'ASSIGNED' AND NEW.reviewer_id <> NEW.assigner_id THEN 'Assigned' WHEN NEW.status = 'AVAILABLE' THEN 'Unassigned' ELSE 'ERROR' END), NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('status', NEW.status, 'reviewer', json_build_object('id', NEW.reviewer_id, 'name', ( SELECT full_name FROM "user" WHERE id = NEW.reviewer_id), 'orgId', NEW.organisation_id, 'orgName', ( SELECT name FROM organisation WHERE id = NEW.organisation_id)), 'assigner', json_build_object('id', NEW.assigner_id, 'name', ( SELECT full_name FROM "user" WHERE id = NEW.assigner_id)), 'stage', json_build_object('number', NEW.stage_number, 'name', ( SELECT title FROM template_stage WHERE id = NEW.stage_id)), 'sections', NEW.assigned_sections, 'reviewLevel', NEW.level_number)); RETURN NULL; END; $application_event$ LANGUAGE plpgsql;`
+    )
   }
 
   // Other version migrations continue here...
