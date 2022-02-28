@@ -57,7 +57,7 @@ CREATE TRIGGER review_response_timestamp_trigger
     FOR EACH ROW
     EXECUTE FUNCTION public.update_review_response_timestamp ();
 
--- set review response original_review_response_id (the response that links to application id should be available for all reaponses)
+-- set review response original_review_response_id (the response that links to application id should be available for all responses)
 -- also flatten out review response chain by providing template_element_id in review_response and application_response_id
 CREATE OR REPLACE FUNCTION set_original_response ()
     RETURNS TRIGGER

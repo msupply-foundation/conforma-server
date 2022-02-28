@@ -140,6 +140,11 @@ const migrateData = async () => {
     await execSync(
       `psql -U postgres -q -b -d tmf_app_manager -f "./database/buildSchema/45_activity_log.sql"`
     )
+
+    // Update function to generate template_element_id for review_response
+    await DB.changeSchema(
+      `CREATE OR REPLACE FUNCTION set_original_response () RETURNS TRIGGER AS $$ BEGIN IF NEW.review_response_link_id IS NOT NULL THEN NEW.original_review_response_id = ( SELECT original_review_response_id FROM review_response WHERE id = NEW.review_response_link_id); NEW.application_response_id = ( SELECT application_response_id FROM review_response WHERE id = NEW.review_response_link_id); ELSE NEW.original_review_response_id = NEW.id; END IF; NEW.template_element_id = ( SELECT template_element_id FROM application_response WHERE id = NEW.application_response_id); RETURN NEW; END; $$ LANGUAGE plpgsql;`
+    )
   }
 
   // Other version migrations continue here...
