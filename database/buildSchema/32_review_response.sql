@@ -83,14 +83,14 @@ BEGIN
         -- should always be original review_response when review_response_link_id IS NULL
         NEW.original_review_response_id = NEW.id;
     END IF;
-    -- review_question_assignment should always exist
+    -- application_response should always exist
     NEW.template_element_id = (
         SELECT
             template_element_id
         FROM
-            review_question_assignment
+            application_response
         WHERE
-            id = NEW.review_question_assignment_id);
+            id = NEW.application_response_id);
     RETURN NEW;
 END;
 $$
