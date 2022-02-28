@@ -2,6 +2,7 @@ import config from '../../src/config'
 import DB from './databaseMethods'
 import { ReviewAssignmentsWithSections } from './types'
 import semverCompare from 'semver/functions/compare'
+import { execSync } from 'child_process'
 
 const { version } = config
 const isManualMigration: Boolean = process.argv[2] === '--migrate'
@@ -71,7 +72,7 @@ const migrateData = async () => {
     FOR EACH ROW WHEN (NEW.status = 'AVAILABLE')
     EXECUTE FUNCTION public.empty_assigned_sections ();`)
 
-    // Update assigned questions function to remove review_question_assignments
+    // Update function to count assigned questions
     await DB.changeSchema(`CREATE OR REPLACE FUNCTION public.assigned_questions_count (app_id int, stage_id int, level int)
     RETURNS bigint
     AS $$
@@ -135,9 +136,9 @@ const migrateData = async () => {
     await DB.changeSchema(`DROP TABLE IF EXISTS
       public.review_question_assignment CASCADE;`)
 
-    // Activity log - remove all references to review_question_assignment
-    await DB.changeSchema(
-      `CREATE OR REPLACE FUNCTION public.assignment_activity_log () RETURNS TRIGGER AS $application_event$ BEGIN INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details) VALUES ('ASSIGNMENT', ( CASE WHEN NEW.status = 'ASSIGNED' AND NEW.reviewer_id = NEW.assigner_id THEN 'Self-Assigned' WHEN NEW.status = 'ASSIGNED' AND NEW.reviewer_id <> NEW.assigner_id THEN 'Assigned' WHEN NEW.status = 'AVAILABLE' THEN 'Unassigned' ELSE 'ERROR' END), NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('status', NEW.status, 'reviewer', json_build_object('id', NEW.reviewer_id, 'name', ( SELECT full_name FROM "user" WHERE id = NEW.reviewer_id), 'orgId', NEW.organisation_id, 'orgName', ( SELECT name FROM organisation WHERE id = NEW.organisation_id)), 'assigner', json_build_object('id', NEW.assigner_id, 'name', ( SELECT full_name FROM "user" WHERE id = NEW.assigner_id)), 'stage', json_build_object('number', NEW.stage_number, 'name', ( SELECT title FROM template_stage WHERE id = NEW.stage_id)), 'sections', NEW.assigned_sections, 'reviewLevel', NEW.level_number)); RETURN NULL; END; $application_event$ LANGUAGE plpgsql;`
+    // Run whole activity log build script from scratch
+    await execSync(
+      `psql -U postgres -q -b -d tmf_app_manager -f "./database/buildSchema/45_activity_log.sql"`
     )
   }
 
