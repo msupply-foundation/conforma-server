@@ -52,7 +52,7 @@ END;
 $application_event$
 LANGUAGE plpgsql;
 
-DROP TRIGGER stage_activity_trigger ON public.application_stage_history;
+DROP TRIGGER IF EXISTS stage_activity_trigger ON public.application_stage_history;
 
 CREATE TRIGGER stage_activity_trigger
     AFTER INSERT ON public.application_stage_history
@@ -89,7 +89,7 @@ END;
 $application_event$
 LANGUAGE plpgsql;
 
-DROP TRIGGER status_activity_trigger ON public.application_status_history;
+DROP TRIGGER IF EXISTS status_activity_trigger ON public.application_status_history;
 
 CREATE TRIGGER status_activity_trigger
 -- We run this trigger BEFORE insertion so we can more easily capture the
@@ -110,14 +110,14 @@ END;
 $application_event$
 LANGUAGE plpgsql;
 
-DROP TRIGGER outcome_insert_activity_trigger ON public.application;
+DROP TRIGGER IF EXISTS outcome_insert_activity_trigger ON public.application;
 
 CREATE TRIGGER outcome_insert_activity_trigger
     AFTER INSERT ON public.application
     FOR EACH ROW
     EXECUTE FUNCTION outcome_activity_log ();
 
-DROP TRIGGER outcome_update_activity_trigger ON public.application;
+DROP TRIGGER IF EXISTS outcome_update_activity_trigger ON public.application;
 
 CREATE TRIGGER outcome_update_activity_trigger
     AFTER UPDATE ON public.application
@@ -185,12 +185,7 @@ BEGIN
                                             title, code, "index"
                                         FROM template_section
                                     WHERE
-                                        code = ANY (ARRAY (
-                                                SELECT
-                                                    OLD.assigned_sections
-                                                FROM review_assignment
-                                            WHERE
-                                                id = NEW.id))
+                                        code = ANY (OLD.assigned_sections)
                                         AND template_id = NEW.template_id ORDER BY "index") t)), 'reviewLevel', NEW.level_number));
     RETURN NULL;
 END;
@@ -199,12 +194,13 @@ LANGUAGE plpgsql;
 
 -- For this trigger, we watch for changes to TRIGGER field, so it only runs
 -- once other triggers have finished
-DROP TRIGGER assignment_activity_trigger ON public.review_assignment;
+DROP TRIGGER IF EXISTS assignment_activity_trigger ON public.review_assignment;
 
 CREATE TRIGGER assignment_activity_trigger
     AFTER UPDATE ON public.review_assignment
     FOR EACH ROW
-    WHEN (NEW.trigger IS NULL AND OLD.trigger = 'PROCESSING')
+    WHEN (NEW.assigned_sections <> OLD.assigned_sections)
+    -- WHEN (NEW.trigger IS NULL AND OLD.trigger = 'PROCESSING')
     EXECUTE FUNCTION assignment_activity_log ();
 
 -- REVIEW STATUS CHANGES
@@ -287,7 +283,7 @@ END;
 $application_event$
 LANGUAGE plpgsql;
 
-DROP TRIGGER review_status_activity_trigger ON public.review_status_history;
+DROP TRIGGER IF EXISTS review_status_activity_trigger ON public.review_status_history;
 
 CREATE TRIGGER review_status_activity_trigger
 -- We run this trigger BEFORE insertion so we can more easily capture the
@@ -342,14 +338,14 @@ BEGIN
                                             assigned_sections
                                         FROM review_assignment
                                     WHERE
-                                        id = assignment_id))
+                                        id = rev_assignment_id))
                                 AND template_id = templ_id ORDER BY "index") t)));
     RETURN NULL;
 END;
 $application_event$
 LANGUAGE plpgsql;
 
-DROP TRIGGER review_decision_activity_trigger ON public.review_decision;
+DROP TRIGGER IF EXISTS review_decision_activity_trigger ON public.review_decision;
 
 CREATE TRIGGER review_decision_activity_trigger
     AFTER UPDATE ON public.review_decision
@@ -412,14 +408,14 @@ END;
 $application_event$
 LANGUAGE plpgsql;
 
-DROP TRIGGER permission_insert_activity_trigger ON public.permission_join;
+DROP TRIGGER IF EXISTS permission_insert_activity_trigger ON public.permission_join;
 
 CREATE TRIGGER permission_insert_activity_trigger
     AFTER INSERT ON public.permission_join
     FOR EACH ROW
     EXECUTE FUNCTION permission_activity_log ();
 
-DROP TRIGGER permission_delete_activity_trigger ON public.permission_join;
+DROP TRIGGER IF EXISTS permission_delete_activity_trigger ON public.permission_join;
 
 CREATE TRIGGER permission_delete_activity_trigger
     BEFORE DELETE ON public.permission_join
