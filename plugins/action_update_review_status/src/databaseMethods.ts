@@ -55,9 +55,17 @@ const databaseMethods = (DBConnect: any) => ({
   },
   getReviewAssignedElementIds: async (reviewAssignmentId: number) => {
     const text = `
-    SELECT template_element_id AS "templateElementId"
-    FROM review_question_assignment
-    WHERE review_assignment_id = $1
+    SELECT DISTINCT(te.id) AS "templateElementId"
+    FROM template_element te JOIN template_section ts
+    ON te.section_id = ts.id
+    JOIN (
+    		SELECT id, application_id, template_id, UNNEST(assigned_sections) as section_code
+    		FROM review_assignment
+    	) ra 
+    ON ra.template_id = ts.template_id  
+    WHERE ra.id = 28
+    AND ts.code = ra.section_code
+    AND te.category = 'QUESTION'
     `
     try {
       const result = await DBConnect.query({ text, values: [reviewAssignmentId] })
