@@ -103,6 +103,31 @@ const migrateData = async () => {
     LANGUAGE sql
     STABLE;`)
 
+    await DB.changeSchema(`CREATE OR REPLACE FUNCTION public.submitted_assigned_questions_count (app_id int, stage_id int, level_number int) RETURNS bigint AS $$
+    SELECT COUNT(DISTINCT (te.id))
+    FROM (SELECT id, application_id, stage_id, level_number, status,
+            UNNEST(assigned_sections) AS section_code
+        FROM review_assignment) ra
+    JOIN template_section ts ON ra.section_code = ts.code
+    JOIN template_element te ON ts.id = te.section_id
+    LEFT JOIN review ON review.review_assignment_id = ra.id
+    LEFT JOIN review_status_history rsh ON rsh.review_id = review.id
+  WHERE
+    ra.application_id = $1
+    AND ra.stage_id = $2
+    AND ra.level_number = $3
+    AND ra.status = 'ASSIGNED'
+    AND te.category = 'QUESTION'
+    AND rsh.status = 'SUBMITTED'
+    AND te.template_code = (
+        SELECT code FROM TEMPLATE
+        WHERE id = (
+          SELECT template_id FROM application
+          WHERE id = 236))
+    $$
+    LANGUAGE sql
+    STABLE;`)
+
     // Create missing "assigned sections" for existing review_assignments
     try {
       const reviewAssignments = await DB.getIncompleteReviewAssignments()
