@@ -654,12 +654,19 @@ class PostgresDB {
     }
   }
 
-  public getUserTemplatePermissions = async (username: string, orgId: number | null) => {
+  public getUserTemplatePermissions = async (
+    username: string,
+    orgId: number | null,
+    includeUserCategory = false
+  ) => {
     const orgMatch = `"orgId" ${orgId === null ? 'IS NULL' : '= $2'}`
+
+    // "User" category permissions are ONLY included in login routes
+    const userCategoryString = includeUserCategory ? ` OR "isUserCategory" = true` : ''
 
     const text = `SELECT * FROM permissions_all
       WHERE username = $1
-      AND (${orgMatch} OR "isUserCategory" = true)
+      AND (${orgMatch}${userCategoryString})
       `
 
     const values: (string | number)[] = [username]
