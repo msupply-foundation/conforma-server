@@ -63,7 +63,7 @@ const databaseMethods = (DBConnect: any) => ({
     		FROM review_assignment
     	) ra 
     ON ra.template_id = ts.template_id  
-    WHERE ra.id = 28
+    WHERE ra.id = $1
     AND ts.code = ra.section_code
     AND te.category = 'QUESTION'
     `

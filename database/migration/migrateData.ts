@@ -123,7 +123,7 @@ const migrateData = async () => {
         SELECT code FROM TEMPLATE
         WHERE id = (
           SELECT template_id FROM application
-          WHERE id = 236))
+          WHERE id = $1))
     $$
     LANGUAGE sql
     STABLE;`)

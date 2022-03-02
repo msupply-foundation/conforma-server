@@ -126,7 +126,7 @@ WHERE
                 FROM
                     application
                 WHERE
-                    id = 236))
+                    id = $1))
 $$
 LANGUAGE sql
 STABLE;
