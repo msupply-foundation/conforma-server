@@ -2,6 +2,7 @@ import config from '../../src/config'
 import DB from './databaseMethods'
 import { ReviewAssignmentsWithSections } from './types'
 import semverCompare from 'semver/functions/compare'
+import { execSync } from 'child_process'
 
 const { version } = config
 const isManualMigration: Boolean = process.argv[2] === '--migrate'
@@ -57,23 +58,75 @@ const migrateData = async () => {
     ) // CREATE OR REPLACE not working
     await DB.changeSchema('DROP FUNCTION unassign_review_without_sections')
 
-    await DB.changeSchema(`CREATE TRIGGER review_assignment_trigger2
-      AFTER INSERT OR UPDATE OF trigger ON public.review_assignment
-      FOR EACH ROW
-      WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
-      EXECUTE FUNCTION public.add_event_to_trigger_queue ();`)
-
-    await DB.changeSchema(`
-        CREATE OR REPLACE FUNCTION public.empty_assigned_sections ()
-          RETURNS TRIGGER AS $review_assignment_event$
+    await DB.changeSchema(`CREATE OR REPLACE FUNCTION public.empty_assigned_sections () RETURNS TRIGGER AS $review_assignment_event$
         BEGIN
-            UPDATE public.review_assignment
-            SET assigned_sections = '{}'
+            UPDATE public.review_assignment SET assigned_sections = '{}'
             WHERE id = NEW.id;
             RETURN NULL;
         END;
         $review_assignment_event$
         LANGUAGE plpgsql;`)
+
+    await DB.changeSchema(`CREATE TRIGGER review_assignment_trigger2
+    AFTER UPDATE OF status ON public.review_assignment
+    FOR EACH ROW WHEN (NEW.status = 'AVAILABLE')
+    EXECUTE FUNCTION public.empty_assigned_sections ();`)
+
+    // Update function to count assigned questions
+    await DB.changeSchema(`CREATE OR REPLACE FUNCTION public.assigned_questions_count (app_id int, stage_id int, level int)
+    RETURNS bigint
+    AS $$
+    SELECT COUNT(DISTINCT (te.id))
+    FROM (
+            SELECT
+                id,
+                application_id,
+                stage_id,
+                level_number,
+                status,
+                UNNEST(assigned_sections) AS section_code
+            FROM
+                review_assignment) ra
+        JOIN template_section ts ON ra.section_code = ts.code
+        JOIN template_element te ON ts.id = te.section_id
+    WHERE
+        ra.application_id = $1
+        AND ra.stage_id = $2
+        AND ra.level_number = $3
+        AND ra.status = 'ASSIGNED'
+        AND te.category = 'QUESTION'
+        AND te.template_code = (SELECT code FROM TEMPLATE
+            WHERE id = (
+                    SELECT template_id FROM application
+                    WHERE id = $1));
+    $$
+    LANGUAGE sql
+    STABLE;`)
+
+    await DB.changeSchema(`CREATE OR REPLACE FUNCTION public.submitted_assigned_questions_count (app_id int, stage_id int, level_number int) RETURNS bigint AS $$
+    SELECT COUNT(DISTINCT (te.id))
+    FROM (SELECT id, application_id, stage_id, level_number, status,
+            UNNEST(assigned_sections) AS section_code
+        FROM review_assignment) ra
+    JOIN template_section ts ON ra.section_code = ts.code
+    JOIN template_element te ON ts.id = te.section_id
+    LEFT JOIN review ON review.review_assignment_id = ra.id
+    LEFT JOIN review_status_history rsh ON rsh.review_id = review.id
+  WHERE
+    ra.application_id = $1
+    AND ra.stage_id = $2
+    AND ra.level_number = $3
+    AND ra.status = 'ASSIGNED'
+    AND te.category = 'QUESTION'
+    AND rsh.status = 'SUBMITTED'
+    AND te.template_code = (
+        SELECT code FROM TEMPLATE
+        WHERE id = (
+          SELECT template_id FROM application
+          WHERE id = $1))
+    $$
+    LANGUAGE sql
+    STABLE;`)
 
     // Create missing "assigned sections" for existing review_assignments
     try {
@@ -93,8 +146,46 @@ const migrateData = async () => {
         }))
       )
     } catch (err) {
-      throw err
+      console.log(
+        "Assigned sections couldn't be updated, presumably already done:",
+        err.message,
+        '\n'
+      )
     }
+
+    // DROP review_question_assignment and related views/fields
+    await DB.changeSchema(`ALTER TABLE review_response
+        DROP COLUMN review_question_assignment_id;`)
+    await DB.changeSchema(`DROP VIEW IF EXISTS
+      public.review_question_assignment_section;`)
+    await DB.changeSchema(`DROP TABLE IF EXISTS
+      public.review_question_assignment CASCADE;`)
+
+    // Run whole activity log build script from scratch
+    await execSync(
+      `psql -U postgres -q -b -d tmf_app_manager -f "./database/buildSchema/45_activity_log.sql"`
+    )
+
+    // Update function to generate template_element_id for review_response
+    await DB.changeSchema(
+      `CREATE OR REPLACE FUNCTION set_original_response () RETURNS TRIGGER AS $$ BEGIN IF NEW.review_response_link_id IS NOT NULL THEN NEW.original_review_response_id = (
+        SELECT original_review_response_id 
+        FROM review_response 
+        WHERE id = NEW.review_response_link_id);
+      NEW.application_response_id = (
+        SELECT application_response_id 
+        FROM review_response 
+        WHERE id = NEW.review_response_link_id);
+      ELSE NEW.original_review_response_id = NEW.id;
+      END IF;
+      -- application_response should always exist
+      NEW.template_element_id = (
+        SELECT template_element_id 
+        FROM application_response 
+        WHERE id = NEW.application_response_id);
+      RETURN NEW; END;
+      $$ LANGUAGE plpgsql;`
+    )
   }
 
   // Other version migrations continue here...
