@@ -84,12 +84,12 @@ test('Test: remove unchanged application_response duplicates', () => {
           { applicationResponseId: 14004, templateElementId: 4005 },
           { applicationResponseId: 14005, templateElementId: 4006 },
           { applicationResponseId: 14007, templateElementId: 4009 },
-          { applicationResponseId: 14010, templateElementId: 4013 },
+          { applicationResponseId: 14009, templateElementId: 4012 },
         ],
         updatedResponses: [
           { applicationResponseId: 14006, templateElementId: 4008 },
           { applicationResponseId: 14008, templateElementId: 4011 },
-          { applicationResponseId: 14009, templateElementId: 4012 },
+          { applicationResponseId: 14010, templateElementId: 4013 },
         ],
       },
     })
@@ -106,20 +106,12 @@ test('Test: remove unchanged review_response duplicates, with custom timestamp',
       error_log: '',
       output: {
         deletedResponses: [
+          { reviewResponseId: 10000, templateElementId: 4001 },
+          { reviewResponseId: 10001, templateElementId: 4002 },
           { reviewResponseId: 10002, templateElementId: 4003 },
           { reviewResponseId: 10004, templateElementId: 4006 },
         ],
         updatedResponses: [
-          {
-            reviewResponseDecision: 'APPROVE',
-            reviewResponseId: 10000,
-            templateElementId: 4001,
-          },
-          {
-            reviewResponseDecision: 'APPROVE',
-            reviewResponseId: 10001,
-            templateElementId: 4002,
-          },
           {
             reviewResponseDecision: 'DECLINE',
             reviewResponseId: 10003,
