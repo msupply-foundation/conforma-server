@@ -55,10 +55,11 @@ test('Test: add User to database', () => {
       error_log: '',
       output: {
         user: {
-          id: 18,
+          id: 19,
           email: 'test@sussol.net',
           first_name: 'Carl',
           last_name: 'Smith',
+          full_name: 'Carl Smith',
           username: 'ceejay2',
           password_hash: 'XYZ1234',
           date_of_birth: new Date('1999-12-22T11:00:00.000Z'),
@@ -82,6 +83,7 @@ test('Test: Modify existing user', () => {
           email: 'carl@msupply.foundation',
           first_name: 'Carl',
           last_name: 'Smith',
+          full_name: 'Carl Smith',
           username: 'carl',
           password_hash: '$2a$10$3Z1cXVI.GzE9F2QYePzbMOg5CGtf6VnNKRiaiRGkzlBXJ0aiMN4JG',
           date_of_birth: null,
@@ -101,12 +103,13 @@ test('Test: Modify existing user using username', () => {
       error_log: '',
       output: {
         user: {
-          id: 6,
+          id: 4,
           email: 'john@msupply.foundation',
           first_name: 'John',
           last_name: 'Smith',
+          full_name: 'John Smith',
           username: 'js',
-          password_hash: '$2a$10$WQ5VMHB6bOVwjyE8Vhh64.TLQKcUOeJpfU6ZUSqYq3tlts3vCN2mG',
+          password_hash: '$2a$10$ne2WcPISMw/Do3JzlwThYeO2GcodrumjI3FwGu1ZUoKgRQyAgNS3e',
           date_of_birth: null,
         },
       },
@@ -129,12 +132,13 @@ test('Test: Change username by matching username', () => {
       error_log: '',
       output: {
         user: {
-          id: 6,
+          id: 4,
           email: 'john@msupply.foundation',
           first_name: 'Johnny',
           last_name: 'Smith',
+          full_name: 'Johnny Smith',
           username: 'johnny_smith',
-          password_hash: '$2a$10$WQ5VMHB6bOVwjyE8Vhh64.TLQKcUOeJpfU6ZUSqYq3tlts3vCN2mG',
+          password_hash: '$2a$10$ne2WcPISMw/Do3JzlwThYeO2GcodrumjI3FwGu1ZUoKgRQyAgNS3e',
           date_of_birth: null,
         },
       },
@@ -151,12 +155,13 @@ test('Test: creating new field on user "dateOfBirth"', () => {
       error_log: '',
       output: {
         user: {
-          dateOfBirth: '1999-12-23',
+          id: 20,
+          dateOfBirth: '1999-12-22',
           date_of_birth: null,
           email: 'test@sussol.net',
           first_name: 'Carl',
-          id: 19,
           last_name: 'Smith',
+          full_name: 'Carl Smith',
           password_hash: 'XYZ1234',
           user_name: 'ceejay',
           username: null,
@@ -190,6 +195,7 @@ test('Test: add Org to database', () => {
       output: {
         organisation: {
           id: 5,
+          is_system_org: false,
           name: 'PharmaFarm',
           registration: 'AVC123',
           address: '123 Uptown Drive\nAuckland',
@@ -211,6 +217,7 @@ test('Test: add Org2 -- not all parameters provided', () => {
       output: {
         organisation: {
           id: 6,
+          is_system_org: false,
           name: 'Import This!',
           registration: null,
           address: null,
@@ -232,6 +239,7 @@ test('Test: Update existing organisation', () => {
       output: {
         organisation: {
           id: 1,
+          is_system_org: false,
           name: 'Drugs-R-Us',
           registration: '123456789',
           address: '123 Nowhere St\nAuckland',
@@ -252,6 +260,6 @@ test('Test: Check creating of application join record', () => {
       values: [result.output.user.id],
     })
 
-    expect(queryResult.rows).toEqual([{ application_id: 4000, id: 6, user_id: 20 }])
+    expect(queryResult.rows).toEqual([{ application_id: 4000, id: 6, user_id: 21 }])
   })
 })

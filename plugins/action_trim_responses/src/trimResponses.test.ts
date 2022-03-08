@@ -37,34 +37,34 @@ beforeAll(async (done) => {
     text: `
     INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10000, NULL, 'APPROVE', 4001, 4010, NULL, 6003, 'NOW()', 'SUBMITTED');
+      VALUES (10000, NULL, 'APPROVE', 4001, 4020, NULL, 6003, 'NOW()', 'SUBMITTED');
     INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10001, NULL, 'APPROVE', 4002, 4011, NULL, 6003, 'NOW()', 'SUBMITTED');
+      VALUES (10001, NULL, 'APPROVE', 4002, 4021, NULL, 6003, 'NOW()', 'SUBMITTED');
     INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10002, NULL, 'APPROVE', 4003, 4012, NULL, 6003, 'NOW()', 'SUBMITTED');
+      VALUES (10002, NULL, 'APPROVE', 4003, 4022, NULL, 6003, 'NOW()', 'SUBMITTED');
     INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10003, 'This not right', 'DECLINE', 4005, 4013, NULL, 6003, 'NOW()', 'SUBMITTED');
+      VALUES (10003, 'This not right', 'DECLINE', 4005, 4023, NULL, 6003, 'NOW()', 'SUBMITTED');
     INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10004, NULL, 'APPROVE', 4006, 4014, NULL, 6003, 'NOW()', 'SUBMITTED');
+      VALUES (10004, NULL, 'APPROVE', 4006, 4024, NULL, 6003, 'NOW()', 'SUBMITTED');
     INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10005, NULL, 'APPROVE', 4008, 4015, NULL, 6003, 'NOW()', 'SUBMITTED');
+      VALUES (10005, NULL, 'APPROVE', 4008, 4025, NULL, 6003, 'NOW()', 'SUBMITTED');
     INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10006, NULL, 'APPROVE', 4009, 4016, NULL, 6003, 'NOW()', 'SUBMITTED');
+      VALUES (10006, NULL, 'APPROVE', 4009, 4026, NULL, 6003, 'NOW()', 'SUBMITTED');
     INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10007, NULL, 'APPROVE', 4011, 4017, NULL, 6003, 'NOW()', 'SUBMITTED');
+      VALUES (10007, NULL, 'APPROVE', 4011, 4027, NULL, 6003, 'NOW()', 'SUBMITTED');
     INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10008, NULL, 'APPROVE', 4012, 4018, NULL, 6003, 'NOW()', 'SUBMITTED');
+      VALUES (10008, NULL, 'APPROVE', 4012, 4028, NULL, 6003, 'NOW()', 'SUBMITTED');
     INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10009, NULL, 'APPROVE', 4013, 4019, NULL, 6003, 'NOW()', 'SUBMITTED');
+      VALUES (10009, NULL, 'APPROVE', 4013, 4029, NULL, 6003, 'NOW()', 'SUBMITTED');
     `,
     values: [],
   })
@@ -106,20 +106,44 @@ test('Test: remove unchanged review_response duplicates, with custom timestamp',
       error_log: '',
       output: {
         deletedResponses: [
-          { reviewResponseId: 10000, templateElementId: 4001 },
-          { reviewResponseId: 10001, templateElementId: 4002 },
           { reviewResponseId: 10002, templateElementId: 4003 },
           { reviewResponseId: 10004, templateElementId: 4006 },
-          { reviewResponseId: 10005, templateElementId: 4008 },
-          { reviewResponseId: 10006, templateElementId: 4009 },
-          { reviewResponseId: 10007, templateElementId: 4011 },
-          { reviewResponseId: 10008, templateElementId: 4012 },
         ],
         updatedResponses: [
+          {
+            reviewResponseDecision: 'APPROVE',
+            reviewResponseId: 10000,
+            templateElementId: 4001,
+          },
+          {
+            reviewResponseDecision: 'APPROVE',
+            reviewResponseId: 10001,
+            templateElementId: 4002,
+          },
           {
             reviewResponseDecision: 'DECLINE',
             reviewResponseId: 10003,
             templateElementId: 4005,
+          },
+          {
+            reviewResponseDecision: 'APPROVE',
+            reviewResponseId: 10005,
+            templateElementId: 4008,
+          },
+          {
+            reviewResponseDecision: 'APPROVE',
+            reviewResponseId: 10006,
+            templateElementId: 4009,
+          },
+          {
+            reviewResponseDecision: 'APPROVE',
+            reviewResponseId: 10007,
+            templateElementId: 4011,
+          },
+          {
+            reviewResponseDecision: 'APPROVE',
+            reviewResponseId: 10008,
+            templateElementId: 4012,
           },
           {
             reviewResponseDecision: 'APPROVE',
