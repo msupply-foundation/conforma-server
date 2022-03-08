@@ -35,36 +35,36 @@ beforeAll(async (done) => {
   // Duplicate review responses, with some modifications
   await DBConnect.query({
     text: `
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+    INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10000, NULL, 'APPROVE', 2000, 4010, NULL, 6003, 'NOW()', 'SUBMITTED');
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+      VALUES (10000, NULL, 'APPROVE', 4001, 4010, NULL, 6003, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10001, NULL, 'APPROVE', 2001, 4011, NULL, 6003, 'NOW()', 'SUBMITTED');
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+      VALUES (10001, NULL, 'APPROVE', 4002, 4011, NULL, 6003, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10002, NULL, 'APPROVE', 2002, 4012, NULL, 6003, 'NOW()', 'SUBMITTED');
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+      VALUES (10002, NULL, 'APPROVE', 4003, 4012, NULL, 6003, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10003, 'This not right', 'DECLINE', 2003, 4013, NULL, 6003, 'NOW()', 'SUBMITTED');
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+      VALUES (10003, 'This not right', 'DECLINE', 4005, 4013, NULL, 6003, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10004, NULL, 'APPROVE', 2004, 4014, NULL, 6003, 'NOW()', 'SUBMITTED');
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+      VALUES (10004, NULL, 'APPROVE', 4006, 4014, NULL, 6003, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10005, NULL, 'APPROVE', 2006, 4015, NULL, 6003, 'NOW()', 'SUBMITTED');
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+      VALUES (10005, NULL, 'APPROVE', 4008, 4015, NULL, 6003, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10006, NULL, 'APPROVE', 2007, 4016, NULL, 6003, 'NOW()', 'SUBMITTED');
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+      VALUES (10006, NULL, 'APPROVE', 4009, 4016, NULL, 6003, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10007, NULL, 'APPROVE', 2008, 4017, NULL, 6003, 'NOW()', 'SUBMITTED');
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+      VALUES (10007, NULL, 'APPROVE', 4011, 4017, NULL, 6003, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10008, NULL, 'APPROVE', 2009, 4018, NULL, 6003, 'NOW()', 'SUBMITTED');
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+      VALUES (10008, NULL, 'APPROVE', 4012, 4018, NULL, 6003, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, template_element_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (10009, NULL, 'APPROVE', 2010, 4019, NULL, 6003, 'NOW()', 'SUBMITTED');
+      VALUES (10009, NULL, 'APPROVE', 4013, 4019, NULL, 6003, 'NOW()', 'SUBMITTED');
     `,
     values: [],
   })
