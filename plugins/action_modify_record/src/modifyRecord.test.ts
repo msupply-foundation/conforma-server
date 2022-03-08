@@ -156,7 +156,7 @@ test('Test: creating new field on user "dateOfBirth"', () => {
       output: {
         user: {
           id: 20,
-          dateOfBirth: '1999-12-22',
+          dateOfBirth: new Date('1999-12-22T11:00:00.000Z'),
           date_of_birth: null,
           email: 'test@sussol.net',
           first_name: 'Carl',
