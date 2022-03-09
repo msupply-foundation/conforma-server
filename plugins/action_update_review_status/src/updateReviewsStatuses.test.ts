@@ -77,8 +77,8 @@ describe('Update review_response to required changes_requested by consolidator1'
   beforeAll(async (done) => {
     await DBConnect.query({
       text: `
-      INSERT INTO public.review_response (id, review_id, review_question_assignment_id, template_element_id, application_response_id, decision, status)
-        VALUES (DEFAULT, 5003, 1022, 4001, 4000, 'DISAGREE', 'SUBMITTED');
+      INSERT INTO public.review_response (id, review_id, template_element_id, application_response_id, decision, status)
+        VALUES (DEFAULT, 5003, 4001, 4000, 'DISAGREE', 'SUBMITTED');
       INSERT INTO public.review_decision (id, decision, review_id)
         VALUES (DEFAULT, 'CHANGES_REQUESTED', 5003);
       INSERT INTO public.review_status_history (id, review_id, status)
@@ -140,10 +140,10 @@ describe('Update review_responses after updating changes_requested to reviewer1'
   beforeAll(async (done) => {
     await DBConnect.query({
       text: `
-    INSERT INTO public.review_response (id, review_id, review_question_assignment_id, template_element_id, application_response_id, decision, status)
-      VALUES (DEFAULT, 6003, 3010, 4001, 4020, 'APPROVE', 'SUBMITTED');
-    INSERT INTO public.review_response (id, review_id, review_question_assignment_id, template_element_id, application_response_id, decision, status)
-      VALUES (DEFAULT, 6003, 3011, 4002, 4021, 'APPROVE', 'SUBMITTED');
+    INSERT INTO public.review_response (id, review_id, template_element_id, application_response_id, decision, status)
+      VALUES (DEFAULT, 6003, 4001, 4020, 'APPROVE', 'SUBMITTED');
+    INSERT INTO public.review_response (id, review_id, template_element_id, application_response_id, decision, status)
+      VALUES (DEFAULT, 6003, 4002, 4021, 'APPROVE', 'SUBMITTED');
     UPDATE public.review_decision SET decision = 'CONFORM', comment = NULL, time_updated = 'NOW()' WHERE id = 6002;
     INSERT INTO public.review_status_history (id, review_id, status)
       VALUES (DEFAULT, 6003, 'SUBMITTED');
@@ -337,6 +337,14 @@ describe('Update review_response to submit review with LOQ to applicant by conso
           updatedReviewAssignments: [
             {
               reviewAssignmentId: 1032,
+              isLocked: true,
+            },
+            {
+              reviewAssignmentId: 1081,
+              isLocked: true,
+            },
+            {
+              reviewAssignmentId: 1083,
               isLocked: true,
             },
           ],
