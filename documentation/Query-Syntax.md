@@ -39,6 +39,7 @@ For more complex lookups, we would hide the complexity from the user in the Temp
   - [Contents](#contents)
 - [Structure](#structure)
   - [type](#type)
+  - [fallback](#fallback)
 - [Operators](#operators)
   - [AND](#and)
   - [OR](#or)
@@ -79,6 +80,7 @@ Each node in the tree is an either:
   type: <optional>
   operator: <string>
   children: [ <optional> ]
+  fallback: <optional>
 }
 ```
 
@@ -103,6 +105,17 @@ Valid values:
 - number
 - boolean / bool
 - array
+
+## fallback
+
+This property allows you to define a `fallback` value for *any* error that is thrown as a result of the query, or any of its children. This can be useful, for example, when making a database query with a parameter, and the parameter isn't available yet because it needs to come from a user's response. Rather than throw an error, or return a error message in the UI, we can provide a fallback (such as an empty string or empty array) so the malformed query is invisible to the end user (and also won't crash the plugin!)
+
+The fallback value can be placed at any level of the query, and will be returned on any error of that node or any of its children. So, for example, if you were building an array of elements, of which only *some* were provided by a database query that might fail, then you could still return the rest of the results by placing a fallback value of an empty array at the level of the database query node.
+
+Note that some of the operators have their own "fallback" node, which can also be used. This is mainly for backwards compatibility purposes -- this top-level `fallback` parameter is the recommended way to handle errors with fallbacks.
+
+Because the fallback doesn't give any useful information about errors, it is recommended that you don't add a fallback value while building and/or debugging queries, so you can benefit from more useful error reporting. The fallback value should be added at the end once you're happy with it.
+
 
 # Operators
 

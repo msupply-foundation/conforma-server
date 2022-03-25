@@ -31,6 +31,7 @@ export interface OperatorNode {
   operator: Operator
   type?: OutputType
   children?: Array<EvaluatorNode>
+  fallback?: any
   value?: ValueNode // deprecated
 }
 

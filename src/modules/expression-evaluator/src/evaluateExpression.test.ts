@@ -299,12 +299,14 @@ test('Test returning single application property, depth 2, no object index', () 
   })
 })
 
-test('Test unresolved object', () => {
-  return evaluateExpression(testData.objectPropertyUnresolved, {
-    objects: { application: testData.application },
-  }).then((result: any) => {
-    expect(result).toBe("Can't resolve object")
-  })
+test('Test unresolved object', async () => {
+  try {
+    await evaluateExpression(testData.objectPropertyUnresolved, {
+      objects: { application: testData.application },
+    })
+  } catch (e) {
+    expect(e.message).toMatch('Object property not found')
+  }
 })
 
 test('Test unresolved object with Null fallback', () => {
@@ -882,21 +884,83 @@ test('Return index -- middle of string', () => {
   })
 })
 
-test('Try and access non-indexable object', () => {
+test('Try and access non-indexable object', async () => {
+  try {
+    await evaluateExpression(
+      {
+        operator: 'objectProperties',
+        children: ['responses.user[2]'],
+      },
+      {
+        objects: { responses: testData.responses },
+      }
+    )
+  } catch (e) {
+    expect(e.message).toMatch('Object not index-able')
+  }
+})
+
+// Errors and fallbacks
+
+test('Throw error -- bad API call', async () => {
+  try {
+    await evaluateExpression({
+      operator: 'API',
+      children: [],
+    })
+  } catch (e) {
+    expect(e.message).toMatch('Invalid API query')
+  }
+})
+
+test('Error bubbles up from child -- unresolved object property', async () => {
+  try {
+    await evaluateExpression(testData.nestedErrorQuery, {
+      objects: { responses: testData.responses },
+    })
+  } catch (e) {
+    expect(e.message).toMatch('Object property not found')
+  }
+})
+
+test('Fallback with error at top-level', () => {
   return evaluateExpression(
     {
       operator: 'objectProperties',
-      children: ['responses.user[2]'],
+      children: ['responses.user.texts'],
+      fallback: 'Not found!',
     },
     {
       objects: { responses: testData.responses },
     }
   ).then((result: any) => {
-    expect(result).toEqual('Object not index-able')
+    expect(result).toEqual('Not found!')
   })
 })
 
-// TO-DO: Write some tests for showing error conditions
+test('Fallback top-level, error deep', () => {
+  return evaluateExpression(testData.nestedSQLErrorWithFallback, {
+    objects: { responses: testData.responses },
+  }).then((result: any) => {
+    expect(result).toEqual('Ignore SQL problem')
+  })
+})
+
+test('Fallback and error deep', () => {
+  return evaluateExpression(testData.nestedFallback, {
+    objects: { responses: testData.responses },
+  }).then((result: any) => {
+    expect(result).toEqual('629 <Not found>')
+  })
+})
+
+test('GraphQL empty array fallback when query returns incomplete data', () => {
+  return evaluateExpression(testData.graphQLErrorWithFallback, {
+    objects: { responses: testData.responses },
+  }).then((result: any) => {
+    expect(result).toEqual([])
+  })
+})
 
 afterAll(() => {
   pgConnect.end()
