@@ -1,5 +1,6 @@
 import { processTrigger, executeAction } from './actions/triggersAndActions'
 import { actionLibrary } from './pluginsConnect'
+import { deleteFile } from './files/deleteFiles'
 import config from '../config'
 import { Client, Pool, QueryResult } from 'pg'
 import {
@@ -38,6 +39,7 @@ class PostgresDB {
     listener.connect()
     listener.query('LISTEN trigger_notifications')
     listener.query('LISTEN action_notifications')
+    listener.query('LISTEN file_notifications')
     listener.on('notification', async ({ channel, payload }) => {
       if (!payload) {
         console.log(`Notification ${channel} received with no payload!`)
@@ -59,6 +61,8 @@ class PostgresDB {
           } finally {
             break
           }
+        case 'file_notifications':
+          deleteFile(payloadObject)
       }
     })
   }
@@ -202,7 +206,10 @@ class PostgresDB {
 
   public addFile = async (payload: FilePayload): Promise<string> => {
     const text = `INSERT INTO file (${Object.keys(payload)}) 
-      VALUES (${this.getValuesPlaceholders(payload)}) RETURNING unique_id`
+      VALUES (${this.getValuesPlaceholders(payload)})
+      ON CONFLICT (unique_id) DO UPDATE
+        SET (${Object.keys(payload)}) = (${this.getValuesPlaceholders(payload)})
+        RETURNING unique_id`
     try {
       const result = await this.query({ text, values: Object.values(payload) })
       return result.rows[0].unique_id
@@ -647,12 +654,19 @@ class PostgresDB {
     }
   }
 
-  public getUserTemplatePermissions = async (username: string, orgId: number | null) => {
+  public getUserTemplatePermissions = async (
+    username: string,
+    orgId: number | null,
+    includeUserCategory = false
+  ) => {
     const orgMatch = `"orgId" ${orgId === null ? 'IS NULL' : '= $2'}`
+
+    // "User" category permissions are ONLY included in login routes
+    const userCategoryString = includeUserCategory ? ` OR "isUserCategory" = true` : ''
 
     const text = `SELECT * FROM permissions_all
       WHERE username = $1
-      AND (${orgMatch} OR "isUserCategory" = true)
+      AND (${orgMatch}${userCategoryString})
       `
 
     const values: (string | number)[] = [username]
@@ -725,64 +739,19 @@ class PostgresDB {
   }
 
   public getUserOrgPermissionNames = async (userId: number, orgId: number | null | undefined) => {
+    // Only consider userId = NULL when orgId is present (can't both be NULL)
+    const userMatch = `("userId" = $1 ${orgId ? 'OR "userId" IS NULL' : ''})`
     const orgMatch = `"orgId" ${orgId ? '= $2' : 'IS NULL'}`
     const text = `
       SELECT "permissionNameId" as id,
       "permissionName" FROM permissions_all
-      WHERE "userId" = $1
+      WHERE ${userMatch}
       AND ${orgMatch}`
     const values: number[] = [userId]
     if (orgId) values.push(orgId)
     try {
       const result = await this.query({ text, values })
       return result.rows
-    } catch (err) {
-      console.log(err.message)
-      throw err
-    }
-  }
-
-  public joinPermissionNameToUser = async (username: string, permissionName: string) => {
-    const text = `
-    insert into permission_join (user_id, permission_name_id) 
-    values (
-        (select id from "user" where username = $1),
-        (select id from permission_name where name = $2))
-    ON CONFLICT (user_id, permission_name_id)
-      WHERE organisation_id IS NULL
-    DO
-    		UPDATE SET (user_id, is_active) = ((select id from "user" where username = $1), true)
-    returning id
-    `
-    try {
-      const result = await this.query({ text, values: [username, permissionName] })
-      return result.rows[0].id
-    } catch (err) {
-      console.log(err.message)
-      throw err
-    }
-  }
-
-  public joinPermissionNameToUserOrg = async (
-    username: string,
-    org: string | number,
-    permissionName: string
-  ) => {
-    const text = `
-    INSERT INTO permission_join (user_id, organisation_id, permission_name_id) 
-    values (
-        (select id from "user" where username = $1),
-        ${typeof org === 'number' ? '$2' : '(select id from organisation where name = $2)'},
-        (select id from permission_name where name = $3))
-    ON CONFLICT (user_id, organisation_id, permission_name_id)
-      WHERE organisation_id IS NOT NULL
-    DO
-    		UPDATE SET (user_id, is_active) = ((select id from "user" where username = $1), true)
-    RETURNING id
-    `
-    try {
-      const result = await this.query({ text, values: [username, org, permissionName] })
-      return result.rows[0].id
     } catch (err) {
       console.log(err.message)
       throw err

@@ -35,56 +35,76 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
       inputQuery.children.map((child: any) => evaluationExpressionInstance(child))
     )
   }
+  let result: any
   switch (inputQuery.operator) {
     case 'AND':
-      return childrenResolved.reduce((acc: boolean, child: boolean) => {
+      result = childrenResolved.reduce((acc: boolean, child: boolean) => {
         return acc && child
       }, true)
+      break
 
     case 'OR':
-      return childrenResolved.reduce((acc: boolean, child: boolean) => {
+      result = childrenResolved.reduce((acc: boolean, child: boolean) => {
         return acc || child
       }, false)
+      break
 
     case 'REGEX':
       try {
         const str: string = childrenResolved[0]
         const re: RegExp = new RegExp(childrenResolved[1])
-        return re.test(str)
+        result = re.test(str)
       } catch {
         throw new Error('Problem with REGEX')
       }
+      break
 
     case '=':
-      return childrenResolved.every((child) => child == childrenResolved[0])
+      result = childrenResolved.every((child) => child == childrenResolved[0])
+      break
 
     case '!=':
-      return childrenResolved[0] != childrenResolved[1]
+      result = childrenResolved[0] != childrenResolved[1]
+      break
 
     case 'CONCAT':
     case '+':
-      if (childrenResolved.length === 0) return childrenResolved
+      if (childrenResolved.length === 0) {
+        result = childrenResolved
+        break
+      }
 
       // Reduce based on "type" if specified
-      if (inputQuery?.type === 'string')
-        return childrenResolved.reduce((acc, child) => acc.concat(child), '')
-      if (inputQuery?.type === 'array')
-        return childrenResolved.reduce((acc, child) => acc.concat(child), [])
+      if (inputQuery?.type === 'string') {
+        result = childrenResolved.reduce((acc, child) => acc.concat(child), '')
+        break
+      }
+      if (inputQuery?.type === 'array') {
+        result = childrenResolved.reduce((acc, child) => acc.concat(child), [])
+        break
+      }
 
       // Concatenate arrays/strings
-      if (childrenResolved.every((child) => typeof child === 'string' || Array.isArray(child)))
-        return childrenResolved.reduce((acc, child) => acc.concat(child))
+      if (childrenResolved.every((child) => typeof child === 'string' || Array.isArray(child))) {
+        result = childrenResolved.reduce((acc, child) => acc.concat(child))
+        break
+      }
 
       // Merge objects
       if (childrenResolved.every((child) => child instanceof Object && !Array.isArray(child))) {
-        return childrenResolved.reduce((acc, child) => ({ ...acc, ...child }), {})
+        {
+          result = childrenResolved.reduce((acc, child) => ({ ...acc, ...child }), {})
+          break
+        }
       }
 
       // Or just try to add any other types
-      return childrenResolved.reduce((acc: number, child: number) => acc + child)
+      result = childrenResolved.reduce((acc: number, child: number) => acc + child)
+      break
 
     case '?':
-      return childrenResolved[0] ? childrenResolved[1] : childrenResolved[2]
+      result = childrenResolved[0] ? childrenResolved[1] : childrenResolved[2]
+      break
 
     case 'objectProperties':
       if (Object.entries(params).length === 0)
@@ -93,10 +113,11 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
         const inputObject = params?.objects ? params.objects : {}
         const property = childrenResolved[0]
         const fallback = childrenResolved?.[1]
-        return extractProperty(inputObject, property, fallback)
+        result = extractProperty(inputObject, property, fallback)
       } catch {
         throw new Error('Problem evaluating object')
       }
+      break
 
     case 'stringSubstitution':
       const origString: string = childrenResolved[0]
@@ -113,7 +134,8 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
         .forEach(([param, replacement]) => {
           outputString = outputString.replace(new RegExp(`${param}`, 'g'), replacement ?? '')
         })
-      return outputString
+      result = outputString
+      break
 
     case 'POST':
     case 'GET':
@@ -159,34 +181,65 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
         throw new Error('Problem with API call')
       }
       try {
-        return extractAndSimplify(data, returnedProperty, "API - Can't resolve property")
+        result = extractAndSimplify(data, returnedProperty, "API - Can't resolve property")
       } catch {
         throw new Error('Problem parsing requested node from API result')
       }
+      break
 
     case 'pgSQL':
       if (!params.pgConnection) throw new Error('No Postgres database connection provided')
-      return processPgSQL(childrenResolved, inputQuery?.type as OutputType, params.pgConnection)
+      result = await processPgSQL(
+        childrenResolved,
+        inputQuery?.type as OutputType,
+        params.pgConnection
+      )
+      break
 
     case 'graphQL':
       if (!params.graphQLConnection) throw new Error('No GraphQL database connection provided')
       const gqlHeaders = params?.headers ?? params.graphQLConnection.headers
-      return processGraphQL(childrenResolved, params.graphQLConnection, gqlHeaders)
+      result = await processGraphQL(childrenResolved, params.graphQLConnection, gqlHeaders)
+      break
 
     case 'buildObject':
-      return buildObject(inputQuery as BuildObjectQuery, evaluationExpressionInstance)
+      result = buildObject(inputQuery as BuildObjectQuery, evaluationExpressionInstance)
+      break
 
     case 'objectFunctions':
       const inputObject = params?.objects ? params.objects : {}
       const funcName = childrenResolved[0]
       const args = childrenResolved.slice(1)
       const func = extractProperty(inputObject, funcName, 'Function not found') as Function
-      return await func(...args)
+      result = await func(...args)
+      break
+
+    default:
+      return 'No matching operators'
 
     // etc. for as many other operators as we want/need.
   }
 
-  return 'No matching operators'
+  if (!inputQuery?.type) return result
+
+  // Type conversion
+  switch (inputQuery.type) {
+    case 'number':
+      return Number.isNaN(Number(result)) ? result : Number(result)
+
+    case 'string':
+      return String(result)
+
+    case 'array':
+      return Array.isArray(result) ? result : [result]
+
+    case 'boolean':
+    case 'bool':
+      return Boolean(result)
+
+    default:
+      return result
+  }
 }
 
 async function processPgSQL(queryArray: any[], queryType: string, connection: IConnection) {
@@ -203,7 +256,8 @@ async function processPgSQL(queryArray: any[], queryType: string, connection: IC
       case 'string':
         return res.rows.flat().join(' ')
       case 'number':
-        return Number(res.rows.flat())
+        const result = res.rows.flat()
+        return Number.isNaN(Number(result)) ? result : Number(result)
       default:
         return res.rows
     }
@@ -296,23 +350,40 @@ const zipArraysToObject = (variableNames: string[], variableValues: any[]) => {
   return createdObject
 }
 
-// Returns a specific property (e.g. application.name) from a nested Object
+// Returns a specific property or index (e.g. application.name) from a nested Object
 const extractProperty = (
   data: BasicObject | BasicObject[],
-  node: string | string[],
+  node: string | number | (string | number)[],
   fallback: any = "Can't resolve object"
 ): BasicObject | string | number | boolean | BasicObject[] | Function => {
   if (typeof data === 'undefined') return fallback
-  const propertyPathArray = Array.isArray(node) ? node : node.split('.')
-  // ie. "application.template.name" => ["applcation", "template", "name"]
+  const propertyPathArray = Array.isArray(node) ? node : splitPropertyString(node as string)
+
+  const currentProperty = propertyPathArray[0]
   if (Array.isArray(data)) {
+    if (typeof currentProperty === 'number')
+      if (propertyPathArray.length === 1)
+        return data?.[currentProperty] === undefined ? fallback : data[currentProperty]
+      else return extractProperty(data[currentProperty], propertyPathArray.slice(1), fallback)
     // If an array, extract the property from *each item*
     return data.map((item) => extractProperty(item, propertyPathArray, fallback))
   }
-  const currentProperty = propertyPathArray[0]
+
   if (propertyPathArray.length === 1)
-    return data?.[currentProperty] === undefined ? fallback : data[currentProperty]
+    if (typeof currentProperty === 'number') return 'Object not index-able'
+    else return data?.[currentProperty] === undefined ? fallback : data[currentProperty]
   else return extractProperty(data?.[currentProperty], propertyPathArray.slice(1), fallback)
+}
+
+// Splits a string representing a (nested) property/index on an Object or Array
+// into array of strings/indexes
+// e.g. "data.organisations.nodes[0]" => ["data","organisations", "nodes", 0]
+const splitPropertyString = (propertyPath: string) => {
+  const arr = propertyPath.split('.').map((part) => {
+    const match = /([A-Za-z]+)\[(\d)\]/g.exec(part)
+    return !match ? part : [match[1], Number(match[2])]
+  })
+  return arr.flat()
 }
 
 // If Object has only 1 property, return just the value of that property,

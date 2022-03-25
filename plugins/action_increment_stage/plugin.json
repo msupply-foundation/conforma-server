@@ -4,7 +4,7 @@
   "name": "Increment Stage",
   "description": "Increments (or creates) the application Stage, if possible.",
   "required_parameters": [],
-  "optional_parameters": ["application_id"],
+  "optional_parameters": ["applicationId"],
   "output_properties": [
     "applicationId",
     "stageNumber",

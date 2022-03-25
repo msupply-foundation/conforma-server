@@ -2,11 +2,14 @@
 
 # To exit container, type 'exit'
 
+# Get SMTP password from .env file
+export $(grep -v '^#' ../.env | xargs)
+
 docker run \
     -ti \
     -p 3000:3000 \
-    -e 'SMTP_PASSWORD=smtp_password_goes_here' -e 'WEB_HOST=http://localhost:3000' \
-    testbuild
+    -e "SMTP_PASSWORD=${SMTP_PASSWORD}" -e 'WEB_HOST=http://localhost:3000' \
+    ${1:-conforma-demo}
 
 # -ti -> interactive (connect to shell on startup)
 # -p -> {localhost-port}:{container-port}, changing this would conflict with web_app_config/config.json

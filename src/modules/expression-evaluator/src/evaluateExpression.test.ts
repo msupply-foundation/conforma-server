@@ -802,6 +802,100 @@ test('Object functions -- generate a date from two strings', () => {
   })
 })
 
+// Type conversion
+test('Extract numbers from array', () => {
+  return evaluateExpression(
+    {
+      operator: 'objectProperties',
+      type: 'number',
+      children: ['responses.orgs.id'],
+    },
+    {
+      objects: { responses: testData.responses },
+    }
+  ).then((result: any) => {
+    expect(result).toBe(628)
+  })
+})
+
+test('Join array into single string', () => {
+  return evaluateExpression(testData.listOfOrgs, {
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toBe(
+      'Food & Drug Agency,Pharma123,Manufacturer Medical,National Medical,Holistic Medicine AU,Bayer (Pty) Ltd,Novartis Spain,Fine Chemicals Corp (Pty) Ltd,Pharma Suppliers,Regional Pharm First,Pharmed Corp Ltd Pty,Global Health Incorporated,Adam Company 2'
+    )
+  })
+})
+
+test('Coerce string to boolean', () => {
+  return evaluateExpression({
+    operator: '=',
+    children: [
+      {
+        operator: '+',
+        type: 'bool',
+        children: ['three'],
+      },
+      true,
+    ],
+  }).then((result: any) => {
+    expect(result).toBe(true)
+  })
+})
+
+// Access array by index
+test('Return index from array', () => {
+  return evaluateExpression(
+    {
+      operator: 'objectProperties',
+      children: ['responses.user.selection[1]'],
+    },
+    {
+      objects: { responses: testData.responses },
+    }
+  ).then((result: any) => {
+    expect(result).toEqual({
+      id: 9,
+      email: 'noreply@sussol.net',
+      lastName: 'Madruga',
+      username: 'nicole',
+      firstName: 'Nicole',
+    })
+  })
+})
+
+test('Return index -- middle of string', () => {
+  return evaluateExpression(
+    {
+      operator: 'objectProperties',
+      children: ['responses.user.selection[0].username'],
+    },
+    {
+      objects: { responses: testData.responses },
+    }
+  ).then((result: any) => {
+    expect(result).toEqual('carl')
+  })
+})
+
+test('Try and access non-indexable object', () => {
+  return evaluateExpression(
+    {
+      operator: 'objectProperties',
+      children: ['responses.user[2]'],
+    },
+    {
+      objects: { responses: testData.responses },
+    }
+  ).then((result: any) => {
+    expect(result).toEqual('Object not index-able')
+  })
+})
+
 // TO-DO: Write some tests for showing error conditions
 
 afterAll(() => {

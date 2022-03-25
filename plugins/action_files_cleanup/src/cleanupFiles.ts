@@ -79,13 +79,8 @@ async function cleanupFiles({ parameters, applicationData, DBConnect }: ActionPl
 
   async function deleteFile(file: FileInfo) {
     try {
-      // Delete the file
-      await fsPromises.unlink(path.join(appRootFolder, filesFolder, file.filePath))
-      // Delete the thumbnail, but only if it's in the application folder
-      // (i.e. not the generics)
-      if (file.filePath.split('/')[0] === file.thumbnailPath.split('/')[0])
-        await fsPromises.unlink(path.join(appRootFolder, filesFolder, file.thumbnailPath))
-      // Delete the database record
+      // Delete the database record -- file will be deleted automatically due to
+      // database trigger
       await db.deleteFileRecord(file.uniqueId)
       return file
     } catch (err) {

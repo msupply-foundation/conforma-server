@@ -1,3 +1,11 @@
+-- For storing system info
+CREATE TABLE public.system_info (
+    id serial PRIMARY KEY,
+    name varchar NOT NULL,
+    value jsonb DEFAULT '{}',
+    timestamp timestamptz DEFAULT CURRENT_TIMESTAMP
+);
+
 -- For primary and foreign key
 CREATE OR REPLACE VIEW constraints_info AS
 SELECT

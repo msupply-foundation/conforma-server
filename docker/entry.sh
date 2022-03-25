@@ -1,13 +1,21 @@
 #!/bin/bash
 
-if [[ ! -f /var/lib/postgresql/12/main/PG_VERSION ]]
-then
+if [[ ! -f /var/lib/postgresql/12/main/PG_VERSION ]]; then
    echo '---'
    echo 'copying fresh db to new mounted volume'
    echo '---'
    cp -r ./fresh_db/* /var/lib/postgresql/12/main
    chown -R postgres:postgres /var/lib/postgresql/12/*
    chmod -R 0700 /var/lib/postgresql/12/*
+fi
+
+if [[ ! -f ./build/files ]]; then
+   echo '---'
+   echo 'no files present, will pull from core-templates'
+   echo '---'
+   cp -r ./build/database/core_templates/files ./build
+   cp -r ./build/database/core_templates/localisation ./build
+   cp ./build/database/core_templates/preferences.json ./build
 fi
 
 echo '---'

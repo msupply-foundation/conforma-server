@@ -120,10 +120,6 @@ class DBConnect {
 
   public getUserOrgPermissionNames = PostgresDB.getUserOrgPermissionNames
 
-  public joinPermissionNameToUser = PostgresDB.joinPermissionNameToUser
-
-  public joinPermissionNameToUserOrg = PostgresDB.joinPermissionNameToUserOrg
-
   public getNumReviewLevels = PostgresDB.getNumReviewLevels
 
   public getReviewStageAndLevel = PostgresDB.getReviewStageAndLevel
@@ -155,6 +151,8 @@ class DBConnect {
   public getReviewDataFromAssignment = GraphQLdb.getReviewDataFromAssignment
 
   public isInternalOrg = GraphQLdb.isInternalOrg
+
+  public getAllApplicationTriggers = GraphQLdb.getAllApplicationTriggers
 }
 
 const dbConnectInstance = DBConnect.Instance

@@ -29,7 +29,9 @@ async function generateReviewAssignments({
   try {
     // Get template information and current stage for application
     const { templateId, status, stageNumber, stageId, stageHistoryTimeCreated } =
-      applicationData?.applicationId ?? (await DBConnect.getApplicationData(applicationId))
+      applicationData?.applicationId
+        ? applicationData
+        : await DBConnect.getApplicationData(applicationId)
 
     // Find out which is the highest review level that has had review
     // assignments previously generated

@@ -4,8 +4,8 @@
   "name": "Revoke Permissions",
   "description": "Revokes existing permission(s) from user/org -- only sets existing permissions to inactive, doesn't actually delete records",
   "required_parameters": ["permissionNames"],
-  "optional_parameters": ["username", "orgName", "orgId"],
-  "output_properties": ["permissionJoinIds", "permissionNames"],
+  "optional_parameters": ["username", "orgName", "orgId", "isRemovingPermission"],
+  "output_properties": ["revokedPermissions"],
   "info": {
     "author": {
       "name": "The mSupply Foundation",

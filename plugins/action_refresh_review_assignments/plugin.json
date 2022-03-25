@@ -4,8 +4,8 @@
   "name": "Refresh User Review Assignment Records",
   "description": "Re-generates ALL review assignments for all applications associated with specific user",
   "required_parameters": [],
-  "optional_parameters": ["userId", "orgId"],
-  "output_properties": [],
+  "optional_parameters": ["userId"],
+  "output_properties": ["updatedApplications"],
   "info": {
     "author": {
       "name": "The mSupply Foundation",

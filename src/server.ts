@@ -29,12 +29,15 @@ import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
 import snapshotRoutes from './components/snapshots/routes'
 import { routeGetLanguageFile } from './components/localisation/routes'
+import { routeTriggers } from './components/other/routeTriggers'
 import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
+import migrateData from '../database/migration/migrateData'
 require('dotenv').config()
 
 // Fastify server
 
 const startServer = async () => {
+  await migrateData()
   await loadActionPlugins() // Connects to Database and listens for Triggers
 
   createFilesFolder()
@@ -123,6 +126,7 @@ const startServer = async () => {
     server.get('/outcomes', routeOutcomes)
     server.get('/outcomes/table/:tableName', routeOutcomesTable)
     server.get('/outcomes/table/:tableName/item/:id', routeOutcomesDetail)
+    server.get('/check-triggers', routeTriggers)
 
     // File upload endpoint
     server.post('/upload', async function (request: any, reply) {
@@ -145,6 +149,7 @@ const startServer = async () => {
       console.error(err)
       process.exit(1)
     }
+    console.log(generateAsciiHeader(config.version))
     console.log(`Server listening at ${address}`)
   })
 
@@ -156,3 +161,19 @@ const startServer = async () => {
 }
 
 startServer()
+
+function generateAsciiHeader(version: string) {
+  // Should look like:
+  // -------------------------
+  // |                       |
+  // |    CONFORMA v0.2.1    |
+  // |                       |
+  // -------------------------
+  const name = `CONFORMA v${version}`
+  const pad = name.length % 2 === 0 ? 0 : 1
+  const outerLine = '-'.repeat(28 + pad)
+  const innerLine = '|' + ' '.repeat(26 + pad) + '|'
+  const nameGap = ' '.repeat((27 + pad) / 2 - (name.length + pad) / 2)
+  const nameLine = `|${nameGap}${name}${nameGap}|`
+  return `\n${outerLine}\n${innerLine}\n${nameLine}\n${innerLine}\n${outerLine}\n`
+}

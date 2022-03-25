@@ -36,7 +36,7 @@ const getParameter = (parameterName: string, isBooleanParameter = false) => {
 
 const getSnapshotName = (lastParameterAlreadyRead: boolean) => {
   if (lastParameterAlreadyRead) return undefined
-  if (process.argv.length <= 3) return undefined
+  if (process.argv.length <= 3) return 'core_templates'
 
   const name = process.argv[process.argv.length - 1]
   if (name in aliases) return aliases[name]
