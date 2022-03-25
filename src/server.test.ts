@@ -1,12 +1,18 @@
 // Test suite for Fastify server endpoints
 const fetch = require('node-fetch')
-const config = require('./config.json')
+import config from './config'
+import secrets from './testSecrets.json'
+// Need to manually create testSecrets.json, see evaluator docs for details
 
 // Config
-const baseURL = `http://localhost:${config.RESTport}/`
+const baseURL = `http://localhost:${config.RESTport}/api/`
 
 const getRequest = async (url: string) => {
-  const response = await fetch(url)
+  const response = await fetch(url, {
+    headers: {
+      Authorization: secrets.nonRegisteredAuth,
+    },
+  })
   const data = response.json()
   return data
 }
@@ -69,7 +75,7 @@ test('Check unique: Returns false when query is invalid (misnamed type field)', 
     (result: any) => {
       expect(result).toEqual({
         unique: false,
-        message: 'Type missing or invalid',
+        message: 'Type, table, or field missing or invalid',
       })
     }
   )
@@ -80,7 +86,7 @@ test('Check unique: Returns false when query is invalid (type is invalid)', () =
     (result: any) => {
       expect(result).toEqual({
         unique: false,
-        message: 'Type missing or invalid',
+        message: 'Type, table, or field missing or invalid',
       })
     }
   )

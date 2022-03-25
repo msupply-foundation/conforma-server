@@ -8,6 +8,7 @@
   - [Increment Stage](#increment-stage)
   - [Change Status](#change-status)
   - [Modify Record](#modify-record)
+    - [How the record is built](#how-the-record-is-built)
   - [Generate Text String](#generate-text-string)
     - [Parameters summary](#parameters-summary)
       - [String parameters](#string-parameters)
@@ -119,15 +120,30 @@ Creates or updates a database record on any table, and creates/updates a related
 
 - _Action Code:_ **`modifyRecord`**
 
-| Input parameters<br />(\*required) <br/> | Output properties    |
-| ---------------------------------------- | -------------------- |
-| `tableName`\*                            | `<tableName>` object |
-| `matchField`                             |                      |
-| `matchValue`                             |                      |
-| `shouldCreateJoinTable` (default `true`) |                      |
-| `...fields for database record`          |                      |
+| Input parameters<br />(\*required) <br/>       | Output properties    |
+| ---------------------------------------------- | -------------------- |
+| `tableName`\*                                  | `<tableName>` object |
+| `matchField`                                   |                      |
+| `matchValue`                                   |                      |
+| `shouldCreateJoinTable` (default `true`)       |                      |
+| `data` (shorthand for multiple fields at once) |                      |
+| `...fields for database record`                |                      |
 
-The Action first checks if a record exists, based on the `matchField` (e.g. `username`) and `matchValue` (e.g. the value of `username` to check). If it exists, the record will be updated, otherwise a new record is created.
+The Action first checks if `<tableName>` exists in the database and creates it if not. It creates fields matching the incoming record and makes a best match of the data type from one of the following postGres data types:
+
+- `date`
+- `time with timezone`
+- `timestamptz` (date and time)
+- `jsonb` (object)
+- `boolean`
+- `integer` (number)
+- `double precision` (number)
+- `varchar` (string)
+- `array` (whose element type is any of the above)
+
+Any time a record is inserted or updated on a table, if the field name doesn't exist it will be created accordingly. (See below for detail on how the record is constructed)
+
+The Action then checks if a record already exists, based on the `matchField` (e.g. `username`) and `matchValue` (e.g. the value of `username` to check). If it exists, the record will be updated, otherwise a new record is created.
 
 If `matchField` is not provided, it will default to `id`.
 
@@ -160,10 +176,50 @@ Wheras:
 
 This will look for a user record with `username = "js"` and update it with the _new_ username of `john`.
 
-**Note:**
+#### How the record is built
+
+The full record to be inserted/updated is built from a combination of the `data` parameter and any other non-specific parameters included in the input. Seperated field parameters can be of any degree of complexity (i.e. [evaluator](Query-Syntax.md) expressions), so may be necessary in some cases. However, the vast majority of data fields inserted will be straight mappings from application responses (and there can be an awful lot of them in some workflows!), so we can use the `data` parameter object as a shorthand to map several fields using a more straightforward syntax all at once -- the `data` object is structured with key-value pairs like so:
+```
+{ <field-name> : <property-from-applicationData>, ... }
+```
+
+For example:
+```
+{
+  first_name: "responses.Q1.text",
+  last_name: "responses.Q2.text",
+  applicant: "username",
+  date_of_birth: "responses.DOB.date.start" (from Date picker)
+}
+```
+
+If we had the above `data` parameter, along with the following additional parameters in the input:
+```
+{
+  ...
+  registration: <some-complex-evaluator-query-to-database>,
+  current_time: <fetch-current-timestamp-using-"objectFunctions">
+}
+```
+The resultant record that would be inserted might look something like this:
+```
+{
+  first_name: "Fred",
+  last_name: "Smith",
+  applicant: "bob",
+  date_of_birth: "23/12/2012",
+  registration: "XYZ-123",
+  current_time: "2022-02-24T11:13:49.987Z"
+}
+```
+
+It is recommended to use the `data` parameter object when possible. The standalone field parameters should be reserved for when the required value is not available directly from `applicationData`.
+
+**Notes:**
 
 - fields with a value of `null` will be omitted from the database update, so any current values will remain unchanged.
 - you can create/update an record without creating/updating the JOIN table by explicitly setting `shouldCreateJoinTable: false`
+- the data type of each field is set the first time a record is added with that field in it, so subsequent insertions/updates *must* match the data type for that field.
 
 ---
 
