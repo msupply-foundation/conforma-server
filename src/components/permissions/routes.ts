@@ -92,12 +92,17 @@ const routeUserPermissions = async (request: any, reply: any) => {
       message: 'Missing username or orgId in query.',
     })
 
-  const { username } = query
-  const orgId = query?.orgId ?? null
+  const username = query?.username === '' ? null : query?.username ?? null
+  const orgId: number | null =
+    query?.orgId === 'null' || query?.orgId === '0'
+      ? null
+      : query?.orgId
+      ? Number(query.orgId)
+      : null
 
   if (auth.error) return reply.send({ success: false, message: auth.console.error })
 
-  const isSystemOrg = await databaseConnect.isInternalOrg(Number(orgId))
+  const isSystemOrg = orgId ? await databaseConnect.isInternalOrg(orgId) : false
 
   const templatePermissionRows = await databaseConnect.getTemplatePermissions(isSystemOrg)
 

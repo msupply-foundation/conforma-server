@@ -20,7 +20,6 @@ CREATE TABLE public.review_response (
     id serial PRIMARY KEY,
     comment varchar,
     decision public.review_response_decision,
-    review_question_assignment_id integer REFERENCES public.review_question_assignment (id) ON DELETE CASCADE,
     application_response_id integer REFERENCES public.application_response (id) ON DELETE CASCADE,
     review_response_link_id integer REFERENCES public.review_response (id) ON DELETE CASCADE,
     original_review_response_id integer REFERENCES public.review_response (id) ON DELETE CASCADE,
@@ -58,7 +57,7 @@ CREATE TRIGGER review_response_timestamp_trigger
     FOR EACH ROW
     EXECUTE FUNCTION public.update_review_response_timestamp ();
 
--- set review response original_review_response_id (the response that links to application id should be available for all reaponses)
+-- set review response original_review_response_id (the response that links to application id should be available for all responses)
 -- also flatten out review response chain by providing template_element_id in review_response and application_response_id
 CREATE OR REPLACE FUNCTION set_original_response ()
     RETURNS TRIGGER
@@ -83,14 +82,14 @@ BEGIN
         -- should always be original review_response when review_response_link_id IS NULL
         NEW.original_review_response_id = NEW.id;
     END IF;
-    -- review_question_assignment should always exist
+    -- application_response should always exist
     NEW.template_element_id = (
         SELECT
             template_element_id
         FROM
-            review_question_assignment
+            application_response
         WHERE
-            id = NEW.review_question_assignment_id);
+            id = NEW.application_response_id);
     RETURN NEW;
 END;
 $$

@@ -498,7 +498,7 @@ i.e `{user: "user"}`
 
 Tree structure:
 
-[[images/query-syntax-example-1.png|Example 1 tree diagram]]
+![Example 1 tree diagram](images/query-syntax-example-1.png)
 
 ```
 {
@@ -524,7 +524,7 @@ _Note: this query uses PostGres (pgSQL) operator -- in the app, we’ll probably
 
 Tree structure:
 
-[[images/query-syntax-example-2.png|Example 2 tree diagram]]
+![Example 2 tree diagram](images/query-syntax-example-2.png)
 
 ```
 {
@@ -565,7 +565,7 @@ Tree structure:
 
 Tree structure:
 
-[[images/query-syntax-example-3b.png|Example 3 tree diagram]]
+![Example 3 tree diagram](images/query-syntax-example-3b.png)
 
 ```
 {
@@ -718,7 +718,7 @@ Then you can bump the minimum version of the package in the dependent projects (
 
 This is a browser-based dev tool within the expression-evaluator folder (`/expression-evaluate-gui`) to make building complex queries for templates easy to test and debug.
 
-[[images/query-syntax-gui_screenshot.png|GUI screenshot]]
+![GUI screenshot](images/query-syntax-gui_screenshot.png)
 
 As it's a stand-alone project, before using it you'll need to run `yarn install` from within
 the **expression-evaluate-gui** folder

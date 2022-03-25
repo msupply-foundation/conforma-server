@@ -1,6 +1,6 @@
 /*************************************************/
 /*** SCRIPT AUTHOR: application-manager-server ***/
-/***    CREATED ON: 2021-11-11T22:29:01.418Z   ***/
+/***    CREATED ON: 2022-02-21T02:55:45.578Z   ***/
 /*************************************************/
 
 --- BEGIN CREATE TABLE "public"."organisation_application_join" ---
@@ -40,6 +40,26 @@ ALTER TABLE IF EXISTS "public"."user_application_join" OWNER TO postgres;
 ALTER TABLE IF EXISTS "public"."organisation" ADD COLUMN IF NOT EXISTS "registration_documentation" jsonb NULL  ;
 
 --- END ALTER TABLE "public"."organisation" ---
+
+--- BEGIN ALTER FUNCTION "public"."empty_assigned_sections" ---
+
+DROP FUNCTION IF EXISTS "public"."empty_assigned_sections"();
+
+CREATE OR REPLACE FUNCTION public.empty_assigned_sections()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+        BEGIN
+            UPDATE public.review_assignment
+            SET assigned_sections = '{}'
+            WHERE id = NEW.id;
+            RETURN NULL;
+        END;
+        $function$
+;
+ALTER FUNCTION "public"."empty_assigned_sections"() OWNER TO postgres;
+
+--- END ALTER FUNCTION "public"."empty_assigned_sections" ---
 
 --- BEGIN CREATE SEQUENCE "public"."organisation_application_join_id_seq" ---
 
