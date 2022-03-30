@@ -1,6 +1,6 @@
 {
   "name": "application-manager-server",
-  "version": "0.1.0",
+  "version": "0.2.0-0",
   "main": "server.js",
   "license": "MIT",
   "repository": {
@@ -30,6 +30,7 @@
     "@types/pluralize": "^0.0.29",
     "@types/readline-sync": "^1.4.4",
     "@types/rimraf": "^3.0.0",
+    "@types/semver": "^7.3.9",
     "@types/sharp": "^0.27.1",
     "jest": "^26.4.0",
     "markdown-toc": "^1.2.0",
@@ -51,7 +52,7 @@
     "pg_permissions": "exec ./utils/postgraphile_launch_permissions.sh",
     "dev_pg": "concurrently --kill-others-on-fail \"yarn dev\"  \"yarn pg\"",
     "dev_pg_permissions": "concurrently --kill-others-on-fail \"yarn dev\"  \"yarn pg_permissions\"",
-    "database_init": "./database/initialise_database.sh tmf_app_manager && ./database/insert_data.sh",
+    "database_init": "yarn snapshot use",
     "postdatabase_init": "./database/turn_on_row_level_security.sh && ./database/post_data_insert.sh",
     "build_plugins": "node ./utils/pluginScripts/buildPlugins.js",
     "push_docs": "exec ./utils/push_docs_to_wiki.sh",
@@ -61,12 +62,13 @@
     "snapshot": "ts-node ./database/snapshotCLI.ts",
     "dockerise": "cd docker && ./dockerise.sh",
     "docker_run": "cd docker && ./run.sh",
-    "release": "./utils/release.sh"
+    "release": "./utils/release.sh",
+    "migrate": "ts-node ./database/migration/migrateData.ts --migrate"
   },
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^6.0.0",
     "@openmsupply/deep-comparison": "^1.0.1",
-    "@openmsupply/expression-evaluator": "^1.9.5",
+    "@openmsupply/expression-evaluator": "^1.10.0",
     "adm-zip": "^0.5.5",
     "bcrypt": "^5.0.0",
     "carbone": "^3.2.3",
@@ -91,6 +93,7 @@
     "pluralize": "^8.0.0",
     "postgraphile": "^4.8.0",
     "postgraphile-plugin-connection-filter": "^2.0.0",
+    "semver": "^7.3.5",
     "sharp": "^0.29.3"
   }
 }

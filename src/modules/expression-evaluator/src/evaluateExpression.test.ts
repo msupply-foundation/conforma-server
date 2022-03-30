@@ -299,12 +299,14 @@ test('Test returning single application property, depth 2, no object index', () 
   })
 })
 
-test('Test unresolved object', () => {
-  return evaluateExpression(testData.objectPropertyUnresolved, {
-    objects: { application: testData.application },
-  }).then((result: any) => {
-    expect(result).toBe("Can't resolve object")
-  })
+test('Test unresolved object', async () => {
+  try {
+    await evaluateExpression(testData.objectPropertyUnresolved, {
+      objects: { application: testData.application },
+    })
+  } catch (e) {
+    expect(e.message).toMatch('Object property not found')
+  }
 })
 
 test('Test unresolved object with Null fallback', () => {
@@ -802,7 +804,163 @@ test('Object functions -- generate a date from two strings', () => {
   })
 })
 
-// TO-DO: Write some tests for showing error conditions
+// Type conversion
+test('Extract numbers from array', () => {
+  return evaluateExpression(
+    {
+      operator: 'objectProperties',
+      type: 'number',
+      children: ['responses.orgs.id'],
+    },
+    {
+      objects: { responses: testData.responses },
+    }
+  ).then((result: any) => {
+    expect(result).toBe(628)
+  })
+})
+
+test('Join array into single string', () => {
+  return evaluateExpression(testData.listOfOrgs, {
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toBe(
+      'Food & Drug Agency,Pharma123,Manufacturer Medical,National Medical,Holistic Medicine AU,Bayer (Pty) Ltd,Novartis Spain,Fine Chemicals Corp (Pty) Ltd,Pharma Suppliers,Regional Pharm First,Pharmed Corp Ltd Pty,Global Health Incorporated,Adam Company 2'
+    )
+  })
+})
+
+test('Coerce string to boolean', () => {
+  return evaluateExpression({
+    operator: '=',
+    children: [
+      {
+        operator: '+',
+        type: 'bool',
+        children: ['three'],
+      },
+      true,
+    ],
+  }).then((result: any) => {
+    expect(result).toBe(true)
+  })
+})
+
+// Access array by index
+test('Return index from array', () => {
+  return evaluateExpression(
+    {
+      operator: 'objectProperties',
+      children: ['responses.user.selection[1]'],
+    },
+    {
+      objects: { responses: testData.responses },
+    }
+  ).then((result: any) => {
+    expect(result).toEqual({
+      id: 9,
+      email: 'noreply@sussol.net',
+      lastName: 'Madruga',
+      username: 'nicole',
+      firstName: 'Nicole',
+    })
+  })
+})
+
+test('Return index -- middle of string', () => {
+  return evaluateExpression(
+    {
+      operator: 'objectProperties',
+      children: ['responses.user.selection[0].username'],
+    },
+    {
+      objects: { responses: testData.responses },
+    }
+  ).then((result: any) => {
+    expect(result).toEqual('carl')
+  })
+})
+
+test('Try and access non-indexable object', async () => {
+  try {
+    await evaluateExpression(
+      {
+        operator: 'objectProperties',
+        children: ['responses.user[2]'],
+      },
+      {
+        objects: { responses: testData.responses },
+      }
+    )
+  } catch (e) {
+    expect(e.message).toMatch('Object not index-able')
+  }
+})
+
+// Errors and fallbacks
+
+test('Throw error -- bad API call', async () => {
+  try {
+    await evaluateExpression({
+      operator: 'API',
+      children: [],
+    })
+  } catch (e) {
+    expect(e.message).toMatch('Invalid API query')
+  }
+})
+
+test('Error bubbles up from child -- unresolved object property', async () => {
+  try {
+    await evaluateExpression(testData.nestedErrorQuery, {
+      objects: { responses: testData.responses },
+    })
+  } catch (e) {
+    expect(e.message).toMatch('Object property not found')
+  }
+})
+
+test('Fallback with error at top-level', () => {
+  return evaluateExpression(
+    {
+      operator: 'objectProperties',
+      children: ['responses.user.texts'],
+      fallback: 'Not found!',
+    },
+    {
+      objects: { responses: testData.responses },
+    }
+  ).then((result: any) => {
+    expect(result).toEqual('Not found!')
+  })
+})
+
+test('Fallback top-level, error deep', () => {
+  return evaluateExpression(testData.nestedSQLErrorWithFallback, {
+    objects: { responses: testData.responses },
+  }).then((result: any) => {
+    expect(result).toEqual('Ignore SQL problem')
+  })
+})
+
+test('Fallback and error deep', () => {
+  return evaluateExpression(testData.nestedFallback, {
+    objects: { responses: testData.responses },
+  }).then((result: any) => {
+    expect(result).toEqual('629 <Not found>')
+  })
+})
+
+test('GraphQL empty array fallback when query returns incomplete data', () => {
+  return evaluateExpression(testData.graphQLErrorWithFallback, {
+    objects: { responses: testData.responses },
+  }).then((result: any) => {
+    expect(result).toEqual([])
+  })
+})
 
 afterAll(() => {
   pgConnect.end()

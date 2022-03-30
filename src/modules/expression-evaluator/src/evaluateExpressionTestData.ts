@@ -1216,3 +1216,121 @@ testData.obFunc2 = {
   operator: 'objectFunctions',
   children: ['functions.fDate', { operator: '+', children: ['December 17, ', '1995 03:24:00'] }],
 }
+
+// Type conversion
+testData.responses = {
+  user: {
+    id: 629,
+    timeUpdated: '2022-02-24T10:24:30.548061+13:00',
+    text: '{email: carl@sussol.net, firstName: Carl, id: 8, lastName: Smith, username: carl}',
+    selection: [
+      {
+        id: 8,
+        email: 'noreply@sussol.net',
+        lastName: 'Smith',
+        username: 'carl',
+        firstName: 'Carl',
+      },
+      {
+        id: 9,
+        email: 'noreply@sussol.net',
+        lastName: 'Madruga',
+        username: 'nicole',
+        firstName: 'Nicole',
+      },
+    ],
+  },
+  orgs: [
+    {
+      id: 628,
+      name: 'Royal Inc.',
+    },
+  ],
+  currentUser: {
+    userId: 2,
+    username: 'admin',
+    firstName: 'Admin',
+    lastName: 'Admin',
+    email: null,
+    dateOfBirth: null,
+    organisation: {
+      orgId: 1,
+      orgName: 'PNG Demo Authority',
+      userRole: 'Owner',
+      registration: 'fda',
+      address: null,
+      logoUrl: '/file?uid=NPQ4Wo_mUS1KSnuSUyIXS',
+      isSystemOrg: true,
+    },
+    sessionId: 'GlGHjaesRA82g1sJ',
+  },
+}
+
+testData.listOfOrgs = {
+  operator: 'graphQL',
+  type: 'string',
+  children: [
+    'query getOrgs {organisations { nodes {id, name}}}',
+    '',
+    [],
+    'organisations.nodes.name',
+  ],
+}
+
+testData.nestedErrorQuery = {
+  operator: '+',
+  children: [
+    {
+      operator: 'objectProperties',
+      children: ['responses.user'],
+    },
+    ' ',
+    {
+      operator: 'objectProperties',
+      children: ['application.path'],
+    },
+  ],
+}
+
+testData.nestedSQLErrorWithFallback = {
+  operator: '+',
+  fallback: 'Ignore SQL problem',
+  children: [
+    'Text value',
+    {
+      operator: 'pgSQL',
+      children: ['Bad SQLquery'],
+    },
+  ],
+}
+
+testData.nestedFallback = {
+  operator: '+',
+  children: [
+    {
+      operator: 'objectProperties',
+      children: ['responses.user.id'],
+    },
+    ' ',
+    {
+      fallback: '<Not found>',
+      operator: 'objectProperties',
+      children: ['application.path'],
+    },
+  ],
+}
+
+testData.graphQLErrorWithFallback = {
+  operator: 'graphQL',
+  fallback: [],
+  children: [
+    'query getUsersOrgs($userId: Int!) {\n  user(id: $userId) {\n    username\n    userOrganisations {\n      nodes {\n        organisation {\n          name\n          id\n        }\n      }\n    }\n  }\n}\n',
+    '',
+    ['userId'],
+    {
+      operator: 'objectProperties',
+      children: ['responses.user.id'],
+    },
+    'user.username',
+  ],
+}

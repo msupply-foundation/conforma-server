@@ -1088,10 +1088,10 @@
   version "1.0.1"
   resolved "https://npm.pkg.github.com/download/@openmsupply/deep-comparison/1.0.1/e2230c86d7c57a929ecced4212c0812c00a98717556a0122ff5f343c3a9dc1df#da636710e93ab0310f3a15967be8eba3aaf3844d"
 
-"@openmsupply/expression-evaluator@^1.9.5":
-  version "1.9.5"
-  resolved "https://npm.pkg.github.com/download/@openmsupply/expression-evaluator/1.9.5/125bf76206253e0935aa5090b0ca4477af42ab4c84dd8eb9d6ea57bfc67293f5#a3990bdbc91db86a621c4efe406dc2bbc1fbbce7"
-  integrity sha512-ugAQmPv8k/PB5saaimwDNKpjfTeV81jfihk3tfNSbanZUdJOgfiCWAUXSdPWhmaa0i6yLu4nN5m4UkKGYL+m8Q==
+"@openmsupply/expression-evaluator@^1.10.0":
+  version "1.10.0"
+  resolved "https://npm.pkg.github.com/download/@openmsupply/expression-evaluator/1.10.0/3ec570fb60395a3639e10213003a919e13ef1e14f81cf099be09d7b76960c154#33f47a87a3dcb5ab19a83077ed08576fd566deb1"
+  integrity sha512-zg3D4FIEKe38xevNTKwLolYOuqqgnerOKug/sh0Ru9Ix8ITGTaSzGACels/E3WvbRrYFPeXA+rAkgboCCeWcDQ==
 
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.1"
@@ -1434,6 +1434,11 @@
   dependencies:
     "@types/glob" "*"
     "@types/node" "*"
+
+"@types/semver@^7.3.9":
+  version "7.3.9"
+  resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.3.9.tgz#152c6c20a7688c30b967ec1841d31ace569863fc"
+  integrity sha512-L/TMpyURfBkf+o/526Zb6kd/tchUP3iBDEPjqjb+U2MAJhVRxxrmr2fwpe08E7QsV7YLcpq0tUaQ9O9x97ZIxQ==
 
 "@types/serve-static@*":
   version "1.13.5"

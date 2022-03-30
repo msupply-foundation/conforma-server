@@ -36,11 +36,13 @@ import {
 } from './components/localisation/routes'
 import { routeTriggers } from './components/other/routeTriggers'
 import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
+import migrateData from '../database/migration/migrateData'
 require('dotenv').config()
 
 // Fastify server
 
 const startServer = async () => {
+  await migrateData()
   await loadActionPlugins() // Connects to Database and listens for Triggers
 
   createFilesFolder()

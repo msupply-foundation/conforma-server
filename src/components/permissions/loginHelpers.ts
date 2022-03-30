@@ -56,7 +56,8 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
 
   const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(
     newUsername,
-    orgId || null
+    orgId || null,
+    true
   )
 
   // Also get org-only permissions

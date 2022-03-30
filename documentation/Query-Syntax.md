@@ -39,6 +39,7 @@ For more complex lookups, we would hide the complexity from the user in the Temp
   - [Contents](#contents)
 - [Structure](#structure)
   - [type](#type)
+  - [fallback](#fallback)
 - [Operators](#operators)
   - [AND](#and)
   - [OR](#or)
@@ -59,7 +60,6 @@ For more complex lookups, we would hide the complexity from the user in the Temp
     - [`expression`](#expression)
     - [`parameters`](#parameters)
 - [Examples](#examples)
-- [To Do](#to-do)
 - [Installation](#installation)
 - [Testing](#testing)
 - [Development](#development)
@@ -80,6 +80,7 @@ Each node in the tree is an either:
   type: <optional>
   operator: <string>
   children: [ <optional> ]
+  fallback: <optional>
 }
 ```
 
@@ -96,15 +97,25 @@ This expression would return the number **8** when evaluated. If `children` are 
 
 ## type
 
-The `type` property is optional in most cases, but some operators will return their results in a different format depending on the `type` (e.g. pgSQL -- see below).
+The `type` property is optional in most cases, but some operators will return their results in a different format depending on the `type` (e.g. pgSQL -- see below). For *all* operators, the evaluator will also attempt to convert it to to the specified `type`. This can be useful, for example, when a number is required from a string output. Note: type conversion follows Javascript type conversion rules using `Number(), String(), Boolean()`.
 
 Valid values:
 
 - string
 - number
-- boolean
+- boolean / bool
 - array
-- object (maybe? -- not required yet)
+
+## fallback
+
+This property allows you to define a `fallback` value for *any* error that is thrown as a result of the query, or any of its children. This can be useful, for example, when making a database query with a parameter, and the parameter isn't available yet because it needs to come from a user's response. Rather than throw an error, or return a error message in the UI, we can provide a fallback (such as an empty string or empty array) so the malformed query is invisible to the end user (and also won't crash the plugin!)
+
+The fallback value can be placed at any level of the query, and will be returned on any error of that node or any of its children. So, for example, if you were building an array of elements, of which only *some* were provided by a database query that might fail, then you could still return the rest of the results by placing a fallback value of an empty array at the level of the database query node.
+
+Note that some of the operators have their own "fallback" node, which can also be used. This is mainly for backwards compatibility purposes -- this top-level `fallback` parameter is the recommended way to handle errors with fallbacks.
+
+Because the fallback doesn't give any useful information about errors, it is recommended that you don't add a fallback value while building and/or debugging queries, so you can benefit from more useful error reporting. The fallback value should be added at the end once you're happy with it.
+
 
 # Operators
 
@@ -181,7 +192,7 @@ The `evaluateExpression` function expects each expression to be passed along wit
 
 - Input:
 
-  - 1st child node returns the name of the field whose value is to be extracted. Can be a nested property, written in dot notation (e.g. `questions.q2`) (but cannot yet get specific elements from arrays.)
+  - 1st child node returns the name of the field whose value is to be extracted. Can be a nested property, written in dot notation (e.g. `questions.q2`)
   - 2nd (optional) node returns a Fallback value, to be returned if the property specified in the first node can't be resolved. Default is string "Can't resolve object", but could be useful to set to `null` in some cases.
 
 - Output: the value specified in `property` of any type.
@@ -207,6 +218,19 @@ application = {
   stage: 1,
   responses: { q1: 'What is the answer?', q2: 'Enter your name' },
 }
+```
+
+**Note**: arrays can be accessed in multiple ways, depending on your requirements. Most simply, arrays can be accessed by index, e.g. `responses.user.selection[1]`. However, if there is an array of objects, it's possible to return a single property from within each object as an array. For example, if you have data object:
+```
+{ orgs: [{id: 1, name: "Org 1"}, {id: 2, name: "Org 2"}]}
+```
+The following property strings will return these results:
+```
+"orgs" -> [{id: 1, name: "Org 1"}, {id: 2, name: "Org 2"}]
+"orgs.name" -> [ "Org 1", "Org 2" ]
+"orgs[0]" -> {id: 1, name: "Org 1"}
+"orgs[1].id" -> 2
+
 ```
 
 ## stringSubstitution
@@ -267,7 +291,7 @@ Performs queries on connected GraphQL interface.
   - 2nd child node returns a **string** containing the url of the GrapqhQL endpoint. Using the value "graphQLEndpoint" (or empty string `""`) will the use the graphQL endpoint specified in the input parameter "GraphQLConnection" object.
   - 3nd child node returns an **array** of field names for the query's associated variables object. If no variables are required for the query, pass an empty array (i.e. `{ value: [] }`).
   - 4rd...N-1 child nodes return the values of the fields for the variables object -- one node for each field in the previous node's array.
-  - The Nth (last) child node returns a **string** stating the node in the returned GraphQL object that is required. E.g. `applications.name` Because GraphQL returns results as nested objects, to get an output in a "simple type", a node in the return object tree is needed. (See examples below and in `TestData`). This last node is optional -- if not provided, the whole result object will be returned unmodified.
+  - The Nth (last) child node returns a **string** stating the node in the returned GraphQL object that is required. E.g. `applications.name` Because GraphQL returns results as nested objects, to get an output in a "simple type", a node in the return object tree is needed. (See examples below and in `TestData`). This last node is optional -- if not provided, the whole result object will be returned unmodified. This extraction follows the same rules as "[objectProperties](#objectproperties) operator above.
 - Output: the returned GraphQL node can be either `string`, `number`, `boolean`, `array`, or `object`. If the output is an object, it will be returned as follows:
 
   - If there is only one field, only the value of the field will be returned.
@@ -347,7 +371,7 @@ This expression queries our `/login` endpoint to check a user's credentials, and
 
 ### Authentication
 
-The `GET`, `POST`, and `GraphQL` operators may require authentication for the endpoints they are querying, such as our own [API](API.md). This can be achieved in a couple of different ways.
+The `GET`, `POST`, and `GraphQL` operators may require authentication for the endpoints they are querying, such as our own [API](API). This can be achieved in a couple of different ways.
 
 1. Pass the authentication information as part of the [parameters](#parameters) `headers` field. For example, a JWT authentication might be:  
     ```
@@ -578,7 +602,7 @@ Tree structure:
 
 Tree structure:
 
-![Example 3 tree diagram](images/query-syntax-example-3.png)
+[[images/query-syntax-example-3.png|Example 3 tree diagram]]
 
 ```
 {
@@ -616,15 +640,6 @@ Tree structure:
 ```
 
 -->
-
-# To Do
-
-- ~~Convert to typescript.~~
-- ~~Make function async and all operators return Promises (currently only pgSQL does, which is not very consistent)~~
-- ~~Better error handling~~
-- Create mocks (or alt?) for Database queries in jest test suite
-- ~~Figure out how to make into a module that can be easily imported into both front-end and back-end repositories.~~
-- Pass JWT/auth token to database operators
 
 <a name="installation"></a>
 
@@ -670,7 +685,7 @@ There is a [Jest](https://jestjs.io/) test suite for the expression evaluator in
 
 However, for the tests to work you'll need two things:
 
-1. Load the [snapshot](Snapshots.md) called `evaluator_test` from the private templates repo (in `/dev/snapshots`)
+1. Load the [snapshot](Snapshots) called `evaluator_test` from the private templates repo (in `/dev/snapshots`)
 2. You'll need to provide authentication JWTs for certain tests. The test suite is expecting a file called `testSecrets.json` in the evaluator /src folder, with the following info:  
 ```
 {
