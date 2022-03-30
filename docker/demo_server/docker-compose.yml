@@ -13,11 +13,11 @@ services:
       WEB_HOST: '${WEB_URL}'
       JWT_SECRET: '${JWT_SECRET}'
     volumes:
-      - .conforma_on_port_${PORT_APP}/postgres:/var/lib/postgresql/12/main/
-      - .conforma_on_port_${PORT_APP}/snapshots:/usr/src/application-manager-server/build/database/_snapshots
-      - .conforma_on_port_${PORT_APP}/files:/usr/src/application-manager-server/build/files
-      - .conforma_on_port_${PORT_APP}/localisation:/usr/src/application-manager-server/build/localisations
-      - .conforma_on_port_${PORT_APP}/preferences:/usr/src/application-manager-server/build/preferences
+      - ./conforma_on_port_${PORT_APP}/postgres:/var/lib/postgresql/12/main/
+      - ./conforma_on_port_${PORT_APP}/snapshots:/usr/src/application-manager-server/build/database/_snapshots
+      - ./conforma_on_port_${PORT_APP}/files:/usr/src/application-manager-server/build/files
+      - ./conforma_on_port_${PORT_APP}/localisation:/usr/src/application-manager-server/build/localisations
+      - ./conforma_on_port_${PORT_APP}/preferences:/usr/src/application-manager-server/build/preferences
     tty: true
   grafana:
     image: 'grafana/grafana'
