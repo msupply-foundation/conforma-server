@@ -16,6 +16,8 @@ services:
       - ./app_postgres_on_port_${PORT_APP}:/var/lib/postgresql/12/main/
       - ./app_snapshots_on_port_${PORT_APP}:/usr/src/application-manager-server/build/database/_snapshots
       - ./app_file_on_port_${PORT_APP}:/usr/src/application-manager-server/build/files
+      - ./app_file_on_port_${PORT_APP}:/usr/src/application-manager-server/build/localisations
+      - ./app_file_on_port_${PORT_APP}:/usr/src/application-manager-server/build/preferences
     tty: true
   grafana:
     image: 'grafana/grafana'
