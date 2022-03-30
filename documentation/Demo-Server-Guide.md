@@ -20,11 +20,13 @@ This will also apply the new version number to the front-end (on whatever branch
 
 ## Build (and upload to Docker hub)
 
-`yarn dockerise <tag-name> [push]`
+`yarn dockerise <tag-or-branch-name> [push]`
 
 (If you don't specify any parameters, it will build the current `develop` branch.)
 
 Note that the previous `yarn release` script will offer to start this build process automatically with the tag you've just created.
+
+One caveat -- if building from a branch, the branch name cannot have a `#` character in it, like we normally name our branches.
 
 It should take a while to run and will build a local Docker image. The optional parameter `push` specifies if the script should automatically push the created image to the **msupplyfoundation** [Docker Hub](https://hub.docker.com/) account.
 
