@@ -38,12 +38,8 @@ export const routeEnableLanguage = async (request: any, reply: any) => {
   }
   languageOptions[index] = changedLanguage
 
-  if (
-    languageOptions.filter((language) => {
-      language.enabled
-    }).length === 0
-  )
-    return reply.send({ success: false, message: 'At least one language must remain enable' })
+  if (languageOptions.filter((language) => language.enabled).length === 0)
+    return reply.send({ success: false, message: 'At least one language must remain enabled' })
 
   // Write file back
   try {
