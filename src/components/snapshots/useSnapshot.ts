@@ -87,7 +87,7 @@ const useSnapshot: SnapshotOperation = async ({
     // Import localisations
     if (options?.includeLocalisation) {
       try {
-        execSync(`cp -r  '${snapshotFolder}/localisation/' '${LOCALISATION_FOLDER}' `)
+        execSync(`cp -r  '${snapshotFolder}/localisation/.' '${LOCALISATION_FOLDER}' `)
       } catch (e) {
         console.log("Couldn't import localisations")
       }
