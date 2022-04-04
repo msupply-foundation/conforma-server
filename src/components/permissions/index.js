@@ -5,6 +5,7 @@ import {
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
+  routeGetCurrentYear,
   routeGetPrefs,
   routecheckUnique,
   routeUserPermissions,
@@ -17,6 +18,7 @@ export {
   routeLoginOrg,
   routeUpdateRowPolicies,
   routeVerification,
+  routeGetCurrentYear,
   routeGetPrefs,
   routecheckUnique,
   routeUserPermissions

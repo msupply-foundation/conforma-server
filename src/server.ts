@@ -12,6 +12,7 @@ import {
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
+  routeGetCurrentYear,
   routeGetPrefs,
   routecheckUnique,
 } from './components/permissions'
@@ -118,6 +119,7 @@ const startServer = async () => {
     )
 
     server.get('/check-unique', routecheckUnique)
+    server.get('/get-year', routeGetCurrentYear)
     server.get('/user-info', routeUserInfo)
     server.get('/user-permissions', routeUserPermissions)
     server.post('/login-org', routeLoginOrg)

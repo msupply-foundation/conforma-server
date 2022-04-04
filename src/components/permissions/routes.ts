@@ -195,6 +195,10 @@ const routeVerification = async (request: any, reply: any) => {
   }
 }
 
+const routeGetCurrentYear = (request: any, reply: any) => {
+  reply.send({ year: new Date().getFullYear() })
+}
+
 // Serve prefs to front-end
 const routeGetPrefs = async (request: any, reply: any) => {
   const prefs = JSON.parse(
@@ -261,6 +265,7 @@ export {
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
+  routeGetCurrentYear,
   routeGetPrefs,
   routecheckUnique,
 }
