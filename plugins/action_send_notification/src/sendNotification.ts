@@ -88,10 +88,9 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
         .then((emailResult: any) => {
           if (emailResult?.response.match(/250 OK.*/)) {
             console.log(
-              `Email successfully sent to: ${emailResult.envelope.to}\n
-                cc:${emailResult.envelope.cc}\n
-                bcc: ${emailResult.envelope.bcc}\n
-                Subject: ${subject}\n`
+              `Email successfully sent to: ${emailResult.envelope.to}\ncc:${
+                emailResult.envelope.cc || ''
+              }\nbcc: ${emailResult.envelope.bcc || ''}\nSubject: ${subject || ''}\n`
             )
 
             // Update notification table with email sent confirmation
