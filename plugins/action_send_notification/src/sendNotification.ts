@@ -9,12 +9,18 @@ import { Attachment } from 'nodemailer/lib/mailer'
 import { getFilePath } from '../../../src/components/files/fileHandler'
 import { ActionApplicationData } from '../../../src/types'
 
+const isValidEmail = (email: string) => /^[\w\-_+.]+@([\w\-]+\.)+[A-Za-z]{2,}$/gm.test(email)
+// Test this regex: https://regex101.com/r/ysGgNx/2
+
 const sendNotification: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
   const { host, port, secure, user, defaultFromName, defaultFromEmail } = config
   const {
     userId = applicationData?.userId,
     email = applicationData?.email,
+    to = email,
+    cc,
+    bcc,
     fromName = defaultFromName,
     fromEmail = defaultFromEmail,
     subject,
@@ -37,16 +43,20 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     },
   })
 
-  if (!email) {
-    console.log('Warning: no email address(es) provided')
-    return {
-      status: ActionQueueStatus.Fail,
-      error_log: 'Email address(es) not supplied',
-    }
-  }
-
   try {
-    const emailAddressString = stringifyEmailRecipientsList(email)
+    const toAddressString = stringifyEmailRecipientsList(to)
+    const ccAddressString = stringifyEmailRecipientsList(cc)
+    const bccAddressString = stringifyEmailRecipientsList(bcc)
+
+    const hasValidEmails = !(
+      toAddressString === '' &&
+      ccAddressString === '' &&
+      bccAddressString === ''
+    )
+
+    if (!hasValidEmails) {
+      console.log('Warning: no valid email addresses provided')
+    }
 
     // Create notification database record
     console.log('Creating notification...')
@@ -54,20 +64,22 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
       userId,
       applicationId: applicationData?.applicationId,
       reviewId: applicationData?.reviewData?.reviewId,
-      emailAddressString,
+      emailAddressString: concatEmails(toAddressString, ccAddressString, bccAddressString),
       subject,
       message,
       attachments: Array.isArray(attachments) ? attachments : [attachments],
     })
 
     // Send email
-    if (sendEmail) {
+    if (sendEmail && hasValidEmails) {
       console.log('Sending email...')
       // Note: Using "any" type as imported @types defintions is incorrect, doesn't recognise some fields on "SentMessageInfo" type
       transporter
         .sendMail({
           from: `${fromName} <${fromEmail}>`,
-          to: emailAddressString,
+          to: toAddressString,
+          cc: ccAddressString,
+          bcc: bccAddressString,
           subject,
           text: message,
           html: marked(message),
@@ -76,7 +88,10 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
         .then((emailResult: any) => {
           if (emailResult?.response.match(/250 OK.*/)) {
             console.log(
-              `Email successfully sent to: ${emailResult.envelope.to}\nSubject: ${subject}\n`
+              `Email successfully sent to: ${emailResult.envelope.to}\n
+                cc:${emailResult.envelope.cc}\n
+                bcc: ${emailResult.envelope.bcc}\n
+                Subject: ${subject}\n`
             )
 
             // Update notification table with email sent confirmation
@@ -96,7 +111,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
 
     return {
       status: ActionQueueStatus.Success,
-      error_log: '',
+      error_log: !hasValidEmails ? 'WARNING: No valid email addresses' : '',
       output: { notification: notificationResult },
     }
   } catch (error) {
@@ -111,8 +126,15 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
 export default sendNotification
 
 const stringifyEmailRecipientsList = (emailAddresses: string | string[]): string => {
-  if (!Array.isArray(emailAddresses)) return emailAddresses
-  return emailAddresses.join(', ')
+  if (!Array.isArray(emailAddresses)) return isValidEmail(emailAddresses) ? emailAddresses : ''
+  return emailAddresses.filter((address) => isValidEmail(address)).join(', ')
+}
+
+const concatEmails = (to: string, cc: string, bcc: string): string => {
+  let output = to
+  if (cc) output += output ? ', ' + cc : cc
+  if (bcc) output += output ? ', ' + bcc : bcc
+  return output
 }
 
 /*
