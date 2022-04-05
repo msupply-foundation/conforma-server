@@ -24,7 +24,7 @@ This will also apply the new version number to the front-end (on whatever branch
 
 (If you don't specify any parameters, it will build the current `develop` branch.)
 
-Note that the previous `yarn release` script will offer to start this build process automatically with the tag you've just created.
+*Note that the previous `yarn release` script will offer to start this build process automatically with the tag you've just created.*
 
 One caveat -- if building from a branch, the branch name cannot have a `#` character in it, like we normally name our branches.
 
@@ -80,10 +80,7 @@ You'll need to make sure you have the SMTP_PASSWORD in your local `.env` file.
 
 ## Move files/folder to/from instance
 
-Edit script in `./docker/demo_server/docker-compose.yml`
-
-- only change the image name (if required)
-- don't change SMTP_PASSWORD!
+Follow this process whenever the docker-compose script is updated (`./docker/demo_server/docker-compose.yml`)
 
 ### Copy script folder demo server scripts
 
@@ -127,34 +124,54 @@ Logs are in `/var/log/nginx`
 docker-compose will complain if directories are not present, create them if needed (they will persist when restarting image, even if `docker-compose down` was run)
 
 ```bash
-mkdir app_snapshots_on_port_8000
-mkdir app_postgres_on_port_8000
+mkdir conforma_on_port_8000 \
+  conforma_on_port_8000/postgres \
+  conforma_on_port_8000/snapshots \
+  conforma_on_port_8000/files \
+  conforma_on_port_8000/localisation \
+  conforma_on_port_8000/preferences
 
 mkdir grafana_on_port_8001
 # grafana user has to own the local directory that's mounted to volume
 # https://community.grafana.com/t/new-docker-install-with-persistent-storage-permission-problem/10896/2
 sudo chown 472 grafana_on_port_8001
 
-mkdir app_snapshots_on_port_8002
-mkdir app_postgres_on_port_8002
+mkdir conforma_on_port_8002 \
+  conforma_on_port_8002/postgres \
+  conforma_on_port_8002/snapshots \
+  conforma_on_port_8002/files \
+  conforma_on_port_8002/localisation \
+  conforma_on_port_8002/preferences
 
 mkdir grafana_on_port_8003
 sudo chown 472 grafana_on_port_8003
 
-mkdir app_snapshots_on_port_8004
-mkdir app_postgres_on_port_8004
+mkdir conforma_on_port_8004 \
+  conforma_on_port_8004/postgres \
+  conforma_on_port_8004/snapshots \
+  conforma_on_port_8004/files \
+  conforma_on_port_8004/localisation \
+  conforma_on_port_8004/preferences
 
 mkdir grafana_on_port_8005
 sudo chown 472 grafana_on_port_8005
 
-mkdir app_snapshots_on_port_8006
-mkdir app_postgres_on_port_8006
+mkdir conforma_on_port_8006 \
+  conforma_on_port_8006/postgres \
+  conforma_on_port_8006/snapshots \
+  conforma_on_port_8006/files \
+  conforma_on_port_8006/localisation \
+  conforma_on_port_8006/preferences
 
 mkdir grafana_on_port_8007
 sudo chown 472 grafana_on_port_8007
 
-mkdir app_snapshots_on_port_8008
-mkdir app_postgres_on_port_8008
+mkdir conforma_on_port_8008 \
+  conforma_on_port_8008/postgres \
+  conforma_on_port_8008/snapshots \
+  conforma_on_port_8008/files \
+  conforma_on_port_8008/localisation \
+  conforma_on_port_8008/preferences
 
 mkdir grafana_on_port_8009
 sudo chown 472 grafana_on_port_8009

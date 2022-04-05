@@ -53,6 +53,9 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources
 RUN apt-get update
 RUN apt-get install yarn -y
 
+# Uncomment following line to force Docker to skip cache from here on:
+# ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
+
 # --- ADD REPOS
 ARG SERVER_BRANCH=master
 ARG WEB_APP_BRANCH=master
