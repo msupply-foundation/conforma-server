@@ -133,13 +133,21 @@ URL query paramter fields (all optional):
 - `user_id`
 - `application_serial` (for associating files with their applications)
 - `application_response_id` (for specifying what response a file belongs to, useful for the file "clean-up" action)
-- `unique_id` (the randomly generated one should normally be sufficient. If this is specifed and the id already exists in the database, the file record will be *updated* with the new file data.)
+- `unique_id` (the randomly generated one should normally be sufficient. If this is specifed and the id already exists in the database, the file record will be _updated_ with the new file data.)
 - `template_id` (to associate a file with a template, for example a carbone template doc)
 - `subfolder` (files are placed in subfolder based on the application_serial provided, but a specific subfolder can be defined instead (which over-rides the application subfolder))
 
 e.g. `/upload?user=2&application_serial=3`
 
 Files are uploaded to `src/files` with their database table id appended to the filename (to ensure uniqueness).
+
+#### Get current year
+
+GET: `/get-year`
+
+Endpoint to return the year on the server
+
+no params
 
 #### Check unique endpoint
 
@@ -202,10 +210,11 @@ GET: `/user-permissions?username=<username>&orgId=<orgId>`
 
 End point to get **another** user's granted permissions + all existing permissions on templates for a given organisation. Intended for use in template to view/edit another user's permissions -- client supplies `username` and `orgId`.
 
-Either `username` or `orgId` can be omitted and the result returned will be either: 
-  * for that user without an org; or 
-  * for that org without a user. 
-  
+Either `username` or `orgId` can be omitted and the result returned will be either:
+
+- for that user without an org; or
+- for that org without a user.
+
 For `orgId`, the values `null` or `0` are equivalent to omitting `orgId` and for `username` an empty string `""` can be used. This is useful in cases such as a template query where you're supplying an `orgId` and `username` parameter, but can't "turn off" the parameters when you want to omit either of them -- just use `orgId=null` or `username=""` to achieve the same thing.
 
 #### Check Triggers
@@ -228,7 +237,7 @@ The front-end processes this data in the `useTriggers` hook.
                 "id": 236,
                 "trigger": "ERROR"
             }
-        ] 
+        ]
 }
 ```
 
