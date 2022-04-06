@@ -2650,6 +2650,11 @@ define-property@^2.0.2:
     is-descriptor "^1.0.2"
     isobject "^3.0.1"
 
+delay-sync@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/delay-sync/-/delay-sync-1.0.2.tgz#1f43bdc3fe50e5c6d11e3ad1e728e0e6e47a712d"
+  integrity sha512-v0u2Lu6eEsoRFBXYAUvG/Nu4+tJqEylzlgxeysiM4PCVse75OmbmOIoXMXK7glBQVHb9QOyKwJZpabQ23jn2/w==
+
 delayed-stream@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
