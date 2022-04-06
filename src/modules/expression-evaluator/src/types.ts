@@ -49,6 +49,7 @@ type Operator =
   | '?'
   | 'REGEX'
   | 'objectProperties'
+  | 'objectFunctions'
   | 'stringSubstitution'
   | 'GET'
   | 'POST'
