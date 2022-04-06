@@ -1,4 +1,4 @@
-import prefs from '../preferences.json'
+import prefs from '../preferences/preferences.json'
 require('dotenv').config()
 import { version } from '../package.json'
 const isProductionBuild = process.env.NODE_ENV === 'production'
