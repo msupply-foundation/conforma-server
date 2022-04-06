@@ -56,6 +56,7 @@ For more complex lookups, we would hide the complexity from the user in the Temp
   - [POST](#post)
     - [Authentication](#authentication)
   - [buildObject](#buildobject)
+  - [objectFunctions](#objectfunctions)
 - [Usage](#usage)
     - [`expression`](#expression)
     - [`parameters`](#parameters)
@@ -467,6 +468,36 @@ Output
 }
 ```
 
+## objectFunctions
+
+This allows the evaluator to fun any abitrary function as an operator, but the functions must be passed in on the `objects` parameter in a `functions` field. 
+
+- Input: 
+  - 1st node is a **string** containing the name of the function in the "objects" parameter (it is recommended to always put functions in a dedicated `functions` field for consistency), e.g. `"functions.<funcName>"`
+  - 2nd...N nodes contain any input parameters required for this function
+
+For example, if you have a simple function to return the current year, you would pass in this as part of the `objects` parameter:
+```
+{
+  ...otherObjectFields,
+  functions {
+    getYear: () => new Date().getFullYear()
+  }
+}
+```
+(See [Usage](#usage) below for exact syntax)
+
+Then, your query expression node would simply be:
+```
+{
+  operator: "objectFunctions",
+  children: [
+    "functions.getYear",
+  ]
+}
+```
+
+
 # Usage
 
 The query evaluator is implemented in the `evaluateExpression` function:
@@ -481,7 +512,7 @@ The query evaluator is implemented in the `evaluateExpression` function:
 
 `parameters` is an (optional) object with the following (optional) properties available:
 
-- `objects : {local objects}` -- **object** containing nested local state objects required for the query (see **objectProperties** above)
+- `objects : {local objects}` -- **object** containing nested local state objects required for the query (see **objectProperties** above). Can also contain a `functions` field which can be called by the  [objectFunctions][#objectFunctions] operator
 - `pgConnection: <postGresConnect object>` (or any valid PostGres connection object, e.g. `Client` from `node-postgres`)
 - `graphQLConnection: { fetch: <fetch object>, endpoint: <URL of GraphQL endpoint>}` -- connection information for a local GraphQL endpoint. Only required if expression contains **graphQL** operator.
 - `APIfetch: <fetch object>` -- required if the API operator is being used. (Note: the reason this must be passed in rather than having the module use `fetch` directly is so it can work in both front- and back-end. The browser provides a native `fetch` method, but this isn't available in Node, which requires the `node-fetch` package. So in order to work in both, the module expects the appropriate variant of the fetch object to be passed in.)
