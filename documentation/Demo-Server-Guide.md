@@ -128,7 +128,7 @@ scp -i $KEY_LOC ubuntu@irims-demo.msupply.org:/etc/nginx/sites-enabled/default .
 
 ### Option 1: Multi-instances server
 
-**Note** The configuration of nginx uses the certificate of irims-demo.msupply.org domain (follwoing other steps of this setup) if needed for a new server, replace with new domain.
+**Note** The configuration of nginx uses the certificate of irims-demo.msupply.org domain (following other steps of this setup) if needed for a new server, replace with new domain.
 
 ```bash
 # cannot directly replace default config, need to do it as sudo, so from within docker instance
