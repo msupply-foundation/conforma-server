@@ -137,7 +137,7 @@ sudo mv demo_server/nginx_config/default /etc/nginx/sites-enabled/
 
 ### Option 2: Single-instance server
 
-**Note**: First you need to have a domain configured and been trhough the steps to Install SSL Certificate with certbot as described in the [New server instance guide](New-Server-Instance.md)
+**Note**: First you need to have a domain configured and have been through the steps to Install SSL Certificate with certbot as described in the [New server instance guide](New-Server-Instance.md)
 
 The file is configured to forward incoming requests to port 50000 to internal port 80000 for **Conforma** App and requests to port 50001 to internal port 80001 for **Grafana** both running as docker containers.
 
