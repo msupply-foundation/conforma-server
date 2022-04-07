@@ -258,7 +258,8 @@ In case you don't want to use the existing database previously set on that insta
 
 - Now re-run the instance changing the ports accordingly to the instance you need to re-launch:
   `PORT_APP=8000 PORT_DASH=8001 sudo -E docker-compose --project-name 'conforma-on-8000' up -d`
-- Alternativelly some servers configuration will need to use `docker compose` instead:
+- Alternatively some servers configuration will need to use `docker compose` instead:
+  `PORT_APP=8000 PORT_DASH=8001 sudo -E docker compose --project-name 'conforma-on-8000' up -d`
   `PORT_APP=8000 PORT_DASH=8001 sudo -E docker compose --project-name 'conforma-on-8000' up -d`
 
 Note: this resets the container to initial state, including database reset. If you want to preserve existing data, you’ll need to take a snapshot first, then reload after restart.
