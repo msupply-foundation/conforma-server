@@ -23,3 +23,5 @@ Steps to create new server:
 - Open ports 50000 and 50001 externally on new server
 - Started App & Dashboard on local ports 8000 and 8001:
   `PORT_APP=8000 PORT_DASH=8001 sudo -E docker compose --project-name 'conforma-on-8000' up -d`
+  - Note that uses `docker compose` instead of `docker-compose` to use the correct package installed on the server. Otherwise (when using docker-compose) you'll get this error:
+    ![Error docker-compose](images/error-docker-compose.png)

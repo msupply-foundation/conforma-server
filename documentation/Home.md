@@ -33,7 +33,7 @@ Please see [ReadMe](__README.md) for information about maintaining this document
 
 **Build and Demo Server**
 
-- [New Demo instance](New-Demo-Instance.md)
+- [New Server instance](New-Server-Instance.md)
 - [Demo Server Guide](Demo_Server_Guide.md)
 
 **Misc**

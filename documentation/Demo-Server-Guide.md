@@ -35,21 +35,27 @@ Or `arn release --minor` from `main` to generate a Minor release.
 
 `yarn dockerise <tag-or-branch-name> [push]`
 
+Example:  
+`yarn dockerise v0.1.5 push`
+
 (If you don't specify any parameters, it will build the current `develop` branch.)
 
 _Note that the previous `yarn release` script will offer to start this build process automatically with the tag you've just created._
 
 One caveat -- if building from a branch, the branch name cannot have a `#` character in it, like we normally name our branches.
 
-It should take a while to run and will build a local Docker image. The optional parameter `push` specifies if the script should automatically push the created image to the **msupplyfoundation** [Docker Hub](https://hub.docker.com/) account.
+### Login to docker
 
-Example:  
-`yarn dockerise v0.1.5 push`
+It should take a while to run and will build a local Docker image. The optional parameter `push` specifies if the script should automatically push the created image to the **msupplyfoundation** [Docker Hub](https://hub.docker.com/) account. If you are logged to a different acount you need to `docker logout` and then `docker login` to your local Docker installation is logged in with the **msupplyfoundation** account (Password in Bitwarden).
+
+### Docker image tag
 
 The build process will create a local image with a tag of the form:
 `build-<releaseTag>_<date>_pg-<version>_node-<version>`
 
 _To see what's going on under the hood when this command is run, please inspect the file `/docker/dockerise.sh`_
+
+### Manually pushing to dockerhub
 
 If you don't auto-push the image as part of the build process, you can do so manually by running: `docker push <full image name>`, where `<full-image-name>` includes the account name, repo name ("conforma-demo") and tag.
 
@@ -66,7 +72,7 @@ You'll need to make sure you have the SMTP_PASSWORD in your local `.env` file.
 
 _To see the actual Docker commands that are constructued, please inspect the file `/docker/run.sh`_
 
-## Log in to demo server with ssh
+## Log in to the demo server with ssh
 
 - Get key file from Bitwarden (openstack-irims-demo-keypair) and save locally (e.g. in `~/Documents/private/conformakey.pem`)
 - SSH login to server:
@@ -74,6 +80,7 @@ _To see the actual Docker commands that are constructued, please inspect the fil
   export KEY_LOC='/Users/<you>/Documents/private/conformakey.pem' (or your local location)
   sudo ssh -i $KEY_LOC ubuntu@irims-demo.msupply.org
   ```
+- Alternativelly login to an specific country server
 - View commit hashes of currently running images:  
   `sudo docker container ls`
 - Stop all instances:  
@@ -82,15 +89,18 @@ _To see the actual Docker commands that are constructued, please inspect the fil
   `sudo docker pull <full-image-name>`
   Example: `sudo docker pull msupplyfoundation/conforma-demo:build-B-1.0.13_2021-12-08_pg-12_node-14`
 - Run image:  
-  `sudo docker run -dti -p 8000:3000 -e 'SMTP_PASSWORD=<password>' -e 'WEB_HOST=https://irims-demo.msupply.org:50000' -e 'JWT_SECRET=<some-random-secret>' --name conforma-demo-on-8000 msupplyfoundation/conforma-demo:build-B-1.0.13_2021-12-08_pg-12_node-14`  
+  `sudo docker run -dti -p 8000:3000 -e 'SMTP_PASSWORD=<password>' -e 'WEB_HOST=<host-domain>' -e 'JWT_SECRET=<some-random-secret>' --name conforma-demo-on-8000 <full-image-name>`  
    This will launch one instance. To launch other instances in their own container, run the same command, but change:
 
   - name
   - port 8000
   - WEB_HOST url
   - JWT_SECRET (this can be any random string, but should be a decent length, say > 24 alphanumeric characters. There's no need to record this key anywhere, as it can change anytime -- that just means existing JWTs become invalid, so users will need to re-login)
+    The system will be launched with “core_snapshot” data. Upload and run a new snapshot as required
 
-  The system will be launched with “basic_snapshot” data. Upload and run a new snapshot as required
+## JUMP to section for a basic server upgrade
+
+- [docker-compose](#docker-compose)
 
 ## Move files/folder to/from instance
 
@@ -105,9 +115,7 @@ cd application-manager-server/docker
 scp -r -i $KEY_LOC ./demo_server ubuntu@irims-demo.msupply.org:/home/ubuntu/
 ```
 
-## Now jump to section docker-compose if this is just a server upgrade
-
-### Download nginx config from demo server to local
+## Save backup of nginx config from demo server to local
 
 **Note**: These steps doesn't seem required for a sever upgrade
 
@@ -116,11 +124,27 @@ cd application-manager-server/docker
 scp -i $KEY_LOC ubuntu@irims-demo.msupply.org:/etc/nginx/sites-enabled/default ./demo_server/nginx_config
 ```
 
-### Upload nginx config back to demo server
+## Upload nginx config back to demo server
+
+### Option 1: Multi-instances server
+
+**Note** The configuration of nginx uses the certificate of irims-demo.msupply.org domain (follwoing other steps of this setup) if needed for a new server, replace with new domain.
 
 ```bash
 # cannot directly replace default config, need to do it as sudo, so from within docker instance
 sudo mv demo_server/nginx_config/default /etc/nginx/sites-enabled/
+```
+
+### Option 2: Single-instance server
+
+**Note**: First you need to have a domain configured and been trhough the steps to Install SSL Certificate with certbot as described in the [New server instance guide](New-Server-Instance.md)
+
+The file is configured to forward incoming requests to port 50000 to internal port 80000 for **Conforma** App and requests to port 50001 to internal port 80001 for **Grafana** both running as docker containers.
+
+You will need to open the file in `demo_server/nginx_config_single/default` and edit where is showing as `<host-domain>` replacing with the actual domain name (as configured in the SSL certificate).
+
+```bash
+sudo mv demo_server/nginx_config_single/default /etc/nginx/sites-enabled/
 ```
 
 ## NGINX
@@ -135,7 +159,9 @@ Logs are in `/var/log/nginx`
 
 ## docker-compose
 
-docker-compose will complain if directories are not present, create them if needed (they will persist when restarting image, even if `docker-compose down` was run)
+docker-compose will complain if directories are not present, create them if needed (they will persist when restarting image, even if `docker-compose down` was run) - use `docker compose down` alternativelly.
+
+**Note**: You just need to have 1 setup (80000 and 80001) if configuring a single-instance server
 
 ```bash
 mkdir conforma_on_port_8000 \
@@ -199,6 +225,8 @@ export SMTP_SECRET='add_smtp_secret_here'
 export WEB_URL='https://irims-demo.msupply.org:<replace port>'
 export JWT_SECRET='random private key'
 
+**Note**: You just need to have first option running if single-instance. Also rememeber to replace the domain of the server accordingly on WEB_URL.
+
 # -d is for detached, if you want to see all output then start without -d
 PORT_APP=8000 PORT_DASH=8001 sudo -E docker-compose --project-name 'conforma-on-8000' up -d
 
@@ -230,6 +258,8 @@ In case you don't want to use the existing database previously set on that insta
 
 - Now re-run the instance changing the ports accordingly to the instance you need to re-launch:
   `PORT_APP=8000 PORT_DASH=8001 sudo -E docker-compose --project-name 'conforma-on-8000' up -d`
+- Alternativelly some servers configuration will need to use `docker compose` instead:
+  `PORT_APP=8000 PORT_DASH=8001 sudo -E docker compose --project-name 'conforma-on-8000' up -d`
 
 Note: this resets the container to initial state, including database reset. If you want to preserve existing data, you’ll need to take a snapshot first, then reload after restart.
 
