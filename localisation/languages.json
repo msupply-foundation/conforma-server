@@ -4,7 +4,7 @@
     "description": "NZ English",
     "code": "en_nz",
     "flag": "🇳🇿",
-    "enabled": true
+    "enabled": false
   },
   {
     "languageName": "Portugese",
