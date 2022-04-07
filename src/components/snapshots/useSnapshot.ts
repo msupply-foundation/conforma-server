@@ -11,6 +11,7 @@ import semverCompare from 'semver/functions/compare'
 import config from '../../../src/config'
 // @ts-ignore
 import delay from 'delay-sync'
+import { createDefaultDataFolders } from '../files/createDefaultFolders'
 
 import {
   DEFAULT_SNAPSHOT_NAME,
@@ -32,6 +33,9 @@ const useSnapshot: SnapshotOperation = async ({
   optionsName,
   options: inOptions,
 }) => {
+  // Ensure relevant folders exist
+  createDefaultDataFolders()
+
   try {
     console.log(`using snapshot, name: ${snapshotName}`)
 
