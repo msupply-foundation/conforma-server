@@ -16,23 +16,6 @@ interface HttpQueryParameters {
   [key: string]: string
 }
 
-export function restoreGenericThumbnails() {
-  // Move generic thumbnails to files/generics subfolder
-  console.log('THUMBNAILS...')
-  fs.readdir(
-    path.join(getAppEntryPointDir(), imagesFolder, 'generic_file_thumbnails'),
-    (_, files) => {
-      files.forEach((file) =>
-        fs.copyFile(
-          path.join(getAppEntryPointDir(), imagesFolder, 'generic_file_thumbnails', file),
-          path.join(getAppEntryPointDir(), filesFolder, genericThumbnailsFolderName, file),
-          () => {}
-        )
-      )
-    }
-  )
-}
-
 export async function getFilePath(uid: string, thumbnail = false) {
   const result = await DBConnect.getFileDownloadInfo(uid, thumbnail)
   if (!result) throw new Error()
