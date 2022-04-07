@@ -3,7 +3,8 @@
 Steps to create new server:
 
 - Have new server running on Openstack
-- Add the BW entry "Angola Conforma Server"
+- Open ports 50000 and 50001 for public
+- Add the BW entry "<Country> Conforma Server" and with the public address to be used for Conforma app - to be edited by the end of this setup (here only for referênce)
 - After provided with public key, access via terminal using ssh
 - Installed Docker engine as instructed here: https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04
 - Logged in to docker hub (terminal `docker login`) as msupplyfoundation user
@@ -14,7 +15,7 @@ Steps to create new server:
   `sudo apt install docker-compose`
 - Upgraded Docker compose to v2 as instructed here: https://docs.docker.com/compose/cli-command/#install-on-linux
 - Copied demo-server folder to new server with `scp`
-- Configured the domain: for https://angola.conforma.nz/ on cpanel with BW "conforma.nz cpanel"
+- Configured the domain: for host on cpanel with BW "conforma.nz cpanel"
 - Install SSL Certificate with certbot (Let's encrypt)
 - Install nginx and copy config from demo-server/
 - Make sure nginx is running with:
