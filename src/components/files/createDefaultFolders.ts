@@ -21,8 +21,7 @@ import { makeFolder } from '../utilityFunctions'
 
 export function createDefaultDataFolders() {
   try {
-    console.log('Creating SNAPSHOTS folder')
-    makeFolder(SNAPSHOT_FOLDER)
+    makeFolder(SNAPSHOT_FOLDER, 'Creating SNAPSHOTS folder')
     // Copy core_templates to snapshots folder
     execSync(`cp -r '${DATABASE_FOLDER}/${BASE_SNAPSHOT_NAME}' '${SNAPSHOT_FOLDER}'`)
   } catch {
@@ -30,8 +29,7 @@ export function createDefaultDataFolders() {
   }
 
   try {
-    console.log('Creating FILES folder')
-    makeFolder(FILES_FOLDER)
+    makeFolder(FILES_FOLDER, 'Creating FILES folder')
     // Restore generic thumbnails, they get wiped out during snapshot loading
     makeFolder(path.join(GENERIC_THUMBNAILS_FOLDER))
     execSync(`cp -r '${GENERIC_THUMBNAILS_SOURCE_FOLDER}/.' '${GENERIC_THUMBNAILS_FOLDER}'`)
@@ -42,12 +40,11 @@ export function createDefaultDataFolders() {
   // If localisation folder is missing, we assume it's a fresh install and
   // fetch them (and preferences) from core templates
   try {
-    console.log('Restoring LOCALISATIONS and PREFERENCES')
     if (
       !fs.existsSync(LOCALISATION_FOLDER) ||
       !fs.existsSync(path.join(LOCALISATION_FOLDER, 'languages.json'))
     ) {
-      makeFolder(LOCALISATION_FOLDER)
+      makeFolder(LOCALISATION_FOLDER, 'Restoring LOCALISATIONS and PREFERENCES')
       execSync(`cp -r '${BASE_SNAPSHOT_FOLDER}/localisation/.' '${LOCALISATION_FOLDER}'`)
       execSync(`cp '${BASE_SNAPSHOT_FOLDER}/${PREFERENCES_FILE_NAME}' '${PREFERENCES_FOLDER}'`)
     }

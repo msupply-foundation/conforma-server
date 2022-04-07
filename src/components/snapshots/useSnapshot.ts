@@ -35,6 +35,7 @@ const useSnapshot: SnapshotOperation = async ({
 }) => {
   // Ensure relevant folders exist
   createDefaultDataFolders()
+  console.log('FILES FOLDER', FILES_FOLDER)
 
   try {
     console.log(`using snapshot, name: ${snapshotName}`)
