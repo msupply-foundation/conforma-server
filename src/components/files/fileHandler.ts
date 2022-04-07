@@ -16,18 +16,9 @@ interface HttpQueryParameters {
   [key: string]: string
 }
 
-export function createFilesFolder() {
-  try {
-    fs.mkdirSync(path.join(getAppEntryPointDir(), filesFolder))
-  } catch {
-    // Folder already exists
-  }
-  try {
-    fs.mkdirSync(path.join(getAppEntryPointDir(), filesFolder, genericThumbnailsFolderName))
-  } catch {
-    // Folder already exists
-  }
+export function restoreGenericThumbnails() {
   // Move generic thumbnails to files/generics subfolder
+  console.log('THUMBNAILS...')
   fs.readdir(
     path.join(getAppEntryPointDir(), imagesFolder, 'generic_file_thumbnails'),
     (_, files) => {

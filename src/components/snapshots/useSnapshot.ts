@@ -25,7 +25,7 @@ import {
   PREFERENCES_FILE,
   SCHEMA_FILE_NAME,
   INFO_FILE_NAME,
-} from './constants'
+} from '../../constants'
 
 const useSnapshot: SnapshotOperation = async ({
   snapshotName = DEFAULT_SNAPSHOT_NAME,

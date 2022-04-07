@@ -25,7 +25,7 @@ import {
   PREFERENCES_FILE,
   PG_DFF_JS_LOCATION,
   DATABASE_FOLDER,
-} from './constants'
+} from '../../constants'
 import { getBaseFiles, getDirectoryFromPath } from './useSnapshot'
 import config from '../../config'
 import { DateTime } from 'luxon'
