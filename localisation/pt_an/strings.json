@@ -1,4 +1,6 @@
 {
+  "_APP_NAME": "conforma",
+  "_APP_NAME_SUBHEADER": "Gerenciador de formulários",
   "ACTION_ASSIGN": "Atribuir",
   "ACTION_CONTINUE": "Continuar",
   "ACTION_START": "Iniciar",
@@ -15,8 +17,6 @@
   "ACTION_VIEW": "Visualizar",
   "ACTION_MAKE_CHANGES": "Fazer alterções",
   "ACTION_EDIT_DRAFT": "Editar rascunho",
-  "APP_NAME": "conforma",
-  "APP_NAME_SUBHEADER": "Gerenciador de formulários",
   "APP_LINK_LINKED_APPLICATIONS": "Formulários associados",
   "APP_LINK_NAME": "Nome",
   "APP_LINK_SERIAL": "Identificador",
