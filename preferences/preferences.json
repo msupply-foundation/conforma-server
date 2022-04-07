@@ -8,6 +8,6 @@
   },
   "web": {
     "paginationPresets": [2, 5, 10, 20, 50],
-    "defaultLanguageCode": "pt_an"
+    "defaultLanguageCode": "en_nz"
   }
 }
