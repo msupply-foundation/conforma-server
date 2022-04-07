@@ -225,7 +225,7 @@ export SMTP_SECRET='add_smtp_secret_here'
 export WEB_URL='https://irims-demo.msupply.org:<replace port>'
 export JWT_SECRET='random private key'
 
-**Note**: You just need to have first option running if single-instance. Also rememeber to replace the domain of the server accordingly on WEB_URL.
+**Note**: You just need to have first option running if single-instance. Also remember to replace the domain of the server accordingly on WEB_URL.
 
 # -d is for detached, if you want to see all output then start without -d
 PORT_APP=8000 PORT_DASH=8001 sudo -E docker-compose --project-name 'conforma-on-8000' up -d
