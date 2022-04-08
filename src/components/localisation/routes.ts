@@ -1,8 +1,11 @@
 import path from 'path'
 import { mkdirSync, rmdirSync, readFileSync, writeFile } from 'fs'
 import { promisify } from 'util'
-import { getAppEntryPointDir } from '../../components/utilityFunctions'
-import { combineRequestParams } from '../../components/utilityFunctions'
+import {
+  getAppEntryPointDir,
+  combineRequestParams,
+  makeFolder,
+} from '../../components/utilityFunctions'
 import config from '../../config'
 
 const { localisationsFolder } = config
@@ -83,11 +86,8 @@ export const routeInstallLanguage = async (request: any, reply: any) => {
       path.join(getAppEntryPointDir(), '../localisation/languages.json'),
       JSON.stringify(languageOptions, null, 2)
     )
-    try {
-      mkdirSync(path.join(getAppEntryPointDir(), `../localisation/${language.code}/`))
-    } catch {
-      // Folder already exists
-    }
+    makeFolder(path.join(getAppEntryPointDir(), `../localisation/${language.code}/`))
+
     await writeFilePromise(
       path.join(getAppEntryPointDir(), `../localisation/${language.code}/strings.json`),
       JSON.stringify(strings, null, 2)
