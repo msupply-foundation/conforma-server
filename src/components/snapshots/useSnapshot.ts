@@ -9,6 +9,8 @@ import importFromJson from '../exportAndImport/importFromJson'
 import { triggerTables } from './triggerTables'
 import semverCompare from 'semver/functions/compare'
 import config from '../../../src/config'
+// @ts-ignore
+import delay from 'delay-sync'
 
 import {
   DEFAULT_SNAPSHOT_NAME,
@@ -69,6 +71,9 @@ const useSnapshot: SnapshotOperation = async ({
       execSync(`psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} DISABLE TRIGGER ALL"`)
     })
 
+    // Pause to allow postgraphile "watch" to detect changed schema
+    delay(2500)
+
     console.log('inserting from snapshot ... ')
     const insertedRecords = await importFromJson(
       snapshotObject,
@@ -87,7 +92,7 @@ const useSnapshot: SnapshotOperation = async ({
     // Import localisations
     if (options?.includeLocalisation) {
       try {
-        execSync(`cp -r  '${snapshotFolder}/localisation/' '${LOCALISATION_FOLDER}/' `)
+        execSync(`cp -r  '${snapshotFolder}/localisation/.' '${LOCALISATION_FOLDER}' `)
       } catch (e) {
         console.log("Couldn't import localisations")
       }

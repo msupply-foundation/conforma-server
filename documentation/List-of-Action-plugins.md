@@ -571,7 +571,9 @@ Generates notifications and sends email. For now, there is no UI for notificatio
 | ---------------------------------------- | ----------------- |
 | `subject`\*                              | `notification`    |
 | `message`\*                              |                   |
-| `email`                                  |                   |
+| `email`, `to` (either)                   |                   |
+| `cc`                                     |                   |
+| `bcc`                                    |                   |
 | `userId`                                 |                   |
 | `fromName`                               |                   |
 | `fromEmail`                              |                   |
@@ -586,13 +588,13 @@ SMTP_PASSWORD=<password>
 
 `subject` and `message` are just the email subject line and message
 
-`email` -- the email address(es) to send the email to. Can be a string (single email address) or an array of strings if multiple recipients. If not supplied, will use the "email" field from `applicationData`.
+`to (email)`, `cc`, `bcc` -- the email address(es) to send the email to, in the "to" "cc" and "bcc" fields, respectively. Can be a string (single email address) or an array of strings if multiple recipients. If not supplied, will use the "email" field from `applicationData`.
 
 `userId` for the notification recipient. If not supplied, it will be taken from `applicationData`.
 
 `fromName` / `fromEmail` refer to who the apparent sender of the email is. Default value(s) should be supplied in `config.json`, but can be over-ridden on a case-by-case basis.
 
-`sendEmail` -- if `true` (this is default), an email will be sent, otherwise a notification record will be created with no email sent.
+`sendEmail` -- if `true` (this is default), an email will be sent, otherwise a notification record will be created with no email sent. Note, also -- if there are no valid email addresses supplied (in any of the `to`, `cc` or `bcc` fields), no email will be sent either, but a valid notification record will still be created.
 
 `attachments` -- any files to attach with the email.
 
