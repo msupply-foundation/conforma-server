@@ -24,7 +24,7 @@ services:
     ports:
       - '${PORT_DASH}:3000'
     volumes:
-      - ./grafana_on_port_${PORT_DASH}:/var/lib/grafana
+      - grafana:/var/lib/grafana
 
 volumes:
   postgres:
@@ -32,4 +32,5 @@ volumes:
   files:
   localisation:
   preferences:
+  grafana:
 
