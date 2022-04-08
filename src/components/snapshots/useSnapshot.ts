@@ -12,6 +12,7 @@ import config from '../../../src/config'
 // @ts-ignore
 import delay from 'delay-sync'
 import { createDefaultDataFolders } from '../files/createDefaultFolders'
+import migrateData from '../../../database/migration/migrateData'
 
 import {
   DEFAULT_SNAPSHOT_NAME,
@@ -118,7 +119,7 @@ const useSnapshot: SnapshotOperation = async ({
 
     // Migrate database to latest version
     console.log('Migrating database (if required)...)')
-    execSync('yarn migrate', { stdio: 'inherit' })
+    await migrateData()
 
     // Regenerate row level policies
     await updateRowPolicies()
