@@ -14,7 +14,7 @@ Steps to create new server:
 - Set all required ENV VARIABLES:
   Example:
   - `export TAG='build-v0.2.0-3_2022-04-06_pg-12_node-14'`
-  - `export WEB_URL='<host-domain>:50000'
+  - `export WEB_URL='<host-domain>:50000'`
   - `export JWT_SECRET='<make-your-own>'`
   - `export SMTP_SECRET='<secret-in-BW>'`
 - Install Docker compose:
