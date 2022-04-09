@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import path from 'path'
-import { SNAPSHOT_FILE_NAME, SNAPSHOT_FOLDER } from '../constants'
+import { SNAPSHOT_FILE_NAME, SNAPSHOT_FOLDER } from '../../../constants'
 import fs from 'fs'
 import { pipeline } from 'stream'
 import { promisify } from 'util'

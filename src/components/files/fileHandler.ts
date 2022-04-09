@@ -16,32 +16,6 @@ interface HttpQueryParameters {
   [key: string]: string
 }
 
-export function createFilesFolder() {
-  try {
-    fs.mkdirSync(path.join(getAppEntryPointDir(), filesFolder))
-  } catch {
-    // Folder already exists
-  }
-  try {
-    fs.mkdirSync(path.join(getAppEntryPointDir(), filesFolder, genericThumbnailsFolderName))
-  } catch {
-    // Folder already exists
-  }
-  // Move generic thumbnails to files/generics subfolder
-  fs.readdir(
-    path.join(getAppEntryPointDir(), imagesFolder, 'generic_file_thumbnails'),
-    (_, files) => {
-      files.forEach((file) =>
-        fs.copyFile(
-          path.join(getAppEntryPointDir(), imagesFolder, 'generic_file_thumbnails', file),
-          path.join(getAppEntryPointDir(), filesFolder, genericThumbnailsFolderName, file),
-          () => {}
-        )
-      )
-    }
-  )
-}
-
 export async function getFilePath(uid: string, thumbnail = false) {
   const result = await DBConnect.getFileDownloadInfo(uid, thumbnail)
   if (!result) throw new Error()

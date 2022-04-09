@@ -43,7 +43,7 @@ ARG POSTGRES_VERSION=12
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list.d/pgdg.list
 RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add
 RUN apt-get update
-# make sure postgresql install is propmpt free
+# make sure postgresql install is prompt free
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get install -y postgresql-${POSTGRES_VERSION}
 
