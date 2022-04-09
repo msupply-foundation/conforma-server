@@ -22,6 +22,25 @@ export type LanguageOption = {
 
 export const routeGetLanguageFile = async (request: any, reply: any) => {
   const { code } = request.params
+  const languageOptions = readLanguageOptions()
+  const requestedIndex = languageOptions.findIndex((lang: LanguageOption) => code === lang.code)
+
+  if (requestedIndex === -1) {
+    reply.statusCode = 400
+    return reply.send({
+      error: 'Language error', // the HTTP error message
+      message: 'Language code not recognised',
+    })
+  }
+
+  if (!languageOptions[requestedIndex].enabled) {
+    reply.statusCode = 403
+    return reply.send({
+      error: 'Language error', // the HTTP error message
+      message: 'Language code not enabled',
+    })
+  }
+
   const stringsFile = path.join(code, 'strings.json')
   reply.sendFile(stringsFile, path.join(getAppEntryPointDir(), localisationsFolder))
 }
@@ -114,12 +133,13 @@ export const routeRemoveLanguage = async (request: any, reply: any) => {
     })
   }
 }
-const readLanguageOptions = (): LanguageOption[] =>
+
+export const readLanguageOptions = (): LanguageOption[] =>
   JSON.parse(
     readFileSync(path.join(getAppEntryPointDir(), '../localisation/languages.json'), 'utf8')
   )
 
-const writeLanguageOptions = async (languageOptions: LanguageOption[]) =>
+export const writeLanguageOptions = async (languageOptions: LanguageOption[]) =>
   await writeFilePromise(
     path.join(getAppEntryPointDir(), '../localisation/languages.json'),
     JSON.stringify(languageOptions, null, 2)
