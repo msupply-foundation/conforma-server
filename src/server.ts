@@ -115,7 +115,6 @@ const startServer = async () => {
         server.get('/get-application-data', routeGetApplicationData)
         server.post('/enable-language', routeEnableLanguage)
         server.post('/install-language', routeInstallLanguage)
-        done()
         server.post('/remove-language', routeRemoveLanguage)
         done()
       },
