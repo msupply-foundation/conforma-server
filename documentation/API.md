@@ -466,10 +466,6 @@ POST: `/install-language`
 
 POST: `/remove-language?code=<languageCode>`
 
-
-
-
-
 #### Snapshot endpoints
 
 - GET: `/snapshots/list`
