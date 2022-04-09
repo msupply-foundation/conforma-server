@@ -65,7 +65,6 @@ export const routeInstallLanguage = async (request: any, reply: any) => {
     return reply.send({ success: false, message: 'Incorrect language data' })
   if (!checkStrings(strings))
     return reply.send({ success: false, message: 'Incorrect strings format' })
-  language.enabled = true
 
   const languageOptions = JSON.parse(
     readFileSync(path.join(getAppEntryPointDir(), '../localisation/languages.json'), 'utf8')
