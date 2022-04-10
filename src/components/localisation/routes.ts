@@ -28,7 +28,7 @@ export const routeGetLanguageFile = async (request: any, reply: any) => {
   if (requestedIndex === -1) {
     reply.statusCode = 400
     return reply.send({
-      error: 'Language error', // the HTTP error message
+      error: 'Language error',
       message: 'Language code not recognised',
     })
   }
@@ -36,7 +36,7 @@ export const routeGetLanguageFile = async (request: any, reply: any) => {
   if (!languageOptions[requestedIndex].enabled) {
     reply.statusCode = 403
     return reply.send({
-      error: 'Language error', // the HTTP error message
+      error: 'Language error',
       message: 'Language code not enabled',
     })
   }
