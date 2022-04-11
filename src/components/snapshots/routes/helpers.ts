@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
 import fsSync from 'fs'
-import { SNAPSHOT_FILE_NAME, SNAPSHOT_FOLDER } from '../constants'
+import { SNAPSHOT_FILE_NAME, SNAPSHOT_FOLDER } from '../../../constants'
 import path from 'path'
 
 export const getSnaphotList = async () => {

@@ -40,6 +40,9 @@ typings/
 # File storage folder
 /files
 
+# Localisation folder -- gets restored from core_templates
+/localisation
+
 #GraphQL schema auto-generated
 database/schema.graphql
 database/schema.json

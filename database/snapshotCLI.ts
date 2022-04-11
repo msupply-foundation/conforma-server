@@ -1,6 +1,6 @@
 import takeSnapshot from '../src/components/snapshots/takeSnapshot'
 import useSnapshot from '../src/components/snapshots/useSnapshot'
-import { DEFAULT_SNAPSHOT_NAME, DEFAULT_OPTIONS_NAME } from '../src/components/snapshots/constants'
+import { DEFAULT_SNAPSHOT_NAME, DEFAULT_OPTIONS_NAME } from '../src/constants'
 
 let aliases: { [key: string]: string }
 try {

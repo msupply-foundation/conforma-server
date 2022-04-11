@@ -17,12 +17,8 @@ import {
 } from './components/permissions'
 import { routeOutcomes, routeOutcomesTable, routeOutcomesDetail } from './components/outcomes'
 import { routeGeneratePDF } from './components/files/documentGenerate'
-import {
-  saveFiles,
-  getFilePath,
-  createFilesFolder,
-  filesFolder,
-} from './components/files/fileHandler'
+import { saveFiles, getFilePath, filesFolder } from './components/files/fileHandler'
+import { createDefaultDataFolders } from './components/files/createDefaultFolders'
 import { getAppEntryPointDir, objectKeysToSnakeCase } from './components/utilityFunctions'
 import { routeRunAction, routeGetApplicationData } from './components/actions/runAction'
 import config from './config'
@@ -40,7 +36,7 @@ const startServer = async () => {
   await migrateData()
   await loadActionPlugins() // Connects to Database and listens for Triggers
 
-  createFilesFolder()
+  createDefaultDataFolders()
 
   const server = fastify()
 

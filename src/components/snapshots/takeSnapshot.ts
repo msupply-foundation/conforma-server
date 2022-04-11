@@ -25,11 +25,12 @@ import {
   PREFERENCES_FILE,
   PG_DFF_JS_LOCATION,
   DATABASE_FOLDER,
-} from './constants'
+} from '../../constants'
 import { getBaseFiles, getDirectoryFromPath } from './useSnapshot'
 import config from '../../config'
 import { DateTime } from 'luxon'
 const asyncRimRaf = promisify(rimraf)
+import { createDefaultDataFolders } from '../files/createDefaultFolders'
 
 const takeSnapshot: SnapshotOperation = async ({
   snapshotName = DEFAULT_SNAPSHOT_NAME,
@@ -37,6 +38,9 @@ const takeSnapshot: SnapshotOperation = async ({
   options: inOptions,
   extraOptions = {},
 }) => {
+  // Ensure relevant folders exist
+  createDefaultDataFolders()
+
   try {
     console.log(`taking snapshot, name: ${snapshotName}`)
 

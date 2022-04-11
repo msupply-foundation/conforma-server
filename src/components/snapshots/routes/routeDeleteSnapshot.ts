@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 import { promisify } from 'util'
 import rimraf from 'rimraf'
 import path from 'path'
-import { SNAPSHOT_FOLDER } from '.././constants'
+import { SNAPSHOT_FOLDER } from '../../../constants'
 
 const asyncRimRaf = promisify(rimraf)
 
