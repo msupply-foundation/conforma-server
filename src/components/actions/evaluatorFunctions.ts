@@ -7,10 +7,6 @@ const generateExpiry = (duration: Duration) => DateTime.now().plus(duration).toJ
 
 const getYear = () => new Date().getFullYear()
 
-const getFormattedDate = (formatString: string) => {
-  const test = DateTime.now().toFormat(formatString)
-  console.log('test', test)
+const getFormattedDate = (formatString: string) => DateTime.now().toFormat(formatString)
 
-  return test
-}
 export default { generateExpiry, getYear, getFormattedDate }
