@@ -29,6 +29,7 @@ import {
   routeEnableLanguage,
   routeInstallLanguage,
   routeRemoveLanguage,
+  routeGetAllLanguageFiles,
 } from './components/localisation/routes'
 import { routeTriggers } from './components/other/routeTriggers'
 import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
@@ -116,6 +117,7 @@ const startServer = async () => {
         server.post('/enable-language', routeEnableLanguage)
         server.post('/install-language', routeInstallLanguage)
         server.post('/remove-language', routeRemoveLanguage)
+        server.get('/all-languages', routeGetAllLanguageFiles)
         done()
       },
       { prefix: '/admin' }

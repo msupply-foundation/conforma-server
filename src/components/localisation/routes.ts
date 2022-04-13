@@ -1,5 +1,5 @@
 import path from 'path'
-import { mkdirSync, rmdirSync, readFileSync, writeFile } from 'fs'
+import { rmdirSync, readFileSync, writeFile } from 'fs'
 import { promisify } from 'util'
 import {
   getAppEntryPointDir,
@@ -43,6 +43,19 @@ export const routeGetLanguageFile = async (request: any, reply: any) => {
 
   const stringsFile = path.join(code, 'strings.json')
   reply.sendFile(stringsFile, path.join(getAppEntryPointDir(), localisationsFolder))
+}
+
+export const routeGetAllLanguageFiles = async (request: any, reply: any) => {
+  const languageOptions = readLanguageOptions()
+  const output: { [key: string]: { [key: string]: string } } = {}
+
+  for (const { code } of languageOptions) {
+    const stringsFile = path.join(code, 'strings.json')
+    output[code] = JSON.parse(
+      readFileSync(path.join(getAppEntryPointDir(), localisationsFolder, stringsFile), 'utf-8')
+    )
+  }
+  reply.send(output)
 }
 
 export const routeEnableLanguage = async (request: any, reply: any) => {
