@@ -46,11 +46,7 @@ export const routeGetLanguageFile = async (request: any, reply: any) => {
 }
 
 export const routeGetAllLanguageFiles = async (request: any, reply: any) => {
-  const includeDisabled = combineRequestParams(request)?.includeDisabled !== 'false'
-  const languageOptions = readLanguageOptions().filter((lang) =>
-    includeDisabled ? true : lang.enabled
-  )
-
+  const languageOptions = readLanguageOptions()
   const output: { [key: string]: { [key: string]: string } } = {}
 
   for (const { code } of languageOptions) {
