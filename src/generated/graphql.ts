@@ -527,6 +527,7 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The `actionQueue` to be created by this mutation. */
@@ -664,8 +665,8 @@ export type ActivityLogApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `ActivityLogInput` mutation. */
@@ -904,10 +905,10 @@ export type Application = Node & {
   verifications: VerificationsConnection;
   /** Reads and enables pagination through a set of `ActivityLog`. */
   activityLogs: ActivityLogsConnection;
-  /** Reads and enables pagination through a set of `OrganisationApplicationJoin`. */
-  organisationApplicationJoins: OrganisationApplicationJoinsConnection;
   /** Reads and enables pagination through a set of `UserApplicationJoin`. */
   userApplicationJoins: UserApplicationJoinsConnection;
+  /** Reads and enables pagination through a set of `OrganisationApplicationJoin`. */
+  organisationApplicationJoins: OrganisationApplicationJoinsConnection;
   stage?: Maybe<Scalars['String']>;
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationStatus>;
@@ -1034,18 +1035,6 @@ export type ApplicationActivityLogsArgs = {
 };
 
 
-export type ApplicationOrganisationApplicationJoinsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<OrganisationApplicationJoinsOrderBy>>;
-  condition?: Maybe<OrganisationApplicationJoinCondition>;
-  filter?: Maybe<OrganisationApplicationJoinFilter>;
-};
-
-
 export type ApplicationUserApplicationJoinsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -1055,6 +1044,18 @@ export type ApplicationUserApplicationJoinsArgs = {
   orderBy?: Maybe<Array<UserApplicationJoinsOrderBy>>;
   condition?: Maybe<UserApplicationJoinCondition>;
   filter?: Maybe<UserApplicationJoinFilter>;
+};
+
+
+export type ApplicationOrganisationApplicationJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<OrganisationApplicationJoinsOrderBy>>;
+  condition?: Maybe<OrganisationApplicationJoinCondition>;
+  filter?: Maybe<OrganisationApplicationJoinFilter>;
 };
 
 /** The fields on `application` to look up the row to connect. */
@@ -1176,14 +1177,14 @@ export type ApplicationFilter = {
   activityLogs?: Maybe<ApplicationToManyActivityLogFilter>;
   /** Some related `activityLogs` exist. */
   activityLogsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `organisationApplicationJoins` relation. */
-  organisationApplicationJoins?: Maybe<ApplicationToManyOrganisationApplicationJoinFilter>;
-  /** Some related `organisationApplicationJoins` exist. */
-  organisationApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `userApplicationJoins` relation. */
   userApplicationJoins?: Maybe<ApplicationToManyUserApplicationJoinFilter>;
   /** Some related `userApplicationJoins` exist. */
   userApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `organisationApplicationJoins` relation. */
+  organisationApplicationJoins?: Maybe<ApplicationToManyOrganisationApplicationJoinFilter>;
+  /** Some related `organisationApplicationJoins` exist. */
+  organisationApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
   /** Filter by the object’s `user` relation. */
@@ -1228,8 +1229,8 @@ export type ApplicationInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `String` values. */
@@ -1346,6 +1347,8 @@ export type ApplicationListShape = {
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
+  languageCode?: Maybe<Scalars['String']>;
+  languageStrings?: Maybe<Scalars['JSON']>;
   assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
@@ -1384,6 +1387,10 @@ export type ApplicationListShapeCondition = {
   outcome?: Maybe<ApplicationOutcome>;
   /** Checks for equality with the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `languageCode` field. */
+  languageCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `languageStrings` field. */
+  languageStrings?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `assigners` field. */
   assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `reviewers` field. */
@@ -1426,6 +1433,10 @@ export type ApplicationListShapeFilter = {
   outcome?: Maybe<ApplicationOutcomeFilter>;
   /** Filter by the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `languageCode` field. */
+  languageCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `languageStrings` field. */
+  languageStrings?: Maybe<JsonFilter>;
   /** Filter by the object’s `assigners` field. */
   assigners?: Maybe<StringListFilter>;
   /** Filter by the object’s `reviewers` field. */
@@ -1462,6 +1473,8 @@ export type ApplicationListShapeInput = {
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
+  languageCode?: Maybe<Scalars['String']>;
+  languageStrings?: Maybe<Scalars['JSON']>;
   assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
@@ -1520,6 +1533,10 @@ export enum ApplicationListShapesOrderBy {
   OutcomeDesc = 'OUTCOME_DESC',
   LastActiveDateAsc = 'LAST_ACTIVE_DATE_ASC',
   LastActiveDateDesc = 'LAST_ACTIVE_DATE_DESC',
+  LanguageCodeAsc = 'LANGUAGE_CODE_ASC',
+  LanguageCodeDesc = 'LANGUAGE_CODE_DESC',
+  LanguageStringsAsc = 'LANGUAGE_STRINGS_ASC',
+  LanguageStringsDesc = 'LANGUAGE_STRINGS_DESC',
   AssignersAsc = 'ASSIGNERS_ASC',
   AssignersDesc = 'ASSIGNERS_DESC',
   ReviewersAsc = 'REVIEWERS_ASC',
@@ -1606,8 +1623,8 @@ export type ApplicationNoteApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The `applicationNote` to be created by this mutation. */
@@ -1886,6 +1903,17 @@ export type ApplicationNoteOrgIdFkeyOrganisationCreateInput = {
   logoUrl?: Maybe<Scalars['String']>;
   isSystemOrg?: Maybe<Scalars['Boolean']>;
   registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  paymentReceipt?: Maybe<Scalars['JSON']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -2027,6 +2055,10 @@ export type ApplicationNoteUserIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -2395,8 +2427,8 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `organisation` in the `ApplicationInput` mutation. */
@@ -2464,6 +2496,17 @@ export type ApplicationOrgIdFkeyOrganisationCreateInput = {
   logoUrl?: Maybe<Scalars['String']>;
   isSystemOrg?: Maybe<Scalars['Boolean']>;
   registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  paymentReceipt?: Maybe<Scalars['JSON']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -2533,8 +2576,8 @@ export type ApplicationPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 export type ApplicationResponse = Node & {
@@ -2611,8 +2654,8 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The `applicationResponse` to be created by this mutation. */
@@ -3193,8 +3236,8 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The `applicationStageHistory` to be created by this mutation. */
@@ -4127,8 +4170,8 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `template` in the `ApplicationInput` mutation. */
@@ -4201,6 +4244,7 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** A filter to be used against many `ActivityLog` object types. All fields are combined with a logical ‘and.’ */
@@ -4348,8 +4392,8 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `user` in the `ApplicationInput` mutation. */
@@ -4412,6 +4456,10 @@ export type ApplicationUserIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -5220,6 +5268,47 @@ export type CreateCounterPayload = {
 /** The output of our create `Counter` mutation. */
 export type CreateCounterPayloadCounterEdgeArgs = {
   orderBy?: Maybe<Array<CountersOrderBy>>;
+};
+
+/** All input for the create `CustomLocalisation` mutation. */
+export type CreateCustomLocalisationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `CustomLocalisation` to be created by this mutation. */
+  customLocalisation: CustomLocalisationInput;
+};
+
+/** The output of our create `CustomLocalisation` mutation. */
+export type CreateCustomLocalisationPayload = {
+  __typename?: 'CreateCustomLocalisationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `CustomLocalisation` that was created by this mutation. */
+  customLocalisation?: Maybe<CustomLocalisation>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Template` that is related to this `CustomLocalisation`. */
+  template?: Maybe<Template>;
+  /** Reads a single `Filter` that is related to this `CustomLocalisation`. */
+  filter?: Maybe<Filter>;
+  /** Reads a single `OutcomeDisplay` that is related to this `CustomLocalisation`. */
+  outcomeDisplay?: Maybe<OutcomeDisplay>;
+  /** Reads a single `PermissionName` that is related to this `CustomLocalisation`. */
+  permissionName?: Maybe<PermissionName>;
+  /** An edge for our `CustomLocalisation`. May be used by Relay 1. */
+  customLocalisationEdge?: Maybe<CustomLocalisationsEdge>;
+};
+
+
+/** The output of our create `CustomLocalisation` mutation. */
+export type CreateCustomLocalisationPayloadCustomLocalisationEdgeArgs = {
+  orderBy?: Maybe<Array<CustomLocalisationsOrderBy>>;
 };
 
 /** All input for the create `ElementTypePlugin` mutation. */
@@ -6447,6 +6536,540 @@ export type CreateVerificationPayloadVerificationEdgeArgs = {
 };
 
 
+export type CustomLocalisation = Node & {
+  __typename?: 'CustomLocalisation';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  /** Reads a single `Template` that is related to this `CustomLocalisation`. */
+  template?: Maybe<Template>;
+  /** Reads a single `Filter` that is related to this `CustomLocalisation`. */
+  filter?: Maybe<Filter>;
+  /** Reads a single `OutcomeDisplay` that is related to this `CustomLocalisation`. */
+  outcomeDisplay?: Maybe<OutcomeDisplay>;
+  /** Reads a single `PermissionName` that is related to this `CustomLocalisation`. */
+  permissionName?: Maybe<PermissionName>;
+};
+
+/**
+ * A condition to be used against `CustomLocalisation` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type CustomLocalisationCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `languageCode` field. */
+  languageCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `strings` field. */
+  strings?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `templateId` field. */
+  templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `filterId` field. */
+  filterId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `outcomeDisplayId` field. */
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `permissionNameId` field. */
+  permissionNameId?: Maybe<Scalars['Int']>;
+};
+
+/** The fields on `customLocalisation` to look up the row to connect. */
+export type CustomLocalisationCustomLocalisationPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `customLocalisation` to look up the row to delete. */
+export type CustomLocalisationCustomLocalisationPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** A filter to be used against `CustomLocalisation` object types. All fields are combined with a logical ‘and.’ */
+export type CustomLocalisationFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `languageCode` field. */
+  languageCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `strings` field. */
+  strings?: Maybe<JsonFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `filterId` field. */
+  filterId?: Maybe<IntFilter>;
+  /** Filter by the object’s `outcomeDisplayId` field. */
+  outcomeDisplayId?: Maybe<IntFilter>;
+  /** Filter by the object’s `permissionNameId` field. */
+  permissionNameId?: Maybe<IntFilter>;
+  /** Filter by the object’s `template` relation. */
+  template?: Maybe<TemplateFilter>;
+  /** A related `template` exists. */
+  templateExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `filter` relation. */
+  filter?: Maybe<FilterFilter>;
+  /** A related `filter` exists. */
+  filterExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `outcomeDisplay` relation. */
+  outcomeDisplay?: Maybe<OutcomeDisplayFilter>;
+  /** A related `outcomeDisplay` exists. */
+  outcomeDisplayExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `permissionName` relation. */
+  permissionName?: Maybe<PermissionNameFilter>;
+  /** A related `permissionName` exists. */
+  permissionNameExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<CustomLocalisationFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<CustomLocalisationFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<CustomLocalisationFilter>;
+};
+
+/** The `customLocalisation` to be created by this mutation. */
+export type CustomLocalisationFilterIdFkeyCustomLocalisationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** The `filter` to be created by this mutation. */
+export type CustomLocalisationFilterIdFkeyFilterCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  code: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  query?: Maybe<Scalars['JSON']>;
+  userRole?: Maybe<PermissionPolicyType>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationFilterIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `filter` in the `CustomLocalisationInput` mutation. */
+export type CustomLocalisationFilterIdFkeyInput = {
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  connectById?: Maybe<FilterFilterPkeyConnect>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  connectByCode?: Maybe<FilterFilterCodeKeyConnect>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  connectByNodeId?: Maybe<FilterNodeIdConnect>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  deleteById?: Maybe<FilterFilterPkeyDelete>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  deleteByCode?: Maybe<FilterFilterCodeKeyDelete>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<FilterNodeIdDelete>;
+  /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
+  updateById?: Maybe<FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingFilterPkeyUpdate>;
+  /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
+  updateByCode?: Maybe<FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingFilterCodeKeyUpdate>;
+  /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
+  updateByNodeId?: Maybe<CustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyNodeIdUpdate>;
+  /** A `FilterInput` object that will be created and connected to this object. */
+  create?: Maybe<CustomLocalisationFilterIdFkeyFilterCreateInput>;
+};
+
+/** Input for the nested mutation of `customLocalisation` in the `FilterInput` mutation. */
+export type CustomLocalisationFilterIdFkeyInverseInput = {
+  /** Flag indicating whether all other `customLocalisation` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  connectById?: Maybe<Array<CustomLocalisationCustomLocalisationPkeyConnect>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<CustomLocalisationNodeIdConnect>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  deleteById?: Maybe<Array<CustomLocalisationCustomLocalisationPkeyDelete>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<CustomLocalisationNodeIdDelete>>;
+  /** The primary key(s) and patch data for `customLocalisation` for the far side of the relationship. */
+  updateById?: Maybe<Array<CustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingCustomLocalisationPkeyUpdate>>;
+  /** The primary key(s) and patch data for `customLocalisation` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyNodeIdUpdate>>;
+  /** A `CustomLocalisationInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<CustomLocalisationFilterIdFkeyCustomLocalisationCreateInput>>;
+};
+
+/** An input for mutations affecting `CustomLocalisation` */
+export type CustomLocalisationInput = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type CustomLocalisationNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `customLocalisation` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type CustomLocalisationNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `customLocalisation` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type CustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `filter` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `filter` being updated. */
+  patch: FilterPatch;
+};
+
+/** The fields on `customLocalisation` to look up the row to update. */
+export type CustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingCustomLocalisationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `customLocalisation` being updated. */
+  patch: UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type CustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `outcomeDisplay` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+  patch: OutcomeDisplayPatch;
+};
+
+/** The fields on `customLocalisation` to look up the row to update. */
+export type CustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingCustomLocalisationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `customLocalisation` being updated. */
+  patch: UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type CustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `permissionName` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `permissionName` being updated. */
+  patch: PermissionNamePatch;
+};
+
+/** The fields on `customLocalisation` to look up the row to update. */
+export type CustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingCustomLocalisationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `customLocalisation` being updated. */
+  patch: UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type CustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `template` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: TemplatePatch;
+};
+
+/** The fields on `customLocalisation` to look up the row to update. */
+export type CustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyUsingCustomLocalisationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `customLocalisation` being updated. */
+  patch: UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The `customLocalisation` to be created by this mutation. */
+export type CustomLocalisationOutcomeDisplayIdFkeyCustomLocalisationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `outcomeDisplay` in the `CustomLocalisationInput` mutation. */
+export type CustomLocalisationOutcomeDisplayIdFkeyInput = {
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  connectById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyConnect>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  connectByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  connectByNodeId?: Maybe<OutcomeDisplayNodeIdConnect>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  deleteById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyDelete>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  deleteByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<OutcomeDisplayNodeIdDelete>;
+  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
+  updateById?: Maybe<OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate>;
+  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
+  updateByTableNameAndCode?: Maybe<OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate>;
+  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
+  updateByNodeId?: Maybe<CustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyNodeIdUpdate>;
+  /** A `OutcomeDisplayInput` object that will be created and connected to this object. */
+  create?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyOutcomeDisplayCreateInput>;
+};
+
+/** Input for the nested mutation of `customLocalisation` in the `OutcomeDisplayInput` mutation. */
+export type CustomLocalisationOutcomeDisplayIdFkeyInverseInput = {
+  /** Flag indicating whether all other `customLocalisation` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  connectById?: Maybe<Array<CustomLocalisationCustomLocalisationPkeyConnect>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<CustomLocalisationNodeIdConnect>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  deleteById?: Maybe<Array<CustomLocalisationCustomLocalisationPkeyDelete>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<CustomLocalisationNodeIdDelete>>;
+  /** The primary key(s) and patch data for `customLocalisation` for the far side of the relationship. */
+  updateById?: Maybe<Array<CustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingCustomLocalisationPkeyUpdate>>;
+  /** The primary key(s) and patch data for `customLocalisation` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyNodeIdUpdate>>;
+  /** A `CustomLocalisationInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<CustomLocalisationOutcomeDisplayIdFkeyCustomLocalisationCreateInput>>;
+};
+
+/** The `outcomeDisplay` to be created by this mutation. */
+export type CustomLocalisationOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  tableName: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  rowRestrictions?: Maybe<Scalars['JSON']>;
+  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewHeaderColumn: Scalars['String'];
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
+  priority?: Maybe<Scalars['Int']>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInverseInput>;
+};
+
+/** Represents an update to a `CustomLocalisation`. Fields that are set will be updated. */
+export type CustomLocalisationPatch = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** The `customLocalisation` to be created by this mutation. */
+export type CustomLocalisationPermissionNameIdFkeyCustomLocalisationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `permissionName` in the `CustomLocalisationInput` mutation. */
+export type CustomLocalisationPermissionNameIdFkeyInput = {
+  /** The primary key(s) for `permissionName` for the far side of the relationship. */
+  connectById?: Maybe<PermissionNamePermissionNamePkeyConnect>;
+  /** The primary key(s) for `permissionName` for the far side of the relationship. */
+  connectByName?: Maybe<PermissionNamePermissionNameNameKeyConnect>;
+  /** The primary key(s) for `permissionName` for the far side of the relationship. */
+  connectByNodeId?: Maybe<PermissionNameNodeIdConnect>;
+  /** The primary key(s) for `permissionName` for the far side of the relationship. */
+  deleteById?: Maybe<PermissionNamePermissionNamePkeyDelete>;
+  /** The primary key(s) for `permissionName` for the far side of the relationship. */
+  deleteByName?: Maybe<PermissionNamePermissionNameNameKeyDelete>;
+  /** The primary key(s) for `permissionName` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<PermissionNameNodeIdDelete>;
+  /** The primary key(s) and patch data for `permissionName` for the far side of the relationship. */
+  updateById?: Maybe<PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingPermissionNamePkeyUpdate>;
+  /** The primary key(s) and patch data for `permissionName` for the far side of the relationship. */
+  updateByName?: Maybe<PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate>;
+  /** The primary key(s) and patch data for `permissionName` for the far side of the relationship. */
+  updateByNodeId?: Maybe<CustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyNodeIdUpdate>;
+  /** A `PermissionNameInput` object that will be created and connected to this object. */
+  create?: Maybe<CustomLocalisationPermissionNameIdFkeyPermissionNameCreateInput>;
+};
+
+/** Input for the nested mutation of `customLocalisation` in the `PermissionNameInput` mutation. */
+export type CustomLocalisationPermissionNameIdFkeyInverseInput = {
+  /** Flag indicating whether all other `customLocalisation` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  connectById?: Maybe<Array<CustomLocalisationCustomLocalisationPkeyConnect>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<CustomLocalisationNodeIdConnect>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  deleteById?: Maybe<Array<CustomLocalisationCustomLocalisationPkeyDelete>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<CustomLocalisationNodeIdDelete>>;
+  /** The primary key(s) and patch data for `customLocalisation` for the far side of the relationship. */
+  updateById?: Maybe<Array<CustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingCustomLocalisationPkeyUpdate>>;
+  /** The primary key(s) and patch data for `customLocalisation` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyNodeIdUpdate>>;
+  /** A `CustomLocalisationInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<CustomLocalisationPermissionNameIdFkeyCustomLocalisationCreateInput>>;
+};
+
+/** The `permissionName` to be created by this mutation. */
+export type CustomLocalisationPermissionNameIdFkeyPermissionNameCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  permissionPolicyId?: Maybe<Scalars['Int']>;
+  isSystemOrgPermission?: Maybe<Scalars['Boolean']>;
+  permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
+};
+
+/** A connection to a list of `CustomLocalisation` values. */
+export type CustomLocalisationsConnection = {
+  __typename?: 'CustomLocalisationsConnection';
+  /** A list of `CustomLocalisation` objects. */
+  nodes: Array<Maybe<CustomLocalisation>>;
+  /** A list of edges which contains the `CustomLocalisation` and cursor to aid in pagination. */
+  edges: Array<CustomLocalisationsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CustomLocalisation` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `CustomLocalisation` edge in the connection. */
+export type CustomLocalisationsEdge = {
+  __typename?: 'CustomLocalisationsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `CustomLocalisation` at the end of the edge. */
+  node?: Maybe<CustomLocalisation>;
+};
+
+/** Methods to use when ordering `CustomLocalisation`. */
+export enum CustomLocalisationsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  LanguageCodeAsc = 'LANGUAGE_CODE_ASC',
+  LanguageCodeDesc = 'LANGUAGE_CODE_DESC',
+  StringsAsc = 'STRINGS_ASC',
+  StringsDesc = 'STRINGS_DESC',
+  TemplateIdAsc = 'TEMPLATE_ID_ASC',
+  TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  FilterIdAsc = 'FILTER_ID_ASC',
+  FilterIdDesc = 'FILTER_ID_DESC',
+  OutcomeDisplayIdAsc = 'OUTCOME_DISPLAY_ID_ASC',
+  OutcomeDisplayIdDesc = 'OUTCOME_DISPLAY_ID_DESC',
+  PermissionNameIdAsc = 'PERMISSION_NAME_ID_ASC',
+  PermissionNameIdDesc = 'PERMISSION_NAME_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** The `customLocalisation` to be created by this mutation. */
+export type CustomLocalisationTemplateIdFkeyCustomLocalisationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `template` in the `CustomLocalisationInput` mutation. */
+export type CustomLocalisationTemplateIdFkeyInput = {
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectById?: Maybe<TemplateTemplatePkeyConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectByNodeId?: Maybe<TemplateNodeIdConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteById?: Maybe<TemplateTemplatePkeyDelete>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateById?: Maybe<TemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyUsingTemplatePkeyUpdate>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateByNodeId?: Maybe<CustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyNodeIdUpdate>;
+  /** A `TemplateInput` object that will be created and connected to this object. */
+  create?: Maybe<CustomLocalisationTemplateIdFkeyTemplateCreateInput>;
+};
+
+/** Input for the nested mutation of `customLocalisation` in the `TemplateInput` mutation. */
+export type CustomLocalisationTemplateIdFkeyInverseInput = {
+  /** Flag indicating whether all other `customLocalisation` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  connectById?: Maybe<Array<CustomLocalisationCustomLocalisationPkeyConnect>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<CustomLocalisationNodeIdConnect>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  deleteById?: Maybe<Array<CustomLocalisationCustomLocalisationPkeyDelete>>;
+  /** The primary key(s) for `customLocalisation` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<CustomLocalisationNodeIdDelete>>;
+  /** The primary key(s) and patch data for `customLocalisation` for the far side of the relationship. */
+  updateById?: Maybe<Array<CustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyUsingCustomLocalisationPkeyUpdate>>;
+  /** The primary key(s) and patch data for `customLocalisation` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<TemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyNodeIdUpdate>>;
+  /** A `CustomLocalisationInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<CustomLocalisationTemplateIdFkeyCustomLocalisationCreateInput>>;
+};
+
+/** The `template` to be created by this mutation. */
+export type CustomLocalisationTemplateIdFkeyTemplateCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
+  startMessage?: Maybe<Scalars['JSON']>;
+  status?: Maybe<TemplateStatus>;
+  submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
+  versionTimestamp?: Maybe<Scalars['Datetime']>;
+  version?: Maybe<Scalars['Int']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
+  templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
+  templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
+};
+
 
 /** A filter to be used against Date fields. All fields are combined with a logical ‘and.’ */
 export type DateFilter = {
@@ -6987,6 +7610,58 @@ export type DeleteCounterPayload = {
 /** The output of our delete `Counter` mutation. */
 export type DeleteCounterPayloadCounterEdgeArgs = {
   orderBy?: Maybe<Array<CountersOrderBy>>;
+};
+
+/** All input for the `deleteCustomLocalisationByNodeId` mutation. */
+export type DeleteCustomLocalisationByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `CustomLocalisation` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteCustomLocalisation` mutation. */
+export type DeleteCustomLocalisationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `CustomLocalisation` mutation. */
+export type DeleteCustomLocalisationPayload = {
+  __typename?: 'DeleteCustomLocalisationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `CustomLocalisation` that was deleted by this mutation. */
+  customLocalisation?: Maybe<CustomLocalisation>;
+  deletedCustomLocalisationNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Template` that is related to this `CustomLocalisation`. */
+  template?: Maybe<Template>;
+  /** Reads a single `Filter` that is related to this `CustomLocalisation`. */
+  filter?: Maybe<Filter>;
+  /** Reads a single `OutcomeDisplay` that is related to this `CustomLocalisation`. */
+  outcomeDisplay?: Maybe<OutcomeDisplay>;
+  /** Reads a single `PermissionName` that is related to this `CustomLocalisation`. */
+  permissionName?: Maybe<PermissionName>;
+  /** An edge for our `CustomLocalisation`. May be used by Relay 1. */
+  customLocalisationEdge?: Maybe<CustomLocalisationsEdge>;
+};
+
+
+/** The output of our delete `CustomLocalisation` mutation. */
+export type DeleteCustomLocalisationPayloadCustomLocalisationEdgeArgs = {
+  orderBy?: Maybe<Array<CustomLocalisationsOrderBy>>;
 };
 
 /** All input for the `deleteElementTypePluginByNodeId` mutation. */
@@ -9136,8 +9811,8 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The `file` to be created by this mutation. */
@@ -9649,6 +10324,7 @@ export type FileTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The `file` to be created by this mutation. */
@@ -9734,6 +10410,10 @@ export type FileUserIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -9758,6 +10438,8 @@ export type Filter = Node & {
   userRole?: Maybe<PermissionPolicyType>;
   /** Reads and enables pagination through a set of `TemplateFilterJoin`. */
   templateFilterJoins: TemplateFilterJoinsConnection;
+  /** Reads and enables pagination through a set of `CustomLocalisation`. */
+  customLocalisations: CustomLocalisationsConnection;
 };
 
 
@@ -9770,6 +10452,18 @@ export type FilterTemplateFilterJoinsArgs = {
   orderBy?: Maybe<Array<TemplateFilterJoinsOrderBy>>;
   condition?: Maybe<TemplateFilterJoinCondition>;
   filter?: Maybe<TemplateFilterJoinFilter>;
+};
+
+
+export type FilterCustomLocalisationsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<CustomLocalisationsOrderBy>>;
+  condition?: Maybe<CustomLocalisationCondition>;
+  filter?: Maybe<CustomLocalisationFilter>;
 };
 
 /** A condition to be used against `Filter` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -9802,6 +10496,10 @@ export type FilterFilter = {
   templateFilterJoins?: Maybe<FilterToManyTemplateFilterJoinFilter>;
   /** Some related `templateFilterJoins` exist. */
   templateFilterJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `customLocalisations` relation. */
+  customLocalisations?: Maybe<FilterToManyCustomLocalisationFilter>;
+  /** Some related `customLocalisations` exist. */
+  customLocalisationsExist?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<FilterFilter>>;
   /** Checks for any expressions in this list. */
@@ -9838,6 +10536,7 @@ export type FilterInput = {
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
   templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationFilterIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -9850,6 +10549,28 @@ export type FilterNodeIdConnect = {
 export type FilterNodeIdDelete = {
   /** The globally unique `ID` which identifies a single `filter` to be deleted. */
   nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `customLocalisation` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `customLocalisation` being updated. */
+  patch: CustomLocalisationPatch;
+};
+
+/** The fields on `filter` to look up the row to update. */
+export type FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingFilterCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `filter` being updated. */
+  patch: UpdateFilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyPatch;
+  code: Scalars['String'];
+};
+
+/** The fields on `filter` to look up the row to update. */
+export type FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingFilterPkeyUpdate = {
+  /** An object where the defined keys will be set on the `filter` being updated. */
+  patch: UpdateFilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyPatch;
+  id: Scalars['Int'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -9882,6 +10603,7 @@ export type FilterPatch = {
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
   templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationFilterIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `Filter` values. */
@@ -9922,6 +10644,16 @@ export enum FiltersOrderBy {
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
+
+/** A filter to be used against many `CustomLocalisation` object types. All fields are combined with a logical ‘and.’ */
+export type FilterToManyCustomLocalisationFilter = {
+  /** Every related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<CustomLocalisationFilter>;
+  /** Some related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<CustomLocalisationFilter>;
+  /** No related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<CustomLocalisationFilter>;
+};
 
 /** A filter to be used against many `TemplateFilterJoin` object types. All fields are combined with a logical ‘and.’ */
 export type FilterToManyTemplateFilterJoinFilter = {
@@ -10115,6 +10847,8 @@ export type Mutation = {
   createApplicationStatusHistory?: Maybe<CreateApplicationStatusHistoryPayload>;
   /** Creates a single `Counter`. */
   createCounter?: Maybe<CreateCounterPayload>;
+  /** Creates a single `CustomLocalisation`. */
+  createCustomLocalisation?: Maybe<CreateCustomLocalisationPayload>;
   /** Creates a single `ElementTypePlugin`. */
   createElementTypePlugin?: Maybe<CreateElementTypePluginPayload>;
   /** Creates a single `File`. */
@@ -10225,6 +10959,10 @@ export type Mutation = {
   updateCounter?: Maybe<UpdateCounterPayload>;
   /** Updates a single `Counter` using a unique key and a patch. */
   updateCounterByName?: Maybe<UpdateCounterPayload>;
+  /** Updates a single `CustomLocalisation` using its globally unique id and a patch. */
+  updateCustomLocalisationByNodeId?: Maybe<UpdateCustomLocalisationPayload>;
+  /** Updates a single `CustomLocalisation` using a unique key and a patch. */
+  updateCustomLocalisation?: Maybe<UpdateCustomLocalisationPayload>;
   /** Updates a single `ElementTypePlugin` using its globally unique id and a patch. */
   updateElementTypePluginByNodeId?: Maybe<UpdateElementTypePluginPayload>;
   /** Updates a single `ElementTypePlugin` using a unique key and a patch. */
@@ -10429,6 +11167,10 @@ export type Mutation = {
   deleteCounter?: Maybe<DeleteCounterPayload>;
   /** Deletes a single `Counter` using a unique key. */
   deleteCounterByName?: Maybe<DeleteCounterPayload>;
+  /** Deletes a single `CustomLocalisation` using its globally unique id. */
+  deleteCustomLocalisationByNodeId?: Maybe<DeleteCustomLocalisationPayload>;
+  /** Deletes a single `CustomLocalisation` using a unique key. */
+  deleteCustomLocalisation?: Maybe<DeleteCustomLocalisationPayload>;
   /** Deletes a single `ElementTypePlugin` using its globally unique id. */
   deleteElementTypePluginByNodeId?: Maybe<DeleteElementTypePluginPayload>;
   /** Deletes a single `ElementTypePlugin` using a unique key. */
@@ -10652,6 +11394,12 @@ export type MutationCreateApplicationStatusHistoryArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateCounterArgs = {
   input: CreateCounterInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateCustomLocalisationArgs = {
+  input: CreateCustomLocalisationInput;
 };
 
 
@@ -10982,6 +11730,18 @@ export type MutationUpdateCounterArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateCounterByNameArgs = {
   input: UpdateCounterByNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateCustomLocalisationByNodeIdArgs = {
+  input: UpdateCustomLocalisationByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateCustomLocalisationArgs = {
+  input: UpdateCustomLocalisationInput;
 };
 
 
@@ -11598,6 +12358,18 @@ export type MutationDeleteCounterByNameArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteCustomLocalisationByNodeIdArgs = {
+  input: DeleteCustomLocalisationByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteCustomLocalisationArgs = {
+  input: DeleteCustomLocalisationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteElementTypePluginByNodeIdArgs = {
   input: DeleteElementTypePluginByNodeIdInput;
 };
@@ -12142,8 +12914,8 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `NotificationInput` mutation. */
@@ -12571,6 +13343,10 @@ export type NotificationUserIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -12595,6 +13371,17 @@ export type Organisation = Node & {
   logoUrl?: Maybe<Scalars['String']>;
   isSystemOrg?: Maybe<Scalars['Boolean']>;
   registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  paymentReceipt?: Maybe<Scalars['JSON']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations: UserOrganisationsConnection;
   /** Reads and enables pagination through a set of `PermissionJoin`. */
@@ -12734,8 +13521,8 @@ export type OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput =
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `OrganisationApplicationJoinInput` mutation. */
@@ -12951,6 +13738,17 @@ export type OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput
   logoUrl?: Maybe<Scalars['String']>;
   isSystemOrg?: Maybe<Scalars['Boolean']>;
   registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  paymentReceipt?: Maybe<Scalars['JSON']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -13023,6 +13821,28 @@ export type OrganisationCondition = {
   isSystemOrg?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `registrationDocumentation` field. */
   registrationDocumentation?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `agent` field. */
+  agent?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `contact` field. */
+  contact?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `authorisation` field. */
+  authorisation?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `paymentReceipt` field. */
+  paymentReceipt?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `type` field. */
+  type?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `serial` field. */
+  serial?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `country` field. */
+  country?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `province` field. */
+  province?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `postalAddress` field. */
+  postalAddress?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `postalCountry` field. */
+  postalCountry?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `postalProvince` field. */
+  postalProvince?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `Organisation` object types. All fields are combined with a logical ‘and.’ */
@@ -13041,6 +13861,28 @@ export type OrganisationFilter = {
   isSystemOrg?: Maybe<BooleanFilter>;
   /** Filter by the object’s `registrationDocumentation` field. */
   registrationDocumentation?: Maybe<JsonFilter>;
+  /** Filter by the object’s `agent` field. */
+  agent?: Maybe<JsonFilter>;
+  /** Filter by the object’s `contact` field. */
+  contact?: Maybe<JsonFilter>;
+  /** Filter by the object’s `authorisation` field. */
+  authorisation?: Maybe<JsonFilter>;
+  /** Filter by the object’s `paymentReceipt` field. */
+  paymentReceipt?: Maybe<JsonFilter>;
+  /** Filter by the object’s `type` field. */
+  type?: Maybe<StringFilter>;
+  /** Filter by the object’s `serial` field. */
+  serial?: Maybe<StringFilter>;
+  /** Filter by the object’s `country` field. */
+  country?: Maybe<StringFilter>;
+  /** Filter by the object’s `province` field. */
+  province?: Maybe<StringFilter>;
+  /** Filter by the object’s `postalAddress` field. */
+  postalAddress?: Maybe<StringFilter>;
+  /** Filter by the object’s `postalCountry` field. */
+  postalCountry?: Maybe<StringFilter>;
+  /** Filter by the object’s `postalProvince` field. */
+  postalProvince?: Maybe<StringFilter>;
   /** Filter by the object’s `userOrganisations` relation. */
   userOrganisations?: Maybe<OrganisationToManyUserOrganisationFilter>;
   /** Some related `userOrganisations` exist. */
@@ -13086,6 +13928,17 @@ export type OrganisationInput = {
   logoUrl?: Maybe<Scalars['String']>;
   isSystemOrg?: Maybe<Scalars['Boolean']>;
   registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  paymentReceipt?: Maybe<Scalars['JSON']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -13349,6 +14202,17 @@ export type OrganisationPatch = {
   logoUrl?: Maybe<Scalars['String']>;
   isSystemOrg?: Maybe<Scalars['Boolean']>;
   registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  paymentReceipt?: Maybe<Scalars['JSON']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -13397,6 +14261,28 @@ export enum OrganisationsOrderBy {
   IsSystemOrgDesc = 'IS_SYSTEM_ORG_DESC',
   RegistrationDocumentationAsc = 'REGISTRATION_DOCUMENTATION_ASC',
   RegistrationDocumentationDesc = 'REGISTRATION_DOCUMENTATION_DESC',
+  AgentAsc = 'AGENT_ASC',
+  AgentDesc = 'AGENT_DESC',
+  ContactAsc = 'CONTACT_ASC',
+  ContactDesc = 'CONTACT_DESC',
+  AuthorisationAsc = 'AUTHORISATION_ASC',
+  AuthorisationDesc = 'AUTHORISATION_DESC',
+  PaymentReceiptAsc = 'PAYMENT_RECEIPT_ASC',
+  PaymentReceiptDesc = 'PAYMENT_RECEIPT_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC',
+  SerialAsc = 'SERIAL_ASC',
+  SerialDesc = 'SERIAL_DESC',
+  CountryAsc = 'COUNTRY_ASC',
+  CountryDesc = 'COUNTRY_DESC',
+  ProvinceAsc = 'PROVINCE_ASC',
+  ProvinceDesc = 'PROVINCE_DESC',
+  PostalAddressAsc = 'POSTAL_ADDRESS_ASC',
+  PostalAddressDesc = 'POSTAL_ADDRESS_DESC',
+  PostalCountryAsc = 'POSTAL_COUNTRY_ASC',
+  PostalCountryDesc = 'POSTAL_COUNTRY_DESC',
+  PostalProvinceAsc = 'POSTAL_PROVINCE_ASC',
+  PostalProvinceDesc = 'POSTAL_PROVINCE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -13488,6 +14374,20 @@ export type OutcomeDisplay = Node & {
   detailViewHeaderColumn: Scalars['String'];
   showLinkedApplications: Scalars['Boolean'];
   priority?: Maybe<Scalars['Int']>;
+  /** Reads and enables pagination through a set of `CustomLocalisation`. */
+  customLocalisations: CustomLocalisationsConnection;
+};
+
+
+export type OutcomeDisplayCustomLocalisationsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<CustomLocalisationsOrderBy>>;
+  condition?: Maybe<CustomLocalisationCondition>;
+  filter?: Maybe<CustomLocalisationFilter>;
 };
 
 export type OutcomeDisplayColumnDefinition = Node & {
@@ -13683,6 +14583,10 @@ export type OutcomeDisplayFilter = {
   showLinkedApplications?: Maybe<BooleanFilter>;
   /** Filter by the object’s `priority` field. */
   priority?: Maybe<IntFilter>;
+  /** Filter by the object’s `customLocalisations` relation. */
+  customLocalisations?: Maybe<OutcomeDisplayToManyCustomLocalisationFilter>;
+  /** Some related `customLocalisations` exist. */
+  customLocalisationsExist?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<OutcomeDisplayFilter>>;
   /** Checks for any expressions in this list. */
@@ -13706,6 +14610,64 @@ export type OutcomeDisplayInput = {
   detailViewHeaderColumn: Scalars['String'];
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
   priority?: Maybe<Scalars['Int']>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type OutcomeDisplayNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `outcomeDisplay` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type OutcomeDisplayNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `outcomeDisplay` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `customLocalisation` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `customLocalisation` being updated. */
+  patch: CustomLocalisationPatch;
+};
+
+/** The fields on `outcomeDisplay` to look up the row to update. */
+export type OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate = {
+  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+  patch: UpdateOutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The fields on `outcomeDisplay` to look up the row to update. */
+export type OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+  patch: UpdateOutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyPatch;
+  tableName: Scalars['String'];
+  code: Scalars['String'];
+};
+
+/** The fields on `outcomeDisplay` to look up the row to connect. */
+export type OutcomeDisplayOutcomeDisplayPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `outcomeDisplay` to look up the row to delete. */
+export type OutcomeDisplayOutcomeDisplayPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `outcomeDisplay` to look up the row to connect. */
+export type OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect = {
+  tableName: Scalars['String'];
+  code: Scalars['String'];
+};
+
+/** The fields on `outcomeDisplay` to look up the row to delete. */
+export type OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete = {
+  tableName: Scalars['String'];
+  code: Scalars['String'];
 };
 
 /** Represents an update to a `OutcomeDisplay`. Fields that are set will be updated. */
@@ -13723,6 +14685,7 @@ export type OutcomeDisplayPatch = {
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
   priority?: Maybe<Scalars['Int']>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `OutcomeDisplay` values. */
@@ -13779,6 +14742,16 @@ export enum OutcomeDisplaysOrderBy {
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
+
+/** A filter to be used against many `CustomLocalisation` object types. All fields are combined with a logical ‘and.’ */
+export type OutcomeDisplayToManyCustomLocalisationFilter = {
+  /** Every related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<CustomLocalisationFilter>;
+  /** Some related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<CustomLocalisationFilter>;
+  /** No related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<CustomLocalisationFilter>;
+};
 
 /** Information about pagination in a connection. */
 export type PageInfo = {
@@ -13985,6 +14958,17 @@ export type PermissionJoinOrganisationIdFkeyOrganisationCreateInput = {
   logoUrl?: Maybe<Scalars['String']>;
   isSystemOrg?: Maybe<Scalars['Boolean']>;
   registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  paymentReceipt?: Maybe<Scalars['JSON']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -14092,6 +15076,7 @@ export type PermissionJoinPermissionNameIdFkeyPermissionNameCreateInput = {
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `PermissionJoin` values. */
@@ -14198,6 +15183,10 @@ export type PermissionJoinUserIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -14226,6 +15215,8 @@ export type PermissionName = Node & {
   permissionJoins: PermissionJoinsConnection;
   /** Reads and enables pagination through a set of `TemplatePermission`. */
   templatePermissions: TemplatePermissionsConnection;
+  /** Reads and enables pagination through a set of `CustomLocalisation`. */
+  customLocalisations: CustomLocalisationsConnection;
 };
 
 
@@ -14250,6 +15241,18 @@ export type PermissionNameTemplatePermissionsArgs = {
   orderBy?: Maybe<Array<TemplatePermissionsOrderBy>>;
   condition?: Maybe<TemplatePermissionCondition>;
   filter?: Maybe<TemplatePermissionFilter>;
+};
+
+
+export type PermissionNameCustomLocalisationsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<CustomLocalisationsOrderBy>>;
+  condition?: Maybe<CustomLocalisationCondition>;
+  filter?: Maybe<CustomLocalisationFilter>;
 };
 
 /**
@@ -14289,6 +15292,10 @@ export type PermissionNameFilter = {
   templatePermissions?: Maybe<PermissionNameToManyTemplatePermissionFilter>;
   /** Some related `templatePermissions` exist. */
   templatePermissionsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `customLocalisations` relation. */
+  customLocalisations?: Maybe<PermissionNameToManyCustomLocalisationFilter>;
+  /** Some related `customLocalisations` exist. */
+  customLocalisationsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `permissionPolicy` relation. */
   permissionPolicy?: Maybe<PermissionPolicyFilter>;
   /** A related `permissionPolicy` exists. */
@@ -14311,6 +15318,7 @@ export type PermissionNameInput = {
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -14323,6 +15331,28 @@ export type PermissionNameNodeIdConnect = {
 export type PermissionNameNodeIdDelete = {
   /** The globally unique `ID` which identifies a single `permissionName` to be deleted. */
   nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `customLocalisation` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `customLocalisation` being updated. */
+  patch: CustomLocalisationPatch;
+};
+
+/** The fields on `permissionName` to look up the row to update. */
+export type PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `permissionName` being updated. */
+  patch: UpdatePermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyPatch;
+  name: Scalars['String'];
+};
+
+/** The fields on `permissionName` to look up the row to update. */
+export type PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingPermissionNamePkeyUpdate = {
+  /** An object where the defined keys will be set on the `permissionName` being updated. */
+  patch: UpdatePermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyPatch;
+  id: Scalars['Int'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -14401,6 +15431,7 @@ export type PermissionNamePatch = {
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
 };
 
 /** The fields on `permissionName` to look up the row to connect. */
@@ -14482,6 +15513,7 @@ export type PermissionNamePermissionPolicyIdFkeyPermissionNameCreateInput = {
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
 };
 
 /** The `permissionPolicy` to be created by this mutation. */
@@ -14534,6 +15566,16 @@ export enum PermissionNamesOrderBy {
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
+
+/** A filter to be used against many `CustomLocalisation` object types. All fields are combined with a logical ‘and.’ */
+export type PermissionNameToManyCustomLocalisationFilter = {
+  /** Every related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<CustomLocalisationFilter>;
+  /** Some related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<CustomLocalisationFilter>;
+  /** No related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<CustomLocalisationFilter>;
+};
 
 /** A filter to be used against many `PermissionJoin` object types. All fields are combined with a logical ‘and.’ */
 export type PermissionNameToManyPermissionJoinFilter = {
@@ -15152,6 +16194,8 @@ export type Query = Node & {
   constraintsInfos?: Maybe<ConstraintsInfosConnection>;
   /** Reads and enables pagination through a set of `Counter`. */
   counters?: Maybe<CountersConnection>;
+  /** Reads and enables pagination through a set of `CustomLocalisation`. */
+  customLocalisations?: Maybe<CustomLocalisationsConnection>;
   /** Reads and enables pagination through a set of `ElementTypePlugin`. */
   elementTypePlugins?: Maybe<ElementTypePluginsConnection>;
   /** Reads and enables pagination through a set of `File`. */
@@ -15240,6 +16284,7 @@ export type Query = Node & {
   applicationStatusHistory?: Maybe<ApplicationStatusHistory>;
   counter?: Maybe<Counter>;
   counterByName?: Maybe<Counter>;
+  customLocalisation?: Maybe<CustomLocalisation>;
   elementTypePlugin?: Maybe<ElementTypePlugin>;
   file?: Maybe<File>;
   fileByUniqueId?: Maybe<File>;
@@ -15333,6 +16378,8 @@ export type Query = Node & {
   applicationStatusHistoryByNodeId?: Maybe<ApplicationStatusHistory>;
   /** Reads a single `Counter` using its globally unique `ID`. */
   counterByNodeId?: Maybe<Counter>;
+  /** Reads a single `CustomLocalisation` using its globally unique `ID`. */
+  customLocalisationByNodeId?: Maybe<CustomLocalisation>;
   /** Reads a single `ElementTypePlugin` using its globally unique `ID`. */
   elementTypePluginByNodeId?: Maybe<ElementTypePlugin>;
   /** Reads a single `File` using its globally unique `ID`. */
@@ -15576,6 +16623,19 @@ export type QueryCountersArgs = {
   orderBy?: Maybe<Array<CountersOrderBy>>;
   condition?: Maybe<CounterCondition>;
   filter?: Maybe<CounterFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCustomLocalisationsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<CustomLocalisationsOrderBy>>;
+  condition?: Maybe<CustomLocalisationCondition>;
+  filter?: Maybe<CustomLocalisationFilter>;
 };
 
 
@@ -16146,6 +17206,12 @@ export type QueryCounterByNameArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryCustomLocalisationArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryElementTypePluginArgs = {
   code: Scalars['String'];
 };
@@ -16435,6 +17501,7 @@ export type QueryVerificationByUniqueIdArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryApplicationListArgs = {
   userid?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -16709,6 +17776,12 @@ export type QueryApplicationStatusHistoryByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCounterByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCustomLocalisationByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -17024,8 +18097,8 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `ReviewInput` mutation. */
@@ -17188,8 +18261,8 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `ReviewAssignmentInput` mutation. */
@@ -17356,6 +18429,10 @@ export type ReviewAssignmentAssignerIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -17449,6 +18526,10 @@ export type ReviewAssignmentAssignerJoinAssignerIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -17632,6 +18713,17 @@ export type ReviewAssignmentAssignerJoinOrganisationIdFkeyOrganisationCreateInpu
   logoUrl?: Maybe<Scalars['String']>;
   isSystemOrg?: Maybe<Scalars['Boolean']>;
   registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  paymentReceipt?: Maybe<Scalars['JSON']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -18244,6 +19336,17 @@ export type ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput = {
   logoUrl?: Maybe<Scalars['String']>;
   isSystemOrg?: Maybe<Scalars['Boolean']>;
   registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  paymentReceipt?: Maybe<Scalars['JSON']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -18417,6 +19520,10 @@ export type ReviewAssignmentReviewerIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -18714,6 +19821,7 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** A filter to be used against many `ReviewAssignmentAssignerJoin` object types. All fields are combined with a logical ‘and.’ */
@@ -20260,6 +21368,10 @@ export type ReviewReviewerIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -21104,6 +22216,8 @@ export type Template = Node & {
   reviewAssignments: ReviewAssignmentsConnection;
   /** Reads and enables pagination through a set of `File`. */
   files: FilesConnection;
+  /** Reads and enables pagination through a set of `CustomLocalisation`. */
+  customLocalisations: CustomLocalisationsConnection;
 };
 
 
@@ -21224,6 +22338,18 @@ export type TemplateFilesArgs = {
   orderBy?: Maybe<Array<FilesOrderBy>>;
   condition?: Maybe<FileCondition>;
   filter?: Maybe<FileFilter>;
+};
+
+
+export type TemplateCustomLocalisationsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<CustomLocalisationsOrderBy>>;
+  condition?: Maybe<CustomLocalisationCondition>;
+  filter?: Maybe<CustomLocalisationFilter>;
 };
 
 export type TemplateAction = Node & {
@@ -21500,6 +22626,7 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `TemplateCategory` values. */
@@ -22297,6 +23424,10 @@ export type TemplateFilter = {
   files?: Maybe<TemplateToManyFileFilter>;
   /** Some related `files` exist. */
   filesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `customLocalisations` relation. */
+  customLocalisations?: Maybe<TemplateToManyCustomLocalisationFilter>;
+  /** Some related `customLocalisations` exist. */
+  customLocalisationsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `templateCategory` relation. */
   templateCategory?: Maybe<TemplateCategoryFilter>;
   /** A related `templateCategory` exists. */
@@ -22363,6 +23494,7 @@ export type TemplateFilterJoinFilterIdFkeyFilterCreateInput = {
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
   templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationFilterIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `filter` in the `TemplateFilterJoinInput` mutation. */
@@ -22586,6 +23718,7 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The `templateFilterJoin` to be created by this mutation. */
@@ -22622,6 +23755,7 @@ export type TemplateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -22663,6 +23797,21 @@ export type TemplateOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate = {
 export type TemplateOnApplicationForApplicationTemplateIdFkeyUsingTemplatePkeyUpdate = {
   /** An object where the defined keys will be set on the `template` being updated. */
   patch: UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `customLocalisation` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `customLocalisation` being updated. */
+  patch: CustomLocalisationPatch;
+};
+
+/** The fields on `template` to look up the row to update. */
+export type TemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyUsingTemplatePkeyUpdate = {
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: UpdateTemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyPatch;
   id: Scalars['Int'];
 };
 
@@ -22827,6 +23976,7 @@ export type TemplatePatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 export type TemplatePermission = Node & {
@@ -23033,6 +24183,7 @@ export type TemplatePermissionPermissionNameIdFkeyPermissionNameCreateInput = {
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
 };
 
 /** The `templatePermission` to be created by this mutation. */
@@ -23160,6 +24311,7 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The `templatePermission` to be created by this mutation. */
@@ -23458,6 +24610,7 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The `templateSection` to be created by this mutation. */
@@ -24115,6 +25268,7 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The `templateStage` to be created by this mutation. */
@@ -24281,6 +25435,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The fields on `template` to look up the row to connect. */
@@ -24311,6 +25466,16 @@ export type TemplateToManyApplicationFilter = {
   some?: Maybe<ApplicationFilter>;
   /** No related `Application` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<ApplicationFilter>;
+};
+
+/** A filter to be used against many `CustomLocalisation` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateToManyCustomLocalisationFilter = {
+  /** Every related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<CustomLocalisationFilter>;
+  /** Some related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<CustomLocalisationFilter>;
+  /** No related `CustomLocalisation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<CustomLocalisationFilter>;
 };
 
 /** A filter to be used against many `File` object types. All fields are combined with a logical ‘and.’ */
@@ -24724,8 +25889,8 @@ export type TriggerScheduleApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `TriggerScheduleInput` mutation. */
@@ -25019,6 +26184,7 @@ export type TriggerScheduleTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The `triggerSchedule` to be created by this mutation. */
@@ -25469,8 +26635,8 @@ export type UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch =
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -25498,8 +26664,8 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -25527,8 +26693,8 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -25556,8 +26722,8 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -25586,8 +26752,8 @@ export type UpdateApplicationOnApplicationNoteForApplicationNoteApplicationIdFke
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -25616,8 +26782,8 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -25646,8 +26812,8 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -25676,8 +26842,8 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -25706,8 +26872,8 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -25736,8 +26902,8 @@ export type UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplica
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -25766,8 +26932,8 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -25796,8 +26962,8 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -25826,8 +26992,8 @@ export type UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFke
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -25856,8 +27022,8 @@ export type UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicat
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -25886,8 +27052,8 @@ export type UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The output of our update `Application` mutation. */
@@ -26242,6 +27408,117 @@ export type UpdateCounterPayloadCounterEdgeArgs = {
   orderBy?: Maybe<Array<CountersOrderBy>>;
 };
 
+/** All input for the `updateCustomLocalisationByNodeId` mutation. */
+export type UpdateCustomLocalisationByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `CustomLocalisation` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `CustomLocalisation` being updated. */
+  patch: CustomLocalisationPatch;
+};
+
+/** All input for the `updateCustomLocalisation` mutation. */
+export type UpdateCustomLocalisationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `CustomLocalisation` being updated. */
+  patch: CustomLocalisationPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `customLocalisation` being updated. */
+export type UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `customLocalisation` being updated. */
+export type UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `customLocalisation` being updated. */
+export type UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `customLocalisation` being updated. */
+export type UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<CustomLocalisationTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<CustomLocalisationFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<CustomLocalisationPermissionNameIdFkeyInput>;
+};
+
+/** The output of our update `CustomLocalisation` mutation. */
+export type UpdateCustomLocalisationPayload = {
+  __typename?: 'UpdateCustomLocalisationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `CustomLocalisation` that was updated by this mutation. */
+  customLocalisation?: Maybe<CustomLocalisation>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Template` that is related to this `CustomLocalisation`. */
+  template?: Maybe<Template>;
+  /** Reads a single `Filter` that is related to this `CustomLocalisation`. */
+  filter?: Maybe<Filter>;
+  /** Reads a single `OutcomeDisplay` that is related to this `CustomLocalisation`. */
+  outcomeDisplay?: Maybe<OutcomeDisplay>;
+  /** Reads a single `PermissionName` that is related to this `CustomLocalisation`. */
+  permissionName?: Maybe<PermissionName>;
+  /** An edge for our `CustomLocalisation`. May be used by Relay 1. */
+  customLocalisationEdge?: Maybe<CustomLocalisationsEdge>;
+};
+
+
+/** The output of our update `CustomLocalisation` mutation. */
+export type UpdateCustomLocalisationPayloadCustomLocalisationEdgeArgs = {
+  orderBy?: Maybe<Array<CustomLocalisationsOrderBy>>;
+};
+
 /** All input for the `updateElementTypePluginByNodeId` mutation. */
 export type UpdateElementTypePluginByNodeIdInput = {
   /**
@@ -26511,6 +27788,17 @@ export type UpdateFilterInput = {
 };
 
 /** An object where the defined keys will be set on the `filter` being updated. */
+export type UpdateFilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  query?: Maybe<Scalars['JSON']>;
+  userRole?: Maybe<PermissionPolicyType>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationFilterIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `filter` being updated. */
 export type UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   code?: Maybe<Scalars['String']>;
@@ -26518,6 +27806,7 @@ export type UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPat
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
   templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationFilterIdFkeyInverseInput>;
 };
 
 /** The output of our update `Filter` mutation. */
@@ -26815,6 +28104,17 @@ export type UpdateOrganisationOnApplicationForApplicationOrgIdFkeyPatch = {
   logoUrl?: Maybe<Scalars['String']>;
   isSystemOrg?: Maybe<Scalars['Boolean']>;
   registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  paymentReceipt?: Maybe<Scalars['JSON']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -26833,6 +28133,17 @@ export type UpdateOrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyPatch 
   logoUrl?: Maybe<Scalars['String']>;
   isSystemOrg?: Maybe<Scalars['Boolean']>;
   registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  paymentReceipt?: Maybe<Scalars['JSON']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -26851,6 +28162,17 @@ export type UpdateOrganisationOnOrganisationApplicationJoinForOrganisationApplic
   logoUrl?: Maybe<Scalars['String']>;
   isSystemOrg?: Maybe<Scalars['Boolean']>;
   registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  paymentReceipt?: Maybe<Scalars['JSON']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -26869,6 +28191,17 @@ export type UpdateOrganisationOnPermissionJoinForPermissionJoinOrganisationIdFke
   logoUrl?: Maybe<Scalars['String']>;
   isSystemOrg?: Maybe<Scalars['Boolean']>;
   registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  paymentReceipt?: Maybe<Scalars['JSON']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -26887,6 +28220,17 @@ export type UpdateOrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentA
   logoUrl?: Maybe<Scalars['String']>;
   isSystemOrg?: Maybe<Scalars['Boolean']>;
   registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  paymentReceipt?: Maybe<Scalars['JSON']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -26905,6 +28249,17 @@ export type UpdateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationI
   logoUrl?: Maybe<Scalars['String']>;
   isSystemOrg?: Maybe<Scalars['Boolean']>;
   registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  paymentReceipt?: Maybe<Scalars['JSON']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -26923,6 +28278,17 @@ export type UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationI
   logoUrl?: Maybe<Scalars['String']>;
   isSystemOrg?: Maybe<Scalars['Boolean']>;
   registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  paymentReceipt?: Maybe<Scalars['JSON']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -27050,6 +28416,24 @@ export type UpdateOutcomeDisplayInput = {
   /** An object where the defined keys will be set on the `OutcomeDisplay` being updated. */
   patch: OutcomeDisplayPatch;
   id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+export type UpdateOutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  tableName?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  rowRestrictions?: Maybe<Scalars['JSON']>;
+  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
+  priority?: Maybe<Scalars['Int']>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationOutcomeDisplayIdFkeyInverseInput>;
 };
 
 /** The output of our update `OutcomeDisplay` mutation. */
@@ -27198,6 +28582,19 @@ export type UpdatePermissionNameInput = {
 };
 
 /** An object where the defined keys will be set on the `permissionName` being updated. */
+export type UpdatePermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  permissionPolicyId?: Maybe<Scalars['Int']>;
+  isSystemOrgPermission?: Maybe<Scalars['Boolean']>;
+  permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `permissionName` being updated. */
 export type UpdatePermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
@@ -27207,6 +28604,7 @@ export type UpdatePermissionNameOnPermissionJoinForPermissionJoinPermissionNameI
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `permissionName` being updated. */
@@ -27218,6 +28616,7 @@ export type UpdatePermissionNameOnPermissionNameForPermissionNamePermissionPolic
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `permissionName` being updated. */
@@ -27230,6 +28629,7 @@ export type UpdatePermissionNameOnTemplatePermissionForTemplatePermissionPermiss
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationPermissionNameIdFkeyInverseInput>;
 };
 
 /** The output of our update `PermissionName` mutation. */
@@ -28693,6 +30093,7 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28721,6 +30122,36 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `template` being updated. */
+export type UpdateTemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
+  startMessage?: Maybe<Scalars['JSON']>;
+  status?: Maybe<TemplateStatus>;
+  submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
+  versionTimestamp?: Maybe<Scalars['Datetime']>;
+  version?: Maybe<Scalars['Int']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
+  templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
+  templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28749,6 +30180,7 @@ export type UpdateTemplateOnFileForFileTemplateIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28777,6 +30209,7 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28805,6 +30238,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28833,6 +30267,7 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28860,6 +30295,7 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28888,6 +30324,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28916,6 +30353,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28944,6 +30382,7 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28972,6 +30411,7 @@ export type UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  customLocalisationsUsingId?: Maybe<CustomLocalisationTemplateIdFkeyInverseInput>;
 };
 
 /** The output of our update `Template` mutation. */
@@ -29586,6 +31026,10 @@ export type UpdateUserOnApplicationForApplicationUserIdFkeyPatch = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -29609,6 +31053,10 @@ export type UpdateUserOnApplicationNoteForApplicationNoteUserIdFkeyPatch = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -29632,6 +31080,10 @@ export type UpdateUserOnFileForFileUserIdFkeyPatch = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -29655,6 +31107,10 @@ export type UpdateUserOnNotificationForNotificationUserIdFkeyPatch = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -29678,6 +31134,10 @@ export type UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -29701,6 +31161,10 @@ export type UpdateUserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJ
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -29724,6 +31188,10 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch =
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -29747,6 +31215,10 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch =
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -29770,6 +31242,10 @@ export type UpdateUserOnReviewForReviewReviewerIdFkeyPatch = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -29793,6 +31269,10 @@ export type UpdateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -29816,6 +31296,10 @@ export type UpdateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -30007,6 +31491,10 @@ export type User = Node & {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations: UserOrganisationsConnection;
   /** Reads and enables pagination through a set of `PermissionJoin`. */
@@ -30202,8 +31690,8 @@ export type UserApplicationJoinApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `UserApplicationJoinInput` mutation. */
@@ -30458,6 +31946,10 @@ export type UserApplicationJoinUserIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -30489,6 +31981,14 @@ export type UserCondition = {
   dateOfBirth?: Maybe<Scalars['Date']>;
   /** Checks for equality with the object’s `passwordHash` field. */
   passwordHash?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `phone` field. */
+  phone?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `address` field. */
+  address?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `country` field. */
+  country?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `province` field. */
+  province?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `User` object types. All fields are combined with a logical ‘and.’ */
@@ -30509,6 +32009,14 @@ export type UserFilter = {
   dateOfBirth?: Maybe<DateFilter>;
   /** Filter by the object’s `passwordHash` field. */
   passwordHash?: Maybe<StringFilter>;
+  /** Filter by the object’s `phone` field. */
+  phone?: Maybe<StringFilter>;
+  /** Filter by the object’s `address` field. */
+  address?: Maybe<StringFilter>;
+  /** Filter by the object’s `country` field. */
+  country?: Maybe<StringFilter>;
+  /** Filter by the object’s `province` field. */
+  province?: Maybe<StringFilter>;
   /** Filter by the object’s `userOrganisations` relation. */
   userOrganisations?: Maybe<UserToManyUserOrganisationFilter>;
   /** Some related `userOrganisations` exist. */
@@ -30571,6 +32079,10 @@ export type UserInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -31000,6 +32512,17 @@ export type UserOrganisationOrganisationIdFkeyOrganisationCreateInput = {
   logoUrl?: Maybe<Scalars['String']>;
   isSystemOrg?: Maybe<Scalars['Boolean']>;
   registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  paymentReceipt?: Maybe<Scalars['JSON']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -31119,6 +32642,10 @@ export type UserOrganisationUserIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -31307,6 +32834,10 @@ export type UserPatch = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -31361,6 +32892,14 @@ export enum UsersOrderBy {
   DateOfBirthDesc = 'DATE_OF_BIRTH_DESC',
   PasswordHashAsc = 'PASSWORD_HASH_ASC',
   PasswordHashDesc = 'PASSWORD_HASH_DESC',
+  PhoneAsc = 'PHONE_ASC',
+  PhoneDesc = 'PHONE_DESC',
+  AddressAsc = 'ADDRESS_ASC',
+  AddressDesc = 'ADDRESS_DESC',
+  CountryAsc = 'COUNTRY_ASC',
+  CountryDesc = 'COUNTRY_DESC',
+  ProvinceAsc = 'PROVINCE_ASC',
+  ProvinceDesc = 'PROVINCE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -31529,8 +33068,8 @@ export type VerificationApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `VerificationInput` mutation. */
@@ -31961,7 +33500,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ApplicationNote'] | ResolversTypes['File'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['Review'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['OrganisationApplicationJoin'] | ResolversTypes['UserApplicationJoin'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['Verification'] | ResolversTypes['ActivityLog'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayColumnDefinition'] | ResolversTypes['SystemInfo'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['CustomLocalisation'] | ResolversTypes['Filter'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['ApplicationNote'] | ResolversTypes['File'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['Review'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['OrganisationApplicationJoin'] | ResolversTypes['UserApplicationJoin'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['Verification'] | ResolversTypes['ActivityLog'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['OutcomeDisplayColumnDefinition'] | ResolversTypes['SystemInfo'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -32040,9 +33579,17 @@ export type ResolversTypes = {
   PermissionNameToManyPermissionJoinFilter: PermissionNameToManyPermissionJoinFilter;
   PermissionNameToManyTemplatePermissionFilter: PermissionNameToManyTemplatePermissionFilter;
   TemplatePermissionFilter: TemplatePermissionFilter;
-  PermissionPolicyFilter: PermissionPolicyFilter;
+  PermissionNameToManyCustomLocalisationFilter: PermissionNameToManyCustomLocalisationFilter;
+  CustomLocalisationFilter: CustomLocalisationFilter;
+  FilterFilter: FilterFilter;
   PermissionPolicyTypeFilter: PermissionPolicyTypeFilter;
   PermissionPolicyType: PermissionPolicyType;
+  FilterToManyTemplateFilterJoinFilter: FilterToManyTemplateFilterJoinFilter;
+  TemplateFilterJoinFilter: TemplateFilterJoinFilter;
+  FilterToManyCustomLocalisationFilter: FilterToManyCustomLocalisationFilter;
+  OutcomeDisplayFilter: OutcomeDisplayFilter;
+  OutcomeDisplayToManyCustomLocalisationFilter: OutcomeDisplayToManyCustomLocalisationFilter;
+  PermissionPolicyFilter: PermissionPolicyFilter;
   PermissionPolicyToManyPermissionNameFilter: PermissionPolicyToManyPermissionNameFilter;
   OrganisationToManyApplicationFilter: OrganisationToManyApplicationFilter;
   ApplicationFilter: ApplicationFilter;
@@ -32083,10 +33630,10 @@ export type ResolversTypes = {
   ActivityLogFilter: ActivityLogFilter;
   EventTypeFilter: EventTypeFilter;
   EventType: EventType;
-  ApplicationToManyOrganisationApplicationJoinFilter: ApplicationToManyOrganisationApplicationJoinFilter;
-  OrganisationApplicationJoinFilter: OrganisationApplicationJoinFilter;
   ApplicationToManyUserApplicationJoinFilter: ApplicationToManyUserApplicationJoinFilter;
   UserApplicationJoinFilter: UserApplicationJoinFilter;
+  ApplicationToManyOrganisationApplicationJoinFilter: ApplicationToManyOrganisationApplicationJoinFilter;
+  OrganisationApplicationJoinFilter: OrganisationApplicationJoinFilter;
   OrganisationToManyApplicationNoteFilter: OrganisationToManyApplicationNoteFilter;
   OrganisationToManyReviewAssignmentFilter: OrganisationToManyReviewAssignmentFilter;
   OrganisationToManyReviewAssignmentAssignerJoinFilter: OrganisationToManyReviewAssignmentAssignerJoinFilter;
@@ -32104,9 +33651,6 @@ export type ResolversTypes = {
   TemplateElementToManyReviewResponseFilter: TemplateElementToManyReviewResponseFilter;
   TemplateToManyTemplateStageFilter: TemplateToManyTemplateStageFilter;
   TemplateToManyTemplateFilterJoinFilter: TemplateToManyTemplateFilterJoinFilter;
-  TemplateFilterJoinFilter: TemplateFilterJoinFilter;
-  FilterFilter: FilterFilter;
-  FilterToManyTemplateFilterJoinFilter: FilterToManyTemplateFilterJoinFilter;
   TemplateToManyTemplatePermissionFilter: TemplateToManyTemplatePermissionFilter;
   TemplateToManyApplicationFilter: TemplateToManyApplicationFilter;
   TemplateToManyActionQueueFilter: TemplateToManyActionQueueFilter;
@@ -32115,6 +33659,7 @@ export type ResolversTypes = {
   TemplateToManyTriggerScheduleFilter: TemplateToManyTriggerScheduleFilter;
   TemplateToManyReviewAssignmentFilter: TemplateToManyReviewAssignmentFilter;
   TemplateToManyFileFilter: TemplateToManyFileFilter;
+  TemplateToManyCustomLocalisationFilter: TemplateToManyCustomLocalisationFilter;
   TemplateCategoryFilter: TemplateCategoryFilter;
   UiLocationListFilter: UiLocationListFilter;
   UiLocation: UiLocation;
@@ -32162,6 +33707,18 @@ export type ResolversTypes = {
   TemplatePermissionsConnection: ResolverTypeWrapper<TemplatePermissionsConnection>;
   TemplatePermission: ResolverTypeWrapper<TemplatePermission>;
   TemplatePermissionsEdge: ResolverTypeWrapper<TemplatePermissionsEdge>;
+  CustomLocalisationsOrderBy: CustomLocalisationsOrderBy;
+  CustomLocalisationCondition: CustomLocalisationCondition;
+  CustomLocalisationsConnection: ResolverTypeWrapper<CustomLocalisationsConnection>;
+  CustomLocalisation: ResolverTypeWrapper<CustomLocalisation>;
+  Filter: ResolverTypeWrapper<Filter>;
+  TemplateFilterJoinsOrderBy: TemplateFilterJoinsOrderBy;
+  TemplateFilterJoinCondition: TemplateFilterJoinCondition;
+  TemplateFilterJoinsConnection: ResolverTypeWrapper<TemplateFilterJoinsConnection>;
+  TemplateFilterJoin: ResolverTypeWrapper<TemplateFilterJoin>;
+  TemplateFilterJoinsEdge: ResolverTypeWrapper<TemplateFilterJoinsEdge>;
+  OutcomeDisplay: ResolverTypeWrapper<OutcomeDisplay>;
+  CustomLocalisationsEdge: ResolverTypeWrapper<CustomLocalisationsEdge>;
   PermissionJoinsEdge: ResolverTypeWrapper<PermissionJoinsEdge>;
   ApplicationsOrderBy: ApplicationsOrderBy;
   ApplicationCondition: ApplicationCondition;
@@ -32261,12 +33818,6 @@ export type ResolversTypes = {
   TemplateStageCondition: TemplateStageCondition;
   TemplateStagesConnection: ResolverTypeWrapper<TemplateStagesConnection>;
   TemplateStagesEdge: ResolverTypeWrapper<TemplateStagesEdge>;
-  TemplateFilterJoinsOrderBy: TemplateFilterJoinsOrderBy;
-  TemplateFilterJoinCondition: TemplateFilterJoinCondition;
-  TemplateFilterJoinsConnection: ResolverTypeWrapper<TemplateFilterJoinsConnection>;
-  TemplateFilterJoin: ResolverTypeWrapper<TemplateFilterJoin>;
-  Filter: ResolverTypeWrapper<Filter>;
-  TemplateFilterJoinsEdge: ResolverTypeWrapper<TemplateFilterJoinsEdge>;
   TemplateActionsOrderBy: TemplateActionsOrderBy;
   TemplateActionCondition: TemplateActionCondition;
   TemplateActionsConnection: ResolverTypeWrapper<TemplateActionsConnection>;
@@ -32335,9 +33886,7 @@ export type ResolversTypes = {
   OrganisationsEdge: ResolverTypeWrapper<OrganisationsEdge>;
   OutcomeDisplaysOrderBy: OutcomeDisplaysOrderBy;
   OutcomeDisplayCondition: OutcomeDisplayCondition;
-  OutcomeDisplayFilter: OutcomeDisplayFilter;
   OutcomeDisplaysConnection: ResolverTypeWrapper<OutcomeDisplaysConnection>;
-  OutcomeDisplay: ResolverTypeWrapper<OutcomeDisplay>;
   OutcomeDisplaysEdge: ResolverTypeWrapper<OutcomeDisplaysEdge>;
   OutcomeDisplayColumnDefinitionsOrderBy: OutcomeDisplayColumnDefinitionsOrderBy;
   OutcomeDisplayColumnDefinitionCondition: OutcomeDisplayColumnDefinitionCondition;
@@ -32812,8 +34361,83 @@ export type ResolversTypes = {
   FileTemplateIdFkeyInput: FileTemplateIdFkeyInput;
   TemplateOnFileForFileTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnFileForFileTemplateIdFkeyUsingTemplatePkeyUpdate;
   updateTemplateOnFileForFileTemplateIdFkeyPatch: UpdateTemplateOnFileForFileTemplateIdFkeyPatch;
-  FileOnFileForFileTemplateIdFkeyNodeIdUpdate: FileOnFileForFileTemplateIdFkeyNodeIdUpdate;
+  CustomLocalisationTemplateIdFkeyInverseInput: CustomLocalisationTemplateIdFkeyInverseInput;
+  CustomLocalisationCustomLocalisationPkeyConnect: CustomLocalisationCustomLocalisationPkeyConnect;
+  CustomLocalisationNodeIdConnect: CustomLocalisationNodeIdConnect;
+  CustomLocalisationCustomLocalisationPkeyDelete: CustomLocalisationCustomLocalisationPkeyDelete;
+  CustomLocalisationNodeIdDelete: CustomLocalisationNodeIdDelete;
+  CustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyUsingCustomLocalisationPkeyUpdate: CustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyUsingCustomLocalisationPkeyUpdate;
+  updateCustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyPatch: UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyPatch;
+  CustomLocalisationTemplateIdFkeyInput: CustomLocalisationTemplateIdFkeyInput;
+  TemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyUsingTemplatePkeyUpdate;
+  updateTemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyPatch: UpdateTemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyPatch;
+  CustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyNodeIdUpdate: CustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyNodeIdUpdate;
   TemplatePatch: TemplatePatch;
+  CustomLocalisationTemplateIdFkeyTemplateCreateInput: CustomLocalisationTemplateIdFkeyTemplateCreateInput;
+  CustomLocalisationFilterIdFkeyInput: CustomLocalisationFilterIdFkeyInput;
+  FilterFilterPkeyConnect: FilterFilterPkeyConnect;
+  FilterFilterCodeKeyConnect: FilterFilterCodeKeyConnect;
+  FilterNodeIdConnect: FilterNodeIdConnect;
+  FilterFilterPkeyDelete: FilterFilterPkeyDelete;
+  FilterFilterCodeKeyDelete: FilterFilterCodeKeyDelete;
+  FilterNodeIdDelete: FilterNodeIdDelete;
+  FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingFilterPkeyUpdate: FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingFilterPkeyUpdate;
+  updateFilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyPatch: UpdateFilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyPatch;
+  TemplateFilterJoinFilterIdFkeyInverseInput: TemplateFilterJoinFilterIdFkeyInverseInput;
+  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate;
+  updateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
+  TemplateFilterJoinFilterIdFkeyInput: TemplateFilterJoinFilterIdFkeyInput;
+  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate;
+  updateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
+  CustomLocalisationFilterIdFkeyInverseInput: CustomLocalisationFilterIdFkeyInverseInput;
+  CustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingCustomLocalisationPkeyUpdate: CustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingCustomLocalisationPkeyUpdate;
+  updateCustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyPatch: UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyPatch;
+  CustomLocalisationOutcomeDisplayIdFkeyInput: CustomLocalisationOutcomeDisplayIdFkeyInput;
+  OutcomeDisplayOutcomeDisplayPkeyConnect: OutcomeDisplayOutcomeDisplayPkeyConnect;
+  OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect: OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect;
+  OutcomeDisplayNodeIdConnect: OutcomeDisplayNodeIdConnect;
+  OutcomeDisplayOutcomeDisplayPkeyDelete: OutcomeDisplayOutcomeDisplayPkeyDelete;
+  OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete: OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete;
+  OutcomeDisplayNodeIdDelete: OutcomeDisplayNodeIdDelete;
+  OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate: OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate;
+  updateOutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyPatch;
+  CustomLocalisationOutcomeDisplayIdFkeyInverseInput: CustomLocalisationOutcomeDisplayIdFkeyInverseInput;
+  CustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingCustomLocalisationPkeyUpdate: CustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingCustomLocalisationPkeyUpdate;
+  updateCustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyPatch: UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyPatch;
+  CustomLocalisationPermissionNameIdFkeyInput: CustomLocalisationPermissionNameIdFkeyInput;
+  PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingPermissionNamePkeyUpdate: PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingPermissionNamePkeyUpdate;
+  updatePermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyPatch: UpdatePermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyPatch;
+  CustomLocalisationPermissionNameIdFkeyInverseInput: CustomLocalisationPermissionNameIdFkeyInverseInput;
+  CustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingCustomLocalisationPkeyUpdate: CustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingCustomLocalisationPkeyUpdate;
+  updateCustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyPatch: UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyPatch;
+  PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyNodeIdUpdate: PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyNodeIdUpdate;
+  CustomLocalisationPatch: CustomLocalisationPatch;
+  CustomLocalisationPermissionNameIdFkeyCustomLocalisationCreateInput: CustomLocalisationPermissionNameIdFkeyCustomLocalisationCreateInput;
+  PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate: PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate;
+  CustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyNodeIdUpdate: CustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyNodeIdUpdate;
+  PermissionNamePatch: PermissionNamePatch;
+  CustomLocalisationPermissionNameIdFkeyPermissionNameCreateInput: CustomLocalisationPermissionNameIdFkeyPermissionNameCreateInput;
+  OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyNodeIdUpdate;
+  CustomLocalisationOutcomeDisplayIdFkeyCustomLocalisationCreateInput: CustomLocalisationOutcomeDisplayIdFkeyCustomLocalisationCreateInput;
+  OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate: OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate;
+  CustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyNodeIdUpdate: CustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyNodeIdUpdate;
+  OutcomeDisplayPatch: OutcomeDisplayPatch;
+  CustomLocalisationOutcomeDisplayIdFkeyOutcomeDisplayCreateInput: CustomLocalisationOutcomeDisplayIdFkeyOutcomeDisplayCreateInput;
+  FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyNodeIdUpdate: FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyNodeIdUpdate;
+  CustomLocalisationFilterIdFkeyCustomLocalisationCreateInput: CustomLocalisationFilterIdFkeyCustomLocalisationCreateInput;
+  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate;
+  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate;
+  FilterPatch: FilterPatch;
+  TemplateFilterJoinFilterIdFkeyFilterCreateInput: TemplateFilterJoinFilterIdFkeyFilterCreateInput;
+  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate;
+  TemplateFilterJoinPatch: TemplateFilterJoinPatch;
+  TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput: TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput;
+  FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingFilterCodeKeyUpdate: FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingFilterCodeKeyUpdate;
+  CustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyNodeIdUpdate: CustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyNodeIdUpdate;
+  CustomLocalisationFilterIdFkeyFilterCreateInput: CustomLocalisationFilterIdFkeyFilterCreateInput;
+  TemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyNodeIdUpdate: TemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyNodeIdUpdate;
+  CustomLocalisationTemplateIdFkeyCustomLocalisationCreateInput: CustomLocalisationTemplateIdFkeyCustomLocalisationCreateInput;
+  FileOnFileForFileTemplateIdFkeyNodeIdUpdate: FileOnFileForFileTemplateIdFkeyNodeIdUpdate;
   FileTemplateIdFkeyTemplateCreateInput: FileTemplateIdFkeyTemplateCreateInput;
   FileApplicationSerialFkeyInput: FileApplicationSerialFkeyInput;
   ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate;
@@ -32953,16 +34577,6 @@ export type ResolversTypes = {
   ActivityLogApplicationIdFkeyInput: ActivityLogApplicationIdFkeyInput;
   ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch: UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch;
-  OrganisationApplicationJoinApplicationIdFkeyInverseInput: OrganisationApplicationJoinApplicationIdFkeyInverseInput;
-  OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect: OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect;
-  OrganisationApplicationJoinNodeIdConnect: OrganisationApplicationJoinNodeIdConnect;
-  OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete: OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete;
-  OrganisationApplicationJoinNodeIdDelete: OrganisationApplicationJoinNodeIdDelete;
-  OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate: OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate;
-  updateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch: UpdateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
-  OrganisationApplicationJoinApplicationIdFkeyInput: OrganisationApplicationJoinApplicationIdFkeyInput;
-  ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
   UserApplicationJoinApplicationIdFkeyInverseInput: UserApplicationJoinApplicationIdFkeyInverseInput;
   UserApplicationJoinUserApplicationJoinPkeyConnect: UserApplicationJoinUserApplicationJoinPkeyConnect;
   UserApplicationJoinNodeIdConnect: UserApplicationJoinNodeIdConnect;
@@ -32973,27 +34587,19 @@ export type ResolversTypes = {
   UserApplicationJoinApplicationIdFkeyInput: UserApplicationJoinApplicationIdFkeyInput;
   ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch;
-  ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate;
-  ApplicationPatch: ApplicationPatch;
-  UserApplicationJoinApplicationIdFkeyApplicationCreateInput: UserApplicationJoinApplicationIdFkeyApplicationCreateInput;
-  UserApplicationJoinUserIdFkeyInput: UserApplicationJoinUserIdFkeyInput;
-  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate;
-  updateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch: UpdateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
-  UserApplicationJoinUserIdFkeyInverseInput: UserApplicationJoinUserIdFkeyInverseInput;
-  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate;
-  updateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch: UpdateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
-  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate;
-  UserApplicationJoinPatch: UserApplicationJoinPatch;
-  UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput: UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput;
-  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate;
-  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate;
-  UserPatch: UserPatch;
-  UserApplicationJoinUserIdFkeyUserCreateInput: UserApplicationJoinUserIdFkeyUserCreateInput;
-  ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate;
-  UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput: UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput;
+  OrganisationApplicationJoinApplicationIdFkeyInverseInput: OrganisationApplicationJoinApplicationIdFkeyInverseInput;
+  OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect: OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect;
+  OrganisationApplicationJoinNodeIdConnect: OrganisationApplicationJoinNodeIdConnect;
+  OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete: OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete;
+  OrganisationApplicationJoinNodeIdDelete: OrganisationApplicationJoinNodeIdDelete;
+  OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate: OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate;
+  updateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch: UpdateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
+  OrganisationApplicationJoinApplicationIdFkeyInput: OrganisationApplicationJoinApplicationIdFkeyInput;
+  ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
   ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate: OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  ApplicationPatch: ApplicationPatch;
   OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput: OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput;
   OrganisationApplicationJoinOrganisationIdFkeyInput: OrganisationApplicationJoinOrganisationIdFkeyInput;
   OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationPkeyUpdate;
@@ -33011,6 +34617,24 @@ export type ResolversTypes = {
   OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput: OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput;
   ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate;
   OrganisationApplicationJoinApplicationIdFkeyOrganisationApplicationJoinCreateInput: OrganisationApplicationJoinApplicationIdFkeyOrganisationApplicationJoinCreateInput;
+  ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  UserApplicationJoinApplicationIdFkeyApplicationCreateInput: UserApplicationJoinApplicationIdFkeyApplicationCreateInput;
+  UserApplicationJoinUserIdFkeyInput: UserApplicationJoinUserIdFkeyInput;
+  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate;
+  updateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch: UpdateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
+  UserApplicationJoinUserIdFkeyInverseInput: UserApplicationJoinUserIdFkeyInverseInput;
+  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate;
+  updateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch: UpdateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
+  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate;
+  UserApplicationJoinPatch: UserApplicationJoinPatch;
+  UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput: UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput;
+  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate;
+  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate;
+  UserPatch: UserPatch;
+  UserApplicationJoinUserIdFkeyUserCreateInput: UserApplicationJoinUserIdFkeyUserCreateInput;
+  ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput: UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput;
   ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ActivityLogOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate: ActivityLogOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate;
   ActivityLogApplicationIdFkeyApplicationCreateInput: ActivityLogApplicationIdFkeyApplicationCreateInput;
@@ -33237,7 +34861,6 @@ export type ResolversTypes = {
   TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput: TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput;
   PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate: PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate;
   PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate: PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate;
-  PermissionNamePatch: PermissionNamePatch;
   PermissionJoinPermissionNameIdFkeyPermissionNameCreateInput: PermissionJoinPermissionNameIdFkeyPermissionNameCreateInput;
   OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate: OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate;
   PermissionJoinPatch: PermissionJoinPatch;
@@ -33279,25 +34902,6 @@ export type ResolversTypes = {
   TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput: TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput;
   TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate;
   TemplateFilterJoinTemplateIdFkeyTemplateCreateInput: TemplateFilterJoinTemplateIdFkeyTemplateCreateInput;
-  TemplateFilterJoinFilterIdFkeyInput: TemplateFilterJoinFilterIdFkeyInput;
-  FilterFilterPkeyConnect: FilterFilterPkeyConnect;
-  FilterFilterCodeKeyConnect: FilterFilterCodeKeyConnect;
-  FilterNodeIdConnect: FilterNodeIdConnect;
-  FilterFilterPkeyDelete: FilterFilterPkeyDelete;
-  FilterFilterCodeKeyDelete: FilterFilterCodeKeyDelete;
-  FilterNodeIdDelete: FilterNodeIdDelete;
-  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate;
-  updateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
-  TemplateFilterJoinFilterIdFkeyInverseInput: TemplateFilterJoinFilterIdFkeyInverseInput;
-  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate;
-  updateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
-  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate;
-  TemplateFilterJoinPatch: TemplateFilterJoinPatch;
-  TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput: TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput;
-  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate;
-  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate;
-  FilterPatch: FilterPatch;
-  TemplateFilterJoinFilterIdFkeyFilterCreateInput: TemplateFilterJoinFilterIdFkeyFilterCreateInput;
   TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate;
   TemplateFilterJoinTemplateIdFkeyTemplateFilterJoinCreateInput: TemplateFilterJoinTemplateIdFkeyTemplateFilterJoinCreateInput;
   TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate: TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate;
@@ -33347,6 +34951,9 @@ export type ResolversTypes = {
   CreateCounterInput: CreateCounterInput;
   CounterInput: CounterInput;
   CreateCounterPayload: ResolverTypeWrapper<CreateCounterPayload>;
+  CreateCustomLocalisationInput: CreateCustomLocalisationInput;
+  CustomLocalisationInput: CustomLocalisationInput;
+  CreateCustomLocalisationPayload: ResolverTypeWrapper<CreateCustomLocalisationPayload>;
   CreateElementTypePluginInput: CreateElementTypePluginInput;
   ElementTypePluginInput: ElementTypePluginInput;
   CreateElementTypePluginPayload: ResolverTypeWrapper<CreateElementTypePluginPayload>;
@@ -33481,6 +35088,9 @@ export type ResolversTypes = {
   UpdateCounterPayload: ResolverTypeWrapper<UpdateCounterPayload>;
   UpdateCounterInput: UpdateCounterInput;
   UpdateCounterByNameInput: UpdateCounterByNameInput;
+  UpdateCustomLocalisationByNodeIdInput: UpdateCustomLocalisationByNodeIdInput;
+  UpdateCustomLocalisationPayload: ResolverTypeWrapper<UpdateCustomLocalisationPayload>;
+  UpdateCustomLocalisationInput: UpdateCustomLocalisationInput;
   UpdateElementTypePluginByNodeIdInput: UpdateElementTypePluginByNodeIdInput;
   ElementTypePluginPatch: ElementTypePluginPatch;
   UpdateElementTypePluginPayload: ResolverTypeWrapper<UpdateElementTypePluginPayload>;
@@ -33509,7 +35119,6 @@ export type ResolversTypes = {
   UpdateOrganisationApplicationJoinPayload: ResolverTypeWrapper<UpdateOrganisationApplicationJoinPayload>;
   UpdateOrganisationApplicationJoinInput: UpdateOrganisationApplicationJoinInput;
   UpdateOutcomeDisplayByNodeIdInput: UpdateOutcomeDisplayByNodeIdInput;
-  OutcomeDisplayPatch: OutcomeDisplayPatch;
   UpdateOutcomeDisplayPayload: ResolverTypeWrapper<UpdateOutcomeDisplayPayload>;
   UpdateOutcomeDisplayInput: UpdateOutcomeDisplayInput;
   UpdateOutcomeDisplayByTableNameAndCodeInput: UpdateOutcomeDisplayByTableNameAndCodeInput;
@@ -33631,6 +35240,9 @@ export type ResolversTypes = {
   DeleteCounterPayload: ResolverTypeWrapper<DeleteCounterPayload>;
   DeleteCounterInput: DeleteCounterInput;
   DeleteCounterByNameInput: DeleteCounterByNameInput;
+  DeleteCustomLocalisationByNodeIdInput: DeleteCustomLocalisationByNodeIdInput;
+  DeleteCustomLocalisationPayload: ResolverTypeWrapper<DeleteCustomLocalisationPayload>;
+  DeleteCustomLocalisationInput: DeleteCustomLocalisationInput;
   DeleteElementTypePluginByNodeIdInput: DeleteElementTypePluginByNodeIdInput;
   DeleteElementTypePluginPayload: ResolverTypeWrapper<DeleteElementTypePluginPayload>;
   DeleteElementTypePluginInput: DeleteElementTypePluginInput;
@@ -33753,7 +35365,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ApplicationNote'] | ResolversParentTypes['File'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['OrganisationApplicationJoin'] | ResolversParentTypes['UserApplicationJoin'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['Verification'] | ResolversParentTypes['ActivityLog'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayColumnDefinition'] | ResolversParentTypes['SystemInfo'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['CustomLocalisation'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['ApplicationNote'] | ResolversParentTypes['File'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['OrganisationApplicationJoin'] | ResolversParentTypes['UserApplicationJoin'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['Verification'] | ResolversParentTypes['ActivityLog'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['OutcomeDisplayColumnDefinition'] | ResolversParentTypes['SystemInfo'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -33819,8 +35431,16 @@ export type ResolversParentTypes = {
   PermissionNameToManyPermissionJoinFilter: PermissionNameToManyPermissionJoinFilter;
   PermissionNameToManyTemplatePermissionFilter: PermissionNameToManyTemplatePermissionFilter;
   TemplatePermissionFilter: TemplatePermissionFilter;
-  PermissionPolicyFilter: PermissionPolicyFilter;
+  PermissionNameToManyCustomLocalisationFilter: PermissionNameToManyCustomLocalisationFilter;
+  CustomLocalisationFilter: CustomLocalisationFilter;
+  FilterFilter: FilterFilter;
   PermissionPolicyTypeFilter: PermissionPolicyTypeFilter;
+  FilterToManyTemplateFilterJoinFilter: FilterToManyTemplateFilterJoinFilter;
+  TemplateFilterJoinFilter: TemplateFilterJoinFilter;
+  FilterToManyCustomLocalisationFilter: FilterToManyCustomLocalisationFilter;
+  OutcomeDisplayFilter: OutcomeDisplayFilter;
+  OutcomeDisplayToManyCustomLocalisationFilter: OutcomeDisplayToManyCustomLocalisationFilter;
+  PermissionPolicyFilter: PermissionPolicyFilter;
   PermissionPolicyToManyPermissionNameFilter: PermissionPolicyToManyPermissionNameFilter;
   OrganisationToManyApplicationFilter: OrganisationToManyApplicationFilter;
   ApplicationFilter: ApplicationFilter;
@@ -33857,10 +35477,10 @@ export type ResolversParentTypes = {
   ApplicationToManyActivityLogFilter: ApplicationToManyActivityLogFilter;
   ActivityLogFilter: ActivityLogFilter;
   EventTypeFilter: EventTypeFilter;
-  ApplicationToManyOrganisationApplicationJoinFilter: ApplicationToManyOrganisationApplicationJoinFilter;
-  OrganisationApplicationJoinFilter: OrganisationApplicationJoinFilter;
   ApplicationToManyUserApplicationJoinFilter: ApplicationToManyUserApplicationJoinFilter;
   UserApplicationJoinFilter: UserApplicationJoinFilter;
+  ApplicationToManyOrganisationApplicationJoinFilter: ApplicationToManyOrganisationApplicationJoinFilter;
+  OrganisationApplicationJoinFilter: OrganisationApplicationJoinFilter;
   OrganisationToManyApplicationNoteFilter: OrganisationToManyApplicationNoteFilter;
   OrganisationToManyReviewAssignmentFilter: OrganisationToManyReviewAssignmentFilter;
   OrganisationToManyReviewAssignmentAssignerJoinFilter: OrganisationToManyReviewAssignmentAssignerJoinFilter;
@@ -33878,9 +35498,6 @@ export type ResolversParentTypes = {
   TemplateElementToManyReviewResponseFilter: TemplateElementToManyReviewResponseFilter;
   TemplateToManyTemplateStageFilter: TemplateToManyTemplateStageFilter;
   TemplateToManyTemplateFilterJoinFilter: TemplateToManyTemplateFilterJoinFilter;
-  TemplateFilterJoinFilter: TemplateFilterJoinFilter;
-  FilterFilter: FilterFilter;
-  FilterToManyTemplateFilterJoinFilter: FilterToManyTemplateFilterJoinFilter;
   TemplateToManyTemplatePermissionFilter: TemplateToManyTemplatePermissionFilter;
   TemplateToManyApplicationFilter: TemplateToManyApplicationFilter;
   TemplateToManyActionQueueFilter: TemplateToManyActionQueueFilter;
@@ -33889,6 +35506,7 @@ export type ResolversParentTypes = {
   TemplateToManyTriggerScheduleFilter: TemplateToManyTriggerScheduleFilter;
   TemplateToManyReviewAssignmentFilter: TemplateToManyReviewAssignmentFilter;
   TemplateToManyFileFilter: TemplateToManyFileFilter;
+  TemplateToManyCustomLocalisationFilter: TemplateToManyCustomLocalisationFilter;
   TemplateCategoryFilter: TemplateCategoryFilter;
   UiLocationListFilter: UiLocationListFilter;
   TemplateCategoryToManyTemplateFilter: TemplateCategoryToManyTemplateFilter;
@@ -33927,6 +35545,16 @@ export type ResolversParentTypes = {
   TemplatePermissionsConnection: TemplatePermissionsConnection;
   TemplatePermission: TemplatePermission;
   TemplatePermissionsEdge: TemplatePermissionsEdge;
+  CustomLocalisationCondition: CustomLocalisationCondition;
+  CustomLocalisationsConnection: CustomLocalisationsConnection;
+  CustomLocalisation: CustomLocalisation;
+  Filter: Filter;
+  TemplateFilterJoinCondition: TemplateFilterJoinCondition;
+  TemplateFilterJoinsConnection: TemplateFilterJoinsConnection;
+  TemplateFilterJoin: TemplateFilterJoin;
+  TemplateFilterJoinsEdge: TemplateFilterJoinsEdge;
+  OutcomeDisplay: OutcomeDisplay;
+  CustomLocalisationsEdge: CustomLocalisationsEdge;
   PermissionJoinsEdge: PermissionJoinsEdge;
   ApplicationCondition: ApplicationCondition;
   ApplicationsConnection: ApplicationsConnection;
@@ -34007,11 +35635,6 @@ export type ResolversParentTypes = {
   TemplateStageCondition: TemplateStageCondition;
   TemplateStagesConnection: TemplateStagesConnection;
   TemplateStagesEdge: TemplateStagesEdge;
-  TemplateFilterJoinCondition: TemplateFilterJoinCondition;
-  TemplateFilterJoinsConnection: TemplateFilterJoinsConnection;
-  TemplateFilterJoin: TemplateFilterJoin;
-  Filter: Filter;
-  TemplateFilterJoinsEdge: TemplateFilterJoinsEdge;
   TemplateActionCondition: TemplateActionCondition;
   TemplateActionsConnection: TemplateActionsConnection;
   TemplateAction: TemplateAction;
@@ -34067,9 +35690,7 @@ export type ResolversParentTypes = {
   OrganisationsConnection: OrganisationsConnection;
   OrganisationsEdge: OrganisationsEdge;
   OutcomeDisplayCondition: OutcomeDisplayCondition;
-  OutcomeDisplayFilter: OutcomeDisplayFilter;
   OutcomeDisplaysConnection: OutcomeDisplaysConnection;
-  OutcomeDisplay: OutcomeDisplay;
   OutcomeDisplaysEdge: OutcomeDisplaysEdge;
   OutcomeDisplayColumnDefinitionCondition: OutcomeDisplayColumnDefinitionCondition;
   OutcomeDisplayColumnDefinitionFilter: OutcomeDisplayColumnDefinitionFilter;
@@ -34534,8 +36155,83 @@ export type ResolversParentTypes = {
   FileTemplateIdFkeyInput: FileTemplateIdFkeyInput;
   TemplateOnFileForFileTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnFileForFileTemplateIdFkeyUsingTemplatePkeyUpdate;
   updateTemplateOnFileForFileTemplateIdFkeyPatch: UpdateTemplateOnFileForFileTemplateIdFkeyPatch;
-  FileOnFileForFileTemplateIdFkeyNodeIdUpdate: FileOnFileForFileTemplateIdFkeyNodeIdUpdate;
+  CustomLocalisationTemplateIdFkeyInverseInput: CustomLocalisationTemplateIdFkeyInverseInput;
+  CustomLocalisationCustomLocalisationPkeyConnect: CustomLocalisationCustomLocalisationPkeyConnect;
+  CustomLocalisationNodeIdConnect: CustomLocalisationNodeIdConnect;
+  CustomLocalisationCustomLocalisationPkeyDelete: CustomLocalisationCustomLocalisationPkeyDelete;
+  CustomLocalisationNodeIdDelete: CustomLocalisationNodeIdDelete;
+  CustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyUsingCustomLocalisationPkeyUpdate: CustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyUsingCustomLocalisationPkeyUpdate;
+  updateCustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyPatch: UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyPatch;
+  CustomLocalisationTemplateIdFkeyInput: CustomLocalisationTemplateIdFkeyInput;
+  TemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyUsingTemplatePkeyUpdate;
+  updateTemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyPatch: UpdateTemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyPatch;
+  CustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyNodeIdUpdate: CustomLocalisationOnCustomLocalisationForCustomLocalisationTemplateIdFkeyNodeIdUpdate;
   TemplatePatch: TemplatePatch;
+  CustomLocalisationTemplateIdFkeyTemplateCreateInput: CustomLocalisationTemplateIdFkeyTemplateCreateInput;
+  CustomLocalisationFilterIdFkeyInput: CustomLocalisationFilterIdFkeyInput;
+  FilterFilterPkeyConnect: FilterFilterPkeyConnect;
+  FilterFilterCodeKeyConnect: FilterFilterCodeKeyConnect;
+  FilterNodeIdConnect: FilterNodeIdConnect;
+  FilterFilterPkeyDelete: FilterFilterPkeyDelete;
+  FilterFilterCodeKeyDelete: FilterFilterCodeKeyDelete;
+  FilterNodeIdDelete: FilterNodeIdDelete;
+  FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingFilterPkeyUpdate: FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingFilterPkeyUpdate;
+  updateFilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyPatch: UpdateFilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyPatch;
+  TemplateFilterJoinFilterIdFkeyInverseInput: TemplateFilterJoinFilterIdFkeyInverseInput;
+  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate;
+  updateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
+  TemplateFilterJoinFilterIdFkeyInput: TemplateFilterJoinFilterIdFkeyInput;
+  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate;
+  updateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
+  CustomLocalisationFilterIdFkeyInverseInput: CustomLocalisationFilterIdFkeyInverseInput;
+  CustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingCustomLocalisationPkeyUpdate: CustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingCustomLocalisationPkeyUpdate;
+  updateCustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyPatch: UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyPatch;
+  CustomLocalisationOutcomeDisplayIdFkeyInput: CustomLocalisationOutcomeDisplayIdFkeyInput;
+  OutcomeDisplayOutcomeDisplayPkeyConnect: OutcomeDisplayOutcomeDisplayPkeyConnect;
+  OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect: OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect;
+  OutcomeDisplayNodeIdConnect: OutcomeDisplayNodeIdConnect;
+  OutcomeDisplayOutcomeDisplayPkeyDelete: OutcomeDisplayOutcomeDisplayPkeyDelete;
+  OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete: OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete;
+  OutcomeDisplayNodeIdDelete: OutcomeDisplayNodeIdDelete;
+  OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate: OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate;
+  updateOutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyPatch;
+  CustomLocalisationOutcomeDisplayIdFkeyInverseInput: CustomLocalisationOutcomeDisplayIdFkeyInverseInput;
+  CustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingCustomLocalisationPkeyUpdate: CustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingCustomLocalisationPkeyUpdate;
+  updateCustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyPatch: UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyPatch;
+  CustomLocalisationPermissionNameIdFkeyInput: CustomLocalisationPermissionNameIdFkeyInput;
+  PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingPermissionNamePkeyUpdate: PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingPermissionNamePkeyUpdate;
+  updatePermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyPatch: UpdatePermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyPatch;
+  CustomLocalisationPermissionNameIdFkeyInverseInput: CustomLocalisationPermissionNameIdFkeyInverseInput;
+  CustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingCustomLocalisationPkeyUpdate: CustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingCustomLocalisationPkeyUpdate;
+  updateCustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyPatch: UpdateCustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyPatch;
+  PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyNodeIdUpdate: PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyNodeIdUpdate;
+  CustomLocalisationPatch: CustomLocalisationPatch;
+  CustomLocalisationPermissionNameIdFkeyCustomLocalisationCreateInput: CustomLocalisationPermissionNameIdFkeyCustomLocalisationCreateInput;
+  PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate: PermissionNameOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate;
+  CustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyNodeIdUpdate: CustomLocalisationOnCustomLocalisationForCustomLocalisationPermissionNameIdFkeyNodeIdUpdate;
+  PermissionNamePatch: PermissionNamePatch;
+  CustomLocalisationPermissionNameIdFkeyPermissionNameCreateInput: CustomLocalisationPermissionNameIdFkeyPermissionNameCreateInput;
+  OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyNodeIdUpdate;
+  CustomLocalisationOutcomeDisplayIdFkeyCustomLocalisationCreateInput: CustomLocalisationOutcomeDisplayIdFkeyCustomLocalisationCreateInput;
+  OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate: OutcomeDisplayOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate;
+  CustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyNodeIdUpdate: CustomLocalisationOnCustomLocalisationForCustomLocalisationOutcomeDisplayIdFkeyNodeIdUpdate;
+  OutcomeDisplayPatch: OutcomeDisplayPatch;
+  CustomLocalisationOutcomeDisplayIdFkeyOutcomeDisplayCreateInput: CustomLocalisationOutcomeDisplayIdFkeyOutcomeDisplayCreateInput;
+  FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyNodeIdUpdate: FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyNodeIdUpdate;
+  CustomLocalisationFilterIdFkeyCustomLocalisationCreateInput: CustomLocalisationFilterIdFkeyCustomLocalisationCreateInput;
+  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate;
+  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate;
+  FilterPatch: FilterPatch;
+  TemplateFilterJoinFilterIdFkeyFilterCreateInput: TemplateFilterJoinFilterIdFkeyFilterCreateInput;
+  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate;
+  TemplateFilterJoinPatch: TemplateFilterJoinPatch;
+  TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput: TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput;
+  FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingFilterCodeKeyUpdate: FilterOnCustomLocalisationForCustomLocalisationFilterIdFkeyUsingFilterCodeKeyUpdate;
+  CustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyNodeIdUpdate: CustomLocalisationOnCustomLocalisationForCustomLocalisationFilterIdFkeyNodeIdUpdate;
+  CustomLocalisationFilterIdFkeyFilterCreateInput: CustomLocalisationFilterIdFkeyFilterCreateInput;
+  TemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyNodeIdUpdate: TemplateOnCustomLocalisationForCustomLocalisationTemplateIdFkeyNodeIdUpdate;
+  CustomLocalisationTemplateIdFkeyCustomLocalisationCreateInput: CustomLocalisationTemplateIdFkeyCustomLocalisationCreateInput;
+  FileOnFileForFileTemplateIdFkeyNodeIdUpdate: FileOnFileForFileTemplateIdFkeyNodeIdUpdate;
   FileTemplateIdFkeyTemplateCreateInput: FileTemplateIdFkeyTemplateCreateInput;
   FileApplicationSerialFkeyInput: FileApplicationSerialFkeyInput;
   ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate;
@@ -34675,16 +36371,6 @@ export type ResolversParentTypes = {
   ActivityLogApplicationIdFkeyInput: ActivityLogApplicationIdFkeyInput;
   ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch: UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch;
-  OrganisationApplicationJoinApplicationIdFkeyInverseInput: OrganisationApplicationJoinApplicationIdFkeyInverseInput;
-  OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect: OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect;
-  OrganisationApplicationJoinNodeIdConnect: OrganisationApplicationJoinNodeIdConnect;
-  OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete: OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete;
-  OrganisationApplicationJoinNodeIdDelete: OrganisationApplicationJoinNodeIdDelete;
-  OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate: OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate;
-  updateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch: UpdateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
-  OrganisationApplicationJoinApplicationIdFkeyInput: OrganisationApplicationJoinApplicationIdFkeyInput;
-  ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
   UserApplicationJoinApplicationIdFkeyInverseInput: UserApplicationJoinApplicationIdFkeyInverseInput;
   UserApplicationJoinUserApplicationJoinPkeyConnect: UserApplicationJoinUserApplicationJoinPkeyConnect;
   UserApplicationJoinNodeIdConnect: UserApplicationJoinNodeIdConnect;
@@ -34695,27 +36381,19 @@ export type ResolversParentTypes = {
   UserApplicationJoinApplicationIdFkeyInput: UserApplicationJoinApplicationIdFkeyInput;
   ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch;
-  ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate;
-  ApplicationPatch: ApplicationPatch;
-  UserApplicationJoinApplicationIdFkeyApplicationCreateInput: UserApplicationJoinApplicationIdFkeyApplicationCreateInput;
-  UserApplicationJoinUserIdFkeyInput: UserApplicationJoinUserIdFkeyInput;
-  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate;
-  updateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch: UpdateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
-  UserApplicationJoinUserIdFkeyInverseInput: UserApplicationJoinUserIdFkeyInverseInput;
-  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate;
-  updateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch: UpdateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
-  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate;
-  UserApplicationJoinPatch: UserApplicationJoinPatch;
-  UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput: UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput;
-  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate;
-  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate;
-  UserPatch: UserPatch;
-  UserApplicationJoinUserIdFkeyUserCreateInput: UserApplicationJoinUserIdFkeyUserCreateInput;
-  ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate;
-  UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput: UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput;
+  OrganisationApplicationJoinApplicationIdFkeyInverseInput: OrganisationApplicationJoinApplicationIdFkeyInverseInput;
+  OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect: OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect;
+  OrganisationApplicationJoinNodeIdConnect: OrganisationApplicationJoinNodeIdConnect;
+  OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete: OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete;
+  OrganisationApplicationJoinNodeIdDelete: OrganisationApplicationJoinNodeIdDelete;
+  OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate: OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate;
+  updateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch: UpdateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
+  OrganisationApplicationJoinApplicationIdFkeyInput: OrganisationApplicationJoinApplicationIdFkeyInput;
+  ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
   ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate: OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  ApplicationPatch: ApplicationPatch;
   OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput: OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput;
   OrganisationApplicationJoinOrganisationIdFkeyInput: OrganisationApplicationJoinOrganisationIdFkeyInput;
   OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationPkeyUpdate;
@@ -34733,6 +36411,24 @@ export type ResolversParentTypes = {
   OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput: OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput;
   ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate;
   OrganisationApplicationJoinApplicationIdFkeyOrganisationApplicationJoinCreateInput: OrganisationApplicationJoinApplicationIdFkeyOrganisationApplicationJoinCreateInput;
+  ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  UserApplicationJoinApplicationIdFkeyApplicationCreateInput: UserApplicationJoinApplicationIdFkeyApplicationCreateInput;
+  UserApplicationJoinUserIdFkeyInput: UserApplicationJoinUserIdFkeyInput;
+  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate;
+  updateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch: UpdateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
+  UserApplicationJoinUserIdFkeyInverseInput: UserApplicationJoinUserIdFkeyInverseInput;
+  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate;
+  updateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch: UpdateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
+  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate;
+  UserApplicationJoinPatch: UserApplicationJoinPatch;
+  UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput: UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput;
+  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate;
+  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate;
+  UserPatch: UserPatch;
+  UserApplicationJoinUserIdFkeyUserCreateInput: UserApplicationJoinUserIdFkeyUserCreateInput;
+  ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput: UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput;
   ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ActivityLogOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate: ActivityLogOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate;
   ActivityLogApplicationIdFkeyApplicationCreateInput: ActivityLogApplicationIdFkeyApplicationCreateInput;
@@ -34959,7 +36655,6 @@ export type ResolversParentTypes = {
   TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput: TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput;
   PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate: PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate;
   PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate: PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate;
-  PermissionNamePatch: PermissionNamePatch;
   PermissionJoinPermissionNameIdFkeyPermissionNameCreateInput: PermissionJoinPermissionNameIdFkeyPermissionNameCreateInput;
   OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate: OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate;
   PermissionJoinPatch: PermissionJoinPatch;
@@ -35001,25 +36696,6 @@ export type ResolversParentTypes = {
   TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput: TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput;
   TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate;
   TemplateFilterJoinTemplateIdFkeyTemplateCreateInput: TemplateFilterJoinTemplateIdFkeyTemplateCreateInput;
-  TemplateFilterJoinFilterIdFkeyInput: TemplateFilterJoinFilterIdFkeyInput;
-  FilterFilterPkeyConnect: FilterFilterPkeyConnect;
-  FilterFilterCodeKeyConnect: FilterFilterCodeKeyConnect;
-  FilterNodeIdConnect: FilterNodeIdConnect;
-  FilterFilterPkeyDelete: FilterFilterPkeyDelete;
-  FilterFilterCodeKeyDelete: FilterFilterCodeKeyDelete;
-  FilterNodeIdDelete: FilterNodeIdDelete;
-  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate;
-  updateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
-  TemplateFilterJoinFilterIdFkeyInverseInput: TemplateFilterJoinFilterIdFkeyInverseInput;
-  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate;
-  updateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
-  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate;
-  TemplateFilterJoinPatch: TemplateFilterJoinPatch;
-  TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput: TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput;
-  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate;
-  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate;
-  FilterPatch: FilterPatch;
-  TemplateFilterJoinFilterIdFkeyFilterCreateInput: TemplateFilterJoinFilterIdFkeyFilterCreateInput;
   TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate;
   TemplateFilterJoinTemplateIdFkeyTemplateFilterJoinCreateInput: TemplateFilterJoinTemplateIdFkeyTemplateFilterJoinCreateInput;
   TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate: TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate;
@@ -35069,6 +36745,9 @@ export type ResolversParentTypes = {
   CreateCounterInput: CreateCounterInput;
   CounterInput: CounterInput;
   CreateCounterPayload: CreateCounterPayload;
+  CreateCustomLocalisationInput: CreateCustomLocalisationInput;
+  CustomLocalisationInput: CustomLocalisationInput;
+  CreateCustomLocalisationPayload: CreateCustomLocalisationPayload;
   CreateElementTypePluginInput: CreateElementTypePluginInput;
   ElementTypePluginInput: ElementTypePluginInput;
   CreateElementTypePluginPayload: CreateElementTypePluginPayload;
@@ -35203,6 +36882,9 @@ export type ResolversParentTypes = {
   UpdateCounterPayload: UpdateCounterPayload;
   UpdateCounterInput: UpdateCounterInput;
   UpdateCounterByNameInput: UpdateCounterByNameInput;
+  UpdateCustomLocalisationByNodeIdInput: UpdateCustomLocalisationByNodeIdInput;
+  UpdateCustomLocalisationPayload: UpdateCustomLocalisationPayload;
+  UpdateCustomLocalisationInput: UpdateCustomLocalisationInput;
   UpdateElementTypePluginByNodeIdInput: UpdateElementTypePluginByNodeIdInput;
   ElementTypePluginPatch: ElementTypePluginPatch;
   UpdateElementTypePluginPayload: UpdateElementTypePluginPayload;
@@ -35231,7 +36913,6 @@ export type ResolversParentTypes = {
   UpdateOrganisationApplicationJoinPayload: UpdateOrganisationApplicationJoinPayload;
   UpdateOrganisationApplicationJoinInput: UpdateOrganisationApplicationJoinInput;
   UpdateOutcomeDisplayByNodeIdInput: UpdateOutcomeDisplayByNodeIdInput;
-  OutcomeDisplayPatch: OutcomeDisplayPatch;
   UpdateOutcomeDisplayPayload: UpdateOutcomeDisplayPayload;
   UpdateOutcomeDisplayInput: UpdateOutcomeDisplayInput;
   UpdateOutcomeDisplayByTableNameAndCodeInput: UpdateOutcomeDisplayByTableNameAndCodeInput;
@@ -35353,6 +37034,9 @@ export type ResolversParentTypes = {
   DeleteCounterPayload: DeleteCounterPayload;
   DeleteCounterInput: DeleteCounterInput;
   DeleteCounterByNameInput: DeleteCounterByNameInput;
+  DeleteCustomLocalisationByNodeIdInput: DeleteCustomLocalisationByNodeIdInput;
+  DeleteCustomLocalisationPayload: DeleteCustomLocalisationPayload;
+  DeleteCustomLocalisationInput: DeleteCustomLocalisationInput;
   DeleteElementTypePluginByNodeIdInput: DeleteElementTypePluginByNodeIdInput;
   DeleteElementTypePluginPayload: DeleteElementTypePluginPayload;
   DeleteElementTypePluginInput: DeleteElementTypePluginInput;
@@ -35588,8 +37272,8 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   notifications?: Resolver<ResolversTypes['NotificationsConnection'], ParentType, ContextType, RequireFields<ApplicationNotificationsArgs, 'orderBy'>>;
   verifications?: Resolver<ResolversTypes['VerificationsConnection'], ParentType, ContextType, RequireFields<ApplicationVerificationsArgs, 'orderBy'>>;
   activityLogs?: Resolver<ResolversTypes['ActivityLogsConnection'], ParentType, ContextType, RequireFields<ApplicationActivityLogsArgs, 'orderBy'>>;
-  organisationApplicationJoins?: Resolver<ResolversTypes['OrganisationApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationOrganisationApplicationJoinsArgs, 'orderBy'>>;
   userApplicationJoins?: Resolver<ResolversTypes['UserApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationUserApplicationJoinsArgs, 'orderBy'>>;
+  organisationApplicationJoins?: Resolver<ResolversTypes['OrganisationApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationOrganisationApplicationJoinsArgs, 'orderBy'>>;
   stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
@@ -35674,6 +37358,8 @@ export type ApplicationListShapeResolvers<ContextType = any, ParentType extends 
   status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
   outcome?: Resolver<Maybe<ResolversTypes['ApplicationOutcome']>, ParentType, ContextType>;
   lastActiveDate?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  languageCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  languageStrings?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   assigners?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   reviewers?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   reviewerAction?: Resolver<Maybe<ResolversTypes['ReviewerAction']>, ParentType, ContextType>;
@@ -36094,6 +37780,18 @@ export type CreateCounterPayloadResolvers<ContextType = any, ParentType extends 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateCustomLocalisationPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateCustomLocalisationPayload'] = ResolversParentTypes['CreateCustomLocalisationPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  customLocalisation?: Resolver<Maybe<ResolversTypes['CustomLocalisation']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  filter?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType>;
+  outcomeDisplay?: Resolver<Maybe<ResolversTypes['OutcomeDisplay']>, ParentType, ContextType>;
+  permissionName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType>;
+  customLocalisationEdge?: Resolver<Maybe<ResolversTypes['CustomLocalisationsEdge']>, ParentType, ContextType, RequireFields<CreateCustomLocalisationPayloadCustomLocalisationEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateElementTypePluginPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateElementTypePluginPayload'] = ResolversParentTypes['CreateElementTypePluginPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   elementTypePlugin?: Resolver<Maybe<ResolversTypes['ElementTypePlugin']>, ParentType, ContextType>;
@@ -36421,6 +38119,36 @@ export interface CursorScalarConfig extends GraphQLScalarTypeConfig<ResolversTyp
   name: 'Cursor';
 }
 
+export type CustomLocalisationResolvers<ContextType = any, ParentType extends ResolversParentTypes['CustomLocalisation'] = ResolversParentTypes['CustomLocalisation']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  languageCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  strings?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  filterId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  outcomeDisplayId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  permissionNameId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  filter?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType>;
+  outcomeDisplay?: Resolver<Maybe<ResolversTypes['OutcomeDisplay']>, ParentType, ContextType>;
+  permissionName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CustomLocalisationsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CustomLocalisationsConnection'] = ResolversParentTypes['CustomLocalisationsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['CustomLocalisation']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['CustomLocalisationsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CustomLocalisationsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['CustomLocalisationsEdge'] = ResolversParentTypes['CustomLocalisationsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['CustomLocalisation']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
   name: 'Date';
 }
@@ -36521,6 +38249,19 @@ export type DeleteCounterPayloadResolvers<ContextType = any, ParentType extends 
   deletedCounterNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   counterEdge?: Resolver<Maybe<ResolversTypes['CountersEdge']>, ParentType, ContextType, RequireFields<DeleteCounterPayloadCounterEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DeleteCustomLocalisationPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteCustomLocalisationPayload'] = ResolversParentTypes['DeleteCustomLocalisationPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  customLocalisation?: Resolver<Maybe<ResolversTypes['CustomLocalisation']>, ParentType, ContextType>;
+  deletedCustomLocalisationNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  filter?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType>;
+  outcomeDisplay?: Resolver<Maybe<ResolversTypes['OutcomeDisplay']>, ParentType, ContextType>;
+  permissionName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType>;
+  customLocalisationEdge?: Resolver<Maybe<ResolversTypes['CustomLocalisationsEdge']>, ParentType, ContextType, RequireFields<DeleteCustomLocalisationPayloadCustomLocalisationEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -36962,6 +38703,7 @@ export type FilterResolvers<ContextType = any, ParentType extends ResolversParen
   query?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   userRole?: Resolver<Maybe<ResolversTypes['PermissionPolicyType']>, ParentType, ContextType>;
   templateFilterJoins?: Resolver<ResolversTypes['TemplateFilterJoinsConnection'], ParentType, ContextType, RequireFields<FilterTemplateFilterJoinsArgs, 'orderBy'>>;
+  customLocalisations?: Resolver<ResolversTypes['CustomLocalisationsConnection'], ParentType, ContextType, RequireFields<FilterCustomLocalisationsArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -37017,6 +38759,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createApplicationStageHistory?: Resolver<Maybe<ResolversTypes['CreateApplicationStageHistoryPayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationStageHistoryArgs, 'input'>>;
   createApplicationStatusHistory?: Resolver<Maybe<ResolversTypes['CreateApplicationStatusHistoryPayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationStatusHistoryArgs, 'input'>>;
   createCounter?: Resolver<Maybe<ResolversTypes['CreateCounterPayload']>, ParentType, ContextType, RequireFields<MutationCreateCounterArgs, 'input'>>;
+  createCustomLocalisation?: Resolver<Maybe<ResolversTypes['CreateCustomLocalisationPayload']>, ParentType, ContextType, RequireFields<MutationCreateCustomLocalisationArgs, 'input'>>;
   createElementTypePlugin?: Resolver<Maybe<ResolversTypes['CreateElementTypePluginPayload']>, ParentType, ContextType, RequireFields<MutationCreateElementTypePluginArgs, 'input'>>;
   createFile?: Resolver<Maybe<ResolversTypes['CreateFilePayload']>, ParentType, ContextType, RequireFields<MutationCreateFileArgs, 'input'>>;
   createFilter?: Resolver<Maybe<ResolversTypes['CreateFilterPayload']>, ParentType, ContextType, RequireFields<MutationCreateFilterArgs, 'input'>>;
@@ -37072,6 +38815,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateCounterByNodeId?: Resolver<Maybe<ResolversTypes['UpdateCounterPayload']>, ParentType, ContextType, RequireFields<MutationUpdateCounterByNodeIdArgs, 'input'>>;
   updateCounter?: Resolver<Maybe<ResolversTypes['UpdateCounterPayload']>, ParentType, ContextType, RequireFields<MutationUpdateCounterArgs, 'input'>>;
   updateCounterByName?: Resolver<Maybe<ResolversTypes['UpdateCounterPayload']>, ParentType, ContextType, RequireFields<MutationUpdateCounterByNameArgs, 'input'>>;
+  updateCustomLocalisationByNodeId?: Resolver<Maybe<ResolversTypes['UpdateCustomLocalisationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateCustomLocalisationByNodeIdArgs, 'input'>>;
+  updateCustomLocalisation?: Resolver<Maybe<ResolversTypes['UpdateCustomLocalisationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateCustomLocalisationArgs, 'input'>>;
   updateElementTypePluginByNodeId?: Resolver<Maybe<ResolversTypes['UpdateElementTypePluginPayload']>, ParentType, ContextType, RequireFields<MutationUpdateElementTypePluginByNodeIdArgs, 'input'>>;
   updateElementTypePlugin?: Resolver<Maybe<ResolversTypes['UpdateElementTypePluginPayload']>, ParentType, ContextType, RequireFields<MutationUpdateElementTypePluginArgs, 'input'>>;
   updateFileByNodeId?: Resolver<Maybe<ResolversTypes['UpdateFilePayload']>, ParentType, ContextType, RequireFields<MutationUpdateFileByNodeIdArgs, 'input'>>;
@@ -37174,6 +38919,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteCounterByNodeId?: Resolver<Maybe<ResolversTypes['DeleteCounterPayload']>, ParentType, ContextType, RequireFields<MutationDeleteCounterByNodeIdArgs, 'input'>>;
   deleteCounter?: Resolver<Maybe<ResolversTypes['DeleteCounterPayload']>, ParentType, ContextType, RequireFields<MutationDeleteCounterArgs, 'input'>>;
   deleteCounterByName?: Resolver<Maybe<ResolversTypes['DeleteCounterPayload']>, ParentType, ContextType, RequireFields<MutationDeleteCounterByNameArgs, 'input'>>;
+  deleteCustomLocalisationByNodeId?: Resolver<Maybe<ResolversTypes['DeleteCustomLocalisationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteCustomLocalisationByNodeIdArgs, 'input'>>;
+  deleteCustomLocalisation?: Resolver<Maybe<ResolversTypes['DeleteCustomLocalisationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteCustomLocalisationArgs, 'input'>>;
   deleteElementTypePluginByNodeId?: Resolver<Maybe<ResolversTypes['DeleteElementTypePluginPayload']>, ParentType, ContextType, RequireFields<MutationDeleteElementTypePluginByNodeIdArgs, 'input'>>;
   deleteElementTypePlugin?: Resolver<Maybe<ResolversTypes['DeleteElementTypePluginPayload']>, ParentType, ContextType, RequireFields<MutationDeleteElementTypePluginArgs, 'input'>>;
   deleteFileByNodeId?: Resolver<Maybe<ResolversTypes['DeleteFilePayload']>, ParentType, ContextType, RequireFields<MutationDeleteFileByNodeIdArgs, 'input'>>;
@@ -37259,7 +39006,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ApplicationNote' | 'File' | 'ReviewAssignment' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'Review' | 'ReviewResponse' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'OrganisationApplicationJoin' | 'UserApplicationJoin' | 'TriggerSchedule' | 'Verification' | 'ActivityLog' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'Counter' | 'ElementTypePlugin' | 'LookupTable' | 'OutcomeDisplay' | 'OutcomeDisplayColumnDefinition' | 'SystemInfo', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'CustomLocalisation' | 'Filter' | 'TemplateFilterJoin' | 'OutcomeDisplay' | 'ApplicationNote' | 'File' | 'ReviewAssignment' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'Review' | 'ReviewResponse' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'OrganisationApplicationJoin' | 'UserApplicationJoin' | 'TriggerSchedule' | 'Verification' | 'ActivityLog' | 'TemplateAction' | 'Counter' | 'ElementTypePlugin' | 'LookupTable' | 'OutcomeDisplayColumnDefinition' | 'SystemInfo', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -37304,6 +39051,17 @@ export type OrganisationResolvers<ContextType = any, ParentType extends Resolver
   logoUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   isSystemOrg?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   registrationDocumentation?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  agent?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  contact?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  authorisation?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  paymentReceipt?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  serial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  province?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  postalAddress?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  postalCountry?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  postalProvince?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   userOrganisations?: Resolver<ResolversTypes['UserOrganisationsConnection'], ParentType, ContextType, RequireFields<OrganisationUserOrganisationsArgs, 'orderBy'>>;
   permissionJoins?: Resolver<ResolversTypes['PermissionJoinsConnection'], ParentType, ContextType, RequireFields<OrganisationPermissionJoinsArgs, 'orderBy'>>;
   applicationsByOrgId?: Resolver<ResolversTypes['ApplicationsConnection'], ParentType, ContextType, RequireFields<OrganisationApplicationsByOrgIdArgs, 'orderBy'>>;
@@ -37367,6 +39125,7 @@ export type OutcomeDisplayResolvers<ContextType = any, ParentType extends Resolv
   detailViewHeaderColumn?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   showLinkedApplications?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   priority?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  customLocalisations?: Resolver<ResolversTypes['CustomLocalisationsConnection'], ParentType, ContextType, RequireFields<OutcomeDisplayCustomLocalisationsArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -37456,6 +39215,7 @@ export type PermissionNameResolvers<ContextType = any, ParentType extends Resolv
   permissionPolicy?: Resolver<Maybe<ResolversTypes['PermissionPolicy']>, ParentType, ContextType>;
   permissionJoins?: Resolver<ResolversTypes['PermissionJoinsConnection'], ParentType, ContextType, RequireFields<PermissionNamePermissionJoinsArgs, 'orderBy'>>;
   templatePermissions?: Resolver<ResolversTypes['TemplatePermissionsConnection'], ParentType, ContextType, RequireFields<PermissionNameTemplatePermissionsArgs, 'orderBy'>>;
+  customLocalisations?: Resolver<ResolversTypes['CustomLocalisationsConnection'], ParentType, ContextType, RequireFields<PermissionNameCustomLocalisationsArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -37585,6 +39345,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationStatusHistories?: Resolver<Maybe<ResolversTypes['ApplicationStatusHistoriesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoriesArgs, 'orderBy'>>;
   constraintsInfos?: Resolver<Maybe<ResolversTypes['ConstraintsInfosConnection']>, ParentType, ContextType, RequireFields<QueryConstraintsInfosArgs, 'orderBy'>>;
   counters?: Resolver<Maybe<ResolversTypes['CountersConnection']>, ParentType, ContextType, RequireFields<QueryCountersArgs, 'orderBy'>>;
+  customLocalisations?: Resolver<Maybe<ResolversTypes['CustomLocalisationsConnection']>, ParentType, ContextType, RequireFields<QueryCustomLocalisationsArgs, 'orderBy'>>;
   elementTypePlugins?: Resolver<Maybe<ResolversTypes['ElementTypePluginsConnection']>, ParentType, ContextType, RequireFields<QueryElementTypePluginsArgs, 'orderBy'>>;
   files?: Resolver<Maybe<ResolversTypes['FilesConnection']>, ParentType, ContextType, RequireFields<QueryFilesArgs, 'orderBy'>>;
   filters?: Resolver<Maybe<ResolversTypes['FiltersConnection']>, ParentType, ContextType, RequireFields<QueryFiltersArgs, 'orderBy'>>;
@@ -37635,6 +39396,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationStatusHistory?: Resolver<Maybe<ResolversTypes['ApplicationStatusHistory']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryArgs, 'id'>>;
   counter?: Resolver<Maybe<ResolversTypes['Counter']>, ParentType, ContextType, RequireFields<QueryCounterArgs, 'id'>>;
   counterByName?: Resolver<Maybe<ResolversTypes['Counter']>, ParentType, ContextType, RequireFields<QueryCounterByNameArgs, 'name'>>;
+  customLocalisation?: Resolver<Maybe<ResolversTypes['CustomLocalisation']>, ParentType, ContextType, RequireFields<QueryCustomLocalisationArgs, 'id'>>;
   elementTypePlugin?: Resolver<Maybe<ResolversTypes['ElementTypePlugin']>, ParentType, ContextType, RequireFields<QueryElementTypePluginArgs, 'code'>>;
   file?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFileArgs, 'id'>>;
   fileByUniqueId?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFileByUniqueIdArgs, 'uniqueId'>>;
@@ -37718,6 +39480,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationStageHistoryByNodeId?: Resolver<Maybe<ResolversTypes['ApplicationStageHistory']>, ParentType, ContextType, RequireFields<QueryApplicationStageHistoryByNodeIdArgs, 'nodeId'>>;
   applicationStatusHistoryByNodeId?: Resolver<Maybe<ResolversTypes['ApplicationStatusHistory']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryByNodeIdArgs, 'nodeId'>>;
   counterByNodeId?: Resolver<Maybe<ResolversTypes['Counter']>, ParentType, ContextType, RequireFields<QueryCounterByNodeIdArgs, 'nodeId'>>;
+  customLocalisationByNodeId?: Resolver<Maybe<ResolversTypes['CustomLocalisation']>, ParentType, ContextType, RequireFields<QueryCustomLocalisationByNodeIdArgs, 'nodeId'>>;
   elementTypePluginByNodeId?: Resolver<Maybe<ResolversTypes['ElementTypePlugin']>, ParentType, ContextType, RequireFields<QueryElementTypePluginByNodeIdArgs, 'nodeId'>>;
   fileByNodeId?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFileByNodeIdArgs, 'nodeId'>>;
   filterByNodeId?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType, RequireFields<QueryFilterByNodeIdArgs, 'nodeId'>>;
@@ -38060,6 +39823,7 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
   triggerSchedules?: Resolver<ResolversTypes['TriggerSchedulesConnection'], ParentType, ContextType, RequireFields<TemplateTriggerSchedulesArgs, 'orderBy'>>;
   reviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<TemplateReviewAssignmentsArgs, 'orderBy'>>;
   files?: Resolver<ResolversTypes['FilesConnection'], ParentType, ContextType, RequireFields<TemplateFilesArgs, 'orderBy'>>;
+  customLocalisations?: Resolver<ResolversTypes['CustomLocalisationsConnection'], ParentType, ContextType, RequireFields<TemplateCustomLocalisationsArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -38452,6 +40216,18 @@ export type UpdateCounterPayloadResolvers<ContextType = any, ParentType extends 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateCustomLocalisationPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateCustomLocalisationPayload'] = ResolversParentTypes['UpdateCustomLocalisationPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  customLocalisation?: Resolver<Maybe<ResolversTypes['CustomLocalisation']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  filter?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType>;
+  outcomeDisplay?: Resolver<Maybe<ResolversTypes['OutcomeDisplay']>, ParentType, ContextType>;
+  permissionName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType>;
+  customLocalisationEdge?: Resolver<Maybe<ResolversTypes['CustomLocalisationsEdge']>, ParentType, ContextType, RequireFields<UpdateCustomLocalisationPayloadCustomLocalisationEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateElementTypePluginPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateElementTypePluginPayload'] = ResolversParentTypes['UpdateElementTypePluginPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   elementTypePlugin?: Resolver<Maybe<ResolversTypes['ElementTypePlugin']>, ParentType, ContextType>;
@@ -38785,6 +40561,10 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   dateOfBirth?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   passwordHash?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  province?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   userOrganisations?: Resolver<ResolversTypes['UserOrganisationsConnection'], ParentType, ContextType, RequireFields<UserUserOrganisationsArgs, 'orderBy'>>;
   permissionJoins?: Resolver<ResolversTypes['PermissionJoinsConnection'], ParentType, ContextType, RequireFields<UserPermissionJoinsArgs, 'orderBy'>>;
   applications?: Resolver<ResolversTypes['ApplicationsConnection'], ParentType, ContextType, RequireFields<UserApplicationsArgs, 'orderBy'>>;
@@ -38996,6 +40776,7 @@ export type Resolvers<ContextType = any> = {
   CreateApplicationStageHistoryPayload?: CreateApplicationStageHistoryPayloadResolvers<ContextType>;
   CreateApplicationStatusHistoryPayload?: CreateApplicationStatusHistoryPayloadResolvers<ContextType>;
   CreateCounterPayload?: CreateCounterPayloadResolvers<ContextType>;
+  CreateCustomLocalisationPayload?: CreateCustomLocalisationPayloadResolvers<ContextType>;
   CreateElementTypePluginPayload?: CreateElementTypePluginPayloadResolvers<ContextType>;
   CreateFilePayload?: CreateFilePayloadResolvers<ContextType>;
   CreateFilterPayload?: CreateFilterPayloadResolvers<ContextType>;
@@ -39031,6 +40812,9 @@ export type Resolvers<ContextType = any> = {
   CreateUserPayload?: CreateUserPayloadResolvers<ContextType>;
   CreateVerificationPayload?: CreateVerificationPayloadResolvers<ContextType>;
   Cursor?: GraphQLScalarType;
+  CustomLocalisation?: CustomLocalisationResolvers<ContextType>;
+  CustomLocalisationsConnection?: CustomLocalisationsConnectionResolvers<ContextType>;
+  CustomLocalisationsEdge?: CustomLocalisationsEdgeResolvers<ContextType>;
   Date?: GraphQLScalarType;
   Datetime?: GraphQLScalarType;
   DeleteActionPluginPayload?: DeleteActionPluginPayloadResolvers<ContextType>;
@@ -39042,6 +40826,7 @@ export type Resolvers<ContextType = any> = {
   DeleteApplicationStageHistoryPayload?: DeleteApplicationStageHistoryPayloadResolvers<ContextType>;
   DeleteApplicationStatusHistoryPayload?: DeleteApplicationStatusHistoryPayloadResolvers<ContextType>;
   DeleteCounterPayload?: DeleteCounterPayloadResolvers<ContextType>;
+  DeleteCustomLocalisationPayload?: DeleteCustomLocalisationPayloadResolvers<ContextType>;
   DeleteElementTypePluginPayload?: DeleteElementTypePluginPayloadResolvers<ContextType>;
   DeleteFilePayload?: DeleteFilePayloadResolvers<ContextType>;
   DeleteFilterPayload?: DeleteFilterPayloadResolvers<ContextType>;
@@ -39194,6 +40979,7 @@ export type Resolvers<ContextType = any> = {
   UpdateApplicationStageHistoryPayload?: UpdateApplicationStageHistoryPayloadResolvers<ContextType>;
   UpdateApplicationStatusHistoryPayload?: UpdateApplicationStatusHistoryPayloadResolvers<ContextType>;
   UpdateCounterPayload?: UpdateCounterPayloadResolvers<ContextType>;
+  UpdateCustomLocalisationPayload?: UpdateCustomLocalisationPayloadResolvers<ContextType>;
   UpdateElementTypePluginPayload?: UpdateElementTypePluginPayloadResolvers<ContextType>;
   UpdateFilePayload?: UpdateFilePayloadResolvers<ContextType>;
   UpdateFilterPayload?: UpdateFilterPayloadResolvers<ContextType>;
