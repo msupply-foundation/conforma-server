@@ -3,10 +3,9 @@ import { getApplicationData } from './getApplicationData'
 import { combineRequestParams } from '../utilityFunctions'
 import DBConnect from '../databaseConnect'
 
-const routeRunAction = async (request: any, reply: any) => {
+export const routeRunAction = async (request: any, reply: any) => {
   const { actionCode, applicationId, reviewId, parameters } = combineRequestParams(request, 'camel')
   const applicationData = applicationId ? await getApplicationData({ applicationId, reviewId }) : {}
-  // console.log('applicationData', applicationData)
   const actionResult = await actionLibrary[actionCode]({
     parameters,
     applicationData,
@@ -15,4 +14,7 @@ const routeRunAction = async (request: any, reply: any) => {
   return reply.send(actionResult)
 }
 
-export default routeRunAction
+export const routeGetApplicationData = async (request: any, reply: any) => {
+  const { applicationId } = combineRequestParams(request, 'camel')
+  reply.send(await getApplicationData({ applicationId: Number(applicationId) }))
+}

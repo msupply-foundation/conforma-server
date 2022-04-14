@@ -4,7 +4,7 @@
   "name": "Generate Document",
   "description": "Generates a PDF document from a Carbone template",
   "required_parameters": ["docTemplateId"],
-  "optional_parameters": ["data", "userId", "applicationSerial"],
+  "optional_parameters": ["options", "additionalData", "userId", "applicationSerial", "templateId"],
   "output_properties": ["document"],
   "info": {
     "author": {

@@ -6,8 +6,9 @@ import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { action as grantPermissions } from './index'
 
 const testParams = {
-  username: 'valerio',
-  permissionNames: ['reviewOrgRego'],
+  username: 'johnny_smith',
+  orgId: null,
+  permissionNames: ['applyGeneral'],
 }
 
 const testParams2 = {
@@ -22,13 +23,18 @@ const testParams3 = {
   permissionNames: ['reviewOrgRego'],
 }
 
-test('Test: Add permission to Valerio', () => {
+test('Test: Add permission to John Smith - without an org', () => {
   return grantPermissions({ parameters: testParams, DBConnect }).then((result: any) => {
     expect(result).toEqual({
       status: ActionQueueStatus.Success,
       output: {
-        permissionJoinIds: [40],
-        permissionNames: ['reviewOrgRego'],
+        grantedPermissions: [
+          {
+            permissionJoinId: 4,
+            permissionName: 'applyGeneral',
+            permissionNameId: 4,
+          },
+        ],
       },
       error_log: '',
     })
@@ -36,13 +42,18 @@ test('Test: Add permission to Valerio', () => {
 })
 
 // Run the test twice to show that result doesn't change even if record already exists
-test('Test: Add permission to Valerio, already exists', () => {
+test('Test: Add permission to John Smith - without an org, already exists', () => {
   return grantPermissions({ parameters: testParams, DBConnect }).then((result: any) => {
     expect(result).toEqual({
       status: ActionQueueStatus.Success,
       output: {
-        permissionJoinIds: [40],
-        permissionNames: ['reviewOrgRego'],
+        grantedPermissions: [
+          {
+            permissionJoinId: 4,
+            permissionName: 'applyGeneral',
+            permissionNameId: 4,
+          },
+        ],
       },
       error_log: '',
     })
@@ -55,8 +66,13 @@ test('Test: Add permission to Carl and Medicinal Importers, Ltd.', () => {
     expect(result).toEqual({
       status: ActionQueueStatus.Success,
       output: {
-        permissionJoinIds: [42],
-        permissionNames: ['reviewOrgRego'],
+        grantedPermissions: [
+          {
+            permissionJoinId: 38,
+            permissionName: 'reviewOrgRego',
+            permissionNameId: 5,
+          },
+        ],
       },
       error_log: '',
     })
@@ -69,8 +85,13 @@ test('Test: Add permission to Carl and Medicinal Importers, Ltd., already exists
     expect(result).toEqual({
       status: ActionQueueStatus.Success,
       output: {
-        permissionJoinIds: [42],
-        permissionNames: ['reviewOrgRego'],
+        grantedPermissions: [
+          {
+            permissionJoinId: 38,
+            permissionName: 'reviewOrgRego',
+            permissionNameId: 5,
+          },
+        ],
       },
       error_log: '',
     })
@@ -82,8 +103,13 @@ test('Test: Add permission to Nicole and "Drugs-R-Us" using orgId', () => {
     expect(result).toEqual({
       status: ActionQueueStatus.Success,
       output: {
-        permissionJoinIds: [44],
-        permissionNames: ['reviewOrgRego'],
+        grantedPermissions: [
+          {
+            permissionJoinId: 40,
+            permissionName: 'reviewOrgRego',
+            permissionNameId: 5,
+          },
+        ],
       },
       error_log: '',
     })

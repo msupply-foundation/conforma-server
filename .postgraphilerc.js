@@ -1,3 +1,4 @@
+require('dotenv').config()
 module.exports = {
   options: {
     appendPlugins: [
@@ -9,7 +10,7 @@ module.exports = {
     enhanceGraphiql: true,
     cors: true,
     dynamicJson: true,
-    jwtSecret: 'devsecret',
+    jwtSecret: process.env.JWT_SECRET || 'devsecret',
     // disableQueryLog: true,
     graphileBuildOptions: {
       connectionFilterRelations: true,

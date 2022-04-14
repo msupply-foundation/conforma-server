@@ -574,7 +574,7 @@ testData.form2 = {
 }
 
 testData.application = {
-  id: 4000,
+  id: 47,
   name: 'Test Review -- Vitamin C',
   status: 'Submitted',
   stage: 1,
@@ -682,12 +682,51 @@ testData.stringSubstitutionEmptyStringInReplacements = {
   children: ['You like: %1%2%3', '', '\\n-Cake', '\\n-Candy'],
 }
 
+testData.stringSubstitutionRepeatedParameters = {
+  operator: 'stringSubstitution',
+  children: ['%1 is the same as %1 but not %2', 'THIS', 'THAT'],
+}
+
 // GET operator
 
 testData.APIisUnique = {
   operator: 'GET',
-  children: ['http://localhost:8080/check-unique', ['type', 'value'], 'username', 'druglord'],
+  children: ['http://localhost:8080/api/check-unique', ['type', 'value'], 'username', 'druglord'],
 }
+
+testData.APIisUniqueWithHeaders = {
+  operator: 'GET',
+  children: [
+    {
+      operator: 'buildObject',
+      properties: [
+        {
+          key: 'url',
+          value: 'http://localhost:8080/api/check-unique',
+        },
+        {
+          key: 'headers',
+          value: {
+            operator: 'buildObject',
+            properties: [
+              {
+                key: 'Authorization',
+                value: {
+                  operator: 'objectProperties',
+                  children: ['secrets.nonRegisteredAuth'],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+    ['type', 'value'],
+    'username',
+    'jane_smith',
+  ],
+}
+
 testData.onlineTestAPI = {
   operator: 'GET',
   children: ['https://jsonplaceholder.typicode.com/todos/1', [], 'title'],
@@ -701,7 +740,13 @@ testData.onlineArrayReturn = {
 
 testData.APIlogin = {
   operator: 'POST',
-  children: ['http://localhost:8080/login', ['username', 'password'], 'js', '123456', 'success'],
+  children: [
+    'http://localhost:8080/api/public/login',
+    ['username', 'password'],
+    'jane_smith',
+    '123456',
+    'success',
+  ],
 }
 
 // prettier-ignore
@@ -725,7 +770,7 @@ testData.getApplicationName = {
       value: 'SELECT name FROM application WHERE template_id = $1 LIMIT 1',
     },
     {
-      value: 5,
+      value: 28,
     },
   ],
 }
@@ -735,7 +780,7 @@ testData.getListOfTemplates = {
   operator: 'pgSQL',
   children: [
     {
-      value: 'SELECT name FROM template',
+      value: 'SELECT name FROM template LIMIT 5',
     },
   ],
 }
@@ -754,7 +799,7 @@ testData.getListOfTemplates_noType = {
   operator: 'pgSQL',
   children: [
     {
-      value: 'SELECT name FROM template',
+      value: 'SELECT name FROM template LIMIT 5',
     },
   ],
 }
@@ -763,7 +808,7 @@ testData.getListOfApplications_withId = {
   operator: 'pgSQL',
   children: [
     {
-      value: 'SELECT id, name FROM application',
+      value: 'SELECT id, name FROM application LIMIT 5',
     },
   ],
 }
@@ -780,7 +825,45 @@ testData.simpleGraphQL = {
     }`,
     'graphQLEndpoint',
     ['appId'],
-    4000,
+    22,
+    'application.name',
+  ],
+}
+
+testData.simpleGraphQLCustomHeader = {
+  operator: 'graphQL',
+  children: [
+    `query App($appId:Int!) {
+      application(id: $appId) {
+        name
+      }
+    }`,
+    {
+      operator: 'buildObject',
+      properties: [
+        {
+          key: 'url',
+          value: '',
+        },
+        {
+          key: 'headers',
+          value: {
+            operator: 'buildObject',
+            properties: [
+              {
+                key: 'Authorization',
+                value: {
+                  operator: 'objectProperties',
+                  children: ['secrets.adminAuth'],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+    ['appId'],
+    22,
     'application.name',
   ],
 }
@@ -789,7 +872,7 @@ testData.GraphQL_listOfApplications = {
   operator: 'graphQL',
   children: [
     `query Apps {
-      applications {
+      applications(first: 3, offset: 10) {
         nodes {
           name
         }
@@ -805,7 +888,7 @@ testData.GraphQL_listOfApplicationsWithId = {
   operator: 'graphQL',
   children: [
     `query Apps {
-      applications {
+      applications(first: 3, offset: 20) {
         nodes {
           name
           id
@@ -822,7 +905,7 @@ testData.GraphQL_listOfTemplates_noReturnSpecified = {
   operator: 'graphQL',
   children: [
     `query Templates {
-      templates {
+      templates(first: 2, offset: 10) {
         edges {
           node {
             name
@@ -851,34 +934,10 @@ testData.GraphQL_CountTemplates_objectParamsOption = {
   ],
 }
 
-testData.GraphQL_CountApplicationSections = {
-  operator: 'graphQL',
-  children: [
-    `query SectionCount($appId:Int!) {
-      application(id: $appId) {
-        id
-        template {
-          name
-        }
-        applicationSections {
-          totalCount
-        }
-      }
-    }`,
-    'graphQLEndpoint',
-    ['appId'],
-    {
-      operator: 'objectProperties',
-      children: ['application.id'],
-    },
-    'application.applicationSections.totalCount',
-  ],
-}
-
 testData.GraphQL_CountApplicationResponses = {
   operator: 'graphQL',
   children: [
-    `query SectionCount($appId:Int!) {
+    `query ResponseCount($appId:Int!) {
       application(id: $appId) {
         applicationResponses {
           totalCount
@@ -973,7 +1032,7 @@ testData.emailValidation = {
     {
       operator: 'GET',
       children: [
-        'http://localhost:8080/check-unique',
+        'http://localhost:8080/api/check-unique',
         ['type', 'value'],
         'email',
         {
@@ -1156,4 +1215,122 @@ testData.obFunc1 = {
 testData.obFunc2 = {
   operator: 'objectFunctions',
   children: ['functions.fDate', { operator: '+', children: ['December 17, ', '1995 03:24:00'] }],
+}
+
+// Type conversion
+testData.responses = {
+  user: {
+    id: 629,
+    timeUpdated: '2022-02-24T10:24:30.548061+13:00',
+    text: '{email: carl@sussol.net, firstName: Carl, id: 8, lastName: Smith, username: carl}',
+    selection: [
+      {
+        id: 8,
+        email: 'noreply@sussol.net',
+        lastName: 'Smith',
+        username: 'carl',
+        firstName: 'Carl',
+      },
+      {
+        id: 9,
+        email: 'noreply@sussol.net',
+        lastName: 'Madruga',
+        username: 'nicole',
+        firstName: 'Nicole',
+      },
+    ],
+  },
+  orgs: [
+    {
+      id: 628,
+      name: 'Royal Inc.',
+    },
+  ],
+  currentUser: {
+    userId: 2,
+    username: 'admin',
+    firstName: 'Admin',
+    lastName: 'Admin',
+    email: null,
+    dateOfBirth: null,
+    organisation: {
+      orgId: 1,
+      orgName: 'PNG Demo Authority',
+      userRole: 'Owner',
+      registration: 'fda',
+      address: null,
+      logoUrl: '/file?uid=NPQ4Wo_mUS1KSnuSUyIXS',
+      isSystemOrg: true,
+    },
+    sessionId: 'GlGHjaesRA82g1sJ',
+  },
+}
+
+testData.listOfOrgs = {
+  operator: 'graphQL',
+  type: 'string',
+  children: [
+    'query getOrgs {organisations { nodes {id, name}}}',
+    '',
+    [],
+    'organisations.nodes.name',
+  ],
+}
+
+testData.nestedErrorQuery = {
+  operator: '+',
+  children: [
+    {
+      operator: 'objectProperties',
+      children: ['responses.user'],
+    },
+    ' ',
+    {
+      operator: 'objectProperties',
+      children: ['application.path'],
+    },
+  ],
+}
+
+testData.nestedSQLErrorWithFallback = {
+  operator: '+',
+  fallback: 'Ignore SQL problem',
+  children: [
+    'Text value',
+    {
+      operator: 'pgSQL',
+      children: ['Bad SQLquery'],
+    },
+  ],
+}
+
+testData.nestedFallback = {
+  operator: '+',
+  children: [
+    {
+      operator: 'objectProperties',
+      children: ['responses.user.id'],
+    },
+    ' ',
+    {
+      fallback: '<Not found>',
+      operator: 'objectProperties',
+      children: ['application.path'],
+    },
+  ],
+}
+
+testData.graphQLErrorWithFallback = {
+  operator: 'graphQL',
+  fallback: [],
+  children: [
+    'query getUsersOrgs($userId: Int!) {\n  user(id: $userId) {\n    username\n    userOrganisations {\n      nodes {\n        organisation {\n          name\n          id\n        }\n      }\n    }\n  }\n}\n',
+    '',
+    ['userId'],
+    {
+      operator: 'objectProperties',
+      children: ['responses.user.id'],
+    },
+    'user.username',
+  ],
 }

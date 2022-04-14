@@ -4,7 +4,7 @@
   "name": "Create Scheduled Action",
   "description": "Adds a record to action_schedule table to schedule an action for some time in the future",
   "required_parameters": ["duration"],
-  "optional_parameters": ["tableName", "entityId", "applicationId", "templateId"],
+  "optional_parameters": ["eventCode", "applicationId", "templateId", "cancel", "data"],
   "output_properties": ["scheduledEvent"],
   "info": {
     "author": {

@@ -58,6 +58,7 @@ export interface ColumnDetailOutput {
   title: string
   code: string
   columnDefinitionMasterList: ColumnDefinitionMasterList
+  gqlFilters: object
   fieldNames: string[]
   headerDefinition: ColumnDefinition | undefined
   showLinkedApplications: boolean

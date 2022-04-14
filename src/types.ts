@@ -153,6 +153,8 @@ export interface FilePayload {
   template_id: number
   application_serial: string
   application_response_id: number
+  description: string
+  is_output_doc: boolean
   file_path: string
   thumbnail_path: string
   mimetype: string

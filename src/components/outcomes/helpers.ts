@@ -1,9 +1,10 @@
 import DBConnect from '../databaseConnect'
-import { getTokenData, extractJWTfromHeader } from '../permissions/loginHelpers'
 import { objectKeysToCamelCase } from '../utilityFunctions'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import fetch from 'node-fetch'
-import { camelCase, startCase } from 'lodash'
+import { camelCase, snakeCase, startCase } from 'lodash'
+// @ts-ignore
+import mapValuesDeep from 'map-values-deep'
 import {
   ColumnDefinition,
   ColumnDefinitionMasterList,
@@ -24,20 +25,37 @@ import { plural } from 'pluralize'
 const REST_OF_OUTCOME_FIELDS = '...'
 const graphQLEndpoint = config.graphQLendpoint
 
-export const getPermissionNamesFromJWT = async (request: any): Promise<string[]> => {
-  const { userId, orgId } = await getTokenData(extractJWTfromHeader(request))
-  return await (
+type JWTData = {
+  userId: number
+  orgId?: number
+  permissionNames: string[]
+}
+export const getPermissionNamesFromJWT = async (request: any): Promise<JWTData> => {
+  const { userId, orgId } = request.auth
+  const permissionNames = await (
     await DBConnect.getUserOrgPermissionNames(userId, orgId)
   ).map((result) => result.permissionName)
+  return { userId, orgId, permissionNames }
 }
 
-export const buildAllColumnDefinitions = async (
-  permissionNames: string[],
-  tableName: string,
+export const buildAllColumnDefinitions = async ({
+  permissionNames,
+  tableName,
+  type,
+  userId,
+  orgId,
+}: {
+  permissionNames: string[]
+  tableName: string
   type: 'TABLE' | 'DETAIL'
-): Promise<ColumnDetailOutput> => {
+  userId: number
+  orgId: number | undefined
+}): Promise<ColumnDetailOutput> => {
   // Look up allowed Outcome displays
-  const outcomeTables = await DBConnect.getAllTableNames()
+  const outcomeTables = (await DBConnect.getAllTableNames()).map((tableName) =>
+    camelCase(tableName)
+  )
+
   if (!outcomeTables.includes(tableName)) throw new Error(`Invalid table name: ${tableName}`)
 
   const outcomes = (await DBConnect.getAllowedOutcomeDisplays(permissionNames, tableName))
@@ -48,13 +66,16 @@ export const buildAllColumnDefinitions = async (
 
   const { title, code } = outcomes[0]
 
+  // Generate graphQL filter object
+  const gqlFilters = getFilters(outcomes, userId, orgId)
+
   // Only for details view
   const headerColumnName = outcomes[0]?.detailViewHeaderColumn ?? ''
   const showLinkedApplications = outcomes[0].showLinkedApplications
 
   // Get all Fields on Outcome table (schema query)
   const fields: { name: string; dataType: PostgresDataType }[] = (
-    await DBConnect.getOutcomeTableColumns(tableName)
+    await DBConnect.getOutcomeTableColumns(snakeCase(tableName))
   ).map(({ name, dataType }) => ({
     name: camelCase(name),
     dataType: dataTypeMap?.[dataType as PostgresDataType] ?? dataType,
@@ -98,10 +119,35 @@ export const buildAllColumnDefinitions = async (
     title: title ?? plural(startCase(tableName)),
     code,
     columnDefinitionMasterList,
+    gqlFilters,
     fieldNames,
     headerDefinition,
     showLinkedApplications,
   }
+}
+
+const getFilters = (
+  outcomes: OutcomeDisplay[],
+  userId: number,
+  orgId: number | undefined
+): object => {
+  // We're only interested in the highest priority restrictions
+  const restrictions =
+    outcomes[0].rowRestrictions == null || Object.keys(outcomes[0].rowRestrictions).length === 0
+      ? { id: { isNull: false } }
+      : outcomes[0].rowRestrictions
+  // Substitute userId/orgId placeholder with actual values
+  return mapValuesDeep(restrictions, (node: any) => {
+    if (typeof node !== 'string') return node
+    switch (node) {
+      case '$userId':
+        return userId
+      case '$orgId':
+        return orgId ?? 0
+      default:
+        return node
+    }
+  })
 }
 
 const buildColumnList = (

@@ -1,15 +1,5 @@
 #!/bin/bash
 
-if [[ ! -f /var/lib/postgresql/12/main/PG_VERSION ]]
-then
-   echo '---'
-   echo 'copying fresh db to new mounted volume'
-   echo '---'
-   cp -r ./fresh_db/* /var/lib/postgresql/12/main
-   chown -R postgres:postgres /var/lib/postgresql/12/*
-   chmod -R 0700 /var/lib/postgresql/12/*
-fi
-
 echo '---'
 echo '---'
 echo '--- STARTING POSTGRES'

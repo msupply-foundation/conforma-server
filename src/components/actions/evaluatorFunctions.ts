@@ -5,4 +5,8 @@ import { DateTime, Duration } from 'luxon'
 
 const generateExpiry = (duration: Duration) => DateTime.now().plus(duration).toJSDate()
 
-export default { generateExpiry }
+const getYear = () => new Date().getFullYear()
+
+const getFormattedDate = (formatString: string) => DateTime.now().toFormat(formatString)
+
+export default { generateExpiry, getYear, getFormattedDate }

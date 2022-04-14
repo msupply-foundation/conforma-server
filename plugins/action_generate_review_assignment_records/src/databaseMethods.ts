@@ -1,4 +1,5 @@
 import { PermissionPolicyType, ReviewAssignment } from '../../../src/generated/graphql'
+import { DeleteReviewAssignment, ExistingReviewAssignment } from './types'
 
 const databaseMethods = (DBConnect: any) => ({
   getLastStageNumber: async (applicationId: number) => {
@@ -12,6 +13,26 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [applicationId] })
       const responses = result.rows[0].max
       return responses
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
+
+  getLastReviewLevel: async (
+    applicationId: number,
+    stageNumber: number
+  ): Promise<number | null> => {
+    const text = `
+      SELECT MAX(level_number)
+        FROM application 
+        INNER JOIN template_stage ON template_stage.template_id = application.template_id 
+        INNER JOIN review_assignment ON review_assignment.application_id = application.id AND template_stage.number = review_assignment.stage_number
+        WHERE application.id = $1
+        AND stage_number = $2`
+    try {
+      const result = await DBConnect.query({ text, values: [applicationId, stageNumber] })
+      return result.rows[0]?.max ?? null
     } catch (err) {
       console.log(err.message)
       throw err
@@ -51,9 +72,13 @@ const databaseMethods = (DBConnect: any) => ({
     levelNumber: number
   ) => {
     const text = `
-    SELECT status, reviewer_id as "userId", is_locked as "isLocked"
-      FROM review_assignment
-      WHERE application_id = $1
+    SELECT 
+      status, 
+      reviewer_id as "userId", 
+      is_locked as "isLocked", 
+      is_self_assignable as "isSelfAssignable"
+    FROM review_assignment
+    WHERE application_id = $1
       AND stage_number = $2
       AND level_number = $3
       `
@@ -86,6 +111,7 @@ const databaseMethods = (DBConnect: any) => ({
         isLastStage,
         isFinalDecision,
         isLocked,
+        isSelfAssignable,
       } = reviewAssignment
       // Needs a slightly different query with different CONFLICT restrictions
       // depending on whether orgId exists or not.
@@ -97,9 +123,10 @@ const databaseMethods = (DBConnect: any) => ({
           status, application_id, allowed_sections,
           level_number, organisation_id, 
           is_last_level, is_last_stage,
-          is_final_decision, is_locked
+          is_final_decision, is_locked,
+          is_self_assignable 
           )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
         ON CONFLICT (reviewer_id, ${
           organisationId ? ' organisation_id,' : ''
         } stage_number, application_id, level_number)
@@ -125,6 +152,7 @@ const databaseMethods = (DBConnect: any) => ({
             isLastStage,
             isFinalDecision,
             isLocked,
+            isSelfAssignable,
           ],
         })
         reviewAssignmentIds.push(result.rows[0].id)
@@ -177,6 +205,34 @@ const databaseMethods = (DBConnect: any) => ({
       }
     }
     return reviewAssignmentAssignerJoinIds
+  },
+
+  removeReviewAssignments: async (reviewAssignments: DeleteReviewAssignment[]) => {
+    const reviewAssignmentIds = []
+    for (const reviewAssignment of reviewAssignments) {
+      const { userId: reviewerId, stageNumber, levelNumber, applicationId } = reviewAssignment
+
+      const text = `
+        DELETE FROM review_assignment 
+          WHERE reviewer_id = $1
+          AND stage_number = $2
+          AND level_number = $3
+          AND application_id = $4 
+        RETURNING id`
+
+      try {
+        const result = await DBConnect.query({
+          text,
+          values: [reviewerId, stageNumber, levelNumber, applicationId],
+        })
+        reviewAssignmentIds.push(result.rows[0].id)
+      } catch (err) {
+        console.log(err.message)
+        reviewAssignmentIds.push(err.message)
+        throw err
+      }
+    }
+    return reviewAssignmentIds
   },
 })
 

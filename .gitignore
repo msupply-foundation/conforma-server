@@ -40,6 +40,9 @@ typings/
 # File storage folder
 /files
 
+# Localisation folder -- gets restored from core_templates
+/localisation
+
 #GraphQL schema auto-generated
 database/schema.graphql
 database/schema.json
@@ -60,3 +63,6 @@ src/modules/expression-evaluator/expression-evaluate-gui/src/expression-evaluato
 #Snapshots working folder
 database/_snapshots
 database/snapshot_path_aliases.json
+
+#Other secrets
+testSecrets.json

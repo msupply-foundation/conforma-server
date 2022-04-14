@@ -4,7 +4,8 @@ CREATE TYPE public.review_status AS ENUM (
     'SUBMITTED',
     'CHANGES_REQUESTED',
     'PENDING',
-    'LOCKED'
+    'LOCKED',
+    'DISCONTINUED'
 );
 
 CREATE TABLE public.review_status_history (
@@ -91,18 +92,42 @@ CREATE FUNCTION public.submitted_assigned_questions_count (app_id int, stage_id 
     RETURNS bigint
     AS $$
     SELECT
-        COUNT(DISTINCT (rqa.template_element_id))
-    FROM
-        review
-    LEFT JOIN review_assignment ra ON review.review_assignment_id = ra.id
-    LEFT JOIN review_question_assignment rqa ON ra.id = rqa.review_assignment_id
-    LEFT JOIN review_status_history rsh ON review.id = rsh.review_id
+        COUNT(DISTINCT (te.id))
+    FROM (
+        SELECT
+            id,
+            application_id,
+            stage_id,
+            level_number,
+            status,
+            UNNEST(assigned_sections) AS section_code
+        FROM
+            review_assignment) ra
+    JOIN template_section ts ON ra.section_code = ts.code
+    JOIN template_element te ON ts.id = te.section_id
+    LEFT JOIN review ON review.review_assignment_id = ra.id
+    LEFT JOIN review_status_history rsh ON rsh.review_id = review.id
 WHERE
     ra.application_id = $1
     AND ra.stage_id = $2
     AND ra.level_number = $3
     AND ra.status = 'ASSIGNED'
+    AND te.category = 'QUESTION'
     AND rsh.status = 'SUBMITTED'
+    AND te.template_code = (
+        SELECT
+            code
+        FROM
+            TEMPLATE
+        WHERE
+            id = (
+                SELECT
+                    template_id
+                FROM
+                    application
+                WHERE
+                    id = $1))
 $$
 LANGUAGE sql
 STABLE;
+

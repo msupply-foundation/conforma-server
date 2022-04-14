@@ -64,12 +64,86 @@ class GraphQLdb {
     return data.review
   }
 
+  public getReviewDataFromAssignment = async (reviewAssignmentId: number) => {
+    const data = await this.gqlQuery(
+      `
+      query getReview($reviewAssignmentId: Int!) {
+        reviews(filter: { reviewAssignmentId: { equalTo: $reviewAssignmentId } }) {
+          nodes {
+            reviewId: id
+            levelNumber
+            isLastLevel
+            isLastStage
+            status
+            latestDecision {
+                decision
+                comment
+            }
+            reviewAssignment {
+              isLocked
+            }
+          }
+        }
+      }
+      `,
+      { reviewAssignmentId }
+    )
+    return data?.reviews?.nodes[0] || null
+  }
+
+  public isInternalOrg = async (orgId: number): Promise<boolean> => {
+    const data = await this.gqlQuery(
+      `
+      query getOrganisation($orgId: Int!) {
+        organisation(id: $orgId) {
+          isSystemOrg
+        }
+      }
+      `,
+      { orgId }
+    )
+    return data?.organisation?.isSystemOrg ?? false
+  }
+
   public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
     switch (tableName) {
       default:
         throw new Error('Method not yet implemented for this table')
     }
     // Not implemented yet -- needs more data in DB
+  }
+
+  public getAllApplicationTriggers = async (serial: string) => {
+    const data = await this.gqlQuery(
+      `
+      query getTriggers($serial: String!) {
+        applicationBySerial(serial: $serial) {
+          reviewAssignments {
+            nodes {
+              id
+              trigger
+            }
+          }
+          reviews {
+            nodes {
+              id
+              trigger
+            }
+          }
+          verifications {
+            nodes {
+              id
+              trigger
+            }
+          }
+          applicationId: id
+          applicationTrigger: trigger
+        }
+      }
+      `,
+      { serial }
+    )
+    return data?.applicationBySerial || null
   }
 }
 

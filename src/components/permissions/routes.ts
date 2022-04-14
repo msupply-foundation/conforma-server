@@ -1,10 +1,12 @@
 import databaseConnect from '../databaseConnect'
-import { getUserInfo, getTokenData, extractJWTfromHeader } from './loginHelpers'
+import { getUserInfo } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
 import { UserOrg } from '../../types'
+import { PermissionDetails } from '../permissions/types'
 import path from 'path'
 import { readFileSync } from 'fs'
+import { startCase } from 'lodash'
 import { getAppEntryPointDir } from '../utilityFunctions'
 
 const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
@@ -58,8 +60,8 @@ Authenticates user and checks they belong to requested org (id). Returns:
 */
 const routeLoginOrg = async (request: any, reply: any) => {
   const { orgId, sessionId } = request.body
-  const token = extractJWTfromHeader(request)
-  const { userId, error } = await getTokenData(token)
+
+  const { userId, error } = request.auth
   if (error) return reply.send({ success: false, message: error })
 
   const userInfo = await getUserInfo({ userId, orgId, sessionId })
@@ -73,8 +75,7 @@ template permissions and new JWT token
 */
 const routeUserInfo = async (request: any, reply: any) => {
   const { sessionId } = request.query
-  const token = extractJWTfromHeader(request)
-  const { userId, orgId, sessionId: returnSessionId, error } = await getTokenData(token)
+  const { userId, orgId, sessionId: returnSessionId, error } = request.auth
   if (error) return reply.send({ success: false, message: error })
 
   return reply.send({
@@ -83,13 +84,88 @@ const routeUserInfo = async (request: any, reply: any) => {
   })
 }
 
+const routeUserPermissions = async (request: any, reply: any) => {
+  const { auth, query } = request
+  if (!query || (!query.username && !query.orgId))
+    return reply.send({
+      success: false,
+      message: 'Missing username or orgId in query.',
+    })
+
+  const username = query?.username === '' ? null : query?.username ?? null
+  const orgId: number | null =
+    query?.orgId === 'null' || query?.orgId === '0'
+      ? null
+      : query?.orgId
+      ? Number(query.orgId)
+      : null
+
+  if (auth.error) return reply.send({ success: false, message: auth.console.error })
+
+  const isSystemOrg = orgId ? await databaseConnect.isInternalOrg(orgId) : false
+
+  const templatePermissionRows = await databaseConnect.getTemplatePermissions(isSystemOrg)
+
+  let grantedPermissions: string[] = []
+  let availablePermissions: string[] = []
+
+  if (username) {
+    // Get permissions for organisation and which have been granted to user
+    const userExistingPermissions = await databaseConnect.getUserTemplatePermissions(
+      username,
+      orgId
+    )
+
+    grantedPermissions = Array.from(
+      new Set(userExistingPermissions.map((p) => p.permissionName))
+    ).sort()
+    availablePermissions = Array.from(
+      new Set(
+        Object.values(templatePermissionRows)
+          .filter(({ permissionName }) => !grantedPermissions.includes(permissionName))
+          .map((p) => p.permissionName)
+      )
+    ).sort()
+  } else {
+    // Get permissions for organisation without association with as user
+    const orgExistingPermissions = await databaseConnect.getSystemOrgTemplatePermissions(
+      isSystemOrg
+    )
+    availablePermissions = Array.from(new Set(orgExistingPermissions.map((p) => p.perm))).sort()
+  }
+
+  // Store array of object per permissionNames with properties and an array of templateCodes
+  const templatePermissions: PermissionDetails[] = Object.values(
+    templatePermissionRows.reduce(
+      (templatePermissions, { permissionNameId, permissionName, templateCode, description }) => {
+        if (!templatePermissions[permissionName])
+          templatePermissions[permissionName] = {
+            id: permissionNameId,
+            name: permissionName,
+            description,
+            displayName: startCase(permissionName),
+            isUserGranted: grantedPermissions.includes(permissionName),
+            templateCodes: [],
+          }
+        if (
+          !!templateCode &&
+          !templatePermissions[permissionName].templateCodes.includes(templateCode)
+        )
+          templatePermissions[permissionName].templateCodes.push(templateCode)
+        return templatePermissions
+      },
+      {}
+    )
+  )
+
+  return reply.send({
+    templatePermissions,
+    grantedPermissions,
+    availablePermissions,
+  })
+}
+
 const routeUpdateRowPolicies = async (request: any, reply: any) => {
-  // const token = extractJWTfromHeader(request)
-  // const username = await getUsername(token)
-  // return reply.send(await getUserInfo(username))
-
-  // TO DO, check for admin
-
   // TODO, add parameters to only drop specific policies, for now drop and reinstante them all
 
   return reply.send(await updateRowPolicies())
@@ -122,7 +198,7 @@ const routeVerification = async (request: any, reply: any) => {
 // Serve prefs to front-end
 const routeGetPrefs = async (request: any, reply: any) => {
   const prefs = JSON.parse(
-    readFileSync(path.join(getAppEntryPointDir(), '../preferences.json'), 'utf8')
+    readFileSync(path.join(getAppEntryPointDir(), '../preferences/preferences.json'), 'utf8')
   )
   const languageOptions = JSON.parse(
     readFileSync(path.join(getAppEntryPointDir(), '../localisation/languages.json'), 'utf8')
@@ -130,12 +206,61 @@ const routeGetPrefs = async (request: any, reply: any) => {
   reply.send({ preferences: prefs.web, languageOptions })
 }
 
+// Unique name/email/organisation/other check
+const routecheckUnique = async (request: any, reply: any) => {
+  const { type, value, table, field } = request.query
+  if (value === '' || value === undefined) {
+    reply.send({
+      unique: false,
+      message: 'Value not provided',
+    })
+    return
+  }
+  let tableName, fieldName
+  switch (type) {
+    case 'username':
+      tableName = 'user'
+      fieldName = 'username'
+      break
+    case 'email':
+      tableName = 'user'
+      fieldName = 'email'
+      break
+    case 'organisation':
+      tableName = 'organisation'
+      fieldName = 'name'
+      break
+    default:
+      if (!table || !field) {
+        reply.send({
+          unique: false,
+          message: 'Type, table, or field missing or invalid',
+        })
+        return
+      } else {
+        tableName = table
+        fieldName = field
+      }
+  }
+  try {
+    const isUnique = await databaseConnect.isUnique(tableName, fieldName, value)
+    reply.send({
+      unique: isUnique,
+      message: '',
+    })
+  } catch (err) {
+    reply.send({ unique: false, message: err.message })
+  }
+}
+
 export {
   routeUserInfo,
+  routeUserPermissions,
   routeLogin,
   routeLoginOrg,
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
   routeGetPrefs,
+  routecheckUnique,
 }

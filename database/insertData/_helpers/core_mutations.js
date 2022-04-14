@@ -75,19 +75,19 @@ exports.coreActions = `
         }
     }
     {
-      actionCode: "changeStatus"
-      trigger: ON_REVIEW_CREATE
-      sequence: 2
-      condition: {
-        operator: "objectProperties"
-        children: [
-          "applicationData.reviewData.reviewAssignment.isLocked"
-        ]
-      }
-      parameterQueries: {
-        newStatus: "LOCKED"
-      }
-  }
+        actionCode: "changeStatus"
+        trigger: ON_REVIEW_CREATE
+        sequence: 2
+        condition: {
+          operator: "objectProperties"
+          children: [
+            "applicationData.reviewData.reviewAssignment.isLocked"
+          ]
+        }
+        parameterQueries: {
+          newStatus: "LOCKED"
+        }
+    }
     # ON_APPLICATION_SUBMIT
     # 1 - change status to SUBMITTED
     # 2 - trim responses
@@ -365,7 +365,56 @@ exports.coreActions = `
             children: ["applicationData.action_payload.trigger_payload.trigger"]
         }
         }
-    }   
+    }
+    # -------------------------------------------
+    # ON_REVIEW_REASSIGN
+    # 1 - change review (if existing) on re-assignment back to status DRAFT or LOCKED (according with assignment)
+    {
+      actionCode: "changeStatus"
+      trigger: ON_REVIEW_REASSIGN
+      sequence: 1
+      condition: {
+        operator: "objectProperties"
+        children: [
+          "applicationData.reviewData.reviewAssignment.isLocked"
+        ]
+      }
+      parameterQueries: {
+        isReview: true #Required since we're updating the review status
+        newStatus: {
+          operator: "?",
+          children: [
+          {
+            operator: "objectProperties",
+            children: [
+            "applicationData.reviewData.reviewAssignment.isLocked",
+            null
+            ]
+          },
+          "LOCKED",
+          "DRAFT"
+          ]
+        }
+      }
+    }
+    # -------------------------------------------
+    # ON_REVIEW_UNASSIGN
+    # 1 - change previous review un-assignment with status locked to also have review status DISCONTINUED
+    {
+      actionCode: "changeStatus"
+      trigger: ON_REVIEW_UNASSIGN
+      sequence: 1
+      condition: {
+        operator: "objectProperties"
+        children: [
+          "applicationData.reviewData.reviewAssignment.isLocked"
+        ]
+      }
+      parameterQueries: {
+        isReview: true #Required since we're updating the review status
+        newStatus: "DISCONTINUED"
+      }
+    }
     `
 
 /*

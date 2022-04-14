@@ -106,17 +106,19 @@ class DBConnect {
 
   public getApplicationResponses = PostgresDB.getApplicationResponses
 
+  public getSystemOrgTemplatePermissions = PostgresDB.getSystemOrgTemplatePermissions
+
   public getUserTemplatePermissions = PostgresDB.getUserTemplatePermissions
 
+  public getOrgTemplatePermissions = PostgresDB.getOrgTemplatePermissions
+
   public getAllPermissions = PostgresDB.getAllPermissions
+
+  public getTemplatePermissions = PostgresDB.getTemplatePermissions
 
   public getAllGeneratedRowPolicies = PostgresDB.getAllGeneratedRowPolicies
 
   public getUserOrgPermissionNames = PostgresDB.getUserOrgPermissionNames
-
-  public joinPermissionNameToUser = PostgresDB.joinPermissionNameToUser
-
-  public joinPermissionNameToUserOrg = PostgresDB.joinPermissionNameToUserOrg
 
   public getNumReviewLevels = PostgresDB.getNumReviewLevels
 
@@ -149,6 +151,12 @@ class DBConnect {
   public gqlQuery = GraphQLdb.gqlQuery
 
   public getReviewData = GraphQLdb.getReviewData
+
+  public getReviewDataFromAssignment = GraphQLdb.getReviewDataFromAssignment
+
+  public isInternalOrg = GraphQLdb.isInternalOrg
+
+  public getAllApplicationTriggers = GraphQLdb.getAllApplicationTriggers
 }
 
 const dbConnectInstance = DBConnect.Instance

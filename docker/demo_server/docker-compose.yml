@@ -3,7 +3,7 @@
 version: '3.9'
 services:
   app:
-    image: 'msupplyfoundation/mflow-demo:${TAG}'
+    image: 'msupplyfoundation/conforma-demo:${TAG}'
     ports:
       - '${PORT_APP}:3000'
     expose:
@@ -11,14 +11,26 @@ services:
     environment:
       SMTP_PASSWORD: '${SMTP_SECRET}'
       WEB_HOST: '${WEB_URL}'
+      JWT_SECRET: '${JWT_SECRET}'
     volumes:
-      - ./app_postgres_on_port_${PORT_APP}:/var/lib/postgresql/12/main/
-      - ./app_snapshots_on_port_${PORT_APP}:/usr/src/application-manager-server/build/database/_snapshots
-      - ./app_file_on_port_${PORT_APP}:/usr/src/application-manager-server/build/files
+      - postgres:/var/lib/postgresql/12/main/
+      - snapshots:/usr/src/application-manager-server/build/database/_snapshots
+      - files:/usr/src/application-manager-server/build/files
+      - localisation:/usr/src/application-manager-server/build/localisation
+      - preferences:/usr/src/application-manager-server/build/preferences
     tty: true
   grafana:
     image: 'grafana/grafana'
     ports:
       - '${PORT_DASH}:3000'
     volumes:
-      - ./grafana_on_port_${PORT_DASH}:/var/lib/grafana
+      - grafana:/var/lib/grafana
+
+volumes:
+  postgres:
+  snapshots:
+  files:
+  localisation:
+  preferences:
+  grafana:
+

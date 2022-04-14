@@ -1,33 +1,84 @@
+import { identity } from 'lodash'
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginInput } from '../../types'
+import databaseMethods from './databaseMethods'
 
 const grantPermissions = async ({ applicationData, parameters, DBConnect }: ActionPluginInput) => {
-  // Don't specify orgName/Id default because we might be wanting to add a
-  // permission without org restriction on it
-  const { username = applicationData?.username, orgName, orgId, permissionNames } = parameters
+  const db = databaseMethods(DBConnect)
+
+  // Don't specify default username/userId, orgName/Id default because we might
+  // be wanting to add a permission without org or user restriction on it
+  const { username, orgName, permissionNames } = parameters
+
   try {
-    console.log('\nGranting permissions:')
-    console.log({ username, orgName, orgId, permissionNames })
+    const userId =
+      parameters?.userId === null
+        ? null
+        : parameters?.userId ?? (await db.getUserIdFromUsername(username))
 
-    const permissionJoinIds = []
-    const outputNames = []
+    if (userId === undefined)
+      return {
+        status: ActionQueueStatus.Fail,
+        error_log: 'Invalid or missing userId or username',
+        output: {},
+      }
 
-    for (const permissionName of permissionNames) {
-      const permissionJoinId =
-        orgName || orgId // Can use either one to create a permission_join with a company
-          ? await DBConnect.joinPermissionNameToUserOrg(username, orgName || orgId, permissionName)
-          : await DBConnect.joinPermissionNameToUser(username, permissionName)
-      permissionJoinIds.push(permissionJoinId)
-      if (permissionJoinId) outputNames.push(permissionName)
-    }
-    return {
+    const orgId =
+      parameters?.orgId === null
+        ? null
+        : parameters?.orgId ?? (await db.getOrgIdFromOrgname(orgName))
+
+    if (orgId === undefined)
+      return {
+        status: ActionQueueStatus.Fail,
+        error_log: 'Invalid or missing orgId or orgName',
+        output: {},
+      }
+
+    if (!userId && !orgId)
+      return {
+        status: ActionQueueStatus.Fail,
+        error_log: 'user and org cannot both be null',
+        output: {},
+      }
+
+    const permissions = await db.getPermissionIdsFromNames(permissionNames)
+    console.log(permissions)
+
+    const outputObject = {
       status: ActionQueueStatus.Success,
       error_log: '',
-      output: {
-        permissionJoinIds,
-        permissionNames: outputNames,
-      },
+      output: {},
     }
+
+    if (permissions.length !== permissionNames.length)
+      outputObject.error_log = 'WARNING: At least one permission name was invalid '
+
+    console.log('\nGranting permissions:')
+    console.log(
+      `User: ${username ?? userId}, Org: ${orgName ?? orgId}: Permissions: ${permissions.map(
+        (p: { name: string }) => p.name
+      )}`
+    )
+
+    const grantedPermissions = []
+
+    for (const { id: permissionNameId, name: permissionName } of permissions) {
+      const permissionJoinId =
+        orgId && userId
+          ? // Both user and org
+            await db.joinPermissionToUserOrg(userId, orgId, permissionNameId)
+          : userId
+          ? // User only, no org
+            await db.joinPermissionToUser(userId, permissionNameId)
+          : // Org only, no user
+            orgId && (await db.joinPermissionToOrg(orgId, permissionNameId))
+      if (permissionJoinId)
+        grantedPermissions.push({ permissionName, permissionNameId, permissionJoinId })
+    }
+
+    outputObject.output = { grantedPermissions }
+    return outputObject
   } catch (error) {
     console.log(error)
     return {

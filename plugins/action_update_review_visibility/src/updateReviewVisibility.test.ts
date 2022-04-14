@@ -23,7 +23,7 @@ test('Test: updateReviewVisibility', () => {
         status: ActionQueueStatus.Success,
         error_log: '',
         output: {
-          reviewResponsesWithUpdatedVisibility: [4021, 4020],
+          reviewResponsesWithUpdatedVisibility: [4021, 4020, 10003],
         },
       })
     }

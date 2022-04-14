@@ -32,12 +32,15 @@ CREATE VIEW permissions_all AS (
         template_permission.id AS "templatePermissionId",
         "template".id AS "templateId",
         "user".id AS "userId",
+        permission_join.id AS "permissionJoinId",
         permission_join.organisation_id AS "orgId",
         CASE WHEN template_category.ui_location @> (ARRAY['USER']::public.ui_location[]) THEN
             TRUE
         ELSE
             FALSE
-        END AS "isUserCategory"
+        END AS "isUserCategory",
+        permission_name.is_system_org_permission AS "isSystemOrgPermission",
+        permission_join.is_active AS "isActive"
     FROM
         permission_name
         JOIN permission_join ON permission_join.permission_name_id = permission_name.id

@@ -8,7 +8,7 @@ const generateDoc: ActionPluginType = async ({
   // DBConnect,
   outputCumulative,
 }) => {
-  const { docTemplateId, additionalData } = parameters
+  const { options, docTemplateId, additionalData, description, isOutputDoc } = parameters
   const data = parameters?.data ?? { ...applicationData, ...outputCumulative, additionalData }
   const userId = parameters?.userId ?? applicationData?.userId
   const applicationSerial = parameters?.applicationSerial ?? applicationData?.applicationSerial
@@ -18,9 +18,12 @@ const generateDoc: ActionPluginType = async ({
     const result = await generatePDF({
       fileId: docTemplateId,
       data,
+      options,
       userId,
       templateId,
       applicationSerial,
+      description,
+      isOutputDoc,
     })
     return {
       status: ActionQueueStatus.Success,

@@ -16,6 +16,7 @@ export interface IConnection {
 export interface IGraphQLConnection {
   fetch: Function
   endpoint: string
+  headers?: { [key: string]: string }
 }
 
 export interface IParameters {
@@ -23,12 +24,14 @@ export interface IParameters {
   pgConnection?: IConnection
   graphQLConnection?: IGraphQLConnection
   APIfetch?: Function
+  headers?: { [key: string]: string }
 }
 
 export interface OperatorNode {
   operator: Operator
   type?: OutputType
   children?: Array<EvaluatorNode>
+  fallback?: any
   value?: ValueNode // deprecated
 }
 
@@ -46,6 +49,7 @@ type Operator =
   | '?'
   | 'REGEX'
   | 'objectProperties'
+  | 'objectFunctions'
   | 'stringSubstitution'
   | 'GET'
   | 'POST'

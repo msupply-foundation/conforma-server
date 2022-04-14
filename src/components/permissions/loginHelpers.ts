@@ -56,8 +56,13 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
 
   const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(
     newUsername,
-    orgId || null
+    orgId || null,
+    true
   )
+
+  // Also get org-only permissions
+  if (orgId)
+    templatePermissionRows.push(...(await databaseConnect.getOrgTemplatePermissions(orgId)))
 
   const selectedOrg = orgId ? orgList.filter((org) => org.orgId === orgId) : undefined
 
@@ -72,6 +77,7 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
       orgId,
       templatePermissionRows,
       sessionId: returnSessionId,
+      isAdmin,
     }),
     user: {
       userId: userId || newUserId,
@@ -106,7 +112,7 @@ const getSignedJWT = async (JWTelements: object) => {
 }
 
 const getAdminJWT = async () => {
-  return await signPromise({ ...baseJWT, role: 'postgres' }, config.jwtSecret)
+  return await signPromise({ ...baseJWT, isAdmin: true, role: 'postgres' }, config.jwtSecret)
 }
 
 export { extractJWTfromHeader, getUserInfo, getTokenData, getAdminJWT }

@@ -15,6 +15,7 @@ import {
   DEFAULT_OPTIONS_NAME,
   SNAPSHOT_FILE_NAME,
   OPTIONS_FILE_NAME,
+  INFO_FILE_NAME,
   PG_DIFF_CONFIG_FILE_NAME,
   PG_SCHEMA_DIFF_FILE_NAME,
   ROOT_FOLDER,
@@ -22,11 +23,16 @@ import {
   SNAPSHOT_OPTIONS_FOLDER,
   FILES_FOLDER,
   LOCALISATION_FOLDER,
+  SCHEMA_FILE_NAME,
   PREFERENCES_FILE,
   PG_DFF_JS_LOCATION,
-} from './constants'
+  DATABASE_FOLDER,
+} from '../../constants'
 import { getBaseFiles, getDirectoryFromPath } from './useSnapshot'
+import config from '../../config'
+import { DateTime } from 'luxon'
 const asyncRimRaf = promisify(rimraf)
+import { createDefaultDataFolders } from '../files/createDefaultFolders'
 
 const takeSnapshot: SnapshotOperation = async ({
   snapshotName = DEFAULT_SNAPSHOT_NAME,
@@ -34,6 +40,9 @@ const takeSnapshot: SnapshotOperation = async ({
   options: inOptions,
   extraOptions = {},
 }) => {
+  // Ensure relevant folders exist
+  createDefaultDataFolders()
+
   try {
     console.log(`taking snapshot, name: ${snapshotName}`)
 
@@ -84,6 +93,18 @@ const takeSnapshot: SnapshotOperation = async ({
     // Copy prefs
     if (options?.includePrefs) execSync(`cp '${PREFERENCES_FILE}' '${newSnapshotFolder}'`)
 
+    // Copy schema build script
+    if (options?.shouldReInitialise)
+      execSync(
+        `cat ${DATABASE_FOLDER}/buildSchema/*.sql >> ${newSnapshotFolder}/${SCHEMA_FILE_NAME}.sql`
+      )
+
+    // Save snapshot info (version, timestamp, etc)
+    await fs.writeFile(
+      path.join(newSnapshotFolder, `${INFO_FILE_NAME}.json`),
+      JSON.stringify(getSnapshotInfo(), null, ' ')
+    )
+
     await zipSnapshot(newSnapshotFolder, snapshotName)
 
     return { success: true, message: `created snapshot ${snapshotName}` }
@@ -124,6 +145,13 @@ const zipSnapshot = async (snapshotFolder: string, snapshotName: string) => {
       resolve('done')
     })
   )
+}
+
+const getSnapshotInfo = () => {
+  return {
+    timestamp: DateTime.now().toISOTime(),
+    version: config.version,
+  }
 }
 
 const getSchemaDiff = async (newSnapshotFolder: string) => {

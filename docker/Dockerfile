@@ -27,11 +27,7 @@ RUN apt-get install lsof -y
 RUN apt-get install nginx -y
 
 # --- LIBRE OFFICE
-# software-properties-common needed to add-apt-repository
-RUN apt-get install software-properties-common -y
-RUN add-apt-repository ppa:libreoffice/ppa -y
-RUN apt-get update
-RUN apt-get install libreoffice -y
+RUN apt install libreoffice -y
 
 # --- NODE and NPX
 ARG NODE_VERSION=14
@@ -47,7 +43,7 @@ ARG POSTGRES_VERSION=12
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list.d/pgdg.list
 RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add
 RUN apt-get update
-# make sure postgresql install is propmpt free
+# make sure postgresql install is prompt free
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get install -y postgresql-${POSTGRES_VERSION}
 
@@ -56,6 +52,9 @@ RUN curl -fsSL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 RUN apt-get update
 RUN apt-get install yarn -y
+
+# Uncomment following line to force Docker to skip cache from here on:
+# ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
 
 # --- ADD REPOS
 ARG SERVER_BRANCH=master
@@ -78,7 +77,7 @@ WORKDIR /usr/src/application-manager-web-app
 RUN cp .npmrc .npmrc_backup
 RUN echo "" >> .npmrc
 RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
-RUN sed -i "s/dev/front: ${SERVER_BRANCH} back: ${WEB_APP_BRANCH}/g" src/config.ts 
+RUN sed -i "s/dev/ ${SERVER_BRANCH}/g" src/config.ts 
 RUN yarn install
 RUN yarn build
 RUN rm .npmrc && mv .npmrc_backup .npmrc
@@ -91,11 +90,10 @@ WORKDIR /etc/postgresql/${POSTGRES_VERSION}/main
 RUN echo "listen_addresses = '*'" >> postgresql.conf
 COPY postgres_config/pg_hba.conf .
 
-ARG INITIAL_DATA_LOCALE=dev
-# --- INITIALISE DATABASE
+# --- INITIALISE DATABASE (core templates)
 WORKDIR /usr/src/initialise_database
 COPY database.sh .
-RUN ./database.sh ${INITIAL_DATA_LOCALE}
+RUN ./database.sh
 
 # --- CREATE LOG DIR
 WORKDIR /var/log/application_manager

@@ -1,0 +1,24 @@
+{
+  "type": "action_plugin",
+  "code": "refreshReviewAssignments",
+  "name": "Refresh User Review Assignment Records",
+  "description": "Re-generates ALL review assignments for all applications associated with specific user",
+  "required_parameters": [],
+  "optional_parameters": ["userId"],
+  "output_properties": ["updatedApplications"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "insert"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2021-11-29"
+  }
+}
