@@ -32,10 +32,10 @@ export function createDefaultDataFolders() {
     if (!fs.existsSync(FILES_FOLDER)) {
       makeFolder(FILES_FOLDER, 'Creating FILES folder')
       execSync(`cp -r '${BASE_SNAPSHOT_FOLDER}/files/.' '${FILES_FOLDER}'`)
-      // Restore generic thumbnails, they get wiped out during snapshot loading
-      makeFolder(path.join(GENERIC_THUMBNAILS_FOLDER))
-      execSync(`cp -r '${GENERIC_THUMBNAILS_SOURCE_FOLDER}/.' '${GENERIC_THUMBNAILS_FOLDER}'`)
     }
+    // Restore generic thumbnails, they get wiped out during snapshot loading
+    makeFolder(path.join(GENERIC_THUMBNAILS_FOLDER))
+    execSync(`cp -r '${GENERIC_THUMBNAILS_SOURCE_FOLDER}/.' '${GENERIC_THUMBNAILS_FOLDER}'`)
   } catch {
     console.log('\nProblem creating FILES folder\n')
   }
