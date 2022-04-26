@@ -130,8 +130,6 @@ const useSnapshot: SnapshotOperation = async ({
       console.log('enable row level policies ... done')
     }
 
-    createDefaultDataFolders()
-
     return { success: true, message: `snapshot loaded ${snapshotName}` }
   } catch (e) {
     return { success: false, message: 'error while loading snapshot', error: e.toString() }
