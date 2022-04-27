@@ -130,6 +130,9 @@ const useSnapshot: SnapshotOperation = async ({
       console.log('enable row level policies ... done')
     }
 
+    // To ensure generic thumbnails are not wiped out, even if server doesn't restart
+    createDefaultDataFolders()
+
     return { success: true, message: `snapshot loaded ${snapshotName}` }
   } catch (e) {
     return { success: false, message: 'error while loading snapshot', error: e.toString() }
