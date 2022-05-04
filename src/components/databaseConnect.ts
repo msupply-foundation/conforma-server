@@ -142,6 +142,8 @@ class DBConnect {
 
   public getOutcomeColumnDefinitions = PostgresDB.getOutcomeColumnDefinitions
 
+  public getApplicationSections = PostgresDB.getApplicationSections
+
   // GraphQL
 
   public gqlQuery = GraphQLdb.gqlQuery
