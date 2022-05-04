@@ -1,6 +1,6 @@
 {
   "name": "application-manager-server",
-  "version": "0.2.0-20",
+  "version": "0.2.0-21",
   "main": "server.js",
   "license": "MIT",
   "repository": {
