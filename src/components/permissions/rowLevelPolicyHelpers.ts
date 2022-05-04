@@ -206,8 +206,8 @@ const replacePlaceholders = (sql: string, permissionAbbreviation: string) => {
   const replacements = [
     {
       prefix: 'jwtUserDetails_bigint_',
-      prefixReplacement: `COALESCE(current_setting('jwt.claims.`,
-      postfix: `', true),'0')::integer`,
+      prefixReplacement: `COALESCE(nullif(current_setting('jwt.claims.`,
+      postfix: `', true),''),'0')::integer`,
     },
     {
       prefix: 'jwtUserDetails_text_',
@@ -216,8 +216,8 @@ const replacePlaceholders = (sql: string, permissionAbbreviation: string) => {
     },
     {
       prefix: 'jwtPermission_bigint_',
-      prefixReplacement: `COALESCE(current_setting('jwt.claims.${permissionAbbreviation}_`,
-      postfix: `', true),'0')::integer`,
+      prefixReplacement: `COALESCE(nullif(current_setting('jwt.claims.${permissionAbbreviation}_`,
+      postfix: `', true),''),'0')::integer`,
     },
     {
       prefix: 'jwtPermission_array_bigint_',
