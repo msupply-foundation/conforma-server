@@ -216,7 +216,9 @@ const migrateData = async () => {
     // New field description returned in permissions_all
     console.log(' - Add permission_all VIEW field: description')
 
-    await DB.changeSchema(`CREATE OR UPDATE VIEW permissions_all AS (
+    await DB.changeSchema(`
+    DROP VIEW IF EXISTS permissions_all;
+    CREATE OR REPLACE VIEW permissions_all AS (
     SELECT
         "user".username AS "username",
         organisation.name AS "orgName",
