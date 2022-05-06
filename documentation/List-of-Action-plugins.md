@@ -11,9 +11,6 @@
     - [How the record is built](#how-the-record-is-built)
   - [Generate Text String](#generate-text-string)
     - [Parameters summary](#parameters-summary)
-      - [String parameters](#string-parameters)
-      - [Update record parameters](#update-record-parameters)
-      - [More examples:](#more-examples)
   - [Join User to Organsation](#join-user-to-organsation)
   - [Grant Permissions](#grant-permissions)
   - [Revoke Permissions](#revoke-permissions)
@@ -538,9 +535,10 @@ Generates a PDF file based on a [Carbone](https://carbone.io/api-reference.html)
 | `appicationSerial`                       |                                            |
 | `templateId`                             |                                            |
 | `userId`                                 |                                            |
+| `data`                                   |                                            |
 | `additionalData`                         |                                            |
-| `description`                            |                                            |
 | `isOutputDoc`                            |                                            |
+| `description`                            |                                            |
 
 
 The Action utilises the internal `generatePDF` function, which is also accessible via the [`/generate-pdf` endpoint](API.md)
