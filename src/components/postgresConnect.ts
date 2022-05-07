@@ -47,7 +47,8 @@ class PostgresDB {
       }
       const payloadObject = JSON.parse(payload)
       // "data" is stored output from scheduled trigger or verification
-      const data = payloadObject?.trigger_payload?.data
+      // "data" can sometimes exceed the byte limit for notification payload, so must be fetched separately
+      const data = await this.getTriggerPayloadData(payloadObject.trigger_id)
       switch (channel) {
         case 'trigger_notifications':
           processTrigger(payloadObject)
@@ -65,6 +66,16 @@ class PostgresDB {
           deleteFile(payloadObject)
       }
     })
+  }
+
+  private getTriggerPayloadData = async (triggerId: number) => {
+    const text = `SELECT data FROM trigger_queue WHERE id = $1`
+    try {
+      const data = await this.query({ text, values: [triggerId] })
+      return data
+    } catch (err) {
+      throw err
+    }
   }
 
   public getValuesPlaceholders = (object: { [key: string]: any }) =>
