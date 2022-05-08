@@ -15,7 +15,11 @@ import {
   routeGetPrefs,
   routecheckUnique,
 } from './components/permissions'
-import { routeOutcomes, routeOutcomesTable, routeOutcomesDetail } from './components/outcomes'
+import {
+  routeDataDisplays,
+  routeDataDisplayTable,
+  routeDataDisplayDetail,
+} from './components/data_display'
 import { routeGeneratePDF } from './components/files/documentGenerate'
 import { saveFiles, getFilePath, filesFolder } from './components/files/fileHandler'
 import { createDefaultDataFolders } from './components/files/createDefaultFolders'
@@ -119,9 +123,9 @@ const startServer = async () => {
     server.post('/login-org', routeLoginOrg)
     server.post('/create-hash', routeCreateHash)
     server.post('/generate-pdf', routeGeneratePDF)
-    server.get('/outcomes', routeOutcomes)
-    server.get('/outcomes/table/:tableName', routeOutcomesTable)
-    server.get('/outcomes/table/:tableName/item/:id', routeOutcomesDetail)
+    server.get('/data-displays', routeDataDisplays)
+    server.get('/data-displays/table/:tableName', routeDataDisplayTable)
+    server.get('/data-displays/table/:tableName/item/:id', routeDataDisplayDetail)
     server.get('/check-triggers', routeTriggers)
 
     // File upload endpoint

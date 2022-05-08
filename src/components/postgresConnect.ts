@@ -931,7 +931,7 @@ class PostgresDB {
     }
   }
 
-  public getOutcomeTableColumns = async (tableName: string) => {
+  public getDataTableColumns = async (tableName: string) => {
     const text = `
       SELECT column_name as name,
       data_type as "dataType"
@@ -962,11 +962,11 @@ class PostgresDB {
 
   // OUTCOME QUERIES
 
-  public getAllowedOutcomeDisplays = async (userPermissions: string[], tableName: string = '%') => {
+  public getAllowedDataDisplays = async (userPermissions: string[], tableName: string = '%') => {
     // Returns any records that have ANY permissionNames in common with input
     // userPermissions, or are empty (i.e. public)
     const text = `
-      SELECT * FROM outcome_display
+      SELECT * FROM data_display
       WHERE (
               $1 && permission_names
               OR permission_names IS NULL
@@ -984,9 +984,9 @@ class PostgresDB {
     }
   }
 
-  public getOutcomeColumnDefinitions = async (tableName: string, columnMatches: string[]) => {
+  public getDataDisplayColumnDefinitions = async (tableName: string, columnMatches: string[]) => {
     const text = `
-      SELECT * FROM outcome_display_column_definition
+      SELECT * FROM data_display_column_definition
       WHERE table_name = $1
       AND column_name = ANY($2)
     `

@@ -134,13 +134,13 @@ class DBConnect {
 
   public getAllTableNames = PostgresDB.getAllTableNames
 
-  public getOutcomeTableColumns = PostgresDB.getOutcomeTableColumns
+  public getDataTableColumns = PostgresDB.getDataTableColumns
 
   public getPermissionPolicies = PostgresDB.getPermissionPolicies
 
-  public getAllowedOutcomeDisplays = PostgresDB.getAllowedOutcomeDisplays
+  public getAllowedDataDisplays = PostgresDB.getAllowedDataDisplays
 
-  public getOutcomeColumnDefinitions = PostgresDB.getOutcomeColumnDefinitions
+  public getDataDisplayColumnDefinitions = PostgresDB.getDataDisplayColumnDefinitions
 
   public getApplicationSections = PostgresDB.getApplicationSections
 

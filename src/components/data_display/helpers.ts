@@ -13,10 +13,10 @@ import {
   DetailsHeader,
   DisplayDefinition,
   LinkedApplication,
-  OutcomesDetailResponse,
-  OutcomesTableResponse,
+  DataDisplaysDetailResponse,
+  DataDisplaysTableResponse,
 } from './types'
-import { OutcomeDisplay, OutcomeDisplayColumnDefinition } from '../../generated/graphql'
+import { DataDisplay, DataDisplayColumnDefinition } from '../../generated/graphql'
 import dataTypeMap, { PostgresDataType } from './postGresToJSDataTypes'
 import config from '../../config'
 import { plural } from 'pluralize'
@@ -58,9 +58,9 @@ export const buildAllColumnDefinitions = async ({
 
   if (!outcomeTables.includes(tableName)) throw new Error(`Invalid table name: ${tableName}`)
 
-  const outcomes = (await DBConnect.getAllowedOutcomeDisplays(permissionNames, tableName))
+  const outcomes = (await DBConnect.getAllowedDataDisplays(permissionNames, tableName))
     .map((outcome) => objectKeysToCamelCase(outcome))
-    .sort((a, b) => b.priority - a.priority) as OutcomeDisplay[]
+    .sort((a, b) => b.priority - a.priority) as DataDisplay[]
 
   if (outcomes.length === 0) throw new Error(`No outcomes available for table "${tableName}"`)
 
@@ -75,7 +75,7 @@ export const buildAllColumnDefinitions = async ({
 
   // Get all Fields on Outcome table (schema query)
   const fields: { name: string; dataType: PostgresDataType }[] = (
-    await DBConnect.getOutcomeTableColumns(snakeCase(tableName))
+    await DBConnect.getDataTableColumns(snakeCase(tableName))
   ).map(({ name, dataType }) => ({
     name: camelCase(name),
     dataType: dataTypeMap?.[dataType as PostgresDataType] ?? dataType,
@@ -126,11 +126,7 @@ export const buildAllColumnDefinitions = async ({
   }
 }
 
-const getFilters = (
-  outcomes: OutcomeDisplay[],
-  userId: number,
-  orgId: number | undefined
-): object => {
+const getFilters = (outcomes: DataDisplay[], userId: number, orgId: number | undefined): object => {
   // We're only interested in the highest priority restrictions
   const restrictions =
     outcomes[0].rowRestrictions == null || Object.keys(outcomes[0].rowRestrictions).length === 0
@@ -151,7 +147,7 @@ const getFilters = (
 }
 
 const buildColumnList = (
-  outcomes: OutcomeDisplay[],
+  outcomes: DataDisplay[],
   fieldNames: string[],
   type: 'TABLE' | 'DETAIL'
 ): string[] => {
@@ -178,12 +174,12 @@ const buildColumnDisplayDefinitions = async (
   tableName: string,
   columns: string[]
 ): Promise<ColumnDisplayDefinitions> => {
-  const columnDefinitionArray = await DBConnect.getOutcomeColumnDefinitions(tableName, columns)
+  const columnDefinitionArray = await DBConnect.getDataDisplayColumnDefinitions(tableName, columns)
   const columnDisplayDefinitions: ColumnDisplayDefinitions = {}
   columnDefinitionArray.forEach((item) => {
     columnDisplayDefinitions[item.column_name] = objectKeysToCamelCase(
       item
-    ) as OutcomeDisplayColumnDefinition
+    ) as DataDisplayColumnDefinition
   })
   return columnDisplayDefinitions
 }
@@ -195,7 +191,7 @@ export const constructTableResponse = async (
   columnDefinitionMasterList: ColumnDefinitionMasterList,
   fetchedRecords: { id: number; [key: string]: any }[],
   totalCount: number
-): Promise<OutcomesTableResponse> => {
+): Promise<DataDisplaysTableResponse> => {
   // Build table headers, which also carry any additional display/format
   // definitions for each column
   const headerRow = columnDefinitionMasterList.map(
@@ -273,7 +269,7 @@ export const constructDetailsResponse = async (
   headerDefinition: ColumnDefinition,
   fetchedRecord: { id: number; [key: string]: any },
   linkedApplications: LinkedApplication[] | undefined
-): Promise<OutcomesDetailResponse> => {
+): Promise<DataDisplaysDetailResponse> => {
   const id = fetchedRecord.id
   const columns = columnDefinitionMasterList.map(({ columnName }) => columnName)
 

@@ -1,5 +1,5 @@
 -- Outcome display
-CREATE TABLE outcome_display (
+CREATE TABLE data_display (
     id serial PRIMARY KEY,
     table_name varchar NOT NULL,
     title varchar,
@@ -17,7 +17,7 @@ CREATE TABLE outcome_display (
 );
 
 -- For columns that require more detail format or evaluation definitions
-CREATE TABLE outcome_display_column_definition (
+CREATE TABLE data_display_column_definition (
     id serial PRIMARY KEY,
     table_name varchar,
     column_name varchar,
