@@ -87,6 +87,7 @@ const createOrUpdateTable = async (
 export default modifyRecord
 
 const getPostgresType = (value: any): string => {
+  if (value instanceof Date) return 'timestamptz'
   if (Array.isArray(value)) {
     const elementType = value.length > 0 ? getPostgresType(value[0]) : 'varchar'
     return `${elementType}[]`

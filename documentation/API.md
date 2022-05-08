@@ -468,11 +468,11 @@ POST: `/remove-language?code=<languageCode>`
 
 #### Snapshot endpoints
 
-- GET: `/snapshots/list`
-- POST: `/snapshots/take`
-- POST: `/snapshots/use`
-- POST: `/snapshots/upload`
-- POST: `/snapshots/delete`
+- GET: `/snapshot/list`
+- POST: `/snapshot/take`
+- POST: `/snapshot/use`
+- POST: `/snapshot/upload`
+- POST: `/snapshot/delete`
 
 See [Snapshot documentation](Snapshots.md) for more info
 
