@@ -216,7 +216,9 @@ const migrateData = async () => {
     // New field description returned in permissions_all
     console.log(' - Add permission_all VIEW field: description')
 
-    await DB.changeSchema(`CREATE OR UPDATE VIEW permissions_all AS (
+    await DB.changeSchema(`
+    DROP VIEW IF EXISTS permissions_all;
+    CREATE OR REPLACE VIEW permissions_all AS (
     SELECT
         "user".username AS "username",
         organisation.name AS "orgName",
@@ -249,7 +251,7 @@ const migrateData = async () => {
         permission_join.is_active AS "isActive"
     FROM
         permission_name
-        JOIN permission_join ON permission_join.permission_name_id = permission_name.id
+        LEFT JOIN permission_join ON permission_join.permission_name_id = permission_name.id
         JOIN permission_policy ON permission_policy.id = permission_name.permission_policy_id
         LEFT JOIN "user" ON permission_join.user_id = "user".id
         LEFT JOIN organisation ON permission_join.organisation_id = organisation.id
