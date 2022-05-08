@@ -257,35 +257,6 @@ const migrateData = async () => {
         LEFT JOIN "template" ON "template".id = template_permission.template_id
         LEFT JOIN template_category ON "template".template_category_id = template_category.id);`)
 
-    // Update pg_notify functions to not include possibly too-large payload data
-    console.log(' - Updating pg_notify functions for triggers')
-
-    await DB.changeSchema(`
-      CREATE OR REPLACE FUNCTION public.notify_trigger_queue ()
-      RETURNS TRIGGER
-      AS $trigger_event$
-        BEGIN
-            PERFORM
-                pg_notify('trigger_notifications', json_build_object('trigger_id', NEW.id, 'trigger', NEW.trigger_type, 'table', NEW.table, 'record_id', NEW.record_id, 'event_code', NEW.event_code)::text);
-            RETURN NULL;
-        END;
-        $trigger_event$
-        LANGUAGE plpgsql;`)
-
-    await DB.changeSchema(`
-        CREATE OR REPLACE FUNCTION public.notify_action_queue ()
-        RETURNS TRIGGER
-        AS $action_event$
-        BEGIN
-            -- IF NEW.status = 'QUEUED' THEN
-            PERFORM
-                pg_notify('action_notifications', json_build_object('id', NEW.id, 'code', NEW.action_code, 'condition_expression', NEW.condition_expression, 'parameter_queries', NEW.parameter_queries)::text);
-            -- END IF;
-            RETURN NULL;
-        END;
-        $action_event$
-        LANGUAGE plpgsql;`)
-
     console.log('Done migrating on v0.2.0...')
   }
 
