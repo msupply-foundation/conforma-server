@@ -46,17 +46,23 @@ class PostgresDB {
         return
       }
       const payloadObject = JSON.parse(payload)
-      // "data" is stored output from scheduled trigger or verification
-      // "data" can sometimes exceed the byte limit for notification payload, so must be fetched separately
-      const data = await this.getTriggerPayloadData(payloadObject.trigger_id)
       switch (channel) {
         case 'trigger_notifications':
-          processTrigger(payloadObject)
+          // "data" is stored output from scheduled trigger or verification
+          // "data" can sometimes exceed the byte limit for notification payload, so must be fetched separately
+          const data = await this.getTriggerPayloadData(payloadObject.trigger_id)
+          processTrigger({ ...payloadObject, data })
           break
         case 'action_notifications':
           // For Async Actions only
           try {
-            await executeAction(payloadObject, actionLibrary, data)
+            // Trigger payload fetched separately to avoid over-size payload error
+            const trigger_payload = await this.getTriggerPayload(payloadObject.id)
+            await executeAction(
+              { ...payloadObject, trigger_payload },
+              actionLibrary,
+              trigger_payload?.data
+            )
           } catch (err) {
             console.log(err.message)
           } finally {
@@ -68,11 +74,23 @@ class PostgresDB {
     })
   }
 
+  // Fetches data from trigger_queue for Action
   private getTriggerPayloadData = async (triggerId: number) => {
     const text = `SELECT data FROM trigger_queue WHERE id = $1`
     try {
-      const data = await this.query({ text, values: [triggerId] })
-      return data
+      const result = await this.query({ text, values: [triggerId] })
+      return result.rows[0].data
+    } catch (err) {
+      throw err
+    }
+  }
+
+  // Fetches trigger_payload from action_queue for async Action
+  private getTriggerPayload = async (actionId: number) => {
+    const text = `SELECT trigger_payload FROM action_queue WHERE id = $1`
+    try {
+      const result = await this.query({ text, values: [actionId] })
+      return result.rows[0].trigger_payload
     } catch (err) {
       throw err
     }
