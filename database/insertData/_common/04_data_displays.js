@@ -1,14 +1,14 @@
 exports.queries = [
   `mutation userOutcomes {
-    createOutcomeDisplay(
+    createDataDisplay(
       input: {
-        outcomeDisplay: {
+        dataDisplay: {
           code: "user"
           detailColumnName: "username"
           tableName: "user"
           pluralTableName: "users"
           title: "Users"
-          outcomeDisplayDetailsUsingId: {
+          dataDisplayDetailsUsingId: {
             create: [
               {
                 columnName: "firstName"
@@ -76,7 +76,7 @@ exports.queries = [
               }
             ]
           }
-          outcomeDisplayTablesUsingId: {
+          dataDisplayTablesUsingId: {
             create: [
               { columnName: "username", title: "Username", isTextColumn: true }
               { columnName: "firstName", title: "First Name", isTextColumn: true }
@@ -92,15 +92,15 @@ exports.queries = [
   }
   `,
   `mutation organisationOutcomes {
-    createOutcomeDisplay(
+    createDataDisplay(
       input: {
-        outcomeDisplay: {
+        dataDisplay: {
           code: "organisation"
           detailColumnName: "name"
           tableName: "organisation"
           pluralTableName: "organisations"
           title: "Organisations"
-          outcomeDisplayDetailsUsingId: {
+          dataDisplayDetailsUsingId: {
             create: [
               {
                 columnName: "registration"
@@ -187,7 +187,7 @@ exports.queries = [
               }
             ]
           }
-          outcomeDisplayTablesUsingId: {
+          dataDisplayTablesUsingId: {
             create: [
               { columnName: "name", title: "Organisation Name", isTextColumn: true }
               { columnName: "registration", title: "Registration Number", isTextColumn: true }
@@ -202,15 +202,15 @@ exports.queries = [
   }
   `,
   `mutation licenseOutcomes {
-    createOutcomeDisplay(
+    createDataDisplay(
       input: {
-        outcomeDisplay: {
+        dataDisplay: {
           code: "license"
           detailColumnName: "serial"
           tableName: "license"
           pluralTableName: "licenses"
           title: "Licenses"
-          outcomeDisplayDetailsUsingId: {
+          dataDisplayDetailsUsingId: {
             create: [
               {
                 columnName: "productType"
@@ -242,7 +242,7 @@ exports.queries = [
               }
             ]
           }
-          outcomeDisplayTablesUsingId: {
+          dataDisplayTablesUsingId: {
             create: [
               { columnName: "serial", title: "Serial", isTextColumn: true }
               { columnName: "productType", title: "Product type", isTextColumn: true }
