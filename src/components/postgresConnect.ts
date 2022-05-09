@@ -329,6 +329,19 @@ class PostgresDB {
     return responses
   }
 
+  public getApplicationSections = async (applicationId: number) => {
+    const text = `
+    SELECT template_section.code as code
+    FROM template_section 
+    JOIN template ON template_section.template_id = template.id
+    JOIN application on application.template_id = template.id
+    WHERE application.id = $1
+    `
+    const result = await this.query({ text, values: [applicationId] })
+    const responses = result.rows
+    return responses
+  }
+
   public getApplicationIdFromTrigger = async (tableName: string, recordId: number) => {
     let text: string
     switch (tableName) {
