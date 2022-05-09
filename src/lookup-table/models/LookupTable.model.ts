@@ -9,26 +9,26 @@ import {
 } from '../types'
 
 const LookupTableModel = () => {
-  const getAllRowsForTable = async ({ name, fieldMap }: LookupTableStructureFull) => {
+  const getAllRowsForTable = async ({ tableName, fieldMap }: LookupTableStructureFull) => {
     const mappedField = ({ label, fieldname }: FieldMapType) => `"${fieldname}" as "${label}"`
     const fields = fieldMap.map(mappedField).join(',')
-    const text = `SELECT ${fields} FROM data_table_${name}`
+    const text = `SELECT ${fields} FROM data_table_${tableName}`
     const result = await DBConnect.query({ text })
     return result.rows
   }
 
-  const createStructure = async ({ name: tableName, label, fieldMap }: LookupTableStructure) => {
+  const createStructure = async ({ tableName, name, fieldMap }: LookupTableStructure) => {
     try {
-      const text = `INSERT INTO data_table (name,label,field_map) VALUES ($1,$2,$3) RETURNING id`
+      const text = `INSERT INTO data_table (table_name,name,field_map, is_lookup_table) VALUES ($1,$2,$3, true) RETURNING id`
 
       const result: QueryResult<{ id: number }> = await DBConnect.query({
         text,
-        values: [tableName, label, JSON.stringify(fieldMap)],
+        values: [tableName, name, JSON.stringify(fieldMap)],
       })
 
       if (result.rows[0].id) return result.rows[0].id
 
-      throw new Error(`Lookup table structure '${label}' could not be created.`)
+      throw new Error(`Lookup table structure '${name}' could not be created.`)
     } catch (error) {
       throw error
     }
@@ -41,7 +41,7 @@ const LookupTableModel = () => {
           query getLookupTableStructure($id: Int!) {
             dataTable(id: $id) {
               id
-              label
+              tableName
               name
               fieldMap
             }
@@ -50,10 +50,10 @@ const LookupTableModel = () => {
         { id: lookupTableId }
       )
 
-      if (!result?.lookupTable?.id)
+      if (!result?.dataTable?.id)
         throw new Error(`Lookup table structure with id '${lookupTableId}' does not exist.`)
 
-      return result.lookupTable
+      return result.dataTable
     } catch (error) {
       throw error
     }
@@ -72,14 +72,14 @@ const LookupTableModel = () => {
         { name: lookupTableName }
       )
 
-      return result.lookupTables.totalCount as number
+      return result.dataTables.totalCount as number
     } catch (error) {
       throw error
     }
   }
 
   const createTable = async ({
-    name: tableName,
+    tableName,
     fieldMap: fieldMaps,
   }: LookupTableBase): Promise<boolean> => {
     try {

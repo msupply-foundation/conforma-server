@@ -7,13 +7,13 @@ import { ILookupTableNameValidator, IValidator } from '../utils/validations/type
 
 type LookupTableServiceProps = {
   tableId?: number
-  tableNameLabel?: string
+  name?: string
 }
 
 const LookupTableService = async (props: LookupTableServiceProps) => {
   let tableName = ''
   let tableId = 0
-  let tableNameLabel = ''
+  let name = ''
   let fieldMaps: FieldMapType[] = []
   let rows: object[] = []
   let dbFieldMap: any = []
@@ -24,15 +24,15 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
   if (props.tableId) {
     tableId = props.tableId
     structure = await lookupTableModel.getStructureById(tableId)
-  } else if (props.tableNameLabel) {
-    tableNameLabel = props.tableNameLabel
+  } else if (props.name) {
+    name = props.name
   }
 
   // Exported Methods
   const getAllRowsForTable = async () => await lookupTableModel.getAllRowsForTable(structure)
 
   const createTable = async () => {
-    tableName = toSnakeCase(tableNameLabel)
+    tableName = toSnakeCase(name)
 
     const lookupTableNameValidator: ILookupTableNameValidator = new LookupTableNameValidator({
       model: lookupTableModel,
@@ -56,13 +56,13 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
     const newTableFieldMap = [idField, ...fieldMaps]
 
     tableId = await lookupTableModel.createStructure({
-      name: tableName,
-      label: tableNameLabel,
+      tableName,
+      name,
       fieldMap: newTableFieldMap,
     })
 
     await lookupTableModel.createTable({
-      name: tableName,
+      tableName,
       fieldMap: newTableFieldMap,
     })
 
@@ -76,8 +76,8 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
   }
 
   const updateTable = async () => {
-    tableName = structure.name
-    tableNameLabel = structure.label
+    tableName = structure.tableName
+    name = structure.name
     tableId = structure.id
     dbFieldMap = structure.fieldMap
 
@@ -169,7 +169,10 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
 
   const compareFieldMaps = () => {
     fieldMaps = [...dbFieldMap, ...fieldMaps].filter(
-      ((set) => (obj: any) => (set.has(obj.label) ? false : set.add(obj.label)))(new Set())
+      (
+        (set) => (obj: any) =>
+          set.has(obj.label) ? false : set.add(obj.label)
+      )(new Set())
     )
 
     return {

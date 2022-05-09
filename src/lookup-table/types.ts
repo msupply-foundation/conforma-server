@@ -1,10 +1,10 @@
 type LookupTableBase = {
-  name: string
+  tableName: string
   fieldMap: FieldMapType[]
 }
 
 interface LookupTableStructure extends LookupTableBase {
-  label: string
+  name: string
 }
 
 interface LookupTableStructureFull extends LookupTableStructure {
