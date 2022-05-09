@@ -1,4 +1,4 @@
--- Outcome display
+-- Data displays
 CREATE TABLE data_display (
     id serial PRIMARY KEY,
     table_name varchar NOT NULL,
@@ -27,5 +27,14 @@ CREATE TABLE data_display_column_definition (
     additional_formatting jsonb,
     value_expression jsonb,
     UNIQUE (table_name, column_name)
+);
+
+-- Table for cataloguing all "data" tables, including lookup tables
+CREATE TABLE data (
+    id serial PRIMARY KEY,
+    table_name varchar NOT NULL UNIQUE,
+    name varchar,
+    field_map jsonb,
+    is_lookup_table boolean DEFAULT FALSE
 );
 

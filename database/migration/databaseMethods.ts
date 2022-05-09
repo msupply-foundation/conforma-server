@@ -77,6 +77,33 @@ const databaseMethods = {
       throw err
     }
   },
+  getLookupTableData: async () => {
+    const text = `SELECT * FROM lookup_table`
+    try {
+      const result = await DBConnect.query({ text })
+      return result.rows
+    } catch (err) {
+      throw err
+    }
+  },
+  insertDataTable: async (
+    tableName: string,
+    name: string,
+    fieldMap: string,
+    isLookupTable: boolean
+  ) => {
+    const text = `INSERT INTO data (table_name, name, field_map, is_lookup_table) VALUES($1, $2, $3, $4)`
+    try {
+      const result = await DBConnect.query({
+        text,
+        values: [tableName, name, fieldMap, isLookupTable],
+      })
+      return result.rows[0]
+    } catch (err) {
+      // Table record already exists, probably
+      console.log(err.message)
+    }
+  },
 }
 
 export default databaseMethods

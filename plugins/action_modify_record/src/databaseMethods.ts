@@ -59,6 +59,11 @@ const databaseMethods = (DBConnect: any) => {
           text,
           value: [tableName],
         })
+        // Also register new table in "data" table
+        await DBConnect.query({
+          text: `INSERT INTO data (table_name, name) VALUES($1, $2)`,
+          values: [tableName, 'Another table'],
+        })
       } catch (err) {
         console.log(err.message)
         throw new Error(`Failed to create table: ${tableName}`)
