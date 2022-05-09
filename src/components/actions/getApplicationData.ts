@@ -62,6 +62,8 @@ export const getApplicationData = async (input: {
     webHostUrl: process.env.WEB_HOST,
   }
 
+  const sectionCodes = (await DBConnect.getApplicationSections(applicationId)).map(({code} : { code: string }) => code)
+
   return {
     action_payload: input?.payload,
     ...applicationData,
@@ -69,5 +71,6 @@ export const getApplicationData = async (input: {
     responses: responseData,
     reviewData,
     environmentData,
+    sectionCodes
   }
 }

@@ -44,11 +44,11 @@ CREATE VIEW permissions_all AS (
         permission_join.is_active AS "isActive"
     FROM
         permission_name
-        JOIN permission_join ON permission_join.permission_name_id = permission_name.id
-        JOIN permission_policy ON permission_policy.id = permission_name.permission_policy_id
-        LEFT JOIN "user" ON permission_join.user_id = "user".id
-        LEFT JOIN organisation ON permission_join.organisation_id = organisation.id
-        LEFT JOIN template_permission ON template_permission.permission_name_id = permission_name.id
-        LEFT JOIN "template" ON "template".id = template_permission.template_id
-        LEFT JOIN template_category ON "template".template_category_id = template_category.id);
+    LEFT JOIN permission_join ON permission_join.permission_name_id = permission_name.id
+    JOIN permission_policy ON permission_policy.id = permission_name.permission_policy_id
+    LEFT JOIN "user" ON permission_join.user_id = "user".id
+    LEFT JOIN organisation ON permission_join.organisation_id = organisation.id
+    LEFT JOIN template_permission ON template_permission.permission_name_id = permission_name.id
+    LEFT JOIN "template" ON "template".id = template_permission.template_id
+    LEFT JOIN template_category ON "template".template_category_id = template_category.id);
 
