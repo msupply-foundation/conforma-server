@@ -95,6 +95,7 @@ export interface ActionApplicationData {
   dateOfBirth: Date | null
   email: string
   orgName: string | null
+  sectionCodes: string[]
   responses: {
     [key: string]: any
   }
