@@ -6,7 +6,7 @@ import { mapValues, get, snakeCase } from 'lodash'
 import { singular } from 'pluralize'
 
 // This will be prepended to NEW table created if not already present
-const DATA_TABLE_PREFIX = 'data_table_'
+export const DATA_TABLE_PREFIX = 'data_table_'
 
 // These are the only tables in the system that we allow to be mutated with this
 // plugin. All other names will have "data_table_" prepended.

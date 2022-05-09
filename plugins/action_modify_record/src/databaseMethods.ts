@@ -1,3 +1,5 @@
+import { DATA_TABLE_PREFIX } from './modifyRecord'
+
 const databaseMethods = (DBConnect: any) => {
   const createRecord = async (tableName: string, record: { [key: string]: any }) => {
     const text = `
@@ -62,7 +64,7 @@ const databaseMethods = (DBConnect: any) => {
         // Also register new table in "data" table
         await DBConnect.query({
           text: `INSERT INTO data_table (table_name, name) VALUES($1, $2)`,
-          values: [tableName, tableNameOriginal],
+          values: [tableName.replace(DATA_TABLE_PREFIX, ''), tableNameOriginal],
         })
       } catch (err) {
         console.log(err.message)
