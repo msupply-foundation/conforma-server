@@ -1,3 +1,4 @@
+import { singular } from 'pluralize'
 import { LookupTableModel } from '../models'
 import { FieldMapType, LookupTableStructureFull } from '../types'
 import { toCamelCase, toSnakeCase } from '../utils'
@@ -32,7 +33,7 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
   const getAllRowsForTable = async () => await lookupTableModel.getAllRowsForTable(structure)
 
   const createTable = async () => {
-    tableName = toSnakeCase(name)
+    tableName = toSnakeCase(singular(name))
 
     const lookupTableNameValidator: ILookupTableNameValidator = new LookupTableNameValidator({
       model: lookupTableModel,
