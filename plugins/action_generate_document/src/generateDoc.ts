@@ -1,6 +1,7 @@
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import { generatePDF } from '../../../src/components/files/documentGenerate'
+import { mapValues, get } from 'lodash'
 
 const generateDoc: ActionPluginType = async ({
   parameters,
@@ -8,16 +9,23 @@ const generateDoc: ActionPluginType = async ({
   // DBConnect,
   outputCumulative,
 }) => {
-  const { options, docTemplateId, additionalData, description, isOutputDoc } = parameters
-  const data = parameters?.data ?? { ...applicationData, ...outputCumulative, additionalData }
+  const { options, docTemplateId, data, additionalData, description, isOutputDoc } = parameters
   const userId = parameters?.userId ?? applicationData?.userId
   const applicationSerial = parameters?.applicationSerial ?? applicationData?.applicationSerial
   const templateId = parameters?.templateId ?? applicationData?.templateId
 
+  // Build full data object
+  const allData = {
+    ...applicationData,
+    ...outputCumulative,
+    ...mapValues(data, (property) => get(applicationData, property, null)),
+    additionalData,
+  }
+
   try {
     const result = await generatePDF({
       fileId: docTemplateId,
-      data,
+      data: allData,
       options,
       userId,
       templateId,
