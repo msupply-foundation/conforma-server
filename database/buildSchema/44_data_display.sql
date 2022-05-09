@@ -30,7 +30,7 @@ CREATE TABLE data_display_column_definition (
 );
 
 -- Table for cataloguing all "data" tables, including lookup tables
-CREATE TABLE data (
+CREATE TABLE data_table (
     id serial PRIMARY KEY,
     table_name varchar NOT NULL UNIQUE,
     name varchar,

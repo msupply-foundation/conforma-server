@@ -83,7 +83,8 @@ const databaseMethods = {
       const result = await DBConnect.query({ text })
       return result.rows
     } catch (err) {
-      throw err
+      // Lookup table probably already deleted
+      console.log(err.message)
     }
   },
   insertDataTable: async (
@@ -92,7 +93,7 @@ const databaseMethods = {
     fieldMap: string,
     isLookupTable: boolean
   ) => {
-    const text = `INSERT INTO data (table_name, name, field_map, is_lookup_table) VALUES($1, $2, $3, $4)`
+    const text = `INSERT INTO data_table (table_name, name, field_map, is_lookup_table) VALUES($1, $2, $3, $4)`
     try {
       const result = await DBConnect.query({
         text,

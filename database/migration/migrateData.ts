@@ -358,7 +358,7 @@ const migrateData = async () => {
     // Common "data" table
     console.log(' - Creating DATA table')
     await DB.changeSchema(`
-      CREATE TABLE data (
+      CREATE TABLE data_table (
           id serial PRIMARY KEY,
           table_name varchar NOT NULL UNIQUE,
           name varchar,
@@ -369,9 +369,11 @@ const migrateData = async () => {
 
     console.log(' - Moving lookup table data to data table')
     const lookupTableData = await DB.getLookupTableData()
-    for (const { name, label, field_map } of lookupTableData) {
-      await DB.changeSchema(`ALTER TABLE lookup_table_${name} RENAME TO data_table_${name}`)
-      await DB.insertDataTable(name, label, JSON.stringify(field_map), true)
+    if (lookupTableData) {
+      for (const { name, label, field_map } of lookupTableData) {
+        await DB.changeSchema(`ALTER TABLE lookup_table_${name} RENAME TO data_table_${name}`)
+        await DB.insertDataTable(name, label, JSON.stringify(field_map), true)
+      }
     }
     await DB.changeSchema(`DROP TABLE IF EXISTS lookup_table`)
 
