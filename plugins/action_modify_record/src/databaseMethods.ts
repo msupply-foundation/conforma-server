@@ -51,7 +51,7 @@ const databaseMethods = (DBConnect: any) => {
       }
     },
     createRecord,
-    createTable: async (tableName: string) => {
+    createTable: async (tableName: string, tableNameOriginal: string) => {
       const text = `CREATE TABLE "${tableName}" ( id serial PRIMARY KEY)`
       console.log('creating table with statement: ', text)
       try {
@@ -62,7 +62,7 @@ const databaseMethods = (DBConnect: any) => {
         // Also register new table in "data" table
         await DBConnect.query({
           text: `INSERT INTO data (table_name, name) VALUES($1, $2)`,
-          values: [tableName, 'Another table'],
+          values: [tableName, tableNameOriginal],
         })
       } catch (err) {
         console.log(err.message)
