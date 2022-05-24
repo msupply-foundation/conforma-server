@@ -259,6 +259,95 @@ const migrateData = async () => {
         LEFT JOIN "template" ON "template".id = template_permission.template_id
         LEFT JOIN template_category ON "template".template_category_id = template_category.id);`)
 
+    // Fix review_actions to only return active applications
+    console.log(' - Fix review_actions to only return active applications')
+
+    await DB.changeSchema(`
+    CREATE OR REPLACE FUNCTION review_list (stageid int, reviewerid int)
+    RETURNS TABLE (
+        application_id int,
+        reviewer_action public.reviewer_action
+    )
+    AS $$
+    SELECT
+        review_assignment.application_id AS application_id,
+        CASE WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'CHANGES_REQUESTED') != 0 THEN
+            'UPDATE_REVIEW'
+        WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'PENDING') != 0 THEN
+            'RESTART_REVIEW'
+        WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'DRAFT'
+            AND is_locked = FALSE) != 0 THEN
+            'CONTINUE_REVIEW'
+        WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+            AND review_assignment.is_final_decision = TRUE
+            AND review_assignment.is_last_stage = TRUE
+            AND review = NULL) != 0 THEN
+            'MAKE_DECISION'
+        WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+            AND review.id IS NULL) != 0 THEN
+            'START_REVIEW'
+        WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'AVAILABLE'
+            AND is_self_assignable = TRUE
+            AND (review = NULL
+            OR is_locked = FALSE)) != 0 THEN
+            'SELF_ASSIGN'
+        WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+            OR review_status_history.status = 'SUBMITTED') != 0 THEN
+            'VIEW_REVIEW'
+        ELSE
+            NULL
+        END::public.reviewer_action
+    FROM
+        review_assignment
+    LEFT JOIN review ON review.review_assignment_id = review_assignment.id
+    LEFT JOIN review_status_history ON (review_status_history.review_id = review.id
+            AND is_current = TRUE)
+    WHERE
+        review_assignment.stage_id = $1
+        AND review_assignment.reviewer_id = $2
+        AND (
+            SELECT
+                outcome
+            FROM
+                application
+            WHERE
+                id = review_assignment.application_id) = 'PENDING'
+    GROUP BY
+        review_assignment.application_id;
+    $$
+    LANGUAGE sql
+    STABLE;
+    `)
+
+    // Update pg_notify functions to not include possibly too-large payload data
+    console.log(' - Updating pg_notify functions for triggers')
+
+    await DB.changeSchema(`
+      CREATE OR REPLACE FUNCTION public.notify_trigger_queue ()
+      RETURNS TRIGGER
+      AS $trigger_event$
+        BEGIN
+            PERFORM
+                pg_notify('trigger_notifications', json_build_object('trigger_id', NEW.id, 'trigger', NEW.trigger_type, 'table', NEW.table, 'record_id', NEW.record_id, 'event_code', NEW.event_code)::text);
+            RETURN NULL;
+        END;
+        $trigger_event$
+        LANGUAGE plpgsql;`)
+
+    await DB.changeSchema(`
+        CREATE OR REPLACE FUNCTION public.notify_action_queue ()
+        RETURNS TRIGGER
+        AS $action_event$
+        BEGIN
+            -- IF NEW.status = 'QUEUED' THEN
+            PERFORM
+                pg_notify('action_notifications', json_build_object('id', NEW.id, 'code', NEW.action_code, 'condition_expression', NEW.condition_expression, 'parameter_queries', NEW.parameter_queries)::text);
+            -- END IF;
+            RETURN NULL;
+        END;
+        $action_event$
+        LANGUAGE plpgsql;`)
+
     console.log('Done migrating on v0.2.0...')
   }
 
