@@ -438,14 +438,17 @@ POST: `/enable-language?code=<languageCode>&enabled=<true/false>`
 POST: `/install-language`
 - To install a a new language into the system.
 
+GET: `/all-languages`
+- Fetches all languages in a single bundle. Used by the "Export as CSV" feature.
+
 **Input parameters** (as body JSON) example:
 ```
 {
     "language": {
-        "languageName": "Portugese",
-        "description": "Portugese translation for Angola users",
-        "code": "pt_an",
-        "flag": "🇦🇴",
+        "languageName": "Portuguese",
+        "description": "Portuguese translation",
+        "code": "pt_br",
+        "flag": "🇧🇷",
         "enabled": true
     },
     "strings": {
@@ -460,7 +463,7 @@ POST: `/install-language`
 ```
 {
     "success": true,
-    "message": "Language installed: Portugese / pt_an"
+    "message": "Language installed: Portuguese / pt_br"
 }
 ```
 
