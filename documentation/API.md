@@ -468,6 +468,7 @@ GET: `/all-languages`
 ```
 
 POST: `/remove-language?code=<languageCode>`
+- uninstalls the language from the server
 
 #### Snapshot endpoints
 
