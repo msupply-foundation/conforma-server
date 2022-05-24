@@ -309,16 +309,16 @@ The return object contains:
 
 The internal function called by this endpoint is the same one run by the ["generateDoc" action](List-of-Action-plugins.md).
 
-### Data Display
+### Data Views
 
 GET:
-`/data-display`
-`/data-display/table/<tableName>`
-`/data-display/table/<tableName>/item/<id>`
+`/data-views`
+`/data-views/table/<tableName>`
+`/data-views/table/<tableName>/item/<id>`
 
 For displaying custom data (e.g. Users, Products, Orgs). User's JWT determines what they are allowed to see, and data is returned accordingly.
 
-Please see [Data Display](Data-Display.md) for more info.
+Please see [Data View](Data-View.md) for more info.
 
 ---
 

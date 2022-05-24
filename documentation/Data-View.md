@@ -1,34 +1,34 @@
-# Data Display
+# Data Views
 
 <!-- toc -->
 
 ## Contents
   - [API](#api)
   - [Configuration](#configuration)
-    - [`data_displays` table](#data_display-table)
-    - [`data_display_column_definition` table](#data_display_column_definition-table)
+    - [`data_view` table](#data_display-table)
+    - [`data_view_column_definition` table](#data_display_column_definition-table)
     - [Additional formatting](#additional-formatting)
     - [A note about Array data](#a-note-about-array-data)
   - [Real use-case example](#real-use-case-example)
 
-Display of (custom) **Data** tables (e.g. Products, Users, Orgs) (or any table, strictly speaking) can be configured for viewing in the UI by setting entries in the `data_display` and `data_display_column_definition` database tables. This allows us to set:
+Display of (custom) **Data** tables (e.g. Products, Users, Orgs) (or any table, strictly speaking) can be configured for viewing in the UI by setting entries in the `data_view` and `data_view_column_definition` database tables. This allows us to set:
 
 - who is allowed to see them
 - what columns to show different types of user
 - "special" columns, which show the result of an [evaluator](Query-Syntax.md) expression, so can show some fields combined, or queries to another table, for example
 - how columns should be formatted in the UI
 
-The data is served to the front-end via the `/data-displays` API end-points, and serves data based on the request's JWT header, so we can ensure that no user can receive data that they haven't been configured to be allowed to see.
+The data is served to the front-end via the `/data-views` API end-points, and serves data based on the request's JWT header, so we can ensure that no user can receive data that they haven't been configured to be allowed to see.
 
-The database's row-level permissions ensure that only allowed rows are returned to the user, and the logic in the "outcomes" code returns allowed columns. We also support custom "rowRestrictions" for limiting the individual records a given user is allowed to see (see below).
+The database's row-level permissions ensure that only allowed rows are returned to the user, and the logic in the "dataViews" code returns allowed columns. We also support custom "rowRestrictions" for limiting the individual records a given user is allowed to see (see below).
 
 ## API
 
 Custom data is available at the following endpoints:
 
-### `/data-displays`
+### `/data-views`
 
-Returns an array of data tables the user is allowed to see (based on JWT header), formatted as follows:
+Returns an array of data table views the user is allowed to see (based on JWT header), formatted as follows:
 
 ```
 [
@@ -43,7 +43,7 @@ Returns an array of data tables the user is allowed to see (based on JWT header)
 
 This endpoint is called in order to populate the Database menu in the UI.
 
-### `/data-displays/table/<tableName>?<queries>`
+### `/data-views/table/<tableName>?<queries>`
 
 For querying a specific table. Data is returned in the following structure:
 
@@ -106,7 +106,7 @@ Query parameters are (currently) as follows:
 
 Eventually, there will be additional parameters for searching and filtering -- not yet implemented
 
-### `/data-displays/table/<tableName>/item/<id>`
+### `/data-views/table/<tableName>/item/<id>`
 
 Fetches data about a single item, for display in data "Details" view. Data is returned in the following format:
 
@@ -193,9 +193,9 @@ Note the different types of data returned and the formatting instructions. Also,
 
 ## Configuration
 
-### `data_display` table
+### `data_view` table
 
-In order to make outcome data available to the front-end, the minimal configuration requirements are a single entry in the `data_display` table with the following fields provided:
+In order to make outcome data available to the front-end, the minimal configuration requirements are a single entry in the `data_view` table with the following fields provided:
 
 - `table_name` -- name of the table we are displaying
 - `code` a unique (per table) identifier
@@ -206,7 +206,7 @@ However, we normally want to not show every field, and not to every user, so fur
 
 Different configurations of fields and who can see them can be set up for each table, so for convenience, we are calling a single configuation a "layout"
 
-The following fields are also configurable in "data_display" layouts:
+The following fields are also configurable in "data_view" layouts:
 
 - `title`: the name of the "view" that shows in the "Database" menu and as the Header of the table (e.g. "Users"). Default is just the tableName converted to plural Title Case, e.g. `user` => "Users"
 - `permissionNames`: an array of permissions names that the request requires (via JWT) in order to see this Layout. Default is an empty array, and both that and `null` allow full access (i.e. no restrictions)
@@ -221,11 +221,11 @@ Some things to be aware of:
 - `show_linked_applications`: if `true`, the `/item` endpoint will also return an array of linked applications connected to this particular item. These are taken from the outcome "join" tables, whose records are created on successful application approvals.
 - `priority`: when multiple layouts match the request (i.e. user has permissions for more than one Layout), the returned columns will be a union of the columns specified in both layouts. However,there will still only be one "Title" and "Header column" returned and each layout may have a different one, so the layout with the highest priority will be used. In general you'd want to give the more "restrcited" permission the higher priority, but most of the time you won't need to consider this as the Title and Header would often be the same. Default value: `1`.
 
-Okay, so if you're just wanting to display fields directly taken from the outcome table in question, and the formatting requirements are all "simple" types (text, number, boolean, Date) the `data_display` table is all you need. However, if you want to return columns with more complex data (such as a list of ingredients, or a query to another table) or require non-default formatting, you'll need to define these in the `data_display_column_definition` table.
+Okay, so if you're just wanting to display fields directly taken from the outcome table in question, and the formatting requirements are all "simple" types (text, number, boolean, Date) the `data_view` table is all you need. However, if you want to return columns with more complex data (such as a list of ingredients, or a query to another table) or require non-default formatting, you'll need to define these in the `data_view_column_definition` table.
 
-### `data_display_column_definition` table
+### `data_view_column_definition` table
 
-As mentioned, this table is for defining how to return columns with specifications beyond that which can be defined in the `data_display` table.
+As mentioned, this table is for defining how to return columns with specifications beyond that which can be defined in the `data_view` table.
 
 The input fields are as follows:
 
@@ -276,7 +276,7 @@ If a column value is an array, then the array will be interpreted as a Markdown 
 
 ## Real use-case example
 
-Here is an `data_display` entry for showing Organisations:
+Here is a `data_view` entry for showing Organisations:
 
 ```
 {
@@ -323,9 +323,9 @@ This layout describe how to display the `organisation` table. It will have the t
 - In Details view, the page Header will be the value from the `name` field (which is why it made sense to exclude it from the list of fields to show)
 - We also are allowed to see a list of Linked Applications in Details view
 
-We now define three columns with custom definitions in `data_display_column_definition`: `logoUrl`, `registrationDocumentation` and `members`. That means that the other two will just use their field name as column title, and the values in those fields will be shown as plain text.
+We now define three columns with custom definitions in `data_view_column_definition`: `logoUrl`, `registrationDocumentation` and `members`. That means that the other two will just use their field name as column title, and the values in those fields will be shown as plain text.
 
-Let's look at the custom column definitions one by one (from `data_display_column_definition`):
+Let's look at the custom column definitions one by one (from `data_view_column_definition`):
 
 **logoUrl**
 
@@ -418,8 +418,8 @@ This is the most sophisticated display field -- it shows a clickable list of use
 
 All up, these definitions will be interpreted by the front-end and displayed in a Table view that looks like this:
 
-![Table View](images/data-display-table-view.png)
+![Table View](images/data-view-table-view.png)
 
 And a Details view like this:
 
-![Details View](images/data-display-detail-view.png)
+![Details View](images/data-view-detail-view.png)

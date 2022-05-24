@@ -138,9 +138,9 @@ class DBConnect {
 
   public getPermissionPolicies = PostgresDB.getPermissionPolicies
 
-  public getAllowedDataDisplays = PostgresDB.getAllowedDataDisplays
+  public getAllowedDataViews = PostgresDB.getAllowedDataViews
 
-  public getDataDisplayColumnDefinitions = PostgresDB.getDataDisplayColumnDefinitions
+  public getDataViewColumnDefinitions = PostgresDB.getDataViewColumnDefinitions
 
   public getApplicationSections = PostgresDB.getApplicationSections
 

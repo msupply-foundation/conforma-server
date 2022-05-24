@@ -1,5 +1,5 @@
--- Data displays
-CREATE TABLE data_display (
+-- Data table display configs
+CREATE TABLE data_view (
     id serial PRIMARY KEY,
     table_name varchar NOT NULL,
     title varchar,
@@ -17,7 +17,7 @@ CREATE TABLE data_display (
 );
 
 -- For columns that require more detail format or evaluation definitions
-CREATE TABLE data_display_column_definition (
+CREATE TABLE data_view_column_definition (
     id serial PRIMARY KEY,
     table_name varchar,
     column_name varchar,

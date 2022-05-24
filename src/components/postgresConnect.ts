@@ -960,13 +960,13 @@ class PostgresDB {
     }
   }
 
-  // OUTCOME QUERIES
+  // DATA TABLE / VIEWS QUERIES
 
-  public getAllowedDataDisplays = async (userPermissions: string[], tableName: string = '%') => {
+  public getAllowedDataViews = async (userPermissions: string[], tableName: string = '%') => {
     // Returns any records that have ANY permissionNames in common with input
     // userPermissions, or are empty (i.e. public)
     const text = `
-      SELECT * FROM data_display
+      SELECT * FROM data_view
       WHERE (
               $1 && permission_names
               OR permission_names IS NULL
@@ -984,9 +984,9 @@ class PostgresDB {
     }
   }
 
-  public getDataDisplayColumnDefinitions = async (tableName: string, columnMatches: string[]) => {
+  public getDataViewColumnDefinitions = async (tableName: string, columnMatches: string[]) => {
     const text = `
-      SELECT * FROM data_display_column_definition
+      SELECT * FROM data_view_column_definition
       WHERE table_name = $1
       AND column_name = ANY($2)
     `

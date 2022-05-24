@@ -12,23 +12,23 @@ import {
   queryLinkedApplications,
 } from './gqlDynamicQueries'
 import { camelCase } from 'lodash'
-import { ColumnDefinition, LinkedApplication, DataDisplaysResponse } from './types'
+import { ColumnDefinition, LinkedApplication, DataViewsResponse } from './types'
 
-const routeDataDisplays = async (request: any, reply: any) => {
+const routeDataViews = async (request: any, reply: any) => {
   const { permissionNames } = await getPermissionNamesFromJWT(request)
-  const dataDisplays = await DBConnect.getAllowedDataDisplays(permissionNames)
-  const distinctDataDisplays = getDistinctObjects(dataDisplays, 'table_name', 'priority')
-  const dataDisplayResponse: DataDisplaysResponse = distinctDataDisplays.map(
+  const dataViews = await DBConnect.getAllowedDataViews(permissionNames)
+  const distinctDataViews = getDistinctObjects(dataViews, 'table_name', 'priority')
+  const dataViewResponse: DataViewsResponse = distinctDataViews.map(
     ({ table_name, title, code }) => ({
       tableName: camelCase(table_name),
       title,
       code,
     })
   )
-  return reply.send(dataDisplayResponse)
+  return reply.send(dataViewResponse)
 }
 
-const routeDataDisplayTable = async (request: any, reply: any) => {
+const routeDataViewTable = async (request: any, reply: any) => {
   const authHeaders = request?.headers?.authorization
   const tableName = camelCase(request.params.tableName)
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
@@ -74,7 +74,7 @@ const routeDataDisplayTable = async (request: any, reply: any) => {
   return reply.send(response)
 }
 
-const routeDataDisplayDetail = async (request: any, reply: any) => {
+const routeDataViewDetail = async (request: any, reply: any) => {
   const authHeaders = request?.headers?.authorization
   const tableName = camelCase(request.params.tableName)
   const recordId = Number(request.params.id)
@@ -117,4 +117,4 @@ const routeDataDisplayDetail = async (request: any, reply: any) => {
   return reply.send(response)
 }
 
-export { routeDataDisplays, routeDataDisplayTable, routeDataDisplayDetail }
+export { routeDataViews, routeDataViewTable, routeDataViewDetail }

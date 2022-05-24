@@ -1,3 +1,3 @@
-import { routeDataDisplays, routeDataDisplayTable, routeDataDisplayDetail } from './routes'
+import { routeDataViews, routeDataViewTable, routeDataViewDetail } from './routes'
 
-export { routeDataDisplays, routeDataDisplayTable, routeDataDisplayDetail }
+export { routeDataViews, routeDataViewTable, routeDataViewDetail }
