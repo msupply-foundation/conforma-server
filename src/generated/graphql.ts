@@ -5222,70 +5222,70 @@ export type CreateCounterPayloadCounterEdgeArgs = {
   orderBy?: Maybe<Array<CountersOrderBy>>;
 };
 
-/** All input for the create `DataDisplayColumnDefinition` mutation. */
-export type CreateDataDisplayColumnDefinitionInput = {
+/** All input for the create `DataViewColumnDefinition` mutation. */
+export type CreateDataViewColumnDefinitionInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataDisplayColumnDefinition` to be created by this mutation. */
-  dataDisplayColumnDefinition: DataDisplayColumnDefinitionInput;
+  /** The `DataViewColumnDefinition` to be created by this mutation. */
+  dataViewColumnDefinition: DataViewColumnDefinitionInput;
 };
 
-/** The output of our create `DataDisplayColumnDefinition` mutation. */
-export type CreateDataDisplayColumnDefinitionPayload = {
-  __typename?: 'CreateDataDisplayColumnDefinitionPayload';
+/** The output of our create `DataViewColumnDefinition` mutation. */
+export type CreateDataViewColumnDefinitionPayload = {
+  __typename?: 'CreateDataViewColumnDefinitionPayload';
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataDisplayColumnDefinition` that was created by this mutation. */
-  dataDisplayColumnDefinition?: Maybe<DataDisplayColumnDefinition>;
+  /** The `DataViewColumnDefinition` that was created by this mutation. */
+  dataViewColumnDefinition?: Maybe<DataViewColumnDefinition>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** An edge for our `DataDisplayColumnDefinition`. May be used by Relay 1. */
-  dataDisplayColumnDefinitionEdge?: Maybe<DataDisplayColumnDefinitionsEdge>;
+  /** An edge for our `DataViewColumnDefinition`. May be used by Relay 1. */
+  dataViewColumnDefinitionEdge?: Maybe<DataViewColumnDefinitionsEdge>;
 };
 
 
-/** The output of our create `DataDisplayColumnDefinition` mutation. */
-export type CreateDataDisplayColumnDefinitionPayloadDataDisplayColumnDefinitionEdgeArgs = {
-  orderBy?: Maybe<Array<DataDisplayColumnDefinitionsOrderBy>>;
+/** The output of our create `DataViewColumnDefinition` mutation. */
+export type CreateDataViewColumnDefinitionPayloadDataViewColumnDefinitionEdgeArgs = {
+  orderBy?: Maybe<Array<DataViewColumnDefinitionsOrderBy>>;
 };
 
-/** All input for the create `DataDisplay` mutation. */
-export type CreateDataDisplayInput = {
+/** All input for the create `DataView` mutation. */
+export type CreateDataViewInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataDisplay` to be created by this mutation. */
-  dataDisplay: DataDisplayInput;
+  /** The `DataView` to be created by this mutation. */
+  dataView: DataViewInput;
 };
 
-/** The output of our create `DataDisplay` mutation. */
-export type CreateDataDisplayPayload = {
-  __typename?: 'CreateDataDisplayPayload';
+/** The output of our create `DataView` mutation. */
+export type CreateDataViewPayload = {
+  __typename?: 'CreateDataViewPayload';
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataDisplay` that was created by this mutation. */
-  dataDisplay?: Maybe<DataDisplay>;
+  /** The `DataView` that was created by this mutation. */
+  dataView?: Maybe<DataView>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** An edge for our `DataDisplay`. May be used by Relay 1. */
-  dataDisplayEdge?: Maybe<DataDisplaysEdge>;
+  /** An edge for our `DataView`. May be used by Relay 1. */
+  dataViewEdge?: Maybe<DataViewsEdge>;
 };
 
 
-/** The output of our create `DataDisplay` mutation. */
-export type CreateDataDisplayPayloadDataDisplayEdgeArgs = {
-  orderBy?: Maybe<Array<DataDisplaysOrderBy>>;
+/** The output of our create `DataView` mutation. */
+export type CreateDataViewPayloadDataViewEdgeArgs = {
+  orderBy?: Maybe<Array<DataViewsOrderBy>>;
 };
 
 /** All input for the create `ElementTypePlugin` mutation. */
@@ -6447,8 +6447,8 @@ export type CreateVerificationPayloadVerificationEdgeArgs = {
 };
 
 
-export type DataDisplay = Node & {
-  __typename?: 'DataDisplay';
+export type DataView = Node & {
+  __typename?: 'DataView';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
@@ -6466,8 +6466,8 @@ export type DataDisplay = Node & {
   priority?: Maybe<Scalars['Int']>;
 };
 
-export type DataDisplayColumnDefinition = Node & {
-  __typename?: 'DataDisplayColumnDefinition';
+export type DataViewColumnDefinition = Node & {
+  __typename?: 'DataViewColumnDefinition';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
@@ -6481,10 +6481,10 @@ export type DataDisplayColumnDefinition = Node & {
 };
 
 /**
- * A condition to be used against `DataDisplayColumnDefinition` object types. All
+ * A condition to be used against `DataViewColumnDefinition` object types. All
  * fields are tested for equality and combined with a logical ‘and.’
  */
-export type DataDisplayColumnDefinitionCondition = {
+export type DataViewColumnDefinitionCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `tableName` field. */
@@ -6503,8 +6503,8 @@ export type DataDisplayColumnDefinitionCondition = {
   valueExpression?: Maybe<Scalars['JSON']>;
 };
 
-/** A filter to be used against `DataDisplayColumnDefinition` object types. All fields are combined with a logical ‘and.’ */
-export type DataDisplayColumnDefinitionFilter = {
+/** A filter to be used against `DataViewColumnDefinition` object types. All fields are combined with a logical ‘and.’ */
+export type DataViewColumnDefinitionFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `tableName` field. */
@@ -6522,15 +6522,15 @@ export type DataDisplayColumnDefinitionFilter = {
   /** Filter by the object’s `valueExpression` field. */
   valueExpression?: Maybe<JsonFilter>;
   /** Checks for all expressions in this list. */
-  and?: Maybe<Array<DataDisplayColumnDefinitionFilter>>;
+  and?: Maybe<Array<DataViewColumnDefinitionFilter>>;
   /** Checks for any expressions in this list. */
-  or?: Maybe<Array<DataDisplayColumnDefinitionFilter>>;
+  or?: Maybe<Array<DataViewColumnDefinitionFilter>>;
   /** Negates the expression. */
-  not?: Maybe<DataDisplayColumnDefinitionFilter>;
+  not?: Maybe<DataViewColumnDefinitionFilter>;
 };
 
-/** An input for mutations affecting `DataDisplayColumnDefinition` */
-export type DataDisplayColumnDefinitionInput = {
+/** An input for mutations affecting `DataViewColumnDefinition` */
+export type DataViewColumnDefinitionInput = {
   id?: Maybe<Scalars['Int']>;
   tableName?: Maybe<Scalars['String']>;
   columnName?: Maybe<Scalars['String']>;
@@ -6541,8 +6541,8 @@ export type DataDisplayColumnDefinitionInput = {
   valueExpression?: Maybe<Scalars['JSON']>;
 };
 
-/** Represents an update to a `DataDisplayColumnDefinition`. Fields that are set will be updated. */
-export type DataDisplayColumnDefinitionPatch = {
+/** Represents an update to a `DataViewColumnDefinition`. Fields that are set will be updated. */
+export type DataViewColumnDefinitionPatch = {
   id?: Maybe<Scalars['Int']>;
   tableName?: Maybe<Scalars['String']>;
   columnName?: Maybe<Scalars['String']>;
@@ -6553,30 +6553,30 @@ export type DataDisplayColumnDefinitionPatch = {
   valueExpression?: Maybe<Scalars['JSON']>;
 };
 
-/** A connection to a list of `DataDisplayColumnDefinition` values. */
-export type DataDisplayColumnDefinitionsConnection = {
-  __typename?: 'DataDisplayColumnDefinitionsConnection';
-  /** A list of `DataDisplayColumnDefinition` objects. */
-  nodes: Array<Maybe<DataDisplayColumnDefinition>>;
-  /** A list of edges which contains the `DataDisplayColumnDefinition` and cursor to aid in pagination. */
-  edges: Array<DataDisplayColumnDefinitionsEdge>;
+/** A connection to a list of `DataViewColumnDefinition` values. */
+export type DataViewColumnDefinitionsConnection = {
+  __typename?: 'DataViewColumnDefinitionsConnection';
+  /** A list of `DataViewColumnDefinition` objects. */
+  nodes: Array<Maybe<DataViewColumnDefinition>>;
+  /** A list of edges which contains the `DataViewColumnDefinition` and cursor to aid in pagination. */
+  edges: Array<DataViewColumnDefinitionsEdge>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `DataDisplayColumnDefinition` you could get from the connection. */
+  /** The count of *all* `DataViewColumnDefinition` you could get from the connection. */
   totalCount: Scalars['Int'];
 };
 
-/** A `DataDisplayColumnDefinition` edge in the connection. */
-export type DataDisplayColumnDefinitionsEdge = {
-  __typename?: 'DataDisplayColumnDefinitionsEdge';
+/** A `DataViewColumnDefinition` edge in the connection. */
+export type DataViewColumnDefinitionsEdge = {
+  __typename?: 'DataViewColumnDefinitionsEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']>;
-  /** The `DataDisplayColumnDefinition` at the end of the edge. */
-  node?: Maybe<DataDisplayColumnDefinition>;
+  /** The `DataViewColumnDefinition` at the end of the edge. */
+  node?: Maybe<DataViewColumnDefinition>;
 };
 
-/** Methods to use when ordering `DataDisplayColumnDefinition`. */
-export enum DataDisplayColumnDefinitionsOrderBy {
+/** Methods to use when ordering `DataViewColumnDefinition`. */
+export enum DataViewColumnDefinitionsOrderBy {
   Natural = 'NATURAL',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
@@ -6599,10 +6599,10 @@ export enum DataDisplayColumnDefinitionsOrderBy {
 }
 
 /**
- * A condition to be used against `DataDisplay` object types. All fields are tested
+ * A condition to be used against `DataView` object types. All fields are tested
  * for equality and combined with a logical ‘and.’
  */
-export type DataDisplayCondition = {
+export type DataViewCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `tableName` field. */
@@ -6631,8 +6631,8 @@ export type DataDisplayCondition = {
   priority?: Maybe<Scalars['Int']>;
 };
 
-/** A filter to be used against `DataDisplay` object types. All fields are combined with a logical ‘and.’ */
-export type DataDisplayFilter = {
+/** A filter to be used against `DataView` object types. All fields are combined with a logical ‘and.’ */
+export type DataViewFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `tableName` field. */
@@ -6660,15 +6660,15 @@ export type DataDisplayFilter = {
   /** Filter by the object’s `priority` field. */
   priority?: Maybe<IntFilter>;
   /** Checks for all expressions in this list. */
-  and?: Maybe<Array<DataDisplayFilter>>;
+  and?: Maybe<Array<DataViewFilter>>;
   /** Checks for any expressions in this list. */
-  or?: Maybe<Array<DataDisplayFilter>>;
+  or?: Maybe<Array<DataViewFilter>>;
   /** Negates the expression. */
-  not?: Maybe<DataDisplayFilter>;
+  not?: Maybe<DataViewFilter>;
 };
 
-/** An input for mutations affecting `DataDisplay` */
-export type DataDisplayInput = {
+/** An input for mutations affecting `DataView` */
+export type DataViewInput = {
   id?: Maybe<Scalars['Int']>;
   tableName: Scalars['String'];
   title?: Maybe<Scalars['String']>;
@@ -6684,8 +6684,8 @@ export type DataDisplayInput = {
   priority?: Maybe<Scalars['Int']>;
 };
 
-/** Represents an update to a `DataDisplay`. Fields that are set will be updated. */
-export type DataDisplayPatch = {
+/** Represents an update to a `DataView`. Fields that are set will be updated. */
+export type DataViewPatch = {
   id?: Maybe<Scalars['Int']>;
   tableName?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
@@ -6701,30 +6701,30 @@ export type DataDisplayPatch = {
   priority?: Maybe<Scalars['Int']>;
 };
 
-/** A connection to a list of `DataDisplay` values. */
-export type DataDisplaysConnection = {
-  __typename?: 'DataDisplaysConnection';
-  /** A list of `DataDisplay` objects. */
-  nodes: Array<Maybe<DataDisplay>>;
-  /** A list of edges which contains the `DataDisplay` and cursor to aid in pagination. */
-  edges: Array<DataDisplaysEdge>;
+/** A connection to a list of `DataView` values. */
+export type DataViewsConnection = {
+  __typename?: 'DataViewsConnection';
+  /** A list of `DataView` objects. */
+  nodes: Array<Maybe<DataView>>;
+  /** A list of edges which contains the `DataView` and cursor to aid in pagination. */
+  edges: Array<DataViewsEdge>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `DataDisplay` you could get from the connection. */
+  /** The count of *all* `DataView` you could get from the connection. */
   totalCount: Scalars['Int'];
 };
 
-/** A `DataDisplay` edge in the connection. */
-export type DataDisplaysEdge = {
-  __typename?: 'DataDisplaysEdge';
+/** A `DataView` edge in the connection. */
+export type DataViewsEdge = {
+  __typename?: 'DataViewsEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']>;
-  /** The `DataDisplay` at the end of the edge. */
-  node?: Maybe<DataDisplay>;
+  /** The `DataView` at the end of the edge. */
+  node?: Maybe<DataView>;
 };
 
-/** Methods to use when ordering `DataDisplay`. */
-export enum DataDisplaysOrderBy {
+/** Methods to use when ordering `DataView`. */
+export enum DataViewsOrderBy {
   Natural = 'NATURAL',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
@@ -7298,19 +7298,19 @@ export type DeleteCounterPayloadCounterEdgeArgs = {
   orderBy?: Maybe<Array<CountersOrderBy>>;
 };
 
-/** All input for the `deleteDataDisplayByNodeId` mutation. */
-export type DeleteDataDisplayByNodeIdInput = {
+/** All input for the `deleteDataViewByNodeId` mutation. */
+export type DeleteDataViewByNodeIdInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `DataDisplay` to be deleted. */
+  /** The globally unique `ID` which will identify a single `DataView` to be deleted. */
   nodeId: Scalars['ID'];
 };
 
-/** All input for the `deleteDataDisplayByTableNameAndCode` mutation. */
-export type DeleteDataDisplayByTableNameAndCodeInput = {
+/** All input for the `deleteDataViewByTableNameAndCode` mutation. */
+export type DeleteDataViewByTableNameAndCodeInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
@@ -7320,19 +7320,19 @@ export type DeleteDataDisplayByTableNameAndCodeInput = {
   code: Scalars['String'];
 };
 
-/** All input for the `deleteDataDisplayColumnDefinitionByNodeId` mutation. */
-export type DeleteDataDisplayColumnDefinitionByNodeIdInput = {
+/** All input for the `deleteDataViewColumnDefinitionByNodeId` mutation. */
+export type DeleteDataViewColumnDefinitionByNodeIdInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `DataDisplayColumnDefinition` to be deleted. */
+  /** The globally unique `ID` which will identify a single `DataViewColumnDefinition` to be deleted. */
   nodeId: Scalars['ID'];
 };
 
-/** All input for the `deleteDataDisplayColumnDefinitionByTableNameAndColumnName` mutation. */
-export type DeleteDataDisplayColumnDefinitionByTableNameAndColumnNameInput = {
+/** All input for the `deleteDataViewColumnDefinitionByTableNameAndColumnName` mutation. */
+export type DeleteDataViewColumnDefinitionByTableNameAndColumnNameInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
@@ -7342,8 +7342,8 @@ export type DeleteDataDisplayColumnDefinitionByTableNameAndColumnNameInput = {
   columnName: Scalars['String'];
 };
 
-/** All input for the `deleteDataDisplayColumnDefinition` mutation. */
-export type DeleteDataDisplayColumnDefinitionInput = {
+/** All input for the `deleteDataViewColumnDefinition` mutation. */
+export type DeleteDataViewColumnDefinitionInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
@@ -7352,31 +7352,31 @@ export type DeleteDataDisplayColumnDefinitionInput = {
   id: Scalars['Int'];
 };
 
-/** The output of our delete `DataDisplayColumnDefinition` mutation. */
-export type DeleteDataDisplayColumnDefinitionPayload = {
-  __typename?: 'DeleteDataDisplayColumnDefinitionPayload';
+/** The output of our delete `DataViewColumnDefinition` mutation. */
+export type DeleteDataViewColumnDefinitionPayload = {
+  __typename?: 'DeleteDataViewColumnDefinitionPayload';
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataDisplayColumnDefinition` that was deleted by this mutation. */
-  dataDisplayColumnDefinition?: Maybe<DataDisplayColumnDefinition>;
-  deletedDataDisplayColumnDefinitionNodeId?: Maybe<Scalars['ID']>;
+  /** The `DataViewColumnDefinition` that was deleted by this mutation. */
+  dataViewColumnDefinition?: Maybe<DataViewColumnDefinition>;
+  deletedDataViewColumnDefinitionNodeId?: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** An edge for our `DataDisplayColumnDefinition`. May be used by Relay 1. */
-  dataDisplayColumnDefinitionEdge?: Maybe<DataDisplayColumnDefinitionsEdge>;
+  /** An edge for our `DataViewColumnDefinition`. May be used by Relay 1. */
+  dataViewColumnDefinitionEdge?: Maybe<DataViewColumnDefinitionsEdge>;
 };
 
 
-/** The output of our delete `DataDisplayColumnDefinition` mutation. */
-export type DeleteDataDisplayColumnDefinitionPayloadDataDisplayColumnDefinitionEdgeArgs = {
-  orderBy?: Maybe<Array<DataDisplayColumnDefinitionsOrderBy>>;
+/** The output of our delete `DataViewColumnDefinition` mutation. */
+export type DeleteDataViewColumnDefinitionPayloadDataViewColumnDefinitionEdgeArgs = {
+  orderBy?: Maybe<Array<DataViewColumnDefinitionsOrderBy>>;
 };
 
-/** All input for the `deleteDataDisplay` mutation. */
-export type DeleteDataDisplayInput = {
+/** All input for the `deleteDataView` mutation. */
+export type DeleteDataViewInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
@@ -7385,27 +7385,27 @@ export type DeleteDataDisplayInput = {
   id: Scalars['Int'];
 };
 
-/** The output of our delete `DataDisplay` mutation. */
-export type DeleteDataDisplayPayload = {
-  __typename?: 'DeleteDataDisplayPayload';
+/** The output of our delete `DataView` mutation. */
+export type DeleteDataViewPayload = {
+  __typename?: 'DeleteDataViewPayload';
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataDisplay` that was deleted by this mutation. */
-  dataDisplay?: Maybe<DataDisplay>;
-  deletedDataDisplayNodeId?: Maybe<Scalars['ID']>;
+  /** The `DataView` that was deleted by this mutation. */
+  dataView?: Maybe<DataView>;
+  deletedDataViewNodeId?: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** An edge for our `DataDisplay`. May be used by Relay 1. */
-  dataDisplayEdge?: Maybe<DataDisplaysEdge>;
+  /** An edge for our `DataView`. May be used by Relay 1. */
+  dataViewEdge?: Maybe<DataViewsEdge>;
 };
 
 
-/** The output of our delete `DataDisplay` mutation. */
-export type DeleteDataDisplayPayloadDataDisplayEdgeArgs = {
-  orderBy?: Maybe<Array<DataDisplaysOrderBy>>;
+/** The output of our delete `DataView` mutation. */
+export type DeleteDataViewPayloadDataViewEdgeArgs = {
+  orderBy?: Maybe<Array<DataViewsOrderBy>>;
 };
 
 /** All input for the `deleteElementTypePluginByNodeId` mutation. */
@@ -10424,10 +10424,10 @@ export type Mutation = {
   createApplicationStatusHistory?: Maybe<CreateApplicationStatusHistoryPayload>;
   /** Creates a single `Counter`. */
   createCounter?: Maybe<CreateCounterPayload>;
-  /** Creates a single `DataDisplay`. */
-  createDataDisplay?: Maybe<CreateDataDisplayPayload>;
-  /** Creates a single `DataDisplayColumnDefinition`. */
-  createDataDisplayColumnDefinition?: Maybe<CreateDataDisplayColumnDefinitionPayload>;
+  /** Creates a single `DataView`. */
+  createDataView?: Maybe<CreateDataViewPayload>;
+  /** Creates a single `DataViewColumnDefinition`. */
+  createDataViewColumnDefinition?: Maybe<CreateDataViewColumnDefinitionPayload>;
   /** Creates a single `ElementTypePlugin`. */
   createElementTypePlugin?: Maybe<CreateElementTypePluginPayload>;
   /** Creates a single `File`. */
@@ -10534,18 +10534,18 @@ export type Mutation = {
   updateCounter?: Maybe<UpdateCounterPayload>;
   /** Updates a single `Counter` using a unique key and a patch. */
   updateCounterByName?: Maybe<UpdateCounterPayload>;
-  /** Updates a single `DataDisplay` using its globally unique id and a patch. */
-  updateDataDisplayByNodeId?: Maybe<UpdateDataDisplayPayload>;
-  /** Updates a single `DataDisplay` using a unique key and a patch. */
-  updateDataDisplay?: Maybe<UpdateDataDisplayPayload>;
-  /** Updates a single `DataDisplay` using a unique key and a patch. */
-  updateDataDisplayByTableNameAndCode?: Maybe<UpdateDataDisplayPayload>;
-  /** Updates a single `DataDisplayColumnDefinition` using its globally unique id and a patch. */
-  updateDataDisplayColumnDefinitionByNodeId?: Maybe<UpdateDataDisplayColumnDefinitionPayload>;
-  /** Updates a single `DataDisplayColumnDefinition` using a unique key and a patch. */
-  updateDataDisplayColumnDefinition?: Maybe<UpdateDataDisplayColumnDefinitionPayload>;
-  /** Updates a single `DataDisplayColumnDefinition` using a unique key and a patch. */
-  updateDataDisplayColumnDefinitionByTableNameAndColumnName?: Maybe<UpdateDataDisplayColumnDefinitionPayload>;
+  /** Updates a single `DataView` using its globally unique id and a patch. */
+  updateDataViewByNodeId?: Maybe<UpdateDataViewPayload>;
+  /** Updates a single `DataView` using a unique key and a patch. */
+  updateDataView?: Maybe<UpdateDataViewPayload>;
+  /** Updates a single `DataView` using a unique key and a patch. */
+  updateDataViewByTableNameAndCode?: Maybe<UpdateDataViewPayload>;
+  /** Updates a single `DataViewColumnDefinition` using its globally unique id and a patch. */
+  updateDataViewColumnDefinitionByNodeId?: Maybe<UpdateDataViewColumnDefinitionPayload>;
+  /** Updates a single `DataViewColumnDefinition` using a unique key and a patch. */
+  updateDataViewColumnDefinition?: Maybe<UpdateDataViewColumnDefinitionPayload>;
+  /** Updates a single `DataViewColumnDefinition` using a unique key and a patch. */
+  updateDataViewColumnDefinitionByTableNameAndColumnName?: Maybe<UpdateDataViewColumnDefinitionPayload>;
   /** Updates a single `ElementTypePlugin` using its globally unique id and a patch. */
   updateElementTypePluginByNodeId?: Maybe<UpdateElementTypePluginPayload>;
   /** Updates a single `ElementTypePlugin` using a unique key and a patch. */
@@ -10738,18 +10738,18 @@ export type Mutation = {
   deleteCounter?: Maybe<DeleteCounterPayload>;
   /** Deletes a single `Counter` using a unique key. */
   deleteCounterByName?: Maybe<DeleteCounterPayload>;
-  /** Deletes a single `DataDisplay` using its globally unique id. */
-  deleteDataDisplayByNodeId?: Maybe<DeleteDataDisplayPayload>;
-  /** Deletes a single `DataDisplay` using a unique key. */
-  deleteDataDisplay?: Maybe<DeleteDataDisplayPayload>;
-  /** Deletes a single `DataDisplay` using a unique key. */
-  deleteDataDisplayByTableNameAndCode?: Maybe<DeleteDataDisplayPayload>;
-  /** Deletes a single `DataDisplayColumnDefinition` using its globally unique id. */
-  deleteDataDisplayColumnDefinitionByNodeId?: Maybe<DeleteDataDisplayColumnDefinitionPayload>;
-  /** Deletes a single `DataDisplayColumnDefinition` using a unique key. */
-  deleteDataDisplayColumnDefinition?: Maybe<DeleteDataDisplayColumnDefinitionPayload>;
-  /** Deletes a single `DataDisplayColumnDefinition` using a unique key. */
-  deleteDataDisplayColumnDefinitionByTableNameAndColumnName?: Maybe<DeleteDataDisplayColumnDefinitionPayload>;
+  /** Deletes a single `DataView` using its globally unique id. */
+  deleteDataViewByNodeId?: Maybe<DeleteDataViewPayload>;
+  /** Deletes a single `DataView` using a unique key. */
+  deleteDataView?: Maybe<DeleteDataViewPayload>;
+  /** Deletes a single `DataView` using a unique key. */
+  deleteDataViewByTableNameAndCode?: Maybe<DeleteDataViewPayload>;
+  /** Deletes a single `DataViewColumnDefinition` using its globally unique id. */
+  deleteDataViewColumnDefinitionByNodeId?: Maybe<DeleteDataViewColumnDefinitionPayload>;
+  /** Deletes a single `DataViewColumnDefinition` using a unique key. */
+  deleteDataViewColumnDefinition?: Maybe<DeleteDataViewColumnDefinitionPayload>;
+  /** Deletes a single `DataViewColumnDefinition` using a unique key. */
+  deleteDataViewColumnDefinitionByTableNameAndColumnName?: Maybe<DeleteDataViewColumnDefinitionPayload>;
   /** Deletes a single `ElementTypePlugin` using its globally unique id. */
   deleteElementTypePluginByNodeId?: Maybe<DeleteElementTypePluginPayload>;
   /** Deletes a single `ElementTypePlugin` using a unique key. */
@@ -10965,14 +10965,14 @@ export type MutationCreateCounterArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateDataDisplayArgs = {
-  input: CreateDataDisplayInput;
+export type MutationCreateDataViewArgs = {
+  input: CreateDataViewInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateDataDisplayColumnDefinitionArgs = {
-  input: CreateDataDisplayColumnDefinitionInput;
+export type MutationCreateDataViewColumnDefinitionArgs = {
+  input: CreateDataViewColumnDefinitionInput;
 };
 
 
@@ -11295,38 +11295,38 @@ export type MutationUpdateCounterByNameArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDataDisplayByNodeIdArgs = {
-  input: UpdateDataDisplayByNodeIdInput;
+export type MutationUpdateDataViewByNodeIdArgs = {
+  input: UpdateDataViewByNodeIdInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDataDisplayArgs = {
-  input: UpdateDataDisplayInput;
+export type MutationUpdateDataViewArgs = {
+  input: UpdateDataViewInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDataDisplayByTableNameAndCodeArgs = {
-  input: UpdateDataDisplayByTableNameAndCodeInput;
+export type MutationUpdateDataViewByTableNameAndCodeArgs = {
+  input: UpdateDataViewByTableNameAndCodeInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDataDisplayColumnDefinitionByNodeIdArgs = {
-  input: UpdateDataDisplayColumnDefinitionByNodeIdInput;
+export type MutationUpdateDataViewColumnDefinitionByNodeIdArgs = {
+  input: UpdateDataViewColumnDefinitionByNodeIdInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDataDisplayColumnDefinitionArgs = {
-  input: UpdateDataDisplayColumnDefinitionInput;
+export type MutationUpdateDataViewColumnDefinitionArgs = {
+  input: UpdateDataViewColumnDefinitionInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDataDisplayColumnDefinitionByTableNameAndColumnNameArgs = {
-  input: UpdateDataDisplayColumnDefinitionByTableNameAndColumnNameInput;
+export type MutationUpdateDataViewColumnDefinitionByTableNameAndColumnNameArgs = {
+  input: UpdateDataViewColumnDefinitionByTableNameAndColumnNameInput;
 };
 
 
@@ -11907,38 +11907,38 @@ export type MutationDeleteCounterByNameArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDataDisplayByNodeIdArgs = {
-  input: DeleteDataDisplayByNodeIdInput;
+export type MutationDeleteDataViewByNodeIdArgs = {
+  input: DeleteDataViewByNodeIdInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDataDisplayArgs = {
-  input: DeleteDataDisplayInput;
+export type MutationDeleteDataViewArgs = {
+  input: DeleteDataViewInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDataDisplayByTableNameAndCodeArgs = {
-  input: DeleteDataDisplayByTableNameAndCodeInput;
+export type MutationDeleteDataViewByTableNameAndCodeArgs = {
+  input: DeleteDataViewByTableNameAndCodeInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDataDisplayColumnDefinitionByNodeIdArgs = {
-  input: DeleteDataDisplayColumnDefinitionByNodeIdInput;
+export type MutationDeleteDataViewColumnDefinitionByNodeIdArgs = {
+  input: DeleteDataViewColumnDefinitionByNodeIdInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDataDisplayColumnDefinitionArgs = {
-  input: DeleteDataDisplayColumnDefinitionInput;
+export type MutationDeleteDataViewColumnDefinitionArgs = {
+  input: DeleteDataViewColumnDefinitionInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDataDisplayColumnDefinitionByTableNameAndColumnNameArgs = {
-  input: DeleteDataDisplayColumnDefinitionByTableNameAndColumnNameInput;
+export type MutationDeleteDataViewColumnDefinitionByTableNameAndColumnNameArgs = {
+  input: DeleteDataViewColumnDefinitionByTableNameAndColumnNameInput;
 };
 
 
@@ -15159,10 +15159,10 @@ export type Query = Node & {
   constraintsInfos?: Maybe<ConstraintsInfosConnection>;
   /** Reads and enables pagination through a set of `Counter`. */
   counters?: Maybe<CountersConnection>;
-  /** Reads and enables pagination through a set of `DataDisplay`. */
-  dataDisplays?: Maybe<DataDisplaysConnection>;
-  /** Reads and enables pagination through a set of `DataDisplayColumnDefinition`. */
-  dataDisplayColumnDefinitions?: Maybe<DataDisplayColumnDefinitionsConnection>;
+  /** Reads and enables pagination through a set of `DataView`. */
+  dataViews?: Maybe<DataViewsConnection>;
+  /** Reads and enables pagination through a set of `DataViewColumnDefinition`. */
+  dataViewColumnDefinitions?: Maybe<DataViewColumnDefinitionsConnection>;
   /** Reads and enables pagination through a set of `ElementTypePlugin`. */
   elementTypePlugins?: Maybe<ElementTypePluginsConnection>;
   /** Reads and enables pagination through a set of `File`. */
@@ -15247,10 +15247,10 @@ export type Query = Node & {
   applicationStatusHistory?: Maybe<ApplicationStatusHistory>;
   counter?: Maybe<Counter>;
   counterByName?: Maybe<Counter>;
-  dataDisplay?: Maybe<DataDisplay>;
-  dataDisplayByTableNameAndCode?: Maybe<DataDisplay>;
-  dataDisplayColumnDefinition?: Maybe<DataDisplayColumnDefinition>;
-  dataDisplayColumnDefinitionByTableNameAndColumnName?: Maybe<DataDisplayColumnDefinition>;
+  dataView?: Maybe<DataView>;
+  dataViewByTableNameAndCode?: Maybe<DataView>;
+  dataViewColumnDefinition?: Maybe<DataViewColumnDefinition>;
+  dataViewColumnDefinitionByTableNameAndColumnName?: Maybe<DataViewColumnDefinition>;
   elementTypePlugin?: Maybe<ElementTypePlugin>;
   file?: Maybe<File>;
   fileByUniqueId?: Maybe<File>;
@@ -15340,10 +15340,10 @@ export type Query = Node & {
   applicationStatusHistoryByNodeId?: Maybe<ApplicationStatusHistory>;
   /** Reads a single `Counter` using its globally unique `ID`. */
   counterByNodeId?: Maybe<Counter>;
-  /** Reads a single `DataDisplay` using its globally unique `ID`. */
-  dataDisplayByNodeId?: Maybe<DataDisplay>;
-  /** Reads a single `DataDisplayColumnDefinition` using its globally unique `ID`. */
-  dataDisplayColumnDefinitionByNodeId?: Maybe<DataDisplayColumnDefinition>;
+  /** Reads a single `DataView` using its globally unique `ID`. */
+  dataViewByNodeId?: Maybe<DataView>;
+  /** Reads a single `DataViewColumnDefinition` using its globally unique `ID`. */
+  dataViewColumnDefinitionByNodeId?: Maybe<DataViewColumnDefinition>;
   /** Reads a single `ElementTypePlugin` using its globally unique `ID`. */
   elementTypePluginByNodeId?: Maybe<ElementTypePlugin>;
   /** Reads a single `File` using its globally unique `ID`. */
@@ -15587,28 +15587,28 @@ export type QueryCountersArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDataDisplaysArgs = {
+export type QueryDataViewsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<DataDisplaysOrderBy>>;
-  condition?: Maybe<DataDisplayCondition>;
-  filter?: Maybe<DataDisplayFilter>;
+  orderBy?: Maybe<Array<DataViewsOrderBy>>;
+  condition?: Maybe<DataViewCondition>;
+  filter?: Maybe<DataViewFilter>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDataDisplayColumnDefinitionsArgs = {
+export type QueryDataViewColumnDefinitionsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<DataDisplayColumnDefinitionsOrderBy>>;
-  condition?: Maybe<DataDisplayColumnDefinitionCondition>;
-  filter?: Maybe<DataDisplayColumnDefinitionFilter>;
+  orderBy?: Maybe<Array<DataViewColumnDefinitionsOrderBy>>;
+  condition?: Maybe<DataViewColumnDefinitionCondition>;
+  filter?: Maybe<DataViewColumnDefinitionFilter>;
 };
 
 
@@ -16153,26 +16153,26 @@ export type QueryCounterByNameArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDataDisplayArgs = {
+export type QueryDataViewArgs = {
   id: Scalars['Int'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDataDisplayByTableNameAndCodeArgs = {
+export type QueryDataViewByTableNameAndCodeArgs = {
   tableName: Scalars['String'];
   code: Scalars['String'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDataDisplayColumnDefinitionArgs = {
+export type QueryDataViewColumnDefinitionArgs = {
   id: Scalars['Int'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDataDisplayColumnDefinitionByTableNameAndColumnNameArgs = {
+export type QueryDataViewColumnDefinitionByTableNameAndColumnNameArgs = {
   tableName: Scalars['String'];
   columnName: Scalars['String'];
 };
@@ -16721,13 +16721,13 @@ export type QueryCounterByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDataDisplayByNodeIdArgs = {
+export type QueryDataViewByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDataDisplayColumnDefinitionByNodeIdArgs = {
+export type QueryDataViewColumnDefinitionByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -26249,124 +26249,124 @@ export type UpdateCounterPayloadCounterEdgeArgs = {
   orderBy?: Maybe<Array<CountersOrderBy>>;
 };
 
-/** All input for the `updateDataDisplayByNodeId` mutation. */
-export type UpdateDataDisplayByNodeIdInput = {
+/** All input for the `updateDataViewByNodeId` mutation. */
+export type UpdateDataViewByNodeIdInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `DataDisplay` to be updated. */
+  /** The globally unique `ID` which will identify a single `DataView` to be updated. */
   nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `DataDisplay` being updated. */
-  patch: DataDisplayPatch;
+  /** An object where the defined keys will be set on the `DataView` being updated. */
+  patch: DataViewPatch;
 };
 
-/** All input for the `updateDataDisplayByTableNameAndCode` mutation. */
-export type UpdateDataDisplayByTableNameAndCodeInput = {
+/** All input for the `updateDataViewByTableNameAndCode` mutation. */
+export type UpdateDataViewByTableNameAndCodeInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `DataDisplay` being updated. */
-  patch: DataDisplayPatch;
+  /** An object where the defined keys will be set on the `DataView` being updated. */
+  patch: DataViewPatch;
   tableName: Scalars['String'];
   code: Scalars['String'];
 };
 
-/** All input for the `updateDataDisplayColumnDefinitionByNodeId` mutation. */
-export type UpdateDataDisplayColumnDefinitionByNodeIdInput = {
+/** All input for the `updateDataViewColumnDefinitionByNodeId` mutation. */
+export type UpdateDataViewColumnDefinitionByNodeIdInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `DataDisplayColumnDefinition` to be updated. */
+  /** The globally unique `ID` which will identify a single `DataViewColumnDefinition` to be updated. */
   nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `DataDisplayColumnDefinition` being updated. */
-  patch: DataDisplayColumnDefinitionPatch;
+  /** An object where the defined keys will be set on the `DataViewColumnDefinition` being updated. */
+  patch: DataViewColumnDefinitionPatch;
 };
 
-/** All input for the `updateDataDisplayColumnDefinitionByTableNameAndColumnName` mutation. */
-export type UpdateDataDisplayColumnDefinitionByTableNameAndColumnNameInput = {
+/** All input for the `updateDataViewColumnDefinitionByTableNameAndColumnName` mutation. */
+export type UpdateDataViewColumnDefinitionByTableNameAndColumnNameInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `DataDisplayColumnDefinition` being updated. */
-  patch: DataDisplayColumnDefinitionPatch;
+  /** An object where the defined keys will be set on the `DataViewColumnDefinition` being updated. */
+  patch: DataViewColumnDefinitionPatch;
   tableName: Scalars['String'];
   columnName: Scalars['String'];
 };
 
-/** All input for the `updateDataDisplayColumnDefinition` mutation. */
-export type UpdateDataDisplayColumnDefinitionInput = {
+/** All input for the `updateDataViewColumnDefinition` mutation. */
+export type UpdateDataViewColumnDefinitionInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `DataDisplayColumnDefinition` being updated. */
-  patch: DataDisplayColumnDefinitionPatch;
+  /** An object where the defined keys will be set on the `DataViewColumnDefinition` being updated. */
+  patch: DataViewColumnDefinitionPatch;
   id: Scalars['Int'];
 };
 
-/** The output of our update `DataDisplayColumnDefinition` mutation. */
-export type UpdateDataDisplayColumnDefinitionPayload = {
-  __typename?: 'UpdateDataDisplayColumnDefinitionPayload';
+/** The output of our update `DataViewColumnDefinition` mutation. */
+export type UpdateDataViewColumnDefinitionPayload = {
+  __typename?: 'UpdateDataViewColumnDefinitionPayload';
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataDisplayColumnDefinition` that was updated by this mutation. */
-  dataDisplayColumnDefinition?: Maybe<DataDisplayColumnDefinition>;
+  /** The `DataViewColumnDefinition` that was updated by this mutation. */
+  dataViewColumnDefinition?: Maybe<DataViewColumnDefinition>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** An edge for our `DataDisplayColumnDefinition`. May be used by Relay 1. */
-  dataDisplayColumnDefinitionEdge?: Maybe<DataDisplayColumnDefinitionsEdge>;
+  /** An edge for our `DataViewColumnDefinition`. May be used by Relay 1. */
+  dataViewColumnDefinitionEdge?: Maybe<DataViewColumnDefinitionsEdge>;
 };
 
 
-/** The output of our update `DataDisplayColumnDefinition` mutation. */
-export type UpdateDataDisplayColumnDefinitionPayloadDataDisplayColumnDefinitionEdgeArgs = {
-  orderBy?: Maybe<Array<DataDisplayColumnDefinitionsOrderBy>>;
+/** The output of our update `DataViewColumnDefinition` mutation. */
+export type UpdateDataViewColumnDefinitionPayloadDataViewColumnDefinitionEdgeArgs = {
+  orderBy?: Maybe<Array<DataViewColumnDefinitionsOrderBy>>;
 };
 
-/** All input for the `updateDataDisplay` mutation. */
-export type UpdateDataDisplayInput = {
+/** All input for the `updateDataView` mutation. */
+export type UpdateDataViewInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `DataDisplay` being updated. */
-  patch: DataDisplayPatch;
+  /** An object where the defined keys will be set on the `DataView` being updated. */
+  patch: DataViewPatch;
   id: Scalars['Int'];
 };
 
-/** The output of our update `DataDisplay` mutation. */
-export type UpdateDataDisplayPayload = {
-  __typename?: 'UpdateDataDisplayPayload';
+/** The output of our update `DataView` mutation. */
+export type UpdateDataViewPayload = {
+  __typename?: 'UpdateDataViewPayload';
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataDisplay` that was updated by this mutation. */
-  dataDisplay?: Maybe<DataDisplay>;
+  /** The `DataView` that was updated by this mutation. */
+  dataView?: Maybe<DataView>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** An edge for our `DataDisplay`. May be used by Relay 1. */
-  dataDisplayEdge?: Maybe<DataDisplaysEdge>;
+  /** An edge for our `DataView`. May be used by Relay 1. */
+  dataViewEdge?: Maybe<DataViewsEdge>;
 };
 
 
-/** The output of our update `DataDisplay` mutation. */
-export type UpdateDataDisplayPayloadDataDisplayEdgeArgs = {
-  orderBy?: Maybe<Array<DataDisplaysOrderBy>>;
+/** The output of our update `DataView` mutation. */
+export type UpdateDataViewPayloadDataViewEdgeArgs = {
+  orderBy?: Maybe<Array<DataViewsOrderBy>>;
 };
 
 /** All input for the `updateElementTypePluginByNodeId` mutation. */
@@ -31968,7 +31968,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ApplicationNote'] | ResolversTypes['File'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['Review'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['OrganisationApplicationJoin'] | ResolversTypes['UserApplicationJoin'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['Verification'] | ResolversTypes['ActivityLog'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['DataDisplay'] | ResolversTypes['DataDisplayColumnDefinition'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['SystemInfo'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ApplicationNote'] | ResolversTypes['File'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['Review'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['OrganisationApplicationJoin'] | ResolversTypes['UserApplicationJoin'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['Verification'] | ResolversTypes['ActivityLog'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['DataView'] | ResolversTypes['DataViewColumnDefinition'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['SystemInfo'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -32320,18 +32320,18 @@ export type ResolversTypes = {
   CountersConnection: ResolverTypeWrapper<CountersConnection>;
   Counter: ResolverTypeWrapper<Counter>;
   CountersEdge: ResolverTypeWrapper<CountersEdge>;
-  DataDisplaysOrderBy: DataDisplaysOrderBy;
-  DataDisplayCondition: DataDisplayCondition;
-  DataDisplayFilter: DataDisplayFilter;
-  DataDisplaysConnection: ResolverTypeWrapper<DataDisplaysConnection>;
-  DataDisplay: ResolverTypeWrapper<DataDisplay>;
-  DataDisplaysEdge: ResolverTypeWrapper<DataDisplaysEdge>;
-  DataDisplayColumnDefinitionsOrderBy: DataDisplayColumnDefinitionsOrderBy;
-  DataDisplayColumnDefinitionCondition: DataDisplayColumnDefinitionCondition;
-  DataDisplayColumnDefinitionFilter: DataDisplayColumnDefinitionFilter;
-  DataDisplayColumnDefinitionsConnection: ResolverTypeWrapper<DataDisplayColumnDefinitionsConnection>;
-  DataDisplayColumnDefinition: ResolverTypeWrapper<DataDisplayColumnDefinition>;
-  DataDisplayColumnDefinitionsEdge: ResolverTypeWrapper<DataDisplayColumnDefinitionsEdge>;
+  DataViewsOrderBy: DataViewsOrderBy;
+  DataViewCondition: DataViewCondition;
+  DataViewFilter: DataViewFilter;
+  DataViewsConnection: ResolverTypeWrapper<DataViewsConnection>;
+  DataView: ResolverTypeWrapper<DataView>;
+  DataViewsEdge: ResolverTypeWrapper<DataViewsEdge>;
+  DataViewColumnDefinitionsOrderBy: DataViewColumnDefinitionsOrderBy;
+  DataViewColumnDefinitionCondition: DataViewColumnDefinitionCondition;
+  DataViewColumnDefinitionFilter: DataViewColumnDefinitionFilter;
+  DataViewColumnDefinitionsConnection: ResolverTypeWrapper<DataViewColumnDefinitionsConnection>;
+  DataViewColumnDefinition: ResolverTypeWrapper<DataViewColumnDefinition>;
+  DataViewColumnDefinitionsEdge: ResolverTypeWrapper<DataViewColumnDefinitionsEdge>;
   ElementTypePluginsOrderBy: ElementTypePluginsOrderBy;
   ElementTypePluginCondition: ElementTypePluginCondition;
   ElementTypePluginFilter: ElementTypePluginFilter;
@@ -33354,12 +33354,12 @@ export type ResolversTypes = {
   CreateCounterInput: CreateCounterInput;
   CounterInput: CounterInput;
   CreateCounterPayload: ResolverTypeWrapper<CreateCounterPayload>;
-  CreateDataDisplayInput: CreateDataDisplayInput;
-  DataDisplayInput: DataDisplayInput;
-  CreateDataDisplayPayload: ResolverTypeWrapper<CreateDataDisplayPayload>;
-  CreateDataDisplayColumnDefinitionInput: CreateDataDisplayColumnDefinitionInput;
-  DataDisplayColumnDefinitionInput: DataDisplayColumnDefinitionInput;
-  CreateDataDisplayColumnDefinitionPayload: ResolverTypeWrapper<CreateDataDisplayColumnDefinitionPayload>;
+  CreateDataViewInput: CreateDataViewInput;
+  DataViewInput: DataViewInput;
+  CreateDataViewPayload: ResolverTypeWrapper<CreateDataViewPayload>;
+  CreateDataViewColumnDefinitionInput: CreateDataViewColumnDefinitionInput;
+  DataViewColumnDefinitionInput: DataViewColumnDefinitionInput;
+  CreateDataViewColumnDefinitionPayload: ResolverTypeWrapper<CreateDataViewColumnDefinitionPayload>;
   CreateElementTypePluginInput: CreateElementTypePluginInput;
   ElementTypePluginInput: ElementTypePluginInput;
   CreateElementTypePluginPayload: ResolverTypeWrapper<CreateElementTypePluginPayload>;
@@ -33488,16 +33488,16 @@ export type ResolversTypes = {
   UpdateCounterPayload: ResolverTypeWrapper<UpdateCounterPayload>;
   UpdateCounterInput: UpdateCounterInput;
   UpdateCounterByNameInput: UpdateCounterByNameInput;
-  UpdateDataDisplayByNodeIdInput: UpdateDataDisplayByNodeIdInput;
-  DataDisplayPatch: DataDisplayPatch;
-  UpdateDataDisplayPayload: ResolverTypeWrapper<UpdateDataDisplayPayload>;
-  UpdateDataDisplayInput: UpdateDataDisplayInput;
-  UpdateDataDisplayByTableNameAndCodeInput: UpdateDataDisplayByTableNameAndCodeInput;
-  UpdateDataDisplayColumnDefinitionByNodeIdInput: UpdateDataDisplayColumnDefinitionByNodeIdInput;
-  DataDisplayColumnDefinitionPatch: DataDisplayColumnDefinitionPatch;
-  UpdateDataDisplayColumnDefinitionPayload: ResolverTypeWrapper<UpdateDataDisplayColumnDefinitionPayload>;
-  UpdateDataDisplayColumnDefinitionInput: UpdateDataDisplayColumnDefinitionInput;
-  UpdateDataDisplayColumnDefinitionByTableNameAndColumnNameInput: UpdateDataDisplayColumnDefinitionByTableNameAndColumnNameInput;
+  UpdateDataViewByNodeIdInput: UpdateDataViewByNodeIdInput;
+  DataViewPatch: DataViewPatch;
+  UpdateDataViewPayload: ResolverTypeWrapper<UpdateDataViewPayload>;
+  UpdateDataViewInput: UpdateDataViewInput;
+  UpdateDataViewByTableNameAndCodeInput: UpdateDataViewByTableNameAndCodeInput;
+  UpdateDataViewColumnDefinitionByNodeIdInput: UpdateDataViewColumnDefinitionByNodeIdInput;
+  DataViewColumnDefinitionPatch: DataViewColumnDefinitionPatch;
+  UpdateDataViewColumnDefinitionPayload: ResolverTypeWrapper<UpdateDataViewColumnDefinitionPayload>;
+  UpdateDataViewColumnDefinitionInput: UpdateDataViewColumnDefinitionInput;
+  UpdateDataViewColumnDefinitionByTableNameAndColumnNameInput: UpdateDataViewColumnDefinitionByTableNameAndColumnNameInput;
   UpdateElementTypePluginByNodeIdInput: UpdateElementTypePluginByNodeIdInput;
   ElementTypePluginPatch: ElementTypePluginPatch;
   UpdateElementTypePluginPayload: ResolverTypeWrapper<UpdateElementTypePluginPayload>;
@@ -33638,14 +33638,14 @@ export type ResolversTypes = {
   DeleteCounterPayload: ResolverTypeWrapper<DeleteCounterPayload>;
   DeleteCounterInput: DeleteCounterInput;
   DeleteCounterByNameInput: DeleteCounterByNameInput;
-  DeleteDataDisplayByNodeIdInput: DeleteDataDisplayByNodeIdInput;
-  DeleteDataDisplayPayload: ResolverTypeWrapper<DeleteDataDisplayPayload>;
-  DeleteDataDisplayInput: DeleteDataDisplayInput;
-  DeleteDataDisplayByTableNameAndCodeInput: DeleteDataDisplayByTableNameAndCodeInput;
-  DeleteDataDisplayColumnDefinitionByNodeIdInput: DeleteDataDisplayColumnDefinitionByNodeIdInput;
-  DeleteDataDisplayColumnDefinitionPayload: ResolverTypeWrapper<DeleteDataDisplayColumnDefinitionPayload>;
-  DeleteDataDisplayColumnDefinitionInput: DeleteDataDisplayColumnDefinitionInput;
-  DeleteDataDisplayColumnDefinitionByTableNameAndColumnNameInput: DeleteDataDisplayColumnDefinitionByTableNameAndColumnNameInput;
+  DeleteDataViewByNodeIdInput: DeleteDataViewByNodeIdInput;
+  DeleteDataViewPayload: ResolverTypeWrapper<DeleteDataViewPayload>;
+  DeleteDataViewInput: DeleteDataViewInput;
+  DeleteDataViewByTableNameAndCodeInput: DeleteDataViewByTableNameAndCodeInput;
+  DeleteDataViewColumnDefinitionByNodeIdInput: DeleteDataViewColumnDefinitionByNodeIdInput;
+  DeleteDataViewColumnDefinitionPayload: ResolverTypeWrapper<DeleteDataViewColumnDefinitionPayload>;
+  DeleteDataViewColumnDefinitionInput: DeleteDataViewColumnDefinitionInput;
+  DeleteDataViewColumnDefinitionByTableNameAndColumnNameInput: DeleteDataViewColumnDefinitionByTableNameAndColumnNameInput;
   DeleteElementTypePluginByNodeIdInput: DeleteElementTypePluginByNodeIdInput;
   DeleteElementTypePluginPayload: ResolverTypeWrapper<DeleteElementTypePluginPayload>;
   DeleteElementTypePluginInput: DeleteElementTypePluginInput;
@@ -33760,7 +33760,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ApplicationNote'] | ResolversParentTypes['File'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['OrganisationApplicationJoin'] | ResolversParentTypes['UserApplicationJoin'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['Verification'] | ResolversParentTypes['ActivityLog'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['DataDisplay'] | ResolversParentTypes['DataDisplayColumnDefinition'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['SystemInfo'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ApplicationNote'] | ResolversParentTypes['File'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['OrganisationApplicationJoin'] | ResolversParentTypes['UserApplicationJoin'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['Verification'] | ResolversParentTypes['ActivityLog'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['DataView'] | ResolversParentTypes['DataViewColumnDefinition'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['SystemInfo'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -34057,16 +34057,16 @@ export type ResolversParentTypes = {
   CountersConnection: CountersConnection;
   Counter: Counter;
   CountersEdge: CountersEdge;
-  DataDisplayCondition: DataDisplayCondition;
-  DataDisplayFilter: DataDisplayFilter;
-  DataDisplaysConnection: DataDisplaysConnection;
-  DataDisplay: DataDisplay;
-  DataDisplaysEdge: DataDisplaysEdge;
-  DataDisplayColumnDefinitionCondition: DataDisplayColumnDefinitionCondition;
-  DataDisplayColumnDefinitionFilter: DataDisplayColumnDefinitionFilter;
-  DataDisplayColumnDefinitionsConnection: DataDisplayColumnDefinitionsConnection;
-  DataDisplayColumnDefinition: DataDisplayColumnDefinition;
-  DataDisplayColumnDefinitionsEdge: DataDisplayColumnDefinitionsEdge;
+  DataViewCondition: DataViewCondition;
+  DataViewFilter: DataViewFilter;
+  DataViewsConnection: DataViewsConnection;
+  DataView: DataView;
+  DataViewsEdge: DataViewsEdge;
+  DataViewColumnDefinitionCondition: DataViewColumnDefinitionCondition;
+  DataViewColumnDefinitionFilter: DataViewColumnDefinitionFilter;
+  DataViewColumnDefinitionsConnection: DataViewColumnDefinitionsConnection;
+  DataViewColumnDefinition: DataViewColumnDefinition;
+  DataViewColumnDefinitionsEdge: DataViewColumnDefinitionsEdge;
   ElementTypePluginCondition: ElementTypePluginCondition;
   ElementTypePluginFilter: ElementTypePluginFilter;
   ElementTypePluginsConnection: ElementTypePluginsConnection;
@@ -35076,12 +35076,12 @@ export type ResolversParentTypes = {
   CreateCounterInput: CreateCounterInput;
   CounterInput: CounterInput;
   CreateCounterPayload: CreateCounterPayload;
-  CreateDataDisplayInput: CreateDataDisplayInput;
-  DataDisplayInput: DataDisplayInput;
-  CreateDataDisplayPayload: CreateDataDisplayPayload;
-  CreateDataDisplayColumnDefinitionInput: CreateDataDisplayColumnDefinitionInput;
-  DataDisplayColumnDefinitionInput: DataDisplayColumnDefinitionInput;
-  CreateDataDisplayColumnDefinitionPayload: CreateDataDisplayColumnDefinitionPayload;
+  CreateDataViewInput: CreateDataViewInput;
+  DataViewInput: DataViewInput;
+  CreateDataViewPayload: CreateDataViewPayload;
+  CreateDataViewColumnDefinitionInput: CreateDataViewColumnDefinitionInput;
+  DataViewColumnDefinitionInput: DataViewColumnDefinitionInput;
+  CreateDataViewColumnDefinitionPayload: CreateDataViewColumnDefinitionPayload;
   CreateElementTypePluginInput: CreateElementTypePluginInput;
   ElementTypePluginInput: ElementTypePluginInput;
   CreateElementTypePluginPayload: CreateElementTypePluginPayload;
@@ -35210,16 +35210,16 @@ export type ResolversParentTypes = {
   UpdateCounterPayload: UpdateCounterPayload;
   UpdateCounterInput: UpdateCounterInput;
   UpdateCounterByNameInput: UpdateCounterByNameInput;
-  UpdateDataDisplayByNodeIdInput: UpdateDataDisplayByNodeIdInput;
-  DataDisplayPatch: DataDisplayPatch;
-  UpdateDataDisplayPayload: UpdateDataDisplayPayload;
-  UpdateDataDisplayInput: UpdateDataDisplayInput;
-  UpdateDataDisplayByTableNameAndCodeInput: UpdateDataDisplayByTableNameAndCodeInput;
-  UpdateDataDisplayColumnDefinitionByNodeIdInput: UpdateDataDisplayColumnDefinitionByNodeIdInput;
-  DataDisplayColumnDefinitionPatch: DataDisplayColumnDefinitionPatch;
-  UpdateDataDisplayColumnDefinitionPayload: UpdateDataDisplayColumnDefinitionPayload;
-  UpdateDataDisplayColumnDefinitionInput: UpdateDataDisplayColumnDefinitionInput;
-  UpdateDataDisplayColumnDefinitionByTableNameAndColumnNameInput: UpdateDataDisplayColumnDefinitionByTableNameAndColumnNameInput;
+  UpdateDataViewByNodeIdInput: UpdateDataViewByNodeIdInput;
+  DataViewPatch: DataViewPatch;
+  UpdateDataViewPayload: UpdateDataViewPayload;
+  UpdateDataViewInput: UpdateDataViewInput;
+  UpdateDataViewByTableNameAndCodeInput: UpdateDataViewByTableNameAndCodeInput;
+  UpdateDataViewColumnDefinitionByNodeIdInput: UpdateDataViewColumnDefinitionByNodeIdInput;
+  DataViewColumnDefinitionPatch: DataViewColumnDefinitionPatch;
+  UpdateDataViewColumnDefinitionPayload: UpdateDataViewColumnDefinitionPayload;
+  UpdateDataViewColumnDefinitionInput: UpdateDataViewColumnDefinitionInput;
+  UpdateDataViewColumnDefinitionByTableNameAndColumnNameInput: UpdateDataViewColumnDefinitionByTableNameAndColumnNameInput;
   UpdateElementTypePluginByNodeIdInput: UpdateElementTypePluginByNodeIdInput;
   ElementTypePluginPatch: ElementTypePluginPatch;
   UpdateElementTypePluginPayload: UpdateElementTypePluginPayload;
@@ -35360,14 +35360,14 @@ export type ResolversParentTypes = {
   DeleteCounterPayload: DeleteCounterPayload;
   DeleteCounterInput: DeleteCounterInput;
   DeleteCounterByNameInput: DeleteCounterByNameInput;
-  DeleteDataDisplayByNodeIdInput: DeleteDataDisplayByNodeIdInput;
-  DeleteDataDisplayPayload: DeleteDataDisplayPayload;
-  DeleteDataDisplayInput: DeleteDataDisplayInput;
-  DeleteDataDisplayByTableNameAndCodeInput: DeleteDataDisplayByTableNameAndCodeInput;
-  DeleteDataDisplayColumnDefinitionByNodeIdInput: DeleteDataDisplayColumnDefinitionByNodeIdInput;
-  DeleteDataDisplayColumnDefinitionPayload: DeleteDataDisplayColumnDefinitionPayload;
-  DeleteDataDisplayColumnDefinitionInput: DeleteDataDisplayColumnDefinitionInput;
-  DeleteDataDisplayColumnDefinitionByTableNameAndColumnNameInput: DeleteDataDisplayColumnDefinitionByTableNameAndColumnNameInput;
+  DeleteDataViewByNodeIdInput: DeleteDataViewByNodeIdInput;
+  DeleteDataViewPayload: DeleteDataViewPayload;
+  DeleteDataViewInput: DeleteDataViewInput;
+  DeleteDataViewByTableNameAndCodeInput: DeleteDataViewByTableNameAndCodeInput;
+  DeleteDataViewColumnDefinitionByNodeIdInput: DeleteDataViewColumnDefinitionByNodeIdInput;
+  DeleteDataViewColumnDefinitionPayload: DeleteDataViewColumnDefinitionPayload;
+  DeleteDataViewColumnDefinitionInput: DeleteDataViewColumnDefinitionInput;
+  DeleteDataViewColumnDefinitionByTableNameAndColumnNameInput: DeleteDataViewColumnDefinitionByTableNameAndColumnNameInput;
   DeleteElementTypePluginByNodeIdInput: DeleteElementTypePluginByNodeIdInput;
   DeleteElementTypePluginPayload: DeleteElementTypePluginPayload;
   DeleteElementTypePluginInput: DeleteElementTypePluginInput;
@@ -36101,19 +36101,19 @@ export type CreateCounterPayloadResolvers<ContextType = any, ParentType extends 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type CreateDataDisplayColumnDefinitionPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateDataDisplayColumnDefinitionPayload'] = ResolversParentTypes['CreateDataDisplayColumnDefinitionPayload']> = {
+export type CreateDataViewColumnDefinitionPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateDataViewColumnDefinitionPayload'] = ResolversParentTypes['CreateDataViewColumnDefinitionPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  dataDisplayColumnDefinition?: Resolver<Maybe<ResolversTypes['DataDisplayColumnDefinition']>, ParentType, ContextType>;
+  dataViewColumnDefinition?: Resolver<Maybe<ResolversTypes['DataViewColumnDefinition']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
-  dataDisplayColumnDefinitionEdge?: Resolver<Maybe<ResolversTypes['DataDisplayColumnDefinitionsEdge']>, ParentType, ContextType, RequireFields<CreateDataDisplayColumnDefinitionPayloadDataDisplayColumnDefinitionEdgeArgs, 'orderBy'>>;
+  dataViewColumnDefinitionEdge?: Resolver<Maybe<ResolversTypes['DataViewColumnDefinitionsEdge']>, ParentType, ContextType, RequireFields<CreateDataViewColumnDefinitionPayloadDataViewColumnDefinitionEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type CreateDataDisplayPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateDataDisplayPayload'] = ResolversParentTypes['CreateDataDisplayPayload']> = {
+export type CreateDataViewPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateDataViewPayload'] = ResolversParentTypes['CreateDataViewPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  dataDisplay?: Resolver<Maybe<ResolversTypes['DataDisplay']>, ParentType, ContextType>;
+  dataView?: Resolver<Maybe<ResolversTypes['DataView']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
-  dataDisplayEdge?: Resolver<Maybe<ResolversTypes['DataDisplaysEdge']>, ParentType, ContextType, RequireFields<CreateDataDisplayPayloadDataDisplayEdgeArgs, 'orderBy'>>;
+  dataViewEdge?: Resolver<Maybe<ResolversTypes['DataViewsEdge']>, ParentType, ContextType, RequireFields<CreateDataViewPayloadDataViewEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -36428,7 +36428,7 @@ export interface CursorScalarConfig extends GraphQLScalarTypeConfig<ResolversTyp
   name: 'Cursor';
 }
 
-export type DataDisplayResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataDisplay'] = ResolversParentTypes['DataDisplay']> = {
+export type DataViewResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataView'] = ResolversParentTypes['DataView']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   tableName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -36446,7 +36446,7 @@ export type DataDisplayResolvers<ContextType = any, ParentType extends Resolvers
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DataDisplayColumnDefinitionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataDisplayColumnDefinition'] = ResolversParentTypes['DataDisplayColumnDefinition']> = {
+export type DataViewColumnDefinitionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataViewColumnDefinition'] = ResolversParentTypes['DataViewColumnDefinition']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   tableName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -36459,31 +36459,31 @@ export type DataDisplayColumnDefinitionResolvers<ContextType = any, ParentType e
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DataDisplayColumnDefinitionsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataDisplayColumnDefinitionsConnection'] = ResolversParentTypes['DataDisplayColumnDefinitionsConnection']> = {
-  nodes?: Resolver<Array<Maybe<ResolversTypes['DataDisplayColumnDefinition']>>, ParentType, ContextType>;
-  edges?: Resolver<Array<ResolversTypes['DataDisplayColumnDefinitionsEdge']>, ParentType, ContextType>;
+export type DataViewColumnDefinitionsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataViewColumnDefinitionsConnection'] = ResolversParentTypes['DataViewColumnDefinitionsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['DataViewColumnDefinition']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['DataViewColumnDefinitionsEdge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
   totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DataDisplayColumnDefinitionsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataDisplayColumnDefinitionsEdge'] = ResolversParentTypes['DataDisplayColumnDefinitionsEdge']> = {
+export type DataViewColumnDefinitionsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataViewColumnDefinitionsEdge'] = ResolversParentTypes['DataViewColumnDefinitionsEdge']> = {
   cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['DataDisplayColumnDefinition']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['DataViewColumnDefinition']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DataDisplaysConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataDisplaysConnection'] = ResolversParentTypes['DataDisplaysConnection']> = {
-  nodes?: Resolver<Array<Maybe<ResolversTypes['DataDisplay']>>, ParentType, ContextType>;
-  edges?: Resolver<Array<ResolversTypes['DataDisplaysEdge']>, ParentType, ContextType>;
+export type DataViewsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataViewsConnection'] = ResolversParentTypes['DataViewsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['DataView']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['DataViewsEdge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
   totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DataDisplaysEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataDisplaysEdge'] = ResolversParentTypes['DataDisplaysEdge']> = {
+export type DataViewsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataViewsEdge'] = ResolversParentTypes['DataViewsEdge']> = {
   cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['DataDisplay']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['DataView']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -36590,21 +36590,21 @@ export type DeleteCounterPayloadResolvers<ContextType = any, ParentType extends 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DeleteDataDisplayColumnDefinitionPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteDataDisplayColumnDefinitionPayload'] = ResolversParentTypes['DeleteDataDisplayColumnDefinitionPayload']> = {
+export type DeleteDataViewColumnDefinitionPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteDataViewColumnDefinitionPayload'] = ResolversParentTypes['DeleteDataViewColumnDefinitionPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  dataDisplayColumnDefinition?: Resolver<Maybe<ResolversTypes['DataDisplayColumnDefinition']>, ParentType, ContextType>;
-  deletedDataDisplayColumnDefinitionNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  dataViewColumnDefinition?: Resolver<Maybe<ResolversTypes['DataViewColumnDefinition']>, ParentType, ContextType>;
+  deletedDataViewColumnDefinitionNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
-  dataDisplayColumnDefinitionEdge?: Resolver<Maybe<ResolversTypes['DataDisplayColumnDefinitionsEdge']>, ParentType, ContextType, RequireFields<DeleteDataDisplayColumnDefinitionPayloadDataDisplayColumnDefinitionEdgeArgs, 'orderBy'>>;
+  dataViewColumnDefinitionEdge?: Resolver<Maybe<ResolversTypes['DataViewColumnDefinitionsEdge']>, ParentType, ContextType, RequireFields<DeleteDataViewColumnDefinitionPayloadDataViewColumnDefinitionEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DeleteDataDisplayPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteDataDisplayPayload'] = ResolversParentTypes['DeleteDataDisplayPayload']> = {
+export type DeleteDataViewPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteDataViewPayload'] = ResolversParentTypes['DeleteDataViewPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  dataDisplay?: Resolver<Maybe<ResolversTypes['DataDisplay']>, ParentType, ContextType>;
-  deletedDataDisplayNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  dataView?: Resolver<Maybe<ResolversTypes['DataView']>, ParentType, ContextType>;
+  deletedDataViewNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
-  dataDisplayEdge?: Resolver<Maybe<ResolversTypes['DataDisplaysEdge']>, ParentType, ContextType, RequireFields<DeleteDataDisplayPayloadDataDisplayEdgeArgs, 'orderBy'>>;
+  dataViewEdge?: Resolver<Maybe<ResolversTypes['DataViewsEdge']>, ParentType, ContextType, RequireFields<DeleteDataViewPayloadDataViewEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -37083,8 +37083,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createApplicationStageHistory?: Resolver<Maybe<ResolversTypes['CreateApplicationStageHistoryPayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationStageHistoryArgs, 'input'>>;
   createApplicationStatusHistory?: Resolver<Maybe<ResolversTypes['CreateApplicationStatusHistoryPayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationStatusHistoryArgs, 'input'>>;
   createCounter?: Resolver<Maybe<ResolversTypes['CreateCounterPayload']>, ParentType, ContextType, RequireFields<MutationCreateCounterArgs, 'input'>>;
-  createDataDisplay?: Resolver<Maybe<ResolversTypes['CreateDataDisplayPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataDisplayArgs, 'input'>>;
-  createDataDisplayColumnDefinition?: Resolver<Maybe<ResolversTypes['CreateDataDisplayColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataDisplayColumnDefinitionArgs, 'input'>>;
+  createDataView?: Resolver<Maybe<ResolversTypes['CreateDataViewPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataViewArgs, 'input'>>;
+  createDataViewColumnDefinition?: Resolver<Maybe<ResolversTypes['CreateDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataViewColumnDefinitionArgs, 'input'>>;
   createElementTypePlugin?: Resolver<Maybe<ResolversTypes['CreateElementTypePluginPayload']>, ParentType, ContextType, RequireFields<MutationCreateElementTypePluginArgs, 'input'>>;
   createFile?: Resolver<Maybe<ResolversTypes['CreateFilePayload']>, ParentType, ContextType, RequireFields<MutationCreateFileArgs, 'input'>>;
   createFilter?: Resolver<Maybe<ResolversTypes['CreateFilterPayload']>, ParentType, ContextType, RequireFields<MutationCreateFilterArgs, 'input'>>;
@@ -37138,12 +37138,12 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateCounterByNodeId?: Resolver<Maybe<ResolversTypes['UpdateCounterPayload']>, ParentType, ContextType, RequireFields<MutationUpdateCounterByNodeIdArgs, 'input'>>;
   updateCounter?: Resolver<Maybe<ResolversTypes['UpdateCounterPayload']>, ParentType, ContextType, RequireFields<MutationUpdateCounterArgs, 'input'>>;
   updateCounterByName?: Resolver<Maybe<ResolversTypes['UpdateCounterPayload']>, ParentType, ContextType, RequireFields<MutationUpdateCounterByNameArgs, 'input'>>;
-  updateDataDisplayByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataDisplayPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataDisplayByNodeIdArgs, 'input'>>;
-  updateDataDisplay?: Resolver<Maybe<ResolversTypes['UpdateDataDisplayPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataDisplayArgs, 'input'>>;
-  updateDataDisplayByTableNameAndCode?: Resolver<Maybe<ResolversTypes['UpdateDataDisplayPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataDisplayByTableNameAndCodeArgs, 'input'>>;
-  updateDataDisplayColumnDefinitionByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataDisplayColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataDisplayColumnDefinitionByNodeIdArgs, 'input'>>;
-  updateDataDisplayColumnDefinition?: Resolver<Maybe<ResolversTypes['UpdateDataDisplayColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataDisplayColumnDefinitionArgs, 'input'>>;
-  updateDataDisplayColumnDefinitionByTableNameAndColumnName?: Resolver<Maybe<ResolversTypes['UpdateDataDisplayColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataDisplayColumnDefinitionByTableNameAndColumnNameArgs, 'input'>>;
+  updateDataViewByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataViewPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataViewByNodeIdArgs, 'input'>>;
+  updateDataView?: Resolver<Maybe<ResolversTypes['UpdateDataViewPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataViewArgs, 'input'>>;
+  updateDataViewByTableNameAndCode?: Resolver<Maybe<ResolversTypes['UpdateDataViewPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataViewByTableNameAndCodeArgs, 'input'>>;
+  updateDataViewColumnDefinitionByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataViewColumnDefinitionByNodeIdArgs, 'input'>>;
+  updateDataViewColumnDefinition?: Resolver<Maybe<ResolversTypes['UpdateDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataViewColumnDefinitionArgs, 'input'>>;
+  updateDataViewColumnDefinitionByTableNameAndColumnName?: Resolver<Maybe<ResolversTypes['UpdateDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataViewColumnDefinitionByTableNameAndColumnNameArgs, 'input'>>;
   updateElementTypePluginByNodeId?: Resolver<Maybe<ResolversTypes['UpdateElementTypePluginPayload']>, ParentType, ContextType, RequireFields<MutationUpdateElementTypePluginByNodeIdArgs, 'input'>>;
   updateElementTypePlugin?: Resolver<Maybe<ResolversTypes['UpdateElementTypePluginPayload']>, ParentType, ContextType, RequireFields<MutationUpdateElementTypePluginArgs, 'input'>>;
   updateFileByNodeId?: Resolver<Maybe<ResolversTypes['UpdateFilePayload']>, ParentType, ContextType, RequireFields<MutationUpdateFileByNodeIdArgs, 'input'>>;
@@ -37240,12 +37240,12 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteCounterByNodeId?: Resolver<Maybe<ResolversTypes['DeleteCounterPayload']>, ParentType, ContextType, RequireFields<MutationDeleteCounterByNodeIdArgs, 'input'>>;
   deleteCounter?: Resolver<Maybe<ResolversTypes['DeleteCounterPayload']>, ParentType, ContextType, RequireFields<MutationDeleteCounterArgs, 'input'>>;
   deleteCounterByName?: Resolver<Maybe<ResolversTypes['DeleteCounterPayload']>, ParentType, ContextType, RequireFields<MutationDeleteCounterByNameArgs, 'input'>>;
-  deleteDataDisplayByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataDisplayPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataDisplayByNodeIdArgs, 'input'>>;
-  deleteDataDisplay?: Resolver<Maybe<ResolversTypes['DeleteDataDisplayPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataDisplayArgs, 'input'>>;
-  deleteDataDisplayByTableNameAndCode?: Resolver<Maybe<ResolversTypes['DeleteDataDisplayPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataDisplayByTableNameAndCodeArgs, 'input'>>;
-  deleteDataDisplayColumnDefinitionByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataDisplayColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataDisplayColumnDefinitionByNodeIdArgs, 'input'>>;
-  deleteDataDisplayColumnDefinition?: Resolver<Maybe<ResolversTypes['DeleteDataDisplayColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataDisplayColumnDefinitionArgs, 'input'>>;
-  deleteDataDisplayColumnDefinitionByTableNameAndColumnName?: Resolver<Maybe<ResolversTypes['DeleteDataDisplayColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataDisplayColumnDefinitionByTableNameAndColumnNameArgs, 'input'>>;
+  deleteDataViewByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataViewPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataViewByNodeIdArgs, 'input'>>;
+  deleteDataView?: Resolver<Maybe<ResolversTypes['DeleteDataViewPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataViewArgs, 'input'>>;
+  deleteDataViewByTableNameAndCode?: Resolver<Maybe<ResolversTypes['DeleteDataViewPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataViewByTableNameAndCodeArgs, 'input'>>;
+  deleteDataViewColumnDefinitionByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataViewColumnDefinitionByNodeIdArgs, 'input'>>;
+  deleteDataViewColumnDefinition?: Resolver<Maybe<ResolversTypes['DeleteDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataViewColumnDefinitionArgs, 'input'>>;
+  deleteDataViewColumnDefinitionByTableNameAndColumnName?: Resolver<Maybe<ResolversTypes['DeleteDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataViewColumnDefinitionByTableNameAndColumnNameArgs, 'input'>>;
   deleteElementTypePluginByNodeId?: Resolver<Maybe<ResolversTypes['DeleteElementTypePluginPayload']>, ParentType, ContextType, RequireFields<MutationDeleteElementTypePluginByNodeIdArgs, 'input'>>;
   deleteElementTypePlugin?: Resolver<Maybe<ResolversTypes['DeleteElementTypePluginPayload']>, ParentType, ContextType, RequireFields<MutationDeleteElementTypePluginArgs, 'input'>>;
   deleteFileByNodeId?: Resolver<Maybe<ResolversTypes['DeleteFilePayload']>, ParentType, ContextType, RequireFields<MutationDeleteFileByNodeIdArgs, 'input'>>;
@@ -37325,7 +37325,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ApplicationNote' | 'File' | 'ReviewAssignment' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'Review' | 'ReviewResponse' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'OrganisationApplicationJoin' | 'UserApplicationJoin' | 'TriggerSchedule' | 'Verification' | 'ActivityLog' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'Counter' | 'DataDisplay' | 'DataDisplayColumnDefinition' | 'ElementTypePlugin' | 'LookupTable' | 'SystemInfo', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ApplicationNote' | 'File' | 'ReviewAssignment' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'Review' | 'ReviewResponse' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'OrganisationApplicationJoin' | 'UserApplicationJoin' | 'TriggerSchedule' | 'Verification' | 'ActivityLog' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'Counter' | 'DataView' | 'DataViewColumnDefinition' | 'ElementTypePlugin' | 'LookupTable' | 'SystemInfo', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -37593,8 +37593,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationStatusHistories?: Resolver<Maybe<ResolversTypes['ApplicationStatusHistoriesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoriesArgs, 'orderBy'>>;
   constraintsInfos?: Resolver<Maybe<ResolversTypes['ConstraintsInfosConnection']>, ParentType, ContextType, RequireFields<QueryConstraintsInfosArgs, 'orderBy'>>;
   counters?: Resolver<Maybe<ResolversTypes['CountersConnection']>, ParentType, ContextType, RequireFields<QueryCountersArgs, 'orderBy'>>;
-  dataDisplays?: Resolver<Maybe<ResolversTypes['DataDisplaysConnection']>, ParentType, ContextType, RequireFields<QueryDataDisplaysArgs, 'orderBy'>>;
-  dataDisplayColumnDefinitions?: Resolver<Maybe<ResolversTypes['DataDisplayColumnDefinitionsConnection']>, ParentType, ContextType, RequireFields<QueryDataDisplayColumnDefinitionsArgs, 'orderBy'>>;
+  dataViews?: Resolver<Maybe<ResolversTypes['DataViewsConnection']>, ParentType, ContextType, RequireFields<QueryDataViewsArgs, 'orderBy'>>;
+  dataViewColumnDefinitions?: Resolver<Maybe<ResolversTypes['DataViewColumnDefinitionsConnection']>, ParentType, ContextType, RequireFields<QueryDataViewColumnDefinitionsArgs, 'orderBy'>>;
   elementTypePlugins?: Resolver<Maybe<ResolversTypes['ElementTypePluginsConnection']>, ParentType, ContextType, RequireFields<QueryElementTypePluginsArgs, 'orderBy'>>;
   files?: Resolver<Maybe<ResolversTypes['FilesConnection']>, ParentType, ContextType, RequireFields<QueryFilesArgs, 'orderBy'>>;
   filters?: Resolver<Maybe<ResolversTypes['FiltersConnection']>, ParentType, ContextType, RequireFields<QueryFiltersArgs, 'orderBy'>>;
@@ -37643,10 +37643,10 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationStatusHistory?: Resolver<Maybe<ResolversTypes['ApplicationStatusHistory']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryArgs, 'id'>>;
   counter?: Resolver<Maybe<ResolversTypes['Counter']>, ParentType, ContextType, RequireFields<QueryCounterArgs, 'id'>>;
   counterByName?: Resolver<Maybe<ResolversTypes['Counter']>, ParentType, ContextType, RequireFields<QueryCounterByNameArgs, 'name'>>;
-  dataDisplay?: Resolver<Maybe<ResolversTypes['DataDisplay']>, ParentType, ContextType, RequireFields<QueryDataDisplayArgs, 'id'>>;
-  dataDisplayByTableNameAndCode?: Resolver<Maybe<ResolversTypes['DataDisplay']>, ParentType, ContextType, RequireFields<QueryDataDisplayByTableNameAndCodeArgs, 'tableName' | 'code'>>;
-  dataDisplayColumnDefinition?: Resolver<Maybe<ResolversTypes['DataDisplayColumnDefinition']>, ParentType, ContextType, RequireFields<QueryDataDisplayColumnDefinitionArgs, 'id'>>;
-  dataDisplayColumnDefinitionByTableNameAndColumnName?: Resolver<Maybe<ResolversTypes['DataDisplayColumnDefinition']>, ParentType, ContextType, RequireFields<QueryDataDisplayColumnDefinitionByTableNameAndColumnNameArgs, 'tableName' | 'columnName'>>;
+  dataView?: Resolver<Maybe<ResolversTypes['DataView']>, ParentType, ContextType, RequireFields<QueryDataViewArgs, 'id'>>;
+  dataViewByTableNameAndCode?: Resolver<Maybe<ResolversTypes['DataView']>, ParentType, ContextType, RequireFields<QueryDataViewByTableNameAndCodeArgs, 'tableName' | 'code'>>;
+  dataViewColumnDefinition?: Resolver<Maybe<ResolversTypes['DataViewColumnDefinition']>, ParentType, ContextType, RequireFields<QueryDataViewColumnDefinitionArgs, 'id'>>;
+  dataViewColumnDefinitionByTableNameAndColumnName?: Resolver<Maybe<ResolversTypes['DataViewColumnDefinition']>, ParentType, ContextType, RequireFields<QueryDataViewColumnDefinitionByTableNameAndColumnNameArgs, 'tableName' | 'columnName'>>;
   elementTypePlugin?: Resolver<Maybe<ResolversTypes['ElementTypePlugin']>, ParentType, ContextType, RequireFields<QueryElementTypePluginArgs, 'code'>>;
   file?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFileArgs, 'id'>>;
   fileByUniqueId?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFileByUniqueIdArgs, 'uniqueId'>>;
@@ -37726,8 +37726,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationStageHistoryByNodeId?: Resolver<Maybe<ResolversTypes['ApplicationStageHistory']>, ParentType, ContextType, RequireFields<QueryApplicationStageHistoryByNodeIdArgs, 'nodeId'>>;
   applicationStatusHistoryByNodeId?: Resolver<Maybe<ResolversTypes['ApplicationStatusHistory']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryByNodeIdArgs, 'nodeId'>>;
   counterByNodeId?: Resolver<Maybe<ResolversTypes['Counter']>, ParentType, ContextType, RequireFields<QueryCounterByNodeIdArgs, 'nodeId'>>;
-  dataDisplayByNodeId?: Resolver<Maybe<ResolversTypes['DataDisplay']>, ParentType, ContextType, RequireFields<QueryDataDisplayByNodeIdArgs, 'nodeId'>>;
-  dataDisplayColumnDefinitionByNodeId?: Resolver<Maybe<ResolversTypes['DataDisplayColumnDefinition']>, ParentType, ContextType, RequireFields<QueryDataDisplayColumnDefinitionByNodeIdArgs, 'nodeId'>>;
+  dataViewByNodeId?: Resolver<Maybe<ResolversTypes['DataView']>, ParentType, ContextType, RequireFields<QueryDataViewByNodeIdArgs, 'nodeId'>>;
+  dataViewColumnDefinitionByNodeId?: Resolver<Maybe<ResolversTypes['DataViewColumnDefinition']>, ParentType, ContextType, RequireFields<QueryDataViewColumnDefinitionByNodeIdArgs, 'nodeId'>>;
   elementTypePluginByNodeId?: Resolver<Maybe<ResolversTypes['ElementTypePlugin']>, ParentType, ContextType, RequireFields<QueryElementTypePluginByNodeIdArgs, 'nodeId'>>;
   fileByNodeId?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFileByNodeIdArgs, 'nodeId'>>;
   filterByNodeId?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType, RequireFields<QueryFilterByNodeIdArgs, 'nodeId'>>;
@@ -38460,19 +38460,19 @@ export type UpdateCounterPayloadResolvers<ContextType = any, ParentType extends 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type UpdateDataDisplayColumnDefinitionPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateDataDisplayColumnDefinitionPayload'] = ResolversParentTypes['UpdateDataDisplayColumnDefinitionPayload']> = {
+export type UpdateDataViewColumnDefinitionPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateDataViewColumnDefinitionPayload'] = ResolversParentTypes['UpdateDataViewColumnDefinitionPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  dataDisplayColumnDefinition?: Resolver<Maybe<ResolversTypes['DataDisplayColumnDefinition']>, ParentType, ContextType>;
+  dataViewColumnDefinition?: Resolver<Maybe<ResolversTypes['DataViewColumnDefinition']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
-  dataDisplayColumnDefinitionEdge?: Resolver<Maybe<ResolversTypes['DataDisplayColumnDefinitionsEdge']>, ParentType, ContextType, RequireFields<UpdateDataDisplayColumnDefinitionPayloadDataDisplayColumnDefinitionEdgeArgs, 'orderBy'>>;
+  dataViewColumnDefinitionEdge?: Resolver<Maybe<ResolversTypes['DataViewColumnDefinitionsEdge']>, ParentType, ContextType, RequireFields<UpdateDataViewColumnDefinitionPayloadDataViewColumnDefinitionEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type UpdateDataDisplayPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateDataDisplayPayload'] = ResolversParentTypes['UpdateDataDisplayPayload']> = {
+export type UpdateDataViewPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateDataViewPayload'] = ResolversParentTypes['UpdateDataViewPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  dataDisplay?: Resolver<Maybe<ResolversTypes['DataDisplay']>, ParentType, ContextType>;
+  dataView?: Resolver<Maybe<ResolversTypes['DataView']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
-  dataDisplayEdge?: Resolver<Maybe<ResolversTypes['DataDisplaysEdge']>, ParentType, ContextType, RequireFields<UpdateDataDisplayPayloadDataDisplayEdgeArgs, 'orderBy'>>;
+  dataViewEdge?: Resolver<Maybe<ResolversTypes['DataViewsEdge']>, ParentType, ContextType, RequireFields<UpdateDataViewPayloadDataViewEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -39004,8 +39004,8 @@ export type Resolvers<ContextType = any> = {
   CreateApplicationStageHistoryPayload?: CreateApplicationStageHistoryPayloadResolvers<ContextType>;
   CreateApplicationStatusHistoryPayload?: CreateApplicationStatusHistoryPayloadResolvers<ContextType>;
   CreateCounterPayload?: CreateCounterPayloadResolvers<ContextType>;
-  CreateDataDisplayColumnDefinitionPayload?: CreateDataDisplayColumnDefinitionPayloadResolvers<ContextType>;
-  CreateDataDisplayPayload?: CreateDataDisplayPayloadResolvers<ContextType>;
+  CreateDataViewColumnDefinitionPayload?: CreateDataViewColumnDefinitionPayloadResolvers<ContextType>;
+  CreateDataViewPayload?: CreateDataViewPayloadResolvers<ContextType>;
   CreateElementTypePluginPayload?: CreateElementTypePluginPayloadResolvers<ContextType>;
   CreateFilePayload?: CreateFilePayloadResolvers<ContextType>;
   CreateFilterPayload?: CreateFilterPayloadResolvers<ContextType>;
@@ -39039,12 +39039,12 @@ export type Resolvers<ContextType = any> = {
   CreateUserPayload?: CreateUserPayloadResolvers<ContextType>;
   CreateVerificationPayload?: CreateVerificationPayloadResolvers<ContextType>;
   Cursor?: GraphQLScalarType;
-  DataDisplay?: DataDisplayResolvers<ContextType>;
-  DataDisplayColumnDefinition?: DataDisplayColumnDefinitionResolvers<ContextType>;
-  DataDisplayColumnDefinitionsConnection?: DataDisplayColumnDefinitionsConnectionResolvers<ContextType>;
-  DataDisplayColumnDefinitionsEdge?: DataDisplayColumnDefinitionsEdgeResolvers<ContextType>;
-  DataDisplaysConnection?: DataDisplaysConnectionResolvers<ContextType>;
-  DataDisplaysEdge?: DataDisplaysEdgeResolvers<ContextType>;
+  DataView?: DataViewResolvers<ContextType>;
+  DataViewColumnDefinition?: DataViewColumnDefinitionResolvers<ContextType>;
+  DataViewColumnDefinitionsConnection?: DataViewColumnDefinitionsConnectionResolvers<ContextType>;
+  DataViewColumnDefinitionsEdge?: DataViewColumnDefinitionsEdgeResolvers<ContextType>;
+  DataViewsConnection?: DataViewsConnectionResolvers<ContextType>;
+  DataViewsEdge?: DataViewsEdgeResolvers<ContextType>;
   Date?: GraphQLScalarType;
   Datetime?: GraphQLScalarType;
   DeleteActionPluginPayload?: DeleteActionPluginPayloadResolvers<ContextType>;
@@ -39056,8 +39056,8 @@ export type Resolvers<ContextType = any> = {
   DeleteApplicationStageHistoryPayload?: DeleteApplicationStageHistoryPayloadResolvers<ContextType>;
   DeleteApplicationStatusHistoryPayload?: DeleteApplicationStatusHistoryPayloadResolvers<ContextType>;
   DeleteCounterPayload?: DeleteCounterPayloadResolvers<ContextType>;
-  DeleteDataDisplayColumnDefinitionPayload?: DeleteDataDisplayColumnDefinitionPayloadResolvers<ContextType>;
-  DeleteDataDisplayPayload?: DeleteDataDisplayPayloadResolvers<ContextType>;
+  DeleteDataViewColumnDefinitionPayload?: DeleteDataViewColumnDefinitionPayloadResolvers<ContextType>;
+  DeleteDataViewPayload?: DeleteDataViewPayloadResolvers<ContextType>;
   DeleteElementTypePluginPayload?: DeleteElementTypePluginPayloadResolvers<ContextType>;
   DeleteFilePayload?: DeleteFilePayloadResolvers<ContextType>;
   DeleteFilterPayload?: DeleteFilterPayloadResolvers<ContextType>;
@@ -39202,8 +39202,8 @@ export type Resolvers<ContextType = any> = {
   UpdateApplicationStageHistoryPayload?: UpdateApplicationStageHistoryPayloadResolvers<ContextType>;
   UpdateApplicationStatusHistoryPayload?: UpdateApplicationStatusHistoryPayloadResolvers<ContextType>;
   UpdateCounterPayload?: UpdateCounterPayloadResolvers<ContextType>;
-  UpdateDataDisplayColumnDefinitionPayload?: UpdateDataDisplayColumnDefinitionPayloadResolvers<ContextType>;
-  UpdateDataDisplayPayload?: UpdateDataDisplayPayloadResolvers<ContextType>;
+  UpdateDataViewColumnDefinitionPayload?: UpdateDataViewColumnDefinitionPayloadResolvers<ContextType>;
+  UpdateDataViewPayload?: UpdateDataViewPayloadResolvers<ContextType>;
   UpdateElementTypePluginPayload?: UpdateElementTypePluginPayloadResolvers<ContextType>;
   UpdateFilePayload?: UpdateFilePayloadResolvers<ContextType>;
   UpdateFilterPayload?: UpdateFilterPayloadResolvers<ContextType>;

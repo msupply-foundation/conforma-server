@@ -349,10 +349,10 @@ const migrateData = async () => {
         LANGUAGE plpgsql;`)
 
     // Renaming outcome tables to "data"
-    console.log(' - Renaming data display tables')
+    console.log(' - Renaming data view tables')
     await DB.changeSchema(`
-          ALTER TABLE outcome_display RENAME TO data_display;
-          ALTER TABLE outcome_display_column_definition RENAME TO data_display_column_definition;
+          ALTER TABLE outcome_display RENAME TO data_view;
+          ALTER TABLE outcome_display_column_definition RENAME TO data_view_column_definition;
     `)
 
     console.log('Done migrating on v0.2.0...')
