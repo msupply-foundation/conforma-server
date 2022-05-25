@@ -65,7 +65,7 @@ CREATE OR REPLACE FUNCTION public.notify_trigger_queue ()
     AS $trigger_event$
 BEGIN
     PERFORM
-        pg_notify('trigger_notifications', json_build_object('trigger_id', NEW.id, 'trigger', NEW.trigger_type, 'table', NEW.table, 'record_id', NEW.record_id, 'event_code', NEW.event_code, 'data', NEW.data)::text);
+        pg_notify('trigger_notifications', json_build_object('trigger_id', NEW.id, 'trigger', NEW.trigger_type, 'table', NEW.table, 'record_id', NEW.record_id, 'event_code', NEW.event_code)::text);
     RETURN NULL;
 END;
 $trigger_event$
