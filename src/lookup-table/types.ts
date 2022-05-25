@@ -4,7 +4,7 @@ type LookupTableBase = {
 }
 
 interface LookupTableStructure extends LookupTableBase {
-  name: string
+  displayName: string
 }
 
 interface LookupTableStructureFull extends LookupTableStructure {

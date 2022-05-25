@@ -4,8 +4,8 @@ import { LookupTableService } from '../services'
 
 const ImportCsvController = async (request: FastifyRequest, reply: FastifyReply) => {
   const data = await request.files()
-  const { tableName } = request.query as any
-  const lookupTableService = await LookupTableService({ name: tableName })
+  const { name } = request.query as any
+  const lookupTableService = await LookupTableService({ name })
 
   for await (const file of data) {
     await parseStream(file.file, {

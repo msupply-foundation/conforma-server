@@ -17,18 +17,18 @@ const LookupTableModel = () => {
     return result.rows
   }
 
-  const createStructure = async ({ tableName, name, fieldMap }: LookupTableStructure) => {
+  const createStructure = async ({ tableName, displayName, fieldMap }: LookupTableStructure) => {
     try {
-      const text = `INSERT INTO data_table (table_name,name,field_map, is_lookup_table) VALUES ($1,$2,$3, true) RETURNING id`
+      const text = `INSERT INTO data_table (table_name, display_name, field_map, is_lookup_table) VALUES ($1,$2,$3, true) RETURNING id`
 
       const result: QueryResult<{ id: number }> = await DBConnect.query({
         text,
-        values: [tableName, name, JSON.stringify(fieldMap)],
+        values: [tableName, displayName, JSON.stringify(fieldMap)],
       })
 
       if (result.rows[0].id) return result.rows[0].id
 
-      throw new Error(`Lookup table structure '${name}' could not be created.`)
+      throw new Error(`Lookup table structure '${displayName}' could not be created.`)
     } catch (error) {
       throw error
     }
@@ -42,7 +42,7 @@ const LookupTableModel = () => {
             dataTable(id: $id) {
               id
               tableName
-              name
+              displayName
               fieldMap
             }
           }
@@ -64,7 +64,7 @@ const LookupTableModel = () => {
       const result = await DBConnect.gqlQuery(
         `
           query countStructureRowsByTableName($name: String!) {
-            dataTables(condition: {name: $name}) {
+            dataTables(condition: {displayName: $name}) {
               totalCount
             }
           }
@@ -155,7 +155,7 @@ const LookupTableModel = () => {
     tableName: string,
     fieldMaps: FieldMapType[]
   ): Promise<boolean> => {
-    const text = `UPDATE data_table SET field_map = $1 WHERE name = $2`
+    const text = `UPDATE data_table SET field_map = $1 WHERE display_name = $2`
     try {
       await DBConnect.query({ text, values: [JSON.stringify(fieldMaps), tableName] })
       return true

@@ -33,7 +33,7 @@ CREATE TABLE data_view_column_definition (
 CREATE TABLE data_table (
     id serial PRIMARY KEY,
     table_name varchar NOT NULL UNIQUE,
-    name varchar,
+    display_name varchar,
     field_map jsonb,
     is_lookup_table boolean DEFAULT FALSE
 );

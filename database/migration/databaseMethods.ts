@@ -89,15 +89,15 @@ const databaseMethods = {
   },
   insertDataTable: async (
     tableName: string,
-    name: string,
+    displayName: string,
     fieldMap: string,
     isLookupTable: boolean
   ) => {
-    const text = `INSERT INTO data_table (table_name, name, field_map, is_lookup_table) VALUES($1, $2, $3, $4)`
+    const text = `INSERT INTO data_table (table_name, display_name, field_map, is_lookup_table) VALUES($1, $2, $3, $4)`
     try {
       const result = await DBConnect.query({
         text,
-        values: [tableName, name, fieldMap, isLookupTable],
+        values: [tableName, displayName, fieldMap, isLookupTable],
       })
       return result.rows[0]
     } catch (err) {

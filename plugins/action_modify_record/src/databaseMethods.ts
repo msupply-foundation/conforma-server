@@ -63,7 +63,7 @@ const databaseMethods = (DBConnect: any) => {
         })
         // Also register new table in "data" table
         await DBConnect.query({
-          text: `INSERT INTO data_table (table_name, name) VALUES($1, $2)`,
+          text: `INSERT INTO data_table (table_name, display_name) VALUES($1, $2)`,
           values: [tableName.replace(DATA_TABLE_PREFIX, ''), tableNameOriginal],
         })
       } catch (err) {

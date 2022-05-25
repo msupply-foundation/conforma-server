@@ -12,15 +12,14 @@ type LookupTableServiceProps = {
 }
 
 const LookupTableService = async (props: LookupTableServiceProps) => {
-  let tableName = ''
-  let tableId = 0
   let name = ''
+  let tableId = 0
   let fieldMaps: FieldMapType[] = []
   let rows: object[] = []
   let dbFieldMap: any = []
   let structure: LookupTableStructureFull
 
-  // Initilisation
+  // Initialisation
   const lookupTableModel = LookupTableModel()
   if (props.tableId) {
     tableId = props.tableId
@@ -32,6 +31,7 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
   // Exported Methods
   const getAllRowsForTable = async () => await lookupTableModel.getAllRowsForTable(structure)
 
+  let tableName = ''
   const createTable = async () => {
     tableName = toSnakeCase(singular(name))
 
@@ -58,7 +58,7 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
 
     tableId = await lookupTableModel.createStructure({
       tableName,
-      name,
+      displayName: name,
       fieldMap: newTableFieldMap,
     })
 
@@ -78,7 +78,7 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
 
   const updateTable = async () => {
     tableName = structure.tableName
-    name = structure.name
+    // displayName = structure.displayName
     tableId = structure.id
     dbFieldMap = structure.fieldMap
 
