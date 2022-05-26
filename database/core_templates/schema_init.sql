@@ -420,6 +420,7 @@ CREATE VIEW permissions_all AS (
         organisation.name AS "orgName",
         "template".code AS "templateCode",
         permission_name.name AS "permissionName",
+        permission_name.description AS "description",
         template_permission.stage_number AS "stageNumber",
         template_permission.level_number AS "reviewLevel",
         template_permission.allowed_sections AS "allowedSections",
@@ -446,13 +447,13 @@ CREATE VIEW permissions_all AS (
         permission_join.is_active AS "isActive"
     FROM
         permission_name
-        JOIN permission_join ON permission_join.permission_name_id = permission_name.id
-        JOIN permission_policy ON permission_policy.id = permission_name.permission_policy_id
-        LEFT JOIN "user" ON permission_join.user_id = "user".id
-        LEFT JOIN organisation ON permission_join.organisation_id = organisation.id
-        LEFT JOIN template_permission ON template_permission.permission_name_id = permission_name.id
-        LEFT JOIN "template" ON "template".id = template_permission.template_id
-        LEFT JOIN template_category ON "template".template_category_id = template_category.id);
+    LEFT JOIN permission_join ON permission_join.permission_name_id = permission_name.id
+    JOIN permission_policy ON permission_policy.id = permission_name.permission_policy_id
+    LEFT JOIN "user" ON permission_join.user_id = "user".id
+    LEFT JOIN organisation ON permission_join.organisation_id = organisation.id
+    LEFT JOIN template_permission ON template_permission.permission_name_id = permission_name.id
+    LEFT JOIN "template" ON "template".id = template_permission.template_id
+    LEFT JOIN template_category ON "template".template_category_id = template_category.id);
 
 -- template element (questions or information elements)
 CREATE TYPE public.template_element_category AS ENUM (
@@ -983,7 +984,6 @@ CREATE TRIGGER trigger_schedule_trigger
     EXECUTE FUNCTION public.add_event_to_trigger_queue ();
 
 -- review assignment
-
 -- FUNCTION to auto-add template_id to review_assignment
 CREATE OR REPLACE FUNCTION public.review_assignment_template_id (application_id int)
     RETURNS int
@@ -1017,7 +1017,7 @@ CREATE TABLE public.review_assignment (
     application_id integer REFERENCES public.application (id) ON DELETE CASCADE NOT NULL,
     template_id integer GENERATED ALWAYS AS (public.review_assignment_template_id (application_id)) STORED REFERENCES public.template (id) ON DELETE CASCADE,
     allowed_sections varchar[] DEFAULT NULL,
-    assigned_sections varchar[] DEFAULT array[]::varchar[] NOT NULL,
+    assigned_sections varchar[] DEFAULT ARRAY[] ::varchar[] NOT NULL,
     TRIGGER public.trigger,
     time_updated timestamptz DEFAULT CURRENT_TIMESTAMP,
     level_number integer,
@@ -1032,16 +1032,16 @@ CREATE TABLE public.review_assignment (
 -- FUNCTION
 CREATE OR REPLACE FUNCTION public.empty_assigned_sections ()
     RETURNS TRIGGER
-        AS $review_assignment_event$
-    BEGIN
-        UPDATE
-            public.review_assignment
-        SET
-            assigned_sections = '{}'
-        WHERE
-            id = NEW.id;
-        RETURN NULL;
-    END;
+    AS $review_assignment_event$
+BEGIN
+    UPDATE
+        public.review_assignment
+    SET
+        assigned_sections = '{}'
+    WHERE
+        id = NEW.id;
+    RETURN NULL;
+END;
 $review_assignment_event$
 LANGUAGE plpgsql;
 
@@ -1083,42 +1083,44 @@ CREATE UNIQUE INDEX unique_review_assignment_assigner_no_org ON review_assignmen
 WHERE
     organisation_id IS NULL;
 
--- review question assignment
-CREATE TABLE public.review_question_assignment (
-    id serial PRIMARY KEY,
-    template_element_id integer REFERENCES public.template_element (id) ON DELETE CASCADE NOT NULL,
-    review_assignment_id integer REFERENCES public.review_assignment (id) ON DELETE CASCADE NOT NULL
-);
-
--- So we know what Section review assignments relate to:
-CREATE OR REPLACE VIEW review_question_assignment_section AS (
-    SELECT
-        rqa.id,
-        template_element_id,
-        review_assignment_id,
-        section_id AS template_section_id
-    FROM
-        public.review_question_assignment rqa
-        JOIN template_element ON template_element_id = template_element.id);
-
 -- Function to return count of assigned questions for current stage/level
 CREATE FUNCTION public.assigned_questions_count (app_id int, stage_id int, level int)
     RETURNS bigint
     AS $$
     SELECT
-        COUNT(DISTINCT (template_element.id))
-    FROM
-        -- LEFT JOIN TEMPLATE ON app.template_id = template.id
-        -- LEFT JOIN review ON app.id = review.application_id
-        review_assignment ra
-    LEFT JOIN review_question_assignment rqa ON ra.id = rqa.review_assignment_id
-    LEFT JOIN template_element ON rqa.template_element_id = template_element.id
+        COUNT(DISTINCT (te.id))
+    FROM (
+        SELECT
+            id,
+            application_id,
+            stage_id,
+            level_number,
+            status,
+            UNNEST(assigned_sections) AS section_code
+        FROM
+            review_assignment) ra
+    JOIN template_section ts ON ra.section_code = ts.code
+    JOIN template_element te ON ts.id = te.section_id
 WHERE
     ra.application_id = $1
     AND ra.stage_id = $2
     AND ra.level_number = $3
     AND ra.status = 'ASSIGNED'
-    AND template_element.category = 'QUESTION'
+    AND te.category = 'QUESTION'
+    AND te.template_code = (
+        SELECT
+            code
+        FROM
+            TEMPLATE
+        WHERE
+            id = (
+                SELECT
+                    template_id
+                FROM
+                    application
+                WHERE
+                    id = $1));
+
 $$
 LANGUAGE sql
 STABLE;
@@ -1289,7 +1291,6 @@ CREATE TABLE public.review_response (
     id serial PRIMARY KEY,
     comment varchar,
     decision public.review_response_decision,
-    review_question_assignment_id integer REFERENCES public.review_question_assignment (id) ON DELETE CASCADE,
     application_response_id integer REFERENCES public.application_response (id) ON DELETE CASCADE,
     review_response_link_id integer REFERENCES public.review_response (id) ON DELETE CASCADE,
     original_review_response_id integer REFERENCES public.review_response (id) ON DELETE CASCADE,
@@ -1327,7 +1328,7 @@ CREATE TRIGGER review_response_timestamp_trigger
     FOR EACH ROW
     EXECUTE FUNCTION public.update_review_response_timestamp ();
 
--- set review response original_review_response_id (the response that links to application id should be available for all reaponses)
+-- set review response original_review_response_id (the response that links to application id should be available for all responses)
 -- also flatten out review response chain by providing template_element_id in review_response and application_response_id
 CREATE OR REPLACE FUNCTION set_original_response ()
     RETURNS TRIGGER
@@ -1352,14 +1353,14 @@ BEGIN
         -- should always be original review_response when review_response_link_id IS NULL
         NEW.original_review_response_id = NEW.id;
     END IF;
-    -- review_question_assignment should always exist
+    -- application_response should always exist
     NEW.template_element_id = (
         SELECT
             template_element_id
         FROM
-            review_question_assignment
+            application_response
         WHERE
-            id = NEW.review_question_assignment_id);
+            id = NEW.application_response_id);
     RETURN NEW;
 END;
 $$
@@ -1498,21 +1499,46 @@ CREATE FUNCTION public.submitted_assigned_questions_count (app_id int, stage_id 
     RETURNS bigint
     AS $$
     SELECT
-        COUNT(DISTINCT (rqa.template_element_id))
-    FROM
-        review
-    LEFT JOIN review_assignment ra ON review.review_assignment_id = ra.id
-    LEFT JOIN review_question_assignment rqa ON ra.id = rqa.review_assignment_id
-    LEFT JOIN review_status_history rsh ON review.id = rsh.review_id
+        COUNT(DISTINCT (te.id))
+    FROM (
+        SELECT
+            id,
+            application_id,
+            stage_id,
+            level_number,
+            status,
+            UNNEST(assigned_sections) AS section_code
+        FROM
+            review_assignment) ra
+    JOIN template_section ts ON ra.section_code = ts.code
+    JOIN template_element te ON ts.id = te.section_id
+    LEFT JOIN review ON review.review_assignment_id = ra.id
+    LEFT JOIN review_status_history rsh ON rsh.review_id = review.id
 WHERE
     ra.application_id = $1
     AND ra.stage_id = $2
     AND ra.level_number = $3
     AND ra.status = 'ASSIGNED'
+    AND te.category = 'QUESTION'
     AND rsh.status = 'SUBMITTED'
+    AND te.template_code = (
+        SELECT
+            code
+        FROM
+            TEMPLATE
+        WHERE
+            id = (
+                SELECT
+                    template_id
+                FROM
+                    application
+                WHERE
+                    id = $1))
 $$
 LANGUAGE sql
-STABLE;-- file
+STABLE;
+
+-- file
 CREATE TABLE public.file (
     id serial PRIMARY KEY,
     unique_id varchar UNIQUE NOT NULL,
@@ -1909,6 +1935,8 @@ CREATE TABLE outcome_display_column_definition (
     UNIQUE (table_name, column_name)
 );
 
+-- ACTIVITY LOG
+-- This script contains "DROP" and "IF EXISTS" statements as it is called as a whole from the migration script
 CREATE TYPE public.event_type AS ENUM (
     'STAGE',
     'STATUS',
@@ -1919,7 +1947,7 @@ CREATE TYPE public.event_type AS ENUM (
     'PERMISSION' -- This type not (necessarily) tied to an application
 );
 
-CREATE TABLE public.activity_log (
+CREATE TABLE IF NOT EXISTS public.activity_log (
     id serial PRIMARY KEY,
     type public.event_type NOT NULL,
     value varchar NOT NULL,
@@ -1932,7 +1960,7 @@ CREATE TABLE public.activity_log (
 
 -- Make an index on the application_id field, since this is the one it will be
 -- searched by most often
-CREATE INDEX activity_log_application_index ON activity_log (application_id);
+CREATE INDEX IF NOT EXISTS activity_log_application_index ON activity_log (application_id);
 
 -- TRIGGERS and FUNCTIONS for updating activity log
 -- STAGE changes
@@ -1960,6 +1988,8 @@ BEGIN
 END;
 $application_event$
 LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS stage_activity_trigger ON public.application_stage_history;
 
 CREATE TRIGGER stage_activity_trigger
     AFTER INSERT ON public.application_stage_history
@@ -1996,6 +2026,8 @@ END;
 $application_event$
 LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS status_activity_trigger ON public.application_status_history;
+
 CREATE TRIGGER status_activity_trigger
 -- We run this trigger BEFORE insertion so we can more easily capture the
 -- previous status value
@@ -2015,10 +2047,14 @@ END;
 $application_event$
 LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS outcome_insert_activity_trigger ON public.application;
+
 CREATE TRIGGER outcome_insert_activity_trigger
     AFTER INSERT ON public.application
     FOR EACH ROW
     EXECUTE FUNCTION outcome_activity_log ();
+
+DROP TRIGGER IF EXISTS outcome_update_activity_trigger ON public.application;
 
 CREATE TRIGGER outcome_update_activity_trigger
     AFTER UPDATE ON public.application
@@ -2045,41 +2081,63 @@ BEGIN
                     'ERROR'
                 END), NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('status', NEW.status, 'reviewer', json_build_object('id', NEW.reviewer_id, 'name', (
                         SELECT
-                            full_name FROM "user"
+                            full_name
+                        FROM "user"
                         WHERE
                             id = NEW.reviewer_id), 'orgId', NEW.organisation_id, 'orgName', (
                             SELECT
-                                name FROM organisation
+                                name
+                            FROM organisation
                             WHERE
                                 id = NEW.organisation_id)), 'assigner', json_build_object('id', NEW.assigner_id, 'name', (
                                 SELECT
-                                    full_name FROM "user"
+                                    full_name
+                                FROM "user"
                                 WHERE
                                     id = NEW.assigner_id)), 'stage', json_build_object('number', NEW.stage_number, 'name', (
                                     SELECT
-                                        title FROM template_stage
+                                        title
+                                    FROM template_stage
                                     WHERE
-                                        id = NEW.stage_id)), 'sections', (
+                                        id = NEW.stage_id)), 'sections', COALESCE((
                                     SELECT
                                         json_agg(t)
-                                        FROM (
-                                            SELECT
-                                                title, code, INDEX FROM template_section
+                                    FROM (
+                                        SELECT
+                                            title, code, "index"
+                                        FROM template_section
+                                    WHERE
+                                        code = ANY (ARRAY (
+                                                SELECT
+                                                    assigned_sections
+                                                FROM review_assignment
                                             WHERE
-                                                id = ANY (ARRAY ( SELECT DISTINCT
-                                                    template_section_id FROM review_question_assignment_section
-                                                WHERE
-                                                    review_assignment_id = NEW.id)) ORDER BY INDEX) t), 'reviewLevel', NEW.level_number));
+                                                id = NEW.id))
+                                        AND template_id = NEW.template_id
+                                        AND NEW.assigned_sections <> '{}' ORDER BY "index") t), (
+                                    SELECT
+                                        json_agg(t)
+                                    FROM (
+                                        SELECT
+                                            title, code, "index"
+                                        FROM template_section
+                                    WHERE
+                                        code = ANY (OLD.assigned_sections)
+                                        AND template_id = NEW.template_id ORDER BY "index") t)), 'reviewLevel', NEW.level_number));
     RETURN NULL;
 END;
 $application_event$
 LANGUAGE plpgsql;
 
--- For this one we need to wait until the Trigger/Action is finished so we can check the newly-created review_question_assignment records
+-- For this trigger, we watch for changes to TRIGGER field, so it only runs
+-- once other triggers have finished
+DROP TRIGGER IF EXISTS assignment_activity_trigger ON public.review_assignment;
+
 CREATE TRIGGER assignment_activity_trigger
     AFTER UPDATE ON public.review_assignment
     FOR EACH ROW
-    WHEN (NEW.trigger IS NULL AND OLD.trigger = 'PROCESSING')
+    WHEN (NEW.assigned_sections <> OLD.assigned_sections)
+    -- WHEN (NEW.trigger IS NULL AND OLD.trigger = 'PROCESSING')
     EXECUTE FUNCTION assignment_activity_log ();
 
 -- REVIEW STATUS CHANGES
@@ -2095,6 +2153,7 @@ DECLARE
     level_num integer;
     is_last_level boolean;
     is_final_decision boolean;
+    templ_id integer;
 BEGIN
     SELECT
         r.application_id,
@@ -2114,6 +2173,13 @@ BEGIN
         review r
     WHERE
         id = NEW.review_id;
+    templ_id = (
+        SELECT
+            template_id
+        FROM
+            application
+        WHERE
+            id = app_id);
     prev_status = (
         SELECT
             status
@@ -2125,33 +2191,36 @@ BEGIN
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
         VALUES ('REVIEW', NEW.status, app_id, TG_TABLE_NAME, NEW.id, json_build_object('prevStatus', prev_status, 'status', NEW.status, 'reviewId', NEW.review_id, 'reviewer', json_build_object('id', reviewer_id, 'name', (
                         SELECT
-                            full_name FROM "user"
+                            full_name
+                        FROM "user"
                         WHERE
                             id = reviewer_id), 'stage', json_build_object('number', stage_number, 'name', (
                                 SELECT
-                                    title FROM public.template_stage
+                                    title
+                                FROM public.template_stage
                                 WHERE
                                     number = stage_number
-                                    AND template_id = (
-                                        SELECT
-                                            template_id FROM application
-                                        WHERE
-                                            id = app_id)))), 'sections', (
+                                    AND template_id = templ_id))), 'sections', (
+                            SELECT
+                                json_agg(t)
+                            FROM (
                                 SELECT
-                                    json_agg(t)
-                                    FROM (
+                                    title, code, "index"
+                                FROM template_section
+                            WHERE
+                                code = ANY (ARRAY (
                                         SELECT
-                                            title, code, "index" FROM template_section
-                                        WHERE
-                                            id = ANY (ARRAY ( SELECT DISTINCT
-                                                        template_section_id FROM review_question_assignment_section
-                                                    WHERE
-                                                        review_assignment_id = assignment_id))
-                                            ORDER BY "index") t), 'level', level_num, 'isLastLevel', is_last_level, 'finalDecision', is_final_decision));
+                                            assigned_sections
+                                        FROM review_assignment
+                                    WHERE
+                                        id = assignment_id))
+                                AND template_id = templ_id ORDER BY "index") t), 'level', level_num, 'isLastLevel', is_last_level, 'finalDecision', is_final_decision));
     RETURN NEW;
 END;
 $application_event$
 LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS review_status_activity_trigger ON public.review_status_history;
 
 CREATE TRIGGER review_status_activity_trigger
 -- We run this trigger BEFORE insertion so we can more easily capture the
@@ -2168,6 +2237,7 @@ DECLARE
     app_id integer;
     reviewer_id integer;
     rev_assignment_id integer;
+    templ_id integer;
 BEGIN
     SELECT
         r.application_id,
@@ -2179,26 +2249,40 @@ BEGIN
         review r
     WHERE
         id = NEW.review_id;
+    templ_id = (
+        SELECT
+            template_id
+        FROM
+            application
+        WHERE
+            id = app_id);
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
         VALUES ('REVIEW_DECISION', NEW.decision, app_id, TG_TABLE_NAME, NEW.id, json_build_object('reviewId', NEW.review_id, 'decision', NEW.decision, 'comment', NEW.comment, 'reviewer', json_build_object('id', reviewer_id, 'name', (
                         SELECT
-                            full_name FROM "user"
+                            full_name
+                        FROM "user"
                         WHERE
                             id = reviewer_id)), 'sections', (
                         SELECT
                             json_agg(t)
-                            FROM (
-                                SELECT
-                                    title, code, INDEX FROM template_section
-                                WHERE
-                                    id = ANY (ARRAY ( SELECT DISTINCT
-                                        template_section_id FROM review_question_assignment_section
+                        FROM (
+                            SELECT
+                                title, code, "index"
+                            FROM template_section
+                            WHERE
+                                code = ANY (ARRAY (
+                                        SELECT
+                                            assigned_sections
+                                        FROM review_assignment
                                     WHERE
-                                        review_assignment_id = rev_assignment_id)) ORDER BY INDEX) t)));
+                                        id = rev_assignment_id))
+                                AND template_id = templ_id ORDER BY "index") t)));
     RETURN NULL;
 END;
 $application_event$
 LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS review_decision_activity_trigger ON public.review_decision;
 
 CREATE TRIGGER review_decision_activity_trigger
     AFTER UPDATE ON public.review_decision
@@ -2252,7 +2336,8 @@ BEGIN
     INSERT INTO public.activity_log (type, value, "table", record_id, details)
         VALUES ('PERMISSION', status, TG_TABLE_NAME, data.id, json_build_object('permission', json_build_object('id', permission_id, 'name', permission_name), 'user', json_build_object('id', user_id, 'username', username, 'name', (
                         SELECT
-                            full_name FROM "user"
+                            full_name
+                        FROM "user"
                         WHERE
                             id = user_id)), 'organisation', json_build_object('id', org_id, 'name', org_name), 'isActive', active));
     RETURN data;
@@ -2260,10 +2345,14 @@ END;
 $application_event$
 LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS permission_insert_activity_trigger ON public.permission_join;
+
 CREATE TRIGGER permission_insert_activity_trigger
     AFTER INSERT ON public.permission_join
     FOR EACH ROW
     EXECUTE FUNCTION permission_activity_log ();
+
+DROP TRIGGER IF EXISTS permission_delete_activity_trigger ON public.permission_join;
 
 CREATE TRIGGER permission_delete_activity_trigger
     BEFORE DELETE ON public.permission_join

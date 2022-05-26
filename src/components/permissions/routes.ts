@@ -8,6 +8,7 @@ import path from 'path'
 import { readFileSync } from 'fs'
 import { startCase } from 'lodash'
 import { getAppEntryPointDir } from '../utilityFunctions'
+import { readLanguageOptions } from '../localisation/routes'
 
 const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
 
@@ -200,9 +201,7 @@ const routeGetPrefs = async (request: any, reply: any) => {
   const prefs = JSON.parse(
     readFileSync(path.join(getAppEntryPointDir(), '../preferences/preferences.json'), 'utf8')
   )
-  const languageOptions = JSON.parse(
-    readFileSync(path.join(getAppEntryPointDir(), '../localisation/languages.json'), 'utf8')
-  )
+  const languageOptions = readLanguageOptions()
   reply.send({ preferences: prefs.web, languageOptions })
 }
 
