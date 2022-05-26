@@ -355,6 +355,28 @@ const migrateData = async () => {
           ALTER TABLE outcome_display_column_definition RENAME TO data_view_column_definition;
     `)
 
+    // Common "data" table
+    console.log(' - Creating DATA table')
+    await DB.changeSchema(`
+      CREATE TABLE data_table (
+          id serial PRIMARY KEY,
+          table_name varchar NOT NULL UNIQUE,
+          display_name varchar,
+          field_map jsonb,
+          is_lookup_table boolean DEFAULT FALSE
+      );
+    `)
+
+    console.log(' - Moving lookup table data to data table')
+    const lookupTableData = await DB.getLookupTableData()
+    if (lookupTableData) {
+      for (const { name, label, field_map } of lookupTableData) {
+        await DB.changeSchema(`ALTER TABLE lookup_table_${name} RENAME TO data_table_${name}`)
+        await DB.insertDataTable(name, label, JSON.stringify(field_map), true)
+      }
+    }
+    await DB.changeSchema(`DROP TABLE IF EXISTS lookup_table`)
+
     console.log('Done migrating on v0.2.0...')
   }
 

@@ -29,3 +29,12 @@ CREATE TABLE data_view_column_definition (
     UNIQUE (table_name, column_name)
 );
 
+-- Table for cataloguing all "data" tables, including lookup tables
+CREATE TABLE data_table (
+    id serial PRIMARY KEY,
+    table_name varchar NOT NULL UNIQUE,
+    display_name varchar,
+    field_map jsonb,
+    is_lookup_table boolean DEFAULT FALSE
+);
+

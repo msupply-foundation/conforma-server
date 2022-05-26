@@ -2,7 +2,15 @@ import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import databaseMethods, { DatabaseMethodsType } from './databaseMethods'
 import { DBConnectType } from '../../../src/components/databaseConnect'
-import { mapValues, get } from 'lodash'
+import { mapValues, get, snakeCase } from 'lodash'
+import { singular } from 'pluralize'
+
+// This will be prepended to NEW table created if not already present
+export const DATA_TABLE_PREFIX = 'data_table_'
+
+// These are the only tables in the system that we allow to be mutated with this
+// plugin. All other names will have "data_table_" prepended.
+const ALLOWED_TABLE_NAMES = ['user', 'organisation']
 
 const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
@@ -14,6 +22,8 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     data,
     ...record
   } = parameters
+
+  const tableNameProper = getValidTableName(tableName)
 
   const fieldToMatch = matchField ?? 'id'
   const valueToMatch = matchValue ?? record[fieldToMatch]
@@ -31,32 +41,33 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
   }
 
   try {
-    await createOrUpdateTable(DBConnect, db, tableName, fullRecord)
+    await createOrUpdateTable(DBConnect, db, tableNameProper, fullRecord, tableName)
 
-    let recordId = await db.getRecordId(tableName, fieldToMatch, valueToMatch)
+    let recordId = await db.getRecordId(tableNameProper, fieldToMatch, valueToMatch)
     const isUpdate = recordId !== 0
 
     let result: any = {}
     if (isUpdate) {
       // UPDATE
-      console.log(`Updating ${tableName} record: ${JSON.stringify(fullRecord, null, 2)}`)
-      result = await db.updateRecord(tableName, recordId, fullRecord)
+      console.log(`Updating ${tableNameProper} record: ${JSON.stringify(fullRecord, null, 2)}`)
+      result = await db.updateRecord(tableNameProper, recordId, fullRecord)
     } else {
       // CREATE NEW
-      console.log(`Creating ${tableName} record: ${JSON.stringify(fullRecord, null, 2)}`)
-      result = await db.createRecord(tableName, fullRecord)
+      console.log(`Creating ${tableNameProper} record: ${JSON.stringify(fullRecord, null, 2)}`)
+      result = await db.createRecord(tableNameProper, fullRecord)
       recordId = result.recordId
     }
 
-    if (shouldCreateJoinTable) await db.createJoinTableAndRecord(tableName, applicationId, recordId)
+    if (shouldCreateJoinTable)
+      await db.createJoinTableAndRecord(tableNameProper, applicationId, recordId)
 
     if (!result.success) throw new Error('Problem creating or updating record')
 
-    console.log(`${isUpdate ? 'Updated' : 'Created'} ${tableName} record, ID: `, recordId)
+    console.log(`${isUpdate ? 'Updated' : 'Created'} ${tableNameProper} record, ID: `, recordId)
     return {
       status: ActionQueueStatus.Success,
       error_log: '',
-      output: { [tableName]: result[tableName] },
+      output: { [tableNameProper]: result[tableNameProper] },
     }
   } catch (error) {
     console.log(error.message)
@@ -71,11 +82,12 @@ const createOrUpdateTable = async (
   DBConnect: DBConnectType,
   db: DatabaseMethodsType,
   tableName: string,
-  record: { [key: string]: object | string }
+  record: { [key: string]: object | string },
+  tableNameOriginal: string
 ) => {
   const tableAndFields = await DBConnect.getDatabaseInfo(tableName)
 
-  if (tableAndFields.length === 0) await db.createTable(tableName)
+  if (tableAndFields.length === 0) await db.createTable(tableName, tableNameOriginal)
 
   const fieldsToCreate = Object.entries(record)
     .filter(([fieldName]) => !tableAndFields.find(({ column_name }) => column_name === fieldName))
@@ -85,6 +97,15 @@ const createOrUpdateTable = async (
 }
 
 export default modifyRecord
+
+const getValidTableName = (inputName: string | undefined): string => {
+  if (!inputName) throw new Error('Missing table name')
+  if (ALLOWED_TABLE_NAMES.includes(inputName)) return inputName
+  const tableName = snakeCase(singular(inputName))
+  const namePattern = new RegExp(`^${DATA_TABLE_PREFIX}.+`)
+
+  return namePattern.test(tableName) ? tableName : `${DATA_TABLE_PREFIX}${tableName}`
+}
 
 const getPostgresType = (value: any): string => {
   if (value instanceof Date) return 'timestamptz'

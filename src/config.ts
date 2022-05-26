@@ -34,6 +34,7 @@ const config: { [key: string]: any } = {
     process.env.NODE_ENV === 'production' ? '../../node_modules' : '../node_modules',
   jwtSecret: process.env.JWT_SECRET || 'devsecret',
   RESTport: 8080,
+  dataTablePrefix: 'data_table',
   ...serverPrefs,
 }
 
