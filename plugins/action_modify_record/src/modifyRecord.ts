@@ -10,7 +10,7 @@ export const DATA_TABLE_PREFIX = 'data_table_'
 
 // These are the only tables in the system that we allow to be mutated with this
 // plugin. All other names will have "data_table_" prepended.
-const ALLOWED_TABLE_NAMES = ['user', 'organisation']
+const ALLOWED_TABLE_NAMES = ['user', 'organisation', 'application']
 
 const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
