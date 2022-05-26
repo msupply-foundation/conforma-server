@@ -78,7 +78,6 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
 
   const updateTable = async () => {
     tableName = structure.tableName
-    // displayName = structure.displayName
     tableId = structure.id
     dbFieldMap = structure.fieldMap
 
