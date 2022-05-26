@@ -24,7 +24,13 @@ import { routeRunAction, routeGetApplicationData } from './components/actions/ru
 import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
 import snapshotRoutes from './components/snapshots/routes'
-import { routeGetLanguageFile } from './components/localisation/routes'
+import {
+  routeGetLanguageFile,
+  routeEnableLanguage,
+  routeInstallLanguage,
+  routeRemoveLanguage,
+  routeGetAllLanguageFiles,
+} from './components/localisation/routes'
 import { routeTriggers } from './components/other/routeTriggers'
 import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
 import migrateData from '../database/migration/migrateData'
@@ -108,6 +114,10 @@ const startServer = async () => {
         server.get('/updateRowPolicies', routeUpdateRowPolicies)
         server.post('/run-action', routeRunAction)
         server.get('/get-application-data', routeGetApplicationData)
+        server.post('/enable-language', routeEnableLanguage)
+        server.post('/install-language', routeInstallLanguage)
+        server.post('/remove-language', routeRemoveLanguage)
+        server.get('/all-languages', routeGetAllLanguageFiles)
         done()
       },
       { prefix: '/admin' }
