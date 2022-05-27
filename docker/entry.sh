@@ -28,7 +28,7 @@ yarn postgraphile \
    --disable-query-log \
    -r graphile_user \
    -q '/postgraphile/graphql' \
-   -i '/postgraphile/graphiql' | tee /var/log/application_manager/graphile.log &
+   -i '/postgraphile/graphiql' | tee /var/log/conforma/graphile.log &
 sleep 3
 
 echo '---'
@@ -36,7 +36,7 @@ echo '---'
 echo '--- STARTING SERVER'
 echo '---'
 echo '---'
-NODE_ENV=production node ./build/src/server.js | tee /var/log/application_manager/server.log &
+NODE_ENV=production node ./build/src/server.js | tee /var/log/conforma/server.log &
 
 echo '---'
 echo '---'

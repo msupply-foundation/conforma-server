@@ -18,7 +18,7 @@ docker run \
 # Volumes
 
 # Can also mount container file system (below commands can be repeated)
-# -v `~/Documents/back_end_plugins:/usr/src/application_manager_server/build/plugins -> ${local-path}{container-path}
+# -v `~/Documents/back_end_plugins:/usr/src/conforma_server/build/plugins -> ${local-path}{container-path}
 
 # Some common container paths
 
@@ -26,5 +26,5 @@ docker run \
 # nginx log: /var/log/nginx/
 # postgresql /etc/postgresql/12/main/
 # postgresql log: /var/log/postgresql/
-# back end snapshots: /usr/src/application_manager_server/database/snapshots/
-# back end and postgraphile log: /var/log/application_manager
+# back end snapshots: /usr/src/conforma_server/database/snapshots/
+# back end and postgraphile log: /var/log/conforma

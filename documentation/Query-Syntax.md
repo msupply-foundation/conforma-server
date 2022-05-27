@@ -676,7 +676,7 @@ Tree structure:
 
 # Installation
 
-The module is published as a Github package [here](https://github.com/openmsupply/application-manager-server/packages/433685).
+The module is published as a Github package [here](https://github.com/openmsupply/conforma-server/packages/433685).
 
 In order to import packages from Github (rather than the default npm), the Github registry info needs to be added to an `.npmrc` config file in the project root, like so:
 
