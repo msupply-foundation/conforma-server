@@ -84,3 +84,5 @@ export const filterObject = (
   const filtered = Object.entries(inputObj).filter(([_, value]) => filterFunction(value))
   return Object.fromEntries(filtered)
 }
+
+export const capitaliseFirstLetter = (str: string) => str[0].toUpperCase() + str.slice(1)

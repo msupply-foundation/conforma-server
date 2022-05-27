@@ -40,7 +40,7 @@ const routeDataViewTable = async (request: any, reply: any) => {
   const orderBy = query?.orderBy ?? 'id'
   const ascending = query?.ascending ? query?.ascending === 'true' : true
 
-  const { columnDefinitionMasterList, fieldNames, gqlFilters, title, code } =
+  const { matchingTableName, columnDefinitionMasterList, fieldNames, gqlFilters, title, code } =
     await buildAllColumnDefinitions({
       permissionNames,
       tableName,
@@ -51,7 +51,7 @@ const routeDataViewTable = async (request: any, reply: any) => {
 
   // GraphQL query -- get ALL fields (passing JWT), with pagination
   const { fetchedRecords, totalCount, error } = await queryDataTable(
-    tableName,
+    matchingTableName,
     fieldNames,
     gqlFilters,
     first,
@@ -81,6 +81,7 @@ const routeDataViewDetail = async (request: any, reply: any) => {
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
 
   const {
+    matchingTableName,
     columnDefinitionMasterList,
     title,
     fieldNames,
@@ -91,7 +92,7 @@ const routeDataViewDetail = async (request: any, reply: any) => {
 
   // GraphQL query -- get ALL fields (passing JWT), with pagination
   const fetchedRecord = await queryDataTableSingleItem(
-    tableName,
+    matchingTableName,
     fieldNames,
     gqlFilters,
     recordId,
@@ -102,7 +103,7 @@ const routeDataViewDetail = async (request: any, reply: any) => {
 
   // GraphQL query to get linked applications -- this one with Admin JWT!
   const linkedApplications = showLinkedApplications
-    ? await queryLinkedApplications(recordId, tableName)
+    ? await queryLinkedApplications(recordId, matchingTableName)
     : undefined
 
   const response = await constructDetailsResponse(
