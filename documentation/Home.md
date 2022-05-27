@@ -1,4 +1,4 @@
-## **The mSupply Foundation Application Manager** server
+## **Conforma** server
 
 ### Development Documentation.
 
