@@ -40,7 +40,7 @@ if [ $PUSH = 'push' ]; then
    docker push "${ACCOUNT}/${IMAGE_NAME}:${IMAGE_TAG}"
 fi
 
-# -t testbuild -> tag for the image, would be something like 'TMF-application-manager:B-{back end tag}-F-{front end tag}'
+# -t testbuild -> tag for the image, would be something like 'TMF-conforma:B-{back end tag}-F-{front end tag}'
 # --build-arg SERVER_BRANCH and WEB_APP_BRANCH -> branch of front and back end to pull and build (should be able to use just the tag name), can escape # with \#
 # --secret id=githubtoken,src=../githubtoken.txt -> can 'secretly' and temporarily mount file (see top comment about this particular file)
 # --no-cache -> can be used to re-build (if for example branch content you are building has changed)

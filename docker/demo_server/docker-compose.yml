@@ -3,7 +3,7 @@
 version: '3.9'
 services:
   app:
-    image: 'msupplyfoundation/conforma-demo:${TAG}'
+    image: 'msupplyfoundation/conforma:${TAG}'
     ports:
       - '${PORT_APP}:3000'
     expose:
@@ -14,10 +14,10 @@ services:
       JWT_SECRET: '${JWT_SECRET}'
     volumes:
       - postgres:/var/lib/postgresql/12/main/
-      - snapshots:/usr/src/application-manager-server/build/database/_snapshots
-      - files:/usr/src/application-manager-server/build/files
-      - localisation:/usr/src/application-manager-server/build/localisation
-      - preferences:/usr/src/application-manager-server/build/preferences
+      - snapshots:/usr/src/conforma-server/build/database/_snapshots
+      - files:/usr/src/conforma-server/build/files
+      - localisation:/usr/src/conforma-server/build/localisation
+      - preferences:/usr/src/conforma-server/build/preferences
     tty: true
   grafana:
     image: 'grafana/grafana'

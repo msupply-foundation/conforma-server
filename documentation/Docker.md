@@ -15,14 +15,14 @@ In Docker folder you will find scripts to build an overall image of both front a
 - Pulls both repos (with specified branches)
   - Since we are using github packages, authentication is required, which is done via a `secret`, see `./dockerise.sh` below
 - Copies configurations
-  - `nginx_config/application_manager.conf`, to set up reverse proxies and serve `server` and `postgraphile` on routes
+  - `nginx_config/conforma.conf`, to set up reverse proxies and serve `server` and `postgraphile` on routes
   - `postgres_config/pg_hba`, to enable no password authentication to pg, careful if port is exposed form container
   - `web_app_config/config.json`, to point web app to `server` and `graphql` correctly
 - Builds both repos
 - Initialised database (schema and data), `./database.sh`
 - Sets up entrypoint (which would launch postgres, postgraphile and server, on container startup, and launches `bash` session), `./entry.sh`
 
-Logs for postgraphile and server are displayed in terminal and also written to `/var/log/application_manager`
+Logs for postgraphile and server are displayed in terminal and also written to `/var/log/conforma`
 
 ## ./dockerise.sh
 
@@ -62,7 +62,7 @@ Last parameter to `docker run`, is the image name and tag
 
 ## Tagging
 
-We want to set up a convention for tagging images, ideally images that will be pushed to docker hub would be built from combinations of tagged releases of back/front repos. And the resulting image would be tagged: `'TMF-application-manager:B-{back end tag}-F-{front end tag}'`
+We want to set up a convention for tagging images, ideally images that will be pushed to docker hub would be built from combinations of tagged releases of back/front repos. And the resulting image would be tagged: `'TMF-conforma:B-{back end tag}-F-{front end tag}'`
 
 ## Volumes
 
@@ -76,8 +76,8 @@ Common container paths
 - nginx log: `/var/log/nginx/`
 - postgresql data: `/etc/postgresql/12/main/`
 - postgresql log: `/var/log/postgresql/`
-- back end snapshots: `/usr/src/application_manager_server/database/snapshots/`
-- back end and postgraphile log: `/var/log/application_manager`
+- back end snapshots: `/usr/src/conforma_server/database/snapshots/`
+- back end and postgraphile log: `/var/log/conforma`
 
 **NOTE** -> when starting new container it will first try to use content of local volume, so it's best to either empty those folders for new image (if you've mounted them)
 

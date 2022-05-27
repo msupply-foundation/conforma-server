@@ -8,7 +8,7 @@ Run `yarn test` to see it in action. (See [Testing section](#testing) for more i
 
 ---
 
-**The problem**: the highly configurable Template system in mSupply Application Manager requires many values to be stored as dynamic queries to either local state or the database, and perform basic operations (logic, concatenation, etc.) on them. We need a way to represent these potentially complex “expressions” in the database so they can be evaluated at runtime (both in the front and back-end), but without resorting to using `eval()` to evaluate javascript code directly.
+**The problem**: the highly configurable Template system in Conforma requires many values to be stored as dynamic queries to either local state or the database, and perform basic operations (logic, concatenation, etc.) on them. We need a way to represent these potentially complex “expressions” in the database so they can be evaluated at runtime (both in the front and back-end), but without resorting to using `eval()` to evaluate javascript code directly.
 
 **The solution**: We store these queries in a JSON **expression tree** which can be easily traversed recursively and evaluated when needed. This way, we can store very simple values (e.g. literal strings) in the same format as complex dynamic queries. The function `evaluateExpression()` evaluates these expressions.
 
@@ -676,7 +676,7 @@ Tree structure:
 
 # Installation
 
-The module is published as a Github package [here](https://github.com/openmsupply/application-manager-server/packages/433685).
+The module is published as a Github package [here](https://github.com/openmsupply/conforma-server/packages/433685).
 
 In order to import packages from Github (rather than the default npm), the Github registry info needs to be added to an `.npmrc` config file in the project root, like so:
 

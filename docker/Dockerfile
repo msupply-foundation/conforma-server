@@ -60,11 +60,11 @@ RUN apt-get install yarn -y
 ARG SERVER_BRANCH=master
 ARG WEB_APP_BRANCH=master
 WORKDIR /usr/src/
-RUN git clone -b ${SERVER_BRANCH} https://github.com/openmsupply/application-manager-server.git
-RUN git clone -b ${WEB_APP_BRANCH} https://github.com/openmsupply/application-manager-web-app.git
+RUN git clone -b ${SERVER_BRANCH} https://github.com/openmsupply/conforma-server.git
+RUN git clone -b ${WEB_APP_BRANCH} https://github.com/openmsupply/conforma-web-app.git
 
 # --- BUILD SERVER
-WORKDIR /usr/src/application-manager-server
+WORKDIR /usr/src/conforma-server
 RUN cp .npmrc .npmrc_backup
 RUN echo "" >> .npmrc
 RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
@@ -73,7 +73,7 @@ RUN yarn build
 RUN rm .npmrc && mv .npmrc_backup .npmrc
 
 # --- BUILD WEB APP
-WORKDIR /usr/src/application-manager-web-app
+WORKDIR /usr/src/conforma-web-app
 RUN cp .npmrc .npmrc_backup
 RUN echo "" >> .npmrc
 RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
@@ -83,7 +83,7 @@ RUN yarn build
 RUN rm .npmrc && mv .npmrc_backup .npmrc
 
 # --- ADD NGINX CONFIG
-COPY nginx_config/application_manager.conf /etc/nginx/conf.d/
+COPY nginx_config/conforma.conf /etc/nginx/conf.d/
 
 # --- ADD POSTGRES CONFIG
 WORKDIR /etc/postgresql/${POSTGRES_VERSION}/main
@@ -96,12 +96,12 @@ COPY database.sh .
 RUN ./database.sh
 
 # --- CREATE LOG DIR
-WORKDIR /var/log/application_manager
+WORKDIR /var/log/conforma
 
 # --- PREPARING ENTRY
 WORKDIR /usr/src/entry
 COPY entry.sh .
-WORKDIR /usr/src/application-manager-server
+WORKDIR /usr/src/conforma-server
 ENTRYPOINT /./usr/src/entry/entry.sh
 
 EXPOSE 3000

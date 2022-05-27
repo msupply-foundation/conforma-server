@@ -3,7 +3,7 @@
 echo '--- STARTING POSTGRES'
 service postgresql start
 
-cd /usr/src/application-manager-server
+cd /usr/src/conforma-server
 
 echo '--- ADDING SCHEMA'
 ./database/initialise_database.sh tmf_app_manager
