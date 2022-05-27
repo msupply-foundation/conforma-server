@@ -55,6 +55,7 @@ export interface ColumnDefinition {
 export type ColumnDefinitionMasterList = ColumnDefinition[]
 
 export interface ColumnDetailOutput {
+  matchingTableName: string
   title: string
   code: string
   columnDefinitionMasterList: ColumnDefinitionMasterList
