@@ -4,7 +4,7 @@
 # githubtoken.txt should contain github token: https://github.com/settings/tokens -> generate new token -> [x] read:packages
 
 BRANCH_NAME=${1:-develop} # Use develop if no branch/tag specified in args
-IMAGE_NAME='conforma-demo'
+IMAGE_NAME='conforma'
 ACCOUNT='msupplyfoundation'
 INITIAL_DATA_LOCALE=''
 PUSH=${2:-nopush} # Default won't push to Docker hub

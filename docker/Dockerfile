@@ -57,8 +57,8 @@ RUN apt-get install yarn -y
 # ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
 
 # --- ADD REPOS
-ARG SERVER_BRANCH=master
-ARG WEB_APP_BRANCH=master
+ARG SERVER_BRANCH=main
+ARG WEB_APP_BRANCH=main
 WORKDIR /usr/src/
 RUN git clone -b ${SERVER_BRANCH} https://github.com/openmsupply/conforma-server.git
 RUN git clone -b ${WEB_APP_BRANCH} https://github.com/openmsupply/conforma-web-app.git
