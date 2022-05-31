@@ -1,5 +1,5 @@
 import DBConnect from '../databaseConnect'
-import { objectKeysToCamelCase } from '../utilityFunctions'
+import { objectKeysToCamelCase, capitaliseFirstLetter } from '../utilityFunctions'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import fetch from 'node-fetch'
 import { camelCase, snakeCase, startCase } from 'lodash'
@@ -24,6 +24,7 @@ import { plural } from 'pluralize'
 // CONSTANTS
 const REST_OF_DATAVIEW_FIELDS = '...'
 const graphQLEndpoint = config.graphQLendpoint
+const dataTablePrefix = camelCase(config.dataTablePrefix)
 
 type JWTData = {
   userId: number
@@ -54,7 +55,11 @@ export const buildAllColumnDefinitions = async ({
   // Look up allowed Data views
   const dataTables = (await DBConnect.getAllTableNames()).map((tableName) => camelCase(tableName))
 
-  if (!dataTables.includes(tableName)) throw new Error(`Invalid table name: ${tableName}`)
+  const matchingTableName = dataTables.find(
+    (table) => table === dataTablePrefix + capitaliseFirstLetter(tableName) || table === tableName
+  )
+
+  if (!matchingTableName) throw new Error(`Invalid table name: ${tableName}`)
 
   const dataViews = (await DBConnect.getAllowedDataViews(permissionNames, tableName))
     .map((dataView) => objectKeysToCamelCase(dataView))
@@ -73,7 +78,7 @@ export const buildAllColumnDefinitions = async ({
 
   // Get all Fields on Data table (schema query)
   const fields: { name: string; dataType: PostgresDataType }[] = (
-    await DBConnect.getDataTableColumns(snakeCase(tableName))
+    await DBConnect.getDataTableColumns(snakeCase(matchingTableName))
   ).map(({ name, dataType }) => ({
     name: camelCase(name),
     dataType: dataTypeMap?.[dataType as PostgresDataType] ?? dataType,
@@ -114,6 +119,7 @@ export const buildAllColumnDefinitions = async ({
       : undefined
 
   return {
+    matchingTableName,
     title: title ?? plural(startCase(tableName)),
     code,
     columnDefinitionMasterList,
