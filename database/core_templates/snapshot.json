@@ -410,120 +410,8 @@
    "value": 2
   }
  ],
- "filter": [
-  {
-   "code": "approveApplications",
-   "id": 1,
-   "query": {
-    "outcome": "APPROVED"
-   },
-   "title": "Approved applications",
-   "userRole": "APPLY"
-  },
-  {
-   "code": "submittedApplications",
-   "id": 2,
-   "query": {
-    "status": "submitted"
-   },
-   "title": "Submitted applications",
-   "userRole": "APPLY"
-  },
-  {
-   "code": "draftApplications",
-   "id": 3,
-   "query": {
-    "status": "draft"
-   },
-   "title": "Draft applications",
-   "userRole": "APPLY"
-  },
-  {
-   "code": "changeRequestApplications",
-   "id": 4,
-   "query": {
-    "status": "Changes Required"
-   },
-   "title": "Applications pending action",
-   "userRole": "APPLY"
-  },
-  {
-   "code": "availableForSelfAssignmentReviews",
-   "id": 5,
-   "query": {
-    "reviewerAction": "SELF_ASSIGN"
-   },
-   "title": "Applications available for self-assignment",
-   "userRole": "REVIEW"
-  },
-  {
-   "code": "readyToStartReviews",
-   "id": 6,
-   "query": {
-    "reviewerAction": "START_REVIEW"
-   },
-   "title": "Applications pending review",
-   "userRole": "REVIEW"
-  },
-  {
-   "code": "readyToRestartReviews",
-   "id": 7,
-   "query": {
-    "reviewerAction": "RESTART_REVIEW"
-   },
-   "title": "Applications with updates to review",
-   "userRole": "REVIEW"
-  },
-  {
-   "code": "draftReviews",
-   "id": 8,
-   "query": {
-    "reviewerAction": "CONTINUE_REVIEW"
-   },
-   "title": "Draft reviews of applications",
-   "userRole": "REVIEW"
-  },
-  {
-   "code": "changeRequestReviews",
-   "id": 9,
-   "query": {
-    "reviewerAction": "UPDATE_REVIEW"
-   },
-   "title": "Reviews pending action",
-   "userRole": "REVIEW"
-  },
-  {
-   "code": "awaitingAssignments",
-   "id": 10,
-   "query": {
-    "assignerAction": "ASSIGN"
-   },
-   "title": "Reviews awaiting assignment",
-   "userRole": "ASSIGN"
-  },
-  {
-   "code": "availableForReAssignments",
-   "id": 11,
-   "query": {
-    "assignerAction": "RE_ASSIGN"
-   },
-   "title": "Reviews available for re-assignment",
-   "userRole": "ASSIGN"
-  }
- ],
- "lookupTable": [],
- "organisation": [
-  {
-   "address": null,
-   "id": 1,
-   "isSystemOrg": true,
-   "logoUrl": "/file?uid=CylhAzxRhSX_QjtArq3bi",
-   "name": "Food and Drug Authority",
-   "registration": "fda",
-   "registrationDocumentation": null
-  }
- ],
- "outcomeDisplay": [
+ "dataTable": [],
+ "dataView": [
   {
    "code": "userPublic",
    "detailViewExcludeColumns": [
@@ -652,7 +540,7 @@
    "title": "Organisations"
   }
  ],
- "outcomeDisplayColumnDefinition": [
+ "dataViewColumnDefinition": [
   {
    "additionalFormatting": null,
    "columnName": "fullName",
@@ -791,6 +679,118 @@
     ],
     "operator": "graphQL"
    }
+  }
+ ],
+ "filter": [
+  {
+   "code": "approveApplications",
+   "id": 1,
+   "query": {
+    "outcome": "APPROVED"
+   },
+   "title": "Approved applications",
+   "userRole": "APPLY"
+  },
+  {
+   "code": "submittedApplications",
+   "id": 2,
+   "query": {
+    "status": "submitted"
+   },
+   "title": "Submitted applications",
+   "userRole": "APPLY"
+  },
+  {
+   "code": "draftApplications",
+   "id": 3,
+   "query": {
+    "status": "draft"
+   },
+   "title": "Draft applications",
+   "userRole": "APPLY"
+  },
+  {
+   "code": "changeRequestApplications",
+   "id": 4,
+   "query": {
+    "status": "Changes Required"
+   },
+   "title": "Applications pending action",
+   "userRole": "APPLY"
+  },
+  {
+   "code": "availableForSelfAssignmentReviews",
+   "id": 5,
+   "query": {
+    "reviewerAction": "SELF_ASSIGN"
+   },
+   "title": "Applications available for self-assignment",
+   "userRole": "REVIEW"
+  },
+  {
+   "code": "readyToStartReviews",
+   "id": 6,
+   "query": {
+    "reviewerAction": "START_REVIEW"
+   },
+   "title": "Applications pending review",
+   "userRole": "REVIEW"
+  },
+  {
+   "code": "readyToRestartReviews",
+   "id": 7,
+   "query": {
+    "reviewerAction": "RESTART_REVIEW"
+   },
+   "title": "Applications with updates to review",
+   "userRole": "REVIEW"
+  },
+  {
+   "code": "draftReviews",
+   "id": 8,
+   "query": {
+    "reviewerAction": "CONTINUE_REVIEW"
+   },
+   "title": "Draft reviews of applications",
+   "userRole": "REVIEW"
+  },
+  {
+   "code": "changeRequestReviews",
+   "id": 9,
+   "query": {
+    "reviewerAction": "UPDATE_REVIEW"
+   },
+   "title": "Reviews pending action",
+   "userRole": "REVIEW"
+  },
+  {
+   "code": "awaitingAssignments",
+   "id": 10,
+   "query": {
+    "assignerAction": "ASSIGN"
+   },
+   "title": "Reviews awaiting assignment",
+   "userRole": "ASSIGN"
+  },
+  {
+   "code": "availableForReAssignments",
+   "id": 11,
+   "query": {
+    "assignerAction": "RE_ASSIGN"
+   },
+   "title": "Reviews available for re-assignment",
+   "userRole": "ASSIGN"
+  }
+ ],
+ "organisation": [
+  {
+   "address": null,
+   "id": 1,
+   "isSystemOrg": true,
+   "logoUrl": "/file?uid=CylhAzxRhSX_QjtArq3bi",
+   "name": "Food and Drug Authority",
+   "registration": "fda",
+   "registrationDocumentation": null
   }
  ],
  "permissionPolicy": [
@@ -1026,6 +1026,12 @@
    "name": "version",
    "timestamp": "2022-05-25T14:46:41.70015+12:00",
    "value": "0.2.0-27"
+  },
+  {
+   "id": 4,
+   "name": "version",
+   "timestamp": "2022-06-02T15:42:17.352887+12:00",
+   "value": "0.2.0"
   }
  ],
  "templateCategory": [
