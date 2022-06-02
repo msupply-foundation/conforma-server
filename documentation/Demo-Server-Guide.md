@@ -163,7 +163,7 @@ docker-compose allows us to map specific container folders to actual folders on 
 
 Volumes are created automatically the first time each docker-compose container instance is launched.
 
-Docker stores these volumes in its internal data folder (`/var/lib/docker/volumnes` in the case of our demo server), so it is a good idea to make a symlink to this folder in a more accessible place (such as in the `demo_server` folder where the `docker-compose.yml` file is). To make a symlink:
+Docker stores these volumes in its internal data folder (`/var/lib/docker/volumes` in the case of our demo server), so it is a good idea to make a symlink to this folder in a more accessible place (such as in the `demo_server` folder where the `docker-compose.yml` file is). To make a symlink:
 
 `ln -s <source-folder> <target-folder>`
 
