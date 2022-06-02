@@ -15,20 +15,22 @@ import {
   routeGetPrefs,
   routecheckUnique,
 } from './components/permissions'
-import { routeOutcomes, routeOutcomesTable, routeOutcomesDetail } from './components/outcomes'
+import { routeDataViews, routeDataViewTable, routeDataViewDetail } from './components/data_display'
 import { routeGeneratePDF } from './components/files/documentGenerate'
-import {
-  saveFiles,
-  getFilePath,
-  createFilesFolder,
-  filesFolder,
-} from './components/files/fileHandler'
+import { saveFiles, getFilePath, filesFolder } from './components/files/fileHandler'
+import { createDefaultDataFolders } from './components/files/createDefaultFolders'
 import { getAppEntryPointDir, objectKeysToSnakeCase } from './components/utilityFunctions'
 import { routeRunAction, routeGetApplicationData } from './components/actions/runAction'
 import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
 import snapshotRoutes from './components/snapshots/routes'
-import { routeGetLanguageFile } from './components/localisation/routes'
+import {
+  routeGetLanguageFile,
+  routeEnableLanguage,
+  routeInstallLanguage,
+  routeRemoveLanguage,
+  routeGetAllLanguageFiles,
+} from './components/localisation/routes'
 import { routeTriggers } from './components/other/routeTriggers'
 import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
 import migrateData from '../database/migration/migrateData'
@@ -40,7 +42,7 @@ const startServer = async () => {
   await migrateData()
   await loadActionPlugins() // Connects to Database and listens for Triggers
 
-  createFilesFolder()
+  createDefaultDataFolders()
 
   const server = fastify()
 
@@ -112,6 +114,10 @@ const startServer = async () => {
         server.get('/updateRowPolicies', routeUpdateRowPolicies)
         server.post('/run-action', routeRunAction)
         server.get('/get-application-data', routeGetApplicationData)
+        server.post('/enable-language', routeEnableLanguage)
+        server.post('/install-language', routeInstallLanguage)
+        server.post('/remove-language', routeRemoveLanguage)
+        server.get('/all-languages', routeGetAllLanguageFiles)
         done()
       },
       { prefix: '/admin' }
@@ -123,9 +129,9 @@ const startServer = async () => {
     server.post('/login-org', routeLoginOrg)
     server.post('/create-hash', routeCreateHash)
     server.post('/generate-pdf', routeGeneratePDF)
-    server.get('/outcomes', routeOutcomes)
-    server.get('/outcomes/table/:tableName', routeOutcomesTable)
-    server.get('/outcomes/table/:tableName/item/:id', routeOutcomesDetail)
+    server.get('/data-views', routeDataViews)
+    server.get('/data-views/table/:tableName', routeDataViewTable)
+    server.get('/data-views/table/:tableName/item/:id', routeDataViewDetail)
     server.get('/check-triggers', routeTriggers)
 
     // File upload endpoint

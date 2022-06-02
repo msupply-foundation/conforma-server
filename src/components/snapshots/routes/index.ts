@@ -1,6 +1,6 @@
 import { FastifyPluginCallback } from 'fastify'
 import fastifyStatic from 'fastify-static'
-import { SNAPSHOT_FOLDER } from '../constants'
+import { SNAPSHOT_FOLDER } from '../../../constants'
 import routeListSnapshots from './routeListSnapshots'
 import routeTakeSnapshot from './routeTakeSnapshot'
 import routeUseSnapshot from './routeUseSnapshot'

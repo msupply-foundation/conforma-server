@@ -134,13 +134,15 @@ class DBConnect {
 
   public getAllTableNames = PostgresDB.getAllTableNames
 
-  public getOutcomeTableColumns = PostgresDB.getOutcomeTableColumns
+  public getDataTableColumns = PostgresDB.getDataTableColumns
 
   public getPermissionPolicies = PostgresDB.getPermissionPolicies
 
-  public getAllowedOutcomeDisplays = PostgresDB.getAllowedOutcomeDisplays
+  public getAllowedDataViews = PostgresDB.getAllowedDataViews
 
-  public getOutcomeColumnDefinitions = PostgresDB.getOutcomeColumnDefinitions
+  public getDataViewColumnDefinitions = PostgresDB.getDataViewColumnDefinitions
+
+  public getApplicationSections = PostgresDB.getApplicationSections
 
   // GraphQL
 

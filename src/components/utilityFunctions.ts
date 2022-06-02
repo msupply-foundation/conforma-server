@@ -32,8 +32,11 @@ export const combineRequestParams = (request: any, outputCase: OutputCase | null
 type OutputCase = 'snake' | 'camel'
 
 // Create folder if it doesn't already exist
-export const makeFolder = (folderPath: string) => {
-  if (!fs.existsSync(folderPath)) fs.mkdirSync(folderPath)
+export const makeFolder = (folderPath: string, message?: string) => {
+  if (!fs.existsSync(folderPath)) {
+    message && console.log(message)
+    fs.mkdirSync(folderPath)
+  }
 }
 
 // Given an array of objects, returns only distinct ones, as determined by a
@@ -81,3 +84,5 @@ export const filterObject = (
   const filtered = Object.entries(inputObj).filter(([_, value]) => filterFunction(value))
   return Object.fromEntries(filtered)
 }
+
+export const capitaliseFirstLetter = (str: string) => str[0].toUpperCase() + str.slice(1)

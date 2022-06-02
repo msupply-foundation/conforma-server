@@ -1,9 +1,5 @@
 #!/bin/bash
 
-#copy folder with snapshot_basic for inital Application manager setup
-mkdir ./database/_snapshots
-cp -rf ./database/core_templates ./database/_snapshots
-
 #insert data from
 echo -e "\nInserting data..."
 

@@ -1,9 +1,9 @@
-# application-manager-server
+# Conforma — server
 
 Install dependencies:  
 `yarn install`
 
-Note: In order to install the [expression-evaluator](https://github.com/openmsupply/application-manager-server/wiki/Query-Syntax) package, you'll need to authenticate with the Github package registry. See instructions for this [here](https://github.com/openmsupply/application-manager-server/wiki/Query-Syntax#installation)
+Note: In order to install the [expression-evaluator](https://github.com/openmsupply/conforma-server/wiki/Query-Syntax) package, you'll need to authenticate with the Github package registry. See instructions for this [here](https://github.com/openmsupply/conforma-server/wiki/Query-Syntax#installation)
 
 Initialise database:  
 `yarn database_init`
@@ -77,7 +77,13 @@ Load snapshot with
 
 Single file GraphQL mutation set of snapshotted data can be found in `./database/snapshot/{snapshot name}.graphql`
 
-See documentation for more details
+See [snapshot documentation](https://github.com/openmsupply/conforma-server/wiki/Snapshots) for more details
+
+## Database migration
+
+Whenever the server runs, the current version is compared against the version the database was last saved with, and runs migration code if necessary. However, in development, you may wish to ensure the database is migrated to the latest changes before a new version has been released -- to do this please run `yarn migrate`
+
+See [migration documentation](https://github.com/openmsupply/conforma-server/wiki/Data-Migration) for more details
 
 ## Triggers and Actions
 
@@ -94,6 +100,8 @@ You should see the message printed to the console.
 
 Also, check the `action_plugin` table to see a couple of extra dummy plugins that automatically get registered on startup.
 
+See [Triggers and Actions documentation](https://github.com/openmsupply/conforma-server/wiki/Triggers-and-Actions) for in-depth explanation
+
 ## evaluateExpression
 
 Documented in the `Query-Syntax.md` in the documentation folder.
@@ -105,4 +113,6 @@ To test (using Jest), must be running graphile as postgres user (i.e. `yarn pg` 
 
 ## Documentation
 
-Developer documentation available in documentation folder -- intended for publication to this repo's wiki. See the documentation's own README for more information
+Developer documentation available in documentation folder -- intended for publication to this repo's wiki. See the documentation's own README for more information.
+
+[Link to documentation wiki](https://github.com/openmsupply/conforma-server/wiki)

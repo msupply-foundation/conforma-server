@@ -1,7 +1,7 @@
-import { OutcomeDisplayColumnDefinition } from '../../generated/graphql'
+import { DataViewColumnDefinition } from '../../generated/graphql'
 
-// Response value of /outcomes endpoint
-export type OutcomesResponse = {
+// Response value of /data-views endpoint
+export type DataViewsResponse = {
   tableName: string
   title: string
   code: string
@@ -31,8 +31,8 @@ interface TableRow {
   item: { [key: string]: any }
 }
 
-// Response object of /outcomes/table endpoint
-export interface OutcomesTableResponse {
+// Response object of /data-views/table endpoint
+export interface DataViewsTableResponse {
   tableName: string
   title: string
   code: string
@@ -43,18 +43,19 @@ export interface OutcomesTableResponse {
 }
 
 export type ColumnDisplayDefinitions = {
-  [key: string]: OutcomeDisplayColumnDefinition
+  [key: string]: DataViewColumnDefinition
 }
 
 export interface ColumnDefinition {
   columnName: string
   isBasicField: boolean
   dataType: string | undefined
-  columnDefinition: OutcomeDisplayColumnDefinition | undefined
+  columnDefinition: DataViewColumnDefinition | undefined
 }
 export type ColumnDefinitionMasterList = ColumnDefinition[]
 
 export interface ColumnDetailOutput {
+  matchingTableName: string
   title: string
   code: string
   columnDefinitionMasterList: ColumnDefinitionMasterList
@@ -81,8 +82,8 @@ export interface DetailsHeader {
   formatting: FormatOptions
 }
 
-// Response object of /outcomes/table/.../item endpoint
-export interface OutcomesDetailResponse {
+// Response object of /data-views/table/.../item endpoint
+export interface DataViewsDetailResponse {
   tableName: string
   tableTitle: string
   id: number

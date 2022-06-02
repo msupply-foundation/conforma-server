@@ -46,16 +46,23 @@ class PostgresDB {
         return
       }
       const payloadObject = JSON.parse(payload)
-      // "data" is stored output from scheduled trigger or verification
-      const data = payloadObject?.trigger_payload?.data
       switch (channel) {
         case 'trigger_notifications':
-          processTrigger(payloadObject)
+          // "data" is stored output from scheduled trigger or verification
+          // "data" can sometimes exceed the byte limit for notification payload, so must be fetched separately
+          const data = await this.getTriggerPayloadData(payloadObject.trigger_id)
+          processTrigger({ ...payloadObject, data })
           break
         case 'action_notifications':
           // For Async Actions only
           try {
-            await executeAction(payloadObject, actionLibrary, data)
+            // Trigger payload fetched separately to avoid over-size payload error
+            const trigger_payload = await this.getTriggerPayload(payloadObject.id)
+            await executeAction(
+              { ...payloadObject, trigger_payload },
+              actionLibrary,
+              trigger_payload?.data
+            )
           } catch (err) {
             console.log(err.message)
           } finally {
@@ -65,6 +72,28 @@ class PostgresDB {
           deleteFile(payloadObject)
       }
     })
+  }
+
+  // Fetches data from trigger_queue for Action
+  private getTriggerPayloadData = async (triggerId: number) => {
+    const text = `SELECT data FROM trigger_queue WHERE id = $1`
+    try {
+      const result = await this.query({ text, values: [triggerId] })
+      return result.rows[0].data
+    } catch (err) {
+      throw err
+    }
+  }
+
+  // Fetches trigger_payload from action_queue for async Action
+  private getTriggerPayload = async (actionId: number) => {
+    const text = `SELECT trigger_payload FROM action_queue WHERE id = $1`
+    try {
+      const result = await this.query({ text, values: [actionId] })
+      return result.rows[0].trigger_payload
+    } catch (err) {
+      throw err
+    }
   }
 
   public getValuesPlaceholders = (object: { [key: string]: any }) =>
@@ -294,6 +323,19 @@ class PostgresDB {
     ON template_element.id = application_response.template_element_id
     WHERE application_id = $1
     ORDER BY code, time_updated DESC
+    `
+    const result = await this.query({ text, values: [applicationId] })
+    const responses = result.rows
+    return responses
+  }
+
+  public getApplicationSections = async (applicationId: number) => {
+    const text = `
+    SELECT template_section.code as code
+    FROM template_section 
+    JOIN template ON template_section.template_id = template.id
+    JOIN application on application.template_id = template.id
+    WHERE application.id = $1
     `
     const result = await this.query({ text, values: [applicationId] })
     const responses = result.rows
@@ -889,7 +931,7 @@ class PostgresDB {
     }
   }
 
-  public getOutcomeTableColumns = async (tableName: string) => {
+  public getDataTableColumns = async (tableName: string) => {
     const text = `
       SELECT column_name as name,
       data_type as "dataType"
@@ -918,13 +960,13 @@ class PostgresDB {
     }
   }
 
-  // OUTCOME QUERIES
+  // DATA TABLE / VIEWS QUERIES
 
-  public getAllowedOutcomeDisplays = async (userPermissions: string[], tableName: string = '%') => {
+  public getAllowedDataViews = async (userPermissions: string[], tableName: string = '%') => {
     // Returns any records that have ANY permissionNames in common with input
     // userPermissions, or are empty (i.e. public)
     const text = `
-      SELECT * FROM outcome_display
+      SELECT * FROM data_view
       WHERE (
               $1 && permission_names
               OR permission_names IS NULL
@@ -942,9 +984,9 @@ class PostgresDB {
     }
   }
 
-  public getOutcomeColumnDefinitions = async (tableName: string, columnMatches: string[]) => {
+  public getDataViewColumnDefinitions = async (tableName: string, columnMatches: string[]) => {
     const text = `
-      SELECT * FROM outcome_display_column_definition
+      SELECT * FROM data_view_column_definition
       WHERE table_name = $1
       AND column_name = ANY($2)
     `

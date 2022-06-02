@@ -1,4 +1,4 @@
-## **The mSupply Foundation Application Manager** server
+## **Conforma** server
 
 ### Development Documentation.
 
@@ -20,6 +20,7 @@ Please see [ReadMe](__README.md) for information about maintaining this document
   - [Application](Database-Schema-Application.md)
   - [Reviews](Database-Schema-Review-And-Consolidation.md)
   - [Questions/Elements](Elements-Questions.md)
+- [Data Migration](Data-Migration.md)
 
 **Modules**
 
@@ -27,18 +28,18 @@ Please see [ReadMe](__README.md) for information about maintaining this document
 - [Triggers & Actions](Triggers-and-Actions.md)
   - [Action plugin spec](Action-plugin-specification.md)
   - [List of Action plugins](List-of-Action-plugins.md)
-  - [List of Core Actions](https://github.com/openmsupply/application-manager-web-app/wiki/List-Core-Actions)
-- [Template Builder](https://github.com/openmsupply/application-manager-web-app/wiki/Template-Builder)
+  - [List of Core Actions](https://github.com/openmsupply/conforma-web-app/wiki/List-Core-Actions)
+- [Template Builder](https://github.com/openmsupply/conforma-web-app/wiki/Template-Builder)
 - [Dynamic Expressions/Queries](Query-Syntax.md)
+- [Data Display/Views](Data-View.md)
+- [Snapshots](Snapshots.md)
 
 **Build and Demo Server**
 
-- [Demo Server Guide](demo_server_guide.md)
-
-**Misc**
-
-- [List of useful Database functions (to be added)](Funcions.md)
+- [New Server instance](New-Server-Instance.md)
+- [Demo Server Guide](Demo-Server-Guide.md)
+- [Docker](Docker.md)
 
 **External**
 
-- [Front-end Docs](https://github.com/openmsupply/application-manager-web-app/wiki)
+- [Front-end Docs](https://github.com/openmsupply/conforma-web-app/wiki)

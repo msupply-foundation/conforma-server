@@ -3,7 +3,7 @@ import { plural } from 'pluralize'
 import { camelCase, snakeCase, upperFirst } from 'lodash'
 import { LinkedApplication } from './types'
 
-export const queryOutcomeTable = async (
+export const queryDataTable = async (
   tableName: string,
   fieldNames: string[],
   gqlFilters: object,
@@ -18,14 +18,14 @@ export const queryOutcomeTable = async (
   const fieldNameString = fieldNames.join(', ')
   const orderByType = `${snakeCase(orderBy).toUpperCase()}_${ascending ? 'ASC' : 'DESC'}`
   const variables = { first, offset, filter: gqlFilters }
-  const graphQLquery = `query getOutcomeRecords($first: Int!, $offset: Int!, $filter: ${filterType}) { ${tableNamePlural}(first: $first, offset: $offset, orderBy: ${orderByType}, filter: $filter) { nodes { ${fieldNameString} }, totalCount}}`
+  const graphQLquery = `query getDataRecords($first: Int!, $offset: Int!, $filter: ${filterType}) { ${tableNamePlural}(first: $first, offset: $offset, orderBy: ${orderByType}, filter: $filter) { nodes { ${fieldNameString} }, totalCount}}`
 
   let queryResult
   try {
     queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
   } catch (err) {
     return {
-      error: { error: true, message: 'Problem with Outcome Table query', detail: err.message },
+      error: { error: true, message: 'Problem with Data Table query', detail: err.message },
     }
   }
   const fetchedRecords = queryResult?.[tableNamePlural]?.nodes
@@ -33,7 +33,7 @@ export const queryOutcomeTable = async (
   return { fetchedRecords, totalCount }
 }
 
-export const queryOutcomeTableSingleItem = async (
+export const queryDataTableSingleItem = async (
   tableName: string,
   fieldNames: string[],
   gqlFilters: object,
@@ -44,12 +44,12 @@ export const queryOutcomeTableSingleItem = async (
   const filterType = upperFirst(camelCase(tableName)) + 'Filter'
   const fieldNameString = fieldNames.join(', ')
   const variables = { id, filter: gqlFilters }
-  const graphQLquery = `query getOutcomeRecord($id:Int!, $filter:${filterType}){ ${tableNamePlural}(condition: {id: $id}, filter: $filter) { nodes {${fieldNameString}}}}`
+  const graphQLquery = `query getDataRecord($id:Int!, $filter:${filterType}){ ${tableNamePlural}(condition: {id: $id}, filter: $filter) { nodes {${fieldNameString}}}}`
   let queryResult
   try {
     queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
   } catch (err) {
-    return { error: true, message: 'Problem with Outcome Item query', detail: err.message }
+    return { error: true, message: 'Problem with Data Item query', detail: err.message }
   }
   const fetchedRecords = queryResult?.[tableNamePlural]?.nodes
   if (fetchedRecords === undefined)

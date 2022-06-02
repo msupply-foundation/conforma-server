@@ -1,5 +1,5 @@
--- Outcome display
-CREATE TABLE outcome_display (
+-- Data table display configs
+CREATE TABLE data_view (
     id serial PRIMARY KEY,
     table_name varchar NOT NULL,
     title varchar,
@@ -17,7 +17,7 @@ CREATE TABLE outcome_display (
 );
 
 -- For columns that require more detail format or evaluation definitions
-CREATE TABLE outcome_display_column_definition (
+CREATE TABLE data_view_column_definition (
     id serial PRIMARY KEY,
     table_name varchar,
     column_name varchar,
@@ -27,5 +27,14 @@ CREATE TABLE outcome_display_column_definition (
     additional_formatting jsonb,
     value_expression jsonb,
     UNIQUE (table_name, column_name)
+);
+
+-- Table for cataloguing all "data" tables, including lookup tables
+CREATE TABLE data_table (
+    id serial PRIMARY KEY,
+    table_name varchar NOT NULL UNIQUE,
+    display_name varchar,
+    field_map jsonb,
+    is_lookup_table boolean DEFAULT FALSE
 );
 

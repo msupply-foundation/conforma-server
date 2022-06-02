@@ -7,26 +7,28 @@ import {
   constructDetailsResponse,
 } from './helpers'
 import {
-  queryOutcomeTable,
-  queryOutcomeTableSingleItem,
+  queryDataTable,
+  queryDataTableSingleItem,
   queryLinkedApplications,
 } from './gqlDynamicQueries'
 import { camelCase } from 'lodash'
-import { ColumnDefinition, LinkedApplication, OutcomesResponse } from './types'
+import { ColumnDefinition, LinkedApplication, DataViewsResponse } from './types'
 
-const routeOutcomes = async (request: any, reply: any) => {
+const routeDataViews = async (request: any, reply: any) => {
   const { permissionNames } = await getPermissionNamesFromJWT(request)
-  const outcomes = await DBConnect.getAllowedOutcomeDisplays(permissionNames)
-  const distinctOutcomes = getDistinctObjects(outcomes, 'table_name', 'priority')
-  const outcomeResponse: OutcomesResponse = distinctOutcomes.map(({ table_name, title, code }) => ({
-    tableName: camelCase(table_name),
-    title,
-    code,
-  }))
-  return reply.send(outcomeResponse)
+  const dataViews = await DBConnect.getAllowedDataViews(permissionNames)
+  const distinctDataViews = getDistinctObjects(dataViews, 'table_name', 'priority')
+  const dataViewResponse: DataViewsResponse = distinctDataViews.map(
+    ({ table_name, title, code }) => ({
+      tableName: camelCase(table_name),
+      title,
+      code,
+    })
+  )
+  return reply.send(dataViewResponse)
 }
 
-const routeOutcomesTable = async (request: any, reply: any) => {
+const routeDataViewTable = async (request: any, reply: any) => {
   const authHeaders = request?.headers?.authorization
   const tableName = camelCase(request.params.tableName)
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
@@ -38,7 +40,7 @@ const routeOutcomesTable = async (request: any, reply: any) => {
   const orderBy = query?.orderBy ?? 'id'
   const ascending = query?.ascending ? query?.ascending === 'true' : true
 
-  const { columnDefinitionMasterList, fieldNames, gqlFilters, title, code } =
+  const { matchingTableName, columnDefinitionMasterList, fieldNames, gqlFilters, title, code } =
     await buildAllColumnDefinitions({
       permissionNames,
       tableName,
@@ -48,8 +50,8 @@ const routeOutcomesTable = async (request: any, reply: any) => {
     })
 
   // GraphQL query -- get ALL fields (passing JWT), with pagination
-  const { fetchedRecords, totalCount, error } = await queryOutcomeTable(
-    tableName,
+  const { fetchedRecords, totalCount, error } = await queryDataTable(
+    matchingTableName,
     fieldNames,
     gqlFilters,
     first,
@@ -72,13 +74,14 @@ const routeOutcomesTable = async (request: any, reply: any) => {
   return reply.send(response)
 }
 
-const routeOutcomesDetail = async (request: any, reply: any) => {
+const routeDataViewDetail = async (request: any, reply: any) => {
   const authHeaders = request?.headers?.authorization
   const tableName = camelCase(request.params.tableName)
   const recordId = Number(request.params.id)
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
 
   const {
+    matchingTableName,
     columnDefinitionMasterList,
     title,
     fieldNames,
@@ -88,8 +91,8 @@ const routeOutcomesDetail = async (request: any, reply: any) => {
   } = await buildAllColumnDefinitions({ permissionNames, tableName, type: 'DETAIL', userId, orgId })
 
   // GraphQL query -- get ALL fields (passing JWT), with pagination
-  const fetchedRecord = await queryOutcomeTableSingleItem(
-    tableName,
+  const fetchedRecord = await queryDataTableSingleItem(
+    matchingTableName,
     fieldNames,
     gqlFilters,
     recordId,
@@ -100,7 +103,7 @@ const routeOutcomesDetail = async (request: any, reply: any) => {
 
   // GraphQL query to get linked applications -- this one with Admin JWT!
   const linkedApplications = showLinkedApplications
-    ? await queryLinkedApplications(recordId, tableName)
+    ? await queryLinkedApplications(recordId, matchingTableName)
     : undefined
 
   const response = await constructDetailsResponse(
@@ -115,4 +118,4 @@ const routeOutcomesDetail = async (request: any, reply: any) => {
   return reply.send(response)
 }
 
-export { routeOutcomes, routeOutcomesTable, routeOutcomesDetail }
+export { routeDataViews, routeDataViewTable, routeDataViewDetail }

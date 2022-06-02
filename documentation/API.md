@@ -8,6 +8,38 @@ The back-end currently has two server instances which are launched to handle inc
 - [**Fastify**](https://www.fastify.io/) server -- additional endpoints for various services. (Will also serve the actual app when deployed, and will probably have PostGraphile added as a plugin later in development)
 
 ---
+## Contents
+
+<!-- toc -->
+
+- [API specification](#api-specification)
+  - [Contents](#contents)
+  - [Postgraphile server API:](#postgraphile-server-api)
+  - [Fastify server API](#fastify-server-api)
+    - [Authentication](#authentication)
+    - [Public endpoints](#public-endpoints)
+      - [Login](#login)
+      - [Get preferences endpoint:](#get-preferences-endpoint)
+      - [Get language endpoint:](#get-language-endpoint)
+      - [Verification endpoint](#verification-endpoint)
+      - [File download endpoint:](#file-download-endpoint)
+    - [Authenticated endpoints](#authenticated-endpoints)
+      - [File upload endpoint:](#file-upload-endpoint)
+      - [Check unique endpoint](#check-unique-endpoint)
+      - [Login Organisation](#login-organisation)
+      - [User Info](#user-info)
+      - [User Permissions](#user-permissions)
+      - [Check Triggers](#check-triggers)
+      - [Generate PDF](#generate-pdf)
+    - [Outcomes](#outcomes)
+    - [Admin only endpoints](#admin-only-endpoints)
+      - [Update row level policies](#update-row-level-policies)
+      - [Run Action](#run-action)
+      - [Manage localisations](#manage-localisations)
+      - [Snapshot endpoints](#snapshot-endpoints)
+      - [Lookup table endpoints](#lookup-table-endpoints)
+
+<!-- tocstop -->
 
 ## Postgraphile server API:
 
@@ -109,7 +141,7 @@ GET: `/file?id=<uniqueId>`
 
 Usage: `GET` request with file database id as a URL query parameter.
 
-## This is a public endpoint, but files all have a long uniqueId which should prevent unauthorized access.
+*This is a public endpoint, but files all have a long uniqueId which should prevent unauthorized access.*
 
 ### Authenticated endpoints
 
@@ -309,16 +341,16 @@ The return object contains:
 
 The internal function called by this endpoint is the same one run by the ["generateDoc" action](List-of-Action-plugins.md).
 
-### Outcomes
+### Data Views
 
 GET:
-`/outcomes`
-`/outcomes/table/<tableName>`
-`/outcomes/table/<tableName>/item/<id>`
+`/data-views`
+`/data-views/table/<tableName>`
+`/data-views/table/<tableName>/item/<id>`
 
-For displaying Outcome data (e.g. Users, Products, Orgs). User's JWT determines what they are allowed to see, and data is returned accordingly.
+For displaying custom data (e.g. Users, Products, Orgs). User's JWT determines what they are allowed to see, and data is returned accordingly.
 
-Please see [Outcomes Display](Outcomes-Display.md) for more info.
+Please see [Data View](Data-View.md) for more info.
 
 ---
 
@@ -396,13 +428,55 @@ returns:
 }
 ```
 
+#### Manage localisations
+
+Used by the front-end `/admin/localisations` page
+
+POST: `/enable-language?code=<languageCode>&enabled=<true/false>`
+- To enable or disable a language that is already installed. If parameter `enabled` is omitted, the current setting will be toggled.
+
+POST: `/install-language`
+- To install a a new language into the system.
+
+GET: `/all-languages`
+- Fetches all languages in a single bundle. Used by the "Export as CSV" feature.
+
+**Input parameters** (as body JSON) example:
+```
+{
+    "language": {
+        "languageName": "Portuguese",
+        "description": "Portuguese translation",
+        "code": "pt_br",
+        "flag": "🇧🇷",
+        "enabled": true
+    },
+    "strings": {
+        "ACTION_ASSIGN": "Atribuir",
+        "ACTION_CONTINUE": "Continuar"
+        ...
+    }
+}
+```
+
+**Returns**:
+```
+{
+    "success": true,
+    "message": "Language installed: Portuguese / pt_br"
+}
+```
+
+POST: `/remove-language?code=<languageCode>`
+- uninstalls the language from the server
+
 #### Snapshot endpoints
 
-- GET: `/snapshots/list`
-- POST: `/snapshots/take`
-- POST: `/snapshots/use`
-- POST: `/snapshots/upload`
-- POST: `/snapshots/delete`
+- GET: `/snapshot/list`
+- POST: `/snapshot/take`
+- POST: `/snapshot/use`
+- POST: `/snapshot/upload`
+- POST: `/snapshot/delete`
 
 See [Snapshot documentation](Snapshots.md) for more info
 

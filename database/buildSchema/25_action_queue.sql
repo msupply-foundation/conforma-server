@@ -32,7 +32,7 @@ CREATE OR REPLACE FUNCTION public.notify_action_queue ()
 BEGIN
     -- IF NEW.status = 'QUEUED' THEN
     PERFORM
-        pg_notify('action_notifications', json_build_object('id', NEW.id, 'code', NEW.action_code, 'trigger_payload', NEW.trigger_payload, 'condition_expression', NEW.condition_expression, 'parameter_queries', NEW.parameter_queries)::text);
+        pg_notify('action_notifications', json_build_object('id', NEW.id, 'code', NEW.action_code, 'condition_expression', NEW.condition_expression, 'parameter_queries', NEW.parameter_queries)::text);
     -- END IF;
     RETURN NULL;
 END;

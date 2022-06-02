@@ -25,6 +25,7 @@ export interface ReviewAssignment {
   status: ReviewAssignmentStatus
   applicationId: number
   allowedSections: string[] | null
+  assignedSections: string[] | null
   levelNumber: number
   isLastLevel: boolean
   isLastStage: boolean
@@ -41,6 +42,7 @@ export interface AssignmentState {
   status: ReviewAssignmentStatus
   isSelfAssignable: boolean
   isLocked: boolean
+  assignedSections?: string[]
 }
 
 export type ExistingReviewAssignment = {

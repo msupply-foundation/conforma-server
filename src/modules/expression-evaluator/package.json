@@ -1,7 +1,7 @@
 {
   "name": "@openmsupply/expression-evaluator",
-  "version": "1.10.0",
-  "description": "Module to evaluate dynamic expressions for the openMsupply Application Manager project",
+  "version": "1.11.2",
+  "description": "Module to evaluate dynamic expressions for Conforma",
   "main": "lib/evaluateExpression.js",
   "types": "lib/evaluateExpression.d.ts",
   "author": "Sustainable Solutions",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@github.com/openmsupply/application-manager-server.git",
+    "url": "ssh://git@github.com/openmsupply/conforma-server.git",
     "directory": "packages/expression-evaluator"
   },
   "devDependencies": {

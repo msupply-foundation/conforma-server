@@ -8,7 +8,7 @@ Run `yarn test` to see it in action. (See [Testing section](#testing) for more i
 
 ---
 
-**The problem**: the highly configurable Template system in mSupply Application Manager requires many values to be stored as dynamic queries to either local state or the database, and perform basic operations (logic, concatenation, etc.) on them. We need a way to represent these potentially complex “expressions” in the database so they can be evaluated at runtime (both in the front and back-end), but without resorting to using `eval()` to evaluate javascript code directly.
+**The problem**: the highly configurable Template system in Conforma requires many values to be stored as dynamic queries to either local state or the database, and perform basic operations (logic, concatenation, etc.) on them. We need a way to represent these potentially complex “expressions” in the database so they can be evaluated at runtime (both in the front and back-end), but without resorting to using `eval()` to evaluate javascript code directly.
 
 **The solution**: We store these queries in a JSON **expression tree** which can be easily traversed recursively and evaluated when needed. This way, we can store very simple values (e.g. literal strings) in the same format as complex dynamic queries. The function `evaluateExpression()` evaluates these expressions.
 
@@ -39,6 +39,7 @@ For more complex lookups, we would hide the complexity from the user in the Temp
   - [Contents](#contents)
 - [Structure](#structure)
   - [type](#type)
+  - [fallback](#fallback)
 - [Operators](#operators)
   - [AND](#and)
   - [OR](#or)
@@ -55,6 +56,7 @@ For more complex lookups, we would hide the complexity from the user in the Temp
   - [POST](#post)
     - [Authentication](#authentication)
   - [buildObject](#buildobject)
+  - [objectFunctions](#objectfunctions)
 - [Usage](#usage)
     - [`expression`](#expression)
     - [`parameters`](#parameters)
@@ -79,6 +81,7 @@ Each node in the tree is an either:
   type: <optional>
   operator: <string>
   children: [ <optional> ]
+  fallback: <optional>
 }
 ```
 
@@ -103,6 +106,17 @@ Valid values:
 - number
 - boolean / bool
 - array
+
+## fallback
+
+This property allows you to define a `fallback` value for *any* error that is thrown as a result of the query, or any of its children. This can be useful, for example, when making a database query with a parameter, and the parameter isn't available yet because it needs to come from a user's response. Rather than throw an error, or return a error message in the UI, we can provide a fallback (such as an empty string or empty array) so the malformed query is invisible to the end user (and also won't crash the plugin!)
+
+The fallback value can be placed at any level of the query, and will be returned on any error of that node or any of its children. So, for example, if you were building an array of elements, of which only *some* were provided by a database query that might fail, then you could still return the rest of the results by placing a fallback value of an empty array at the level of the database query node.
+
+Note that some of the operators have their own "fallback" node, which can also be used. This is mainly for backwards compatibility purposes -- this top-level `fallback` parameter is the recommended way to handle errors with fallbacks.
+
+Because the fallback doesn't give any useful information about errors, it is recommended that you don't add a fallback value while building and/or debugging queries, so you can benefit from more useful error reporting. The fallback value should be added at the end once you're happy with it.
+
 
 # Operators
 
@@ -454,6 +468,36 @@ Output
 }
 ```
 
+## objectFunctions
+
+This allows the evaluator to fun any abitrary function as an operator, but the functions must be passed in on the `objects` parameter. 
+
+- Input: 
+  - 1st node is a **string** containing the name of the function in the "objects" parameter (it is recommended to always put functions in a dedicated `functions` field for consistency), e.g. `"functions.<funcName>"`
+  - 2nd...N nodes contain any input parameters required for this function
+
+For example, if you have a simple function to return the current year, you would pass in this as part of the `objects` parameter:
+```
+{
+  ...otherObjectFields,
+  functions: {
+    getYear: () => new Date().getFullYear()
+  }
+}
+```
+(See [Usage](#usage) below for exact syntax)
+
+Then, your query expression node would simply be:
+```
+{
+  operator: "objectFunctions",
+  children: [
+    "functions.getYear",
+  ]
+}
+```
+
+
 # Usage
 
 The query evaluator is implemented in the `evaluateExpression` function:
@@ -468,7 +512,7 @@ The query evaluator is implemented in the `evaluateExpression` function:
 
 `parameters` is an (optional) object with the following (optional) properties available:
 
-- `objects : {local objects}` -- **object** containing nested local state objects required for the query (see **objectProperties** above)
+- `objects : {local objects}` -- **object** containing nested local state objects required for the query (see **objectProperties** above). Can also contain arbitrary functions which can be called by the  [objectFunctions][#objectFunctions] operator.
 - `pgConnection: <postGresConnect object>` (or any valid PostGres connection object, e.g. `Client` from `node-postgres`)
 - `graphQLConnection: { fetch: <fetch object>, endpoint: <URL of GraphQL endpoint>}` -- connection information for a local GraphQL endpoint. Only required if expression contains **graphQL** operator.
 - `APIfetch: <fetch object>` -- required if the API operator is being used. (Note: the reason this must be passed in rather than having the module use `fetch` directly is so it can work in both front- and back-end. The browser provides a native `fetch` method, but this isn't available in Node, which requires the `node-fetch` package. So in order to work in both, the module expects the appropriate variant of the fetch object to be passed in.)
@@ -632,7 +676,7 @@ Tree structure:
 
 # Installation
 
-The module is published as a Github package [here](https://github.com/openmsupply/application-manager-server/packages/433685).
+The module is published as a Github package [here](https://github.com/openmsupply/conforma-server/packages/433685).
 
 In order to import packages from Github (rather than the default npm), the Github registry info needs to be added to an `.npmrc` config file in the project root, like so:
 

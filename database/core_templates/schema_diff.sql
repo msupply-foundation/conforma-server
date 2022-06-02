@@ -1,7 +1,13 @@
 /*************************************************/
 /*** SCRIPT AUTHOR: application-manager-server ***/
-/***    CREATED ON: 2021-11-11T22:29:01.418Z   ***/
+/***    CREATED ON: 2022-05-25T03:41:23.989Z   ***/
 /*************************************************/
+
+--- BEGIN ALTER TABLE "public"."organisation" ---
+
+ALTER TABLE IF EXISTS "public"."organisation" ADD COLUMN IF NOT EXISTS "registration_documentation" jsonb NULL  ;
+
+--- END ALTER TABLE "public"."organisation" ---
 
 --- BEGIN CREATE TABLE "public"."organisation_application_join" ---
 
@@ -35,11 +41,126 @@ ALTER TABLE IF EXISTS "public"."user_application_join" OWNER TO postgres;
 
 --- END CREATE TABLE "public"."user_application_join" ---
 
---- BEGIN ALTER TABLE "public"."organisation" ---
+--- BEGIN ALTER FUNCTION "public"."empty_assigned_sections" ---
 
-ALTER TABLE IF EXISTS "public"."organisation" ADD COLUMN IF NOT EXISTS "registration_documentation" jsonb NULL  ;
+DROP FUNCTION IF EXISTS "public"."empty_assigned_sections"();
 
---- END ALTER TABLE "public"."organisation" ---
+CREATE OR REPLACE FUNCTION public.empty_assigned_sections()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+        BEGIN
+            UPDATE public.review_assignment SET assigned_sections = '{}'
+            WHERE id = NEW.id;
+            RETURN NULL;
+        END;
+        $function$
+;
+ALTER FUNCTION "public"."empty_assigned_sections"() OWNER TO postgres;
+
+--- END ALTER FUNCTION "public"."empty_assigned_sections" ---
+
+--- BEGIN ALTER FUNCTION "public"."assigned_questions_count" ---
+
+DROP FUNCTION IF EXISTS "public"."assigned_questions_count"(integer, integer, integer);
+
+CREATE OR REPLACE FUNCTION public.assigned_questions_count(app_id integer, stage_id integer, level integer)
+ RETURNS bigint
+ LANGUAGE sql
+ STABLE
+AS $function$
+    SELECT COUNT(DISTINCT (te.id))
+    FROM (
+            SELECT
+                id,
+                application_id,
+                stage_id,
+                level_number,
+                status,
+                UNNEST(assigned_sections) AS section_code
+            FROM
+                review_assignment) ra
+        JOIN template_section ts ON ra.section_code = ts.code
+        JOIN template_element te ON ts.id = te.section_id
+    WHERE
+        ra.application_id = $1
+        AND ra.stage_id = $2
+        AND ra.level_number = $3
+        AND ra.status = 'ASSIGNED'
+        AND te.category = 'QUESTION'
+        AND te.template_code = (SELECT code FROM TEMPLATE
+            WHERE id = (
+                    SELECT template_id FROM application
+                    WHERE id = $1));
+    $function$
+;
+ALTER FUNCTION "public"."assigned_questions_count"(integer, integer, integer) OWNER TO postgres;
+
+--- END ALTER FUNCTION "public"."assigned_questions_count" ---
+
+--- BEGIN ALTER FUNCTION "public"."submitted_assigned_questions_count" ---
+
+DROP FUNCTION IF EXISTS "public"."submitted_assigned_questions_count"(integer, integer, integer);
+
+CREATE OR REPLACE FUNCTION public.submitted_assigned_questions_count(app_id integer, stage_id integer, level_number integer)
+ RETURNS bigint
+ LANGUAGE sql
+ STABLE
+AS $function$
+    SELECT COUNT(DISTINCT (te.id))
+    FROM (SELECT id, application_id, stage_id, level_number, status,
+            UNNEST(assigned_sections) AS section_code
+        FROM review_assignment) ra
+    JOIN template_section ts ON ra.section_code = ts.code
+    JOIN template_element te ON ts.id = te.section_id
+    LEFT JOIN review ON review.review_assignment_id = ra.id
+    LEFT JOIN review_status_history rsh ON rsh.review_id = review.id
+  WHERE
+    ra.application_id = $1
+    AND ra.stage_id = $2
+    AND ra.level_number = $3
+    AND ra.status = 'ASSIGNED'
+    AND te.category = 'QUESTION'
+    AND rsh.status = 'SUBMITTED'
+    AND te.template_code = (
+        SELECT code FROM TEMPLATE
+        WHERE id = (
+          SELECT template_id FROM application
+          WHERE id = $1))
+    $function$
+;
+ALTER FUNCTION "public"."submitted_assigned_questions_count"(integer, integer, integer) OWNER TO postgres;
+
+--- END ALTER FUNCTION "public"."submitted_assigned_questions_count" ---
+
+--- BEGIN ALTER FUNCTION "public"."set_original_response" ---
+
+DROP FUNCTION IF EXISTS "public"."set_original_response"();
+
+CREATE OR REPLACE FUNCTION public.set_original_response()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$ BEGIN IF NEW.review_response_link_id IS NOT NULL THEN NEW.original_review_response_id = (
+        SELECT original_review_response_id 
+        FROM review_response 
+        WHERE id = NEW.review_response_link_id);
+      NEW.application_response_id = (
+        SELECT application_response_id 
+        FROM review_response 
+        WHERE id = NEW.review_response_link_id);
+      ELSE NEW.original_review_response_id = NEW.id;
+      END IF;
+      -- application_response should always exist
+      NEW.template_element_id = (
+        SELECT template_element_id 
+        FROM application_response 
+        WHERE id = NEW.application_response_id);
+      RETURN NEW; END;
+      $function$
+;
+ALTER FUNCTION "public"."set_original_response"() OWNER TO postgres;
+
+--- END ALTER FUNCTION "public"."set_original_response" ---
 
 --- BEGIN CREATE SEQUENCE "public"."organisation_application_join_id_seq" ---
 

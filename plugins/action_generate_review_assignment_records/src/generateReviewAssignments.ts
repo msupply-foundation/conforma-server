@@ -53,6 +53,8 @@ async function generateReviewAssignments({
     if (highestReviewAssignmentLevel == null) highestReviewAssignmentLevel = 1
 
     const numReviewLevels = (await DBConnect.getNumReviewLevels(stageId)) || 0
+    
+    const sectionCodes = applicationData?.sectionCodes || [];
 
     if (reviewId) {
       const { stageNumber: submittedReviewStage, levelNumber: submittedReviewLevel } =
@@ -67,7 +69,8 @@ async function generateReviewAssignments({
         reviewId,
         submittedReviewStage,
         submittedReviewLevel,
-        numReviewLevels
+        numReviewLevels,
+        sectionCodes
       )
     }
     // isApplication submission/re-submission
@@ -80,7 +83,8 @@ async function generateReviewAssignments({
         stageHistoryTimeCreated,
         templateId,
         numReviewLevels,
-        highestReviewAssignmentLevel
+        highestReviewAssignmentLevel,
+        sectionCodes
       )
   } catch (error) {
     console.log(error.message)
@@ -100,7 +104,8 @@ const generateForFirstLevelReviews = async (
   stageId: number,
   stageHistoryTimeCreated: Date,
   templateId: number,
-  numReviewLevels: number
+  numReviewLevels: number,
+  sectionCodes: string[],
 ) => {
   console.log('Generating review assignment records for application submission...')
   console.log(`Application ${applicationId} stage ${stageNumber}`)
@@ -115,7 +120,8 @@ const generateForFirstLevelReviews = async (
     stageId,
     stageHistoryTimeCreated,
     templateId,
-    numReviewLevels
+    numReviewLevels,
+    sectionCodes
   )
 
   let result = {
@@ -138,7 +144,8 @@ const generateForNextLevelReviews = async (
   reviewId: number,
   submittedReviewStage: number,
   submittedReviewLevel: number,
-  numReviewLevels: number
+  numReviewLevels: number,
+  sectionCodes: string[],
 ) => {
   console.log('Generating review assignment records for review submission...')
   console.log(`Application ${applicationId} stage ${currentStageNumber}\n
@@ -181,7 +188,8 @@ const generateForNextLevelReviews = async (
     stageId,
     stageHistoryTimeCreated,
     templateId,
-    numReviewLevels
+    numReviewLevels,
+    sectionCodes
   )
 
   let result = {
@@ -202,7 +210,8 @@ const generateForAllReviewAssignmentLevels = async (
   stageHistoryTimeCreated: Date,
   templateId: number,
   numReviewLevels: number,
-  highestReviewAssignmentLevel: number
+  highestReviewAssignmentLevel: number,
+  sectionCodes: string[]
 ) => {
   console.log('Generating review assignment records for assignments re-generation...')
   console.log(
@@ -229,7 +238,8 @@ const generateForAllReviewAssignmentLevels = async (
         stageId,
         stageHistoryTimeCreated,
         templateId,
-        numReviewLevels
+        numReviewLevels,
+        sectionCodes
       )
     )
   )
@@ -246,7 +256,8 @@ const generateReviewAssignmentsInLevel = async (
   stageId: number,
   stageHistoryTimeCreated: Date,
   templateId: number,
-  numReviewLevels: number
+  numReviewLevels: number,
+  sectionCodes: string[],
 ): Promise<ResultObject> => {
   const lastStageNumber: number = await db.getLastStageNumber(applicationId)
   // Check if other reviewAssignment is already assigned to create new ones LOCKED
@@ -274,7 +285,8 @@ const generateReviewAssignmentsInLevel = async (
     isLastStage,
     stageId,
     stageNumber,
-    stageHistoryTimeCreated
+    stageHistoryTimeCreated,
+    sectionCodes
   )
 
   // Delete review_assignment that no longer applies
@@ -330,7 +342,8 @@ type RegerenateReviewAssignments = (
   isLastStage: boolean,
   stageId: number,
   stageNumber: number,
-  timeStageCreated: Date
+  timeStageCreated: Date,
+  sectionCodes: string[]
 ) => {
   createReviewAssignments: ReviewAssignmentObject
   deleteReviewAssignments: DeleteReviewAssignment[]
@@ -346,7 +359,8 @@ const generateNextReviewAssignments: RegerenateReviewAssignments = (
   isLastStage,
   stageId,
   stageNumber,
-  timeStageCreated
+  timeStageCreated,
+  sectionCodes
 ) => {
   // Remove from the list of previous reviewAssignments when
   // no longer showing reviewer on nextLevelReviewers (when permission is revoked)
@@ -377,6 +391,7 @@ const generateNextReviewAssignments: RegerenateReviewAssignments = (
       existingReviewsAssigned,
       reviewer.canMakeFinalDecision,
       reviewer.canSelfAssign || nextReviewLevel > 1,
+      sectionCodes,
       existingAssignment
     )
 
@@ -412,7 +427,7 @@ const constructReviewAssignmentObject = (
   stageNumber: number,
   timeStageCreated: Date
 ) => {
-  const { status, isSelfAssignable, isLocked } = assignment
+  const { status, isSelfAssignable, isLocked, assignedSections } = assignment
   const { userId, orgId, allowedSections, canMakeFinalDecision } = reviewer
   const userOrgKey = `${userId}_${orgId ? orgId : 0}`
   if (reviewAssignments[userOrgKey])
@@ -424,6 +439,7 @@ const constructReviewAssignmentObject = (
       organisationId: orgId,
       status,
       allowedSections: allowedSections || null,
+      assignedSections: assignedSections || null,
       isSelfAssignable: isSelfAssignable || false,
       isFinalDecision: canMakeFinalDecision,
       isLocked,
@@ -442,7 +458,8 @@ const getNewOrExistingAssignmentStatus = (
   existingReviewsAssigned: ExistingReviewAssignment[],
   canMakeFinalDecision: boolean,
   isSelfAssignable: boolean,
-  existingAssignment?: ExistingReviewAssignment
+  sectionCodes: string[],
+  existingAssignment?: ExistingReviewAssignment,
 ): AssignmentState => {
   const isReviewAssigned = existingReviewsAssigned.length > 0
   const isAssigned = existingReviewsAssigned.some(
@@ -452,7 +469,7 @@ const getNewOrExistingAssignmentStatus = (
   // Note: This logic will be updated during implementation of ISSUE #836 (front-end) to allow
   // locking other reviewAssignments for finalDecision once one has been submitted.
   if (canMakeFinalDecision)
-    return { status: ReviewAssignmentStatus.Assigned, isSelfAssignable: true, isLocked: false }
+    return { status: ReviewAssignmentStatus.Assigned, isSelfAssignable: true, isLocked: false, assignedSections: sectionCodes }
 
   // Create new OR update ReviewAssignment:
   // 1. If existing

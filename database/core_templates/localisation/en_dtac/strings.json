@@ -1,10 +1,10 @@
 {
-  "LABEL_REVIEW_APPROVE": "Mark as reviewed",
-  "LABEL_REVIEW_RESSUBMIT": "Request clarification",
-  "LABEL_REVIEW_DECICION_CONFORM": "Reviewed",
-  "LABEL_REVIEW_DECISION_NON_CONFORM": "Clarification required",
   "DECISION_CONFORM": "Move application to the next stage",
   "DECISION_NON_CONFORM": "Mark application as unsuccessful",
+  "LABEL_REVIEW_APPROVE": "Mark as reviewed",
+  "LABEL_REVIEW_DECICION_CONFORM": "Reviewed",
+  "LABEL_REVIEW_DECISION_NON_CONFORM": "Clarification required",
+  "LABEL_REVIEW_RESSUBMIT": "Request clarification",
   "OUTCOME_APPROVED": "Granted!",
   "OUTCOME_REJECTED": "Unsuccessful this time"
 }

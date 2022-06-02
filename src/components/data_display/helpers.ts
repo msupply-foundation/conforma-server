@@ -1,5 +1,5 @@
 import DBConnect from '../databaseConnect'
-import { objectKeysToCamelCase } from '../utilityFunctions'
+import { objectKeysToCamelCase, capitaliseFirstLetter } from '../utilityFunctions'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import fetch from 'node-fetch'
 import { camelCase, snakeCase, startCase } from 'lodash'
@@ -13,17 +13,18 @@ import {
   DetailsHeader,
   DisplayDefinition,
   LinkedApplication,
-  OutcomesDetailResponse,
-  OutcomesTableResponse,
+  DataViewsDetailResponse,
+  DataViewsTableResponse,
 } from './types'
-import { OutcomeDisplay, OutcomeDisplayColumnDefinition } from '../../generated/graphql'
+import { DataView, DataViewColumnDefinition } from '../../generated/graphql'
 import dataTypeMap, { PostgresDataType } from './postGresToJSDataTypes'
 import config from '../../config'
 import { plural } from 'pluralize'
 
 // CONSTANTS
-const REST_OF_OUTCOME_FIELDS = '...'
+const REST_OF_DATAVIEW_FIELDS = '...'
 const graphQLEndpoint = config.graphQLendpoint
+const dataTablePrefix = camelCase(config.dataTablePrefix)
 
 type JWTData = {
   userId: number
@@ -51,31 +52,33 @@ export const buildAllColumnDefinitions = async ({
   userId: number
   orgId: number | undefined
 }): Promise<ColumnDetailOutput> => {
-  // Look up allowed Outcome displays
-  const outcomeTables = (await DBConnect.getAllTableNames()).map((tableName) =>
-    camelCase(tableName)
+  // Look up allowed Data views
+  const dataTables = (await DBConnect.getAllTableNames()).map((tableName) => camelCase(tableName))
+
+  const matchingTableName = dataTables.find(
+    (table) => table === dataTablePrefix + capitaliseFirstLetter(tableName) || table === tableName
   )
 
-  if (!outcomeTables.includes(tableName)) throw new Error(`Invalid table name: ${tableName}`)
+  if (!matchingTableName) throw new Error(`Invalid table name: ${tableName}`)
 
-  const outcomes = (await DBConnect.getAllowedOutcomeDisplays(permissionNames, tableName))
-    .map((outcome) => objectKeysToCamelCase(outcome))
-    .sort((a, b) => b.priority - a.priority) as OutcomeDisplay[]
+  const dataViews = (await DBConnect.getAllowedDataViews(permissionNames, tableName))
+    .map((dataView) => objectKeysToCamelCase(dataView))
+    .sort((a, b) => b.priority - a.priority) as DataView[]
 
-  if (outcomes.length === 0) throw new Error(`No outcomes available for table "${tableName}"`)
+  if (dataViews.length === 0) throw new Error(`No views available for table "${tableName}"`)
 
-  const { title, code } = outcomes[0]
+  const { title, code } = dataViews[0]
 
   // Generate graphQL filter object
-  const gqlFilters = getFilters(outcomes, userId, orgId)
+  const gqlFilters = getFilters(dataViews, userId, orgId)
 
   // Only for details view
-  const headerColumnName = outcomes[0]?.detailViewHeaderColumn ?? ''
-  const showLinkedApplications = outcomes[0].showLinkedApplications
+  const headerColumnName = dataViews[0]?.detailViewHeaderColumn ?? ''
+  const showLinkedApplications = dataViews[0].showLinkedApplications
 
-  // Get all Fields on Outcome table (schema query)
+  // Get all Fields on Data table (schema query)
   const fields: { name: string; dataType: PostgresDataType }[] = (
-    await DBConnect.getOutcomeTableColumns(snakeCase(tableName))
+    await DBConnect.getDataTableColumns(snakeCase(matchingTableName))
   ).map(({ name, dataType }) => ({
     name: camelCase(name),
     dataType: dataTypeMap?.[dataType as PostgresDataType] ?? dataType,
@@ -87,7 +90,7 @@ export const buildAllColumnDefinitions = async ({
   }, {})
 
   // Get all returning column names (include/exclude + custom columns)
-  const columnsToReturn: string[] = buildColumnList(outcomes, fieldNames, type)
+  const columnsToReturn: string[] = buildColumnList(dataViews, fieldNames, type)
 
   // Get all associated display column_definition records
   const customDisplayDefinitions = await buildColumnDisplayDefinitions(tableName, [
@@ -116,6 +119,7 @@ export const buildAllColumnDefinitions = async ({
       : undefined
 
   return {
+    matchingTableName,
     title: title ?? plural(startCase(tableName)),
     code,
     columnDefinitionMasterList,
@@ -126,16 +130,12 @@ export const buildAllColumnDefinitions = async ({
   }
 }
 
-const getFilters = (
-  outcomes: OutcomeDisplay[],
-  userId: number,
-  orgId: number | undefined
-): object => {
+const getFilters = (dataViews: DataView[], userId: number, orgId: number | undefined): object => {
   // We're only interested in the highest priority restrictions
   const restrictions =
-    outcomes[0].rowRestrictions == null || Object.keys(outcomes[0].rowRestrictions).length === 0
+    dataViews[0].rowRestrictions == null || Object.keys(dataViews[0].rowRestrictions).length === 0
       ? { id: { isNull: false } }
-      : outcomes[0].rowRestrictions
+      : dataViews[0].rowRestrictions
   // Substitute userId/orgId placeholder with actual values
   return mapValuesDeep(restrictions, (node: any) => {
     if (typeof node !== 'string') return node
@@ -151,7 +151,7 @@ const getFilters = (
 }
 
 const buildColumnList = (
-  outcomes: OutcomeDisplay[],
+  dataViews: DataView[],
   fieldNames: string[],
   type: 'TABLE' | 'DETAIL'
 ): string[] => {
@@ -159,16 +159,16 @@ const buildColumnList = (
   const excludeColumns: string[] = []
   const includeField = type === 'TABLE' ? 'tableViewIncludeColumns' : 'detailViewIncludeColumns'
   const excludeField = type === 'TABLE' ? 'tableViewExcludeColumns' : 'detailViewExcludeColumns'
-  outcomes.forEach((outcome) => {
-    if (outcome[includeField] === null) includeColumns.push(...fieldNames)
-    else includeColumns.push(...(outcome[includeField] as string[]))
-    outcome[excludeField] !== null && excludeColumns.push(...(outcome[excludeField] as string[]))
+  dataViews.forEach((dataView) => {
+    if (dataView[includeField] === null) includeColumns.push(...fieldNames)
+    else includeColumns.push(...(dataView[includeField] as string[]))
+    dataView[excludeField] !== null && excludeColumns.push(...(dataView[excludeField] as string[]))
   })
-  // Convert to Sets to remove duplicate column names from multiple outcomes and
-  // expand "..." to all fields (so we don't have to enter the full field list
-  // in "includeColumns" when also adding a "custom" field)
+  // Convert to Sets to remove duplicate column names from multiple data views
+  // and expand "..." to all fields (so we don't have to enter the full field
+  // list in "includeColumns" when also adding a "custom" field)
   const includeSet = new Set(
-    includeColumns.map((col) => (col === REST_OF_OUTCOME_FIELDS ? fieldNames : col)).flat()
+    includeColumns.map((col) => (col === REST_OF_DATAVIEW_FIELDS ? fieldNames : col)).flat()
   )
   const excludeSet = new Set(excludeColumns)
   return [...includeSet].filter((x) => !excludeSet.has(x))
@@ -178,12 +178,12 @@ const buildColumnDisplayDefinitions = async (
   tableName: string,
   columns: string[]
 ): Promise<ColumnDisplayDefinitions> => {
-  const columnDefinitionArray = await DBConnect.getOutcomeColumnDefinitions(tableName, columns)
+  const columnDefinitionArray = await DBConnect.getDataViewColumnDefinitions(tableName, columns)
   const columnDisplayDefinitions: ColumnDisplayDefinitions = {}
   columnDefinitionArray.forEach((item) => {
     columnDisplayDefinitions[item.column_name] = objectKeysToCamelCase(
       item
-    ) as OutcomeDisplayColumnDefinition
+    ) as DataViewColumnDefinition
   })
   return columnDisplayDefinitions
 }
@@ -195,7 +195,7 @@ export const constructTableResponse = async (
   columnDefinitionMasterList: ColumnDefinitionMasterList,
   fetchedRecords: { id: number; [key: string]: any }[],
   totalCount: number
-): Promise<OutcomesTableResponse> => {
+): Promise<DataViewsTableResponse> => {
   // Build table headers, which also carry any additional display/format
   // definitions for each column
   const headerRow = columnDefinitionMasterList.map(
@@ -216,7 +216,7 @@ export const constructTableResponse = async (
     }
   )
 
-  // Construct table rows by iterating over outcome records
+  // Construct table rows by iterating over data table records
   //  - for columns that need evaluation, we put all the Promises into an array
   //    (evaluationPromiseArray) so they can all be run asynchronously in
   //    parallel. We also need to keep track of where they belong in the main
@@ -273,7 +273,7 @@ export const constructDetailsResponse = async (
   headerDefinition: ColumnDefinition,
   fetchedRecord: { id: number; [key: string]: any },
   linkedApplications: LinkedApplication[] | undefined
-): Promise<OutcomesDetailResponse> => {
+): Promise<DataViewsDetailResponse> => {
   const id = fetchedRecord.id
   const columns = columnDefinitionMasterList.map(({ columnName }) => columnName)
 

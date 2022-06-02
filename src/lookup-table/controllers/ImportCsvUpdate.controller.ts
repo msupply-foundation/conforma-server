@@ -11,29 +11,31 @@ const ImportCsvUpdateController = async (
   reply: FastifyReply
 ) => {
   const { lookupTableId } = request.params
-  const data = await request.file()
+  const data = await request.files()
 
   const lookupTableService = await LookupTableService({ tableId: Number(lookupTableId) })
 
-  await parseStream(data.file, {
-    headers: lookupTableService.parseCsvHeaders,
-  })
-    .on('data', async (row) => {
-      await lookupTableService.addRow(row)
+  for await (const file of data) {
+    await parseStream(file.file, {
+      headers: lookupTableService.parseCsvHeaders,
     })
-    .on('end', async (rowCount: number) => {
-      await lookupTableService
-        .updateTable()
-        .catch((error: Error) =>
-          reply.status(422).send({ status: 'error', name: error.name, message: error.message })
-        )
-        .then((message) => {
-          reply.send({ status: 'success', message: JSON.stringify(message) })
-        })
-    })
-    .on('error', (error: Error) => {
-      reply.status(422).send({ status: 'error', name: error.name, message: error.message })
-    })
+      .on('data', async (row) => {
+        await lookupTableService.addRow(row)
+      })
+      .on('end', async (rowCount: number) => {
+        await lookupTableService
+          .updateTable()
+          .catch((error: Error) =>
+            reply.status(422).send({ status: 'error', name: error.name, message: error.message })
+          )
+          .then((message) => {
+            reply.send({ status: 'success', message: JSON.stringify(message) })
+          })
+      })
+      .on('error', (error: Error) => {
+        reply.status(422).send({ status: 'error', name: error.name, message: error.message })
+      })
+  }
 }
 
 export default ImportCsvUpdateController
