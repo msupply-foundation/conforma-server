@@ -2,21 +2,21 @@
 
 The `./documentation` folder is the root documentation folder for this repository.
 
-Within this documentation folder is a clone of the repo's [**wiki**](https://github.com/openmsupply/application-manager-server/wiki) repository, which appears as a submodule in the main repo, in `./documentation/_wiki`
+Within this documentation folder is a clone of the repo's [**wiki**](https://github.com/openmsupply/conforma-server/wiki) repository, which appears as a submodule in the main repo, in `./documentation/_wiki`
 
 ### To configure with submodule:
 
 - Clone repo with submodule pulled (if already in master):  
-  `git clone --recurse-submodules https://github.com/openmsupply/application-manager-server.git`
+  `git clone --recurse-submodules https://github.com/openmsupply/conforma-server.git`
 
 - Clone repo with submodule in specific branch:  
-  `git clone --recurse-submodules -b <branch_name> https://github.com/openmsupply/application-manager-server.git`
+  `git clone --recurse-submodules -b <branch_name> https://github.com/openmsupply/conforma-server.git`
 
 - Init and pull submodule folder:  
   `git submodule update --init`
 
 - If already on master, you can clone + pull submodules:  
-  `git clone --recurse-submodules https://github.com/openmsupply/application-manager-server.git`
+  `git clone --recurse-submodules https://github.com/openmsupply/conforma-server.git`
 
 - Or after changing branches the command to init and pull:  
   `git submodule update --init`

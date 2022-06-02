@@ -8,7 +8,7 @@
     - Run `npm login --scope=@openmsupply --registry=https://npm.pkg.github.com`
     - Then enter your github registration `username`, `passowrd` (token) and `email`
 - Ensure your back-end `.env` has a variable called `FRONT_END_PATH` with the _full_ path to the front-end repo on your local system.  
-  e.g. `FRONT_END_PATH='/Users/<username>/GitHub/conforma/application-manager-web-app/'`
+  e.g. `FRONT_END_PATH='/Users/<username>/GitHub/conforma/conforma-web-app/'`
 - Ensure your local Docker installation is logged in with the **msupplyfoundation** account (Password in Bitwarden)
 - Ensure your docker Engine running locally to build a new image
 - Yarn should be in the latest v1. i.e: `1.22.18` to correctly use `yarn release`
@@ -113,14 +113,14 @@ Follow this process whenever the docker-compose or nginx configs are updated (`.
 **Note**: You are sending local changes to the server
 
 ```bash
-cd application-manager-server/docker
+cd conforma-server/docker
 scp -r -i $KEY_LOC ./demo_server ubuntu@irims-demo.msupply.org:/home/ubuntu/
 ```
 
 ## Save backup of nginx config from demo server to local
 
 ```bash
-cd application-manager-server/docker
+cd conforma-server/docker
 scp -i $KEY_LOC ubuntu@irims-demo.msupply.org:/etc/nginx/sites-enabled/default ./demo_server/nginx_config
 ```
 
@@ -227,8 +227,8 @@ To remove all currently unused volumes at once:
 
 ```bash
 # don't need bash inside contiainer for this
-sudo docker exec -ti conforma-on-8000_app_1 cat /var/log/application_manager/server.log
-sudo docker exec -ti conforma-on-8000_app_1 cat /var/log/application_manager/graphile.log
+sudo docker exec -ti conforma-on-8000_app_1 cat /var/log/conforma/server.log
+sudo docker exec -ti conforma-on-8000_app_1 cat /var/log/conforma/graphile.log
 ```
 
 ### Other image/container commands
@@ -262,4 +262,4 @@ You can access the command line of a particular container instance with the foll
 From there the following commands might be useful:
 
 - view environment variables: `printenv`
-- check the server log: `tail -n 100 /var/log/application_manager/server.log`
+- check the server log: `tail -n 100 /var/log/conforma/server.log`

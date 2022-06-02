@@ -17,7 +17,7 @@
       "applicationName": "pg-diff-cli"
     },
     "compareOptions": {
-      "author": "application-manager-server",
+      "author": "conforma-server",
       "outputDirectory": "sqlscripts",
       "getAuthorFromGit": false,
       "schemaCompare": {
