@@ -165,7 +165,7 @@ CREATE OR REPLACE FUNCTION public.notify_trigger_queue ()
     AS $trigger_event$
 BEGIN
     PERFORM
-        pg_notify('trigger_notifications', json_build_object('trigger_id', NEW.id, 'trigger', NEW.trigger_type, 'table', NEW.table, 'record_id', NEW.record_id, 'event_code', NEW.event_code, 'data', NEW.data)::text);
+        pg_notify('trigger_notifications', json_build_object('trigger_id', NEW.id, 'trigger', NEW.trigger_type, 'table', NEW.table, 'record_id', NEW.record_id, 'event_code', NEW.event_code)::text);
     RETURN NULL;
 END;
 $trigger_event$
@@ -912,7 +912,7 @@ CREATE OR REPLACE FUNCTION public.notify_action_queue ()
 BEGIN
     -- IF NEW.status = 'QUEUED' THEN
     PERFORM
-        pg_notify('action_notifications', json_build_object('id', NEW.id, 'code', NEW.action_code, 'trigger_payload', NEW.trigger_payload, 'condition_expression', NEW.condition_expression, 'parameter_queries', NEW.parameter_queries)::text);
+        pg_notify('action_notifications', json_build_object('id', NEW.id, 'code', NEW.action_code, 'condition_expression', NEW.condition_expression, 'parameter_queries', NEW.parameter_queries)::text);
     -- END IF;
     RETURN NULL;
 END;
@@ -1708,33 +1708,47 @@ CREATE FUNCTION review_list (stageid int, reviewerid int)
     AS $$
     SELECT
         review_assignment.application_id AS application_id,
-        CASE 
-            WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'CHANGES_REQUESTED') != 0
-                THEN 'UPDATE_REVIEW'
-            WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'PENDING') != 0
-                THEN 'RESTART_REVIEW'
-            WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'DRAFT' AND is_locked = FALSE) != 0
-                THEN 'CONTINUE_REVIEW'
-            WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED' 
-                                    AND review_assignment.is_final_decision = TRUE
-                                    AND review_assignment.is_last_stage = TRUE
-                                    AND review = NULL) != 0
-                THEN 'MAKE_DECISION'
-            WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED' AND review.id IS NULL) != 0
-                THEN 'START_REVIEW'
-            WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'AVAILABLE' AND is_self_assignable = TRUE AND (review = NULL OR is_locked = FALSE)) != 0
-                THEN 'SELF_ASSIGN'
-            WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED' OR review_status_history.status = 'SUBMITTED') != 0
-                THEN 'VIEW_REVIEW'
-            ELSE NULL
+        CASE WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'CHANGES_REQUESTED') != 0 THEN
+            'UPDATE_REVIEW'
+        WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'PENDING') != 0 THEN
+            'RESTART_REVIEW'
+        WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'DRAFT'
+            AND is_locked = FALSE) != 0 THEN
+            'CONTINUE_REVIEW'
+        WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+            AND review_assignment.is_final_decision = TRUE
+            AND review_assignment.is_last_stage = TRUE
+            AND review = NULL) != 0 THEN
+            'MAKE_DECISION'
+        WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+            AND review.id IS NULL) != 0 THEN
+            'START_REVIEW'
+        WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'AVAILABLE'
+            AND is_self_assignable = TRUE
+            AND (review = NULL
+            OR is_locked = FALSE)) != 0 THEN
+            'SELF_ASSIGN'
+        WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+            OR review_status_history.status = 'SUBMITTED') != 0 THEN
+            'VIEW_REVIEW'
+        ELSE
+            NULL
         END::public.reviewer_action
     FROM
         review_assignment
     LEFT JOIN review ON review.review_assignment_id = review_assignment.id
     LEFT JOIN review_status_history ON (review_status_history.review_id = review.id
             AND is_current = TRUE)
-WHERE review_assignment.stage_id = $1
+WHERE
+    review_assignment.stage_id = $1
     AND review_assignment.reviewer_id = $2
+    AND (
+        SELECT
+            outcome
+        FROM
+            application
+        WHERE
+            id = review_assignment.application_id) = 'PENDING'
 GROUP BY
     review_assignment.application_id;
 
@@ -1896,16 +1910,8 @@ $$
 LANGUAGE sql
 STABLE;
 
--- lookup table
-CREATE TABLE lookup_table (
-    id serial PRIMARY KEY,
-    name varchar,
-    label varchar,
-    field_map jsonb
-);
-
--- Outcome display
-CREATE TABLE outcome_display (
+-- Data table display configs
+CREATE TABLE data_view (
     id serial PRIMARY KEY,
     table_name varchar NOT NULL,
     title varchar,
@@ -1923,7 +1929,7 @@ CREATE TABLE outcome_display (
 );
 
 -- For columns that require more detail format or evaluation definitions
-CREATE TABLE outcome_display_column_definition (
+CREATE TABLE data_view_column_definition (
     id serial PRIMARY KEY,
     table_name varchar,
     column_name varchar,
@@ -1933,6 +1939,15 @@ CREATE TABLE outcome_display_column_definition (
     additional_formatting jsonb,
     value_expression jsonb,
     UNIQUE (table_name, column_name)
+);
+
+-- Table for cataloguing all "data" tables, including lookup tables
+CREATE TABLE data_table (
+    id serial PRIMARY KEY,
+    table_name varchar NOT NULL UNIQUE,
+    display_name varchar,
+    field_map jsonb,
+    is_lookup_table boolean DEFAULT FALSE
 );
 
 -- ACTIVITY LOG
