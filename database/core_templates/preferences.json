@@ -8,6 +8,8 @@
   },
   "web": {
     "paginationPresets": [2, 5, 10, 20, 50],
-    "defaultLanguageCode": "en_nz"
+    "defaultLanguageCode": "en_nz",
+    "brandLogoFileId": "FatzcVDjgxuAcdwQf1h_u",
+    "brandLogoOnDarkFileId": "6t0oVIzvHe45VyVk4NiMO"
   }
 }
