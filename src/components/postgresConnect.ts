@@ -419,6 +419,25 @@ class PostgresDB {
     }
   }
 
+  public getSingleTemplateAction = async (
+    templateId: number,
+    code: string
+  ): Promise<ActionInTemplate> => {
+    const text = `
+      SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, template_action.event_code AS event_code, sequence, condition, parameter_queries 
+      FROM template 
+      JOIN template_action ON template.id = template_action.template_id 
+      JOIN action_plugin ON template_action.action_code = action_plugin.code 
+      WHERE template_id = $1 AND template_action.code = $2
+    `
+    try {
+      const result = await this.query({ text, values: [templateId, code] })
+      return result.rows[0] as ActionInTemplate
+    } catch (err) {
+      throw err
+    }
+  }
+
   public updateActionPlugin = async (plugin: ActionPlugin): Promise<boolean> => {
     const setMapping = Object.keys(plugin).map((key, index) => `${key} = $${index + 1}`)
     const text = `UPDATE action_plugin SET ${setMapping.join(',')} WHERE code = $${

@@ -44,6 +44,8 @@ class DBConnect {
 
   public getActionsByTemplateId = PostgresDB.getActionsByTemplateId
 
+  public getSingleTemplateAction = PostgresDB.getSingleTemplateAction
+
   public updateActionPlugin = PostgresDB.updateActionPlugin
 
   public updateTriggerQueueStatus = PostgresDB.updateTriggerQueueStatus

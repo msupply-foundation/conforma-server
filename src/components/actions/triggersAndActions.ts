@@ -23,6 +23,7 @@ import { ActionQueueStatus, TriggerQueueStatus } from '../../generated/graphql'
 import scheduler from 'node-schedule'
 import config from '../../config'
 import { DateTime } from 'luxon'
+import { swapOutAliasedActions } from './helpers'
 
 // Dev configs
 const showApplicationDataLog = false
@@ -76,17 +77,19 @@ export async function processTrigger(payload: TriggerPayload) {
   const templateId = await DBConnect.getTemplateIdFromTrigger(payload.table, payload.record_id)
 
   // Get Actions from matching Template (and match templateActionCode if applicable)
-  const actions = await (
-    await DBConnect.getActionsByTemplateId(templateId, trigger)
-  ).filter((action) => {
-    if (!event_code) return true
-    else return action.event_code === event_code
-  })
+  const actions = (await DBConnect.getActionsByTemplateId(templateId, trigger))
+    .filter((action) => {
+      if (!event_code) return true
+      else return action.event_code === event_code
+    })
+    .map((action) => (action.code !== 'alias' ? action : swapOutAliasedActions(templateId, action)))
+
+  const resolvedActions = await Promise.all(actions)
 
   // Separate into Sequential and Async actions
   const actionsSequential: ActionSequential[] = []
   const actionsAsync: ActionInTemplate[] = []
-  for (const action of actions) {
+  for (const action of resolvedActions) {
     if (action.sequence) actionsSequential.push(action as ActionSequential)
     else actionsAsync.push(action)
   }
