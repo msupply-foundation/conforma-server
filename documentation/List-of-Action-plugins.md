@@ -24,6 +24,7 @@
   - [Send Notification](#send-notification)
   - [Schedule Action](#schedule-action)
   - [Clean Up Files](#clean-up-files)
+  - [Aliasing existing template actions](#aliasing-existing-template-actions)
 - [Core Actions](#core-actions)
     - [On Application Create:](#on-application-create)
     - [On Application Submit](#on-application-submit)
@@ -657,6 +658,26 @@ Action to remove files no longer connected to application responses -- for examp
 Can supply *either* `applicationId` or `applicationSerial`, although this can be inferred from `applicationData` if neither is supplied.
 
 Note: There is a database trigger/postgres listener to automatically delete files when their database record is deleted, so we only need to delete the records, not the files themselves.
+
+### Aliasing existing template actions
+
+Finally, we have this "special" action which allows us to create an alias to an existing template action. The use for this is if you have configured a complex action with a lot of parameters or queries, and you wish to run it with slight differences for a document preview (for example), you can just set an alias to the original action instead of configuring and maintaining the same thing twice within the template (LINK TO PREVIEW DOCUMENTATION WHEN ITS DONE)
+
+In fact, this is not really an action at all -- it's just a dummy plugin that makes the action library and front-end (and therefore template_actions) see it as an available action. But all the logic is handled internally as part of the `processTrigger` functionality -- if it sees an "alias" action, the function simply swaps it out with the template action it is referencing.
+
+- _Action Code:_ **`alias`**
+
+| Input parameters<br />(\*required) <br/> | Output properties                  |
+| ---------------------------------------- | ---------------------------------- |
+| `code`\*                                 | `output as per the aliased action` |
+| `condition`                              |                                    |
+| `...any other aliased action parameters` |                                    |
+
+To be able to reference an existing template action, it needs to have a unique (per template) code in its template_action record.
+
+Then this alias action just passes in the code of the action it's referencing and the trigger processor will swap it out for that one.
+
+By default the action runs with the condition and parameters it has defined, but these can be overridden by the alias. To override the condition, you can either set the "condition" field directly, or supply a "condition" parameter (which takes priority). The one problem with the native "condition" field, though, is that it is always `true` by default, so we wouldn't want to always override with that. Therefore, the "condition" field only overrides the aliased actions condition if it is something other than `true`. (If you want it to be `true` (i.e. always run, then set `condition: true` in parameters))
 
 ---
 

@@ -35,7 +35,7 @@ export const swapOutAliasedActions = async (templateId: number, action: ActionIn
 
   // Override condition if specified
   // It would make most sense for actual condition field to be the one we look
-  // at for overriding the aliased action's condition, but becauase this has
+  // at for overriding the aliased action's condition, but because this has
   // default "true" and can never be null, then we'd always get "true" as the
   // condition. So we only consider the condition field if it's something other
   // than "true". And if we actually *want* it to be "true", then we can
