@@ -380,6 +380,18 @@ const migrateData = async () => {
     console.log('Done migrating on v0.2.0...')
   }
 
+  // v0.3.1
+  if (databaseVersionLessThan('0.3.1')) {
+    console.log('Migrating to v0.3.1...')
+
+    // Enforce code must be unique per template in template_action table
+    console.log(' - Creating unique index for code/template in template_action')
+    await DB.changeSchema(`
+      CREATE UNIQUE INDEX IF NOT EXISTS unique_template_action_code
+      ON template_action (code, template_id)
+    `)
+  }
+
   // Other version migrations continue here...
 
   // Finally, set the database version to the current version
