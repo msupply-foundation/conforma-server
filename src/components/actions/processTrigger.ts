@@ -10,7 +10,9 @@ import { swapOutAliasedActions } from './helpers'
 const showActionOutcomeLog = false
 
 export async function processTrigger(payload: TriggerPayload) {
-  const { trigger_id, trigger, table, record_id, data, event_code } = payload
+  const { trigger_id, trigger, table, record_id, data, event_code, previewData } = payload
+
+  console.log('Input payload', payload)
 
   const templateId = await DBConnect.getTemplateIdFromTrigger(payload.table, payload.record_id)
 
@@ -47,12 +49,14 @@ export async function processTrigger(payload: TriggerPayload) {
         typeof action.sequence === 'number'
           ? ActionQueueStatus.Processing
           : ActionQueueStatus.Queued,
+      preview_data: previewData,
     })
   }
-  await DBConnect.updateTriggerQueueStatus({
-    status: TriggerQueueStatus.ActionsDispatched,
-    id: trigger_id,
-  })
+  if (trigger_id)
+    await DBConnect.updateTriggerQueueStatus({
+      status: TriggerQueueStatus.ActionsDispatched,
+      id: trigger_id,
+    })
 
   // Get sequential Actions from database
   const actionsToExecute = await DBConnect.getActionsProcessing(templateId)
@@ -82,9 +86,14 @@ export async function processTrigger(payload: TriggerPayload) {
         parameter_queries: action.parameter_queries,
         trigger_payload: action.trigger_payload,
       }
-      const result = await executeAction(actionPayload, actionLibrary, {
-        outputCumulative,
-      })
+      const result = await executeAction(
+        actionPayload,
+        actionLibrary,
+        {
+          outputCumulative,
+        },
+        previewData
+      )
       outputCumulative = { ...outputCumulative, ...result.output }
       // Debug helper console.log to inspect action outputs:
       if (showActionOutcomeLog) console.log('outputCumulative:', outputCumulative)
@@ -93,6 +102,8 @@ export async function processTrigger(payload: TriggerPayload) {
       actionFailed = action.action_code
     }
   }
+
+  // console.log('outputCumulative', outputCumulative)
   // After all done, set Trigger on table back to NULL (or Error)
   DBConnect.resetTrigger(table, record_id, actionFailed !== '')
   // and set is_active = false if scheduled action

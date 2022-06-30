@@ -1,5 +1,11 @@
-import { ActionLibrary, ActionPayload, ActionQueueExecutePayload } from '../../types'
+import {
+  ActionApplicationData,
+  ActionLibrary,
+  ActionPayload,
+  ActionQueueExecutePayload,
+} from '../../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
+import { merge } from 'lodash'
 import functions from './evaluatorFunctions'
 import DBConnect from '../databaseConnect'
 import fetch from 'node-fetch'
@@ -17,10 +23,11 @@ const graphQLEndpoint = config.graphQLendpoint
 export async function executeAction(
   payload: ActionPayload,
   actionLibrary: ActionLibrary,
-  additionalObjects: any = {}
+  additionalObjects: any = {},
+  previewData?: Partial<ActionApplicationData>
 ): Promise<ActionQueueExecutePayload> {
-  // Get fresh applicationData for each Action
-  const applicationData = await getApplicationData({ payload })
+  // Get fresh applicationData for each Action, and inject previewData if present
+  const applicationData = merge(await getApplicationData({ payload }), previewData)
 
   // Debug helper console.log to inspect applicationData:
   if (showApplicationDataLog) console.log('ApplicationData: ', applicationData)

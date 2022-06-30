@@ -390,6 +390,18 @@ const migrateData = async () => {
       CREATE UNIQUE INDEX IF NOT EXISTS unique_template_action_code
       ON template_action (code, template_id)
     `)
+
+    console.log(' - Adding new trigger value ON_PREVIEW')
+    await DB.changeSchema(`
+    ALTER TYPE public.trigger ADD VALUE IF NOT EXISTS
+    'ON_PREVIEW' AFTER  'ON_SCHEDULE';
+    `)
+
+    console.log(' - Adding preview_data to action_queue')
+    await DB.changeSchema(`
+      ALTER TABLE action_queue
+      ADD COLUMN IF NOT EXISTS preview_data jsonb;
+    `)
   }
 
   // Other version migrations continue here...
