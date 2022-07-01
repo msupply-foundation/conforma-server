@@ -47,7 +47,6 @@ export async function processTrigger(payload: TriggerPayload) {
         typeof action.sequence === 'number'
           ? ActionQueueStatus.Processing
           : ActionQueueStatus.Queued,
-      preview_data: previewData,
     })
   }
   if (trigger_id)

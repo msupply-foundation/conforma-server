@@ -55,7 +55,6 @@ export interface ActionQueuePayload {
   parameter_queries: { [key: string]: any }
   parameters_evaluated: { [key: string]: any }
   status: ActionQueueStatus
-  preview_data?: Partial<ActionApplicationData>
 }
 
 export interface ActionQueueGetPayload {

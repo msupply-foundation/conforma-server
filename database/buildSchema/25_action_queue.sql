@@ -18,7 +18,6 @@ CREATE TABLE public.action_queue (
         condition_expression jsonb,
         parameter_queries jsonb,
         parameters_evaluated jsonb,
-        preview_data jsonb,
         status public.action_queue_status,
         output jsonb,
         time_queued timestamptz,

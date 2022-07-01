@@ -397,10 +397,10 @@ const migrateData = async () => {
     'ON_PREVIEW' AFTER  'ON_SCHEDULE';
     `)
 
-    console.log(' - Adding preview_data to action_queue')
+    console.log(' - Adding is_preview_doc to file table')
     await DB.changeSchema(`
-      ALTER TABLE action_queue
-      ADD COLUMN IF NOT EXISTS preview_data jsonb;
+      ALTER TABLE file
+      ADD COLUMN IF NOT EXISTS is_preview_doc boolean;
     `)
   }
 
