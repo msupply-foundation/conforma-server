@@ -4,7 +4,7 @@ import { actionLibrary } from '../pluginsConnect'
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import { executeAction } from './executeAction'
 import { ActionQueueStatus, TriggerQueueStatus } from '../../generated/graphql'
-import { swapOutAliasedActions } from './helpers'
+import { swapOutAliasedAction } from './helpers'
 
 // Dev config
 const showActionOutcomeLog = false
@@ -20,7 +20,7 @@ export async function processTrigger(payload: TriggerPayload) {
       if (!event_code) return true
       else return action.event_code === event_code
     })
-    .map((action) => (action.code !== 'alias' ? action : swapOutAliasedActions(templateId, action)))
+    .map((action) => (action.code !== 'alias' ? action : swapOutAliasedAction(templateId, action)))
 
   const resolvedActions = await Promise.all(actions)
 

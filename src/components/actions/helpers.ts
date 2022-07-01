@@ -1,3 +1,4 @@
+import { merge } from 'lodash'
 import { ActionInTemplate } from '../../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import { BasicObject, IParameters } from '@openmsupply/expression-evaluator/lib/types'
@@ -22,7 +23,7 @@ export async function evaluateParameters(
   }
 }
 
-export const swapOutAliasedActions = async (templateId: number, action: ActionInTemplate) => {
+export const swapOutAliasedAction = async (templateId: number, action: ActionInTemplate) => {
   // Fetch aliased action from database
   const {
     condition,
@@ -45,7 +46,7 @@ export const swapOutAliasedActions = async (templateId: number, action: ActionIn
   if (altCondition !== undefined) aliasedAction.condition = altCondition
 
   // Override parameters
-  aliasedAction.parameter_queries = { ...aliasedAction.parameter_queries, ...overrideParams }
+  aliasedAction.parameter_queries = merge(aliasedAction.parameter_queries, overrideParams)
 
   return aliasedAction
 }
