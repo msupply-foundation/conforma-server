@@ -1,12 +1,10 @@
-import { actionLibrary } from '../pluginsConnect'
-import { getApplicationData } from './getApplicationData'
 import { combineRequestParams } from '../utilityFunctions'
-import DBConnect from '../databaseConnect'
 import { processTrigger } from './processTrigger'
+import { createDisplayData } from './helpers'
 import { Trigger } from '../../generated/graphql'
 
 export const routePreviewActions = async (request: any, reply: any) => {
-  const { applicationId, reviewId, ...previewData } = combineRequestParams(request, 'camel')
+  const { applicationId, reviewId, previewData } = combineRequestParams(request, 'camel')
   console.log('PREVIEW....')
   console.log('application', applicationId)
   console.log('review', reviewId)
@@ -22,9 +20,13 @@ export const routePreviewActions = async (request: any, reply: any) => {
     previewData,
   }
 
-  await processTrigger(triggerPayload)
+  const actionsOutput = await processTrigger(triggerPayload)
+
+  const displayData = createDisplayData(actionsOutput)
+
+  console.log(JSON.stringify(actionsOutput, null, 2))
 
   // Return results
 
-  return reply.send(`Application ${applicationId}`)
+  return reply.send({ displayData, actionsOutput })
 }

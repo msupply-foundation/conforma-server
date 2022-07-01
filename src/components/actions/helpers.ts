@@ -2,6 +2,7 @@ import { ActionInTemplate } from '../../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import { BasicObject, IParameters } from '@openmsupply/expression-evaluator/lib/types'
 import DBConnect from '../databaseConnect'
+import { ActionQueueStatus } from '../../generated/graphql'
 
 export async function evaluateParameters(
   parameterQueries: BasicObject,
@@ -47,4 +48,49 @@ export const swapOutAliasedActions = async (templateId: number, action: ActionIn
   aliasedAction.parameter_queries = { ...aliasedAction.parameter_queries, ...overrideParams }
 
   return aliasedAction
+}
+
+interface ActionResult {
+  action: string // code
+  status: ActionQueueStatus
+  output: BasicObject | null
+}
+
+interface ActionResultDisplayData {
+  type: 'DOCUMENT' | 'NOTIFICATION' | 'OTHER'
+  status: ActionQueueStatus
+  displayString: string
+  text?: string // for email string
+  fileId?: string // for generating url in front-end
+}
+
+// Convert the full action output into a simplified format that can be easily
+// displayed by the front-end Preview module
+export const createDisplayData = (actionsOutput: ActionResult[]): ActionResultDisplayData[] => {
+  return actionsOutput.map((result) => {
+    switch (result.action) {
+      case 'sendNotification':
+        return {
+          type: 'NOTIFICATION',
+          status: result.status,
+          displayString: result.output?.notification?.subject ?? 'Email notification',
+          text: result.output?.notification?.message,
+        }
+      case 'generateDoc':
+        return {
+          type: 'DOCUMENT',
+          status: result.status,
+          displayString: result.output?.document?.filename ?? 'Generated Document',
+          fileId: result.output?.document?.uniqueId,
+        }
+      // We're only expecting preview results from sendNotification and generateDoc actions. Fallback for others:
+      default:
+        return {
+          type: 'OTHER',
+          status: result.status,
+          displayString: `Result of action: ${result.action}`,
+          text: JSON.stringify(result.output, null, 2),
+        }
+    }
+  })
 }

@@ -12,8 +12,6 @@ const showActionOutcomeLog = false
 export async function processTrigger(payload: TriggerPayload) {
   const { trigger_id, trigger, table, record_id, data, event_code, previewData } = payload
 
-  console.log('Input payload', payload)
-
   const templateId = await DBConnect.getTemplateIdFromTrigger(payload.table, payload.record_id)
 
   // Get Actions from matching Template (and match templateActionCode if applicable)
@@ -65,6 +63,10 @@ export async function processTrigger(payload: TriggerPayload) {
   // "data" is stored output from scheduled triggers or verifications
   let outputCumulative = { ...data?.outputCumulative }
 
+  // Result collection to send back to preview endpoint
+  // (but could be used elsewhere if required)
+  const actionOutputs = []
+
   // Execute sequential Actions one by one
   let actionFailed = ''
   for (const action of actionsToExecute) {
@@ -94,7 +96,15 @@ export async function processTrigger(payload: TriggerPayload) {
         },
         previewData
       )
+
       outputCumulative = { ...outputCumulative, ...result.output }
+      if (result.status !== ActionQueueStatus.ConditionNotMet)
+        actionOutputs.push({
+          action: action.action_code,
+          status: result.status,
+          output: result.output,
+        })
+
       // Debug helper console.log to inspect action outputs:
       if (showActionOutcomeLog) console.log('outputCumulative:', outputCumulative)
       if (result.status === ActionQueueStatus.Fail) console.log(result.error_log)
@@ -103,10 +113,12 @@ export async function processTrigger(payload: TriggerPayload) {
     }
   }
 
-  // console.log('outputCumulative', outputCumulative)
   // After all done, set Trigger on table back to NULL (or Error)
   DBConnect.resetTrigger(table, record_id, actionFailed !== '')
   // and set is_active = false if scheduled action
   if (table === 'trigger_schedule' && actionFailed === '')
     DBConnect.setScheduledActionDone(table, record_id)
+
+  // Return value only used by Previews endpoint
+  return actionOutputs
 }
