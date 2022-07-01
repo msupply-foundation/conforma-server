@@ -102,6 +102,7 @@ export async function processTrigger(payload: TriggerPayload) {
           action: action.action_code,
           status: result.status,
           output: result.output,
+          errorLog: result.error_log ? result.error_log : null,
         })
 
       // Debug helper console.log to inspect action outputs:

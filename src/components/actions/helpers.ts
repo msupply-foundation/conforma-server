@@ -55,6 +55,7 @@ interface ActionResult {
   action: string // code
   status: ActionQueueStatus
   output: BasicObject | null
+  errorLog: string | null
 }
 
 interface ActionResultDisplayData {
@@ -63,6 +64,7 @@ interface ActionResultDisplayData {
   displayString: string
   text?: string // for email string
   fileId?: string // for generating url in front-end
+  errorLog: string | null // if Action failed
 }
 
 // Convert the full action output into a simplified format that can be easily
@@ -76,6 +78,7 @@ export const createDisplayData = (actionsOutput: ActionResult[]): ActionResultDi
           status: result.status,
           displayString: result.output?.notification?.subject ?? 'Email notification',
           text: result.output?.notification?.message,
+          errorLog: result.errorLog,
         }
       case 'generateDoc':
         return {
@@ -83,6 +86,7 @@ export const createDisplayData = (actionsOutput: ActionResult[]): ActionResultDi
           status: result.status,
           displayString: result.output?.document?.filename ?? 'Generated Document',
           fileId: result.output?.document?.uniqueId,
+          errorLog: result.errorLog,
         }
       // We're only expecting preview results from sendNotification and generateDoc actions. Fallback for others:
       default:
@@ -91,6 +95,7 @@ export const createDisplayData = (actionsOutput: ActionResult[]): ActionResultDi
           status: result.status,
           displayString: `Result of action: ${result.action}`,
           text: JSON.stringify(result.output, null, 2),
+          errorLog: result.errorLog,
         }
     }
   })
