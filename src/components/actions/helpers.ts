@@ -93,7 +93,7 @@ export const createDisplayData = (actionsOutput: ActionResult[]): ActionResultDi
         return {
           type: 'OTHER',
           status: result.status,
-          displayString: `Result of action: ${result.action}`,
+          displayString: `Output of action: ${result.action}`,
           text: JSON.stringify(result.output, null, 2),
           errorLog: result.errorLog,
         }
