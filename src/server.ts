@@ -20,7 +20,12 @@ import { routeGeneratePDF } from './components/files/documentGenerate'
 import { saveFiles, getFilePath, filesFolder } from './components/files/fileHandler'
 import { createDefaultDataFolders } from './components/files/createDefaultFolders'
 import { getAppEntryPointDir, objectKeysToSnakeCase } from './components/utilityFunctions'
-import { routeRunAction, routeGetApplicationData, routePreviewActions } from './components/actions'
+import {
+  routeRunAction,
+  routeGetApplicationData,
+  routePreviewActions,
+  cleanUpPreviewFiles,
+} from './components/actions'
 import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
 import snapshotRoutes from './components/snapshots/routes'
@@ -41,6 +46,7 @@ require('dotenv').config()
 const startServer = async () => {
   await migrateData()
   await loadActionPlugins() // Connects to Database and listens for Triggers
+  await cleanUpPreviewFiles() // Runs on schedule as well as startup
 
   createDefaultDataFolders()
 

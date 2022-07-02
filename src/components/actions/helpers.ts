@@ -46,7 +46,12 @@ export const swapOutAliasedAction = async (templateId: number, action: ActionInT
   if (altCondition !== undefined) aliasedAction.condition = altCondition
 
   // Override parameters
-  aliasedAction.parameter_queries = merge(aliasedAction.parameter_queries, overrideParams)
+  aliasedAction.parameter_queries = merge(
+    aliasedAction.parameter_queries,
+    // All docs generated through here should be preview docs/non-output
+    { isPreviewDoc: true, isOutputDoc: false },
+    overrideParams
+  )
 
   return aliasedAction
 }

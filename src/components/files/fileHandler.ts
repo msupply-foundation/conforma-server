@@ -81,6 +81,7 @@ export async function registerFileInDB({
   description,
   application_note_id,
   is_output_doc = false,
+  is_preview_doc = false,
   mimetype,
 }: any) {
   try {
@@ -95,6 +96,7 @@ export async function registerFileInDB({
         description,
         application_note_id,
         is_output_doc,
+        is_preview_doc,
         file_path,
         thumbnail_path,
         mimetype: file ? file.mimetype : mimetype,

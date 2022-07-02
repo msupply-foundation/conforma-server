@@ -9,7 +9,8 @@ const generateDoc: ActionPluginType = async ({
   // DBConnect,
   outputCumulative,
 }) => {
-  const { options, docTemplateId, data, additionalData, description, isOutputDoc } = parameters
+  const { options, docTemplateId, data, additionalData, description, isOutputDoc, isPreviewDoc } =
+    parameters
   const userId = parameters?.userId ?? applicationData?.userId
   const applicationSerial = parameters?.applicationSerial ?? applicationData?.applicationSerial
   const templateId = parameters?.templateId ?? applicationData?.templateId
@@ -32,6 +33,7 @@ const generateDoc: ActionPluginType = async ({
       applicationSerial,
       description,
       isOutputDoc,
+      isPreviewDoc,
     })
     return {
       status: ActionQueueStatus.Success,
