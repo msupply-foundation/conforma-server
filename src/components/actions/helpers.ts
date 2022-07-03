@@ -84,7 +84,10 @@ export const createDisplayData = (actionsOutput: ActionResult[]): ActionResultDi
         return {
           type: 'DOCUMENT',
           status: result.status,
-          displayString: result.output?.document?.filename ?? 'Generated Document',
+          displayString:
+            result.output?.document?.description ??
+            result.output?.document?.filename ??
+            'Generated Document',
           fileId: result.output?.document?.uniqueId,
           errorLog: result.errorLog,
         }
