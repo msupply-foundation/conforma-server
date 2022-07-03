@@ -14,6 +14,7 @@ import { getApplicationData } from './getApplicationData'
 import { ActionQueueStatus } from '../../generated/graphql'
 import config from '../../config'
 import { evaluateParameters } from './helpers'
+import { getAdminJWT } from '../permissions/loginHelpers'
 
 // Dev config
 const showApplicationDataLog = false
@@ -37,6 +38,9 @@ export async function executeAction(
     pgConnection: DBConnect,
     APIfetch: fetch,
     graphQLConnection: { fetch, endpoint: graphQLEndpoint },
+    headers: {
+      Authorization: `Bearer ${await getAdminJWT()}`,
+    },
   }
 
   // Evaluate condition
