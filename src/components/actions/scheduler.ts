@@ -18,7 +18,7 @@ else checkActionSchedule.minute = 0
 // Node scheduler to clean-up preview files periodically
 const cleanUpPreviewsSchedule = new scheduler.RecurrenceRule()
 
-cleanUpPreviewsSchedule.hour = config?.hoursSchedule ?? [1] // once per day
+cleanUpPreviewsSchedule.hour = config?.previewDocsCleanupSchedule ?? [1] // once per day
 if (schedulerTestMode) checkActionSchedule.second = [0, 30]
 else checkActionSchedule.minute = 0
 
@@ -38,7 +38,10 @@ export const triggerScheduledActions = async () => {
 }
 
 export const cleanUpPreviewFiles = async () => {
-  console.log('Cleaning up preview files...')
+  console.log(
+    DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
+    'Cleaning up preview files...'
+  )
   const deleteCount = await DBConnect.cleanUpPreviewFiles()
   console.log(`${deleteCount} files removed.`)
 }
