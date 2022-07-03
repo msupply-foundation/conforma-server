@@ -97,7 +97,7 @@ export async function generatePDF({
       })
     )
     console.log('Document creation complete\n')
-    return { uniqueId, filename: originalFilename, filePath: outputFilePath }
+    return { uniqueId, filename: originalFilename, filePath: outputFilePath, description }
   } catch (err) {
     throw err
   }
