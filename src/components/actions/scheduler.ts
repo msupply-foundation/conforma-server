@@ -6,25 +6,23 @@ import { DateTime } from 'luxon'
 // Dev config option
 const schedulerTestMode = false // Runs scheduler every 30 seconds
 
-// Instantiate node-scheduler to run scheduled actions periodically
-const checkActionSchedule = new scheduler.RecurrenceRule()
-
-if (schedulerTestMode) checkActionSchedule.second = [0, 30]
-else {
-  checkActionSchedule.hour = config?.hoursSchedule ?? [
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-  ] // every hour by default
-  checkActionSchedule.minute = 0
-}
+// Node-scheduler to run scheduled actions periodically
+const checkActionSchedule = schedulerTestMode
+  ? { second: [0, 30] }
+  : {
+      hour: config?.hoursSchedule ?? [
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+      ], // every hour by default
+      minute: 0,
+    }
 
 // Node scheduler to clean-up preview files periodically
-const cleanUpPreviewsSchedule = new scheduler.RecurrenceRule()
-
-if (schedulerTestMode) cleanUpPreviewsSchedule.second = [0, 30]
-else {
-  cleanUpPreviewsSchedule.hour = config?.previewDocsCleanupSchedule ?? [1] // default once per day
-  cleanUpPreviewsSchedule.minute = 0
-}
+const cleanUpPreviewsSchedule = schedulerTestMode
+  ? { second: [0, 30] }
+  : {
+      hour: config?.previewDocsCleanupSchedule ?? [1], // default once per day
+      minute: 0,
+    }
 
 // Launch schedulers
 scheduler.scheduleJob(checkActionSchedule, () => {
