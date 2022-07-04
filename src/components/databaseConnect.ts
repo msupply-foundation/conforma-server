@@ -34,6 +34,8 @@ class DBConnect {
 
   public addFile = PostgresDB.addFile
 
+  public updateFileDescription = PostgresDB.updateFileDescription
+
   public getFileDownloadInfo = PostgresDB.getFileDownloadInfo
 
   public cleanUpPreviewFiles = PostgresDB.cleanUpPreviewFiles

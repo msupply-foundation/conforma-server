@@ -246,6 +246,21 @@ class PostgresDB {
     }
   }
 
+  public updateFileDescription = async (
+    unique_id: string,
+    description: string
+  ): Promise<{ unique_id: string; original_filename: string; mimetype: string }> => {
+    const text = `UPDATE file SET description = $1 
+      WHERE unique_id = $2
+      RETURNING unique_id, original_filename, mimetype`
+    try {
+      const result = await this.query({ text, values: [description, unique_id] })
+      return result.rows[0]
+    } catch (err) {
+      throw err
+    }
+  }
+
   public getFileDownloadInfo = async (
     uid: string,
     thumbnail = false
