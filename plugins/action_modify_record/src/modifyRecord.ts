@@ -21,6 +21,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     shouldCreateJoinTable = true,
     data,
     records,
+    keyMap, // Not used in here, but stops it from becoming a field name
     ...record
   } = parameters
 
@@ -31,7 +32,11 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
   const applicationId = applicationData?.applicationId || 0
 
   // If multiple records, run whole action on each one
-  if (records) return await updateMultipleRecords({ parameters, applicationData, DBConnect })
+  if (records) {
+    const output = await updateMultipleRecords({ parameters, applicationData, DBConnect })
+    console.log('Multi output', output)
+    return output
+  }
 
   // Don't update fields with NULL
   for (const key in record) {
@@ -98,11 +103,16 @@ const updateMultipleRecords: ActionPluginType = async ({
     shouldCreateJoinTable = true,
     data,
     records,
+    keyMap,
+    ...otherFields
   } = parameters
 
   const results: ActionPluginOutput[] = []
 
-  for (const record of records) {
+  console.log('Records', records)
+  console.log('Mapped', constructMappedRecords(records, keyMap, otherFields))
+
+  for (const record of keyMap ? constructMappedRecords(records, keyMap, otherFields) : records) {
     const result = await modifyRecord({
       parameters: { tableName, matchField, matchValue, shouldCreateJoinTable, data, ...record },
       applicationData,
@@ -115,7 +125,21 @@ const updateMultipleRecords: ActionPluginType = async ({
     results.push(result)
   }
 
-  return { output: results, status, error_log: errors.join(', ') }
+  return { output: { records }, status, error_log: errors.join(', ') }
+}
+
+const constructMappedRecords = (
+  records: { [key: string]: any }[],
+  keyMap: { [key: string]: any },
+  otherFields: { [key: string]: any }
+) => {
+  return records.map((record) => {
+    const newRecord: { [key: string]: any } = {}
+    Object.entries(keyMap).forEach(([key, value]) => {
+      if (value in record) newRecord[key] = record?.[value]
+    })
+    return { ...newRecord, ...otherFields }
+  })
 }
 
 const createOrUpdateTable = async (
