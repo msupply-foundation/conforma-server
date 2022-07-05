@@ -1,5 +1,5 @@
 import { ActionQueueStatus } from '../../../src/generated/graphql'
-import { ActionPluginType } from '../../types'
+import { ActionPluginOutput, ActionPluginType } from '../../types'
 import databaseMethods, { DatabaseMethodsType } from './databaseMethods'
 import { DBConnectType } from '../../../src/components/databaseConnect'
 import { mapValues, get, snakeCase } from 'lodash'
@@ -10,7 +10,7 @@ export const DATA_TABLE_PREFIX = 'data_table_'
 
 // These are the only tables in the system that we allow to be mutated with this
 // plugin. All other names will have "data_table_" prepended.
-const ALLOWED_TABLE_NAMES = ['user', 'organisation', 'application']
+const ALLOWED_TABLE_NAMES = ['user', 'organisation', 'application', 'file']
 
 const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
@@ -20,6 +20,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     matchValue,
     shouldCreateJoinTable = true,
     data,
+    records,
     ...record
   } = parameters
 
@@ -28,6 +29,9 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
   const fieldToMatch = matchField ?? 'id'
   const valueToMatch = matchValue ?? record[fieldToMatch]
   const applicationId = applicationData?.applicationId || 0
+
+  // If multiple records, run whole action on each one
+  if (records) return await updateMultipleRecords({ parameters, applicationData, DBConnect })
 
   // Don't update fields with NULL
   for (const key in record) {
@@ -76,6 +80,42 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
       error_log: error.message,
     }
   }
+}
+
+// When we have multiple records, we recursively call "modifyRecord" on each
+// one, and collect all outputs
+const updateMultipleRecords: ActionPluginType = async ({
+  parameters,
+  applicationData,
+  DBConnect,
+}) => {
+  let status = ActionQueueStatus.Success
+  const errors: string[] = []
+  const {
+    tableName,
+    matchField,
+    matchValue,
+    shouldCreateJoinTable = true,
+    data,
+    records,
+  } = parameters
+
+  const results: ActionPluginOutput[] = []
+
+  for (const record of records) {
+    const result = await modifyRecord({
+      parameters: { tableName, matchField, matchValue, shouldCreateJoinTable, data, ...record },
+      applicationData,
+      DBConnect,
+    })
+    if (result.status === ActionQueueStatus.Fail) {
+      status = ActionQueueStatus.Fail
+      errors.push(result.error_log)
+    }
+    results.push(result)
+  }
+
+  return { output: results, status, error_log: errors.join(', ') }
 }
 
 const createOrUpdateTable = async (

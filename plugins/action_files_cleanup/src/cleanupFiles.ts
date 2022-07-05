@@ -1,7 +1,5 @@
 import fs from 'fs'
-import path from 'path'
 import databaseMethods from './databaseMethods'
-const fsPromises = fs.promises
 
 import { ActionPluginInput } from '../../types'
 import { ActionQueueStatus } from '../../../src/generated/graphql'
