@@ -397,12 +397,16 @@ const migrateData = async () => {
     'ON_PREVIEW' AFTER  'ON_SCHEDULE';
     `)
 
-    console.log(' - Adding is_preview_doc and is_reference_doc to file table')
+    console.log(
+      ' - Adding columns to file table: is_preview_doc, is_internal_reference_doc, is_external_reference_doc'
+    )
     await DB.changeSchema(`
       ALTER TABLE file
       ADD COLUMN IF NOT EXISTS is_preview_doc boolean DEFAULT FALSE NOT NULL;
       ALTER TABLE file
-      ADD COLUMN IF NOT EXISTS is_reference_doc boolean DEFAULT FALSE NOT NULL;
+      ADD COLUMN IF NOT EXISTS is_internal_reference_doc boolean DEFAULT FALSE NOT NULL;
+      ALTER TABLE file
+      ADD COLUMN IF NOT EXISTS is_external_reference_doc boolean DEFAULT FALSE NOT NULL;
     `)
   }
 
