@@ -263,7 +263,7 @@ class PostgresDB {
   public cleanUpPreviewFiles = async () => {
     const text = `
       DELETE FROM file
-      WHERE is_preview_doc = true
+      WHERE to_be_deleted = true
       AND timestamp < now() - interval '${config?.previewDocsMinKeepTime ?? '2 hours'}'
       RETURNING id;
     `
