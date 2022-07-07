@@ -43,7 +43,7 @@ interface GeneratePDFInput {
   subFolder?: string
   description?: string
   isOutputDoc?: boolean
-  isPreviewDoc?: boolean
+  toBeDeleted?: boolean
 }
 
 export async function generatePDF({
@@ -57,7 +57,7 @@ export async function generatePDF({
   subFolder,
   description,
   isOutputDoc,
-  isPreviewDoc,
+  toBeDeleted,
 }: GeneratePDFInput) {
   // Existing Carbone Template properties
   const templateFileInfo = await getFilePath(fileId)
@@ -90,7 +90,7 @@ export async function generatePDF({
         applicationResponseId,
         description,
         isOutputDoc,
-        isPreviewDoc,
+        toBeDeleted,
         filePath: outputFilePath,
         thumbnailPath: PDF_THUMBNAIL,
         mimetype: PDF_MIMETYPE,
