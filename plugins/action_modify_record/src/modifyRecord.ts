@@ -3,6 +3,7 @@ import { ActionPluginOutput, ActionPluginType } from '../../types'
 import databaseMethods, { DatabaseMethodsType } from './databaseMethods'
 import { DBConnectType } from '../../../src/components/databaseConnect'
 import { mapValues, get, snakeCase } from 'lodash'
+import { objectKeysToSnakeCase } from '../../../src/components/utilityFunctions'
 import { singular } from 'pluralize'
 
 // This will be prepended to NEW table created if not already present
@@ -33,8 +34,8 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
 
   // If multiple records, run whole action on each one
   if (records) {
-    const output = await updateMultipleRecords({ parameters, applicationData, DBConnect })
-    return output
+    const combinedOutput = await updateMultipleRecords({ parameters, applicationData, DBConnect })
+    return combinedOutput
   }
 
   // Don't update fields with NULL
@@ -43,10 +44,10 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
   }
 
   // Build full record
-  const fullRecord = {
+  const fullRecord = objectKeysToSnakeCase({
     ...record,
     ...mapValues(data, (property) => get(applicationData, property, null)),
-  }
+  })
 
   try {
     await createOrUpdateTable(DBConnect, db, tableNameProper, fullRecord, tableName)
