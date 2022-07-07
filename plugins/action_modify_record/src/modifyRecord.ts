@@ -34,7 +34,6 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
   // If multiple records, run whole action on each one
   if (records) {
     const output = await updateMultipleRecords({ parameters, applicationData, DBConnect })
-    console.log('Multi output', output)
     return output
   }
 
@@ -108,9 +107,6 @@ const updateMultipleRecords: ActionPluginType = async ({
   } = parameters
 
   const results: ActionPluginOutput[] = []
-
-  console.log('Records', records)
-  console.log('Mapped', constructMappedRecords(records, keyMap, otherFields))
 
   for (const record of keyMap ? constructMappedRecords(records, keyMap, otherFields) : records) {
     const result = await modifyRecord({
