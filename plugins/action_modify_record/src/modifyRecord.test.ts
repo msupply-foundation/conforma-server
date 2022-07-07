@@ -436,3 +436,6 @@ test('Test: add multiple records to multiple tables, using keyMap', () => {
     })
   })
 })
+
+// TO-DO: Write some tests to check mapping of "data" fields in single-record
+// version
