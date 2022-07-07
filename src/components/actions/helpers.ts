@@ -49,7 +49,7 @@ export const swapOutAliasedAction = async (templateId: number, action: ActionInT
   aliasedAction.parameter_queries = merge(
     aliasedAction.parameter_queries,
     // All docs generated through here should be preview docs/non-output
-    { isPreviewDoc: true, isOutputDoc: false },
+    { toBeDeleted: true, isOutputDoc: false },
     overrideParams
   )
 
