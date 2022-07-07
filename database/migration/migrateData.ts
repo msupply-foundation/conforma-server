@@ -397,10 +397,10 @@ const migrateData = async () => {
     'ON_PREVIEW' AFTER  'ON_SCHEDULE';
     `)
 
-    console.log(' - Adding is_preview_doc to file table')
+    console.log(' - Adding to_be_deleted to file table')
     await DB.changeSchema(`
       ALTER TABLE file
-      ADD COLUMN IF NOT EXISTS is_preview_doc boolean;
+      ADD COLUMN IF NOT EXISTS to_be_deleted boolean DEFAULT FALSE NOT NULL;
     `)
   }
 
