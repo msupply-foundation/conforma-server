@@ -174,7 +174,6 @@ export type ActionQueue = Node & {
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
-  previewData?: Maybe<Scalars['JSON']>;
   /** Reads a single `TriggerQueue` that is related to this `ActionQueue`. */
   triggerQueueByTriggerEvent?: Maybe<TriggerQueue>;
   /** Reads a single `Template` that is related to this `ActionQueue`. */
@@ -224,8 +223,6 @@ export type ActionQueueCondition = {
   timeCompleted?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `errorLog` field. */
   errorLog?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `previewData` field. */
-  previewData?: Maybe<Scalars['JSON']>;
 };
 
 /** A filter to be used against `ActionQueue` object types. All fields are combined with a logical ‘and.’ */
@@ -258,8 +255,6 @@ export type ActionQueueFilter = {
   timeCompleted?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `errorLog` field. */
   errorLog?: Maybe<StringFilter>;
-  /** Filter by the object’s `previewData` field. */
-  previewData?: Maybe<JsonFilter>;
   /** Filter by the object’s `triggerQueueByTriggerEvent` relation. */
   triggerQueueByTriggerEvent?: Maybe<TriggerQueueFilter>;
   /** A related `triggerQueueByTriggerEvent` exists. */
@@ -292,7 +287,6 @@ export type ActionQueueInput = {
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
-  previewData?: Maybe<Scalars['JSON']>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
   templateToTemplateId?: Maybe<ActionQueueTemplateIdFkeyInput>;
 };
@@ -355,7 +349,6 @@ export type ActionQueuePatch = {
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
-  previewData?: Maybe<Scalars['JSON']>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
   templateToTemplateId?: Maybe<ActionQueueTemplateIdFkeyInput>;
 };
@@ -413,8 +406,6 @@ export enum ActionQueuesOrderBy {
   TimeCompletedDesc = 'TIME_COMPLETED_DESC',
   ErrorLogAsc = 'ERROR_LOG_ASC',
   ErrorLogDesc = 'ERROR_LOG_DESC',
-  PreviewDataAsc = 'PREVIEW_DATA_ASC',
-  PreviewDataDesc = 'PREVIEW_DATA_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -468,7 +459,6 @@ export type ActionQueueTemplateIdFkeyActionQueueCreateInput = {
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
-  previewData?: Maybe<Scalars['JSON']>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
   templateToTemplateId?: Maybe<ActionQueueTemplateIdFkeyInput>;
 };
@@ -554,7 +544,6 @@ export type ActionQueueTriggerEventFkeyActionQueueCreateInput = {
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
-  previewData?: Maybe<Scalars['JSON']>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
   templateToTemplateId?: Maybe<ActionQueueTemplateIdFkeyInput>;
 };
@@ -11115,6 +11104,9 @@ export type File = Node & {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp: Scalars['Datetime'];
+  isInternalReferenceDoc: Scalars['Boolean'];
+  isExternalReferenceDoc: Scalars['Boolean'];
+  toBeDeleted: Scalars['Boolean'];
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
   /** Reads a single `Template` that is related to this `File`. */
@@ -11157,6 +11149,9 @@ export type FileApplicationNoteIdFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -11242,6 +11237,9 @@ export type FileApplicationResponseIdFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -11342,6 +11340,9 @@ export type FileApplicationSerialFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -11431,6 +11432,12 @@ export type FileCondition = {
   submitted?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `timestamp` field. */
   timestamp?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `isInternalReferenceDoc` field. */
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isExternalReferenceDoc` field. */
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `toBeDeleted` field. */
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
 };
 
 /** The fields on `file` to look up the row to connect. */
@@ -11485,6 +11492,12 @@ export type FileFilter = {
   submitted?: Maybe<BooleanFilter>;
   /** Filter by the object’s `timestamp` field. */
   timestamp?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `isInternalReferenceDoc` field. */
+  isInternalReferenceDoc?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isExternalReferenceDoc` field. */
+  isExternalReferenceDoc?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `toBeDeleted` field. */
+  toBeDeleted?: Maybe<BooleanFilter>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
@@ -11530,6 +11543,9 @@ export type FileInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -11676,6 +11692,9 @@ export type FilePatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -11738,6 +11757,12 @@ export enum FilesOrderBy {
   SubmittedDesc = 'SUBMITTED_DESC',
   TimestampAsc = 'TIMESTAMP_ASC',
   TimestampDesc = 'TIMESTAMP_DESC',
+  IsInternalReferenceDocAsc = 'IS_INTERNAL_REFERENCE_DOC_ASC',
+  IsInternalReferenceDocDesc = 'IS_INTERNAL_REFERENCE_DOC_DESC',
+  IsExternalReferenceDocAsc = 'IS_EXTERNAL_REFERENCE_DOC_ASC',
+  IsExternalReferenceDocDesc = 'IS_EXTERNAL_REFERENCE_DOC_DESC',
+  ToBeDeletedAsc = 'TO_BE_DELETED_ASC',
+  ToBeDeletedDesc = 'TO_BE_DELETED_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -11758,6 +11783,9 @@ export type FileTemplateIdFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -11853,6 +11881,9 @@ export type FileUserIdFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -29036,7 +29067,6 @@ export type UpdateActionQueueOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
-  previewData?: Maybe<Scalars['JSON']>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
   templateToTemplateId?: Maybe<ActionQueueTemplateIdFkeyInput>;
 };
@@ -29056,7 +29086,6 @@ export type UpdateActionQueueOnActionQueueForActionQueueTriggerEventFkeyPatch = 
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
-  previewData?: Maybe<Scalars['JSON']>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
   templateToTemplateId?: Maybe<ActionQueueTemplateIdFkeyInput>;
 };
@@ -30842,6 +30871,9 @@ export type UpdateFileOnFileForFileApplicationNoteIdFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -30865,6 +30897,9 @@ export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -30888,6 +30923,9 @@ export type UpdateFileOnFileForFileApplicationSerialFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -30911,6 +30949,9 @@ export type UpdateFileOnFileForFileTemplateIdFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -30934,6 +30975,9 @@ export type UpdateFileOnFileForFileUserIdFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -41132,7 +41176,6 @@ export type ActionQueueResolvers<ContextType = any, ParentType extends Resolvers
   timeQueued?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   timeCompleted?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   errorLog?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  previewData?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   triggerQueueByTriggerEvent?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -43007,6 +43050,9 @@ export type FileResolvers<ContextType = any, ParentType extends ResolversParentT
   mimetype?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   submitted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   timestamp?: Resolver<ResolversTypes['Datetime'], ParentType, ContextType>;
+  isInternalReferenceDoc?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isExternalReferenceDoc?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  toBeDeleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
