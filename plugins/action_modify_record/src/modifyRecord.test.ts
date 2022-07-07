@@ -1,4 +1,5 @@
-// Test suite for the modifyRecord Action -- just confirms that users are written to database.
+// Test suite for the modifyRecord Action
+// Needs fresh database `yarn database_init`
 
 import DBConnect from '../../../src/components/databaseConnect'
 import { ActionQueueStatus } from '../../../src/generated/graphql'
@@ -19,10 +20,10 @@ const testUser = {
 const testUser2 = {
   first_name: 'Carl',
   last_name: 'Smith',
-  user_name: 'ceejay',
-  dateOfBirth: '1999-12-23',
+  username: 'ceejay',
   password_hash: 'XYZ1234',
   email: 'test@sussol.net',
+  phoneNumber: '111234',
 }
 
 const updatedUser = {
@@ -31,18 +32,18 @@ const updatedUser = {
 }
 
 const updatedUserByUsername = {
-  username: 'js',
-  email: 'john@msupply.foundation',
+  username: 'ceejay2',
+  email: 'new-email@msupply.foundation',
 }
 
 const updatedUserByUsername2 = {
-  username: 'johnny_smith',
-  first_name: 'Johnny',
+  username: 'carlos',
+  first_name: 'Carlos',
 }
 
 const extraParameters = {
   DBConnect,
-  applicationData: { applicationId: 4000 } as ActionApplicationData,
+  applicationData: { applicationId: 1 } as ActionApplicationData,
 }
 
 test('Test: add User to database', () => {
@@ -55,7 +56,7 @@ test('Test: add User to database', () => {
       error_log: '',
       output: {
         user: {
-          id: 19,
+          id: 3,
           email: 'test@sussol.net',
           first_name: 'Carl',
           last_name: 'Smith',
@@ -74,46 +75,52 @@ test('Test: Modify existing user', () => {
     parameters: { tableName: 'user', ...updatedUser },
     ...extraParameters,
   }).then((result: any) => {
-    expect(result).toEqual({
-      status: ActionQueueStatus.Success,
-      error_log: '',
-      output: {
-        user: {
-          id: 3,
-          email: 'carl@msupply.foundation',
-          first_name: 'Carl',
-          last_name: 'Smith',
-          full_name: 'Carl Smith',
-          username: 'carl',
-          password_hash: '$2a$10$3Z1cXVI.GzE9F2QYePzbMOg5CGtf6VnNKRiaiRGkzlBXJ0aiMN4JG',
-          date_of_birth: null,
+    expect(
+      expect.objectContaining({
+        status: ActionQueueStatus.Success,
+        error_log: '',
+        output: {
+          user: {
+            id: 3,
+            email: 'carl@msupply.foundation',
+            first_name: 'Carl',
+            last_name: 'Smith',
+            full_name: 'Carl Smith',
+            username: 'carl',
+            password_hash: 'XYZ1234',
+          },
         },
-      },
-    })
+      })
+    )
   })
 })
 
 test('Test: Modify existing user using username', () => {
   return modifyRecord({
-    parameters: { tableName: 'user', matchField: 'username', ...updatedUserByUsername },
+    parameters: {
+      tableName: 'user',
+      matchField: 'username',
+      ...updatedUserByUsername,
+    },
     ...extraParameters,
   }).then((result: any) => {
-    expect(result).toEqual({
-      status: ActionQueueStatus.Success,
-      error_log: '',
-      output: {
-        user: {
-          id: 4,
-          email: 'john@msupply.foundation',
-          first_name: 'John',
-          last_name: 'Smith',
-          full_name: 'John Smith',
-          username: 'js',
-          password_hash: '$2a$10$ne2WcPISMw/Do3JzlwThYeO2GcodrumjI3FwGu1ZUoKgRQyAgNS3e',
-          date_of_birth: null,
+    expect(
+      expect.objectContaining({
+        status: ActionQueueStatus.Success,
+        error_log: '',
+        output: {
+          user: {
+            id: 3,
+            email: 'new-email@msupply.foundation',
+            first_name: 'Carl',
+            last_name: 'Smith',
+            full_name: 'Carl Smith',
+            username: 'carl',
+            password_hash: 'XYZ1234',
+          },
         },
-      },
-    })
+      })
+    )
   })
 })
 
@@ -122,53 +129,56 @@ test('Test: Change username by matching username', () => {
     parameters: {
       tableName: 'user',
       matchField: 'username',
-      matchValue: 'js',
+      matchValue: 'ceejay2',
       ...updatedUserByUsername2,
+      shouldCreateJoinTable: false,
     },
     ...extraParameters,
   }).then((result: any) => {
-    expect(result).toEqual({
-      status: ActionQueueStatus.Success,
-      error_log: '',
-      output: {
-        user: {
-          id: 4,
-          email: 'john@msupply.foundation',
-          first_name: 'Johnny',
-          last_name: 'Smith',
-          full_name: 'Johnny Smith',
-          username: 'johnny_smith',
-          password_hash: '$2a$10$ne2WcPISMw/Do3JzlwThYeO2GcodrumjI3FwGu1ZUoKgRQyAgNS3e',
-          date_of_birth: null,
+    expect(
+      expect.objectContaining({
+        status: ActionQueueStatus.Success,
+        error_log: '',
+        output: {
+          user: {
+            id: 3,
+            email: 'new-email@msupply.foundation',
+            first_name: 'Carlos',
+            last_name: 'Smith',
+            full_name: 'Carlos Smith',
+            username: 'carlos',
+            password_hash: 'XYZ1234',
+          },
         },
-      },
-    })
+      })
+    )
   })
 })
 
-test('Test: creating new field on user "dateOfBirth"', () => {
+test('Test: creating new field "phone_number" on user', () => {
   return modifyRecord({
     parameters: { tableName: 'user', ...testUser2 },
     ...extraParameters,
   }).then((result: any) => {
-    expect(result).toEqual({
-      error_log: '',
-      output: {
-        user: {
-          id: 20,
-          dateOfBirth: new Date('1999-12-22T11:00:00.000Z'),
-          date_of_birth: null,
-          email: 'test@sussol.net',
-          first_name: 'Carl',
-          last_name: 'Smith',
-          full_name: 'Carl Smith',
-          password_hash: 'XYZ1234',
-          user_name: 'ceejay',
-          username: null,
+    expect(
+      expect.objectContaining({
+        error_log: '',
+        output: {
+          user: {
+            id: 4,
+            email: 'test@sussol.net',
+            first_name: 'Carl',
+            last_name: 'Smith',
+            full_name: 'Carl Smith',
+            password_hash: 'XYZ1234',
+            username: 'ceejay',
+            // Should convert to snake case automatically
+            phone_number: '111234',
+          },
         },
-      },
-      status: ActionQueueStatus.Success,
-    })
+        status: ActionQueueStatus.Success,
+      })
+    )
   })
 })
 
@@ -194,12 +204,13 @@ test('Test: add Org to database', () => {
       error_log: '',
       output: {
         organisation: {
-          id: 5,
+          id: 2,
           is_system_org: false,
           name: 'PharmaFarm',
           registration: 'AVC123',
           address: '123 Uptown Drive\nAuckland',
           logo_url: null,
+          registration_documentation: null,
         },
       },
     })
@@ -216,12 +227,13 @@ test('Test: add Org2 -- not all parameters provided', () => {
       error_log: '',
       output: {
         organisation: {
-          id: 6,
+          id: 3,
           is_system_org: false,
           name: 'Import This!',
           registration: null,
           address: null,
           logo_url: null,
+          registration_documentation: null,
         },
       },
     })
@@ -239,11 +251,12 @@ test('Test: Update existing organisation', () => {
       output: {
         organisation: {
           id: 1,
-          is_system_org: false,
-          name: 'Drugs-R-Us',
+          is_system_org: true,
+          name: 'Food and Drug Authority',
           registration: '123456789',
-          address: '123 Nowhere St\nAuckland',
-          logo_url: null,
+          address: null,
+          logo_url: '/file?uid=CylhAzxRhSX_QjtArq3bi',
+          registration_documentation: null,
         },
       },
     })
@@ -260,6 +273,166 @@ test('Test: Check creating of application join record', () => {
       values: [result.output.user.id],
     })
 
-    expect(queryResult.rows).toEqual([{ application_id: 4000, id: 6, user_id: 21 }])
+    expect(queryResult.rows).toEqual([{ application_id: 1, id: 6, user_id: 5 }])
+  })
+})
+
+test('Test: add single record to new table', () => {
+  return modifyRecord({
+    parameters: { tableName: 'test', name: 'Hello', amount: 5, date: '1999-12-22' },
+    ...extraParameters,
+  }).then((result: any) => {
+    expect(result).toEqual({
+      status: ActionQueueStatus.Success,
+      error_log: '',
+      output: {
+        data_table_test: {
+          id: 1,
+          name: 'Hello',
+          amount: 5,
+          date: new Date('1999-12-21T11:00:00.000Z'),
+        },
+      },
+    })
+  })
+})
+
+test('Test: add multiple records to new table', () => {
+  return modifyRecord({
+    parameters: {
+      tableName: 'test2',
+      records: [
+        { name: 'New Record', amount: 5, isCompleted: true },
+        { name: 'Another record', amount: 10, isCompleted: false },
+        { name: 'Another record', floatingValue: 1.5 },
+      ],
+    },
+    ...extraParameters,
+  }).then((result: any) => {
+    expect(result).toEqual({
+      output: {
+        records: [
+          {
+            status: 'SUCCESS',
+            error_log: '',
+            output: {
+              data_table_test_2: {
+                id: 1,
+                name: 'New Record',
+                amount: 5,
+                is_completed: true,
+              },
+            },
+          },
+          {
+            status: 'SUCCESS',
+            error_log: '',
+            output: {
+              data_table_test_2: {
+                id: 2,
+                name: 'Another record',
+                amount: 10,
+                is_completed: false,
+              },
+            },
+          },
+          {
+            status: 'SUCCESS',
+            error_log: '',
+            output: {
+              data_table_test_2: {
+                id: 3,
+                name: 'Another record',
+                amount: null,
+                is_completed: null,
+                floating_value: 1.5,
+              },
+            },
+          },
+        ],
+      },
+      status: 'SUCCESS',
+      error_log: '',
+    })
+  })
+})
+
+test('Test: add multiple records to multiple tables, using keyMap', () => {
+  return modifyRecord({
+    parameters: {
+      tableName: 'test2',
+      records: [
+        { tableName: 'test3', fullname: 'New Record', amount: 5, isCompleted: true },
+        { fullName: 'Another record', amount: 10, isCompleted: false },
+        { fullname: 'Another record', floatingValue: 1.5 },
+        { tableName: 'test3', fullName: 'Another record', floatingValue: 1.5 },
+      ],
+      keyMap: { name: 'fullName' },
+      value1: 10,
+      booleanValue: true,
+    },
+    ...extraParameters,
+  }).then((result: any) => {
+    expect(result).toEqual({
+      output: {
+        records: [
+          {
+            status: 'SUCCESS',
+            error_log: '',
+            output: {
+              data_table_test_3: {
+                id: 1,
+                value_1: 10,
+                boolean_value: true,
+              },
+            },
+          },
+          {
+            status: 'SUCCESS',
+            error_log: '',
+            output: {
+              data_table_test_2: {
+                id: 4,
+                name: 'Another record',
+                amount: null,
+                is_completed: null,
+                floating_value: null,
+                value_1: 10,
+                boolean_value: true,
+              },
+            },
+          },
+          {
+            status: 'SUCCESS',
+            error_log: '',
+            output: {
+              data_table_test_2: {
+                id: 5,
+                name: null,
+                amount: null,
+                is_completed: null,
+                floating_value: null,
+                value_1: 10,
+                boolean_value: true,
+              },
+            },
+          },
+          {
+            status: 'SUCCESS',
+            error_log: '',
+            output: {
+              data_table_test_3: {
+                id: 2,
+                value_1: 10,
+                boolean_value: true,
+                name: 'Another record',
+              },
+            },
+          },
+        ],
+      },
+      status: 'SUCCESS',
+      error_log: '',
+    })
   })
 })

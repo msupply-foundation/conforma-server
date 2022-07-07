@@ -122,9 +122,13 @@ const updateMultipleRecords: ActionPluginType = async ({
     results.push(result)
   }
 
-  return { output: { records }, status, error_log: errors.join(', ') }
+  return { output: { records: results }, status, error_log: errors.join(', ') }
 }
 
+// This allows us to remap the property names of the incoming objects to those
+// required by the desination data table. For a single record, we can already
+// map individual fields, but we can't access individual items in an array of
+// records
 const constructMappedRecords = (
   records: { [key: string]: any }[],
   keyMap: { [key: string]: any },
@@ -134,6 +138,14 @@ const constructMappedRecords = (
     const newRecord: { [key: string]: any } = {}
     Object.entries(keyMap).forEach(([key, value]) => {
       if (value in record) newRecord[key] = record?.[value]
+      // Make sure the "standard" parameters get kept, if present in individual
+      // records
+      const { tableName, matchField, matchValue, data, shouldCreateJoinTable } = record
+      if (tableName) newRecord.tableName = tableName
+      if (matchField) newRecord.matchField = matchField
+      if (matchValue) newRecord.matchValue = matchValue
+      if (data) newRecord.data = data
+      if (shouldCreateJoinTable) newRecord.shouldCreateJoinTable = shouldCreateJoinTable
     })
     return { ...newRecord, ...otherFields }
   })
