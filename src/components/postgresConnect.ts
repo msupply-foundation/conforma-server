@@ -910,7 +910,7 @@ class PostgresDB {
 
   public getAllApplicationResponses = async (applicationId: number) => {
     const text = `
-    SELECT ar.id, template_element_id, code, value, time_updated
+    SELECT ar.id, template_element_id, code, value, time_updated, te.is_reviewable, te.review_required
     FROM application_response ar JOIN template_element te
     ON ar.template_element_id = te.id
     WHERE application_id = $1

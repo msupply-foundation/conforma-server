@@ -1,6 +1,6 @@
 import databaseMethods from './databaseMethods'
 import { ActionPluginType } from '../../types'
-import { ActionQueueStatus } from '../../../src/generated/graphql'
+import { ActionQueueStatus, IsReviewableStatus } from '../../../src/generated/graphql'
 const isEqual = require('deep-equal')
 interface Response {
   id: number
@@ -52,9 +52,12 @@ const trimResponses: ActionPluginType = async ({ parameters, applicationData, DB
       const previousResponse =
         responseArray.length > 1 ? responseArray[responseArray.length - 2] : null
       if (
-        isEqual(latestResponse.value, previousResponse?.value) ||
-        latestResponse.value === null || // Application Responses
-        latestResponse.value?.decision === null // Review responses
+        (previousResponse !== null && isEqual(latestResponse.value, previousResponse?.value)) ||
+        // Application Responses
+        (latestResponse.value === null &&
+          latestResponse.is_reviewable !== IsReviewableStatus.Always) ||
+        // Review responses
+        latestResponse.value?.decision === null
       )
         responsesToDelete.push(latestResponse.id)
     })

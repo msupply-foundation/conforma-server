@@ -4,6 +4,11 @@ CREATE TYPE public.template_element_category AS ENUM (
     'INFORMATION'
 );
 
+CREATE TYPE public.is_reviewable_status AS ENUM (
+    'ALWAYS',
+    'NEVER'
+);
+
 -- FUNCTION to return template_code for current element/section
 CREATE OR REPLACE FUNCTION public.get_template_code (section_id int)
     RETURNS varchar
@@ -52,6 +57,8 @@ CREATE TABLE public.template_element (
     validation_message varchar,
     help_text varchar,
     parameters jsonb,
+    is_reviewable public.is_reviewable_status DEFAULT NULL,
+    review_required boolean NOT NULL DEFAULT TRUE,
     template_code varchar GENERATED ALWAYS AS (public.get_template_code (section_id)) STORED,
     template_version integer GENERATED ALWAYS AS (public.get_template_version (section_id)) STORED,
     UNIQUE (template_code, code, template_version)
