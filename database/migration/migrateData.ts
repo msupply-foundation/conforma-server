@@ -442,8 +442,8 @@ const migrateData = async () => {
     await DB.changeSchema(`
       ALTER TABLE template_element
         ADD COLUMN IF NOT EXISTS is_reviewable public.is_reviewable_status DEFAULT NULL;
-      ALTER TABLE template_element
-        ADD COLUMN IF NOT EXISTS review_required boolean NOT NULL DEFAULT TRUE;`)
+        `)
+    // TO-DO: Add "review_required" column for optional reviews
   }
 
   // Other version migrations continue here...

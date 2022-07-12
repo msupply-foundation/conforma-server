@@ -3163,7 +3163,6 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   isReviewable?: Maybe<IsReviewableStatus>;
-  reviewRequired?: Maybe<Scalars['Boolean']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -23983,7 +23982,6 @@ export type ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput = {
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   isReviewable?: Maybe<IsReviewableStatus>;
-  reviewRequired?: Maybe<Scalars['Boolean']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -25654,7 +25652,6 @@ export type TemplateElement = Node & {
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   isReviewable?: Maybe<IsReviewableStatus>;
-  reviewRequired: Scalars['Boolean'];
   /** Reads a single `TemplateSection` that is related to this `TemplateElement`. */
   section?: Maybe<TemplateSection>;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
@@ -25760,8 +25757,6 @@ export type TemplateElementCondition = {
   templateVersion?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `isReviewable` field. */
   isReviewable?: Maybe<IsReviewableStatus>;
-  /** Checks for equality with the object’s `reviewRequired` field. */
-  reviewRequired?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against `TemplateElement` object types. All fields are combined with a logical ‘and.’ */
@@ -25802,8 +25797,6 @@ export type TemplateElementFilter = {
   templateVersion?: Maybe<IntFilter>;
   /** Filter by the object’s `isReviewable` field. */
   isReviewable?: Maybe<IsReviewableStatusFilter>;
-  /** Filter by the object’s `reviewRequired` field. */
-  reviewRequired?: Maybe<BooleanFilter>;
   /** Filter by the object’s `parametersString` field. */
   parametersString?: Maybe<StringFilter>;
   /** Filter by the object’s `applicationResponses` relation. */
@@ -25844,7 +25837,6 @@ export type TemplateElementInput = {
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   isReviewable?: Maybe<IsReviewableStatus>;
-  reviewRequired?: Maybe<Scalars['Boolean']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -25954,7 +25946,6 @@ export type TemplateElementPatch = {
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   isReviewable?: Maybe<IsReviewableStatus>;
-  reviewRequired?: Maybe<Scalars['Boolean']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -26042,7 +26033,6 @@ export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   isReviewable?: Maybe<IsReviewableStatus>;
-  reviewRequired?: Maybe<Scalars['Boolean']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -26107,8 +26097,6 @@ export enum TemplateElementsOrderBy {
   TemplateVersionDesc = 'TEMPLATE_VERSION_DESC',
   IsReviewableAsc = 'IS_REVIEWABLE_ASC',
   IsReviewableDesc = 'IS_REVIEWABLE_DESC',
-  ReviewRequiredAsc = 'REVIEW_REQUIRED_ASC',
-  ReviewRequiredDesc = 'REVIEW_REQUIRED_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -33218,7 +33206,6 @@ export type UpdateTemplateElementOnApplicationResponseForApplicationResponseTemp
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   isReviewable?: Maybe<IsReviewableStatus>;
-  reviewRequired?: Maybe<Scalars['Boolean']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -33244,7 +33231,6 @@ export type UpdateTemplateElementOnReviewResponseForReviewResponseTemplateElemen
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   isReviewable?: Maybe<IsReviewableStatus>;
-  reviewRequired?: Maybe<Scalars['Boolean']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -33269,7 +33255,6 @@ export type UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFke
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   isReviewable?: Maybe<IsReviewableStatus>;
-  reviewRequired?: Maybe<Scalars['Boolean']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -44465,7 +44450,6 @@ export type TemplateElementResolvers<ContextType = any, ParentType extends Resol
   templateCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   templateVersion?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   isReviewable?: Resolver<Maybe<ResolversTypes['IsReviewableStatus']>, ParentType, ContextType>;
-  reviewRequired?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   section?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType>;
   applicationResponses?: Resolver<ResolversTypes['ApplicationResponsesConnection'], ParentType, ContextType, RequireFields<TemplateElementApplicationResponsesArgs, 'orderBy'>>;
   reviewResponses?: Resolver<ResolversTypes['ReviewResponsesConnection'], ParentType, ContextType, RequireFields<TemplateElementReviewResponsesArgs, 'orderBy'>>;
