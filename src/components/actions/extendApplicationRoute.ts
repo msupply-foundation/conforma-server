@@ -6,10 +6,11 @@ import { Duration } from 'luxon'
 export const routeExtendApplication = async (request: any, reply: any) => {
   const { applicationId, eventCode, extensionTime } = combineRequestParams(request, 'camel')
 
-  const extensionDuration =
-    Number(extensionTime) === NaN
-      ? extensionTime
-      : Duration.fromObject({ days: Number(extensionTime) })
+  const extensionDuration = isNaN(Number(extensionTime))
+    ? extensionTime
+    : Duration.fromObject({ days: Number(extensionTime) })
+
+  console.log('extensionDuration', extensionDuration)
 
   // A dummy triggerPayload object, as though it was retrieved from the
   // trigger_queue table
