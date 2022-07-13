@@ -177,7 +177,7 @@ export interface TriggerPayload {
   application_id?: number
   event_code?: string
   data?: { [key: string]: any }
-  previewData?: Partial<ActionApplicationData>
+  applicationDataExtra?: Partial<ActionApplicationData> | { [key: string]: any }
 }
 
 export interface TriggerQueueUpdatePayload {

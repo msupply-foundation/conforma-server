@@ -28325,6 +28325,7 @@ export enum Trigger {
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
   OnVerification = 'ON_VERIFICATION',
   OnSchedule = 'ON_SCHEDULE',
+  OnExtend = 'ON_EXTEND',
   OnPreview = 'ON_PREVIEW',
   DevTest = 'DEV_TEST',
   Processing = 'PROCESSING',

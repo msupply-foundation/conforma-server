@@ -10,7 +10,7 @@ import { swapOutAliasedAction } from './helpers'
 const showActionOutcomeLog = false
 
 export async function processTrigger(payload: TriggerPayload) {
-  const { trigger_id, trigger, table, record_id, data, event_code, previewData } = payload
+  const { trigger_id, trigger, table, record_id, data, event_code, applicationDataExtra } = payload
 
   const templateId = await DBConnect.getTemplateIdFromTrigger(payload.table, payload.record_id)
 
@@ -93,7 +93,7 @@ export async function processTrigger(payload: TriggerPayload) {
         {
           outputCumulative,
         },
-        previewData
+        applicationDataExtra
       )
 
       outputCumulative = { ...outputCumulative, ...result.output }

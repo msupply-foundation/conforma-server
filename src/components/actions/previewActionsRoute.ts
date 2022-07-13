@@ -13,7 +13,7 @@ export const routePreviewActions = async (request: any, reply: any) => {
     trigger: Trigger.OnPreview,
     table: reviewId ? 'review' : 'application',
     record_id: reviewId ? Number(reviewId) : Number(applicationId),
-    previewData,
+    applicationDataExtra: previewData,
   }
 
   const actionsOutput = await processTrigger(triggerPayload)
