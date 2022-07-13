@@ -187,6 +187,26 @@ class PostgresDB {
     }
   }
 
+  public updateScheduledEventTime = async (
+    applicationId: number,
+    eventCode: string,
+    newTime: string // ISO string
+  ) => {
+    const text = `
+      UPDATE trigger_schedule
+        SET time_scheduled = $1, is_active = TRUE
+        WHERE application_id = $2
+        AND event_code = $3
+        RETURNING *
+    `
+    try {
+      const result = await this.query({ text, values: [newTime, applicationId, eventCode] })
+      return result.rows
+    } catch (err) {
+      throw err
+    }
+  }
+
   public triggerScheduledActions = async () => {
     const text = `
       UPDATE trigger_schedule SET trigger = 'ON_SCHEDULE'
@@ -196,6 +216,19 @@ class PostgresDB {
     try {
       const result = await this.query({ text })
       return true
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public setTrigger = async (table: string, recordId: string, trigger: Trigger) => {
+    const text = `
+      UPDATE ${table} SET trigger = $1
+        WHERE id = $2
+    `
+    try {
+      const result = await this.query({ text, values: [trigger, recordId] })
+      return result.rows[0]
     } catch (err) {
       throw err
     }
