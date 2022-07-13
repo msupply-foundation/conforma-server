@@ -16,6 +16,7 @@ CREATE TYPE public.trigger AS ENUM (
     'ON_VERIFICATION',
     'ON_SCHEDULE',
     'ON_PREVIEW',
+    'ON_EXTEND',
     'DEV_TEST',
     'PROCESSING',
     'ERROR'

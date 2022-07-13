@@ -391,10 +391,12 @@ const migrateData = async () => {
       ON template_action (code, template_id)
     `)
 
-    console.log(' - Adding new trigger value ON_PREVIEW')
+    console.log(' - Adding new trigger values ON_PREVIEW & ON_EXTEND')
     await DB.changeSchema(`
     ALTER TYPE public.trigger ADD VALUE IF NOT EXISTS
     'ON_PREVIEW' AFTER  'ON_SCHEDULE';
+    ALTER TYPE public.trigger ADD VALUE IF NOT EXISTS
+    'ON_EXTEND' AFTER  'ON_SCHEDULE';
     `)
 
     console.log(
