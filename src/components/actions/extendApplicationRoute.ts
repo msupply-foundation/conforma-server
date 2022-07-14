@@ -12,7 +12,9 @@ export const routeExtendApplication = async (request: any, reply: any) => {
   // TO-DO: define specific permission names required for extending deadlines
   const { permissionNames: userPermissions } = await getPermissionNamesFromJWT(request)
 
-  const templatePermissions = (await DBConnect.getTemplatePermissionsFromApplication(applicationId))
+  const templatePermissions = (
+    await DBConnect.getTemplatePermissionsFromApplication(Number(applicationId))
+  )
     .filter(
       (permission: any) =>
         permission?.permissionName?.permissionPolicy?.type === PermissionPolicyType.Review
