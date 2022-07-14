@@ -5,7 +5,7 @@ import DBConnect from '../databaseConnect'
 import { getPermissionNamesFromJWT } from '../data_display/helpers'
 
 export const routeExtendApplication = async (request: any, reply: any) => {
-  const { applicationId, eventCode, extensionTime } = combineRequestParams(request, 'camel')
+  const { applicationId, eventCode, extensionTime, data } = combineRequestParams(request, 'camel')
 
   // Check permissions first -- currently we just check user has ANY Reviewing
   // permissions for current template.
@@ -34,7 +34,7 @@ export const routeExtendApplication = async (request: any, reply: any) => {
           .plus({ days: Number(extensionTime) })
           .toISO()
 
-    // Upsert trigger schedule event, return error if event doesn't exist
+    // Update trigger schedule event, return error if event doesn't exist
     const extensionResult = await DBConnect.updateScheduledEventTime(
       applicationId,
       eventCode,
@@ -44,8 +44,15 @@ export const routeExtendApplication = async (request: any, reply: any) => {
     if (extensionResult.length === 0)
       return reply.send({ success: false, message: 'No matching event found' })
 
-    // Set trigger so template actions will fire
-    await DBConnect.setTrigger('application', applicationId, Trigger.OnExtend)
+    // Add trigger event directly to trigger_queue so we can include eventCode
+    // and any additional data
+    await DBConnect.addTriggerEvent({
+      trigger: Trigger.OnExtend,
+      table: 'application',
+      recordId: applicationId,
+      eventCode,
+      data,
+    })
 
     return reply.send({ success: true, newDeadline: extensionResult[0].time_scheduled })
   } catch (err) {

@@ -30,9 +30,9 @@ class DBConnect {
 
   public triggerScheduledActions = PostgresDB.triggerScheduledActions
 
-  public setTrigger = PostgresDB.setTrigger
-
   public resetTrigger = PostgresDB.resetTrigger
+
+  public addTriggerEvent = PostgresDB.addTriggerEvent
 
   public setScheduledActionDone = PostgresDB.setScheduledActionDone
 

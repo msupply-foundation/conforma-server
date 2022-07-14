@@ -35,7 +35,7 @@ CREATE TABLE public.trigger_queue (
     record_id int,
     event_code varchar,
     data jsonb,
-    timestamp timestamptz,
+    timestamp timestamptz DEFAULT CURRENT_TIMESTAMP,
     status public.trigger_queue_status,
     log jsonb
 );

@@ -221,19 +221,6 @@ class PostgresDB {
     }
   }
 
-  public setTrigger = async (table: string, recordId: string, trigger: Trigger) => {
-    const text = `
-      UPDATE ${table} SET trigger = $1
-        WHERE id = $2
-    `
-    try {
-      const result = await this.query({ text, values: [trigger, recordId] })
-      return result.rows[0]
-    } catch (err) {
-      throw err
-    }
-  }
-
   public resetTrigger = async (
     table: string,
     record_id: number,
@@ -247,6 +234,39 @@ class PostgresDB {
         values: [triggerStatus, record_id],
       })
       return true
+    } catch (err) {
+      throw err
+    }
+  }
+
+  // Normally triggers are added automatically by the database when trigger
+  // fields are set, but we can add them via a function call if we need to, such
+  // as in the "extend-application" endpoint.
+  public addTriggerEvent = async ({
+    trigger,
+    table,
+    recordId,
+    eventCode,
+    data,
+  }: {
+    trigger: Trigger
+    table: string
+    recordId: number
+    eventCode?: string
+    data?: { [key: string]: any }
+  }) => {
+    console.log('eventCode', eventCode)
+    const text = `
+      INSERT INTO trigger_queue
+        (trigger_type, "table", record_id, event_code, data)
+        VALUES ($1, $2, $3, $4, $5)
+    `
+    try {
+      const result = await this.query({
+        text,
+        values: [trigger, table, recordId, eventCode, data],
+      })
+      return result
     } catch (err) {
       throw err
     }

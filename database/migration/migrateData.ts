@@ -479,6 +479,14 @@ const migrateData = async () => {
         WHEN (NEW.outcome = 'PENDING' AND OLD.outcome <> 'PENDING')
         EXECUTE FUNCTION public.outcome_reverted ();
     `)
+
+    console.log(' - Setting default timestamp on trigger_queue')
+
+    await DB.changeSchema(`
+      ALTER TABLE trigger_queue 
+      ALTER COLUMN timestamp
+      SET DEFAULT CURRENT_TIMESTAMP
+    `)
   }
 
   // Other version migrations continue here...
