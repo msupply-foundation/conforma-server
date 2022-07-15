@@ -1406,6 +1406,7 @@ export type ApplicationListShape = {
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
+  applicantDeadline?: Maybe<Scalars['Datetime']>;
   assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
@@ -1444,6 +1445,8 @@ export type ApplicationListShapeCondition = {
   outcome?: Maybe<ApplicationOutcome>;
   /** Checks for equality with the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `applicantDeadline` field. */
+  applicantDeadline?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `assigners` field. */
   assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `reviewers` field. */
@@ -1486,6 +1489,8 @@ export type ApplicationListShapeFilter = {
   outcome?: Maybe<ApplicationOutcomeFilter>;
   /** Filter by the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `applicantDeadline` field. */
+  applicantDeadline?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `assigners` field. */
   assigners?: Maybe<StringListFilter>;
   /** Filter by the object’s `reviewers` field. */
@@ -1522,6 +1527,7 @@ export type ApplicationListShapeInput = {
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
+  applicantDeadline?: Maybe<Scalars['Datetime']>;
   assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
@@ -1580,6 +1586,8 @@ export enum ApplicationListShapesOrderBy {
   OutcomeDesc = 'OUTCOME_DESC',
   LastActiveDateAsc = 'LAST_ACTIVE_DATE_ASC',
   LastActiveDateDesc = 'LAST_ACTIVE_DATE_DESC',
+  ApplicantDeadlineAsc = 'APPLICANT_DEADLINE_ASC',
+  ApplicantDeadlineDesc = 'APPLICANT_DEADLINE_DESC',
   AssignersAsc = 'ASSIGNERS_ASC',
   AssignersDesc = 'ASSIGNERS_DESC',
   ReviewersAsc = 'REVIEWERS_ASC',
@@ -20263,7 +20271,6 @@ export type QueryApplicationListArgs = {
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ApplicationListShapesOrderBy>>;
   filter?: Maybe<ApplicationListShapeFilter>;
 };
 
@@ -41388,6 +41395,7 @@ export type ApplicationListShapeResolvers<ContextType = any, ParentType extends 
   status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
   outcome?: Resolver<Maybe<ResolversTypes['ApplicationOutcome']>, ParentType, ContextType>;
   lastActiveDate?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  applicantDeadline?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   assigners?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   reviewers?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   reviewerAction?: Resolver<Maybe<ResolversTypes['ReviewerAction']>, ParentType, ContextType>;
