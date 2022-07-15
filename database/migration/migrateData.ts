@@ -518,8 +518,9 @@ const migrateData = async () => {
               FROM
                   trigger_schedule
               WHERE
-                  application_id = app.id
-                  AND is_active = TRUE) AS applicant_deadline,
+                   application_id = app.id
+                    AND is_active = TRUE
+                    AND event_code = 'appDeadline') AS applicant_deadline,
           assigners,
           reviewers,
           reviewer_action,
