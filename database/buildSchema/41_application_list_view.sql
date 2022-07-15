@@ -13,6 +13,8 @@ CREATE TABLE application_list_shape (
     "status" public.application_status,
     outcome public.application_outcome,
     last_active_date timestamptz,
+    applicant_deadline timestamptz,
+    -- TO-DO: reviewer_deadline
     assigners varchar[],
     reviewers varchar[],
     reviewer_action public.reviewer_action,
@@ -24,7 +26,7 @@ CREATE TABLE application_list_shape (
     total_assign_locked bigint
 );
 
-CREATE FUNCTION application_list (userid int DEFAULT 0)
+CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
     RETURNS SETOF application_list_shape
     AS $$
     SELECT
@@ -40,6 +42,14 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
         stage_status.status,
         app.outcome,
         status_history_time_created AS last_active_date,
+        (
+            SELECT
+                time_scheduled
+            FROM
+                trigger_schedule
+            WHERE
+                application_id = app.id
+                AND is_active = TRUE) AS applicant_deadline,
         assigners,
         reviewers,
         reviewer_action,
