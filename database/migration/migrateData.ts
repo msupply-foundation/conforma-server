@@ -520,7 +520,7 @@ const migrateData = async () => {
               WHERE
                    application_id = app.id
                     AND is_active = TRUE
-                    AND event_code = 'appDeadline') AS applicant_deadline,
+                    AND event_code = 'applicantDeadline') AS applicant_deadline,
           assigners,
           reviewers,
           reviewer_action,
