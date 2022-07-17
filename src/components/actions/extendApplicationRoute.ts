@@ -28,23 +28,27 @@ export const routeExtendApplication = async (request: any, reply: any) => {
   if (!hasPermission) return reply.send({ success: false, message: 'Unauthorized' })
 
   try {
+    const event = await DBConnect.getScheduledEvent(applicationId, eventCode)
+    if (!event) return reply.send({ success: false, message: 'No matching event found' })
+
     // If time is a number, we consider it as number of days. Otherwise a Luxon
     // duration object can be provided for more specificity
-    const scheduledTime = isNaN(Number(extensionTime))
-      ? DateTime.now().plus(extensionTime).toISO()
-      : DateTime.now()
-          .plus({ days: Number(extensionTime) })
-          .toISO()
+    const duration = isNaN(Number(extensionTime)) ? extensionTime : { days: Number(extensionTime) }
 
-    // Update trigger schedule event, return error if event doesn't exist
+    // If event is in the past, we add the duration to the current time,
+    // otherwise we add it to the scheduled event time
+    const currentScheduledTime = DateTime.fromJSDate(event.time_scheduled)
+    const scheduledTime =
+      currentScheduledTime < DateTime.now()
+        ? DateTime.now().plus(duration).toISO()
+        : currentScheduledTime.plus(duration).toISO()
+
+    // Update trigger schedule event
     const extensionResult = await DBConnect.updateScheduledEventTime(
       applicationId,
       eventCode,
       scheduledTime
     )
-
-    if (extensionResult.length === 0)
-      return reply.send({ success: false, message: 'No matching event found' })
 
     // Add trigger event directly to trigger_queue so we can include eventCode
     // and any additional data
@@ -56,7 +60,7 @@ export const routeExtendApplication = async (request: any, reply: any) => {
       data,
     })
 
-    return reply.send({ success: true, newDeadline: extensionResult[0].time_scheduled })
+    return reply.send({ success: true, newDeadline: extensionResult.time_scheduled })
   } catch (err) {
     return { success: false, message: err.message }
   }
