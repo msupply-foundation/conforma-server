@@ -20271,6 +20271,7 @@ export type QueryApplicationListArgs = {
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ApplicationListShapesOrderBy>>;
   filter?: Maybe<ApplicationListShapeFilter>;
 };
 
@@ -28611,7 +28612,7 @@ export type TriggerSchedule = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   eventCode?: Maybe<Scalars['String']>;
-  timeScheduled?: Maybe<Scalars['Datetime']>;
+  timeScheduled: Scalars['Datetime'];
   applicationId: Scalars['Int'];
   templateId?: Maybe<Scalars['Int']>;
   data?: Maybe<Scalars['JSON']>;
@@ -28704,7 +28705,7 @@ export type TriggerScheduleApplicationIdFkeyInverseInput = {
 export type TriggerScheduleApplicationIdFkeyTriggerScheduleCreateInput = {
   id?: Maybe<Scalars['Int']>;
   eventCode?: Maybe<Scalars['String']>;
-  timeScheduled?: Maybe<Scalars['Datetime']>;
+  timeScheduled: Scalars['Datetime'];
   templateId?: Maybe<Scalars['Int']>;
   data?: Maybe<Scalars['JSON']>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -28772,7 +28773,7 @@ export type TriggerScheduleFilter = {
 export type TriggerScheduleInput = {
   id?: Maybe<Scalars['Int']>;
   eventCode?: Maybe<Scalars['String']>;
-  timeScheduled?: Maybe<Scalars['Datetime']>;
+  timeScheduled: Scalars['Datetime'];
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   data?: Maybe<Scalars['JSON']>;
@@ -28953,7 +28954,7 @@ export type TriggerScheduleTemplateIdFkeyTemplateCreateInput = {
 export type TriggerScheduleTemplateIdFkeyTriggerScheduleCreateInput = {
   id?: Maybe<Scalars['Int']>;
   eventCode?: Maybe<Scalars['String']>;
-  timeScheduled?: Maybe<Scalars['Datetime']>;
+  timeScheduled: Scalars['Datetime'];
   applicationId?: Maybe<Scalars['Int']>;
   data?: Maybe<Scalars['JSON']>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -44662,7 +44663,7 @@ export type TriggerScheduleResolvers<ContextType = any, ParentType extends Resol
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   eventCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  timeScheduled?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  timeScheduled?: Resolver<ResolversTypes['Datetime'], ParentType, ContextType>;
   applicationId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   data?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;

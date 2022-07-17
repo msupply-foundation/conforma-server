@@ -42,15 +42,7 @@ CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
         stage_status.status,
         app.outcome,
         status_history_time_created AS last_active_date,
-        (
-            SELECT
-                time_scheduled
-            FROM
-                trigger_schedule
-            WHERE
-                application_id = app.id
-                AND is_active = TRUE
-                AND event_code = 'applicantDeadline') AS applicant_deadline,
+        ts.time_scheduled AS applicant_deadline,
         assigners,
         reviewers,
         reviewer_action,
@@ -73,6 +65,9 @@ CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
     LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
     LEFT JOIN review_list (stage_status.stage_id, $1) ON app.id = review_list.application_id
     LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
+    LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
+        AND ts.is_active = TRUE
+        AND ts.event_code = 'applicantDeadline'
 WHERE
     app.is_config = FALSE
 $$
