@@ -485,7 +485,15 @@ const migrateData = async () => {
     await DB.changeSchema(`
       ALTER TABLE trigger_queue 
       ALTER COLUMN timestamp
-      SET DEFAULT CURRENT_TIMESTAMP
+      SET DEFAULT CURRENT_TIMESTAMP;
+    `)
+
+    console.log(' - Making scheduled time on trigger_schedule non-nullable')
+
+    await DB.changeSchema(`
+      ALTER TABLE trigger_schedule
+      ALTER COLUMN time_scheduled
+      SET NOT NULL;
     `)
   }
 

@@ -2,7 +2,7 @@
 CREATE TABLE public.trigger_schedule (
     id serial PRIMARY KEY,
     event_code varchar,
-    time_scheduled timestamptz,
+    time_scheduled timestamptz NOT NULL,
     application_id integer REFERENCES public.application (id) ON DELETE CASCADE NOT NULL,
     template_id integer REFERENCES public.template (id) ON DELETE CASCADE,
     data jsonb,
