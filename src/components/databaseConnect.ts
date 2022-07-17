@@ -26,6 +26,8 @@ class DBConnect {
 
   public updateActionParametersEvaluated = PostgresDB.updateActionParametersEvaluated
 
+  public getScheduledEvent = PostgresDB.getScheduledEvent
+
   public updateScheduledEventTime = PostgresDB.updateScheduledEventTime
 
   public triggerScheduledActions = PostgresDB.triggerScheduledActions

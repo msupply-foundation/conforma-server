@@ -187,6 +187,20 @@ class PostgresDB {
     }
   }
 
+  public getScheduledEvent = async (applicationId: number, eventCode: string) => {
+    const text = `
+      SELECT * FROM trigger_schedule
+      WHERE application_id = $1
+      AND event_code = $2
+    `
+    try {
+      const result = await this.query({ text, values: [applicationId, eventCode] })
+      return result.rows[0] ?? null
+    } catch (err) {
+      throw err
+    }
+  }
+
   public updateScheduledEventTime = async (
     applicationId: number,
     eventCode: string,
@@ -201,7 +215,7 @@ class PostgresDB {
     `
     try {
       const result = await this.query({ text, values: [newTime, applicationId, eventCode] })
-      return result.rows
+      return result.rows[0] ?? null
     } catch (err) {
       throw err
     }
