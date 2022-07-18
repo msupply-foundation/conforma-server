@@ -132,7 +132,12 @@ CREATE OR REPLACE FUNCTION public.deadline_extension_activity_log ()
     AS $application_event$
 BEGIN
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
-        VALUES ('EXTENSION', NEW.event_code, NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('newDeadline', NEW.time_scheduled));
+        VALUES ('EXTENSION', NEW.event_code, NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('newDeadline', NEW.time_scheduled, 'extendedBy', json_build_object('userId', NEW.editor_user_id, 'name', (
+                        SELECT
+                            full_name
+                        FROM "user"
+                        WHERE
+                            id = NEW.editor_user_id))));
     RETURN NULL;
 END;
 $application_event$

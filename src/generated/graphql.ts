@@ -2039,6 +2039,7 @@ export type ApplicationNoteUserIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -4425,6 +4426,7 @@ export type ApplicationUserIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -6303,6 +6305,8 @@ export type CreateTriggerSchedulePayload = {
   application?: Maybe<Application>;
   /** Reads a single `Template` that is related to this `TriggerSchedule`. */
   template?: Maybe<Template>;
+  /** Reads a single `User` that is related to this `TriggerSchedule`. */
+  editorUser?: Maybe<User>;
   /** An edge for our `TriggerSchedule`. May be used by Relay 1. */
   triggerScheduleEdge?: Maybe<TriggerSchedulesEdge>;
 };
@@ -8939,6 +8943,8 @@ export type DeleteTriggerSchedulePayload = {
   application?: Maybe<Application>;
   /** Reads a single `Template` that is related to this `TriggerSchedule`. */
   template?: Maybe<Template>;
+  /** Reads a single `User` that is related to this `TriggerSchedule`. */
+  editorUser?: Maybe<User>;
   /** An edge for our `TriggerSchedule`. May be used by Relay 1. */
   triggerScheduleEdge?: Maybe<TriggerSchedulesEdge>;
 };
@@ -10214,6 +10220,7 @@ export type FileUserIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -13002,6 +13009,7 @@ export type NotificationUserIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -14320,6 +14328,7 @@ export type PermissionJoinUserIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -17492,6 +17501,7 @@ export type ReviewAssignmentAssignerIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -17585,6 +17595,7 @@ export type ReviewAssignmentAssignerJoinAssignerIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -18553,6 +18564,7 @@ export type ReviewAssignmentReviewerIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -20397,6 +20409,7 @@ export type ReviewReviewerIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -24837,10 +24850,13 @@ export type TriggerSchedule = Node & {
   data?: Maybe<Scalars['JSON']>;
   isActive?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
+  editorUserId?: Maybe<Scalars['Int']>;
   /** Reads a single `Application` that is related to this `TriggerSchedule`. */
   application?: Maybe<Application>;
   /** Reads a single `Template` that is related to this `TriggerSchedule`. */
   template?: Maybe<Template>;
+  /** Reads a single `User` that is related to this `TriggerSchedule`. */
+  editorUser?: Maybe<User>;
 };
 
 /** The `application` to be created by this mutation. */
@@ -24926,8 +24942,10 @@ export type TriggerScheduleApplicationIdFkeyTriggerScheduleCreateInput = {
   data?: Maybe<Scalars['JSON']>;
   isActive?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
+  editorUserId?: Maybe<Scalars['Int']>;
   applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
   templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
+  userToEditorUserId?: Maybe<TriggerScheduleEditorUserIdFkeyInput>;
 };
 
 /**
@@ -24951,6 +24969,91 @@ export type TriggerScheduleCondition = {
   isActive?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
+  /** Checks for equality with the object’s `editorUserId` field. */
+  editorUserId?: Maybe<Scalars['Int']>;
+};
+
+/** Input for the nested mutation of `user` in the `TriggerScheduleInput` mutation. */
+export type TriggerScheduleEditorUserIdFkeyInput = {
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectById?: Maybe<UserUserPkeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByNodeId?: Maybe<UserNodeIdConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteById?: Maybe<UserUserPkeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<UserNodeIdDelete>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateById?: Maybe<UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingUserUsernameKeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByNodeId?: Maybe<TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate>;
+  /** A `UserInput` object that will be created and connected to this object. */
+  create?: Maybe<TriggerScheduleEditorUserIdFkeyUserCreateInput>;
+};
+
+/** Input for the nested mutation of `triggerSchedule` in the `UserInput` mutation. */
+export type TriggerScheduleEditorUserIdFkeyInverseInput = {
+  /** Flag indicating whether all other `triggerSchedule` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `triggerSchedule` for the far side of the relationship. */
+  connectById?: Maybe<Array<TriggerScheduleTriggerSchedulePkeyConnect>>;
+  /** The primary key(s) for `triggerSchedule` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<TriggerScheduleNodeIdConnect>>;
+  /** The primary key(s) for `triggerSchedule` for the far side of the relationship. */
+  deleteById?: Maybe<Array<TriggerScheduleTriggerSchedulePkeyDelete>>;
+  /** The primary key(s) for `triggerSchedule` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<TriggerScheduleNodeIdDelete>>;
+  /** The primary key(s) and patch data for `triggerSchedule` for the far side of the relationship. */
+  updateById?: Maybe<Array<TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingTriggerSchedulePkeyUpdate>>;
+  /** The primary key(s) and patch data for `triggerSchedule` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate>>;
+  /** A `TriggerScheduleInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<TriggerScheduleEditorUserIdFkeyTriggerScheduleCreateInput>>;
+};
+
+/** The `triggerSchedule` to be created by this mutation. */
+export type TriggerScheduleEditorUserIdFkeyTriggerScheduleCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  eventCode?: Maybe<Scalars['String']>;
+  timeScheduled: Scalars['Datetime'];
+  applicationId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  data?: Maybe<Scalars['JSON']>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
+  templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
+  userToEditorUserId?: Maybe<TriggerScheduleEditorUserIdFkeyInput>;
+};
+
+/** The `user` to be created by this mutation. */
+export type TriggerScheduleEditorUserIdFkeyUserCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** A filter to be used against `TriggerSchedule` object types. All fields are combined with a logical ‘and.’ */
@@ -24971,12 +25074,18 @@ export type TriggerScheduleFilter = {
   isActive?: Maybe<BooleanFilter>;
   /** Filter by the object’s `trigger` field. */
   trigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `editorUserId` field. */
+  editorUserId?: Maybe<IntFilter>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
   /** A related `template` exists. */
   templateExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `editorUser` relation. */
+  editorUser?: Maybe<UserFilter>;
+  /** A related `editorUser` exists. */
+  editorUserExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<TriggerScheduleFilter>>;
   /** Checks for any expressions in this list. */
@@ -24995,8 +25104,10 @@ export type TriggerScheduleInput = {
   data?: Maybe<Scalars['JSON']>;
   isActive?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
+  editorUserId?: Maybe<Scalars['Int']>;
   applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
   templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
+  userToEditorUserId?: Maybe<TriggerScheduleEditorUserIdFkeyInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -25027,6 +25138,21 @@ export type TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyU
 };
 
 /** The globally unique `ID` look up for the row to update. */
+export type TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `user` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UserPatch;
+};
+
+/** The fields on `triggerSchedule` to look up the row to update. */
+export type TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingTriggerSchedulePkeyUpdate = {
+  /** An object where the defined keys will be set on the `triggerSchedule` being updated. */
+  patch: UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
 export type TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `template` to be connected. */
   nodeId: Scalars['ID'];
@@ -25051,8 +25177,10 @@ export type TriggerSchedulePatch = {
   data?: Maybe<Scalars['JSON']>;
   isActive?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
+  editorUserId?: Maybe<Scalars['Int']>;
   applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
   templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
+  userToEditorUserId?: Maybe<TriggerScheduleEditorUserIdFkeyInput>;
 };
 
 /** A connection to a list of `TriggerSchedule` values. */
@@ -25096,6 +25224,8 @@ export enum TriggerSchedulesOrderBy {
   IsActiveDesc = 'IS_ACTIVE_DESC',
   TriggerAsc = 'TRIGGER_ASC',
   TriggerDesc = 'TRIGGER_DESC',
+  EditorUserIdAsc = 'EDITOR_USER_ID_ASC',
+  EditorUserIdDesc = 'EDITOR_USER_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -25175,8 +25305,10 @@ export type TriggerScheduleTemplateIdFkeyTriggerScheduleCreateInput = {
   data?: Maybe<Scalars['JSON']>;
   isActive?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
+  editorUserId?: Maybe<Scalars['Int']>;
   applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
   templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
+  userToEditorUserId?: Maybe<TriggerScheduleEditorUserIdFkeyInput>;
 };
 
 /** The fields on `triggerSchedule` to look up the row to connect. */
@@ -29604,8 +29736,25 @@ export type UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationI
   data?: Maybe<Scalars['JSON']>;
   isActive?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
+  editorUserId?: Maybe<Scalars['Int']>;
   applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
   templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
+  userToEditorUserId?: Maybe<TriggerScheduleEditorUserIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `triggerSchedule` being updated. */
+export type UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  eventCode?: Maybe<Scalars['String']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  data?: Maybe<Scalars['JSON']>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
+  templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
+  userToEditorUserId?: Maybe<TriggerScheduleEditorUserIdFkeyInput>;
 };
 
 /** An object where the defined keys will be set on the `triggerSchedule` being updated. */
@@ -29617,8 +29766,10 @@ export type UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFk
   data?: Maybe<Scalars['JSON']>;
   isActive?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
+  editorUserId?: Maybe<Scalars['Int']>;
   applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
   templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
+  userToEditorUserId?: Maybe<TriggerScheduleEditorUserIdFkeyInput>;
 };
 
 /** The output of our update `TriggerSchedule` mutation. */
@@ -29637,6 +29788,8 @@ export type UpdateTriggerSchedulePayload = {
   application?: Maybe<Application>;
   /** Reads a single `Template` that is related to this `TriggerSchedule`. */
   template?: Maybe<Template>;
+  /** Reads a single `User` that is related to this `TriggerSchedule`. */
+  editorUser?: Maybe<User>;
   /** An edge for our `TriggerSchedule`. May be used by Relay 1. */
   triggerScheduleEdge?: Maybe<TriggerSchedulesEdge>;
 };
@@ -29765,6 +29918,7 @@ export type UpdateUserOnApplicationForApplicationUserIdFkeyPatch = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -29788,6 +29942,7 @@ export type UpdateUserOnApplicationNoteForApplicationNoteUserIdFkeyPatch = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -29811,6 +29966,7 @@ export type UpdateUserOnFileForFileUserIdFkeyPatch = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -29834,6 +29990,7 @@ export type UpdateUserOnNotificationForNotificationUserIdFkeyPatch = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -29857,6 +30014,7 @@ export type UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -29880,6 +30038,7 @@ export type UpdateUserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJ
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -29903,6 +30062,7 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch =
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -29926,6 +30086,7 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch =
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -29949,6 +30110,31 @@ export type UpdateUserOnReviewForReviewReviewerIdFkeyPatch = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `user` being updated. */
+export type UpdateUserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -29972,6 +30158,7 @@ export type UpdateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -29995,6 +30182,7 @@ export type UpdateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -30190,6 +30378,8 @@ export type User = Node & {
   applications: ApplicationsConnection;
   /** Reads and enables pagination through a set of `ApplicationNote`. */
   applicationNotes: ApplicationNotesConnection;
+  /** Reads and enables pagination through a set of `TriggerSchedule`. */
+  triggerSchedulesByEditorUserId: TriggerSchedulesConnection;
   /** Reads and enables pagination through a set of `ReviewAssignment`. */
   reviewAssignmentsByAssignerId: ReviewAssignmentsConnection;
   /** Reads and enables pagination through a set of `ReviewAssignment`. */
@@ -30252,6 +30442,18 @@ export type UserApplicationNotesArgs = {
   orderBy?: Maybe<Array<ApplicationNotesOrderBy>>;
   condition?: Maybe<ApplicationNoteCondition>;
   filter?: Maybe<ApplicationNoteFilter>;
+};
+
+
+export type UserTriggerSchedulesByEditorUserIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<TriggerSchedulesOrderBy>>;
+  condition?: Maybe<TriggerScheduleCondition>;
+  filter?: Maybe<TriggerScheduleFilter>;
 };
 
 
@@ -30637,6 +30839,7 @@ export type UserApplicationJoinUserIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -30700,6 +30903,10 @@ export type UserFilter = {
   applicationNotes?: Maybe<UserToManyApplicationNoteFilter>;
   /** Some related `applicationNotes` exist. */
   applicationNotesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `triggerSchedulesByEditorUserId` relation. */
+  triggerSchedulesByEditorUserId?: Maybe<UserToManyTriggerScheduleFilter>;
+  /** Some related `triggerSchedulesByEditorUserId` exist. */
+  triggerSchedulesByEditorUserIdExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewAssignmentsByAssignerId` relation. */
   reviewAssignmentsByAssignerId?: Maybe<UserToManyReviewAssignmentFilter>;
   /** Some related `reviewAssignmentsByAssignerId` exist. */
@@ -30750,6 +30957,7 @@ export type UserInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -30966,6 +31174,28 @@ export type UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate = {
 export type UserOnReviewForReviewReviewerIdFkeyUsingUserUsernameKeyUpdate = {
   /** An object where the defined keys will be set on the `user` being updated. */
   patch: UpdateUserOnReviewForReviewReviewerIdFkeyPatch;
+  username: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `triggerSchedule` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `triggerSchedule` being updated. */
+  patch: TriggerSchedulePatch;
+};
+
+/** The fields on `user` to look up the row to update. */
+export type UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingUserPkeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The fields on `user` to look up the row to update. */
+export type UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch;
   username: Scalars['String'];
 };
 
@@ -31298,6 +31528,7 @@ export type UserOrganisationUserIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -31486,6 +31717,7 @@ export type UserPatch = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
@@ -31618,6 +31850,16 @@ export type UserToManyReviewFilter = {
   some?: Maybe<ReviewFilter>;
   /** No related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<ReviewFilter>;
+};
+
+/** A filter to be used against many `TriggerSchedule` object types. All fields are combined with a logical ‘and.’ */
+export type UserToManyTriggerScheduleFilter = {
+  /** Every related `TriggerSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<TriggerScheduleFilter>;
+  /** Some related `TriggerSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<TriggerScheduleFilter>;
+  /** No related `TriggerSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<TriggerScheduleFilter>;
 };
 
 /** A filter to be used against many `UserApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
@@ -32136,7 +32378,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ApplicationNote'] | ResolversTypes['File'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['Review'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['OrganisationApplicationJoin'] | ResolversTypes['UserApplicationJoin'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['Verification'] | ResolversTypes['ActivityLog'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['DataTable'] | ResolversTypes['DataView'] | ResolversTypes['DataViewColumnDefinition'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['SystemInfo'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ApplicationNote'] | ResolversTypes['File'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['Review'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['OrganisationApplicationJoin'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['UserApplicationJoin'] | ResolversTypes['Verification'] | ResolversTypes['ActivityLog'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['DataTable'] | ResolversTypes['DataView'] | ResolversTypes['DataViewColumnDefinition'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['SystemInfo'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -32271,6 +32513,7 @@ export type ResolversTypes = {
   UserToManyPermissionJoinFilter: UserToManyPermissionJoinFilter;
   UserToManyApplicationFilter: UserToManyApplicationFilter;
   UserToManyApplicationNoteFilter: UserToManyApplicationNoteFilter;
+  UserToManyTriggerScheduleFilter: UserToManyTriggerScheduleFilter;
   UserToManyReviewAssignmentFilter: UserToManyReviewAssignmentFilter;
   UserToManyReviewAssignmentAssignerJoinFilter: UserToManyReviewAssignmentAssignerJoinFilter;
   UserToManyReviewFilter: UserToManyReviewFilter;
@@ -32411,16 +32654,16 @@ export type ResolversTypes = {
   OrganisationApplicationJoin: ResolverTypeWrapper<OrganisationApplicationJoin>;
   OrganisationApplicationJoinsEdge: ResolverTypeWrapper<OrganisationApplicationJoinsEdge>;
   UserOrganisationsEdge: ResolverTypeWrapper<UserOrganisationsEdge>;
-  UserApplicationJoinsOrderBy: UserApplicationJoinsOrderBy;
-  UserApplicationJoinCondition: UserApplicationJoinCondition;
-  UserApplicationJoinsConnection: ResolverTypeWrapper<UserApplicationJoinsConnection>;
-  UserApplicationJoin: ResolverTypeWrapper<UserApplicationJoin>;
-  UserApplicationJoinsEdge: ResolverTypeWrapper<UserApplicationJoinsEdge>;
   TriggerSchedulesOrderBy: TriggerSchedulesOrderBy;
   TriggerScheduleCondition: TriggerScheduleCondition;
   TriggerSchedulesConnection: ResolverTypeWrapper<TriggerSchedulesConnection>;
   TriggerSchedule: ResolverTypeWrapper<TriggerSchedule>;
   TriggerSchedulesEdge: ResolverTypeWrapper<TriggerSchedulesEdge>;
+  UserApplicationJoinsOrderBy: UserApplicationJoinsOrderBy;
+  UserApplicationJoinCondition: UserApplicationJoinCondition;
+  UserApplicationJoinsConnection: ResolverTypeWrapper<UserApplicationJoinsConnection>;
+  UserApplicationJoin: ResolverTypeWrapper<UserApplicationJoin>;
+  UserApplicationJoinsEdge: ResolverTypeWrapper<UserApplicationJoinsEdge>;
   VerificationsOrderBy: VerificationsOrderBy;
   VerificationCondition: VerificationCondition;
   VerificationsConnection: ResolverTypeWrapper<VerificationsConnection>;
@@ -32869,6 +33112,12 @@ export type ResolversTypes = {
   ApplicationNoteUserIdFkeyInput: ApplicationNoteUserIdFkeyInput;
   UserOnApplicationNoteForApplicationNoteUserIdFkeyUsingUserPkeyUpdate: UserOnApplicationNoteForApplicationNoteUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnApplicationNoteForApplicationNoteUserIdFkeyPatch: UpdateUserOnApplicationNoteForApplicationNoteUserIdFkeyPatch;
+  TriggerScheduleEditorUserIdFkeyInverseInput: TriggerScheduleEditorUserIdFkeyInverseInput;
+  TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingTriggerSchedulePkeyUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingTriggerSchedulePkeyUpdate;
+  updateTriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch: UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch;
+  TriggerScheduleEditorUserIdFkeyInput: TriggerScheduleEditorUserIdFkeyInput;
+  UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingUserPkeyUpdate: UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingUserPkeyUpdate;
+  updateUserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch: UpdateUserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch;
   ReviewAssignmentAssignerIdFkeyInverseInput: ReviewAssignmentAssignerIdFkeyInverseInput;
   ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingReviewAssignmentPkeyUpdate;
   updateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch;
@@ -33337,6 +33586,12 @@ export type ResolversTypes = {
   ReviewAssignmentReviewerIdFkeyUserCreateInput: ReviewAssignmentReviewerIdFkeyUserCreateInput;
   UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate;
   ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput: ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput;
+  UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingUserUsernameKeyUpdate: UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingUserUsernameKeyUpdate;
+  TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate;
+  TriggerScheduleEditorUserIdFkeyUserCreateInput: TriggerScheduleEditorUserIdFkeyUserCreateInput;
+  UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate: UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate;
+  TriggerSchedulePatch: TriggerSchedulePatch;
+  TriggerScheduleEditorUserIdFkeyTriggerScheduleCreateInput: TriggerScheduleEditorUserIdFkeyTriggerScheduleCreateInput;
   UserOnApplicationNoteForApplicationNoteUserIdFkeyUsingUserUsernameKeyUpdate: UserOnApplicationNoteForApplicationNoteUserIdFkeyUsingUserUsernameKeyUpdate;
   ApplicationNoteOnApplicationNoteForApplicationNoteUserIdFkeyNodeIdUpdate: ApplicationNoteOnApplicationNoteForApplicationNoteUserIdFkeyNodeIdUpdate;
   ApplicationNoteUserIdFkeyUserCreateInput: ApplicationNoteUserIdFkeyUserCreateInput;
@@ -33350,7 +33605,6 @@ export type ResolversTypes = {
   TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate;
   TriggerScheduleTemplateIdFkeyTemplateCreateInput: TriggerScheduleTemplateIdFkeyTemplateCreateInput;
   ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate: ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate;
-  TriggerSchedulePatch: TriggerSchedulePatch;
   TriggerScheduleApplicationIdFkeyTriggerScheduleCreateInput: TriggerScheduleApplicationIdFkeyTriggerScheduleCreateInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate: ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate;
@@ -33932,7 +34186,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ApplicationNote'] | ResolversParentTypes['File'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['OrganisationApplicationJoin'] | ResolversParentTypes['UserApplicationJoin'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['Verification'] | ResolversParentTypes['ActivityLog'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['DataTable'] | ResolversParentTypes['DataView'] | ResolversParentTypes['DataViewColumnDefinition'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['SystemInfo'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ApplicationNote'] | ResolversParentTypes['File'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['OrganisationApplicationJoin'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['UserApplicationJoin'] | ResolversParentTypes['Verification'] | ResolversParentTypes['ActivityLog'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['DataTable'] | ResolversParentTypes['DataView'] | ResolversParentTypes['DataViewColumnDefinition'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['SystemInfo'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -34048,6 +34302,7 @@ export type ResolversParentTypes = {
   UserToManyPermissionJoinFilter: UserToManyPermissionJoinFilter;
   UserToManyApplicationFilter: UserToManyApplicationFilter;
   UserToManyApplicationNoteFilter: UserToManyApplicationNoteFilter;
+  UserToManyTriggerScheduleFilter: UserToManyTriggerScheduleFilter;
   UserToManyReviewAssignmentFilter: UserToManyReviewAssignmentFilter;
   UserToManyReviewAssignmentAssignerJoinFilter: UserToManyReviewAssignmentAssignerJoinFilter;
   UserToManyReviewFilter: UserToManyReviewFilter;
@@ -34165,14 +34420,14 @@ export type ResolversParentTypes = {
   OrganisationApplicationJoin: OrganisationApplicationJoin;
   OrganisationApplicationJoinsEdge: OrganisationApplicationJoinsEdge;
   UserOrganisationsEdge: UserOrganisationsEdge;
-  UserApplicationJoinCondition: UserApplicationJoinCondition;
-  UserApplicationJoinsConnection: UserApplicationJoinsConnection;
-  UserApplicationJoin: UserApplicationJoin;
-  UserApplicationJoinsEdge: UserApplicationJoinsEdge;
   TriggerScheduleCondition: TriggerScheduleCondition;
   TriggerSchedulesConnection: TriggerSchedulesConnection;
   TriggerSchedule: TriggerSchedule;
   TriggerSchedulesEdge: TriggerSchedulesEdge;
+  UserApplicationJoinCondition: UserApplicationJoinCondition;
+  UserApplicationJoinsConnection: UserApplicationJoinsConnection;
+  UserApplicationJoin: UserApplicationJoin;
+  UserApplicationJoinsEdge: UserApplicationJoinsEdge;
   VerificationCondition: VerificationCondition;
   VerificationsConnection: VerificationsConnection;
   Verification: Verification;
@@ -34594,6 +34849,12 @@ export type ResolversParentTypes = {
   ApplicationNoteUserIdFkeyInput: ApplicationNoteUserIdFkeyInput;
   UserOnApplicationNoteForApplicationNoteUserIdFkeyUsingUserPkeyUpdate: UserOnApplicationNoteForApplicationNoteUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnApplicationNoteForApplicationNoteUserIdFkeyPatch: UpdateUserOnApplicationNoteForApplicationNoteUserIdFkeyPatch;
+  TriggerScheduleEditorUserIdFkeyInverseInput: TriggerScheduleEditorUserIdFkeyInverseInput;
+  TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingTriggerSchedulePkeyUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingTriggerSchedulePkeyUpdate;
+  updateTriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch: UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch;
+  TriggerScheduleEditorUserIdFkeyInput: TriggerScheduleEditorUserIdFkeyInput;
+  UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingUserPkeyUpdate: UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingUserPkeyUpdate;
+  updateUserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch: UpdateUserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch;
   ReviewAssignmentAssignerIdFkeyInverseInput: ReviewAssignmentAssignerIdFkeyInverseInput;
   ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingReviewAssignmentPkeyUpdate;
   updateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch;
@@ -35062,6 +35323,12 @@ export type ResolversParentTypes = {
   ReviewAssignmentReviewerIdFkeyUserCreateInput: ReviewAssignmentReviewerIdFkeyUserCreateInput;
   UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate;
   ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput: ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput;
+  UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingUserUsernameKeyUpdate: UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingUserUsernameKeyUpdate;
+  TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate;
+  TriggerScheduleEditorUserIdFkeyUserCreateInput: TriggerScheduleEditorUserIdFkeyUserCreateInput;
+  UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate: UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate;
+  TriggerSchedulePatch: TriggerSchedulePatch;
+  TriggerScheduleEditorUserIdFkeyTriggerScheduleCreateInput: TriggerScheduleEditorUserIdFkeyTriggerScheduleCreateInput;
   UserOnApplicationNoteForApplicationNoteUserIdFkeyUsingUserUsernameKeyUpdate: UserOnApplicationNoteForApplicationNoteUserIdFkeyUsingUserUsernameKeyUpdate;
   ApplicationNoteOnApplicationNoteForApplicationNoteUserIdFkeyNodeIdUpdate: ApplicationNoteOnApplicationNoteForApplicationNoteUserIdFkeyNodeIdUpdate;
   ApplicationNoteUserIdFkeyUserCreateInput: ApplicationNoteUserIdFkeyUserCreateInput;
@@ -35075,7 +35342,6 @@ export type ResolversParentTypes = {
   TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate;
   TriggerScheduleTemplateIdFkeyTemplateCreateInput: TriggerScheduleTemplateIdFkeyTemplateCreateInput;
   ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate: ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate;
-  TriggerSchedulePatch: TriggerSchedulePatch;
   TriggerScheduleApplicationIdFkeyTriggerScheduleCreateInput: TriggerScheduleApplicationIdFkeyTriggerScheduleCreateInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate: ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate;
@@ -36559,6 +36825,7 @@ export type CreateTriggerSchedulePayloadResolvers<ContextType = any, ParentType 
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  editorUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   triggerScheduleEdge?: Resolver<Maybe<ResolversTypes['TriggerSchedulesEdge']>, ParentType, ContextType, RequireFields<CreateTriggerSchedulePayloadTriggerScheduleEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -37102,6 +37369,7 @@ export type DeleteTriggerSchedulePayloadResolvers<ContextType = any, ParentType 
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  editorUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   triggerScheduleEdge?: Resolver<Maybe<ResolversTypes['TriggerSchedulesEdge']>, ParentType, ContextType, RequireFields<DeleteTriggerSchedulePayloadTriggerScheduleEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -37507,7 +37775,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ApplicationNote' | 'File' | 'ReviewAssignment' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'Review' | 'ReviewResponse' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'OrganisationApplicationJoin' | 'UserApplicationJoin' | 'TriggerSchedule' | 'Verification' | 'ActivityLog' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'Counter' | 'DataTable' | 'DataView' | 'DataViewColumnDefinition' | 'ElementTypePlugin' | 'SystemInfo', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ApplicationNote' | 'File' | 'ReviewAssignment' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'Review' | 'ReviewResponse' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'OrganisationApplicationJoin' | 'TriggerSchedule' | 'UserApplicationJoin' | 'Verification' | 'ActivityLog' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'Counter' | 'DataTable' | 'DataView' | 'DataViewColumnDefinition' | 'ElementTypePlugin' | 'SystemInfo', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -38539,8 +38807,10 @@ export type TriggerScheduleResolvers<ContextType = any, ParentType extends Resol
   data?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   isActive?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
+  editorUserId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  editorUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -38926,6 +39196,7 @@ export type UpdateTriggerSchedulePayloadResolvers<ContextType = any, ParentType 
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  editorUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   triggerScheduleEdge?: Resolver<Maybe<ResolversTypes['TriggerSchedulesEdge']>, ParentType, ContextType, RequireFields<UpdateTriggerSchedulePayloadTriggerScheduleEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -38981,6 +39252,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   permissionJoins?: Resolver<ResolversTypes['PermissionJoinsConnection'], ParentType, ContextType, RequireFields<UserPermissionJoinsArgs, 'orderBy'>>;
   applications?: Resolver<ResolversTypes['ApplicationsConnection'], ParentType, ContextType, RequireFields<UserApplicationsArgs, 'orderBy'>>;
   applicationNotes?: Resolver<ResolversTypes['ApplicationNotesConnection'], ParentType, ContextType, RequireFields<UserApplicationNotesArgs, 'orderBy'>>;
+  triggerSchedulesByEditorUserId?: Resolver<ResolversTypes['TriggerSchedulesConnection'], ParentType, ContextType, RequireFields<UserTriggerSchedulesByEditorUserIdArgs, 'orderBy'>>;
   reviewAssignmentsByAssignerId?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<UserReviewAssignmentsByAssignerIdArgs, 'orderBy'>>;
   reviewedReviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<UserReviewedReviewAssignmentsArgs, 'orderBy'>>;
   reviewAssignmentAssignerJoinsByAssignerId?: Resolver<ResolversTypes['ReviewAssignmentAssignerJoinsConnection'], ParentType, ContextType, RequireFields<UserReviewAssignmentAssignerJoinsByAssignerIdArgs, 'orderBy'>>;

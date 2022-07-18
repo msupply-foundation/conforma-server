@@ -496,6 +496,13 @@ const migrateData = async () => {
       SET NOT NULL;
     `)
 
+    console.log(' - Add "user_id" field to trigger_schedule to track user who made changes')
+
+    await DB.changeSchema(`
+      ALTER TABLE trigger_schedule
+      ADD COLUMN editor_user_id integer REFERENCES public.user (id) ON DELETE CASCADE;
+    `)
+
     console.log(' - Adding applicant_deadline to application_list')
 
     await DB.changeSchema(`
@@ -565,7 +572,9 @@ const migrateData = async () => {
       AS $application_event$
       BEGIN
           INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
-              VALUES ('EXTENSION', NEW.event_code, NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('newDeadline', NEW.time_scheduled));
+              VALUES ('EXTENSION', NEW.event_code, NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('newDeadline', NEW.time_scheduled, 'extendedBy', json_build_object('userId', NEW.editor_user_id, 'name', (
+                SELECT full_name FROM "user"
+                WHERE id = NEW.editor_user_id))));
           RETURN NULL;
       END;
       $application_event$
