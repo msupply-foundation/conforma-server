@@ -184,11 +184,6 @@ const migrateData = async () => {
     await DB.changeSchema(`DROP TABLE IF EXISTS
       public.review_question_assignment CASCADE;`)
 
-    // Run whole activity log build script from scratch
-    await execSync(
-      `psql -U postgres -q -b -d tmf_app_manager -f "./database/buildSchema/45_activity_log.sql"`
-    )
-
     // Update function to generate template_element_id for review_response
     console.log(
       ' - Update set_original_response FUNCTION generated field: template_element_id (from review_response)'
@@ -550,6 +545,11 @@ const migrateData = async () => {
     // Need to use psql as node-pg doesn't handle the comment command
     execSync(
       `psql -U postgres -d tmf_app_manager -c "COMMENT ON FUNCTION application_list (userid int) IS E'@sortable';"`
+    )
+
+    // Run whole activity log build script from scratch
+    await execSync(
+      `psql -U postgres -q -b -d tmf_app_manager -f "./database/buildSchema/45_activity_log.sql"`
     )
   }
 
