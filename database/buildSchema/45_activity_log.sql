@@ -143,7 +143,7 @@ DROP TRIGGER IF EXISTS deadline_extension_activity_trigger ON public.application
 CREATE TRIGGER deadline_extension_activity_trigger
     AFTER UPDATE ON public.trigger_schedule
     FOR EACH ROW
-    WHEN (NEW.time_scheduled > OLD.time_scheduled AND NEW.event_code = "applicantDeadline")
+    WHEN (NEW.time_scheduled > OLD.time_scheduled AND NEW.event_code = 'applicantDeadline')
     EXECUTE FUNCTION deadline_extension_activity_log ();
 
 -- ASSIGNMENT changes

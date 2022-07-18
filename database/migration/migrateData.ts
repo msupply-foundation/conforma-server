@@ -184,6 +184,11 @@ const migrateData = async () => {
     await DB.changeSchema(`DROP TABLE IF EXISTS
       public.review_question_assignment CASCADE;`)
 
+    // Run whole activity log build script from scratch
+    await execSync(
+      `psql -U postgres -q -b -d tmf_app_manager -f "./database/buildSchema/45_activity_log.sql"`
+    )
+
     // Update function to generate template_element_id for review_response
     console.log(
       ' - Update set_original_response FUNCTION generated field: template_element_id (from review_response)'
@@ -547,10 +552,33 @@ const migrateData = async () => {
       `psql -U postgres -d tmf_app_manager -c "COMMENT ON FUNCTION application_list (userid int) IS E'@sortable';"`
     )
 
-    // Run whole activity log build script from scratch
-    await execSync(
-      `psql -U postgres -q -b -d tmf_app_manager -f "./database/buildSchema/45_activity_log.sql"`
-    )
+    console.log(' - Updating activity_log functions')
+
+    await DB.changeSchema(`
+      ALTER TYPE public.event_type ADD VALUE IF NOT EXISTS
+      'EXTENSION' AFTER 'OUTCOME';
+    `)
+    // Scheduled event (deadline) changes
+    await DB.changeSchema(`
+      CREATE OR REPLACE FUNCTION public.deadline_extension_activity_log ()
+      RETURNS TRIGGER
+      AS $application_event$
+      BEGIN
+          INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
+              VALUES ('EXTENSION', NEW.event_code, NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('newDeadline', NEW.time_scheduled));
+          RETURN NULL;
+      END;
+      $application_event$
+      LANGUAGE plpgsql;
+
+      DROP TRIGGER IF EXISTS deadline_extension_activity_trigger ON public.application;
+
+      CREATE TRIGGER deadline_extension_activity_trigger
+          AFTER UPDATE ON public.trigger_schedule
+          FOR EACH ROW
+          WHEN (NEW.time_scheduled > OLD.time_scheduled AND NEW.event_code = 'applicantDeadline')
+          EXECUTE FUNCTION deadline_extension_activity_log ();
+    `)
   }
 
   // Other version migrations continue here...
