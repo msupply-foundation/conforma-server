@@ -5,7 +5,8 @@ import { DateTime, Duration } from 'luxon'
 
 const generateExpiry = (duration: Duration) => DateTime.now().plus(duration).toJSDate()
 
-const getYear = () => new Date().getFullYear()
+const getYear = (type?: 'short'): string =>
+  type === 'short' ? String(new Date().getFullYear()).slice(2) : String(new Date().getFullYear())
 
 const getFormattedDate = (formatString: string) => DateTime.now().toFormat(formatString)
 
