@@ -5,7 +5,7 @@ export const swapOutAliasedActions = async (templateId: number, action: ActionIn
   // Fetch aliased action from database
   const {
     condition,
-    parameter_queries: { code, condition: altCondition, ...overrideParams },
+    parameter_queries: { code, shouldOverrideCondition, ...overrideParams },
   } = action
   if (!code) throw new Error('Missing code in aliased action')
 
@@ -14,14 +14,12 @@ export const swapOutAliasedActions = async (templateId: number, action: ActionIn
   if (!aliasedAction) throw new Error('No Action matching alias')
 
   // Override condition if specified
-  // It would make most sense for actual condition field to be the one we look
-  // at for overriding the aliased action's condition, but because this has
-  // default "true" and can never be null, then we'd always get "true" as the
-  // condition. So we only consider the condition field if it's something other
-  // than "true". And if we actually *want* it to be "true", then we can
-  // override it further by specifying a "condition" field in parameters
-  if (condition !== true) aliasedAction.condition = condition
-  if (altCondition !== undefined) aliasedAction.condition = altCondition
+  // The alias condition (if specified) will take priority over the original
+  // action condition. However, the default condition is "true", and we don't
+  // want that to ALWAYS override the original action condition. So we ignore it
+  // if the alias condition = true. In the event that we actually *want* this to
+  // override, the "shouldOverrideCondition" parameter should be set to "true"
+  if (condition !== true || shouldOverrideCondition) aliasedAction.condition = condition
 
   // Override parameters
   aliasedAction.parameter_queries = { ...aliasedAction.parameter_queries, ...overrideParams }
