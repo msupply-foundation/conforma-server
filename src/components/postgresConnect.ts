@@ -1,4 +1,4 @@
-import { processTrigger, executeAction } from './actions/triggersAndActions'
+import { processTrigger, executeAction } from './actions'
 import { actionLibrary } from './pluginsConnect'
 import { deleteFile } from './files/deleteFiles'
 import config from '../config'
@@ -9,7 +9,6 @@ import {
   ActionPlugin,
   FileDownloadInfo,
   ActionQueueExecutePayload,
-  ActionQueueGetPayload,
   ActionQueuePayload,
   FilePayload,
   TriggerQueueUpdatePayload,

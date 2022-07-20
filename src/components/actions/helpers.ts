@@ -1,5 +1,25 @@
 import { ActionInTemplate } from '../../types'
+import evaluateExpression from '@openmsupply/expression-evaluator'
+import { BasicObject, IParameters } from '@openmsupply/expression-evaluator/lib/types'
 import DBConnect from '../databaseConnect'
+
+export async function evaluateParameters(
+  parameterQueries: BasicObject,
+  evaluatorParameters: IParameters = {}
+) {
+  const parametersEvaluated: BasicObject = {}
+  try {
+    for (const key in parameterQueries) {
+      parametersEvaluated[key] = await evaluateExpression(
+        parameterQueries[key],
+        evaluatorParameters
+      )
+    }
+    return parametersEvaluated
+  } catch (err) {
+    throw err
+  }
+}
 
 export const swapOutAliasedActions = async (templateId: number, action: ActionInTemplate) => {
   // Fetch aliased action from database
