@@ -41,13 +41,15 @@ export async function executeAction(
     )
   } catch (err) {
     console.log('>> Error evaluating condition for action:', payload.code)
-    return await DBConnect.executedActionStatusUpdate({
+    const actionResult = {
       status: ActionQueueStatus.Fail,
       error_log: 'Problem evaluating condition: ' + err,
       parameters_evaluated: null,
       output: null,
       id: payload.id,
-    })
+    }
+    await DBConnect.executedActionStatusUpdate(actionResult)
+    return actionResult
   }
 
   if (condition) {
