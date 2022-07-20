@@ -25,10 +25,8 @@ export async function processTrigger(payload: TriggerPayload) {
   // .filter/.map runs each loop async, so need to wait for them all to finish
   const resolvedActions = await Promise.all(actions)
 
-// Separate into Sequential and Async actions
-  const actionsSequential = resolvedActions.filter(
-    ({ sequence }) => !!sequence
-  ) as ActionSequential[]
+  // Separate into Sequential and Async actions
+  const actionsSequential = resolvedActions.filter(({ sequence }) => !!sequence)
   const actionsAsync = resolvedActions.filter(({ sequence }) => !sequence)
 
   for (const action of [...actionsAsync, ...actionsSequential]) {
