@@ -84,6 +84,7 @@ export async function processTrigger(payload: TriggerPayload) {
     })
     .map((action) => (action.code !== 'alias' ? action : swapOutAliasedActions(templateId, action)))
 
+  // .filter/.map runs each loop async, so need to wait for them all to finish
   const resolvedActions = await Promise.all(actions)
 
   // Separate into Sequential and Async actions
