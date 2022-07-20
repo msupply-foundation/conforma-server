@@ -51,7 +51,8 @@ export async function processTrigger(payload: TriggerPayload) {
     id: trigger_id,
   })
 
-  // Get sequential Actions from database
+  // Get sequential Actions from database (Async actions are handled directly by
+  // pg_notify -- see listeners in postgresConnect.ts)
   const actionsToExecute = await DBConnect.getActionsProcessing(templateId)
 
   // Collect output properties of actions in sequence
