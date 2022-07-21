@@ -69,6 +69,13 @@ export interface ActionQueueExecutePayload {
   output: BasicObject | null
 }
 
+export interface ActionResult {
+  action: string // code
+  status: ActionQueueStatus
+  output: BasicObject | null
+  errorLog: string | null
+}
+
 export interface ActionApplicationData {
   action_payload: ActionPayload
   applicationId: number

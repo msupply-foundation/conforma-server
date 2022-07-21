@@ -1,7 +1,7 @@
 import { combineRequestParams } from '../utilityFunctions'
 import { processTrigger } from './processTrigger'
 import { ActionQueueStatus, Trigger } from '../../generated/graphql'
-import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
+import { ActionResult } from '../../types'
 
 export const routePreviewActions = async (request: any, reply: any) => {
   const { applicationId, reviewId, previewData } = combineRequestParams(request, 'camel')
@@ -21,13 +21,6 @@ export const routePreviewActions = async (request: any, reply: any) => {
   const displayData = createDisplayData(actionsOutput)
 
   return reply.send({ displayData, actionsOutput })
-}
-
-interface ActionResult {
-  action: string // code
-  status: ActionQueueStatus
-  output: BasicObject | null
-  errorLog: string | null
 }
 
 interface ActionResultDisplayData {
