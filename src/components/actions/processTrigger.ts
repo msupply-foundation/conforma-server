@@ -22,15 +22,12 @@ export async function processTrigger(payload: TriggerPayload) {
     })
     .map((action) => (action.code !== 'alias' ? action : swapOutAliasedAction(templateId, action)))
 
+  // .filter/.map runs each loop async, so need to wait for them all to finish
   const resolvedActions = await Promise.all(actions)
 
   // Separate into Sequential and Async actions
-  const actionsSequential: ActionSequential[] = []
-  const actionsAsync: ActionInTemplate[] = []
-  for (const action of resolvedActions) {
-    if (action.sequence) actionsSequential.push(action as ActionSequential)
-    else actionsAsync.push(action)
-  }
+  const actionsSequential = resolvedActions.filter(({ sequence }) => !!sequence)
+  const actionsAsync = resolvedActions.filter(({ sequence }) => !sequence)
 
   for (const action of [...actionsAsync, ...actionsSequential]) {
     // Add all actions to Action Queue
@@ -55,7 +52,8 @@ export async function processTrigger(payload: TriggerPayload) {
       id: trigger_id,
     })
 
-  // Get sequential Actions from database
+  // Get sequential Actions from database (Async actions are handled directly by
+  // pg_notify -- see listeners in postgresConnect.ts)
   const actionsToExecute = await DBConnect.getActionsProcessing(templateId)
 
   // Collect output properties of actions in sequence
