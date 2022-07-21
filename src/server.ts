@@ -20,7 +20,7 @@ import { routeGeneratePDF } from './components/files/documentGenerate'
 import { saveFiles, getFilePath, filesFolder } from './components/files/fileHandler'
 import { createDefaultDataFolders } from './components/files/createDefaultFolders'
 import { getAppEntryPointDir, objectKeysToSnakeCase } from './components/utilityFunctions'
-import { routeRunAction, routeGetApplicationData } from './components/actions'
+import { routeRunAction, routeGetApplicationData, routePreviewActions } from './components/actions'
 import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
 import snapshotRoutes from './components/snapshots/routes'
@@ -123,6 +123,7 @@ const startServer = async () => {
       { prefix: '/admin' }
     )
 
+    // Routes that require authentication but no special permissions
     server.get('/check-unique', routecheckUnique)
     server.get('/user-info', routeUserInfo)
     server.get('/user-permissions', routeUserPermissions)
@@ -133,6 +134,7 @@ const startServer = async () => {
     server.get('/data-views/table/:tableName', routeDataViewTable)
     server.get('/data-views/table/:tableName/item/:id', routeDataViewDetail)
     server.get('/check-triggers', routeTriggers)
+    server.post('/preview-actions', routePreviewActions)
 
     // File upload endpoint
     server.post('/upload', async function (request: any, reply) {

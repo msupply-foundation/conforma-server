@@ -1,16 +1,17 @@
-import { ActionInTemplate, TriggerPayload, ActionSequential } from '../../types'
+import { TriggerPayload, ActionResult } from '../../types'
 import DBConnect from '../databaseConnect'
 import { actionLibrary } from '../pluginsConnect'
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import { executeAction } from './executeAction'
 import { ActionQueueStatus, TriggerQueueStatus } from '../../generated/graphql'
-import { swapOutAliasedActions } from './helpers'
+import { swapOutAliasedAction } from './helpers'
 
 // Dev config
 const showActionOutcomeLog = false
 
-export async function processTrigger(payload: TriggerPayload) {
-  const { trigger_id, trigger, table, record_id, data, event_code } = payload
+export async function processTrigger(payload: TriggerPayload): Promise<ActionResult[]> {
+  const { trigger_id, trigger, table, record_id, data, event_code, applicationDataOverride } =
+    payload
 
   const templateId = await DBConnect.getTemplateIdFromTrigger(payload.table, payload.record_id)
 
@@ -20,7 +21,7 @@ export async function processTrigger(payload: TriggerPayload) {
       if (!event_code) return true
       else return action.event_code === event_code
     })
-    .map((action) => (action.code !== 'alias' ? action : swapOutAliasedActions(templateId, action)))
+    .map((action) => (action.code !== 'alias' ? action : swapOutAliasedAction(templateId, action)))
 
   // .filter/.map runs each loop async, so need to wait for them all to finish
   const resolvedActions = await Promise.all(actions)
@@ -46,10 +47,11 @@ export async function processTrigger(payload: TriggerPayload) {
           : ActionQueueStatus.Queued,
     })
   }
-  await DBConnect.updateTriggerQueueStatus({
-    status: TriggerQueueStatus.ActionsDispatched,
-    id: trigger_id,
-  })
+  if (trigger_id)
+    await DBConnect.updateTriggerQueueStatus({
+      status: TriggerQueueStatus.ActionsDispatched,
+      id: trigger_id,
+    })
 
   // Get sequential Actions from database (Async actions are handled directly by
   // pg_notify -- see listeners in postgresConnect.ts)
@@ -58,6 +60,10 @@ export async function processTrigger(payload: TriggerPayload) {
   // Collect output properties of actions in sequence
   // "data" is stored output from scheduled triggers or verifications
   let outputCumulative = { ...data?.outputCumulative }
+
+  // Result collection to send back to preview endpoint
+  // (but could be used elsewhere if required)
+  const actionOutputs = []
 
   // Execute sequential Actions one by one
   let actionFailed = ''
@@ -80,10 +86,24 @@ export async function processTrigger(payload: TriggerPayload) {
         parameter_queries: action.parameter_queries,
         trigger_payload: action.trigger_payload,
       }
-      const result = await executeAction(actionPayload, actionLibrary, {
-        outputCumulative,
-      })
+      const result = await executeAction(
+        actionPayload,
+        actionLibrary,
+        {
+          outputCumulative,
+        },
+        applicationDataOverride
+      )
+
       outputCumulative = { ...outputCumulative, ...result.output }
+      if (result.status !== ActionQueueStatus.ConditionNotMet)
+        actionOutputs.push({
+          action: action.action_code,
+          status: result.status,
+          output: result.output,
+          errorLog: result.error_log ? result.error_log : null,
+        })
+
       // Debug helper console.log to inspect action outputs:
       if (showActionOutcomeLog) console.log('outputCumulative:', outputCumulative)
       if (result.status === ActionQueueStatus.Fail) console.log(result.error_log)
@@ -91,9 +111,13 @@ export async function processTrigger(payload: TriggerPayload) {
       actionFailed = action.action_code
     }
   }
+
   // After all done, set Trigger on table back to NULL (or Error)
   DBConnect.resetTrigger(table, record_id, actionFailed !== '')
   // and set is_active = false if scheduled action
   if (table === 'trigger_schedule' && actionFailed === '')
     DBConnect.setScheduledActionDone(table, record_id)
+
+  // Return value only used by Previews endpoint
+  return actionOutputs
 }

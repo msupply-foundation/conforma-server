@@ -45,7 +45,7 @@ export interface ActionQueue {
 }
 
 export interface ActionQueuePayload {
-  trigger_event: number
+  trigger_event: number | null
   trigger_payload: TriggerPayload
   template_id: number
   action_code: string
@@ -67,6 +67,13 @@ export interface ActionQueueExecutePayload {
   parameters_evaluated: { [key: string]: any } | null
   status: ActionQueueStatus
   output: BasicObject | null
+}
+
+export interface ActionResult {
+  action: string // code
+  status: ActionQueueStatus
+  output: BasicObject | null
+  errorLog: string | null
 }
 
 export interface ActionApplicationData {
@@ -170,13 +177,14 @@ export interface FileGetPayload {
 export type QueryParams = string[] | { [key: string]: any }
 
 export interface TriggerPayload {
-  trigger_id: number
+  trigger_id: number | null
   trigger: Trigger
   table: string
   record_id: number
   application_id?: number
   event_code?: string
   data?: { [key: string]: any }
+  applicationDataOverride?: Partial<ActionApplicationData>
 }
 
 export interface TriggerQueueUpdatePayload {

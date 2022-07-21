@@ -1,5 +1,11 @@
-import { ActionLibrary, ActionPayload, ActionQueueExecutePayload } from '../../types'
+import {
+  ActionApplicationData,
+  ActionLibrary,
+  ActionPayload,
+  ActionQueueExecutePayload,
+} from '../../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
+import { merge } from 'lodash'
 import functions from './evaluatorFunctions'
 import DBConnect from '../databaseConnect'
 import fetch from 'node-fetch'
@@ -8,6 +14,7 @@ import { getApplicationData } from './getApplicationData'
 import { ActionQueueStatus } from '../../generated/graphql'
 import config from '../../config'
 import { evaluateParameters } from './helpers'
+import { getAdminJWT } from '../permissions/loginHelpers'
 
 // Dev config
 const showApplicationDataLog = false
@@ -17,10 +24,11 @@ const graphQLEndpoint = config.graphQLendpoint
 export async function executeAction(
   payload: ActionPayload,
   actionLibrary: ActionLibrary,
-  additionalObjects: any = {}
+  additionalObjects: any = {},
+  applicationDataOverride?: Partial<ActionApplicationData>
 ): Promise<ActionQueueExecutePayload> {
-  // Get fresh applicationData for each Action
-  const applicationData = await getApplicationData({ payload })
+  // Get fresh applicationData for each Action, and inject applicationDataOverride if present
+  const applicationData = merge(await getApplicationData({ payload }), applicationDataOverride)
 
   // Debug helper console.log to inspect applicationData:
   if (showApplicationDataLog) console.log('ApplicationData: ', applicationData)
@@ -30,6 +38,9 @@ export async function executeAction(
     pgConnection: DBConnect,
     APIfetch: fetch,
     graphQLConnection: { fetch, endpoint: graphQLEndpoint },
+    headers: {
+      Authorization: `Bearer ${await getAdminJWT()}`,
+    },
   }
 
   // Evaluate condition

@@ -10,6 +10,7 @@ CREATE TABLE public.file (
     description varchar,
     application_note_id integer REFERENCES public.application_note (id) ON DELETE CASCADE,
     is_output_doc boolean DEFAULT FALSE NOT NULL,
+    to_be_deleted boolean DEFAULT FALSE NOT NULL,
     file_path varchar NOT NULL,
     thumbnail_path varchar,
     mimetype varchar,
