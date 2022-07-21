@@ -5,6 +5,8 @@ import { DateTime, Duration } from 'luxon'
 
 const generateExpiry = (duration: Duration) => DateTime.now().plus(duration).toJSDate()
 
+// getYear() => "2022"
+// getYear("short") => "22"
 const getYear = (type?: 'short'): string =>
   type === 'short' ? String(new Date().getFullYear()).slice(2) : String(new Date().getFullYear())
 

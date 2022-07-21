@@ -4,7 +4,7 @@
   "name": "Alias Action",
   "description": "Dummy plugin to facilitate aliasing of template actions",
   "required_parameters": ["code"],
-  "optional_parameters": ["condition", "...anyPluginFields"],
+  "optional_parameters": ["shouldOverrideCondition", "...anyPluginFields"],
   "output_properties": [],
   "info": {
     "author": {
