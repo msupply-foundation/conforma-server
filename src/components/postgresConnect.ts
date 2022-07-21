@@ -260,6 +260,21 @@ class PostgresDB {
     }
   }
 
+  public cleanUpPreviewFiles = async () => {
+    const text = `
+      DELETE FROM file
+      WHERE to_be_deleted = true
+      AND timestamp < now() - interval '${config?.previewDocsMinKeepTime ?? '2 hours'}'
+      RETURNING id;
+    `
+    try {
+      const result = await this.query({ text })
+      return result.rows.length
+    } catch (err) {
+      throw err
+    }
+  }
+
   public addActionPlugin = async (plugin: ActionPlugin): Promise<boolean> => {
     const text = `INSERT INTO action_plugin (${Object.keys(plugin)}) 
       VALUES (${this.getValuesPlaceholders(plugin)})`

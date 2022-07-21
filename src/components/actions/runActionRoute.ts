@@ -15,6 +15,10 @@ export const routeRunAction = async (request: any, reply: any) => {
 }
 
 export const routeGetApplicationData = async (request: any, reply: any) => {
-  const { applicationId } = combineRequestParams(request, 'camel')
-  reply.send(await getApplicationData({ applicationId: Number(applicationId) }))
+  const { applicationId, reviewId } = combineRequestParams(request, 'camel')
+  const appDataParams: { applicationId: number; reviewId?: number } = {
+    applicationId: Number(applicationId),
+  }
+  if (reviewId) appDataParams.reviewId = Number(reviewId)
+  reply.send(await getApplicationData(appDataParams))
 }

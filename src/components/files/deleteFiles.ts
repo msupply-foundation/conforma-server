@@ -24,6 +24,11 @@ export const deleteFile = async (file: FileDetail) => {
     if (!thumbnailPath.match(genericThumbnailsFolderName))
       await fsPromises.unlink(path.join(filesPath, thumbnailPath))
     console.log(`File deleted: ${originalFilename}`)
+
+    // Also delete folder if it's now empty
+    const dir = path.dirname(filePath)
+    if ((await fsPromises.readdir(path.join(filesPath, dir))).length === 0)
+      await fsPromises.rmdir(path.join(filesPath, dir))
   } catch (err) {
     console.log(err)
   }
