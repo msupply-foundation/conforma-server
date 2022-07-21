@@ -4,7 +4,10 @@ import { ActionQueueStatus, Trigger } from '../../generated/graphql'
 import { ActionResult } from '../../types'
 
 export const routePreviewActions = async (request: any, reply: any) => {
-  const { applicationId, reviewId, previewData } = combineRequestParams(request, 'camel')
+  const { applicationId, reviewId, applicationDataOverride } = combineRequestParams(
+    request,
+    'camel'
+  )
 
   // A dummy triggerPayload object, as though it was retrieved from the
   // trigger_queue table
@@ -13,7 +16,7 @@ export const routePreviewActions = async (request: any, reply: any) => {
     trigger: Trigger.OnPreview,
     table: reviewId ? 'review' : 'application',
     record_id: reviewId ? Number(reviewId) : Number(applicationId),
-    previewData,
+    applicationDataOverride,
   }
 
   const actionsOutput = await processTrigger(triggerPayload)
