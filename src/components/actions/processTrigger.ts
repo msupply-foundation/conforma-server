@@ -1,4 +1,4 @@
-import { ActionInTemplate, TriggerPayload, ActionSequential } from '../../types'
+import { TriggerPayload, ActionResult } from '../../types'
 import DBConnect from '../databaseConnect'
 import { actionLibrary } from '../pluginsConnect'
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
@@ -9,8 +9,9 @@ import { swapOutAliasedAction } from './helpers'
 // Dev config
 const showActionOutcomeLog = false
 
-export async function processTrigger(payload: TriggerPayload) {
-  const { trigger_id, trigger, table, record_id, data, event_code, previewData } = payload
+export async function processTrigger(payload: TriggerPayload): Promise<ActionResult[]> {
+  const { trigger_id, trigger, table, record_id, data, event_code, applicationDataOverride } =
+    payload
 
   const templateId = await DBConnect.getTemplateIdFromTrigger(payload.table, payload.record_id)
 
@@ -22,15 +23,12 @@ export async function processTrigger(payload: TriggerPayload) {
     })
     .map((action) => (action.code !== 'alias' ? action : swapOutAliasedAction(templateId, action)))
 
+  // .filter/.map runs each loop async, so need to wait for them all to finish
   const resolvedActions = await Promise.all(actions)
 
   // Separate into Sequential and Async actions
-  const actionsSequential: ActionSequential[] = []
-  const actionsAsync: ActionInTemplate[] = []
-  for (const action of resolvedActions) {
-    if (action.sequence) actionsSequential.push(action as ActionSequential)
-    else actionsAsync.push(action)
-  }
+  const actionsSequential = resolvedActions.filter(({ sequence }) => !!sequence)
+  const actionsAsync = resolvedActions.filter(({ sequence }) => !sequence)
 
   for (const action of [...actionsAsync, ...actionsSequential]) {
     // Add all actions to Action Queue
@@ -55,7 +53,8 @@ export async function processTrigger(payload: TriggerPayload) {
       id: trigger_id,
     })
 
-  // Get sequential Actions from database
+  // Get sequential Actions from database (Async actions are handled directly by
+  // pg_notify -- see listeners in postgresConnect.ts)
   const actionsToExecute = await DBConnect.getActionsProcessing(templateId)
 
   // Collect output properties of actions in sequence
@@ -93,7 +92,7 @@ export async function processTrigger(payload: TriggerPayload) {
         {
           outputCumulative,
         },
-        previewData
+        applicationDataOverride
       )
 
       outputCumulative = { ...outputCumulative, ...result.output }

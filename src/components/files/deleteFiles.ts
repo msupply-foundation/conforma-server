@@ -27,8 +27,8 @@ export const deleteFile = async (file: FileDetail) => {
 
     // Also delete folder if it's now empty
     const dir = path.dirname(filePath)
-    if (fs.readdirSync(path.join(filesPath, dir)).length === 0)
-      fs.rmdirSync(path.join(filesPath, dir))
+    if ((await fsPromises.readdir(path.join(filesPath, dir))).length === 0)
+      await fsPromises.rmdir(path.join(filesPath, dir))
   } catch (err) {
     console.log(err)
   }
