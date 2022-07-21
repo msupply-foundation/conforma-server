@@ -69,6 +69,13 @@ export interface ActionQueueExecutePayload {
   output: BasicObject | null
 }
 
+export interface ActionResult {
+  action: string // code
+  status: ActionQueueStatus
+  output: BasicObject | null
+  errorLog: string | null
+}
+
 export interface ActionApplicationData {
   action_payload: ActionPayload
   applicationId: number
@@ -177,7 +184,7 @@ export interface TriggerPayload {
   application_id?: number
   event_code?: string
   data?: { [key: string]: any }
-  previewData?: Partial<ActionApplicationData>
+  applicationDataOverride?: Partial<ActionApplicationData>
 }
 
 export interface TriggerQueueUpdatePayload {
