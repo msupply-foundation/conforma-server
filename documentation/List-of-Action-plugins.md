@@ -670,14 +670,16 @@ In fact, this is not really an action at all -- it's just a dummy plugin that ma
 | Input parameters<br />(\*required) <br/> | Output properties                  |
 | ---------------------------------------- | ---------------------------------- |
 | `code`\*                                 | `output as per the aliased action` |
-| `condition`                              |                                    |
+| `shouldOverrideCondition`                |                                    |
 | `...any other aliased action parameters` |                                    |
 
 To be able to reference an existing template action, it needs to have a unique (per template) code in its template_action record.
 
 Then this alias action just passes in the code of the action it's referencing and the trigger processor will swap it out for that one.
 
-By default the action runs with the condition and parameters it has defined, but these can be overridden by the alias. To override the condition, you can either set the "condition" field directly, or supply a "condition" parameter (which takes priority). The one problem with the native "condition" field, though, is that it is always `true` by default, so we wouldn't want to always override with that. Therefore, the "condition" field only overrides the aliased actions condition if it is something other than `true`. (If you want it to be `true` (i.e. always run, then set `condition: true` in parameters))
+By default the (original/aliased) action runs with the condition and parameters it has defined, but these can be overridden by the alias. For example, if you have a `sendNotification` action which normally runs with `sendEmail: true` (the default), but you don't want emails going out when previewing, you'd just supply the parameter `sendEmail: false` to the alias and that would override the `sendNotification` parameter on this occasion.
+
+The "condition" field (common to all template_actions) can also override the original action's condition. However, every action has `condition: true` by default, so we ignore the alias action's condition if it's set to `true`. In the event that you actually *want* this to override the original action's condition (i.e. run the original action no matter what), then you'll need to set the `shouldOverrideConditon` to `true` (that's the only condition this parameter would need to be specified).
 
 ---
 
