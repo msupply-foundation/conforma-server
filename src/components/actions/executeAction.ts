@@ -25,10 +25,10 @@ export async function executeAction(
   payload: ActionPayload,
   actionLibrary: ActionLibrary,
   additionalObjects: any = {},
-  previewData?: Partial<ActionApplicationData>
+  applicationDataOverride?: Partial<ActionApplicationData>
 ): Promise<ActionQueueExecutePayload> {
-  // Get fresh applicationData for each Action, and inject previewData if present
-  const applicationData = merge(await getApplicationData({ payload }), previewData)
+  // Get fresh applicationData for each Action, and inject applicationDataOverride if present
+  const applicationData = merge(await getApplicationData({ payload }), applicationDataOverride)
 
   // Debug helper console.log to inspect applicationData:
   if (showApplicationDataLog) console.log('ApplicationData: ', applicationData)

@@ -1,4 +1,4 @@
-import { ActionInTemplate, TriggerPayload, ActionSequential } from '../../types'
+import { TriggerPayload, ActionResult } from '../../types'
 import DBConnect from '../databaseConnect'
 import { actionLibrary } from '../pluginsConnect'
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
@@ -9,8 +9,9 @@ import { swapOutAliasedAction } from './helpers'
 // Dev config
 const showActionOutcomeLog = false
 
-export async function processTrigger(payload: TriggerPayload) {
-  const { trigger_id, trigger, table, record_id, data, event_code, previewData } = payload
+export async function processTrigger(payload: TriggerPayload): Promise<ActionResult[]> {
+  const { trigger_id, trigger, table, record_id, data, event_code, applicationDataOverride } =
+    payload
 
   const templateId = await DBConnect.getTemplateIdFromTrigger(payload.table, payload.record_id)
 
@@ -91,7 +92,7 @@ export async function processTrigger(payload: TriggerPayload) {
         {
           outputCumulative,
         },
-        previewData
+        applicationDataOverride
       )
 
       outputCumulative = { ...outputCumulative, ...result.output }
