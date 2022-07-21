@@ -25,10 +25,11 @@ export async function executeAction(
   payload: ActionPayload,
   actionLibrary: ActionLibrary,
   additionalObjects: any = {},
-  applicationDataExtra?: Partial<ActionApplicationData>
+  applicationDataOverride?: Partial<ActionApplicationData>
 ): Promise<ActionQueueExecutePayload> {
-  // Get fresh applicationData for each Action, and inject previewData if present
-  const applicationData = merge(await getApplicationData({ payload }), applicationDataExtra)
+  // Get fresh applicationData for each Action, and inject
+  // applicationDataOverride if present
+  const applicationData = merge(await getApplicationData({ payload }), applicationDataOverride)
 
   // Debug helper console.log to inspect applicationData:
   if (showApplicationDataLog) console.log('ApplicationData: ', applicationData)
@@ -52,51 +53,18 @@ export async function executeAction(
     )
   } catch (err) {
     console.log('>> Error evaluating condition for action:', payload.code)
-    return await DBConnect.executedActionStatusUpdate({
+    const actionResult = {
       status: ActionQueueStatus.Fail,
       error_log: 'Problem evaluating condition: ' + err,
       parameters_evaluated: null,
       output: null,
       id: payload.id,
-    })
+    }
+    await DBConnect.executedActionStatusUpdate(actionResult)
+    return actionResult
   }
 
-  if (condition) {
-    try {
-      // Evaluate parameters
-      const parametersEvaluated = await evaluateParameters(
-        payload.parameter_queries,
-        evaluatorParams
-      )
-      // TO-DO: Check all required parameters are present
-
-      // TO-DO: If Scheduled, create a Job instead
-      const actionResult = await actionLibrary[payload.code]({
-        parameters: parametersEvaluated,
-        applicationData,
-        outputCumulative: evaluatorParams.objects?.outputCumulative || {},
-        DBConnect,
-      })
-
-      return await DBConnect.executedActionStatusUpdate({
-        status: actionResult.status,
-        error_log: actionResult.error_log,
-        parameters_evaluated: parametersEvaluated,
-        output: actionResult.output,
-        id: payload.id,
-      })
-    } catch (err) {
-      console.error('>> Error executing action:', payload.code)
-      await DBConnect.executedActionStatusUpdate({
-        status: ActionQueueStatus.Fail,
-        error_log: "Couldn't execute Action: " + err.message,
-        parameters_evaluated: null,
-        output: null,
-        id: payload.id,
-      })
-      throw err
-    }
-  } else {
+  if (!condition) {
     console.log(payload.code + ': Condition not met')
     return await DBConnect.executedActionStatusUpdate({
       status: ActionQueueStatus.ConditionNotMet,
@@ -105,5 +73,38 @@ export async function executeAction(
       output: null,
       id: payload.id,
     })
+  }
+
+  // Condition met -- executing now...
+  try {
+    // Evaluate parameters
+    const parametersEvaluated = await evaluateParameters(payload.parameter_queries, evaluatorParams)
+    // TO-DO: Check all required parameters are present
+
+    // TO-DO: If Scheduled, create a Job instead
+    const actionResult = await actionLibrary[payload.code]({
+      parameters: parametersEvaluated,
+      applicationData,
+      outputCumulative: evaluatorParams.objects?.outputCumulative || {},
+      DBConnect,
+    })
+
+    return await DBConnect.executedActionStatusUpdate({
+      status: actionResult.status,
+      error_log: actionResult.error_log,
+      parameters_evaluated: parametersEvaluated,
+      output: actionResult.output,
+      id: payload.id,
+    })
+  } catch (err) {
+    console.error('>> Error executing action:', payload.code)
+    await DBConnect.executedActionStatusUpdate({
+      status: ActionQueueStatus.Fail,
+      error_log: "Couldn't execute Action: " + err.message,
+      parameters_evaluated: null,
+      output: null,
+      id: payload.id,
+    })
+    throw err
   }
 }
