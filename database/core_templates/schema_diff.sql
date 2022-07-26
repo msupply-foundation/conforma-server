@@ -1,12 +1,98 @@
 /***********************************************/
 /*** SCRIPT AUTHOR: conforma-server          ***/
-/***    CREATED ON: 2022-06-28T05:54:46.732Z ***/
+/***    CREATED ON: 2022-07-25T11:51:43.081Z ***/
 /***********************************************/
+
+--- BEGIN CREATE SEQUENCE "public"."organisation_application_join_id_seq" ---
+
+
+CREATE SEQUENCE IF NOT EXISTS "public"."organisation_application_join_id_seq" 
+	INCREMENT BY 1 
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 1
+	NO CYCLE;
+
+ALTER SEQUENCE "public"."organisation_application_join_id_seq" OWNER TO postgres;
+
+COMMENT ON SEQUENCE "public"."organisation_application_join_id_seq"  IS NULL;
+
+--- END CREATE SEQUENCE "public"."organisation_application_join_id_seq" ---
+
+--- BEGIN CREATE SEQUENCE "public"."user_application_join_id_seq" ---
+
+
+CREATE SEQUENCE IF NOT EXISTS "public"."user_application_join_id_seq" 
+	INCREMENT BY 1 
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 1
+	NO CYCLE;
+
+ALTER SEQUENCE "public"."user_application_join_id_seq" OWNER TO postgres;
+
+COMMENT ON SEQUENCE "public"."user_application_join_id_seq"  IS NULL;
+
+--- END CREATE SEQUENCE "public"."user_application_join_id_seq" ---
+
+--- BEGIN ALTER TABLE "public"."organisation" ---
+
+ALTER TABLE IF EXISTS "public"."organisation" ADD COLUMN IF NOT EXISTS "registration_documentation" jsonb NULL  ;
+
+COMMENT ON COLUMN "public"."organisation"."registration_documentation"  IS NULL;
+
+--- END ALTER TABLE "public"."organisation" ---
+
+--- BEGIN ALTER TABLE "public"."data_view_column_definition" ---
+
+ALTER TABLE IF EXISTS "public"."data_view_column_definition" ADD CONSTRAINT "outcome_display_column_definition_pkey" PRIMARY KEY (id);
+
+COMMENT ON CONSTRAINT "outcome_display_column_definition_pkey" ON "public"."data_view_column_definition" IS NULL;
+
+ALTER TABLE IF EXISTS "public"."data_view_column_definition" ADD CONSTRAINT "outcome_display_column_definition_table_name_column_name_key" UNIQUE (table_name, column_name);
+
+COMMENT ON CONSTRAINT "outcome_display_column_definition_table_name_column_name_key" ON "public"."data_view_column_definition" IS NULL;
+
+ALTER TABLE IF EXISTS "public"."data_view_column_definition" DROP CONSTRAINT IF EXISTS "data_view_column_definition_pkey";
+
+ALTER TABLE IF EXISTS "public"."data_view_column_definition" DROP CONSTRAINT IF EXISTS "data_view_column_definition_table_name_column_name_key";
+
+CREATE UNIQUE INDEX outcome_display_column_definition_table_name_column_name_key ON public.data_view_column_definition USING btree (table_name, column_name);
+
+COMMENT ON INDEX "public"."outcome_display_column_definition_table_name_column_name_key"  IS NULL;
+
+DROP INDEX IF EXISTS data_view_column_definition_table_name_column_name_key;
+
+--- END ALTER TABLE "public"."data_view_column_definition" ---
+
+--- BEGIN ALTER TABLE "public"."data_view" ---
+
+ALTER TABLE IF EXISTS "public"."data_view" ADD CONSTRAINT "outcome_display_pkey" PRIMARY KEY (id);
+
+COMMENT ON CONSTRAINT "outcome_display_pkey" ON "public"."data_view" IS NULL;
+
+ALTER TABLE IF EXISTS "public"."data_view" ADD CONSTRAINT "outcome_display_table_name_code_key" UNIQUE (table_name, code);
+
+COMMENT ON CONSTRAINT "outcome_display_table_name_code_key" ON "public"."data_view" IS NULL;
+
+ALTER TABLE IF EXISTS "public"."data_view" DROP CONSTRAINT IF EXISTS "data_view_pkey";
+
+ALTER TABLE IF EXISTS "public"."data_view" DROP CONSTRAINT IF EXISTS "data_view_table_name_code_key";
+
+CREATE UNIQUE INDEX outcome_display_table_name_code_key ON public.data_view USING btree (table_name, code);
+
+COMMENT ON INDEX "public"."outcome_display_table_name_code_key"  IS NULL;
+
+DROP INDEX IF EXISTS data_view_table_name_code_key;
+
+--- END ALTER TABLE "public"."data_view" ---
 
 --- BEGIN CREATE TABLE "public"."organisation_application_join" ---
 
 CREATE TABLE IF NOT EXISTS "public"."organisation_application_join" (
-	"id" serial NOT NULL  ,
+	"id" int4 NOT NULL DEFAULT nextval('organisation_application_join_id_seq'::regclass) ,
 	"application_id" int4 NOT NULL  ,
 	"organisation_id" int4 NOT NULL  ,
 	CONSTRAINT "organisation_application_join_pkey" PRIMARY KEY (id) ,
@@ -17,12 +103,30 @@ CREATE TABLE IF NOT EXISTS "public"."organisation_application_join" (
 ALTER TABLE IF EXISTS "public"."organisation_application_join" OWNER TO postgres;
 
 
+COMMENT ON COLUMN "public"."organisation_application_join"."id"  IS NULL;
+
+
+COMMENT ON COLUMN "public"."organisation_application_join"."application_id"  IS NULL;
+
+
+COMMENT ON COLUMN "public"."organisation_application_join"."organisation_id"  IS NULL;
+
+COMMENT ON CONSTRAINT "organisation_application_join_pkey" ON "public"."organisation_application_join" IS NULL;
+
+
+COMMENT ON CONSTRAINT "organisation_application_join_application_id_fkey" ON "public"."organisation_application_join" IS NULL;
+
+
+COMMENT ON CONSTRAINT "organisation_application_join_organisation_id_fkey" ON "public"."organisation_application_join" IS NULL;
+
+COMMENT ON TABLE "public"."organisation_application_join"  IS NULL;
+
 --- END CREATE TABLE "public"."organisation_application_join" ---
 
 --- BEGIN CREATE TABLE "public"."user_application_join" ---
 
 CREATE TABLE IF NOT EXISTS "public"."user_application_join" (
-	"id" serial NOT NULL  ,
+	"id" int4 NOT NULL DEFAULT nextval('user_application_join_id_seq'::regclass) ,
 	"application_id" int4 NOT NULL  ,
 	"user_id" int4 NOT NULL  ,
 	CONSTRAINT "user_application_join_pkey" PRIMARY KEY (id) ,
@@ -33,47 +137,27 @@ CREATE TABLE IF NOT EXISTS "public"."user_application_join" (
 ALTER TABLE IF EXISTS "public"."user_application_join" OWNER TO postgres;
 
 
+COMMENT ON COLUMN "public"."user_application_join"."id"  IS NULL;
+
+
+COMMENT ON COLUMN "public"."user_application_join"."application_id"  IS NULL;
+
+
+COMMENT ON COLUMN "public"."user_application_join"."user_id"  IS NULL;
+
+COMMENT ON CONSTRAINT "user_application_join_pkey" ON "public"."user_application_join" IS NULL;
+
+
+COMMENT ON CONSTRAINT "user_application_join_application_id_fkey" ON "public"."user_application_join" IS NULL;
+
+
+COMMENT ON CONSTRAINT "user_application_join_user_id_fkey" ON "public"."user_application_join" IS NULL;
+
+COMMENT ON TABLE "public"."user_application_join"  IS NULL;
+
 --- END CREATE TABLE "public"."user_application_join" ---
 
---- BEGIN ALTER TABLE "public"."organisation" ---
-
-ALTER TABLE IF EXISTS "public"."organisation" ADD COLUMN IF NOT EXISTS "registration_documentation" jsonb NULL  ;
-
---- END ALTER TABLE "public"."organisation" ---
-
---- BEGIN ALTER TABLE "public"."data_view_column_definition" ---
-
-ALTER TABLE IF EXISTS "public"."data_view_column_definition" ADD CONSTRAINT "outcome_display_column_definition_pkey" PRIMARY KEY (id);
-
-ALTER TABLE IF EXISTS "public"."data_view_column_definition" ADD CONSTRAINT "outcome_display_column_definition_table_name_column_name_key" UNIQUE (table_name, column_name);
-
-ALTER TABLE IF EXISTS "public"."data_view_column_definition" DROP CONSTRAINT IF EXISTS "data_view_column_definition_pkey";
-
-ALTER TABLE IF EXISTS "public"."data_view_column_definition" DROP CONSTRAINT IF EXISTS "data_view_column_definition_table_name_column_name_key";
-
-CREATE UNIQUE INDEX outcome_display_column_definition_table_name_column_name_key ON public.data_view_column_definition USING btree (table_name, column_name);
-
-DROP INDEX IF EXISTS data_view_column_definition_table_name_column_name_key;
-
---- END ALTER TABLE "public"."data_view_column_definition" ---
-
---- BEGIN ALTER TABLE "public"."data_view" ---
-
-ALTER TABLE IF EXISTS "public"."data_view" ADD CONSTRAINT "outcome_display_pkey" PRIMARY KEY (id);
-
-ALTER TABLE IF EXISTS "public"."data_view" ADD CONSTRAINT "outcome_display_table_name_code_key" UNIQUE (table_name, code);
-
-ALTER TABLE IF EXISTS "public"."data_view" DROP CONSTRAINT IF EXISTS "data_view_pkey";
-
-ALTER TABLE IF EXISTS "public"."data_view" DROP CONSTRAINT IF EXISTS "data_view_table_name_code_key";
-
-CREATE UNIQUE INDEX outcome_display_table_name_code_key ON public.data_view USING btree (table_name, code);
-
-DROP INDEX IF EXISTS data_view_table_name_code_key;
-
---- END ALTER TABLE "public"."data_view" ---
-
---- BEGIN ALTER FUNCTION "public"."empty_assigned_sections" ---
+--- BEGIN ALTER FUNCTION "public"."empty_assigned_sections"() ---
 
 DROP FUNCTION IF EXISTS "public"."empty_assigned_sections"();
 
@@ -90,9 +174,11 @@ AS $function$
 ;
 ALTER FUNCTION "public"."empty_assigned_sections"() OWNER TO postgres;
 
---- END ALTER FUNCTION "public"."empty_assigned_sections" ---
+COMMENT ON FUNCTION "public"."empty_assigned_sections"()  IS NULL;
 
---- BEGIN ALTER FUNCTION "public"."notify_action_queue" ---
+--- END ALTER FUNCTION "public"."empty_assigned_sections"() ---
+
+--- BEGIN ALTER FUNCTION "public"."notify_action_queue"() ---
 
 DROP FUNCTION IF EXISTS "public"."notify_action_queue"();
 
@@ -111,9 +197,11 @@ AS $function$
 ;
 ALTER FUNCTION "public"."notify_action_queue"() OWNER TO postgres;
 
---- END ALTER FUNCTION "public"."notify_action_queue" ---
+COMMENT ON FUNCTION "public"."notify_action_queue"()  IS NULL;
 
---- BEGIN ALTER FUNCTION "public"."set_original_response" ---
+--- END ALTER FUNCTION "public"."notify_action_queue"() ---
+
+--- BEGIN ALTER FUNCTION "public"."set_original_response"() ---
 
 DROP FUNCTION IF EXISTS "public"."set_original_response"();
 
@@ -140,9 +228,11 @@ AS $function$ BEGIN IF NEW.review_response_link_id IS NOT NULL THEN NEW.original
 ;
 ALTER FUNCTION "public"."set_original_response"() OWNER TO postgres;
 
---- END ALTER FUNCTION "public"."set_original_response" ---
+COMMENT ON FUNCTION "public"."set_original_response"()  IS NULL;
 
---- BEGIN ALTER FUNCTION "public"."notify_trigger_queue" ---
+--- END ALTER FUNCTION "public"."set_original_response"() ---
+
+--- BEGIN ALTER FUNCTION "public"."notify_trigger_queue"() ---
 
 DROP FUNCTION IF EXISTS "public"."notify_trigger_queue"();
 
@@ -159,9 +249,11 @@ AS $function$
 ;
 ALTER FUNCTION "public"."notify_trigger_queue"() OWNER TO postgres;
 
---- END ALTER FUNCTION "public"."notify_trigger_queue" ---
+COMMENT ON FUNCTION "public"."notify_trigger_queue"()  IS NULL;
 
---- BEGIN ALTER FUNCTION "public"."review_list" ---
+--- END ALTER FUNCTION "public"."notify_trigger_queue"() ---
+
+--- BEGIN ALTER FUNCTION "public"."review_list"(integer, integer) ---
 
 DROP FUNCTION IF EXISTS "public"."review_list"(integer, integer);
 
@@ -219,9 +311,11 @@ AS $function$
 ;
 ALTER FUNCTION "public"."review_list"(integer, integer) OWNER TO postgres;
 
---- END ALTER FUNCTION "public"."review_list" ---
+COMMENT ON FUNCTION "public"."review_list"(integer, integer)  IS NULL;
 
---- BEGIN ALTER FUNCTION "public"."assigned_questions_count" ---
+--- END ALTER FUNCTION "public"."review_list"(integer, integer) ---
+
+--- BEGIN ALTER FUNCTION "public"."assigned_questions_count"(integer, integer, integer) ---
 
 DROP FUNCTION IF EXISTS "public"."assigned_questions_count"(integer, integer, integer);
 
@@ -257,9 +351,11 @@ AS $function$
 ;
 ALTER FUNCTION "public"."assigned_questions_count"(integer, integer, integer) OWNER TO postgres;
 
---- END ALTER FUNCTION "public"."assigned_questions_count" ---
+COMMENT ON FUNCTION "public"."assigned_questions_count"(integer, integer, integer)  IS NULL;
 
---- BEGIN ALTER FUNCTION "public"."submitted_assigned_questions_count" ---
+--- END ALTER FUNCTION "public"."assigned_questions_count"(integer, integer, integer) ---
+
+--- BEGIN ALTER FUNCTION "public"."submitted_assigned_questions_count"(integer, integer, integer) ---
 
 DROP FUNCTION IF EXISTS "public"."submitted_assigned_questions_count"(integer, integer, integer);
 
@@ -292,34 +388,6 @@ AS $function$
 ;
 ALTER FUNCTION "public"."submitted_assigned_questions_count"(integer, integer, integer) OWNER TO postgres;
 
---- END ALTER FUNCTION "public"."submitted_assigned_questions_count" ---
+COMMENT ON FUNCTION "public"."submitted_assigned_questions_count"(integer, integer, integer)  IS NULL;
 
---- BEGIN CREATE SEQUENCE "public"."organisation_application_join_id_seq" ---
-
-
-CREATE SEQUENCE IF NOT EXISTS "public"."organisation_application_join_id_seq" 
-	INCREMENT BY 1 
-	MINVALUE 1
-	MAXVALUE 2147483647
-	START WITH 1
-	CACHE 1
-	NO CYCLE;
-
-ALTER SEQUENCE "public"."organisation_application_join_id_seq" OWNER TO postgres;
-
---- END CREATE SEQUENCE "public"."organisation_application_join_id_seq" ---
-
---- BEGIN CREATE SEQUENCE "public"."user_application_join_id_seq" ---
-
-
-CREATE SEQUENCE IF NOT EXISTS "public"."user_application_join_id_seq" 
-	INCREMENT BY 1 
-	MINVALUE 1
-	MAXVALUE 2147483647
-	START WITH 1
-	CACHE 1
-	NO CYCLE;
-
-ALTER SEQUENCE "public"."user_application_join_id_seq" OWNER TO postgres;
-
---- END CREATE SEQUENCE "public"."user_application_join_id_seq" ---
+--- END ALTER FUNCTION "public"."submitted_assigned_questions_count"(integer, integer, integer) ---
