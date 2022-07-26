@@ -361,6 +361,21 @@
    ],
    "path": "../plugins/action_refresh_review_assignments/src/index.ts",
    "requiredParameters": []
+  },
+  {
+   "code": "alias",
+   "description": "Dummy plugin to facilitate aliasing of template actions",
+   "id": 21,
+   "name": "Alias Action",
+   "optionalParameters": [
+    "shouldOverrideCondition",
+    "...anyPluginFields"
+   ],
+   "outputProperties": [],
+   "path": "../plugins/action_alias/src/index.ts",
+   "requiredParameters": [
+    "code"
+   ]
   }
  ],
  "counter": [
@@ -12412,6 +12427,7 @@
    "templateId": null,
    "thumbnailPath": "fda_CylhAzxRhSX_QjtArq3bi.png",
    "timestamp": "2021-10-04T15:23:06.342206+13:00",
+   "toBeDeleted": false,
    "uniqueId": "CylhAzxRhSX_QjtArq3bi",
    "userId": null
   },
@@ -12429,6 +12445,7 @@
    "templateId": null,
    "thumbnailPath": "logos/conforma_logo_wide_white_1024_6t0oVIzvHe45VyVk4NiMO_thumb.jpg",
    "timestamp": "2022-06-28T17:50:38.769376+12:00",
+   "toBeDeleted": false,
    "uniqueId": "6t0oVIzvHe45VyVk4NiMO",
    "userId": null
   },
@@ -12446,6 +12463,7 @@
    "templateId": null,
    "thumbnailPath": "logos/conforma_logo_wide_1024_FatzcVDjgxuAcdwQf1h_u_thumb.jpg",
    "timestamp": "2022-06-28T17:52:09.758334+12:00",
+   "toBeDeleted": false,
    "uniqueId": "FatzcVDjgxuAcdwQf1h_u",
    "userId": null
   }
