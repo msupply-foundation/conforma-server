@@ -115,6 +115,7 @@ CREATE TYPE public.trigger AS ENUM (
     'ON_APPROVAL_SUBMIT',
     'ON_VERIFICATION',
     'ON_SCHEDULE',
+    'ON_PREVIEW',
     'DEV_TEST',
     'PROCESSING',
     'ERROR'
@@ -948,6 +949,9 @@ CREATE TABLE public.template_action (
     sequence integer
 );
 
+-- Constraint ensuring that the "code" value must be unique per template
+CREATE UNIQUE INDEX unique_template_action_code ON template_action (code, template_id);
+
 CREATE FUNCTION public.template_action_parameters_queries_string (template_action public.template_action)
     RETURNS text
     AS $$
@@ -1550,6 +1554,7 @@ CREATE TABLE public.file (
     description varchar,
     application_note_id integer REFERENCES public.application_note (id) ON DELETE CASCADE,
     is_output_doc boolean DEFAULT FALSE NOT NULL,
+    to_be_deleted boolean DEFAULT FALSE NOT NULL,
     file_path varchar NOT NULL,
     thumbnail_path varchar,
     mimetype varchar,
