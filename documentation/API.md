@@ -31,7 +31,7 @@ The back-end currently has two server instances which are launched to handle inc
       - [User Permissions](#user-permissions)
       - [Check Triggers](#check-triggers)
       - [Generate PDF](#generate-pdf)
-    - [Outcomes](#outcomes)
+    - [Data Views](#data-views)
     - [Admin only endpoints](#admin-only-endpoints)
       - [Update row level policies](#update-row-level-policies)
       - [Run Action](#run-action)
@@ -240,31 +240,7 @@ Either `username` or `orgId` can be omitted and the result returned will be eith
   
 For `orgId`, the values `null` or `0` are equivalent to omitting `orgId` and for `username` an empty string `""` can be used. This is useful in cases such as a template query where you're supplying an `orgId` and `username` parameter, but can't "turn off" the parameters when you want to omit either of them -- just use `orgId=null` or `username=""` to achieve the same thing.
 
-#### Check Triggers
-
-GET: `/check-trigger?serial=<applicationSerial>`
-
-This endpoint is used by the front-end application loader to ensure that ALL triggers associated with an application (i.e. review assignments, reviews, verifications) are not runninng before the application data is fetched. This is so any mutations that cause Actions to run are all finished before any subsequent data is re-fetched, so the front-end shows all the changes.
-
-The front-end processes this data in the `useTriggers` hook.
-
-##### RESPONSE Body:
-
-```
-{
-    "status": "ready" | "processing" | "error",
-    "errors": // only present if status: "error"
-        [
-            {
-                "table": "application",
-                "id": 236,
-                "trigger": "ERROR"
-            }
-        ] 
-}
-```
-
-##### usage
+##### Usage
 
 GET: `/user-permissions?username=<username>` If no `orgId` is received the list should contain user-only permissions (the ones with organisation_id = NULL) for external users.
 
@@ -317,6 +293,30 @@ Returns (on success):
    [
        "applyCompanyRegistration"
    ]
+}
+```
+
+#### Check Triggers
+
+GET: `/check-trigger?serial=<applicationSerial>`
+
+This endpoint is used by the front-end application loader to ensure that ALL triggers associated with an application (i.e. review assignments, reviews, verifications) are not runninng before the application data is fetched. This is so any mutations that cause Actions to run are all finished before any subsequent data is re-fetched, so the front-end shows all the changes.
+
+The front-end processes this data in the `useTriggers` hook.
+
+##### RESPONSE Body:
+
+```
+{
+    "status": "ready" | "processing" | "error",
+    "errors": // only present if status: "error"
+        [
+            {
+                "table": "application",
+                "id": 236,
+                "trigger": "ERROR"
+            }
+        ] 
 }
 ```
 
