@@ -1,5 +1,5 @@
 import { ActionQueueStatus } from '../../../src/generated/graphql'
-import { ActionPluginOutput, ActionPluginType } from '../../types'
+import { ActionPluginType } from '../../types'
 import databaseMethods, { DatabaseMethodsType } from './databaseMethods'
 import { DBConnectType } from '../../../src/components/databaseConnect'
 import { mapValues, get, snakeCase } from 'lodash'
@@ -21,8 +21,6 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     matchValue,
     shouldCreateJoinTable = true,
     data,
-    records,
-    keyMap, // Not used in here, but stops it from becoming a field name
     ...record
   } = parameters
 
@@ -31,12 +29,6 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
   const fieldToMatch = matchField ?? 'id'
   const valueToMatch = matchValue ?? record[fieldToMatch]
   const applicationId = applicationData?.applicationId || 0
-
-  // If multiple records, run whole action on each one
-  if (records) {
-    const combinedOutput = await updateMultipleRecords({ parameters, applicationData, DBConnect })
-    return combinedOutput
-  }
 
   // Don't update fields with NULL
   for (const key in record) {
@@ -85,70 +77,6 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
       error_log: error.message,
     }
   }
-}
-
-// When we have multiple records, we recursively call "modifyRecord" on each
-// one, and collect all outputs
-const updateMultipleRecords: ActionPluginType = async ({
-  parameters,
-  applicationData,
-  DBConnect,
-}) => {
-  let status = ActionQueueStatus.Success
-  const errors: string[] = []
-  const {
-    tableName,
-    matchField,
-    matchValue,
-    shouldCreateJoinTable = true,
-    data,
-    records,
-    keyMap,
-    ...otherFields
-  } = parameters
-
-  const results: ActionPluginOutput[] = []
-
-  for (const record of keyMap ? constructMappedRecords(records, keyMap, otherFields) : records) {
-    const result = await modifyRecord({
-      parameters: { tableName, matchField, matchValue, shouldCreateJoinTable, data, ...record },
-      applicationData,
-      DBConnect,
-    })
-    if (result.status === ActionQueueStatus.Fail) {
-      status = ActionQueueStatus.Fail
-      errors.push(result.error_log)
-    }
-    results.push(result)
-  }
-
-  return { output: { records: results }, status, error_log: errors.join(', ') }
-}
-
-// This allows us to remap the property names of the incoming objects to those
-// required by the desination data table. For a single record, we can already
-// map individual fields, but we can't access individual items in an array of
-// records
-const constructMappedRecords = (
-  records: { [key: string]: any }[],
-  keyMap: { [key: string]: any },
-  otherFields: { [key: string]: any }
-) => {
-  return records.map((record) => {
-    const newRecord: { [key: string]: any } = {}
-    Object.entries(keyMap).forEach(([key, value]) => {
-      if (value in record) newRecord[key] = record?.[value]
-      // Make sure the "standard" parameters get kept, if present in individual
-      // records
-      const { tableName, matchField, matchValue, data, shouldCreateJoinTable } = record
-      if (tableName) newRecord.tableName = tableName
-      if (matchField) newRecord.matchField = matchField
-      if (matchValue) newRecord.matchValue = matchValue
-      if (data) newRecord.data = data
-      if (shouldCreateJoinTable) newRecord.shouldCreateJoinTable = shouldCreateJoinTable
-    })
-    return { ...newRecord, ...otherFields }
-  })
 }
 
 const createOrUpdateTable = async (
