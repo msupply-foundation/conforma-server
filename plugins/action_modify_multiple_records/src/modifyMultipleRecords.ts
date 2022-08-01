@@ -29,7 +29,6 @@ const modifyMultipleRecords: ActionPluginType = async ({
     const newRecord = keyMap ? constructMappedRecords(record, keyMap) : { ...record }
     newRecord.tableName = record.tableName ?? tableName
     newRecord.matchField = record.matchField ?? matchField
-    newRecord.tableName = record.tableName ?? tableName
     newRecord.matchValue = record.matchValue ?? matchValue
     newRecord.shouldCreateJoinTable = record.shouldCreateJoinTable ?? shouldCreateJoinTable ?? true
     newRecord.data = { ...data, ...record.data }
