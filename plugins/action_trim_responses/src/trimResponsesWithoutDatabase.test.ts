@@ -53,6 +53,20 @@ test('trimResponses: trim application responses', async () => {
           applicationResponseId: 2,
           templateElementId: -1,
         },
+        // Would be deleted before updated
+        {
+          applicationResponseId: 4,
+          templateElementId: -1,
+        },
+        // Would be deleted before updated
+        {
+          applicationResponseId: 5,
+          templateElementId: -1,
+        },
+        {
+          applicationResponseId: 6,
+          templateElementId: -1,
+        },
       ],
     },
   })
