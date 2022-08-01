@@ -431,6 +431,19 @@ const migrateData = async () => {
         AND (OLD.is_external_reference_doc = TRUE OR OLD.is_internal_reference_doc = TRUE))
       EXECUTE FUNCTION public.mark_file_for_deletion ();
     `)
+
+    console.log(' - Adding reviewability fields to template_element')
+
+    await DB.changeSchema(`
+    CREATE TYPE public.is_reviewable_status AS ENUM (
+      'ALWAYS',
+      'NEVER' );`)
+
+    await DB.changeSchema(`
+      ALTER TABLE template_element
+        ADD COLUMN IF NOT EXISTS is_reviewable public.is_reviewable_status DEFAULT NULL;
+        `)
+    // TO-DO: Add "review_required" column for optional reviews
   }
 
   // Other version migrations continue here...
