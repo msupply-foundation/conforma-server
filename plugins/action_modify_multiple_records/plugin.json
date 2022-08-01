@@ -1,16 +1,17 @@
 {
   "type": "action_plugin",
-  "code": "modifyRecord",
-  "name": "Modify Record",
-  "description": "Inserts or updates a record in database, e.g. User, Org",
-  "required_parameters": ["tableName"],
+  "code": "modifyMultipleRecords",
+  "name": "Modify Multiple Records",
+  "description": "Inserts or updates multiple database records",
+  "required_parameters": ["records"],
   "optional_parameters": [
+    "tableName",
     "matchField",
     "matchValue",
     "shouldCreateJoinTable",
     "<other record fields>"
   ],
-  "output_properties": ["<tableName>"],
+  "output_properties": ["records"],
   "info": {
     "author": {
       "name": "The mSupply Foundation",
