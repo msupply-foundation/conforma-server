@@ -138,13 +138,17 @@ const routeUserPermissions = async (request: any, reply: any) => {
   // Store array of object per permissionNames with properties and an array of templateCodes
   const templatePermissions: PermissionDetails[] = Object.values(
     templatePermissionRows.reduce(
-      (templatePermissions, { permissionNameId, permissionName, templateCode, description }) => {
+      (
+        templatePermissions,
+        { permissionNameId, permissionName, templateCode, description, isSystemOrgPermission }
+      ) => {
         if (!templatePermissions[permissionName])
           templatePermissions[permissionName] = {
             id: permissionNameId,
             name: permissionName,
             description,
             displayName: startCase(permissionName),
+            isSystemOrgPermission,
             isUserGranted: grantedPermissions.includes(permissionName),
             templateCodes: [],
           }

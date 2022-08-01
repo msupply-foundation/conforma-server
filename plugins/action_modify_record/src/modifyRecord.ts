@@ -3,6 +3,7 @@ import { ActionPluginType } from '../../types'
 import databaseMethods, { DatabaseMethodsType } from './databaseMethods'
 import { DBConnectType } from '../../../src/components/databaseConnect'
 import { mapValues, get, snakeCase } from 'lodash'
+import { objectKeysToSnakeCase } from '../../../src/components/utilityFunctions'
 import { singular } from 'pluralize'
 
 // This will be prepended to NEW table created if not already present
@@ -10,7 +11,7 @@ export const DATA_TABLE_PREFIX = 'data_table_'
 
 // These are the only tables in the system that we allow to be mutated with this
 // plugin. All other names will have "data_table_" prepended.
-const ALLOWED_TABLE_NAMES = ['user', 'organisation', 'application']
+const ALLOWED_TABLE_NAMES = ['user', 'organisation', 'application', 'file']
 
 const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
@@ -35,10 +36,10 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
   }
 
   // Build full record
-  const fullRecord = {
+  const fullRecord = objectKeysToSnakeCase({
     ...record,
     ...mapValues(data, (property) => get(applicationData, property, null)),
-  }
+  })
 
   try {
     await createOrUpdateTable(DBConnect, db, tableNameProper, fullRecord, tableName)

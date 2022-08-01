@@ -397,10 +397,39 @@ const migrateData = async () => {
     'ON_PREVIEW' AFTER  'ON_SCHEDULE';
     `)
 
-    console.log(' - Adding to_be_deleted to file table')
+    console.log(
+      ' - Adding columns to file table: to_be_deleted, is_internal_reference_doc, is_external_reference_doc'
+    )
     await DB.changeSchema(`
       ALTER TABLE file
       ADD COLUMN IF NOT EXISTS to_be_deleted boolean DEFAULT FALSE NOT NULL;
+      ALTER TABLE file
+      ADD COLUMN IF NOT EXISTS is_internal_reference_doc boolean DEFAULT FALSE NOT NULL;
+      ALTER TABLE file
+      ADD COLUMN IF NOT EXISTS is_external_reference_doc boolean DEFAULT FALSE NOT NULL;
+    `)
+
+    console.log(' - Adding function/trigger to delete unused reference docs')
+
+    await DB.changeSchema(`
+    CREATE OR REPLACE FUNCTION public.mark_file_for_deletion ()
+    RETURNS TRIGGER AS $file_event$
+    BEGIN
+        UPDATE public.file
+        SET to_be_deleted = TRUE
+        WHERE id = NEW.id;
+        RETURN NULL;
+    END;
+    $file_event$
+    LANGUAGE plpgsql;
+
+    CREATE TRIGGER file_no_longer_reference
+      AFTER UPDATE ON public.file
+      FOR EACH ROW
+      WHEN (NEW.is_external_reference_doc = FALSE
+        AND NEW.is_internal_reference_doc = FALSE
+        AND (OLD.is_external_reference_doc = TRUE OR OLD.is_internal_reference_doc = TRUE))
+      EXECUTE FUNCTION public.mark_file_for_deletion ();
     `)
   }
 
