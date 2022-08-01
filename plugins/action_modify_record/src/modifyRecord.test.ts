@@ -1,10 +1,11 @@
-// Test suite for the modifyRecord Action
+// Test suite for the modifyRecord AND modifyMultipleRecords Actions
 // Needs fresh database `yarn database_init`
 
 import DBConnect from '../../../src/components/databaseConnect'
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionApplicationData } from '../../../src/types'
 import { action as modifyRecord } from './index'
+import { action as modifyMultipleRecords } from '../../action_modify_multiple_records/src'
 
 // User tests
 
@@ -298,7 +299,7 @@ test('Test: add single record to new table', () => {
 })
 
 test('Test: add multiple records to new table', () => {
-  return modifyRecord({
+  return modifyMultipleRecords({
     parameters: {
       tableName: 'test2',
       records: [
@@ -358,7 +359,7 @@ test('Test: add multiple records to new table', () => {
 })
 
 test('Test: add multiple records to multiple tables, using keyMap', () => {
-  return modifyRecord({
+  return modifyMultipleRecords({
     parameters: {
       tableName: 'test2',
       records: [
