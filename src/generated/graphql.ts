@@ -9357,8 +9357,8 @@ export type File = Node & {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp: Scalars['Datetime'];
-  isInternalReferenceDoc: Scalars['Boolean'];
-  isExternalReferenceDoc: Scalars['Boolean'];
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
   /** Reads a single `Template` that is related to this `File`. */
@@ -37139,8 +37139,8 @@ export type FileResolvers<ContextType = any, ParentType extends ResolversParentT
   mimetype?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   submitted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   timestamp?: Resolver<ResolversTypes['Datetime'], ParentType, ContextType>;
-  isInternalReferenceDoc?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  isExternalReferenceDoc?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isInternalReferenceDoc?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isExternalReferenceDoc?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
