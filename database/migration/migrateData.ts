@@ -501,6 +501,13 @@ const migrateData = async () => {
       ALTER COLUMN time_scheduled
       SET NOT NULL;
     `)
+
+    console.log(' - Adding "COMPLETED" status to trigger_queue enum')
+
+    await DB.changeSchema(`
+      ALTER TYPE public.trigger_queue_status ADD VALUE IF NOT EXISTS
+      'COMPLETED' AFTER  'ERROR';
+    `)
   }
 
   // Other version migrations continue here...

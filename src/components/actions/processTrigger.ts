@@ -113,10 +113,16 @@ export async function processTrigger(payload: TriggerPayload): Promise<ActionRes
   }
 
   // After all done, set Trigger on table back to NULL (or Error)
-  DBConnect.resetTrigger(table, record_id, actionFailed !== '')
+  await DBConnect.resetTrigger(table, record_id, actionFailed !== '')
   // and set is_active = false if scheduled action
   if (table === 'trigger_schedule' && actionFailed === '')
-    DBConnect.setScheduledActionDone(table, record_id)
+    await DBConnect.setScheduledActionDone(table, record_id)
+  // and set trigger_queue status to "COMPLETED"
+  if (trigger_id)
+    await DBConnect.updateTriggerQueueStatus({
+      status: actionFailed ? TriggerQueueStatus.Error : TriggerQueueStatus.Completed,
+      id: trigger_id,
+    })
 
   // Return value only used by Previews endpoint
   return actionOutputs
