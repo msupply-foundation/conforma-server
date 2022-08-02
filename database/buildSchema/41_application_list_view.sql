@@ -13,8 +13,6 @@ CREATE TABLE application_list_shape (
     "status" public.application_status,
     outcome public.application_outcome,
     last_active_date timestamptz,
-    applicant_deadline timestamptz,
-    -- TO-DO: reviewer_deadline
     assigners varchar[],
     reviewers varchar[],
     reviewer_action public.reviewer_action,
@@ -23,7 +21,9 @@ CREATE TABLE application_list_shape (
     -- assigned_questions_level_1 bigint,
     total_questions bigint,
     total_assigned bigint,
-    total_assign_locked bigint
+    total_assign_locked bigint,
+    applicant_deadline timestamptz
+    -- TO-DO: reviewer_deadline
 );
 
 CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
@@ -42,7 +42,6 @@ CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
         stage_status.status,
         app.outcome,
         status_history_time_created AS last_active_date,
-        ts.time_scheduled AS applicant_deadline,
         assigners,
         reviewers,
         reviewer_action,
@@ -55,7 +54,8 @@ CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
         -- assigned_questions_level_1,
         total_questions,
         total_assigned,
-        total_assign_locked
+        total_assign_locked,
+        ts.time_scheduled AS applicant_deadline
     FROM
         application app
     LEFT JOIN TEMPLATE ON app.template_id = template.id
