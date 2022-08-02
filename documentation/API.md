@@ -26,12 +26,15 @@ The back-end currently has two server instances which are launched to handle inc
     - [Authenticated endpoints](#authenticated-endpoints)
       - [File upload endpoint:](#file-upload-endpoint)
       - [Check unique endpoint](#check-unique-endpoint)
+      - [Create hash](#create-hash)
       - [Login Organisation](#login-organisation)
       - [User Info](#user-info)
       - [User Permissions](#user-permissions)
       - [Check Triggers](#check-triggers)
       - [Generate PDF](#generate-pdf)
     - [Data Views](#data-views)
+    - [Preview Actions](#preview-actions)
+    - [Extend application deadline](#extend-application-deadline)
     - [Admin only endpoints](#admin-only-endpoints)
       - [Update row level policies](#update-row-level-policies)
       - [Run Action](#run-action)
@@ -204,6 +207,31 @@ Request will return an object, structured like so:
 There are basic unit tests for this endpoint. Run:  
 `yarn test src/server.test.ts`
 
+#### Create hash
+
+POST: `/create-hash`
+
+Endpoint to retrieve a [bcrypt](https://www.npmjs.com/package/bcrypt) hash value for a given (password) string. Used by the "Password" form element to hash passwords before saving.
+
+
+##### REQUEST Body:
+
+Note -- password string must be provided in body json rather than query parameters for security reasons (so string is not in plaintext in url)
+
+```JSON
+{
+    "password": "${password}"
+}
+```
+
+##### RESPONSE Body (example):
+
+```JSON
+{
+    "hash": "$2b$10$DkmOA1ODFlghsj49j.QlvuyZO.9uULn2LDqTYv7MdUSnGVCI1h9aC"
+}
+```
+
 #### Login Organisation
 
 POST: `/login-org`
@@ -352,6 +380,13 @@ For displaying custom data (e.g. Users, Products, Orgs). User's JWT determines w
 
 Please see [Data View](Data-View.md) for more info.
 
+### Preview Actions
+
+POST: `/generate-pdf`
+
+
+### Extend application deadline
+
 ---
 
 ### Admin only endpoints
@@ -393,6 +428,8 @@ A json array of new policies:
 POST: `/run-action`
 
 End point to run [Actions](Triggers-and-Actions.md) in isolation. Returns the action's "Output" object.
+
+**Note: this endpoint is intended as a dev tool only and shouldn't be called from the actual codebase.**
 
 **Parameters** (as body JSON):
 
