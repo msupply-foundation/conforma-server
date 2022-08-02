@@ -187,6 +187,40 @@ class PostgresDB {
     }
   }
 
+  public getScheduledEvent = async (applicationId: number, eventCode: string) => {
+    const text = `
+      SELECT * FROM trigger_schedule
+      WHERE application_id = $1
+      AND event_code = $2
+    `
+    try {
+      const result = await this.query({ text, values: [applicationId, eventCode] })
+      return result.rows[0] ?? null
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public updateScheduledEventTime = async (
+    applicationId: number,
+    eventCode: string,
+    newTime: string // ISO string
+  ) => {
+    const text = `
+      UPDATE trigger_schedule
+        SET time_scheduled = $1, is_active = TRUE
+        WHERE application_id = $2
+        AND event_code = $3
+        RETURNING *
+    `
+    try {
+      const result = await this.query({ text, values: [newTime, applicationId, eventCode] })
+      return result.rows[0] ?? null
+    } catch (err) {
+      throw err
+    }
+  }
+
   public triggerScheduledActions = async () => {
     const text = `
       UPDATE trigger_schedule SET trigger = 'ON_SCHEDULE'
@@ -214,6 +248,40 @@ class PostgresDB {
         values: [triggerStatus, record_id],
       })
       return true
+    } catch (err) {
+      throw err
+    }
+  }
+
+  // Normally triggers are added automatically by the database when trigger
+  // fields are set, but we can add them via a function call if we need to, such
+  // as in the "extend-application" endpoint.
+  public addTriggerEvent = async ({
+    trigger,
+    table,
+    recordId,
+    eventCode,
+    data,
+  }: {
+    trigger: Trigger
+    table: string
+    recordId: number
+    eventCode?: string
+    data?: { [key: string]: any }
+  }) => {
+    console.log('eventCode', eventCode)
+    const text = `
+      INSERT INTO trigger_queue
+        (trigger_type, "table", record_id, event_code, data)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING id
+    `
+    try {
+      const result = await this.query({
+        text,
+        values: [trigger, table, recordId, eventCode, data],
+      })
+      return result.rows[0].id
     } catch (err) {
       throw err
     }
@@ -1041,6 +1109,47 @@ class PostgresDB {
     try {
       const result = await this.query({ text, values: [tableName, columnMatches] })
       return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public waitForDatabaseValue = async ({
+    table,
+    column,
+    matchColumn = 'id',
+    matchValue,
+    waitValue,
+    errorValue,
+    refetchInterval = 0.5, // seconds
+    maxAttempts = 20,
+  }: {
+    table: string
+    column: string
+    matchColumn: string
+    matchValue: any
+    waitValue: any
+    errorValue?: any
+    refetchInterval?: number
+    maxAttempts?: number
+  }): Promise<'SUCCESS' | 'ERROR' | 'TIMEOUT'> => {
+    const text = `
+      SELECT ${column} FROM ${table}
+      WHERE ${matchColumn} = $1;
+    `
+    try {
+      for (let i = 0; i < maxAttempts; i++) {
+        const result = await this.query({ text, values: [matchValue] })
+        const value = result.rows[0][column]
+
+        if (value === waitValue) return 'SUCCESS'
+
+        if (errorValue !== undefined && value === errorValue) return 'ERROR'
+
+        await this.query({ text: 'SELECT pg_sleep($1)', values: [refetchInterval] })
+      }
+      return 'TIMEOUT'
     } catch (err) {
       console.log(err.message)
       throw err

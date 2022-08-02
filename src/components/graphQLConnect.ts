@@ -145,6 +145,33 @@ class GraphQLdb {
     )
     return data?.applicationBySerial || null
   }
+
+  public getTemplatePermissionsFromApplication = async (applicationId: number) => {
+    const data = await this.gqlQuery(
+      `
+      query getTemplatePermissions($applicationId: Int!) {
+        application(id: $applicationId) {
+          template {
+            templatePermissions {
+              nodes {
+                permissionName {
+                  name
+                  isSystemOrgPermission
+                  permissionPolicy {
+                    name
+                    type
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `,
+      { applicationId }
+    )
+    return data?.application.template.templatePermissions.nodes || null
+  }
 }
 
 const graphqlDBInstance = GraphQLdb.Instance

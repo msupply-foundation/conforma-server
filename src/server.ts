@@ -24,6 +24,7 @@ import {
   routeRunAction,
   routeGetApplicationData,
   routePreviewActions,
+  routeExtendApplication,
   cleanUpPreviewFiles,
 } from './components/actions'
 import config from './config'
@@ -141,6 +142,7 @@ const startServer = async () => {
     server.get('/data-views/table/:tableName/item/:id', routeDataViewDetail)
     server.get('/check-triggers', routeTriggers)
     server.post('/preview-actions', routePreviewActions)
+    server.post('/extend-application', routeExtendApplication)
 
     // File upload endpoint
     server.post('/upload', async function (request: any, reply) {

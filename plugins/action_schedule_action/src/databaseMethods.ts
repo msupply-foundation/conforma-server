@@ -10,7 +10,7 @@ const databaseMethods = (DBConnect: any) => ({
       INSERT into trigger_schedule (event_code, time_scheduled, application_id, template_id, data)
       VALUES ($1, $2, $3, $4, $5)
       ON CONFLICT (event_code, application_id)
-        DO UPDATE SET time_scheduled = $2
+        DO UPDATE SET time_scheduled = $2, is_active = TRUE
       RETURNING *
     `
     try {

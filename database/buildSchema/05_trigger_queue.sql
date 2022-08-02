@@ -16,6 +16,7 @@ CREATE TYPE public.trigger AS ENUM (
     'ON_VERIFICATION',
     'ON_SCHEDULE',
     'ON_PREVIEW',
+    'ON_EXTEND',
     'DEV_TEST',
     'PROCESSING',
     'ERROR'
@@ -24,7 +25,8 @@ CREATE TYPE public.trigger AS ENUM (
 CREATE TYPE public.trigger_queue_status AS ENUM (
     'TRIGGERED',
     'ACTIONS_DISPATCHED',
-    'ERROR'
+    'ERROR',
+    'COMPLETED'
 );
 
 CREATE TABLE public.trigger_queue (
@@ -34,7 +36,7 @@ CREATE TABLE public.trigger_queue (
     record_id int,
     event_code varchar,
     data jsonb,
-    timestamp timestamptz,
+    timestamp timestamptz DEFAULT CURRENT_TIMESTAMP,
     status public.trigger_queue_status,
     log jsonb
 );

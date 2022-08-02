@@ -391,10 +391,12 @@ const migrateData = async () => {
       ON template_action (code, template_id)
     `)
 
-    console.log(' - Adding new trigger value ON_PREVIEW')
+    console.log(' - Adding new trigger values ON_PREVIEW & ON_EXTEND')
     await DB.changeSchema(`
     ALTER TYPE public.trigger ADD VALUE IF NOT EXISTS
     'ON_PREVIEW' AFTER  'ON_SCHEDULE';
+    ALTER TYPE public.trigger ADD VALUE IF NOT EXISTS
+    'ON_EXTEND' AFTER  'ON_SCHEDULE';
     `)
 
     console.log(
@@ -448,6 +450,12 @@ const migrateData = async () => {
     console.log(' - Adding function to revert outcomes')
 
     await DB.changeSchema(`
+      ALTER TABLE application 
+      ALTER COLUMN outcome
+      SET DEFAULT 'PENDING';
+    `)
+
+    await DB.changeSchema(`
     CREATE OR REPLACE FUNCTION public.outcome_reverted ()
       RETURNS TRIGGER
       AS $application_event$
@@ -476,6 +484,29 @@ const migrateData = async () => {
         FOR EACH ROW
         WHEN (NEW.outcome = 'PENDING' AND OLD.outcome <> 'PENDING')
         EXECUTE FUNCTION public.outcome_reverted ();
+    `)
+
+    console.log(' - Setting default timestamp on trigger_queue')
+
+    await DB.changeSchema(`
+      ALTER TABLE trigger_queue 
+      ALTER COLUMN timestamp
+      SET DEFAULT CURRENT_TIMESTAMP;
+    `)
+
+    console.log(' - Making scheduled time on trigger_schedule non-nullable')
+
+    await DB.changeSchema(`
+      ALTER TABLE trigger_schedule
+      ALTER COLUMN time_scheduled
+      SET NOT NULL;
+    `)
+
+    console.log(' - Adding "COMPLETED" status to trigger_queue enum')
+
+    await DB.changeSchema(`
+      ALTER TYPE public.trigger_queue_status ADD VALUE IF NOT EXISTS
+      'COMPLETED' AFTER  'ERROR';
     `)
   }
 
