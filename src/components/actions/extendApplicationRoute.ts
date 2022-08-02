@@ -1,5 +1,5 @@
 import { combineRequestParams } from '../utilityFunctions'
-import { PermissionPolicyType, Trigger } from '../../generated/graphql'
+import { PermissionPolicyType, Trigger, TriggerQueueStatus } from '../../generated/graphql'
 import { DateTime } from 'luxon'
 import DBConnect from '../databaseConnect'
 import { getPermissionNamesFromJWT } from '../data_display/helpers'
@@ -56,7 +56,7 @@ export const routeExtendApplication = async (request: any, reply: any) => {
 
     // Add trigger event directly to trigger_queue so we can include eventCode
     // and any additional data
-    await DBConnect.addTriggerEvent({
+    const triggerQueueId = await DBConnect.addTriggerEvent({
       trigger: Trigger.OnExtend,
       table: 'application',
       recordId: applicationId,
@@ -64,7 +64,20 @@ export const routeExtendApplication = async (request: any, reply: any) => {
       data,
     })
 
-    return reply.send({ success: true, newDeadline: extensionResult.time_scheduled })
+    const triggerStatus = await DBConnect.waitForDatabaseValue({
+      table: 'trigger_queue',
+      column: 'status',
+      waitValue: TriggerQueueStatus.Completed,
+      errorValue: TriggerQueueStatus.Error,
+      matchColumn: 'id',
+      matchValue: triggerQueueId,
+    })
+
+    return reply.send({
+      success: true,
+      newDeadline: extensionResult.time_scheduled,
+      actionsResult: triggerStatus,
+    })
   } catch (err) {
     return { success: false, message: err.message }
   }

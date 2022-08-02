@@ -450,6 +450,12 @@ const migrateData = async () => {
     console.log(' - Adding function to revert outcomes')
 
     await DB.changeSchema(`
+      ALTER TABLE application 
+      ALTER COLUMN outcome
+      SET DEFAULT 'PENDING';
+    `)
+
+    await DB.changeSchema(`
     CREATE OR REPLACE FUNCTION public.outcome_reverted ()
       RETURNS TRIGGER
       AS $application_event$
@@ -494,6 +500,13 @@ const migrateData = async () => {
       ALTER TABLE trigger_schedule
       ALTER COLUMN time_scheduled
       SET NOT NULL;
+    `)
+
+    console.log(' - Adding "COMPLETED" status to trigger_queue enum')
+
+    await DB.changeSchema(`
+      ALTER TYPE public.trigger_queue_status ADD VALUE IF NOT EXISTS
+      'COMPLETED' AFTER  'ERROR';
     `)
 
     console.log(' - Add "user_id" field to trigger_schedule to track user who made changes')

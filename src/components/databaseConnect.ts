@@ -156,6 +156,8 @@ class DBConnect {
 
   public getApplicationSections = PostgresDB.getApplicationSections
 
+  public waitForDatabaseValue = PostgresDB.waitForDatabaseValue
+
   // GraphQL
 
   public gqlQuery = GraphQLdb.gqlQuery
