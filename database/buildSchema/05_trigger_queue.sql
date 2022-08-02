@@ -25,7 +25,8 @@ CREATE TYPE public.trigger AS ENUM (
 CREATE TYPE public.trigger_queue_status AS ENUM (
     'TRIGGERED',
     'ACTIONS_DISPATCHED',
-    'ERROR'
+    'ERROR',
+    'COMPLETED'
 );
 
 CREATE TABLE public.trigger_queue (
