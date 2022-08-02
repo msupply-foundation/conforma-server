@@ -171,6 +171,7 @@ URL query paramter fields (all optional):
 - `unique_id` (the randomly generated one should normally be sufficient. If this is specifed and the id already exists in the database, the file record will be *updated* with the new file data.)
 - `template_id` (to associate a file with a template, for example a carbone template doc)
 - `subfolder` (files are placed in subfolder based on the application_serial provided, but a specific subfolder can be defined instead (which over-rides the application subfolder))
+- `description` an optional descriptive string for each file. Currently shows up in "Documents" tab of review page, in [Action previews](#preview-actions), and in the application form if `showDescription` is enabled in the `fileUpload` element.
 - `isOutputDoc` specifies that the file is a document associated with the outcome of an application. This is used to determine which documents to display on the "Documents" tab of the review home page.
 - `isInternalReferenceDoc`/`isExternalReferenceDoc` specifies that the document should appear in the front-end menu bar, under "Help" and "Reference" menus respectively. There is an Admin template called "Manage Reference Docs" that can be used by a system manager to manage these documents.
 
