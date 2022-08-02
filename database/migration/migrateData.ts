@@ -450,6 +450,12 @@ const migrateData = async () => {
     console.log(' - Adding function to revert outcomes')
 
     await DB.changeSchema(`
+      ALTER TABLE application 
+      ALTER COLUMN outcome
+      SET DEFAULT 'PENDING';
+    `)
+
+    await DB.changeSchema(`
     CREATE OR REPLACE FUNCTION public.outcome_reverted ()
       RETURNS TRIGGER
       AS $application_event$
