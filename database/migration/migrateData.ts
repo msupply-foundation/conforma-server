@@ -505,9 +505,39 @@ const migrateData = async () => {
 
     console.log(' - Adding applicant_deadline to application_list')
 
+    // We need to drop and re-create the application_list_shape table so the
+    // column order gets preserved, otherwise the subsequent application_list
+    // function will fail
     await DB.changeSchema(`
-      ALTER TABLE application_list_shape
-      ADD COLUMN IF NOT EXISTS applicant_deadline timestamptz;
+      DROP TABLE IF EXISTS application_list_shape CASCADE;
+    `)
+
+    await DB.changeSchema(`
+      CREATE TABLE application_list_shape (
+        id int,
+        "serial" varchar,
+        "name" varchar,
+        template_code varchar,
+        template_name varchar,
+        applicant varchar,
+        org_name varchar,
+        stage varchar,
+        stage_colour varchar,
+        "status" public.application_status,
+        outcome public.application_outcome,
+        last_active_date timestamptz,
+        applicant_deadline timestamptz,
+        -- TO-DO: reviewer_deadline
+        assigners varchar[],
+        reviewers varchar[],
+        reviewer_action public.reviewer_action,
+        assigner_action public.assigner_action,
+        -- is_fully_assigned_level_1 boolean,
+        -- assigned_questions_level_1 bigint,
+        total_questions bigint,
+        total_assigned bigint,
+        total_assign_locked bigint
+    );
     `)
 
     await DB.changeSchema(`
