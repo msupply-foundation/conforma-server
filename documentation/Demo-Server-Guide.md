@@ -81,7 +81,7 @@ _To see the actual Docker commands that are constructued, please inspect the fil
 - SSH login to server:
   ```bash
   export KEY_LOC='/Users/<you>/Documents/private/conformakey.pem' (or your local location)
-  sudo ssh -i $KEY_LOC ubuntu@irims-demo.msupply.org
+  sudo ssh -i $KEY_LOC ubuntu@conforma-demo.msupply.org
   ```
 - Alternatively, log in to any specific country server
 - View a list of currently running images:  
