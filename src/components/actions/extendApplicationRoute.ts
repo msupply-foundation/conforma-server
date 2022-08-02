@@ -3,7 +3,6 @@ import { PermissionPolicyType, Trigger, TriggerQueueStatus } from '../../generat
 import { DateTime } from 'luxon'
 import DBConnect from '../databaseConnect'
 import { getPermissionNamesFromJWT } from '../data_display/helpers'
-import { getTokenData } from '../permissions/loginHelpers'
 
 export const routeExtendApplication = async (request: any, reply: any) => {
   const { applicationId, eventCode, extensionTime, data } = combineRequestParams(request, 'camel')
