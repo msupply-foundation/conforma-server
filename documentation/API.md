@@ -382,7 +382,60 @@ Please see [Data View](Data-View.md) for more info.
 
 ### Preview Actions
 
-POST: `/generate-pdf`
+POST: `/preview-actions`
+
+Allows template actions for a particular application to be run without actually being triggered by the normal [trigger/action process](Triggers-and-Actions.md). Used by the "Preview Decision" UI for reviewers where they can see what outputs (correspondence/documents) will be sent to the applicant as a result of their decision, but without actually sending anything out.
+
+In order to be preview-able, template actions must be specifically configured to respond to the "ON_PREVIEW" trigger. Usually, these will be done with [Aliased actions](List-of-Action-plugins.md#aliasing-existing-template-actions), which point to the "real" actions, but with some of their parameters overriden. For example, for previewing an email (sendNotification) action, we would preview it with the "sendEmail" parameter set to `false` so it will generate the email text but not actually send it out yet.
+
+See examples in the core/demo templates for how to configure action previews.
+
+##### REQUEST parameters:
+
+- `applicationId`
+- `reviewId` (one of either `applicationId` or `reviewId` must be provided)
+- `applicationDataOverride` an object containing data to override the generated applicationData. For example, when simulating a decision, we would override the `reviewData.latestDecision.decision` field with the hypothetical decision value and then the action would be "previewed" as though that were the actual applicationData it uses.
+
+
+##### RESPONSE Body (example):
+
+```JSON
+{
+    "displayData": [
+        {
+            "type": "NOTIFICATION",
+            "status": "SUCCESS",
+            "displayString": "Congratulations, application S-UUR-0001 has been approved",
+            "text": "## Your product registration license ...",
+            "errorLog": null
+        }
+    ],
+    "actionsOutput": [
+        {
+            "action": "sendNotification",
+            "status": "SUCCESS",
+            "output": {
+                "notification": {
+                    "id": 2,
+                    "user_id": 9,
+                    "application_id": 239,
+                    "review_id": 3,
+                    "email_recipients": "carl@msupply.foundation",
+                    "subject": "Congratulations, application S-UUR-0001 has been approved",
+                    "message": "## Your product registration license ...",
+                    "attachments": [],
+                    "email_sent": false,
+                    "is_read": false
+                }
+            },
+            "errorLog": null
+        }
+    ]
+}
+```
+
+`displayData` is used by the front-end to present the Preview results in the UI. `actionsOutput` contains the raw output of each action that ran.
+
 
 
 ### Extend application deadline
