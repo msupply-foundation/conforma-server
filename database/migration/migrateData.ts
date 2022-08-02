@@ -527,14 +527,14 @@ const migrateData = async () => {
           stage_status.status,
           app.outcome,
           status_history_time_created AS last_active_date,
-          ts.time_scheduled AS applicant_deadline,
           assigners,
           reviewers,
           reviewer_action,
           assigner_action,
           total_questions,
           total_assigned,
-          total_assign_locked
+          total_assign_locked,
+          ts.time_scheduled AS applicant_deadline
       FROM
           application app
       LEFT JOIN TEMPLATE ON app.template_id = template.id
