@@ -444,6 +444,39 @@ const migrateData = async () => {
         ADD COLUMN IF NOT EXISTS is_reviewable public.is_reviewable_status DEFAULT NULL;
         `)
     // TO-DO: Add "review_required" column for optional reviews
+
+    console.log(' - Adding function to revert outcomes')
+
+    await DB.changeSchema(`
+    CREATE OR REPLACE FUNCTION public.outcome_reverted ()
+      RETURNS TRIGGER
+      AS $application_event$
+    BEGIN
+      UPDATE public.application
+      SET is_active = TRUE
+      WHERE id = NEW.id;
+
+      INSERT INTO public.application_status_history (application_stage_history_id, status)
+          VALUES ((SELECT id FROM application_stage_history
+                  WHERE application_id = NEW.id AND is_current = TRUE),
+                  (SELECT status FROM application_status_history
+                    WHERE time_created = (SELECT MAX(time_created)
+                              FROM application_status_history
+                              WHERE is_current = FALSE AND application_id = NEW.id)));
+      RETURN NULL;
+    END;
+      $application_event$
+      LANGUAGE plpgsql;
+    `)
+
+    await DB.changeSchema(`
+      DROP TRIGGER IF EXISTS outcome_revert_trigger ON application;
+      CREATE TRIGGER outcome_revert_trigger
+        AFTER UPDATE OF outcome ON public.application
+        FOR EACH ROW
+        WHEN (NEW.outcome = 'PENDING' AND OLD.outcome <> 'PENDING')
+        EXECUTE FUNCTION public.outcome_reverted ();
+    `)
   }
 
   // Other version migrations continue here...
