@@ -171,6 +171,8 @@ URL query paramter fields (all optional):
 - `unique_id` (the randomly generated one should normally be sufficient. If this is specifed and the id already exists in the database, the file record will be *updated* with the new file data.)
 - `template_id` (to associate a file with a template, for example a carbone template doc)
 - `subfolder` (files are placed in subfolder based on the application_serial provided, but a specific subfolder can be defined instead (which over-rides the application subfolder))
+- `isOutputDoc` specifies that the file is a document associated with the outcome of an application. This is used to determine which documents to display on the "Documents" tab of the review home page.
+- `isInternalReferenceDoc`/`isExternalReferenceDoc` specifies that the document should appear in the front-end menu bar, under "Help" and "Reference" menus respectively. There is an Admin template called "Manage Reference Docs" that can be used by a system manager to manage these documents.
 
 e.g. `/upload?user=2&application_serial=3`
 
@@ -439,6 +441,28 @@ See examples in the core/demo templates for how to configure action previews.
 
 
 ### Extend application deadline
+
+POST: `/extend-application`
+
+Endpoint for extending a deadline associated with an application. Currently, the main use case is for extending an applicant deadline for responding to a request for changes (event code: `applicantDeadline`), but in theory could be used for extending other types of deadlines as well.
+
+It works by finding an event in the `trigger_schedule` table with matching `applicationId` and `eventCode` and then extending the `time_scheduled` by the specified amount. It also simulates a trigger `ON_EXTEND` which can be used to trigger other events in the application (such as resetting the outcome from "EXPIRED" back to "PENING" for example).
+
+##### REQUEST parameters:
+
+- `applicationId`
+- `eventCode` -- value in `trigger_schedule` to match. For applicant deadlines we are currently using the hard-coded value `applicantDeadline` to match in the front-end UI. This event code is also passed along with the "ON_EXTEND" trigger to use to match to actions. 
+- `extensionTime` -- a length of time: either a number (which will be interpreted as days), or a [Luxon duration object](https://moment.github.io/luxon/api-docs/index.html#duration). If the current deadline has already expired, this extension time will be added to the current time. If it's not already expired, it'll be added to the current `time_scheduled`.
+- `data` -- any additional data that will be passed along as part of the simulated trigger's `data` field
+
+##### RESPONSE body (example):
+
+```JSON
+{
+    "success": true,
+    "newDeadline": "2027-07-19T22:18:04.992Z"
+}
+```
 
 ---
 
