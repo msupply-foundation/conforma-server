@@ -9,6 +9,7 @@
   - [Change Status](#change-status)
   - [Modify Record](#modify-record)
     - [How the record is built](#how-the-record-is-built)
+  - [Modify Multiple Records](#modify-multiple-records)
   - [Generate Text String](#generate-text-string)
     - [Parameters summary](#parameters-summary)
   - [Join User to Organsation](#join-user-to-organsation)
@@ -218,6 +219,28 @@ It is recommended to use the `data` parameter object when possible. The standalo
 - fields with a value of `null` will be omitted from the database update, so any current values will remain unchanged.
 - you can create/update an record without creating/updating the JOIN table by explicitly setting `shouldCreateJoinTable: false`
 - the data type of each field is set the first time a record is added with that field in it, so subsequent insertions/updates *must* match the data type for that field.
+
+---
+
+### Modify Multiple Records
+
+- Allows creating or updating *multiple* database records. It basically just calls the above `modifyRecord` action multiple times.
+
+- _Action Code:_ **`modifyMultipleRecords`**
+
+| Input parameters<br />(\*required) <br/>       | Output properties      |
+| ---------------------------------------------- | ---------------------- |
+| `tableName`                                    | `records: [<results>]` |
+| `matchField`                                   |                        |
+| `matchValue`                                   |                        |
+| `shouldCreateJoinTable` (default `true`)       |                        |
+| `data` (shorthand for multiple fields at once) |                        |
+| `records`\*                                    |                        |
+
+Most of these parameters are the same as for `modifyRecord`. The `records` parameter is an array of records, structured similarly. Each record can have its own `tableName`, `matchField`, etc. within it, but if they're all going to be the same, then global values can be used. Parameters within each record will take priority over the global ones.
+
+The output `records` property is an array of results, each structured as per a single `modifyRecord` output.
+
 
 ---
 
