@@ -27,6 +27,8 @@ export const routeExtendApplication = async (request: any, reply: any) => {
 
   if (!hasPermission) return reply.send({ success: false, message: 'Unauthorized' })
 
+  const { userId } = request.auth
+
   try {
     const event = await DBConnect.getScheduledEvent(applicationId, eventCode)
     if (!event) return reply.send({ success: false, message: 'No matching event found' })
@@ -47,7 +49,8 @@ export const routeExtendApplication = async (request: any, reply: any) => {
     const extensionResult = await DBConnect.updateScheduledEventTime(
       applicationId,
       eventCode,
-      scheduledTime
+      scheduledTime,
+      userId
     )
 
     // Add trigger event directly to trigger_queue so we can include eventCode

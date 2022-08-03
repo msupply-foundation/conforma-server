@@ -509,11 +509,48 @@ const migrateData = async () => {
       'COMPLETED' AFTER  'ERROR';
     `)
 
-    console.log(' - Adding applicant_deadline to application_list')
+    console.log(' - Add "user_id" field to trigger_schedule to track user who made changes')
 
     await DB.changeSchema(`
-      ALTER TABLE application_list_shape
-      ADD COLUMN IF NOT EXISTS applicant_deadline timestamptz;
+      ALTER TABLE trigger_schedule
+      ADD COLUMN editor_user_id integer REFERENCES public.user (id) ON DELETE CASCADE;
+    `)
+
+    console.log(' - Adding applicant_deadline to application_list')
+
+    // We need to drop and re-create the application_list_shape table so the
+    // column order gets preserved, otherwise the subsequent application_list
+    // function will fail
+    await DB.changeSchema(`
+      DROP TABLE IF EXISTS application_list_shape CASCADE;
+    `)
+
+    await DB.changeSchema(`
+      CREATE TABLE application_list_shape (
+        id int,
+        "serial" varchar,
+        "name" varchar,
+        template_code varchar,
+        template_name varchar,
+        applicant varchar,
+        org_name varchar,
+        stage varchar,
+        stage_colour varchar,
+        "status" public.application_status,
+        outcome public.application_outcome,
+        last_active_date timestamptz,
+        applicant_deadline timestamptz,
+        -- TO-DO: reviewer_deadline
+        assigners varchar[],
+        reviewers varchar[],
+        reviewer_action public.reviewer_action,
+        assigner_action public.assigner_action,
+        -- is_fully_assigned_level_1 boolean,
+        -- assigned_questions_level_1 bigint,
+        total_questions bigint,
+        total_assigned bigint,
+        total_assign_locked bigint
+    );
     `)
 
     await DB.changeSchema(`
@@ -564,6 +601,36 @@ const migrateData = async () => {
     execSync(
       `psql -U postgres -d tmf_app_manager -c "COMMENT ON FUNCTION application_list (userid int) IS E'@sortable';"`
     )
+
+    console.log(' - Updating activity_log functions')
+
+    await DB.changeSchema(`
+      ALTER TYPE public.event_type ADD VALUE IF NOT EXISTS
+      'EXTENSION' AFTER 'OUTCOME';
+    `)
+    // Scheduled event (deadline) changes
+    await DB.changeSchema(`
+      CREATE OR REPLACE FUNCTION public.deadline_extension_activity_log ()
+      RETURNS TRIGGER
+      AS $application_event$
+      BEGIN
+          INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
+              VALUES ('EXTENSION', NEW.event_code, NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('newDeadline', NEW.time_scheduled, 'extendedBy', json_build_object('userId', NEW.editor_user_id, 'name', (
+                SELECT full_name FROM "user"
+                WHERE id = NEW.editor_user_id))));
+          RETURN NULL;
+      END;
+      $application_event$
+      LANGUAGE plpgsql;
+
+      DROP TRIGGER IF EXISTS deadline_extension_activity_trigger ON public.application;
+
+      CREATE TRIGGER deadline_extension_activity_trigger
+          AFTER UPDATE ON public.trigger_schedule
+          FOR EACH ROW
+          WHEN (NEW.time_scheduled > OLD.time_scheduled AND NEW.event_code = 'applicantDeadline' AND NEW.editor_user_id IS NOT NULL)
+          EXECUTE FUNCTION deadline_extension_activity_log ();
+    `)
   }
 
   // Other version migrations continue here...

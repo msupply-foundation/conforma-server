@@ -7,6 +7,7 @@ CREATE TABLE public.trigger_schedule (
     template_id integer REFERENCES public.template (id) ON DELETE CASCADE,
     data jsonb,
     is_active boolean DEFAULT TRUE,
+    editor_user_id integer REFERENCES public.user (id) ON DELETE CASCADE,
     TRIGGER public.trigger
 );
 

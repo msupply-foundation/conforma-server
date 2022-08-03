@@ -204,17 +204,18 @@ class PostgresDB {
   public updateScheduledEventTime = async (
     applicationId: number,
     eventCode: string,
-    newTime: string // ISO string
+    newTime: string, // ISO string
+    userId: number
   ) => {
     const text = `
       UPDATE trigger_schedule
-        SET time_scheduled = $1, is_active = TRUE
-        WHERE application_id = $2
-        AND event_code = $3
+        SET time_scheduled = $1, is_active = TRUE, editor_user_id = $2
+        WHERE application_id = $3
+        AND event_code = $4
         RETURNING *
     `
     try {
-      const result = await this.query({ text, values: [newTime, applicationId, eventCode] })
+      const result = await this.query({ text, values: [newTime, userId, applicationId, eventCode] })
       return result.rows[0] ?? null
     } catch (err) {
       throw err
