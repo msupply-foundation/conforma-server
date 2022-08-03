@@ -628,7 +628,7 @@ const migrateData = async () => {
       CREATE TRIGGER deadline_extension_activity_trigger
           AFTER UPDATE ON public.trigger_schedule
           FOR EACH ROW
-          WHEN (NEW.time_scheduled > OLD.time_scheduled AND NEW.event_code = 'applicantDeadline')
+          WHEN (NEW.time_scheduled > OLD.time_scheduled AND NEW.event_code = 'applicantDeadline' AND NEW.editor_user_id IS NOT NULL)
           EXECUTE FUNCTION deadline_extension_activity_log ();
     `)
   }
