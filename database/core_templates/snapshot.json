@@ -1073,6 +1073,12 @@
    "name": "version",
    "timestamp": "2022-06-28T17:47:48.480302+12:00",
    "value": "0.3.0"
+  },
+  {
+   "id": 6,
+   "name": "version",
+   "timestamp": "2022-08-05T14:55:38.468024+12:00",
+   "value": "0.3.1"
   }
  ],
  "templateCategory": [
