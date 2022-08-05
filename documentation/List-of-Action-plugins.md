@@ -236,10 +236,25 @@ It is recommended to use the `data` parameter object when possible. The standalo
 | `shouldCreateJoinTable` (default `true`)       |                        |
 | `data` (shorthand for multiple fields at once) |                        |
 | `records`\*                                    |                        |
+| `keyMap`                                       |                        |
 
 Most of these parameters are the same as for `modifyRecord`. The `records` parameter is an array of records, structured similarly. Each record can have its own `tableName`, `matchField`, etc. within it, but if they're all going to be the same, then global values can be used. Parameters within each record will take priority over the global ones.
 
 The output `records` property is an array of results, each structured as per a single `modifyRecord` output.
+
+The `keyMap` property is used if the `records` have field names different from what you need the database field to be named. You provide an object which maps record field names to database field names -- the `keys` are the names of the fields in the database, and the `values` are the record fields that get mapped to them. 
+
+For example:
+
+```
+{
+  name: "entered_name",
+  age: "entered_age"
+}
+```
+This will look for fields `entered_name` and `entered_age` on the incoming records and insert the associated values in to database fields `name` and `age`, respectively.
+
+Note that when a `keyMap` is present, *only* the fields explicitly named in the map will be inserted into the database; all other fields in the records will be ignored. By default, *all* record fields are inserted into the database, so if you want to only include a subset, you can just provide a `keyMap` of the fields you want to keep mapped to themselves. For example if you have a record `{name: "John", age: 28, isStaff: true}` but you only want to write the `name` field to the database, just provide `keyMap: {name: "name"}`.
 
 
 ---
