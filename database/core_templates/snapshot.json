@@ -7544,6 +7544,7 @@
    "index": 0,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "text": "Please update your user information"
    },
@@ -7578,6 +7579,7 @@
    "index": 1,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "First Name"
    },
@@ -7625,6 +7627,7 @@
    "index": 2,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Last Name"
    },
@@ -7659,6 +7662,7 @@
    "index": 3,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Select a username"
    },
@@ -7743,6 +7747,7 @@
    "index": 4,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Email"
    },
@@ -7775,6 +7780,7 @@
    "index": 5,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "type": "toggle",
     "label": "Do you wish to change your password?",
@@ -7800,6 +7806,7 @@
    "index": 6,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Current Password",
     "placeholder": "Current password",
@@ -7869,6 +7876,7 @@
    "index": 7,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "New Password",
     "description": "Please select a new password",
@@ -7919,6 +7927,7 @@
    "index": 10,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "style": "basic",
     "title": "## Welcome to IRIMS Application Manager"
@@ -7941,6 +7950,7 @@
    "index": 20,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "First Name"
    },
@@ -7962,6 +7972,7 @@
    "index": 30,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Last Name"
    },
@@ -7983,6 +7994,7 @@
    "index": 40,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Select a username",
     "description": "You can use 3 or more letters, numbers and - . _ or @"
@@ -8056,6 +8068,7 @@
    "index": 50,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Email"
    },
@@ -8088,6 +8101,7 @@
    "index": 60,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Password",
     "maskedInput": true,
@@ -8126,6 +8140,7 @@
    "index": 10,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "style": "info",
     "title": "## Organisation details"
@@ -8148,6 +8163,7 @@
    "index": 20,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "What is the name of your organisation?"
    },
@@ -8197,6 +8213,7 @@
    "index": 30,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Please enter your organisation registration code"
    },
@@ -8248,6 +8265,7 @@
    "index": 40,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Organisation **physical** address"
    },
@@ -8269,6 +8287,7 @@
    "index": 50,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Is the organisation **postal** address *different* to the physical address?",
     "checkboxes": [
@@ -8297,6 +8316,7 @@
    "index": 60,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Organisation **postal** address",
     "description": "*Note: in the current schema only one address value is actually saved to the database. This is just for demonstration purposes.*"
@@ -8330,6 +8350,7 @@
    "index": 70,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": null,
    "sectionId": 11,
    "templateCode": "OrgRegistration",
@@ -8349,6 +8370,7 @@
    "index": 80,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Upload a logo for your organisation",
     "description": "File must be an image type (.jpg, .jpeg, .png, .gif, .svg) and less than 5MB",
@@ -8380,6 +8402,7 @@
    "index": 90,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "What is your organisation's primary activity",
     "options": [
@@ -8406,6 +8429,7 @@
    "index": 10,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "text": {
      "children": [
@@ -8451,6 +8475,7 @@
    "index": 20,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "url": {
      "children": [
@@ -8491,6 +8516,7 @@
    "index": 30,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Please provide proof of your organisation registration",
     "description": "Allowed formats: .pdf, .doc, .jpg, .png",
@@ -8523,6 +8549,7 @@
    "index": 40,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Please provide any other documentation pertinent to your organisation's activities",
     "description": "Allowed formats: .pdf, .doc, .jpg, .png",
@@ -8554,6 +8581,7 @@
    "index": 0,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "style": "basic",
     "title": {
@@ -8587,6 +8615,7 @@
    "index": 1,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Please select the organisation you wish to join",
     "search": true,
@@ -8619,6 +8648,7 @@
    "index": 2,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Reason for joining",
     "description": "Please provide a brief summary of your relationship to this organisation"
@@ -8641,6 +8671,7 @@
    "index": 3,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": null,
    "sectionId": 13,
    "templateCode": "OrgJoin",
@@ -8660,6 +8691,7 @@
    "index": 4,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "style": "basic",
     "title": "### Documentation"
@@ -8682,6 +8714,7 @@
    "index": 5,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Please provide photo ID",
     "description": "Please upload a copy of your photo ID. Must be in **image** or **PDF** format and under 5MB.",
@@ -8712,6 +8745,7 @@
    "index": 6,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Please upload additional documentation",
     "description": "If necessary, please provide additional documentation showing your relationship to this organisation.\nYou can upload more than one file if necessary, with same restrictions as above.",
@@ -8742,6 +8776,7 @@
    "index": 0,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "First Name"
    },
@@ -8763,6 +8798,7 @@
    "index": 1,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": {
      "children": [
@@ -8828,6 +8864,7 @@
    "index": 2,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "text": {
      "children": [
@@ -8888,6 +8925,7 @@
    "index": 3,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Description",
     "lines": 8,
@@ -8923,6 +8961,7 @@
    "index": 4,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Password",
     "placeholder": "Password must be at least 8 chars long",
@@ -8961,6 +9000,7 @@
    "index": 5,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": null,
    "sectionId": 14,
    "templateCode": "Demo",
@@ -8980,6 +9020,7 @@
    "index": 6,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "text": "Shows other selectors as a result of your **selection** which can be **dynamically defined**",
     "title": "### This page demonstrates selectors options"
@@ -9002,6 +9043,7 @@
    "index": 7,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Organisation Type",
     "options": [
@@ -9032,6 +9074,7 @@
    "index": 8,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Select Manufacturer",
     "options": [
@@ -9072,6 +9115,7 @@
    "index": 9,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Select Distributor",
     "options": [
@@ -9112,6 +9156,7 @@
    "index": 10,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Select Importer",
     "options": [
@@ -9152,6 +9197,7 @@
    "index": 12,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": null,
    "sectionId": 14,
    "templateCode": "Demo",
@@ -9171,6 +9217,7 @@
    "index": 13,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "This Radio button group has no default",
     "options": [
@@ -9199,6 +9246,7 @@
    "index": 14,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Select an organisation (GraphQL query)",
     "options": {
@@ -9230,6 +9278,7 @@
    "index": 15,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": null,
    "sectionId": 14,
    "templateCode": "Demo",
@@ -9249,6 +9298,7 @@
    "index": 16,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "text": "Different types and settings for Checkbox plugin",
     "style": "basic",
@@ -9272,6 +9322,7 @@
    "index": 17,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "This is a single checkbox",
     "checkboxes": [
@@ -9296,6 +9347,7 @@
    "index": 18,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Three checkboxes, one pre-selected",
     "checkboxes": [
@@ -9326,6 +9378,7 @@
    "index": 19,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "type": "toggle",
     "label": "Behold! a **toggle** switch:",
@@ -9351,6 +9404,7 @@
    "index": 20,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "title": {
      "children": [
@@ -9396,6 +9450,7 @@
    "index": 21,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "type": "slider",
     "label": "And a couple of **sliders**:",
@@ -9430,6 +9485,7 @@
    "index": 22,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "text": {
      "children": [
@@ -9482,6 +9538,7 @@
    "index": 23,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Lotsa boxes",
     "layout": "inline",
@@ -9519,6 +9576,7 @@
    "index": 24,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": null,
    "sectionId": 14,
    "templateCode": "Demo",
@@ -9538,6 +9596,7 @@
    "index": 25,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "API Lookup: Choose a name from this list",
     "search": true,
@@ -9575,6 +9634,7 @@
    "index": 26,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Enter 'magicword' to see a text box"
    },
@@ -9596,6 +9656,7 @@
    "index": 27,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "text": {
      "children": [
@@ -9649,6 +9710,7 @@
    "index": 28,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "text": "A text info box can be presented in a number of **styles**.\n\n*Please select one below*",
     "style": {
@@ -9677,6 +9739,7 @@
    "index": 29,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Select a style",
     "default": "none",
@@ -9710,6 +9773,7 @@
    "index": 100,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "text": "A demonstration of the File Upload plugin",
     "style": "info",
@@ -9733,6 +9797,7 @@
    "index": 101,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Please upload your documentation",
     "description": "You can provide multiple files.  \nFiles must be **image** files or **PDF** and under 5MB.",
@@ -9762,6 +9827,7 @@
    "index": 102,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": null,
    "sectionId": 15,
    "templateCode": "Demo",
@@ -9781,6 +9847,7 @@
    "index": 103,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Please add some more files",
     "description": {
@@ -9816,6 +9883,7 @@
    "index": 104,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": null,
    "sectionId": 15,
    "templateCode": "Demo",
@@ -9835,6 +9903,7 @@
    "index": 105,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Please upload an image file to display",
     "description": "Only 1 file allowed, must be an image type (.jpg, .jpeg, .png, .gif, .svg) and less than 5MB",
@@ -9866,6 +9935,7 @@
    "index": 106,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "url": {
      "children": [
@@ -9927,6 +9997,7 @@
    "index": 107,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Select image size",
     "default": 3,
@@ -9970,6 +10041,7 @@
    "index": 108,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Select image alignment",
     "default": 1,
@@ -10008,6 +10080,7 @@
    "index": 3,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "text": "List items can be displayed in **Card** or **Table** form",
     "style": "info",
@@ -10031,6 +10104,7 @@
    "index": 4,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Ingredients list",
     "modalText": "## Ingredient item \n\nPlease enter details for **one** ingredient",
@@ -10148,6 +10222,7 @@
    "index": 5,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Display style for Ingredients list",
     "default": "cards",
@@ -10175,6 +10250,7 @@
    "index": 6,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": null,
    "sectionId": 16,
    "templateCode": "Demo",
@@ -10194,6 +10270,7 @@
    "index": 7,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "icon": "user",
     "label": "Search for users",
@@ -10239,6 +10316,7 @@
    "index": 8,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "icon": "world",
     "label": "Search for countries",
@@ -10286,6 +10364,7 @@
    "index": 9,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "icon": "pills",
     "label": "Lookup mSupply Universal Codes",
@@ -10337,6 +10416,7 @@
    "index": 11,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "icon": "building",
     "label": "Search for an organisation",
@@ -10379,6 +10459,7 @@
    "index": 10,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "style": "basic",
     "title": "## Organisation details"
@@ -10401,6 +10482,7 @@
    "index": 20,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "What is the name of your organisation?"
    },
@@ -10450,6 +10532,7 @@
    "index": 30,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Please enter your organisation registration code"
    },
@@ -10501,6 +10584,7 @@
    "index": 40,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Organisation **physical** address"
    },
@@ -10522,6 +10606,7 @@
    "index": 50,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Is the organisation **postal** address *different* to the physical address?",
     "checkboxes": [
@@ -10550,6 +10635,7 @@
    "index": 60,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Organisation **postal** address",
     "description": "*Note: in the current schema only one address value is actually saved to the database. This is just for demonstration purposes.*"
@@ -10583,6 +10669,7 @@
    "index": 70,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": null,
    "sectionId": 17,
    "templateCode": "CoreActions",
@@ -10602,6 +10689,7 @@
    "index": 80,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Upload a logo for your organisation",
     "description": "File must be an image type (.jpg, .jpeg, .png, .gif, .svg) and less than 5MB",
@@ -10633,6 +10721,7 @@
    "index": 90,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "What is your organisation's primary activity",
     "options": [
@@ -10659,6 +10748,7 @@
    "index": 10,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "text": {
      "children": [
@@ -10704,6 +10794,7 @@
    "index": 20,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "url": {
      "children": [
@@ -10744,6 +10835,7 @@
    "index": 30,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Please provide proof of your organisation registration",
     "description": "Allowed formats: .pdf, .doc, .jpg, .png",
@@ -10776,6 +10868,7 @@
    "index": 40,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "label": "Please provide any other documentation pertinent to your organisation's activities",
     "description": "Allowed formats: .pdf, .doc, .jpg, .png",
@@ -10807,6 +10900,7 @@
    "index": 10,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "style": "success",
     "title": "### Password reset request"
@@ -10841,6 +10935,7 @@
     "operator": "="
    },
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Please enter your username"
    },
@@ -10896,6 +10991,7 @@
    "index": 41,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "New password",
     "maskedInput": true,
@@ -10946,6 +11042,7 @@
    "index": 1,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "icon": "user",
     "label": "User",
@@ -10996,6 +11093,7 @@
    "index": 3,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Permissions",
     "checkboxes": {
@@ -11026,6 +11124,7 @@
    "index": 2,
    "isEditable": true,
    "isRequired": false,
+   "isReviewable": null,
    "parameters": {
     "icon": "building",
     "label": "Organisation",
@@ -11074,6 +11173,7 @@
    "index": 1,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "icon": "user",
     "label": "User",
@@ -11124,6 +11224,7 @@
    "index": 2,
    "isEditable": true,
    "isRequired": true,
+   "isReviewable": null,
    "parameters": {
     "label": "Select an organisation to add user to",
     "search": true,
@@ -12420,6 +12521,8 @@
    "description": null,
    "filePath": "fda_CylhAzxRhSX_QjtArq3bi.png",
    "id": 3,
+   "isExternalReferenceDoc": false,
+   "isInternalReferenceDoc": false,
    "isOutputDoc": false,
    "mimetype": null,
    "originalFilename": "fda.png",
@@ -12438,6 +12541,8 @@
    "description": null,
    "filePath": "logos/conforma_logo_wide_white_1024_6t0oVIzvHe45VyVk4NiMO.png",
    "id": 4,
+   "isExternalReferenceDoc": false,
+   "isInternalReferenceDoc": false,
    "isOutputDoc": false,
    "mimetype": "image/png",
    "originalFilename": "conforma_logo_wide_white_1024.png",
@@ -12456,6 +12561,8 @@
    "description": null,
    "filePath": "logos/conforma_logo_wide_1024_FatzcVDjgxuAcdwQf1h_u.png",
    "id": 5,
+   "isExternalReferenceDoc": false,
+   "isInternalReferenceDoc": false,
    "isOutputDoc": false,
    "mimetype": "image/png",
    "originalFilename": "conforma_logo_wide_1024.png",

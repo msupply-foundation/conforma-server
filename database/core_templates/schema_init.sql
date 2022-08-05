@@ -116,6 +116,7 @@ CREATE TYPE public.trigger AS ENUM (
     'ON_VERIFICATION',
     'ON_SCHEDULE',
     'ON_PREVIEW',
+    'ON_EXTEND',
     'DEV_TEST',
     'PROCESSING',
     'ERROR'
@@ -124,7 +125,8 @@ CREATE TYPE public.trigger AS ENUM (
 CREATE TYPE public.trigger_queue_status AS ENUM (
     'TRIGGERED',
     'ACTIONS_DISPATCHED',
-    'ERROR'
+    'ERROR',
+    'COMPLETED'
 );
 
 CREATE TABLE public.trigger_queue (
@@ -134,7 +136,7 @@ CREATE TABLE public.trigger_queue (
     record_id int,
     event_code varchar,
     data jsonb,
-    timestamp timestamptz,
+    timestamp timestamptz DEFAULT CURRENT_TIMESTAMP,
     status public.trigger_queue_status,
     log jsonb
 );
@@ -462,6 +464,11 @@ CREATE TYPE public.template_element_category AS ENUM (
     'INFORMATION'
 );
 
+CREATE TYPE public.is_reviewable_status AS ENUM (
+    'ALWAYS',
+    'NEVER'
+);
+
 -- FUNCTION to return template_code for current element/section
 CREATE OR REPLACE FUNCTION public.get_template_code (section_id int)
     RETURNS varchar
@@ -510,6 +517,8 @@ CREATE TABLE public.template_element (
     validation_message varchar,
     help_text varchar,
     parameters jsonb,
+    is_reviewable public.is_reviewable_status DEFAULT NULL,
+    -- review_required boolean NOT NULL DEFAULT TRUE,
     template_code varchar GENERATED ALWAYS AS (public.get_template_code (section_id)) STORED,
     template_version integer GENERATED ALWAYS AS (public.get_template_version (section_id)) STORED,
     UNIQUE (template_code, code, template_version)
@@ -557,7 +566,7 @@ CREATE TABLE public.application (
     session_id varchar,
     serial varchar UNIQUE,
     name varchar,
-    outcome public.application_outcome,
+    outcome public.application_outcome DEFAULT 'PENDING',
     is_active bool,
     is_config bool DEFAULT FALSE,
     TRIGGER public.trigger
@@ -596,6 +605,52 @@ CREATE TRIGGER outcome_trigger
     FOR EACH ROW
     WHEN (OLD.outcome = 'PENDING' AND NEW.outcome <> 'PENDING')
     EXECUTE FUNCTION public.outcome_changed ();
+
+--FUNCTION to revert application status/active when OUTCOME is changed back to PENDING
+CREATE OR REPLACE FUNCTION public.outcome_reverted ()
+    RETURNS TRIGGER
+    AS $application_event$
+BEGIN
+    UPDATE
+        public.application
+    SET
+        is_active = TRUE
+    WHERE
+        id = NEW.id;
+    INSERT INTO public.application_status_history (application_stage_history_id, status)
+        VALUES ((
+                SELECT
+                    id
+                FROM
+                    application_stage_history
+                WHERE
+                    application_id = NEW.id
+                    AND is_current = TRUE),
+                (
+                    SELECT
+                        status
+                    FROM
+                        application_status_history
+                    WHERE
+                        time_created = (
+                            SELECT
+                                MAX(time_created)
+                            FROM
+                                application_status_history
+                            WHERE
+                                is_current = FALSE
+                                AND application_id = NEW.id)));
+    RETURN NULL;
+END;
+$application_event$
+LANGUAGE plpgsql;
+
+--TRIGGER to run above function when outcome is updated
+CREATE TRIGGER outcome_revert_trigger
+    AFTER UPDATE OF outcome ON public.application
+    FOR EACH ROW
+    WHEN (NEW.outcome = 'PENDING' AND OLD.outcome <> 'PENDING')
+    EXECUTE FUNCTION public.outcome_reverted ();
 
 -- application_note (for internal comments)
 CREATE TABLE public.application_note (
@@ -969,11 +1024,12 @@ STABLE;
 CREATE TABLE public.trigger_schedule (
     id serial PRIMARY KEY,
     event_code varchar,
-    time_scheduled timestamptz,
+    time_scheduled timestamptz NOT NULL,
     application_id integer REFERENCES public.application (id) ON DELETE CASCADE NOT NULL,
     template_id integer REFERENCES public.template (id) ON DELETE CASCADE,
     data jsonb,
     is_active boolean DEFAULT TRUE,
+    editor_user_id integer REFERENCES public.user (id) ON DELETE CASCADE,
     TRIGGER public.trigger
 );
 
@@ -1554,6 +1610,8 @@ CREATE TABLE public.file (
     description varchar,
     application_note_id integer REFERENCES public.application_note (id) ON DELETE CASCADE,
     is_output_doc boolean DEFAULT FALSE NOT NULL,
+    is_internal_reference_doc boolean DEFAULT FALSE NOT NULL,
+    is_external_reference_doc boolean DEFAULT FALSE NOT NULL,
     to_be_deleted boolean DEFAULT FALSE NOT NULL,
     file_path varchar NOT NULL,
     thumbnail_path varchar,
@@ -1562,7 +1620,7 @@ CREATE TABLE public.file (
     timestamp timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- Function to Notify server of File deletion
+-- Function to Notify server of File record deletion
 CREATE OR REPLACE FUNCTION public.notify_file_server ()
     RETURNS TRIGGER
     AS $trigger_event$
@@ -1579,6 +1637,29 @@ CREATE TRIGGER file_deletion
     AFTER DELETE ON public.file
     FOR EACH ROW
     EXECUTE FUNCTION public.notify_file_server ();
+
+-- FUNCTION to mark file for deletion if it's no longer a reference doc
+CREATE OR REPLACE FUNCTION public.mark_file_for_deletion ()
+    RETURNS TRIGGER
+    AS $file_event$
+BEGIN
+    UPDATE
+        public.file
+    SET
+        to_be_deleted = TRUE
+    WHERE
+        id = NEW.id;
+    RETURN NULL;
+END;
+$file_event$
+LANGUAGE plpgsql;
+
+-- TRIGGER to execute above function when files no longer reference
+CREATE TRIGGER file_no_longer_reference
+    AFTER UPDATE ON public.file
+    FOR EACH ROW
+    WHEN (NEW.is_external_reference_doc = FALSE AND NEW.is_internal_reference_doc = FALSE AND (OLD.is_external_reference_doc = TRUE OR OLD.is_internal_reference_doc = TRUE))
+    EXECUTE FUNCTION public.mark_file_for_deletion ();
 
 -- notification
 CREATE TABLE public.notification (
@@ -1776,6 +1857,8 @@ CREATE TABLE application_list_shape (
     "status" public.application_status,
     outcome public.application_outcome,
     last_active_date timestamptz,
+    applicant_deadline timestamptz,
+    -- TO-DO: reviewer_deadline
     assigners varchar[],
     reviewers varchar[],
     reviewer_action public.reviewer_action,
@@ -1787,7 +1870,7 @@ CREATE TABLE application_list_shape (
     total_assign_locked bigint
 );
 
-CREATE FUNCTION application_list (userid int DEFAULT 0)
+CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
     RETURNS SETOF application_list_shape
     AS $$
     SELECT
@@ -1803,6 +1886,7 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
         stage_status.status,
         app.outcome,
         status_history_time_created AS last_active_date,
+        ts.time_scheduled AS applicant_deadline,
         assigners,
         reviewers,
         reviewer_action,
@@ -1825,6 +1909,9 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
     LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
     LEFT JOIN review_list (stage_status.stage_id, $1) ON app.id = review_list.application_id
     LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
+    LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
+        AND ts.is_active = TRUE
+        AND ts.event_code = 'applicantDeadline'
 WHERE
     app.is_config = FALSE
 $$
@@ -1961,6 +2048,7 @@ CREATE TYPE public.event_type AS ENUM (
     'STAGE',
     'STATUS',
     'OUTCOME',
+    'EXTENSION',
     'ASSIGNMENT',
     'REVIEW',
     'REVIEW_DECISION',
@@ -2081,6 +2169,31 @@ CREATE TRIGGER outcome_update_activity_trigger
     FOR EACH ROW
     WHEN (NEW.outcome <> OLD.outcome)
     EXECUTE FUNCTION outcome_activity_log ();
+
+-- SCHEDULED EVENT (Deadline) changes
+CREATE OR REPLACE FUNCTION public.deadline_extension_activity_log ()
+    RETURNS TRIGGER
+    AS $application_event$
+BEGIN
+    INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
+        VALUES ('EXTENSION', NEW.event_code, NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('newDeadline', NEW.time_scheduled, 'extendedBy', json_build_object('userId', NEW.editor_user_id, 'name', (
+                        SELECT
+                            full_name
+                        FROM "user"
+                        WHERE
+                            id = NEW.editor_user_id))));
+    RETURN NULL;
+END;
+$application_event$
+LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS deadline_extension_activity_trigger ON public.application;
+
+CREATE TRIGGER deadline_extension_activity_trigger
+    AFTER UPDATE ON public.trigger_schedule
+    FOR EACH ROW
+    WHEN (NEW.time_scheduled > OLD.time_scheduled AND NEW.event_code = 'applicantDeadline' AND NEW.editor_user_id IS NOT NULL)
+    EXECUTE FUNCTION deadline_extension_activity_log ();
 
 -- ASSIGNMENT changes
 CREATE OR REPLACE FUNCTION public.assignment_activity_log ()
