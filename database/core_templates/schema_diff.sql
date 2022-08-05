@@ -1,7 +1,45 @@
 /***********************************************/
 /*** SCRIPT AUTHOR: conforma-server          ***/
-/***    CREATED ON: 2022-08-05T02:25:35.405Z ***/
+/***    CREATED ON: 2022-08-05T02:33:28.520Z ***/
 /***********************************************/
+
+--- BEGIN ALTER TABLE "public"."organisation" ---
+
+ALTER TABLE IF EXISTS "public"."organisation" ADD COLUMN IF NOT EXISTS "registration_documentation" jsonb NULL  ;
+
+--- END ALTER TABLE "public"."organisation" ---
+
+--- BEGIN ALTER TABLE "public"."data_view" ---
+
+ALTER TABLE IF EXISTS "public"."data_view" ADD CONSTRAINT "outcome_display_table_name_code_key" UNIQUE (table_name, code);
+
+ALTER TABLE IF EXISTS "public"."data_view" ADD CONSTRAINT "outcome_display_pkey" PRIMARY KEY (id);
+
+ALTER TABLE IF EXISTS "public"."data_view" DROP CONSTRAINT IF EXISTS "data_view_pkey";
+
+ALTER TABLE IF EXISTS "public"."data_view" DROP CONSTRAINT IF EXISTS "data_view_table_name_code_key";
+
+CREATE UNIQUE INDEX outcome_display_table_name_code_key ON public.data_view USING btree (table_name, code);
+
+DROP INDEX IF EXISTS data_view_table_name_code_key;
+
+--- END ALTER TABLE "public"."data_view" ---
+
+--- BEGIN ALTER TABLE "public"."data_view_column_definition" ---
+
+ALTER TABLE IF EXISTS "public"."data_view_column_definition" ADD CONSTRAINT "outcome_display_column_definition_table_name_column_name_key" UNIQUE (table_name, column_name);
+
+ALTER TABLE IF EXISTS "public"."data_view_column_definition" ADD CONSTRAINT "outcome_display_column_definition_pkey" PRIMARY KEY (id);
+
+ALTER TABLE IF EXISTS "public"."data_view_column_definition" DROP CONSTRAINT IF EXISTS "data_view_column_definition_pkey";
+
+ALTER TABLE IF EXISTS "public"."data_view_column_definition" DROP CONSTRAINT IF EXISTS "data_view_column_definition_table_name_column_name_key";
+
+CREATE UNIQUE INDEX outcome_display_column_definition_table_name_column_name_key ON public.data_view_column_definition USING btree (table_name, column_name);
+
+DROP INDEX IF EXISTS data_view_column_definition_table_name_column_name_key;
+
+--- END ALTER TABLE "public"."data_view_column_definition" ---
 
 --- BEGIN CREATE TABLE "public"."organisation_application_join" ---
 
@@ -34,44 +72,6 @@ ALTER TABLE IF EXISTS "public"."user_application_join" OWNER TO postgres;
 
 
 --- END CREATE TABLE "public"."user_application_join" ---
-
---- BEGIN ALTER TABLE "public"."organisation" ---
-
-ALTER TABLE IF EXISTS "public"."organisation" ADD COLUMN IF NOT EXISTS "registration_documentation" jsonb NULL  ;
-
---- END ALTER TABLE "public"."organisation" ---
-
---- BEGIN ALTER TABLE "public"."data_view" ---
-
-ALTER TABLE IF EXISTS "public"."data_view" ADD CONSTRAINT "outcome_display_pkey" PRIMARY KEY (id);
-
-ALTER TABLE IF EXISTS "public"."data_view" ADD CONSTRAINT "outcome_display_table_name_code_key" UNIQUE (table_name, code);
-
-ALTER TABLE IF EXISTS "public"."data_view" DROP CONSTRAINT IF EXISTS "data_view_pkey";
-
-ALTER TABLE IF EXISTS "public"."data_view" DROP CONSTRAINT IF EXISTS "data_view_table_name_code_key";
-
-CREATE UNIQUE INDEX outcome_display_table_name_code_key ON public.data_view USING btree (table_name, code);
-
-DROP INDEX IF EXISTS data_view_table_name_code_key;
-
---- END ALTER TABLE "public"."data_view" ---
-
---- BEGIN ALTER TABLE "public"."data_view_column_definition" ---
-
-ALTER TABLE IF EXISTS "public"."data_view_column_definition" ADD CONSTRAINT "outcome_display_column_definition_pkey" PRIMARY KEY (id);
-
-ALTER TABLE IF EXISTS "public"."data_view_column_definition" ADD CONSTRAINT "outcome_display_column_definition_table_name_column_name_key" UNIQUE (table_name, column_name);
-
-ALTER TABLE IF EXISTS "public"."data_view_column_definition" DROP CONSTRAINT IF EXISTS "data_view_column_definition_pkey";
-
-ALTER TABLE IF EXISTS "public"."data_view_column_definition" DROP CONSTRAINT IF EXISTS "data_view_column_definition_table_name_column_name_key";
-
-CREATE UNIQUE INDEX outcome_display_column_definition_table_name_column_name_key ON public.data_view_column_definition USING btree (table_name, column_name);
-
-DROP INDEX IF EXISTS data_view_column_definition_table_name_column_name_key;
-
---- END ALTER TABLE "public"."data_view_column_definition" ---
 
 --- BEGIN ALTER FUNCTION "public"."empty_assigned_sections" ---
 
@@ -160,6 +160,75 @@ AS $function$
 ALTER FUNCTION "public"."notify_trigger_queue"() OWNER TO postgres;
 
 --- END ALTER FUNCTION "public"."notify_trigger_queue" ---
+
+--- BEGIN ALTER FUNCTION "public"."mark_file_for_deletion" ---
+
+DROP FUNCTION IF EXISTS "public"."mark_file_for_deletion"();
+
+CREATE OR REPLACE FUNCTION public.mark_file_for_deletion()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+    BEGIN
+        UPDATE public.file
+        SET to_be_deleted = TRUE
+        WHERE id = NEW.id;
+        RETURN NULL;
+    END;
+    $function$
+;
+ALTER FUNCTION "public"."mark_file_for_deletion"() OWNER TO postgres;
+
+--- END ALTER FUNCTION "public"."mark_file_for_deletion" ---
+
+--- BEGIN ALTER FUNCTION "public"."outcome_reverted" ---
+
+DROP FUNCTION IF EXISTS "public"."outcome_reverted"();
+
+CREATE OR REPLACE FUNCTION public.outcome_reverted()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+    BEGIN
+      UPDATE public.application
+      SET is_active = TRUE
+      WHERE id = NEW.id;
+
+      INSERT INTO public.application_status_history (application_stage_history_id, status)
+          VALUES ((SELECT id FROM application_stage_history
+                  WHERE application_id = NEW.id AND is_current = TRUE),
+                  (SELECT status FROM application_status_history
+                    WHERE time_created = (SELECT MAX(time_created)
+                              FROM application_status_history
+                              WHERE is_current = FALSE AND application_id = NEW.id)));
+      RETURN NULL;
+    END;
+      $function$
+;
+ALTER FUNCTION "public"."outcome_reverted"() OWNER TO postgres;
+
+--- END ALTER FUNCTION "public"."outcome_reverted" ---
+
+--- BEGIN ALTER FUNCTION "public"."deadline_extension_activity_log" ---
+
+DROP FUNCTION IF EXISTS "public"."deadline_extension_activity_log"();
+
+CREATE OR REPLACE FUNCTION public.deadline_extension_activity_log()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+      BEGIN
+          INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
+              VALUES ('EXTENSION', NEW.event_code, NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('newDeadline', NEW.time_scheduled, 'extendedBy', json_build_object('userId', NEW.editor_user_id, 'name', (
+                SELECT full_name FROM "user"
+                WHERE id = NEW.editor_user_id))));
+          RETURN NULL;
+      END;
+      $function$
+;
+ALTER FUNCTION "public"."deadline_extension_activity_log"() OWNER TO postgres;
+
+--- END ALTER FUNCTION "public"."deadline_extension_activity_log" ---
 
 --- BEGIN ALTER FUNCTION "public"."review_list" ---
 
@@ -294,54 +363,6 @@ ALTER FUNCTION "public"."submitted_assigned_questions_count"(integer, integer, i
 
 --- END ALTER FUNCTION "public"."submitted_assigned_questions_count" ---
 
---- BEGIN ALTER FUNCTION "public"."mark_file_for_deletion" ---
-
-DROP FUNCTION IF EXISTS "public"."mark_file_for_deletion"();
-
-CREATE OR REPLACE FUNCTION public.mark_file_for_deletion()
- RETURNS trigger
- LANGUAGE plpgsql
-AS $function$
-    BEGIN
-        UPDATE public.file
-        SET to_be_deleted = TRUE
-        WHERE id = NEW.id;
-        RETURN NULL;
-    END;
-    $function$
-;
-ALTER FUNCTION "public"."mark_file_for_deletion"() OWNER TO postgres;
-
---- END ALTER FUNCTION "public"."mark_file_for_deletion" ---
-
---- BEGIN ALTER FUNCTION "public"."outcome_reverted" ---
-
-DROP FUNCTION IF EXISTS "public"."outcome_reverted"();
-
-CREATE OR REPLACE FUNCTION public.outcome_reverted()
- RETURNS trigger
- LANGUAGE plpgsql
-AS $function$
-    BEGIN
-      UPDATE public.application
-      SET is_active = TRUE
-      WHERE id = NEW.id;
-
-      INSERT INTO public.application_status_history (application_stage_history_id, status)
-          VALUES ((SELECT id FROM application_stage_history
-                  WHERE application_id = NEW.id AND is_current = TRUE),
-                  (SELECT status FROM application_status_history
-                    WHERE time_created = (SELECT MAX(time_created)
-                              FROM application_status_history
-                              WHERE is_current = FALSE AND application_id = NEW.id)));
-      RETURN NULL;
-    END;
-      $function$
-;
-ALTER FUNCTION "public"."outcome_reverted"() OWNER TO postgres;
-
---- END ALTER FUNCTION "public"."outcome_reverted" ---
-
 --- BEGIN ALTER FUNCTION "public"."application_list" ---
 
 DROP FUNCTION IF EXISTS "public"."application_list"(integer);
@@ -392,23 +413,32 @@ ALTER FUNCTION "public"."application_list"(integer) OWNER TO postgres;
 
 --- END ALTER FUNCTION "public"."application_list" ---
 
---- BEGIN ALTER FUNCTION "public"."deadline_extension_activity_log" ---
+--- BEGIN CREATE SEQUENCE "public"."organisation_application_join_id_seq" ---
 
-DROP FUNCTION IF EXISTS "public"."deadline_extension_activity_log"();
 
-CREATE OR REPLACE FUNCTION public.deadline_extension_activity_log()
- RETURNS trigger
- LANGUAGE plpgsql
-AS $function$
-      BEGIN
-          INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
-              VALUES ('EXTENSION', NEW.event_code, NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('newDeadline', NEW.time_scheduled, 'extendedBy', json_build_object('userId', NEW.editor_user_id, 'name', (
-                SELECT full_name FROM "user"
-                WHERE id = NEW.editor_user_id))));
-          RETURN NULL;
-      END;
-      $function$
-;
-ALTER FUNCTION "public"."deadline_extension_activity_log"() OWNER TO postgres;
+CREATE SEQUENCE IF NOT EXISTS "public"."organisation_application_join_id_seq" 
+	INCREMENT BY 1 
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 1
+	NO CYCLE;
 
---- END ALTER FUNCTION "public"."deadline_extension_activity_log" ---
+ALTER SEQUENCE "public"."organisation_application_join_id_seq" OWNER TO postgres;
+
+--- END CREATE SEQUENCE "public"."organisation_application_join_id_seq" ---
+
+--- BEGIN CREATE SEQUENCE "public"."user_application_join_id_seq" ---
+
+
+CREATE SEQUENCE IF NOT EXISTS "public"."user_application_join_id_seq" 
+	INCREMENT BY 1 
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 1
+	NO CYCLE;
+
+ALTER SEQUENCE "public"."user_application_join_id_seq" OWNER TO postgres;
+
+--- END CREATE SEQUENCE "public"."user_application_join_id_seq" ---

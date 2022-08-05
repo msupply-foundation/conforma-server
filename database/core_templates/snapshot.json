@@ -214,7 +214,7 @@
     "<other record fields>"
    ],
    "outputProperties": [
-    "[record]"
+    "<tableName>"
    ],
    "path": "../plugins/action_modify_record/src/index.ts",
    "requiredParameters": [
@@ -375,6 +375,26 @@
    "path": "../plugins/action_alias/src/index.ts",
    "requiredParameters": [
     "code"
+   ]
+  },
+  {
+   "code": "modifyMultipleRecords",
+   "description": "Inserts or updates multiple database records",
+   "id": 22,
+   "name": "Modify Multiple Records",
+   "optionalParameters": [
+    "tableName",
+    "matchField",
+    "matchValue",
+    "shouldCreateJoinTable",
+    "<other record fields>"
+   ],
+   "outputProperties": [
+    "records"
+   ],
+   "path": "../plugins/action_modify_multiple_records/src/index.ts",
+   "requiredParameters": [
+    "records"
    ]
   }
  ],
