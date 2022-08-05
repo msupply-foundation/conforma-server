@@ -5902,24 +5902,24 @@ pg-connection-string@^2.0.0, pg-connection-string@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/pg-connection-string/-/pg-connection-string-2.4.0.tgz#c979922eb47832999a204da5dbe1ebf2341b6a10"
 
-pg-diff-api@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/pg-diff-api/-/pg-diff-api-1.1.0.tgz#3cd2bc4e485eed7b9f354a34a66497dd3907a1e8"
-  integrity sha512-ccGjcYuwSdWywzZ6y2kkzOA+OBKpDqv4K7P15IA9CskvIYbhfbXKEXKb/m+0/ZPmxX/QqC0fJfM69bsNewHWFw==
+pg-diff-api@1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/pg-diff-api/-/pg-diff-api-1.4.1.tgz#31df5a5edb935cf426448f903c6d43e333343838"
+  integrity sha512-OWkQnHecIWEePezcYO36F+GknUDtj7QaYkqXtG8dscxm1L7FEyyGAMmYUvZU8x8XKM8ePvicr5pE9J6W9jJjLA==
   dependencies:
     deep-equal "2.0.5"
     line-by-line "0.1.6"
     pg "8.5.1"
 
-pg-diff-cli@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/pg-diff-cli/-/pg-diff-cli-2.1.0.tgz#ec7794d6c060f752d2f575e3028a6fb36cc50df2"
-  integrity sha512-WnxPDiJBq/p6WJwsFkTXAS7S9Xl6FA4NGbdrqg/LNGNJEUMVIoA8JMGGtwQA2wXVMTfe4abw6BOCzaE6Ab2bGQ==
+pg-diff-cli@^2.4.0:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/pg-diff-cli/-/pg-diff-cli-2.4.1.tgz#1edca59a7152588af3795f5cae9c66eb2677da94"
+  integrity sha512-O00TH5dYygz5Ksm35zLG0nwYCY41IfaoHKfEfCM1TxwlvWYZ3EdVbq7GLogtEbpGRnaApqP7mGHdgtHEe9TLfg==
   dependencies:
     chalk "4.1.0"
     clui "0.3.6"
     figlet "1.5.0"
-    pg-diff-api "1.1.0"
+    pg-diff-api "1.4.1"
 
 pg-int8@1.0.1:
   version "1.0.1"
