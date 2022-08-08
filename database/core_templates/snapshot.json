@@ -1079,6 +1079,12 @@
    "name": "version",
    "timestamp": "2022-08-05T14:55:38.468024+12:00",
    "value": "0.3.1"
+  },
+  {
+   "id": 7,
+   "name": "version",
+   "timestamp": "2022-08-09T09:04:03.365202+12:00",
+   "value": "0.4.0"
   }
  ],
  "templateCategory": [
@@ -1166,91 +1172,91 @@
  ],
  "permissionName": [
   {
-   "description": "Permission for internal user be allowed to access areas for System admin settings",
+   "description": "Internal user to be allowed to access areas for System admin settings",
    "id": 1,
    "isSystemOrgPermission": true,
    "name": "admin",
    "permissionPolicyId": 8
   },
   {
-   "description": "Permission for external user to apply for User registration template",
+   "description": "External user to be allowed applying for User registration template (public)",
    "id": 2,
    "isSystemOrgPermission": false,
    "name": "applyUserRegistration",
    "permissionPolicyId": 1
   },
   {
-   "description": "Permission for external user to apply for User edit template",
+   "description": "External user to be allowed applying for User edit template (registed users)",
    "id": 3,
    "isSystemOrgPermission": false,
    "name": "applyUserEdit",
    "permissionPolicyId": 2
   },
   {
-   "description": "Permission for external user to apply to various types of templates",
+   "description": "External user to be allowed applying to general types of templates",
    "id": 4,
    "isSystemOrgPermission": false,
    "name": "applyGeneral",
    "permissionPolicyId": 2
   },
   {
-   "description": "Permission for internal user to review Organisation registration templates",
+   "description": "Internal user to be allowed reviewing Organisation registration templates",
    "id": 5,
    "isSystemOrgPermission": true,
    "name": "reviewOrgRego",
    "permissionPolicyId": 5
   },
   {
-   "description": "Permission for internal user to review User joining Organisation templates",
+   "description": "Internal user to be allowed reviewing User join Organisation templates",
    "id": 6,
    "isSystemOrgPermission": true,
    "name": "reviewJoinOrg",
    "permissionPolicyId": 4
   },
   {
-   "description": "Permission for internal user to assign reviewers for various types of templates",
+   "description": "Internal user to be allowed assigning reviewers to general types of templates",
    "id": 7,
    "isSystemOrgPermission": true,
    "name": "assignGeneral",
    "permissionPolicyId": 7
   },
   {
-   "description": "Permission for internal user to review various types of templates",
+   "description": "Internal user to be allowed reviewing general types of templates",
    "id": 8,
    "isSystemOrgPermission": true,
    "name": "reviewGeneral",
    "permissionPolicyId": 5
   },
   {
-   "description": "Permission for internal user to review on stage Screening various types of templates",
+   "description": "Internal user to be allowed reviewing stage 1 on general types of templates",
    "id": 9,
    "isSystemOrgPermission": true,
    "name": "reviewScreening",
    "permissionPolicyId": 5
   },
   {
-   "description": "Permission for internal user to review on stage Assessment only Section 1 of various types of templates",
+   "description": "Internal user to be allowed reviewing stage 2 - only section 1 - on general types of templates",
    "id": 10,
    "isSystemOrgPermission": true,
    "name": "reviewAssessmentSection1Level1",
    "permissionPolicyId": 5
   },
   {
-   "description": "Permission for internal user to review on stage Assessment only Section 2 of various types of templates",
+   "description": "Internal user to be allowed reviewing stage 2 - only section 2 - on general types of templates",
    "id": 11,
    "isSystemOrgPermission": true,
    "name": "reviewAssessmentSection2Level1",
    "permissionPolicyId": 5
   },
   {
-   "description": "Permission for internal user to consolidate on stage Assessment of various types of templates",
+   "description": "Internal user to be allowed consolidating stage 2 on general types of templates",
    "id": 12,
    "isSystemOrgPermission": true,
    "name": "reviewAssessmentLevel2",
    "permissionPolicyId": 5
   },
   {
-   "description": "Permission for internal user to make a decision on stage Final Decision of various types of templates",
+   "description": "Internal user to be allowed making a final decision on last stage of general types of templates",
    "id": 13,
    "isSystemOrgPermission": true,
    "name": "reviewFinalDecision",
