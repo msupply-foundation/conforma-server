@@ -16581,6 +16581,7 @@ export type QueryApplicationListArgs = {
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ApplicationListShapesOrderBy>>;
   filter?: Maybe<ApplicationListShapeFilter>;
 };
 
