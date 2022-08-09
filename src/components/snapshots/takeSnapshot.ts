@@ -65,7 +65,7 @@ const takeSnapshot: SnapshotOperation = async ({
 
     if (options.shouldReInitialise) await getSchemaDiff(newSnapshotFolder)
 
-    await copyFiles(newSnapshotFolder, snapshotObject.file)
+    await copyFiles(newSnapshotFolder, snapshotObject.file ?? [], options)
 
     // Copy localisation
     if (options?.includeLocalisation)
@@ -165,11 +165,15 @@ const getSchemaDiff = async (newSnapshotFolder: string) => {
   console.log('creating schema diff ... done ')
 }
 
-const copyFiles = async (newSnapshotFolder: string, fileRecords: ObjectRecord[] = []) => {
+const copyFiles = async (
+  newSnapshotFolder: string,
+  fileRecords: ObjectRecord[],
+  options: ExportAndImportOptions
+) => {
   // copy only files that associated with exported file records and base filed in files directory (thumbnails)
   const filePaths = fileRecords.map((fileRecord) => fileRecord.filePath)
   filePaths.push(...fileRecords.map((fileRecord) => fileRecord.thumbnailPath))
-  const baseFilePaths = await getBaseFiles(FILES_FOLDER)
+  const baseFilePaths = options.resetFiles ? await getBaseFiles(FILES_FOLDER) : []
 
   for (const filePath of [...filePaths, ...baseFilePaths]) {
     try {
