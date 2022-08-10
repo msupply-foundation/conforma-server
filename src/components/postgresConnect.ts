@@ -660,9 +660,9 @@ class PostgresDB {
     table: string,
     field: string,
     value: string,
-    caseInSensitive: boolean
+    caseInsensitive: boolean
   ): Promise<boolean> => {
-    const text = caseInSensitive
+    const text = caseInsensitive
       ? `SELECT COUNT(*) FROM "${table}" WHERE LOWER(${field}) = LOWER($1)`
       : `SELECT COUNT(*) FROM "${table}" WHERE ${field} = $1`
     try {
