@@ -663,8 +663,8 @@ class PostgresDB {
     caseSensitive: boolean
   ): Promise<boolean> => {
     const text = caseSensitive
-      ? `SELECT COUNT(*) FROM "${table}" WHERE(${field}) =($1)`
-      : `SELECT COUNT(*) FROM "${table}" WHERE LOWER(${field}) = LOWER($1)`
+      ? `SELECT COUNT(*) FROM "${table}" WHERE LOWER(${field}) = LOWER($1)`
+      : `SELECT COUNT(*) FROM "${table}" WHERE ${field} = $1`
     try {
       const result = await this.query({ text, values: [value] })
       return !Boolean(Number(result.rows[0].count))
