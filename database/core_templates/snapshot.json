@@ -432,7 +432,7 @@
   {
    "id": 7,
    "name": "PasswordReset",
-   "value": 106
+   "value": 108
   },
   {
    "id": 8,
@@ -824,8 +824,7 @@
    "isSystemOrg": true,
    "logoUrl": "/file?uid=CylhAzxRhSX_QjtArq3bi",
    "name": "Food and Drug Authority",
-   "registration": "fda",
-   "registrationDocumentation": null
+   "registration": "fda"
   }
  ],
  "permissionPolicy": [
@@ -1091,6 +1090,12 @@
    "name": "version",
    "timestamp": "2022-08-09T11:52:09.531658+12:00",
    "value": "0.4.0"
+  },
+  {
+   "id": 9,
+   "name": "version",
+   "timestamp": "2022-08-11T10:10:05.334676+12:00",
+   "value": "0.4.2-0"
   }
  ],
  "templateCategory": [
@@ -1579,6 +1584,32 @@
    "templateId": 13,
    "trigger": null,
    "userId": 2
+  },
+  {
+   "id": 18,
+   "isActive": true,
+   "isConfig": false,
+   "name": "Reset Password - 0106",
+   "orgId": null,
+   "outcome": "PENDING",
+   "serial": "3jHSayW8nGJb1yjQlWKCIWis",
+   "sessionId": "oD3wTEt3AkljPFtP",
+   "templateId": 11,
+   "trigger": null,
+   "userId": 1
+  },
+  {
+   "id": 19,
+   "isActive": true,
+   "isConfig": false,
+   "name": "Reset Password - 0107",
+   "orgId": null,
+   "outcome": "PENDING",
+   "serial": "DMvXoQQWe5Uhkb6ukmrhBOID",
+   "sessionId": "Eu2RD6_X5XMtTVrM",
+   "templateId": 11,
+   "trigger": null,
+   "userId": 1
   }
  ],
  "permissionJoin": [
@@ -7503,7 +7534,90 @@
    "title": "Automatic"
   }
  ],
- "activityLog": [],
+ "activityLog": [
+  {
+   "applicationId": 18,
+   "details": {
+    "outcome": "PENDING"
+   },
+   "id": 2,
+   "recordId": 18,
+   "table": "application",
+   "timestamp": "2022-08-11T10:13:08.263223+12:00",
+   "type": "OUTCOME",
+   "value": "PENDING"
+  },
+  {
+   "applicationId": 18,
+   "details": {
+    "stage": {
+     "name": "Check Username",
+     "colour": "#1E14DB",
+     "number": 1
+    }
+   },
+   "id": 3,
+   "recordId": 17,
+   "table": "application_stage_history",
+   "timestamp": "2022-08-11T10:13:08.437572+12:00",
+   "type": "STAGE",
+   "value": "Check Username"
+  },
+  {
+   "applicationId": 18,
+   "details": {
+    "status": "DRAFT",
+    "prevStatus": null
+   },
+   "id": 4,
+   "recordId": 17,
+   "table": "application_status_history",
+   "timestamp": "2022-08-11T10:13:08.440729+12:00",
+   "type": "STATUS",
+   "value": "DRAFT"
+  },
+  {
+   "applicationId": 19,
+   "details": {
+    "outcome": "PENDING"
+   },
+   "id": 5,
+   "recordId": 19,
+   "table": "application",
+   "timestamp": "2022-08-11T10:15:21.574247+12:00",
+   "type": "OUTCOME",
+   "value": "PENDING"
+  },
+  {
+   "applicationId": 19,
+   "details": {
+    "stage": {
+     "name": "Check Username",
+     "colour": "#1E14DB",
+     "number": 1
+    }
+   },
+   "id": 6,
+   "recordId": 18,
+   "table": "application_stage_history",
+   "timestamp": "2022-08-11T10:15:21.714024+12:00",
+   "type": "STAGE",
+   "value": "Check Username"
+  },
+  {
+   "applicationId": 19,
+   "details": {
+    "status": "DRAFT",
+    "prevStatus": null
+   },
+   "id": 7,
+   "recordId": 18,
+   "table": "application_status_history",
+   "timestamp": "2022-08-11T10:15:21.717953+12:00",
+   "type": "STATUS",
+   "value": "DRAFT"
+  }
+ ],
  "applicationNote": [],
  "applicationStageHistory": [
   {
@@ -7568,9 +7682,22 @@
    "isCurrent": true,
    "stageId": 18,
    "timeCreated": "2021-10-04T10:57:52.368001+13:00"
+  },
+  {
+   "applicationId": 18,
+   "id": 17,
+   "isCurrent": true,
+   "stageId": 15,
+   "timeCreated": "2022-08-11T10:13:08.437572+12:00"
+  },
+  {
+   "applicationId": 19,
+   "id": 18,
+   "isCurrent": true,
+   "stageId": 15,
+   "timeCreated": "2022-08-11T10:15:21.714024+12:00"
   }
  ],
- "organisationApplicationJoin": [],
  "templateElement": [
   {
    "category": "INFORMATION",
@@ -10956,7 +11083,7 @@
    "code": "username",
    "defaultValue": null,
    "elementTypePluginCode": "shortText",
-   "helpText": "",
+   "helpText": null,
    "id": 174,
    "index": 40,
    "isEditable": {
@@ -11000,9 +11127,11 @@
        },
        [
         "type",
+        "caseInsensitive",
         "value"
        ],
        "username",
+       "false",
        {
         "children": [
          "responses.thisResponse"
@@ -11011,12 +11140,12 @@
        },
        "unique"
       ],
-      "operator": "API"
+      "operator": "GET"
      }
     ],
     "operator": "="
    },
-   "validationMessage": "Sorry, this username is not recognised",
+   "validationMessage": "Sorry, this username is not recognised. Ensure capitalisation of username is correct.",
    "visibilityCondition": true
   },
   {
@@ -11338,7 +11467,6 @@
   }
  ],
  "triggerSchedule": [],
- "userApplicationJoin": [],
  "verification": [],
  "applicationResponse": [
   {
@@ -12474,6 +12602,58 @@
    "timeSubmitted": null,
    "timeUpdated": "2021-10-04T10:57:51.893189+13:00",
    "value": ""
+  },
+  {
+   "applicationId": 18,
+   "id": 209,
+   "isValid": false,
+   "stageNumber": 1,
+   "status": "DRAFT",
+   "templateElementId": 174,
+   "timeCreated": "2022-08-11T10:13:08.263223+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2022-08-11T10:15:18.437685+12:00",
+   "value": {
+    "text": "admiN"
+   }
+  },
+  {
+   "applicationId": 18,
+   "id": 210,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 175,
+   "timeCreated": "2022-08-11T10:13:08.263223+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2022-08-11T10:13:08.263223+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 19,
+   "id": 211,
+   "isValid": false,
+   "stageNumber": 1,
+   "status": "DRAFT",
+   "templateElementId": 174,
+   "timeCreated": "2022-08-11T10:15:21.574247+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2022-08-11T10:15:30.010915+12:00",
+   "value": {
+    "text": "adMin"
+   }
+  },
+  {
+   "applicationId": 19,
+   "id": 212,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 175,
+   "timeCreated": "2022-08-11T10:15:21.574247+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2022-08-11T10:15:21.574247+12:00",
+   "value": null
   }
  ],
  "applicationStatusHistory": [
@@ -12548,6 +12728,22 @@
    "isCurrent": true,
    "status": "DRAFT",
    "timeCreated": "2021-10-04T10:57:52.369085+13:00"
+  },
+  {
+   "applicationId": 18,
+   "applicationStageHistoryId": 17,
+   "id": 17,
+   "isCurrent": true,
+   "status": "DRAFT",
+   "timeCreated": "2022-08-11T10:13:08.440729+12:00"
+  },
+  {
+   "applicationId": 19,
+   "applicationStageHistoryId": 18,
+   "id": 18,
+   "isCurrent": true,
+   "status": "DRAFT",
+   "timeCreated": "2022-08-11T10:15:21.717953+12:00"
   }
  ],
  "reviewAssignment": [],
