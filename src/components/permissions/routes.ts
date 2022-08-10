@@ -211,7 +211,7 @@ const routeGetPrefs = async (request: any, reply: any) => {
 
 // Unique name/email/organisation/other check
 const routecheckUnique = async (request: any, reply: any) => {
-  const { type, value, table, field, caseInSensitive } = request.query
+  const { type, value, table, field, caseInsensitive } = request.query
   if (value === '' || value === undefined) {
     reply.send({
       unique: false,
@@ -250,7 +250,7 @@ const routecheckUnique = async (request: any, reply: any) => {
       tableName,
       fieldName,
       value,
-      caseInSensitive == 'false' ? false : true
+      caseInsensitive == 'false' ? false : true
     )
     reply.send({
       unique: isUnique,
