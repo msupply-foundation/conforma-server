@@ -211,7 +211,7 @@ const routeGetPrefs = async (request: any, reply: any) => {
 
 // Unique name/email/organisation/other check
 const routecheckUnique = async (request: any, reply: any) => {
-  const { type, value, table, field } = request.query
+  const { type, value, table, field, caseSensitive } = request.query
   if (value === '' || value === undefined) {
     reply.send({
       unique: false,
@@ -246,7 +246,7 @@ const routecheckUnique = async (request: any, reply: any) => {
       }
   }
   try {
-    const isUnique = await databaseConnect.isUnique(tableName, fieldName, value)
+    const isUnique = await databaseConnect.isUnique(tableName, fieldName, value, caseSensitive=="false"? false : true)
     reply.send({
       unique: isUnique,
       message: '',
