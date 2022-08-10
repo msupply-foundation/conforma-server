@@ -246,7 +246,12 @@ const routecheckUnique = async (request: any, reply: any) => {
       }
   }
   try {
-    const isUnique = await databaseConnect.isUnique(tableName, fieldName, value, caseSensitive=="false"? false : true)
+    const isUnique = await databaseConnect.isUnique(
+      tableName,
+      fieldName,
+      value,
+      caseSensitive == 'false' ? false : true
+    )
     reply.send({
       unique: isUnique,
       message: '',

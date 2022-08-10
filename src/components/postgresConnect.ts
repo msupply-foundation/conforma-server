@@ -656,8 +656,15 @@ class PostgresDB {
     }
   }
 
-  public isUnique = async (table: string, field: string, value: string, caseSensitive:boolean): Promise<boolean> => {
-    const text = caseSensitive?`SELECT COUNT(*) FROM "${table}" WHERE(${field}) =($1)`:`SELECT COUNT(*) FROM "${table}" WHERE LOWER(${field}) = LOWER($1)`
+  public isUnique = async (
+    table: string,
+    field: string,
+    value: string,
+    caseSensitive: boolean
+  ): Promise<boolean> => {
+    const text = caseSensitive
+      ? `SELECT COUNT(*) FROM "${table}" WHERE(${field}) =($1)`
+      : `SELECT COUNT(*) FROM "${table}" WHERE LOWER(${field}) = LOWER($1)`
     try {
       const result = await this.query({ text, values: [value] })
       return !Boolean(Number(result.rows[0].count))
