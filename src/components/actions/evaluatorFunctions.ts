@@ -10,6 +10,14 @@ const generateExpiry = (duration: Duration) => DateTime.now().plus(duration).toJ
 const getYear = (type?: 'short'): string =>
   type === 'short' ? String(new Date().getFullYear()).slice(2) : String(new Date().getFullYear())
 
-const getFormattedDate = (formatString: string) => DateTime.now().toFormat(formatString)
+// Returns ISO date string or JS Date as formatted Date (Luxon). Returns current
+// date if date not supplied
+const getFormattedDate = (formatString: string, date?: string | Date) =>
+  (date
+    ? typeof date === 'string'
+      ? DateTime.fromISO(date)
+      : DateTime.fromJSDate(date)
+    : DateTime.now()
+  ).toFormat(formatString)
 
 export default { generateExpiry, getYear, getFormattedDate }
