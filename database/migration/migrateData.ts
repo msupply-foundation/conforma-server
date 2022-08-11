@@ -633,6 +633,16 @@ const migrateData = async () => {
     `)
   }
 
+  // v0.4.2
+  if (databaseVersionLessThan('0.4.2')) {
+    console.log(' - Adding MANAGEMENT to UI Locations')
+
+    await DB.changeSchema(`
+      ALTER TYPE public.ui_location ADD VALUE IF NOT EXISTS
+      'MANAGEMENT' AFTER 'ADMIN';
+    `)
+  }
+
   // Other version migrations continue here...
 
   // Finally, set the database version to the current version
