@@ -77,7 +77,6 @@ WORKDIR /usr/src/conforma-web-app
 RUN cp .npmrc .npmrc_backup
 RUN echo "" >> .npmrc
 RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
-RUN sed -i "s/dev/ ${SERVER_BRANCH}/g" src/config.ts 
 RUN yarn install
 RUN yarn build
 RUN rm .npmrc && mv .npmrc_backup .npmrc
