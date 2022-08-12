@@ -72,7 +72,7 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
 
   return {
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
-    permissionsNames: Array.from(
+    permissionNames: Array.from(
       new Set(templatePermissionRows.map(({ permissionName }) => permissionName))
     ),
     JWT: await getSignedJWT({
