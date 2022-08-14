@@ -453,7 +453,7 @@ It works by finding an event in the `trigger_schedule` table with matching `appl
 
 - `applicationId`
 - `eventCode` -- value in `trigger_schedule` to match. For applicant deadlines we are currently using the hard-coded value `applicantDeadline` to match in the front-end UI. This event code is also passed along with the "ON_EXTEND" trigger to use to match to actions. 
-- `extensionTime` -- a length of time: either a number (which will be interpreted as days), or a [Luxon duration object](https://moment.github.io/luxon/api-docs/index.html#duration). If the current deadline has already expired, this extension time will be added to the current time. If it's not already expired, it'll be added to the current `time_scheduled`.
+- `extensionTime` -- a length of time: either a number (which will be interpreted as days), or a [Luxon duration object](https://moment.github.io/luxon/api-docs/index.html#duration). If the current deadline has already expired, this extension time will be added to the current time. If it's not already expired, it'll be added to the current value of the `time_scheduled` field.
 - `data` -- any additional data that will be passed along as part of the simulated trigger's `data` field
 
 ##### RESPONSE body (example):
