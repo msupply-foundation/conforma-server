@@ -447,7 +447,7 @@ POST: `/extend-application`
 
 Endpoint for extending a deadline associated with an application. Currently, the main use case is for extending an applicant deadline for responding to a request for changes (event code: `applicantDeadline`), but in theory could be used for extending other types of deadlines as well.
 
-It works by finding an event in the `trigger_schedule` table with matching `applicationId` and `eventCode` and then extending the `time_scheduled` by the specified amount. It also simulates a trigger `ON_EXTEND` which can be used to trigger other events in the application (such as resetting the outcome from "EXPIRED" back to "PENING" for example).
+It works by finding an event in the `trigger_schedule` table with matching `applicationId` and `eventCode` and then extending the `time_scheduled` by the specified amount. It also simulates a trigger `ON_EXTEND` -- i.e. the Trigger/Action system will respond as though an `ON_EXTEND` trigger had been fired for that application. This can be used (like normal triggers) to perform Actions, as per the template_action configuration. In the case of deadlines, the main Action we'd normally run with the `ON_EXTEND` trigger is to reset the application outcome (`changeOutcome` action) from "EXPIRED" back to "PENDING". (Note: there is a automatic database trigger/function to update the status whenever "Outcome" changes, to keep it consistent and correct.)
 
 ##### REQUEST parameters:
 
