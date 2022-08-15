@@ -187,7 +187,8 @@ CREATE TYPE public.ui_location AS ENUM (
     'DASHBOARD',
     'LIST',
     'USER',
-    'ADMIN'
+    'ADMIN',
+    'MANAGEMENT'
 );
 
 CREATE TABLE public.template_category (

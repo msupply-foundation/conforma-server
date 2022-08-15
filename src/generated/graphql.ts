@@ -24491,7 +24491,8 @@ export enum UiLocation {
   Dashboard = 'DASHBOARD',
   List = 'LIST',
   User = 'USER',
-  Admin = 'ADMIN'
+  Admin = 'ADMIN',
+  Management = 'MANAGEMENT'
 }
 
 /** A filter to be used against UiLocation List fields. All fields are combined with a logical ‘and.’ */
