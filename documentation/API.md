@@ -26,12 +26,15 @@ The back-end currently has two server instances which are launched to handle inc
     - [Authenticated endpoints](#authenticated-endpoints)
       - [File upload endpoint:](#file-upload-endpoint)
       - [Check unique endpoint](#check-unique-endpoint)
+      - [Create hash](#create-hash)
       - [Login Organisation](#login-organisation)
       - [User Info](#user-info)
       - [User Permissions](#user-permissions)
       - [Check Triggers](#check-triggers)
       - [Generate PDF](#generate-pdf)
     - [Data Views](#data-views)
+    - [Preview Actions](#preview-actions)
+    - [Extend application deadline](#extend-application-deadline)
     - [Admin only endpoints](#admin-only-endpoints)
       - [Update row level policies](#update-row-level-policies)
       - [Run Action](#run-action)
@@ -168,6 +171,9 @@ URL query paramter fields (all optional):
 - `unique_id` (the randomly generated one should normally be sufficient. If this is specifed and the id already exists in the database, the file record will be *updated* with the new file data.)
 - `template_id` (to associate a file with a template, for example a carbone template doc)
 - `subfolder` (files are placed in subfolder based on the application_serial provided, but a specific subfolder can be defined instead (which over-rides the application subfolder))
+- `description` an optional descriptive string for each file. Currently shows up in "Documents" tab of review page, in [Action previews](#preview-actions), and in the application form if `showDescription` is enabled in the `fileUpload` element.
+- `isOutputDoc` specifies that the file is a document associated with the outcome of an application. This is used to determine which documents to display on the "Documents" tab of the review home page.
+- `isInternalReferenceDoc`/`isExternalReferenceDoc` specifies that the document should appear in the front-end menu bar, under "Help" and "Reference" menus respectively. There is an Admin template called "Manage Reference Docs" that can be used by a system manager to manage these documents.
 
 e.g. `/upload?user=2&application_serial=3`
 
@@ -203,6 +209,31 @@ Request will return an object, structured like so:
 
 There are basic unit tests for this endpoint. Run:  
 `yarn test src/server.test.ts`
+
+#### Create hash
+
+POST: `/create-hash`
+
+Endpoint to retrieve a [bcrypt](https://www.npmjs.com/package/bcrypt) hash value for a given (password) string. Used by the "Password" form element to hash passwords before saving.
+
+
+##### REQUEST Body:
+
+Note -- password string must be provided in body json rather than query parameters for security reasons (so string is not in plaintext in url)
+
+```JSON
+{
+    "password": "${password}"
+}
+```
+
+##### RESPONSE Body (example):
+
+```JSON
+{
+    "hash": "$2b$10$DkmOA1ODFlghsj49j.QlvuyZO.9uULn2LDqTYv7MdUSnGVCI1h9aC"
+}
+```
 
 #### Login Organisation
 
@@ -352,6 +383,88 @@ For displaying custom data (e.g. Users, Products, Orgs). User's JWT determines w
 
 Please see [Data View](Data-View.md) for more info.
 
+### Preview Actions
+
+POST: `/preview-actions`
+
+Allows template actions for a particular application to be run without actually being triggered by the normal [trigger/action process](Triggers-and-Actions.md). Used by the "Preview Decision" UI for reviewers where they can see what outputs (correspondence/documents) will be sent to the applicant as a result of their decision, but without actually sending anything out.
+
+In order to be preview-able, template actions must be specifically configured to respond to the "ON_PREVIEW" trigger. Usually, these will be done with [Aliased actions](List-of-Action-plugins.md#aliasing-existing-template-actions), which point to the "real" actions, but with some of their parameters overriden. For example, for previewing an email (sendNotification) action, we would preview it with the "sendEmail" parameter set to `false` so it will generate the email text but not actually send it out yet.
+
+See examples in the core/demo templates for how to configure action previews.
+
+##### REQUEST parameters:
+
+- `applicationId`
+- `reviewId` (one of either `applicationId` or `reviewId` must be provided)
+- `applicationDataOverride` an object containing data to override the generated applicationData. For example, when simulating a decision, we would override the `reviewData.latestDecision.decision` field with the hypothetical decision value and then the action would be "previewed" as though that were the actual applicationData it uses.
+
+
+##### RESPONSE Body (example):
+
+```JSON
+{
+    "displayData": [
+        {
+            "type": "NOTIFICATION",
+            "status": "SUCCESS",
+            "displayString": "Congratulations, application S-UUR-0001 has been approved",
+            "text": "## Your product registration license ...",
+            "errorLog": null
+        }
+    ],
+    "actionsOutput": [
+        {
+            "action": "sendNotification",
+            "status": "SUCCESS",
+            "output": {
+                "notification": {
+                    "id": 2,
+                    "user_id": 9,
+                    "application_id": 239,
+                    "review_id": 3,
+                    "email_recipients": "carl@msupply.foundation",
+                    "subject": "Congratulations, application S-UUR-0001 has been approved",
+                    "message": "## Your product registration license ...",
+                    "attachments": [],
+                    "email_sent": false,
+                    "is_read": false
+                }
+            },
+            "errorLog": null
+        }
+    ]
+}
+```
+
+`displayData` is used by the front-end to present the Preview results in the UI. `actionsOutput` contains the raw output of each action that ran.
+
+
+
+### Extend application deadline
+
+POST: `/extend-application`
+
+Endpoint for extending a deadline associated with an application. Currently, the main use case is for extending an applicant deadline for responding to a request for changes (event code: `applicantDeadline`), but in theory could be used for extending other types of deadlines as well.
+
+It works by finding an event in the `trigger_schedule` table with matching `applicationId` and `eventCode` and then extending the `time_scheduled` by the specified amount. It also simulates a trigger `ON_EXTEND` -- i.e. the Trigger/Action system will respond as though an `ON_EXTEND` trigger had been fired for that application. This can be used (like normal triggers) to perform Actions, as per the template_action configuration. In the case of deadlines, the main Action we'd normally run with the `ON_EXTEND` trigger is to reset the application outcome (`changeOutcome` action) from "EXPIRED" back to "PENDING". (Note: there is a automatic database trigger/function to update the status whenever "Outcome" changes, to keep it consistent and correct.)
+
+##### REQUEST parameters:
+
+- `applicationId`
+- `eventCode` -- value in `trigger_schedule` to match. For applicant deadlines we are currently using the hard-coded value `applicantDeadline` to match in the front-end UI. This event code is also passed along with the "ON_EXTEND" trigger to use to match to actions. 
+- `extensionTime` -- a length of time: either a number (which will be interpreted as days), or a [Luxon duration object](https://moment.github.io/luxon/api-docs/index.html#duration). If the current deadline has already expired, this extension time will be added to the current time. If it's not already expired, it'll be added to the current value of the `time_scheduled` field.
+- `data` -- any additional data that will be passed along as part of the simulated trigger's `data` field
+
+##### RESPONSE body (example):
+
+```JSON
+{
+    "success": true,
+    "newDeadline": "2027-07-19T22:18:04.992Z"
+}
+```
+
 ---
 
 ### Admin only endpoints
@@ -393,6 +506,8 @@ A json array of new policies:
 POST: `/run-action`
 
 End point to run [Actions](Triggers-and-Actions.md) in isolation. Returns the action's "Output" object.
+
+**Note: this endpoint is intended as a dev tool only and shouldn't be called from the actual codebase.**
 
 **Parameters** (as body JSON):
 
