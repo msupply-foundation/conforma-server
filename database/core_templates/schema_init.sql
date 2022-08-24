@@ -1784,60 +1784,66 @@ CREATE TYPE public.reviewer_action AS ENUM (
     'CONTINUE_REVIEW',
     'MAKE_DECISION',
     'RESTART_REVIEW',
-    'UPDATE_REVIEW'
+    'UPDATE_REVIEW',
+    'AWAITING_RESPONSE'
 );
 
-CREATE FUNCTION review_list (stageid int, reviewerid int)
+CREATE FUNCTION review_list (stageid int, reviewerid int, appstatus public.application_status)
     RETURNS TABLE (
         application_id int,
         reviewer_action public.reviewer_action
     )
     AS $$
-    SELECT
-        review_assignment.application_id AS application_id,
-        CASE WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'CHANGES_REQUESTED') != 0 THEN
-            'UPDATE_REVIEW'
-        WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'PENDING') != 0 THEN
-            'RESTART_REVIEW'
-        WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'DRAFT'
-            AND is_locked = FALSE) != 0 THEN
-            'CONTINUE_REVIEW'
-        WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
-            AND review_assignment.is_final_decision = TRUE
-            AND review_assignment.is_last_stage = TRUE
-            AND review = NULL) != 0 THEN
-            'MAKE_DECISION'
-        WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
-            AND review.id IS NULL) != 0 THEN
-            'START_REVIEW'
-        WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'AVAILABLE'
-            AND is_self_assignable = TRUE
-            AND (review = NULL
-            OR is_locked = FALSE)) != 0 THEN
-            'SELF_ASSIGN'
-        WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
-            OR review_status_history.status = 'SUBMITTED') != 0 THEN
-            'VIEW_REVIEW'
-        ELSE
-            NULL
-        END::public.reviewer_action
-    FROM
-        review_assignment
-    LEFT JOIN review ON review.review_assignment_id = review_assignment.id
-    LEFT JOIN review_status_history ON (review_status_history.review_id = review.id
-            AND is_current = TRUE)
-WHERE
-    review_assignment.stage_id = $1
-    AND review_assignment.reviewer_id = $2
-    AND (
         SELECT
-            outcome
+            review_assignment.application_id AS application_id,
+            CASE WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'CHANGES_REQUESTED') != 0 THEN
+                'UPDATE_REVIEW'
+            WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'PENDING') != 0 THEN
+                'RESTART_REVIEW'
+            WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'DRAFT'
+                AND is_locked = FALSE) != 0 THEN
+                'CONTINUE_REVIEW'
+            WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+                AND review_assignment.is_final_decision = TRUE
+                AND review_assignment.is_last_stage = TRUE
+                AND review = NULL) != 0 THEN
+                'MAKE_DECISION'
+            WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+                AND review.id IS NULL) != 0 THEN
+                'START_REVIEW'
+            WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'AVAILABLE'
+                AND is_self_assignable = TRUE
+                AND (review = NULL
+                OR is_locked = FALSE)) != 0 THEN
+                'SELF_ASSIGN'
+            WHEN COUNT(*) FILTER (WHERE (appstatus = 'CHANGES_REQUIRED'
+                OR appstatus = 'DRAFT') 
+                AND review_assignment.status = 'ASSIGNED'
+                AND review_status_history.status = 'SUBMITTED') != 0 THEN
+                'AWAITING_RESPONSE'
+            WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+                OR review_status_history.status = 'SUBMITTED') != 0 THEN
+                'VIEW_REVIEW'
+            ELSE
+                NULL
+            END::public.reviewer_action
         FROM
-            application
-        WHERE
-            id = review_assignment.application_id) = 'PENDING'
-GROUP BY
-    review_assignment.application_id;
+            review_assignment
+        LEFT JOIN review ON review.review_assignment_id = review_assignment.id
+        LEFT JOIN review_status_history ON (review_status_history.review_id = review.id
+                AND is_current = TRUE)
+    WHERE
+        review_assignment.stage_id = $1
+        AND review_assignment.reviewer_id = $2
+        AND (
+            SELECT
+                outcome
+            FROM
+                application
+            WHERE
+                id = review_assignment.application_id) = 'PENDING'
+    GROUP BY
+        review_assignment.application_id;
 
 $$
 LANGUAGE sql
@@ -1874,47 +1880,47 @@ CREATE TABLE application_list_shape (
 CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
     RETURNS SETOF application_list_shape
     AS $$
-    SELECT
-        app.id,
-        app.serial,
-        app.name,
-        template.code AS template_code,
-        template.name AS template_name,
-        CONCAT(first_name, ' ', last_name) AS applicant,
-        org.name AS org_name,
-        stage_status.stage,
-        stage_status.stage_colour,
-        stage_status.status,
-        app.outcome,
-        status_history_time_created AS last_active_date,
-        ts.time_scheduled AS applicant_deadline,
-        assigners,
-        reviewers,
-        reviewer_action,
-        assigner_action,
-        -- CASE WHEN is_fully_assigned_level_1 IS NULL THEN
-        --     FALSE
-        -- ELSE
-        --     is_fully_assigned_level_1
-        -- END,
-        -- assigned_questions_level_1,
-        total_questions,
-        total_assigned,
-        total_assign_locked
-    FROM
-        application app
-    LEFT JOIN TEMPLATE ON app.template_id = template.id
-    LEFT JOIN "user" ON user_id = "user".id
-    LEFT JOIN application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
-    LEFT JOIN organisation org ON app.org_id = org.id
-    LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
-    LEFT JOIN review_list (stage_status.stage_id, $1) ON app.id = review_list.application_id
-    LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
-    LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
-        AND ts.is_active = TRUE
-        AND ts.event_code = 'applicantDeadline'
-WHERE
-    app.is_config = FALSE
+        SELECT
+            app.id,
+            app.serial,
+            app.name,
+            template.code AS template_code,
+            template.name AS template_name,
+            CONCAT(first_name, ' ', last_name) AS applicant,
+            org.name AS org_name,
+            stage_status.stage,
+            stage_status.stage_colour,
+            stage_status.status,
+            app.outcome,
+            status_history_time_created AS last_active_date,
+            ts.time_scheduled AS applicant_deadline,
+            assigners,
+            reviewers,
+            reviewer_action,
+            assigner_action,
+            -- CASE WHEN is_fully_assigned_level_1 IS NULL THEN
+            --     FALSE
+            -- ELSE
+            --     is_fully_assigned_level_1
+            -- END,
+            -- assigned_questions_level_1,
+            total_questions,
+            total_assigned,
+            total_assign_locked
+        FROM
+            application app
+        LEFT JOIN TEMPLATE ON app.template_id = template.id
+        LEFT JOIN "user" ON user_id = "user".id
+        LEFT JOIN application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
+        LEFT JOIN organisation org ON app.org_id = org.id
+        LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
+        LEFT JOIN review_list (stage_status.stage_id, $1, stage_status.status) ON app.id = review_list.application_id
+        LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
+        LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
+            AND ts.is_active = TRUE
+            AND ts.event_code = 'applicantDeadline'
+    WHERE
+        app.is_config = FALSE
 $$
 LANGUAGE sql
 STABLE;
