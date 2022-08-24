@@ -643,6 +643,16 @@ const migrateData = async () => {
     `)
   }
 
+  // v0.4.4
+  if (databaseVersionLessThan('0.4.4')) {
+    console.log(' - Add "Optional if no response" option to "is_reviewable"')
+
+    await DB.changeSchema(`
+      ALTER TYPE public.is_reviewable_status ADD VALUE IF NOT EXISTS
+      'OPTIONAL_IF_NO_RESPONSE' AFTER 'NEVER';
+    `)
+  }
+
   // Other version migrations continue here...
 
   // Finally, set the database version to the current version
