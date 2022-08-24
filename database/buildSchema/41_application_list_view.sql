@@ -29,47 +29,47 @@ CREATE TABLE application_list_shape (
 CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
     RETURNS SETOF application_list_shape
     AS $$
-    SELECT
-        app.id,
-        app.serial,
-        app.name,
-        template.code AS template_code,
-        template.name AS template_name,
-        CONCAT(first_name, ' ', last_name) AS applicant,
-        org.name AS org_name,
-        stage_status.stage,
-        stage_status.stage_colour,
-        stage_status.status,
-        app.outcome,
-        status_history_time_created AS last_active_date,
-        ts.time_scheduled AS applicant_deadline,
-        assigners,
-        reviewers,
-        reviewer_action,
-        assigner_action,
-        -- CASE WHEN is_fully_assigned_level_1 IS NULL THEN
-        --     FALSE
-        -- ELSE
-        --     is_fully_assigned_level_1
-        -- END,
-        -- assigned_questions_level_1,
-        total_questions,
-        total_assigned,
-        total_assign_locked
-    FROM
-        application app
-    LEFT JOIN TEMPLATE ON app.template_id = template.id
-    LEFT JOIN "user" ON user_id = "user".id
-    LEFT JOIN application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
-    LEFT JOIN organisation org ON app.org_id = org.id
-    LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
-    LEFT JOIN review_list (stage_status.stage_id, $1) ON app.id = review_list.application_id
-    LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
-    LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
-        AND ts.is_active = TRUE
-        AND ts.event_code = 'applicantDeadline'
-WHERE
-    app.is_config = FALSE
+        SELECT
+            app.id,
+            app.serial,
+            app.name,
+            template.code AS template_code,
+            template.name AS template_name,
+            CONCAT(first_name, ' ', last_name) AS applicant,
+            org.name AS org_name,
+            stage_status.stage,
+            stage_status.stage_colour,
+            stage_status.status,
+            app.outcome,
+            status_history_time_created AS last_active_date,
+            ts.time_scheduled AS applicant_deadline,
+            assigners,
+            reviewers,
+            reviewer_action,
+            assigner_action,
+            -- CASE WHEN is_fully_assigned_level_1 IS NULL THEN
+            --     FALSE
+            -- ELSE
+            --     is_fully_assigned_level_1
+            -- END,
+            -- assigned_questions_level_1,
+            total_questions,
+            total_assigned,
+            total_assign_locked
+        FROM
+            application app
+        LEFT JOIN TEMPLATE ON app.template_id = template.id
+        LEFT JOIN "user" ON user_id = "user".id
+        LEFT JOIN application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
+        LEFT JOIN organisation org ON app.org_id = org.id
+        LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
+        LEFT JOIN review_list (stage_status.stage_id, $1, stage_status.status) ON app.id = review_list.application_id
+        LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
+        LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
+            AND ts.is_active = TRUE
+            AND ts.event_code = 'applicantDeadline'
+    WHERE
+        app.is_config = FALSE
 $$
 LANGUAGE sql
 STABLE;
