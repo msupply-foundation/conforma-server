@@ -9644,7 +9644,8 @@
       "text": "Cake",
       "label": "I like cake"
      }
-    ]
+    ],
+    "displayFormat": "checkboxes"
    },
    "sectionId": 14,
    "templateCode": "Demo",
@@ -9735,7 +9736,8 @@
      ],
      "operator": "API"
     },
-    "description": "If you have a lot of checkboxes, you may wish to use `layout: \"inline\"`.  \n_This selection is dynamically created from an online API._"
+    "description": "If you have a lot of checkboxes, you may wish to use `layout: \"inline\"`.  \n_This selection is dynamically created from an online API._",
+    "displayFormat": "checkboxes"
    },
    "sectionId": 14,
    "templateCode": "Demo",
