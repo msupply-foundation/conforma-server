@@ -645,6 +645,13 @@ const migrateData = async () => {
 
   // v0.4.4
   if (databaseVersionLessThan('0.4.4')) {
+    console.log(' - Removes events in Trigger list: ON_REVIEW_REASSIGN and ON_REVIEW_SELF_ASSIGN')
+
+    // await DB.changeSchema(`
+    //   ALTER TYPE public.trigger DROP ATTRIBUTE IF EXISTS "ON_REVIEW_SELF_ASSIGN";
+    //   ALTER TYPE public.trigger DROP ATTRIBUTE IF EXISTS "ON_REVIEW_REASSIGN";
+    // `)
+
     console.log(' - Adding AWAITING_RESPONSE action to reviewer_action')
 
     await DB.changeSchema(`
