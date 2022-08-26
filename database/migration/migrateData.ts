@@ -646,13 +646,232 @@ const migrateData = async () => {
   // v0.4.4
   if (databaseVersionLessThan('0.4.4')) {
     console.log(' - Add "Optional if no response" option to "is_reviewable"')
-
     await DB.changeSchema(`
       ALTER TYPE public.is_reviewable_status ADD VALUE IF NOT EXISTS
       'OPTIONAL_IF_NO_RESPONSE' AFTER 'NEVER';
     `)
-  }
 
+    console.log(' - Removes Trigger values: ON_REVIEW_REASSIGN and ON_REVIEW_SELF_ASSIGN')
+
+    // This step seperate as it'll fail if the type has already been redefined
+    await DB.changeSchema(`
+      UPDATE template_action SET trigger='ON_REVIEW_ASSIGN'
+        WHERE trigger='ON_REVIEW_REASSIGN' OR trigger='ON_REVIEW_SELF_ASSIGN';	
+    `)
+
+    await DB.changeSchema(`
+      ALTER TYPE public.trigger RENAME to trigger_old;
+
+      CREATE TYPE public.trigger AS ENUM
+      (
+        'ON_APPLICATION_CREATE',
+        'ON_APPLICATION_RESTART',
+        'ON_APPLICATION_SUBMIT',
+        'ON_APPLICATION_SAVE',
+        'ON_APPLICATION_WITHDRAW',
+        'ON_REVIEW_CREATE',
+        'ON_REVIEW_SUBMIT',
+        'ON_REVIEW_RESTART',
+        'ON_REVIEW_ASSIGN',
+        'ON_REVIEW_UNASSIGN',
+        'ON_APPROVAL_SUBMIT',
+        'ON_VERIFICATION',
+        'ON_SCHEDULE',
+        'ON_PREVIEW',
+        'ON_EXTEND',
+        'DEV_TEST',
+        'PROCESSING',
+        'ERROR'
+      );
+
+      ALTER TABLE trigger_queue
+        ALTER COLUMN trigger_type TYPE public.trigger
+        USING trigger_type::text::public.trigger;    
+        
+      ALTER TABLE template_action
+        ALTER COLUMN trigger TYPE public.trigger
+        USING trigger::text::public.trigger;
+
+      DROP TRIGGER IF EXISTS application_trigger ON application;
+
+      ALTER TABLE application
+          ALTER COLUMN TRIGGER TYPE public.trigger
+          USING TRIGGER::text::public.trigger;
+      
+      CREATE TRIGGER application_trigger
+          AFTER INSERT OR UPDATE OF trigger ON public.application
+          FOR EACH ROW
+          WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
+          EXECUTE FUNCTION public.add_event_to_trigger_queue ();
+      
+      DROP TRIGGER IF EXISTS trigger_schedule_trigger ON trigger_schedule;
+      
+      ALTER TABLE trigger_schedule
+          ALTER COLUMN TRIGGER TYPE public.trigger
+          USING TRIGGER::text::public.trigger;
+      
+      CREATE TRIGGER trigger_schedule_trigger
+          AFTER INSERT OR UPDATE OF trigger ON public.trigger_schedule
+          FOR EACH ROW
+          WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
+          EXECUTE FUNCTION public.add_event_to_trigger_queue ();
+      
+      DROP TRIGGER IF EXISTS review_assignment_trigger ON review_assignment;
+      
+      ALTER TABLE review_assignment
+          ALTER COLUMN TRIGGER TYPE public.trigger
+          USING TRIGGER::text::public.trigger;
+      
+      CREATE TRIGGER review_assignment_trigger
+          AFTER INSERT OR UPDATE OF trigger ON public.review_assignment
+          FOR EACH ROW
+          WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
+          EXECUTE FUNCTION public.add_event_to_trigger_queue ();
+      
+      DROP TRIGGER IF EXISTS review_trigger ON review;
+      
+      ALTER TABLE review
+          ALTER COLUMN TRIGGER TYPE public.trigger
+          USING TRIGGER::text::public.trigger;
+      
+      CREATE TRIGGER review_trigger
+          AFTER INSERT OR UPDATE OF trigger ON public.review
+          FOR EACH ROW
+          WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
+          EXECUTE FUNCTION public.add_event_to_trigger_queue ();
+      
+      DROP TRIGGER IF EXISTS verification_trigger ON verification;
+      
+      ALTER TABLE verification
+          ALTER COLUMN TRIGGER TYPE public.trigger
+          USING TRIGGER::text::public.trigger;
+      
+      CREATE TRIGGER verification_trigger
+          AFTER INSERT OR UPDATE OF trigger ON public.verification
+          FOR EACH ROW
+          WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
+          EXECUTE FUNCTION public.add_event_to_trigger_queue ();
+      
+      DROP TYPE public.trigger_old;    
+    `)
+
+    console.log(' - Adding AWAITING_RESPONSE action to reviewer_action')
+
+    await DB.changeSchema(`
+      ALTER TYPE public.reviewer_action ADD VALUE IF NOT EXISTS
+      'AWAITING_RESPONSE' AFTER 'UPDATE_REVIEW';
+    `)
+
+    console.log(' - Update function review_list to return action AWAITING_RESPONSE')
+
+    await DB.changeSchema(`
+      CREATE OR REPLACE FUNCTION review_list (stageid int, reviewerid int, appstatus public.application_status)
+      RETURNS TABLE (
+          application_id int,
+          reviewer_action public.reviewer_action
+      )
+      AS $$
+          SELECT
+              review_assignment.application_id AS application_id,
+              CASE WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'CHANGES_REQUESTED') != 0 THEN
+                  'UPDATE_REVIEW'
+              WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'PENDING') != 0 THEN
+                  'RESTART_REVIEW'
+              WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'DRAFT'
+                  AND is_locked = FALSE) != 0 THEN
+                  'CONTINUE_REVIEW'
+              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+                  AND review_assignment.is_final_decision = TRUE
+                  AND review_assignment.is_last_stage = TRUE
+                  AND review = NULL) != 0 THEN
+                  'MAKE_DECISION'
+              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+                  AND review.id IS NULL) != 0 THEN
+                  'START_REVIEW'
+              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'AVAILABLE'
+                  AND is_self_assignable = TRUE
+                  AND (review = NULL
+                  OR is_locked = FALSE)) != 0 THEN
+                  'SELF_ASSIGN'
+              WHEN COUNT(*) FILTER (WHERE (appstatus = 'CHANGES_REQUIRED'
+                  OR appstatus = 'DRAFT') 
+                  AND review_assignment.status = 'ASSIGNED'
+                  AND review_status_history.status = 'SUBMITTED') != 0 THEN
+                  'AWAITING_RESPONSE'
+              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+                  OR review_status_history.status = 'SUBMITTED') != 0 THEN
+                  'VIEW_REVIEW'
+              ELSE
+                  NULL
+              END::public.reviewer_action
+          FROM
+              review_assignment
+          LEFT JOIN review ON review.review_assignment_id = review_assignment.id
+          LEFT JOIN review_status_history ON (review_status_history.review_id = review.id
+                  AND is_current = TRUE)
+      WHERE
+          review_assignment.stage_id = $1
+          AND review_assignment.reviewer_id = $2
+          AND (
+              SELECT
+                  outcome
+              FROM
+                  application
+              WHERE
+                  id = review_assignment.application_id) = 'PENDING'
+      GROUP BY
+          review_assignment.application_id;
+  
+    $$
+    LANGUAGE sql
+    STABLE;
+      `)
+
+    console.log(
+      ' - Update function application_list to pass along stage_status to review_list function'
+    )
+    await DB.changeSchema(`CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
+    RETURNS SETOF application_list_shape
+    AS $$
+        SELECT
+            app.id,
+            app.serial,
+            app.name,
+            template.code AS template_code,
+            template.name AS template_name,
+            CONCAT(first_name, ' ', last_name) AS applicant,
+            org.name AS org_name,
+            stage_status.stage,
+            stage_status.stage_colour,
+            stage_status.status,
+            app.outcome,
+            status_history_time_created AS last_active_date,
+            ts.time_scheduled AS applicant_deadline,
+            assigners,
+            reviewers,
+            reviewer_action,
+            assigner_action,
+            total_questions,
+            total_assigned,
+            total_assign_locked
+        FROM
+            application app
+        LEFT JOIN TEMPLATE ON app.template_id = template.id
+        LEFT JOIN "user" ON user_id = "user".id
+        LEFT JOIN application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
+        LEFT JOIN organisation org ON app.org_id = org.id
+        LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
+        LEFT JOIN review_list (stage_status.stage_id, $1, stage_status.status) ON app.id = review_list.application_id
+        LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
+        LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
+            AND ts.is_active = TRUE
+            AND ts.event_code = 'applicantDeadline'
+    WHERE
+        app.is_config = FALSE
+  $$
+  LANGUAGE sql
+  STABLE;`)
+  }
   // Other version migrations continue here...
 
   // Finally, set the database version to the current version

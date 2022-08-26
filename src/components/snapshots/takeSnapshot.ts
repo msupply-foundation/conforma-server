@@ -55,7 +55,7 @@ const takeSnapshot: SnapshotOperation = async ({
     // Write snapshot and config to folder
     await fs.writeFile(
       path.join(newSnapshotFolder, `${SNAPSHOT_FILE_NAME}.json`),
-      JSON.stringify(snapshotObject, null, ' ')
+      JSON.stringify(snapshotObject, null, 2)
     )
 
     await fs.writeFile(

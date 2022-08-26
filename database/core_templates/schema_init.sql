@@ -110,8 +110,6 @@ CREATE TYPE public.trigger AS ENUM (
     'ON_REVIEW_RESTART',
     'ON_REVIEW_ASSIGN',
     'ON_REVIEW_UNASSIGN',
-    'ON_REVIEW_REASSIGN',
-    'ON_REVIEW_SELF_ASSIGN',
     'ON_APPROVAL_SUBMIT',
     'ON_VERIFICATION',
     'ON_SCHEDULE',
@@ -1784,10 +1782,11 @@ CREATE TYPE public.reviewer_action AS ENUM (
     'CONTINUE_REVIEW',
     'MAKE_DECISION',
     'RESTART_REVIEW',
-    'UPDATE_REVIEW'
+    'UPDATE_REVIEW',
+    'AWAITING_RESPONSE'
 );
 
-CREATE FUNCTION review_list (stageid int, reviewerid int)
+CREATE FUNCTION review_list (stageid int, reviewerid int, appstatus public.application_status)
     RETURNS TABLE (
         application_id int,
         reviewer_action public.reviewer_action
@@ -1815,6 +1814,11 @@ CREATE FUNCTION review_list (stageid int, reviewerid int)
             AND (review = NULL
             OR is_locked = FALSE)) != 0 THEN
             'SELF_ASSIGN'
+        WHEN COUNT(*) FILTER (WHERE (appstatus = 'CHANGES_REQUIRED'
+            OR appstatus = 'DRAFT')
+            AND review_assignment.status = 'ASSIGNED'
+            AND review_status_history.status = 'SUBMITTED') != 0 THEN
+            'AWAITING_RESPONSE'
         WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
             OR review_status_history.status = 'SUBMITTED') != 0 THEN
             'VIEW_REVIEW'
@@ -1908,7 +1912,7 @@ CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
     LEFT JOIN application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
     LEFT JOIN organisation org ON app.org_id = org.id
     LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
-    LEFT JOIN review_list (stage_status.stage_id, $1) ON app.id = review_list.application_id
+    LEFT JOIN review_list (stage_status.stage_id, $1, stage_status.status) ON app.id = review_list.application_id
     LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
     LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
         AND ts.is_active = TRUE

@@ -33,14 +33,13 @@ async function updateReviewAssignmentsStatus({
         isSelfAssignable
       )
 
-      return otherSelfAssignments.map(({ id }: ReviewAssignment) => ({
+      return otherSelfAssignments.map(({ id, assignedSections }: ReviewAssignment) => ({
         id,
-        isLocked,
+        isLocked: isLocked || assignedSections.length > 0,
       }))
     }
 
     switch (trigger) {
-      case Trigger.OnReviewSelfAssign:
       case Trigger.OnReviewAssign:
         assignments = await setOtherSelfAssignmentsLocked(true)
         break
