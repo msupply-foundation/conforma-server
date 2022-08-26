@@ -5,17 +5,28 @@
       "description": "Changes the outcome field of an application.",
       "id": 1,
       "name": "Change Outcome",
-      "optionalParameters": ["applicationId"],
-      "outputProperties": ["applicationId", "newOutcome"],
+      "optionalParameters": [
+        "applicationId"
+      ],
+      "outputProperties": [
+        "applicationId",
+        "newOutcome"
+      ],
       "path": "../plugins/action_change_outcome/src/index.ts",
-      "requiredParameters": ["newOutcome"]
+      "requiredParameters": [
+        "newOutcome"
+      ]
     },
     {
       "code": "changeStatus",
       "description": "Changes the Status of an application",
       "id": 2,
       "name": "Change Status",
-      "optionalParameters": ["applicationId", "reviewId", "isReview"],
+      "optionalParameters": [
+        "applicationId",
+        "reviewId",
+        "isReview"
+      ],
       "outputProperties": [
         "applicationId",
         "status",
@@ -24,7 +35,9 @@
         "reviewStatusHistoryTimestamp"
       ],
       "path": "../plugins/action_change_status/src/index.ts",
-      "requiredParameters": ["newStatus"]
+      "requiredParameters": [
+        "newStatus"
+      ]
     },
     {
       "code": "cLog",
@@ -34,17 +47,29 @@
       "optionalParameters": [],
       "outputProperties": [],
       "path": "../plugins/action_console_log/src/index.ts",
-      "requiredParameters": ["message"]
+      "requiredParameters": [
+        "message"
+      ]
     },
     {
       "code": "createVerification",
       "description": "Adds a record to verification table",
       "id": 4,
       "name": "Create Verification",
-      "optionalParameters": ["uniqueId", "expiry", "message", "code", "data"],
-      "outputProperties": ["verification"],
+      "optionalParameters": [
+        "uniqueId",
+        "expiry",
+        "message",
+        "code",
+        "data"
+      ],
+      "outputProperties": [
+        "verification"
+      ],
       "path": "../plugins/action_create_verification/src/index.ts",
-      "requiredParameters": ["applicationId"]
+      "requiredParameters": [
+        "applicationId"
+      ]
     },
     {
       "code": "cleanupFiles",
@@ -52,9 +77,13 @@
       "id": 5,
       "name": "Clean up application files",
       "optionalParameters": null,
-      "outputProperties": ["deletedFiles"],
+      "outputProperties": [
+        "deletedFiles"
+      ],
       "path": "../plugins/action_files_cleanup/src/index.ts",
-      "requiredParameters": ["applicationSerial"]
+      "requiredParameters": [
+        "applicationSerial"
+      ]
     },
     {
       "code": "generateDoc",
@@ -68,17 +97,26 @@
         "applicationSerial",
         "templateId"
       ],
-      "outputProperties": ["document"],
+      "outputProperties": [
+        "document"
+      ],
       "path": "../plugins/action_generate_document/src/index.ts",
-      "requiredParameters": ["docTemplateId"]
+      "requiredParameters": [
+        "docTemplateId"
+      ]
     },
     {
       "code": "generateReviewAssignments",
       "description": "Generates review_assignment records for current application",
       "id": 7,
       "name": "Generate Review Assignment Records",
-      "optionalParameters": ["applicationId", "reviewId"],
-      "outputProperties": ["levels"],
+      "optionalParameters": [
+        "applicationId",
+        "reviewId"
+      ],
+      "outputProperties": [
+        "levels"
+      ],
       "path": "../plugins/action_generate_review_assignment_records/src/index.ts",
       "requiredParameters": []
     },
@@ -100,26 +138,42 @@
         "matchField",
         "matchValue"
       ],
-      "outputProperties": ["generatedText"],
+      "outputProperties": [
+        "generatedText"
+      ],
       "path": "../plugins/action_generate_text_string/src/index.ts",
-      "requiredParameters": ["pattern"]
+      "requiredParameters": [
+        "pattern"
+      ]
     },
     {
       "code": "grantPermissions",
       "description": "Grants permission to user/org, creates permission join from user/org to permission name. If org not provided, the permission will be granted to the user only.",
       "id": 9,
       "name": "Grant Permissions",
-      "optionalParameters": ["username", "userId", "orgName", "orgId"],
-      "outputProperties": ["permissionJoinIds", "permissionNames"],
+      "optionalParameters": [
+        "username",
+        "userId",
+        "orgName",
+        "orgId"
+      ],
+      "outputProperties": [
+        "permissionJoinIds",
+        "permissionNames"
+      ],
       "path": "../plugins/action_grant_permissions/src/index.ts",
-      "requiredParameters": ["permissionNames"]
+      "requiredParameters": [
+        "permissionNames"
+      ]
     },
     {
       "code": "incrementStage",
       "description": "Increments (or creates) the application Stage, if possible.",
       "id": 10,
       "name": "Increment Stage",
-      "optionalParameters": ["applicationId"],
+      "optionalParameters": [
+        "applicationId"
+      ],
       "outputProperties": [
         "applicationId",
         "stageNumber",
@@ -136,10 +190,17 @@
       "description": "Links a user to an organisation",
       "id": 11,
       "name": "Add User to Organisation",
-      "optionalParameters": ["user_role"],
-      "outputProperties": ["userOrgId"],
+      "optionalParameters": [
+        "user_role"
+      ],
+      "outputProperties": [
+        "userOrgId"
+      ],
       "path": "../plugins/action_join_user_org/src/index.ts",
-      "requiredParameters": ["user_id", "org_id"]
+      "requiredParameters": [
+        "user_id",
+        "org_id"
+      ]
     },
     {
       "code": "modifyRecord",
@@ -152,27 +213,48 @@
         "shouldCreateJoinTable",
         "<other record fields>"
       ],
-      "outputProperties": ["<tableName>"],
+      "outputProperties": [
+        "<tableName>"
+      ],
       "path": "../plugins/action_modify_record/src/index.ts",
-      "requiredParameters": ["tableName"]
+      "requiredParameters": [
+        "tableName"
+      ]
     },
     {
       "code": "sendNotification",
       "description": "Creates a notification and send an email",
       "id": 13,
       "name": "Send Email",
-      "optionalParameters": ["userId", "fromName", "fromEmail", "attachments", "sendEmail"],
-      "outputProperties": ["notification"],
+      "optionalParameters": [
+        "userId",
+        "fromName",
+        "fromEmail",
+        "attachments",
+        "sendEmail"
+      ],
+      "outputProperties": [
+        "notification"
+      ],
       "path": "../plugins/action_send_notification/src/index.ts",
-      "requiredParameters": ["subject", "message"]
+      "requiredParameters": [
+        "subject",
+        "message"
+      ]
     },
     {
       "code": "trimResponses",
       "description": "Trims duplicated application or review responses if nothing has changed",
       "id": 14,
       "name": "Trim duplicate reponses",
-      "optionalParameters": ["applicationId", "reviewId"],
-      "outputProperties": ["deletedIds", "updatedIds"],
+      "optionalParameters": [
+        "applicationId",
+        "reviewId"
+      ],
+      "outputProperties": [
+        "deletedIds",
+        "updatedIds"
+      ],
       "path": "../plugins/action_trim_responses/src/index.ts",
       "requiredParameters": []
     },
@@ -181,28 +263,49 @@
       "description": "Update status of Review Assignment records when one is Assigned",
       "id": 15,
       "name": "Update Review Assignment statuses",
-      "optionalParameters": ["trigger"],
-      "outputProperties": ["reviewAssignmentUpdates"],
+      "optionalParameters": [
+        "trigger"
+      ],
+      "outputProperties": [
+        "reviewAssignmentUpdates"
+      ],
       "path": "../plugins/action_update_review_assignments_status/src/index.ts",
-      "requiredParameters": ["reviewAssignmentId"]
+      "requiredParameters": [
+        "reviewAssignmentId"
+      ]
     },
     {
       "code": "updateReviewsStatuses",
       "description": "Updates status of associated reviews when application re-submitted",
       "id": 16,
       "name": "Update Review Statuses",
-      "optionalParameters": ["applicationId", "reviewId", "trigeredBy", "stageId", "level"],
-      "outputProperties": ["updatedReviews", "updatedReviewAssignments"],
+      "optionalParameters": [
+        "applicationId",
+        "reviewId",
+        "trigeredBy",
+        "stageId",
+        "level"
+      ],
+      "outputProperties": [
+        "updatedReviews",
+        "updatedReviewAssignments"
+      ],
       "path": "../plugins/action_update_review_status/src/index.ts",
-      "requiredParameters": ["changedResponses"]
+      "requiredParameters": [
+        "changedResponses"
+      ]
     },
     {
       "code": "updateReviewVisibility",
       "description": "Updates review response records to be visible to Applicant based on recommendations of last level review",
       "id": 17,
       "name": "Update Applicant's Review Visibility",
-      "optionalParameters": ["reviewId"],
-      "outputProperties": ["reviewResponsesWithUpdatedVisibility"],
+      "optionalParameters": [
+        "reviewId"
+      ],
+      "outputProperties": [
+        "reviewResponsesWithUpdatedVisibility"
+      ],
       "path": "../plugins/action_update_review_visibility/src/index.ts",
       "requiredParameters": []
     },
@@ -211,28 +314,51 @@
       "description": "Revokes existing permission(s) from user/org -- only sets existing permissions to inactive, doesn't actually delete records",
       "id": 18,
       "name": "Revoke Permissions",
-      "optionalParameters": ["username", "orgName", "orgId", "isRemovingPermission"],
-      "outputProperties": ["revokedPermissions"],
+      "optionalParameters": [
+        "username",
+        "orgName",
+        "orgId",
+        "isRemovingPermission"
+      ],
+      "outputProperties": [
+        "revokedPermissions"
+      ],
       "path": "../plugins/action_revoke_permissions/src/index.ts",
-      "requiredParameters": ["permissionNames"]
+      "requiredParameters": [
+        "permissionNames"
+      ]
     },
     {
       "code": "scheduleAction",
       "description": "Adds a record to action_schedule table to schedule an action for some time in the future",
       "id": 19,
       "name": "Create Scheduled Action",
-      "optionalParameters": ["eventCode", "applicationId", "templateId", "cancel", "data"],
-      "outputProperties": ["scheduledEvent"],
+      "optionalParameters": [
+        "eventCode",
+        "applicationId",
+        "templateId",
+        "cancel",
+        "data"
+      ],
+      "outputProperties": [
+        "scheduledEvent"
+      ],
       "path": "../plugins/action_schedule_action/src/index.ts",
-      "requiredParameters": ["duration"]
+      "requiredParameters": [
+        "duration"
+      ]
     },
     {
       "code": "refreshReviewAssignments",
       "description": "Re-generates ALL review assignments for all applications associated with specific user",
       "id": 20,
       "name": "Refresh User Review Assignment Records",
-      "optionalParameters": ["userId"],
-      "outputProperties": ["updatedApplications"],
+      "optionalParameters": [
+        "userId"
+      ],
+      "outputProperties": [
+        "updatedApplications"
+      ],
       "path": "../plugins/action_refresh_review_assignments/src/index.ts",
       "requiredParameters": []
     },
@@ -241,10 +367,15 @@
       "description": "Dummy plugin to facilitate aliasing of template actions",
       "id": 21,
       "name": "Alias Action",
-      "optionalParameters": ["shouldOverrideCondition", "...anyPluginFields"],
+      "optionalParameters": [
+        "shouldOverrideCondition",
+        "...anyPluginFields"
+      ],
       "outputProperties": [],
       "path": "../plugins/action_alias/src/index.ts",
-      "requiredParameters": ["code"]
+      "requiredParameters": [
+        "code"
+      ]
     },
     {
       "code": "modifyMultipleRecords",
@@ -258,9 +389,13 @@
         "shouldCreateJoinTable",
         "<other record fields>"
       ],
-      "outputProperties": ["records"],
+      "outputProperties": [
+        "records"
+      ],
       "path": "../plugins/action_modify_multiple_records/src/index.ts",
-      "requiredParameters": ["records"]
+      "requiredParameters": [
+        "records"
+      ]
     }
   ],
   "counter": [
@@ -314,7 +449,12 @@
   "dataView": [
     {
       "code": "userPublic",
-      "detailViewExcludeColumns": ["id", "firstName", "lastName", "passwordHash"],
+      "detailViewExcludeColumns": [
+        "id",
+        "firstName",
+        "lastName",
+        "passwordHash"
+      ],
       "detailViewHeaderColumn": "fullName",
       "detailViewIncludeColumns": null,
       "id": 1,
@@ -332,14 +472,26 @@
       "showLinkedApplications": false,
       "tableName": "user",
       "tableViewExcludeColumns": null,
-      "tableViewIncludeColumns": ["usernamePlain", "firstName", "lastName"],
+      "tableViewIncludeColumns": [
+        "usernamePlain",
+        "firstName",
+        "lastName"
+      ],
       "title": "Users (current organisation)"
     },
     {
       "code": "organisation",
-      "detailViewExcludeColumns": ["id", "name", "isSystemOrg"],
+      "detailViewExcludeColumns": [
+        "id",
+        "name",
+        "isSystemOrg"
+      ],
       "detailViewHeaderColumn": "name",
-      "detailViewIncludeColumns": ["logoUrl", "...", "members"],
+      "detailViewIncludeColumns": [
+        "logoUrl",
+        "...",
+        "members"
+      ],
       "id": 2,
       "permissionNames": null,
       "priority": 1,
@@ -355,37 +507,71 @@
       "showLinkedApplications": true,
       "tableName": "organisation",
       "tableViewExcludeColumns": null,
-      "tableViewIncludeColumns": ["logoUrl", "name", "address"],
+      "tableViewIncludeColumns": [
+        "logoUrl",
+        "name",
+        "address"
+      ],
       "title": "My Organisations"
     },
     {
       "code": "userRestricted",
-      "detailViewExcludeColumns": ["id", "firstName", "lastName", "passwordHash"],
+      "detailViewExcludeColumns": [
+        "id",
+        "firstName",
+        "lastName",
+        "passwordHash"
+      ],
       "detailViewHeaderColumn": "fullName",
-      "detailViewIncludeColumns": ["...", "orgs"],
+      "detailViewIncludeColumns": [
+        "...",
+        "orgs"
+      ],
       "id": 3,
-      "permissionNames": ["admin", "consolProduct"],
+      "permissionNames": [
+        "admin",
+        "consolProduct"
+      ],
       "priority": 2,
       "rowRestrictions": null,
       "showLinkedApplications": true,
       "tableName": "user",
-      "tableViewExcludeColumns": ["id", "passwordHash", "dateOfBirth", "usernamePlain"],
+      "tableViewExcludeColumns": [
+        "id",
+        "passwordHash",
+        "dateOfBirth",
+        "usernamePlain"
+      ],
       "tableViewIncludeColumns": null,
       "title": "Users"
     },
     {
       "code": "organisationAdmin",
-      "detailViewExcludeColumns": ["id", "name", "isSystemOrg"],
+      "detailViewExcludeColumns": [
+        "id",
+        "name",
+        "isSystemOrg"
+      ],
       "detailViewHeaderColumn": "name",
-      "detailViewIncludeColumns": ["logoUrl", "...", "members"],
+      "detailViewIncludeColumns": [
+        "logoUrl",
+        "...",
+        "members"
+      ],
       "id": 4,
-      "permissionNames": ["admin"],
+      "permissionNames": [
+        "admin"
+      ],
       "priority": 2,
       "rowRestrictions": null,
       "showLinkedApplications": true,
       "tableName": "organisation",
       "tableViewExcludeColumns": null,
-      "tableViewIncludeColumns": ["logoUrl", "name", "address"],
+      "tableViewIncludeColumns": [
+        "logoUrl",
+        "name",
+        "address"
+      ],
       "title": "Organisations"
     }
   ],
@@ -402,11 +588,15 @@
         "children": [
           "%1 %2",
           {
-            "children": ["firstName"],
+            "children": [
+              "firstName"
+            ],
             "operator": "objectProperties"
           },
           {
-            "children": ["lastName"],
+            "children": [
+              "lastName"
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -420,12 +610,16 @@
         "url": {
           "children": [
             {
-              "children": ["applicationData.config.serverREST"],
+              "children": [
+                "applicationData.config.serverREST"
+              ],
               "operator": "objectProperties"
             },
             "/public",
             {
-              "children": ["responses.thisResponse"],
+              "children": [
+                "responses.thisResponse"
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -464,9 +658,13 @@
         "children": [
           "query getOrgUsers($id:Int!) { userOrganisations(filter: {organisationId: {equalTo: $id}}) { nodes { user { id, firstName, lastName }}}}",
           "graphQLEndpoint",
-          ["id"],
+          [
+            "id"
+          ],
           {
-            "children": ["id"],
+            "children": [
+              "id"
+            ],
             "operator": "objectProperties"
           },
           "userOrganisations"
@@ -483,7 +681,9 @@
       "tableName": "user",
       "title": "Username",
       "valueExpression": {
-        "children": ["username"],
+        "children": [
+          "username"
+        ],
         "operator": "objectProperties"
       }
     },
@@ -501,9 +701,13 @@
         "children": [
           "query getUsersOrgs($id: Int!) {  userOrganisations(filter: {userId: {equalTo: $id}}) { nodes { organisation { name, id }}}}",
           "graphQLEndpoint",
-          ["id"],
+          [
+            "id"
+          ],
           {
-            "children": ["id"],
+            "children": [
+              "id"
+            ],
             "operator": "objectProperties"
           },
           "userOrganisations"
@@ -620,8 +824,7 @@
       "isSystemOrg": true,
       "logoUrl": "/file?uid=CylhAzxRhSX_QjtArq3bi",
       "name": "Food and Drug Authority",
-      "registration": "fda",
-      "registrationDocumentation": null
+      "registration": "fda"
     }
   ],
   "permissionPolicy": [
@@ -897,7 +1100,7 @@
     {
       "id": 10,
       "name": "version",
-      "timestamp": "2022-08-26T20:44:26.296175+12:00",
+      "timestamp": "2022-08-26T20:58:41.134134+12:00",
       "value": "0.4.3"
     }
   ],
@@ -907,49 +1110,68 @@
       "icon": "code",
       "id": 1,
       "title": "Dev",
-      "uiLocation": ["DASHBOARD", "LIST"]
+      "uiLocation": [
+        "DASHBOARD",
+        "LIST"
+      ]
     },
     {
       "code": "org",
       "icon": "building",
       "id": 2,
       "title": "Organisation",
-      "uiLocation": ["DASHBOARD", "LIST"]
+      "uiLocation": [
+        "DASHBOARD",
+        "LIST"
+      ]
     },
     {
       "code": "drugRego",
       "icon": "pills",
       "id": 3,
       "title": "Drug Registration",
-      "uiLocation": ["DASHBOARD", "LIST"]
+      "uiLocation": [
+        "DASHBOARD",
+        "LIST"
+      ]
     },
     {
       "code": "user",
       "icon": "user",
       "id": 4,
       "title": "User settings",
-      "uiLocation": ["LIST", "USER"]
+      "uiLocation": [
+        "LIST",
+        "USER"
+      ]
     },
     {
       "code": "license",
       "icon": "certificate",
       "id": 5,
       "title": "Company license",
-      "uiLocation": ["DASHBOARD", "LIST"]
+      "uiLocation": [
+        "DASHBOARD",
+        "LIST"
+      ]
     },
     {
       "code": "admin",
       "icon": "configure",
       "id": 6,
       "title": "Admin",
-      "uiLocation": ["ADMIN"]
+      "uiLocation": [
+        "ADMIN"
+      ]
     },
     {
       "code": "manage",
       "icon": "setting",
       "id": 7,
       "title": "System Management",
-      "uiLocation": ["MANAGEMENT"]
+      "uiLocation": [
+        "MANAGEMENT"
+      ]
     }
   ],
   "user": [
@@ -1164,7 +1386,9 @@
         "children": [
           "## This is the general registration for feature showcase\nHi, %1. You will need to provide:\n- Proof of identity (Passport, Drivers license)\n- Proof of your medical certification\n- Drug ingredient list\n- Product images\n- Packging images",
           {
-            "children": ["currentUser.firstName"],
+            "children": [
+              "currentUser.firstName"
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -1175,7 +1399,9 @@
         "children": [
           "### Application Submitted!\nThanks, %1.",
           {
-            "children": ["currentUser.firstName"],
+            "children": [
+              "currentUser.firstName"
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -1216,7 +1442,10 @@
             "children": [
               1,
               {
-                "children": ["applicationData.current.stage.number", null],
+                "children": [
+                  "applicationData.current.stage.number",
+                  null
+                ],
                 "operator": "objectProperties"
               }
             ],
@@ -1528,7 +1757,9 @@
         "tableName": "application",
         "counterInit": 100,
         "counterName": {
-          "children": ["applicationData.templateCode"],
+          "children": [
+            "applicationData.templateCode"
+          ],
           "operator": "objectProperties"
         },
         "customFields": {},
@@ -1580,34 +1811,48 @@
       "id": 4,
       "parameterQueries": {
         "id": {
-          "children": ["applicationData.userId"],
+          "children": [
+            "applicationData.userId"
+          ],
           "operator": "objectProperties"
         },
         "email": {
-          "children": ["applicationData.responses.Q4.text"],
+          "children": [
+            "applicationData.responses.Q4.text"
+          ],
           "operator": "objectProperties"
         },
         "username": {
-          "children": ["applicationData.responses.Q3.text"],
+          "children": [
+            "applicationData.responses.Q3.text"
+          ],
           "operator": "objectProperties"
         },
         "last_name": {
-          "children": ["applicationData.responses.Q2.text"],
+          "children": [
+            "applicationData.responses.Q2.text"
+          ],
           "operator": "objectProperties"
         },
         "tableName": "user",
         "first_name": {
-          "children": ["applicationData.responses.Q1.text"],
+          "children": [
+            "applicationData.responses.Q1.text"
+          ],
           "operator": "objectProperties"
         },
         "password_hash": {
           "children": [
             {
-              "children": ["applicationData.responses.passwordCheckbox.values.0.selected"],
+              "children": [
+                "applicationData.responses.passwordCheckbox.values.0.selected"
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.responses.newPassword.hash"],
+              "children": [
+                "applicationData.responses.newPassword.hash"
+              ],
               "operator": "objectProperties"
             },
             null
@@ -1664,7 +1909,9 @@
         "tableName": "application",
         "counterInit": 100,
         "counterName": {
-          "children": ["applicationData.templateCode"],
+          "children": [
+            "applicationData.templateCode"
+          ],
           "operator": "objectProperties"
         },
         "customFields": {},
@@ -1734,7 +1981,10 @@
           "children": [
             "## Registration complete!\n\nThanks, %1.\n\nPlease log in to continue.",
             {
-              "children": ["applicationData.responses.Q1FirstName.text", ""],
+              "children": [
+                "applicationData.responses.Q1FirstName.text",
+                ""
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -1754,21 +2004,30 @@
       "id": 12,
       "parameterQueries": {
         "email": {
-          "children": ["applicationData.responses.Q4Email.text", ""],
+          "children": [
+            "applicationData.responses.Q4Email.text",
+            ""
+          ],
           "operator": "objectProperties"
         },
         "message": {
           "children": [
             "Hi %1,\n\nplease confirm your user account registration by clicking (or copy-pasting) the following link:\n\n[%2%3](%2%3)",
             {
-              "children": ["applicationData.responses.Q1FirstName.text", ""],
+              "children": [
+                "applicationData.responses.Q1FirstName.text",
+                ""
+              ],
               "operator": "objectProperties"
             },
             {
               "children": [
                 "%1%2",
                 {
-                  "children": ["applicationData.environmentData.webHostUrl", null],
+                  "children": [
+                    "applicationData.environmentData.webHostUrl",
+                    null
+                  ],
                   "operator": "objectProperties"
                 },
                 "/verify?uid="
@@ -1776,7 +2035,9 @@
               "operator": "stringSubstitution"
             },
             {
-              "children": ["outputCumulative.verification.unique_id"],
+              "children": [
+                "outputCumulative.verification.unique_id"
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -1799,24 +2060,34 @@
       "id": 13,
       "parameterQueries": {
         "email": {
-          "children": ["applicationData.responses.Q4Email.text"],
+          "children": [
+            "applicationData.responses.Q4Email.text"
+          ],
           "operator": "objectProperties"
         },
         "username": {
-          "children": ["applicationData.responses.Q3Username.text"],
+          "children": [
+            "applicationData.responses.Q3Username.text"
+          ],
           "operator": "objectProperties"
         },
         "last_name": {
-          "children": ["applicationData.responses.Q2LastName.text"],
+          "children": [
+            "applicationData.responses.Q2LastName.text"
+          ],
           "operator": "objectProperties"
         },
         "tableName": "user",
         "first_name": {
-          "children": ["applicationData.responses.Q1FirstName.text"],
+          "children": [
+            "applicationData.responses.Q1FirstName.text"
+          ],
           "operator": "objectProperties"
         },
         "password_hash": {
-          "children": ["applicationData.responses.Q5Password.hash"],
+          "children": [
+            "applicationData.responses.Q5Password.hash"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -1865,10 +2136,14 @@
       "id": 16,
       "parameterQueries": {
         "username": {
-          "children": ["applicationData.responses.Q3Username.text"],
+          "children": [
+            "applicationData.responses.Q3Username.text"
+          ],
           "operator": "objectProperties"
         },
-        "permissionNames": ["applyGeneral"]
+        "permissionNames": [
+          "applyGeneral"
+        ]
       },
       "sequence": 4,
       "templateId": 2,
@@ -1886,7 +2161,9 @@
         "fieldName": "serial",
         "tableName": "application",
         "counterName": {
-          "children": ["applicationData.templateCode"],
+          "children": [
+            "applicationData.templateCode"
+          ],
           "operator": "objectProperties"
         },
         "updateRecord": true
@@ -1974,7 +2251,9 @@
       "actionCode": "changeStatus",
       "code": null,
       "condition": {
-        "children": ["applicationData.reviewData.reviewAssignment.isLocked"],
+        "children": [
+          "applicationData.reviewData.reviewAssignment.isLocked"
+        ],
         "operator": "objectProperties"
       },
       "description": null,
@@ -2034,7 +2313,9 @@
       "id": 130,
       "parameterQueries": {
         "changedResponses": {
-          "children": ["outputCumulative.updatedResponses"],
+          "children": [
+            "outputCumulative.updatedResponses"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -2077,7 +2358,9 @@
       "id": 133,
       "parameterQueries": {
         "timestamp": {
-          "children": ["outputCumulative.reviewStatusHistoryTimestamp"],
+          "children": [
+            "outputCumulative.reviewStatusHistoryTimestamp"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -2095,11 +2378,15 @@
       "parameterQueries": {
         "triggeredBy": "REVIEW",
         "applicationId": {
-          "children": ["applicationData.applicationId"],
+          "children": [
+            "applicationData.applicationId"
+          ],
           "operator": "objectProperties"
         },
         "changedResponses": {
-          "children": ["outputCumulative.updatedResponses"],
+          "children": [
+            "outputCumulative.updatedResponses"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -2117,7 +2404,9 @@
               {
                 "children": [
                   {
-                    "children": ["applicationData.reviewData.latestDecision.decision"],
+                    "children": [
+                      "applicationData.reviewData.latestDecision.decision"
+                    ],
                     "operator": "objectProperties"
                   },
                   "CONFORM"
@@ -2127,7 +2416,9 @@
               {
                 "children": [
                   {
-                    "children": ["applicationData.reviewData.latestDecision.decision"],
+                    "children": [
+                      "applicationData.reviewData.latestDecision.decision"
+                    ],
                     "operator": "objectProperties"
                   },
                   "NON_CONFORM"
@@ -2138,7 +2429,9 @@
             "operator": "OR"
           },
           {
-            "children": ["applicationData.reviewData.isLastLevel"],
+            "children": [
+              "applicationData.reviewData.isLastLevel"
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -2172,7 +2465,9 @@
           {
             "children": [
               {
-                "children": ["applicationData.reviewData.latestDecision.decision"],
+                "children": [
+                  "applicationData.reviewData.latestDecision.decision"
+                ],
                 "operator": "objectProperties"
               },
               "LIST_OF_QUESTIONS"
@@ -2180,7 +2475,9 @@
             "operator": "="
           },
           {
-            "children": ["applicationData.reviewData.isLastLevel"],
+            "children": [
+              "applicationData.reviewData.isLastLevel"
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -2202,7 +2499,9 @@
           {
             "children": [
               {
-                "children": ["applicationData.reviewData.latestDecision.decision"],
+                "children": [
+                  "applicationData.reviewData.latestDecision.decision"
+                ],
                 "operator": "objectProperties"
               },
               "LIST_OF_QUESTIONS"
@@ -2210,7 +2509,9 @@
             "operator": "="
           },
           {
-            "children": ["applicationData.reviewData.isLastLevel"],
+            "children": [
+              "applicationData.reviewData.isLastLevel"
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -2235,23 +2536,34 @@
           {
             "children": [
               {
-                "children": ["applicationData.reviewData.latestDecision.decision", null],
+                "children": [
+                  "applicationData.reviewData.latestDecision.decision",
+                  null
+                ],
                 "operator": "objectProperties"
               },
               {
                 "type": "string",
-                "children": ["CONFORM", "NON_CONFORM"],
+                "children": [
+                  "CONFORM",
+                  "NON_CONFORM"
+                ],
                 "operator": "OR"
               }
             ],
             "operator": "="
           },
           {
-            "children": ["applicationData.reviewData.isLastLevel"],
+            "children": [
+              "applicationData.reviewData.isLastLevel"
+            ],
             "operator": "objectProperties"
           },
           {
-            "children": ["applicationData.reviewData.isLastStage", null],
+            "children": [
+              "applicationData.reviewData.isLastStage",
+              null
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -2266,7 +2578,10 @@
             {
               "children": [
                 {
-                  "children": ["applicationData.reviewData.latestDecision.decision", null],
+                  "children": [
+                    "applicationData.reviewData.latestDecision.decision",
+                    null
+                  ],
                   "operator": "objectProperties"
                 },
                 "CONFORM"
@@ -2292,11 +2607,15 @@
       "id": 140,
       "parameterQueries": {
         "trigger": {
-          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.trigger"
+          ],
           "operator": "objectProperties"
         },
         "reviewAssignmentId": {
-          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.record_id"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -2340,7 +2659,9 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.outcome"],
+            "children": [
+              "applicationData.outcome"
+            ],
             "operator": "objectProperties"
           },
           "APPROVED"
@@ -2352,18 +2673,24 @@
       "id": 143,
       "parameterQueries": {
         "name": {
-          "children": ["applicationData.responses.name.text"],
+          "children": [
+            "applicationData.responses.name.text"
+          ],
           "operator": "objectProperties"
         },
         "address": {
-          "children": ["applicationData.responses.physAdd.text"],
+          "children": [
+            "applicationData.responses.physAdd.text"
+          ],
           "operator": "objectProperties"
         },
         "logo_url": {
           "children": [
             "",
             {
-              "children": ["applicationData.responses.logo.files.fileUrl"],
+              "children": [
+                "applicationData.responses.logo.files.fileUrl"
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -2371,11 +2698,15 @@
         },
         "tableName": "organisation",
         "registration": {
-          "children": ["applicationData.responses.rego.text"],
+          "children": [
+            "applicationData.responses.rego.text"
+          ],
           "operator": "objectProperties"
         },
         "registration_documentation": {
-          "children": ["applicationData.responses.regoDoc"],
+          "children": [
+            "applicationData.responses.regoDoc"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -2389,7 +2720,9 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.outcome"],
+            "children": [
+              "applicationData.outcome"
+            ],
             "operator": "objectProperties"
           },
           "APPROVED"
@@ -2401,12 +2734,16 @@
       "id": 144,
       "parameterQueries": {
         "user_id": {
-          "children": ["applicationData.userId"],
+          "children": [
+            "applicationData.userId"
+          ],
           "operator": "objectProperties"
         },
         "user_role": "Owner",
         "organisation_id": {
-          "children": ["outputCumulative.organisation.id"],
+          "children": [
+            "outputCumulative.organisation.id"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -2420,7 +2757,9 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.outcome"],
+            "children": [
+              "applicationData.outcome"
+            ],
             "operator": "objectProperties"
           },
           "APPROVED"
@@ -2432,14 +2771,20 @@
       "id": 145,
       "parameterQueries": {
         "orgName": {
-          "children": ["outputCumulative.organisation.name"],
+          "children": [
+            "outputCumulative.organisation.name"
+          ],
           "operator": "objectProperties"
         },
         "username": {
-          "children": ["applicationData.username"],
+          "children": [
+            "applicationData.username"
+          ],
           "operator": "objectProperties"
         },
-        "permissionNames": ["reviewJoinOrg"]
+        "permissionNames": [
+          "reviewJoinOrg"
+        ]
       },
       "sequence": 103,
       "templateId": 7,
@@ -2457,7 +2802,9 @@
         "fieldName": "serial",
         "tableName": "application",
         "counterName": {
-          "children": ["applicationData.templateCode"],
+          "children": [
+            "applicationData.templateCode"
+          ],
           "operator": "objectProperties"
         },
         "updateRecord": true
@@ -2545,7 +2892,9 @@
       "actionCode": "changeStatus",
       "code": null,
       "condition": {
-        "children": ["applicationData.reviewData.reviewAssignment.isLocked"],
+        "children": [
+          "applicationData.reviewData.reviewAssignment.isLocked"
+        ],
         "operator": "objectProperties"
       },
       "description": null,
@@ -2605,7 +2954,9 @@
       "id": 156,
       "parameterQueries": {
         "changedResponses": {
-          "children": ["outputCumulative.updatedResponses"],
+          "children": [
+            "outputCumulative.updatedResponses"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -2648,7 +2999,9 @@
       "id": 159,
       "parameterQueries": {
         "timestamp": {
-          "children": ["outputCumulative.reviewStatusHistoryTimestamp"],
+          "children": [
+            "outputCumulative.reviewStatusHistoryTimestamp"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -2666,11 +3019,15 @@
       "parameterQueries": {
         "triggeredBy": "REVIEW",
         "applicationId": {
-          "children": ["applicationData.applicationId"],
+          "children": [
+            "applicationData.applicationId"
+          ],
           "operator": "objectProperties"
         },
         "changedResponses": {
-          "children": ["outputCumulative.updatedResponses"],
+          "children": [
+            "outputCumulative.updatedResponses"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -2688,7 +3045,9 @@
               {
                 "children": [
                   {
-                    "children": ["applicationData.reviewData.latestDecision.decision"],
+                    "children": [
+                      "applicationData.reviewData.latestDecision.decision"
+                    ],
                     "operator": "objectProperties"
                   },
                   "CONFORM"
@@ -2698,7 +3057,9 @@
               {
                 "children": [
                   {
-                    "children": ["applicationData.reviewData.latestDecision.decision"],
+                    "children": [
+                      "applicationData.reviewData.latestDecision.decision"
+                    ],
                     "operator": "objectProperties"
                   },
                   "NON_CONFORM"
@@ -2709,7 +3070,9 @@
             "operator": "OR"
           },
           {
-            "children": ["applicationData.reviewData.isLastLevel"],
+            "children": [
+              "applicationData.reviewData.isLastLevel"
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -2743,7 +3106,9 @@
           {
             "children": [
               {
-                "children": ["applicationData.reviewData.latestDecision.decision"],
+                "children": [
+                  "applicationData.reviewData.latestDecision.decision"
+                ],
                 "operator": "objectProperties"
               },
               "LIST_OF_QUESTIONS"
@@ -2751,7 +3116,9 @@
             "operator": "="
           },
           {
-            "children": ["applicationData.reviewData.isLastLevel"],
+            "children": [
+              "applicationData.reviewData.isLastLevel"
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -2773,7 +3140,9 @@
           {
             "children": [
               {
-                "children": ["applicationData.reviewData.latestDecision.decision"],
+                "children": [
+                  "applicationData.reviewData.latestDecision.decision"
+                ],
                 "operator": "objectProperties"
               },
               "LIST_OF_QUESTIONS"
@@ -2781,7 +3150,9 @@
             "operator": "="
           },
           {
-            "children": ["applicationData.reviewData.isLastLevel"],
+            "children": [
+              "applicationData.reviewData.isLastLevel"
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -2806,23 +3177,34 @@
           {
             "children": [
               {
-                "children": ["applicationData.reviewData.latestDecision.decision", null],
+                "children": [
+                  "applicationData.reviewData.latestDecision.decision",
+                  null
+                ],
                 "operator": "objectProperties"
               },
               {
                 "type": "string",
-                "children": ["CONFORM", "NON_CONFORM"],
+                "children": [
+                  "CONFORM",
+                  "NON_CONFORM"
+                ],
                 "operator": "OR"
               }
             ],
             "operator": "="
           },
           {
-            "children": ["applicationData.reviewData.isLastLevel"],
+            "children": [
+              "applicationData.reviewData.isLastLevel"
+            ],
             "operator": "objectProperties"
           },
           {
-            "children": ["applicationData.reviewData.isLastStage", null],
+            "children": [
+              "applicationData.reviewData.isLastStage",
+              null
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -2837,7 +3219,10 @@
             {
               "children": [
                 {
-                  "children": ["applicationData.reviewData.latestDecision.decision", null],
+                  "children": [
+                    "applicationData.reviewData.latestDecision.decision",
+                    null
+                  ],
                   "operator": "objectProperties"
                 },
                 "CONFORM"
@@ -2863,11 +3248,15 @@
       "id": 166,
       "parameterQueries": {
         "trigger": {
-          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.trigger"
+          ],
           "operator": "objectProperties"
         },
         "reviewAssignmentId": {
-          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.record_id"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -2914,11 +3303,15 @@
       "id": 169,
       "parameterQueries": {
         "id": {
-          "children": ["applicationData.applicationId"],
+          "children": [
+            "applicationData.applicationId"
+          ],
           "operator": "objectProperties"
         },
         "org_id": {
-          "children": ["applicationData.responses.S1Q1.selection.id"],
+          "children": [
+            "applicationData.responses.S1Q1.selection.id"
+          ],
           "operator": "objectProperties"
         },
         "tableName": "application"
@@ -2933,7 +3326,9 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.outcome"],
+            "children": [
+              "applicationData.outcome"
+            ],
             "operator": "objectProperties"
           },
           "APPROVED"
@@ -2945,11 +3340,15 @@
       "id": 170,
       "parameterQueries": {
         "user_id": {
-          "children": ["applicationData.userId"],
+          "children": [
+            "applicationData.userId"
+          ],
           "operator": "objectProperties"
         },
         "organisation_id": {
-          "children": ["applicationData.responses.S1Q1.selection.id"],
+          "children": [
+            "applicationData.responses.S1Q1.selection.id"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -2963,7 +3362,9 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.outcome"],
+            "children": [
+              "applicationData.outcome"
+            ],
             "operator": "objectProperties"
           },
           "APPROVED"
@@ -2975,14 +3376,20 @@
       "id": 171,
       "parameterQueries": {
         "orgName": {
-          "children": ["applicationData.responses.S1Q1.selection.name"],
+          "children": [
+            "applicationData.responses.S1Q1.selection.name"
+          ],
           "operator": "objectProperties"
         },
         "username": {
-          "children": ["applicationData.username"],
+          "children": [
+            "applicationData.username"
+          ],
           "operator": "objectProperties"
         },
-        "permissionNames": ["canApplyDrugRego"]
+        "permissionNames": [
+          "canApplyDrugRego"
+        ]
       },
       "sequence": 130,
       "templateId": 8,
@@ -2994,7 +3401,9 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.outcome"],
+            "children": [
+              "applicationData.outcome"
+            ],
             "operator": "objectProperties"
           },
           "APPROVED"
@@ -3017,7 +3426,9 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.outcome"],
+            "children": [
+              "applicationData.outcome"
+            ],
             "operator": "objectProperties"
           },
           "APPROVED"
@@ -3032,11 +3443,17 @@
           "children": [
             "### Congratulations, %1!\n\nYour application to join organisation %2 has been APPROVED.\n\n[Application Dashboard](%3)\n\nPlease find attached the ID file you uploaded (testing attachment handling)",
             {
-              "children": ["applicationData.firstName", ""],
+              "children": [
+                "applicationData.firstName",
+                ""
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.responses.S1Q1.text", ""],
+              "children": [
+                "applicationData.responses.S1Q1.text",
+                ""
+              ],
               "operator": "objectProperties"
             },
             "http://localhost:3000"
@@ -3047,7 +3464,10 @@
           "children": [
             "Application approved: %1",
             {
-              "children": ["applicationData.applicationSerial", ""],
+              "children": [
+                "applicationData.applicationSerial",
+                ""
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -3056,7 +3476,9 @@
         "fromName": "Application Manager",
         "fromEmail": "no-reply@sussol.net",
         "attachments": {
-          "children": ["applicationData.responses.IDUpload.files.uniqueId"],
+          "children": [
+            "applicationData.responses.IDUpload.files.uniqueId"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -3076,7 +3498,9 @@
         "fieldName": "serial",
         "tableName": "application",
         "counterName": {
-          "children": ["applicationData.templateCode"],
+          "children": [
+            "applicationData.templateCode"
+          ],
           "operator": "objectProperties"
         },
         "updateRecord": true
@@ -3164,7 +3588,9 @@
       "actionCode": "changeStatus",
       "code": null,
       "condition": {
-        "children": ["applicationData.reviewData.reviewAssignment.isLocked"],
+        "children": [
+          "applicationData.reviewData.reviewAssignment.isLocked"
+        ],
         "operator": "objectProperties"
       },
       "description": null,
@@ -3224,7 +3650,9 @@
       "id": 184,
       "parameterQueries": {
         "changedResponses": {
-          "children": ["outputCumulative.updatedResponses"],
+          "children": [
+            "outputCumulative.updatedResponses"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -3267,7 +3695,9 @@
       "id": 187,
       "parameterQueries": {
         "timestamp": {
-          "children": ["outputCumulative.reviewStatusHistoryTimestamp"],
+          "children": [
+            "outputCumulative.reviewStatusHistoryTimestamp"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -3285,11 +3715,15 @@
       "parameterQueries": {
         "triggeredBy": "REVIEW",
         "applicationId": {
-          "children": ["applicationData.applicationId"],
+          "children": [
+            "applicationData.applicationId"
+          ],
           "operator": "objectProperties"
         },
         "changedResponses": {
-          "children": ["outputCumulative.updatedResponses"],
+          "children": [
+            "outputCumulative.updatedResponses"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -3307,7 +3741,9 @@
               {
                 "children": [
                   {
-                    "children": ["applicationData.reviewData.latestDecision.decision"],
+                    "children": [
+                      "applicationData.reviewData.latestDecision.decision"
+                    ],
                     "operator": "objectProperties"
                   },
                   "CONFORM"
@@ -3317,7 +3753,9 @@
               {
                 "children": [
                   {
-                    "children": ["applicationData.reviewData.latestDecision.decision"],
+                    "children": [
+                      "applicationData.reviewData.latestDecision.decision"
+                    ],
                     "operator": "objectProperties"
                   },
                   "NON_CONFORM"
@@ -3328,7 +3766,9 @@
             "operator": "OR"
           },
           {
-            "children": ["applicationData.reviewData.isLastLevel"],
+            "children": [
+              "applicationData.reviewData.isLastLevel"
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -3362,7 +3802,9 @@
           {
             "children": [
               {
-                "children": ["applicationData.reviewData.latestDecision.decision"],
+                "children": [
+                  "applicationData.reviewData.latestDecision.decision"
+                ],
                 "operator": "objectProperties"
               },
               "LIST_OF_QUESTIONS"
@@ -3370,7 +3812,9 @@
             "operator": "="
           },
           {
-            "children": ["applicationData.reviewData.isLastLevel"],
+            "children": [
+              "applicationData.reviewData.isLastLevel"
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -3392,7 +3836,9 @@
           {
             "children": [
               {
-                "children": ["applicationData.reviewData.latestDecision.decision"],
+                "children": [
+                  "applicationData.reviewData.latestDecision.decision"
+                ],
                 "operator": "objectProperties"
               },
               "LIST_OF_QUESTIONS"
@@ -3400,7 +3846,9 @@
             "operator": "="
           },
           {
-            "children": ["applicationData.reviewData.isLastLevel"],
+            "children": [
+              "applicationData.reviewData.isLastLevel"
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -3425,23 +3873,34 @@
           {
             "children": [
               {
-                "children": ["applicationData.reviewData.latestDecision.decision", null],
+                "children": [
+                  "applicationData.reviewData.latestDecision.decision",
+                  null
+                ],
                 "operator": "objectProperties"
               },
               {
                 "type": "string",
-                "children": ["CONFORM", "NON_CONFORM"],
+                "children": [
+                  "CONFORM",
+                  "NON_CONFORM"
+                ],
                 "operator": "OR"
               }
             ],
             "operator": "="
           },
           {
-            "children": ["applicationData.reviewData.isLastLevel"],
+            "children": [
+              "applicationData.reviewData.isLastLevel"
+            ],
             "operator": "objectProperties"
           },
           {
-            "children": ["applicationData.reviewData.isLastStage", null],
+            "children": [
+              "applicationData.reviewData.isLastStage",
+              null
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -3456,7 +3915,10 @@
             {
               "children": [
                 {
-                  "children": ["applicationData.reviewData.latestDecision.decision", null],
+                  "children": [
+                    "applicationData.reviewData.latestDecision.decision",
+                    null
+                  ],
                   "operator": "objectProperties"
                 },
                 "CONFORM"
@@ -3482,11 +3944,15 @@
       "id": 194,
       "parameterQueries": {
         "trigger": {
-          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.trigger"
+          ],
           "operator": "objectProperties"
         },
         "reviewAssignmentId": {
-          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.record_id"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -3538,7 +4004,9 @@
         "fieldName": "serial",
         "tableName": "application",
         "counterName": {
-          "children": ["applicationData.templateCode"],
+          "children": [
+            "applicationData.templateCode"
+          ],
           "operator": "objectProperties"
         },
         "updateRecord": true
@@ -3626,7 +4094,9 @@
       "actionCode": "changeStatus",
       "code": null,
       "condition": {
-        "children": ["applicationData.reviewData.reviewAssignment.isLocked"],
+        "children": [
+          "applicationData.reviewData.reviewAssignment.isLocked"
+        ],
         "operator": "objectProperties"
       },
       "description": "**CORE-ACTION** Change review status to LOCKED when the reviewer clicks to start one assignment with has flag isLocked as true",
@@ -3686,7 +4156,9 @@
       "id": 207,
       "parameterQueries": {
         "changedResponses": {
-          "children": ["outputCumulative.updatedResponses"],
+          "children": [
+            "outputCumulative.updatedResponses"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -3729,7 +4201,9 @@
       "id": 210,
       "parameterQueries": {
         "timestamp": {
-          "children": ["outputCumulative.reviewStatusHistoryTimestamp"],
+          "children": [
+            "outputCumulative.reviewStatusHistoryTimestamp"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -3747,11 +4221,15 @@
       "parameterQueries": {
         "triggeredBy": "REVIEW",
         "applicationId": {
-          "children": ["applicationData.applicationId"],
+          "children": [
+            "applicationData.applicationId"
+          ],
           "operator": "objectProperties"
         },
         "changedResponses": {
-          "children": ["outputCumulative.updatedResponses"],
+          "children": [
+            "outputCumulative.updatedResponses"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -3769,7 +4247,9 @@
               {
                 "children": [
                   {
-                    "children": ["applicationData.reviewData.latestDecision.decision"],
+                    "children": [
+                      "applicationData.reviewData.latestDecision.decision"
+                    ],
                     "operator": "objectProperties"
                   },
                   "CONFORM"
@@ -3779,7 +4259,9 @@
               {
                 "children": [
                   {
-                    "children": ["applicationData.reviewData.latestDecision.decision"],
+                    "children": [
+                      "applicationData.reviewData.latestDecision.decision"
+                    ],
                     "operator": "objectProperties"
                   },
                   "NON_CONFORM"
@@ -3790,7 +4272,9 @@
             "operator": "OR"
           },
           {
-            "children": ["applicationData.reviewData.isLastLevel"],
+            "children": [
+              "applicationData.reviewData.isLastLevel"
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -3824,7 +4308,9 @@
           {
             "children": [
               {
-                "children": ["applicationData.reviewData.latestDecision.decision"],
+                "children": [
+                  "applicationData.reviewData.latestDecision.decision"
+                ],
                 "operator": "objectProperties"
               },
               "LIST_OF_QUESTIONS"
@@ -3832,7 +4318,9 @@
             "operator": "="
           },
           {
-            "children": ["applicationData.reviewData.isLastLevel"],
+            "children": [
+              "applicationData.reviewData.isLastLevel"
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -3854,7 +4342,9 @@
           {
             "children": [
               {
-                "children": ["applicationData.reviewData.latestDecision.decision"],
+                "children": [
+                  "applicationData.reviewData.latestDecision.decision"
+                ],
                 "operator": "objectProperties"
               },
               "LIST_OF_QUESTIONS"
@@ -3862,7 +4352,9 @@
             "operator": "="
           },
           {
-            "children": ["applicationData.reviewData.isLastLevel"],
+            "children": [
+              "applicationData.reviewData.isLastLevel"
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -3887,23 +4379,34 @@
           {
             "children": [
               {
-                "children": ["applicationData.reviewData.latestDecision.decision", null],
+                "children": [
+                  "applicationData.reviewData.latestDecision.decision",
+                  null
+                ],
                 "operator": "objectProperties"
               },
               {
                 "type": "string",
-                "children": ["CONFORM", "NON_CONFORM"],
+                "children": [
+                  "CONFORM",
+                  "NON_CONFORM"
+                ],
                 "operator": "OR"
               }
             ],
             "operator": "="
           },
           {
-            "children": ["applicationData.reviewData.isLastLevel"],
+            "children": [
+              "applicationData.reviewData.isLastLevel"
+            ],
             "operator": "objectProperties"
           },
           {
-            "children": ["applicationData.reviewData.isLastStage", null],
+            "children": [
+              "applicationData.reviewData.isLastStage",
+              null
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -3918,7 +4421,10 @@
             {
               "children": [
                 {
-                  "children": ["applicationData.reviewData.latestDecision.decision", null],
+                  "children": [
+                    "applicationData.reviewData.latestDecision.decision",
+                    null
+                  ],
                   "operator": "objectProperties"
                 },
                 "CONFORM"
@@ -3944,11 +4450,15 @@
       "id": 217,
       "parameterQueries": {
         "trigger": {
-          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.trigger"
+          ],
           "operator": "objectProperties"
         },
         "reviewAssignmentId": {
-          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.record_id"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -3983,7 +4493,9 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.outcome"],
+            "children": [
+              "applicationData.outcome"
+            ],
             "operator": "objectProperties"
           },
           "APPROVED"
@@ -3995,18 +4507,24 @@
       "id": 219,
       "parameterQueries": {
         "name": {
-          "children": ["applicationData.responses.name.text"],
+          "children": [
+            "applicationData.responses.name.text"
+          ],
           "operator": "objectProperties"
         },
         "address": {
-          "children": ["applicationData.responses.physAdd.text"],
+          "children": [
+            "applicationData.responses.physAdd.text"
+          ],
           "operator": "objectProperties"
         },
         "logo_url": {
           "children": [
             "",
             {
-              "children": ["applicationData.responses.logo.files.fileUrl"],
+              "children": [
+                "applicationData.responses.logo.files.fileUrl"
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -4014,11 +4532,15 @@
         },
         "tableName": "organisation",
         "registration": {
-          "children": ["applicationData.responses.rego.text"],
+          "children": [
+            "applicationData.responses.rego.text"
+          ],
           "operator": "objectProperties"
         },
         "registration_documentation": {
-          "children": ["applicationData.responses.regoDoc"],
+          "children": [
+            "applicationData.responses.regoDoc"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -4032,7 +4554,9 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.outcome"],
+            "children": [
+              "applicationData.outcome"
+            ],
             "operator": "objectProperties"
           },
           "APPROVED"
@@ -4044,12 +4568,16 @@
       "id": 220,
       "parameterQueries": {
         "user_id": {
-          "children": ["applicationData.userId"],
+          "children": [
+            "applicationData.userId"
+          ],
           "operator": "objectProperties"
         },
         "user_role": "Owner",
         "organisation_id": {
-          "children": ["outputCumulative.organisation.id"],
+          "children": [
+            "outputCumulative.organisation.id"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -4063,7 +4591,9 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.outcome"],
+            "children": [
+              "applicationData.outcome"
+            ],
             "operator": "objectProperties"
           },
           "APPROVED"
@@ -4075,14 +4605,20 @@
       "id": 221,
       "parameterQueries": {
         "orgName": {
-          "children": ["outputCumulative.organisation.name"],
+          "children": [
+            "outputCumulative.organisation.name"
+          ],
           "operator": "objectProperties"
         },
         "username": {
-          "children": ["applicationData.username"],
+          "children": [
+            "applicationData.username"
+          ],
           "operator": "objectProperties"
         },
-        "permissionNames": ["reviewJoinOrg"]
+        "permissionNames": [
+          "reviewJoinOrg"
+        ]
       },
       "sequence": 103,
       "templateId": 10,
@@ -4096,7 +4632,9 @@
           {
             "children": [
               {
-                "children": ["applicationData.reviewData.latestDecision.decision"],
+                "children": [
+                  "applicationData.reviewData.latestDecision.decision"
+                ],
                 "operator": "objectProperties"
               },
               "NON_CONFORM"
@@ -4106,7 +4644,9 @@
           {
             "children": [
               {
-                "children": ["applicationData.stage"],
+                "children": [
+                  "applicationData.stage"
+                ],
                 "operator": "objectProperties"
               },
               "Screening"
@@ -4114,7 +4654,9 @@
             "operator": "="
           },
           {
-            "children": ["applicationData.reviewData.isLastLevel"],
+            "children": [
+              "applicationData.reviewData.isLastLevel"
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -4138,7 +4680,9 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.outcome"],
+            "children": [
+              "applicationData.outcome"
+            ],
             "operator": "objectProperties"
           },
           "APPROVED"
@@ -4150,26 +4694,41 @@
       "id": 223,
       "parameterQueries": {
         "email": {
-          "children": ["applicationData.email", ""],
+          "children": [
+            "applicationData.email",
+            ""
+          ],
           "operator": "objectProperties"
         },
         "message": {
           "children": [
             "# Your company licence has been registered.\n\nHi %1 %2, \n\nYour application %3 to register a licence to apply for Product registrations for company ‘%4’ has been approved. \n\nLog into your mFlow account to view the changes. \n\nMany thanks, \n\n{Regulatory Authority}",
             {
-              "children": ["applicationData.firstName", ""],
+              "children": [
+                "applicationData.firstName",
+                ""
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.lastName", ""],
+              "children": [
+                "applicationData.lastName",
+                ""
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.applicationName", null],
+              "children": [
+                "applicationData.applicationName",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.orgName", null],
+              "children": [
+                "applicationData.orgName",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -4179,7 +4738,10 @@
           "children": [
             "Congratulations, application %1 has been approved",
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -4198,7 +4760,9 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.outcome"],
+            "children": [
+              "applicationData.outcome"
+            ],
             "operator": "objectProperties"
           },
           "REJECTED"
@@ -4210,30 +4774,48 @@
       "id": 224,
       "parameterQueries": {
         "email": {
-          "children": ["applicationData.email", ""],
+          "children": [
+            "applicationData.email",
+            ""
+          ],
           "operator": "objectProperties"
         },
         "message": {
           "children": [
             "# Your application has been rejected\n \n%1 application was rejected during stage of %2.\nThe outline reason for rejection is:\n    \"%3\"\n\nTo see more information on mFlow visit %4/application/%5\n\nMany thanks,\n\n%6",
             {
-              "children": ["applicationData.applicationName", null],
+              "children": [
+                "applicationData.applicationName",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.stage", null],
+              "children": [
+                "applicationData.stage",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.reviewData.latestDecision.comment", null],
+              "children": [
+                "applicationData.reviewData.latestDecision.comment",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.environmentData.webHostUrl", null],
+              "children": [
+                "applicationData.environmentData.webHostUrl",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
@@ -4252,7 +4834,10 @@
           "children": [
             "Changes have been made to your application %1",
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -4269,7 +4854,10 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.reviewData.latestDecision.decision", null],
+            "children": [
+              "applicationData.reviewData.latestDecision.decision",
+              null
+            ],
             "operator": "objectProperties"
           },
           "LIST_OF_QUESTIONS"
@@ -4281,14 +4869,20 @@
       "id": 226,
       "parameterQueries": {
         "email": {
-          "children": ["applicationData.email", ""],
+          "children": [
+            "applicationData.email",
+            ""
+          ],
           "operator": "objectProperties"
         },
         "message": {
           "children": [
             "# A List of Questions have been submitted\n \nApplication %1 needs your attention now. \n\n%2\n\nTo see and make changes to your application on mFlow visit: [%3/application/%4](%3/application/%4)\n\nMany thanks,\n\n%5",
             {
-              "children": ["applicationData.applicationName", null],
+              "children": [
+                "applicationData.applicationName",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
@@ -4296,7 +4890,10 @@
                 {
                   "children": [
                     {
-                      "children": ["applicationData.reviewData.latestDecision.comment", null],
+                      "children": [
+                        "applicationData.reviewData.latestDecision.comment",
+                        null
+                      ],
                       "operator": "objectProperties"
                     },
                     null
@@ -4307,7 +4904,10 @@
                   "children": [
                     "The outline reason for changes required is:\n\n    \"%2\"",
                     {
-                      "children": ["applicationData.reviewData.latestDecision.comment", null],
+                      "children": [
+                        "applicationData.reviewData.latestDecision.comment",
+                        null
+                      ],
                       "operator": "objectProperties"
                     }
                   ],
@@ -4318,11 +4918,17 @@
               "operator": "?"
             },
             {
-              "children": ["applicationData.environmentData.webHostUrl", null],
+              "children": [
+                "applicationData.environmentData.webHostUrl",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
@@ -4341,7 +4947,10 @@
           "children": [
             "Changes have been made to your application %1",
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -4360,7 +4969,9 @@
           {
             "children": [
               {
-                "children": ["applicationData.reviewData.latestDecision.decision"],
+                "children": [
+                  "applicationData.reviewData.latestDecision.decision"
+                ],
                 "operator": "objectProperties"
               },
               "NON_CONFORM"
@@ -4370,7 +4981,9 @@
           {
             "children": [
               {
-                "children": ["applicationData.stage"],
+                "children": [
+                  "applicationData.stage"
+                ],
                 "operator": "objectProperties"
               },
               "Screening"
@@ -4378,7 +4991,9 @@
             "operator": "="
           },
           {
-            "children": ["applicationData.reviewData.isLastLevel"],
+            "children": [
+              "applicationData.reviewData.isLastLevel"
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -4402,7 +5017,9 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.outcome"],
+            "children": [
+              "applicationData.outcome"
+            ],
             "operator": "objectProperties"
           },
           "APPROVED"
@@ -4414,26 +5031,41 @@
       "id": 228,
       "parameterQueries": {
         "email": {
-          "children": ["applicationData.email", ""],
+          "children": [
+            "applicationData.email",
+            ""
+          ],
           "operator": "objectProperties"
         },
         "message": {
           "children": [
             "# Your company licence has been registered.\n\nHi %1 %2, \n\nYour application %3 to register a licence to apply for Product registrations for company ‘%4’ has been approved. \n\nLog into your mFlow account to view the changes. \n\nMany thanks, \n\n{Regulatory Authority}",
             {
-              "children": ["applicationData.firstName", ""],
+              "children": [
+                "applicationData.firstName",
+                ""
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.lastName", ""],
+              "children": [
+                "applicationData.lastName",
+                ""
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.applicationName", null],
+              "children": [
+                "applicationData.applicationName",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.orgName", null],
+              "children": [
+                "applicationData.orgName",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -4443,7 +5075,10 @@
           "children": [
             "Congratulations, application %1 has been approved",
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -4462,7 +5097,9 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.outcome"],
+            "children": [
+              "applicationData.outcome"
+            ],
             "operator": "objectProperties"
           },
           "REJECTED"
@@ -4474,30 +5111,48 @@
       "id": 229,
       "parameterQueries": {
         "email": {
-          "children": ["applicationData.email", ""],
+          "children": [
+            "applicationData.email",
+            ""
+          ],
           "operator": "objectProperties"
         },
         "message": {
           "children": [
             "# Your application has been rejected\n \n%1 application was rejected during stage of %2.\nThe outline reason for rejection is:\n    \"%3\"\n\nTo see more information on mFlow visit [%4/application/%5](%4/application/%5)\n\nMany thanks,\n\n%6",
             {
-              "children": ["applicationData.applicationName", null],
+              "children": [
+                "applicationData.applicationName",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.stage", null],
+              "children": [
+                "applicationData.stage",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.reviewData.latestDecision.comment", null],
+              "children": [
+                "applicationData.reviewData.latestDecision.comment",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.environmentData.webHostUrl", null],
+              "children": [
+                "applicationData.environmentData.webHostUrl",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
@@ -4516,7 +5171,10 @@
           "children": [
             "Changes have been made to your application %1",
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -4533,7 +5191,10 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.reviewData.latestDecision.decision", null],
+            "children": [
+              "applicationData.reviewData.latestDecision.decision",
+              null
+            ],
             "operator": "objectProperties"
           },
           "LIST_OF_QUESTIONS"
@@ -4545,14 +5206,20 @@
       "id": 230,
       "parameterQueries": {
         "email": {
-          "children": ["applicationData.email", ""],
+          "children": [
+            "applicationData.email",
+            ""
+          ],
           "operator": "objectProperties"
         },
         "message": {
           "children": [
             "# A List of Questions have been submitted\n \nApplication %1 needs your attention now. \n\n%2\n\nTo see and make changes to your application on mFlow visit: [%3/application/%4](%3/application/%4)\n\nMany thanks,\n\n%5",
             {
-              "children": ["applicationData.applicationName", null],
+              "children": [
+                "applicationData.applicationName",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
@@ -4560,7 +5227,10 @@
                 {
                   "children": [
                     {
-                      "children": ["applicationData.reviewData.latestDecision.comment", null],
+                      "children": [
+                        "applicationData.reviewData.latestDecision.comment",
+                        null
+                      ],
                       "operator": "objectProperties"
                     },
                     null
@@ -4571,7 +5241,10 @@
                   "children": [
                     "The outline reason for changes required is:\n\n    \"%2\"",
                     {
-                      "children": ["applicationData.reviewData.latestDecision.comment", null],
+                      "children": [
+                        "applicationData.reviewData.latestDecision.comment",
+                        null
+                      ],
                       "operator": "objectProperties"
                     }
                   ],
@@ -4582,11 +5255,17 @@
               "operator": "?"
             },
             {
-              "children": ["applicationData.environmentData.webHostUrl", null],
+              "children": [
+                "applicationData.environmentData.webHostUrl",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
@@ -4605,7 +5284,10 @@
           "children": [
             "Changes have been made to your application %1",
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -4622,7 +5304,9 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.outcome"],
+            "children": [
+              "applicationData.outcome"
+            ],
             "operator": "objectProperties"
           },
           "APPROVED"
@@ -4634,26 +5318,41 @@
       "id": 231,
       "parameterQueries": {
         "email": {
-          "children": ["applicationData.email", ""],
+          "children": [
+            "applicationData.email",
+            ""
+          ],
           "operator": "objectProperties"
         },
         "message": {
           "children": [
             "# Your request to join organistion has been approved.\n\nHi %1 %2, \n\nYour application %3 to join company ‘%4’ has been approved. \n\nLog into your mFlow account to view the changes. \n\nMany thanks, \n\n{Regulatory Agency}",
             {
-              "children": ["applicationData.firstName", ""],
+              "children": [
+                "applicationData.firstName",
+                ""
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.lastName", ""],
+              "children": [
+                "applicationData.lastName",
+                ""
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.applicationName", null],
+              "children": [
+                "applicationData.applicationName",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.orgName", null],
+              "children": [
+                "applicationData.orgName",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -4663,7 +5362,10 @@
           "children": [
             "Congratulations, application %1 has been approved",
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -4682,7 +5384,9 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.outcome"],
+            "children": [
+              "applicationData.outcome"
+            ],
             "operator": "objectProperties"
           },
           "REJECTED"
@@ -4694,30 +5398,48 @@
       "id": 232,
       "parameterQueries": {
         "email": {
-          "children": ["applicationData.email", ""],
+          "children": [
+            "applicationData.email",
+            ""
+          ],
           "operator": "objectProperties"
         },
         "message": {
           "children": [
             "# Your application has been rejected\n \n%1 application was rejected during stage of %2.\nThe outline reason for rejection is:\n    \"%3\"\n\nTo see more information on mFlow visit [%4/application/%5](%4/application/%5)\n\nMany thanks,\n\n{Regulatory Agency}",
             {
-              "children": ["applicationData.applicationName", null],
+              "children": [
+                "applicationData.applicationName",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.stage", null],
+              "children": [
+                "applicationData.stage",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.reviewData.latestDecision.comment", null],
+              "children": [
+                "applicationData.reviewData.latestDecision.comment",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.environmentData.webHostUrl", null],
+              "children": [
+                "applicationData.environmentData.webHostUrl",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -4727,7 +5449,10 @@
           "children": [
             "Changes have been made to your application %1",
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -4744,7 +5469,10 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.reviewData.latestDecision.decision", null],
+            "children": [
+              "applicationData.reviewData.latestDecision.decision",
+              null
+            ],
             "operator": "objectProperties"
           },
           "LIST_OF_QUESTIONS"
@@ -4756,14 +5484,20 @@
       "id": 233,
       "parameterQueries": {
         "email": {
-          "children": ["applicationData.email", ""],
+          "children": [
+            "applicationData.email",
+            ""
+          ],
           "operator": "objectProperties"
         },
         "message": {
           "children": [
             "# A List of Questions have been submitted\n \nApplication %1 needs your attention now. \n\n%2\n\nTo see and make changes to your application on mFlow visit: [%3/application/%4](%3/application/%4)\n\nMany thanks,\n\n{Regulatory Agency}",
             {
-              "children": ["applicationData.applicationName", null],
+              "children": [
+                "applicationData.applicationName",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
@@ -4771,7 +5505,10 @@
                 {
                   "children": [
                     {
-                      "children": ["applicationData.reviewData.latestDecision.comment", null],
+                      "children": [
+                        "applicationData.reviewData.latestDecision.comment",
+                        null
+                      ],
                       "operator": "objectProperties"
                     },
                     null
@@ -4782,7 +5519,10 @@
                   "children": [
                     "The outline reason for changes required is:\n\n    \"%2\"",
                     {
-                      "children": ["applicationData.reviewData.latestDecision.comment", null],
+                      "children": [
+                        "applicationData.reviewData.latestDecision.comment",
+                        null
+                      ],
                       "operator": "objectProperties"
                     }
                   ],
@@ -4793,11 +5533,17 @@
               "operator": "?"
             },
             {
-              "children": ["applicationData.environmentData.webHostUrl", null],
+              "children": [
+                "applicationData.environmentData.webHostUrl",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -4807,7 +5553,10 @@
           "children": [
             "Changes have been made to your application %1",
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -4824,7 +5573,9 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.outcome"],
+            "children": [
+              "applicationData.outcome"
+            ],
             "operator": "objectProperties"
           },
           "APPROVED"
@@ -4836,26 +5587,41 @@
       "id": 234,
       "parameterQueries": {
         "email": {
-          "children": ["applicationData.email", ""],
+          "children": [
+            "applicationData.email",
+            ""
+          ],
           "operator": "objectProperties"
         },
         "message": {
           "children": [
             "# Your request to register an organistion has been approved.\n\nHi %1 %2, \n\nYour application %3 to join company ‘%4’ has been approved. \n\nLog into your mFlow account to view the changes. \n\nMany thanks, \n\n{Regulatory Agency}",
             {
-              "children": ["applicationData.firstName", ""],
+              "children": [
+                "applicationData.firstName",
+                ""
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.lastName", ""],
+              "children": [
+                "applicationData.lastName",
+                ""
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.applicationName", null],
+              "children": [
+                "applicationData.applicationName",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.responses.name.text", null],
+              "children": [
+                "applicationData.responses.name.text",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -4865,7 +5631,10 @@
           "children": [
             "Congratulations, application %1 has been approved",
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -4884,7 +5653,9 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.outcome"],
+            "children": [
+              "applicationData.outcome"
+            ],
             "operator": "objectProperties"
           },
           "REJECTED"
@@ -4896,30 +5667,48 @@
       "id": 235,
       "parameterQueries": {
         "email": {
-          "children": ["applicationData.email", ""],
+          "children": [
+            "applicationData.email",
+            ""
+          ],
           "operator": "objectProperties"
         },
         "message": {
           "children": [
             "# Your application has been rejected\n \n%1 application was rejected during stage of %2.\nThe outline reason for rejection is:\n    \"%3\"\n\nTo see more information on mFlow visit [%4/application/%5](%4/application/%5)\n\nMany thanks,\n\n{Regulatory Agency}",
             {
-              "children": ["applicationData.applicationName", null],
+              "children": [
+                "applicationData.applicationName",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.stage", null],
+              "children": [
+                "applicationData.stage",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.reviewData.latestDecision.comment", null],
+              "children": [
+                "applicationData.reviewData.latestDecision.comment",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.environmentData.webHostUrl", null],
+              "children": [
+                "applicationData.environmentData.webHostUrl",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -4929,7 +5718,10 @@
           "children": [
             "Changes have been made to your application %1",
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -4946,7 +5738,10 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.reviewData.latestDecision.decision", null],
+            "children": [
+              "applicationData.reviewData.latestDecision.decision",
+              null
+            ],
             "operator": "objectProperties"
           },
           "LIST_OF_QUESTIONS"
@@ -4958,14 +5753,20 @@
       "id": 236,
       "parameterQueries": {
         "email": {
-          "children": ["applicationData.email", ""],
+          "children": [
+            "applicationData.email",
+            ""
+          ],
           "operator": "objectProperties"
         },
         "message": {
           "children": [
             "# A List of Questions have been submitted\n \nApplication %1 needs your attention now. \n\n%2\n\nTo see and make changes to your application on mFlow visit: [%3/application/%4](%3/application/%4)\n\nMany thanks,\n\n{Regulatory Agency}",
             {
-              "children": ["applicationData.applicationName", null],
+              "children": [
+                "applicationData.applicationName",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
@@ -4973,7 +5774,10 @@
                 {
                   "children": [
                     {
-                      "children": ["applicationData.reviewData.latestDecision.comment", null],
+                      "children": [
+                        "applicationData.reviewData.latestDecision.comment",
+                        null
+                      ],
                       "operator": "objectProperties"
                     },
                     null
@@ -4984,7 +5788,10 @@
                   "children": [
                     "The outline reason for changes required is:\n\n    \"%2\"",
                     {
-                      "children": ["applicationData.reviewData.latestDecision.comment", null],
+                      "children": [
+                        "applicationData.reviewData.latestDecision.comment",
+                        null
+                      ],
                       "operator": "objectProperties"
                     }
                   ],
@@ -4995,11 +5802,17 @@
               "operator": "?"
             },
             {
-              "children": ["applicationData.environmentData.webHostUrl", null],
+              "children": [
+                "applicationData.environmentData.webHostUrl",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -5009,7 +5822,10 @@
           "children": [
             "Changes have been made to your application %1",
             {
-              "children": ["applicationData.applicationSerial", null],
+              "children": [
+                "applicationData.applicationSerial",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -5050,7 +5866,9 @@
         "tableName": "application",
         "counterInit": 100,
         "counterName": {
-          "children": ["applicationData.templateCode"],
+          "children": [
+            "applicationData.templateCode"
+          ],
           "operator": "objectProperties"
         },
         "customFields": {
@@ -5096,7 +5914,10 @@
         "children": [
           1,
           {
-            "children": ["applicationData.stageNumber", null],
+            "children": [
+              "applicationData.stageNumber",
+              null
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -5113,14 +5934,20 @@
             {
               "children": [
                 {
-                  "children": ["applicationData.applicationSerial", null],
+                  "children": [
+                    "applicationData.applicationSerial",
+                    null
+                  ],
                   "operator": "objectProperties"
                 }
               ],
               "operator": "+"
             },
             {
-              "children": ["applicationData.sessionId", null],
+              "children": [
+                "applicationData.sessionId",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -5138,7 +5965,10 @@
         "children": [
           1,
           {
-            "children": ["applicationData.stageNumber", null],
+            "children": [
+              "applicationData.stageNumber",
+              null
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -5152,9 +5982,13 @@
           "children": [
             "query getUser($username:String!) {userByUsername(username: $username) {email, firstName, lastName }}",
             "graphQLendpoint",
-            ["username"],
+            [
+              "username"
+            ],
             {
-              "children": ["applicationData.responses.username.text"],
+              "children": [
+                "applicationData.responses.username.text"
+              ],
               "operator": "objectProperties"
             },
             "userByUsername.email"
@@ -5168,9 +6002,13 @@
               "children": [
                 "query getUser($username:String!) {userByUsername(username: $username) {email, firstName, lastName }}",
                 "graphQLendpoint",
-                ["username"],
+                [
+                  "username"
+                ],
                 {
-                  "children": ["applicationData.responses.username.text"],
+                  "children": [
+                    "applicationData.responses.username.text"
+                  ],
                   "operator": "objectProperties"
                 },
                 "userByUsername.firstName"
@@ -5178,15 +6016,23 @@
               "operator": "graphQL"
             },
             {
-              "children": ["applicationData.responses.username.text", null],
+              "children": [
+                "applicationData.responses.username.text",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.environmentData.webHostUrl", null],
+              "children": [
+                "applicationData.environmentData.webHostUrl",
+                null
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["outputCumulative.verification.unique_id"],
+              "children": [
+                "outputCumulative.verification.unique_id"
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -5207,7 +6053,10 @@
         "children": [
           2,
           {
-            "children": ["applicationData.stageNumber", null],
+            "children": [
+              "applicationData.stageNumber",
+              null
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -5220,11 +6069,16 @@
         "tableName": "user",
         "matchField": "username",
         "matchValue": {
-          "children": ["applicationData.responses.username.text", null],
+          "children": [
+            "applicationData.responses.username.text",
+            null
+          ],
           "operator": "objectProperties"
         },
         "password_hash": {
-          "children": ["applicationData.responses.password.hash"],
+          "children": [
+            "applicationData.responses.password.hash"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -5239,7 +6093,10 @@
         "children": [
           2,
           {
-            "children": ["applicationData.stageNumber", null],
+            "children": [
+              "applicationData.stageNumber",
+              null
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -5323,7 +6180,10 @@
           "children": [
             "",
             {
-              "children": ["applicationData.responses.org.selection.name", null],
+              "children": [
+                "applicationData.responses.org.selection.name",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -5333,14 +6193,18 @@
           "children": [
             "",
             {
-              "children": ["applicationData.responses.user.selection.username"],
+              "children": [
+                "applicationData.responses.user.selection.username"
+              ],
               "operator": "objectProperties"
             }
           ],
           "operator": "+"
         },
         "permissionNames": {
-          "children": ["applicationData.responses.permissions.selectedValuesArray.text"],
+          "children": [
+            "applicationData.responses.permissions.selectedValuesArray.text"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -5360,7 +6224,9 @@
         "fieldName": "serial",
         "tableName": "application",
         "counterName": {
-          "children": ["applicationData.templateCode"],
+          "children": [
+            "applicationData.templateCode"
+          ],
           "operator": "objectProperties"
         },
         "updateRecord": true
@@ -5430,7 +6296,9 @@
         "fieldName": "serial",
         "tableName": "application",
         "counterName": {
-          "children": ["applicationData.templateCode"],
+          "children": [
+            "applicationData.templateCode"
+          ],
           "operator": "objectProperties"
         },
         "updateRecord": true
@@ -5472,14 +6340,20 @@
           "children": [
             "",
             {
-              "children": ["applicationData.responses.user.selection.id", null],
+              "children": [
+                "applicationData.responses.user.selection.id",
+                null
+              ],
               "operator": "objectProperties"
             }
           ],
           "operator": "+"
         },
         "organisation_id": {
-          "children": ["applicationData.responses.org.selection.id", null],
+          "children": [
+            "applicationData.responses.org.selection.id",
+            null
+          ],
           "operator": "objectProperties"
         }
       },
@@ -5622,7 +6496,10 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.reviewData", null],
+            "children": [
+              "applicationData.reviewData",
+              null
+            ],
             "operator": "objectProperties"
           },
           null
@@ -5637,7 +6514,10 @@
         "newStatus": {
           "children": [
             {
-              "children": ["applicationData.reviewData.reviewAssignment.isLocked", null],
+              "children": [
+                "applicationData.reviewData.reviewAssignment.isLocked",
+                null
+              ],
               "operator": "objectProperties"
             },
             "LOCKED",
@@ -5656,7 +6536,10 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.reviewData", null],
+            "children": [
+              "applicationData.reviewData",
+              null
+            ],
             "operator": "objectProperties"
           },
           null
@@ -5671,7 +6554,10 @@
         "newStatus": {
           "children": [
             {
-              "children": ["applicationData.reviewData.reviewAssignment.isLocked", null],
+              "children": [
+                "applicationData.reviewData.reviewAssignment.isLocked",
+                null
+              ],
               "operator": "objectProperties"
             },
             "LOCKED",
@@ -5690,7 +6576,10 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.reviewData", null],
+            "children": [
+              "applicationData.reviewData",
+              null
+            ],
             "operator": "objectProperties"
           },
           null
@@ -5705,7 +6594,10 @@
         "newStatus": {
           "children": [
             {
-              "children": ["applicationData.reviewData.reviewAssignment.isLocked", null],
+              "children": [
+                "applicationData.reviewData.reviewAssignment.isLocked",
+                null
+              ],
               "operator": "objectProperties"
             },
             "LOCKED",
@@ -5724,7 +6616,10 @@
       "condition": {
         "children": [
           {
-            "children": ["applicationData.reviewData", null],
+            "children": [
+              "applicationData.reviewData",
+              null
+            ],
             "operator": "objectProperties"
           },
           null
@@ -5739,7 +6634,10 @@
         "newStatus": {
           "children": [
             {
-              "children": ["applicationData.reviewData.reviewAssignment.isLocked", null],
+              "children": [
+                "applicationData.reviewData.reviewAssignment.isLocked",
+                null
+              ],
               "operator": "objectProperties"
             },
             "LOCKED",
@@ -5761,11 +6659,15 @@
       "id": 268,
       "parameterQueries": {
         "trigger": {
-          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.trigger"
+          ],
           "operator": "objectProperties"
         },
         "reviewAssignmentId": {
-          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.record_id"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -5782,11 +6684,15 @@
       "id": 269,
       "parameterQueries": {
         "trigger": {
-          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.trigger"
+          ],
           "operator": "objectProperties"
         },
         "reviewAssignmentId": {
-          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.record_id"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -5803,11 +6709,15 @@
       "id": 270,
       "parameterQueries": {
         "trigger": {
-          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.trigger"
+          ],
           "operator": "objectProperties"
         },
         "reviewAssignmentId": {
-          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.record_id"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -5824,11 +6734,15 @@
       "id": 271,
       "parameterQueries": {
         "trigger": {
-          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.trigger"
+          ],
           "operator": "objectProperties"
         },
         "reviewAssignmentId": {
-          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.record_id"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -5845,11 +6759,15 @@
       "id": 272,
       "parameterQueries": {
         "trigger": {
-          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.trigger"
+          ],
           "operator": "objectProperties"
         },
         "reviewAssignmentId": {
-          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.record_id"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -5866,11 +6784,15 @@
       "id": 273,
       "parameterQueries": {
         "trigger": {
-          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.trigger"
+          ],
           "operator": "objectProperties"
         },
         "reviewAssignmentId": {
-          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.record_id"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -5887,11 +6809,15 @@
       "id": 274,
       "parameterQueries": {
         "trigger": {
-          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.trigger"
+          ],
           "operator": "objectProperties"
         },
         "reviewAssignmentId": {
-          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.record_id"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -5908,11 +6834,15 @@
       "id": 275,
       "parameterQueries": {
         "trigger": {
-          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.trigger"
+          ],
           "operator": "objectProperties"
         },
         "reviewAssignmentId": {
-          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.record_id"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -5929,11 +6859,15 @@
       "id": 276,
       "parameterQueries": {
         "trigger": {
-          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.trigger"
+          ],
           "operator": "objectProperties"
         },
         "reviewAssignmentId": {
-          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.record_id"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -5950,11 +6884,15 @@
       "id": 277,
       "parameterQueries": {
         "trigger": {
-          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.trigger"
+          ],
           "operator": "objectProperties"
         },
         "reviewAssignmentId": {
-          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.record_id"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -5971,11 +6909,15 @@
       "id": 278,
       "parameterQueries": {
         "trigger": {
-          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.trigger"
+          ],
           "operator": "objectProperties"
         },
         "reviewAssignmentId": {
-          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.record_id"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -5992,11 +6934,15 @@
       "id": 279,
       "parameterQueries": {
         "trigger": {
-          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.trigger"
+          ],
           "operator": "objectProperties"
         },
         "reviewAssignmentId": {
-          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "children": [
+            "applicationData.action_payload.trigger_payload.record_id"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -6772,7 +7718,6 @@
       "timeCreated": "2022-08-11T10:15:21.714024+12:00"
     }
   ],
-  "organisationApplicationJoin": [],
   "templateElement": [
     {
       "category": "INFORMATION",
@@ -6805,7 +7750,9 @@
           {
             "key": "text",
             "value": {
-              "children": ["currentUser.firstName"],
+              "children": [
+                "currentUser.firstName"
+              ],
               "operator": "objectProperties"
             }
           }
@@ -6828,7 +7775,9 @@
       "validation": {
         "children": [
           {
-            "children": ["responses.thisResponse"],
+            "children": [
+              "responses.thisResponse"
+            ],
             "operator": "objectProperties"
           },
           {
@@ -6849,7 +7798,9 @@
           {
             "key": "text",
             "value": {
-              "children": ["currentUser.lastName"],
+              "children": [
+                "currentUser.lastName"
+              ],
               "operator": "objectProperties"
             }
           }
@@ -6882,7 +7833,9 @@
           {
             "key": "text",
             "value": {
-              "children": ["currentUser.username"],
+              "children": [
+                "currentUser.username"
+              ],
               "operator": "objectProperties"
             }
           }
@@ -6909,17 +7862,24 @@
               {
                 "children": [
                   {
-                    "children": ["applicationData.config.serverREST"],
+                    "children": [
+                      "applicationData.config.serverREST"
+                    ],
                     "operator": "objectProperties"
                   },
                   "/check-unique"
                 ],
                 "operator": "+"
               },
-              ["type", "value"],
+              [
+                "type",
+                "value"
+              ],
               "username",
               {
-                "children": ["responses.thisResponse"],
+                "children": [
+                  "responses.thisResponse"
+                ],
                 "operator": "objectProperties"
               },
               "unique"
@@ -6929,11 +7889,15 @@
           {
             "children": [
               {
-                "children": ["currentUser.username"],
+                "children": [
+                  "currentUser.username"
+                ],
                 "operator": "objectProperties"
               },
               {
-                "children": ["responses.thisResponse"],
+                "children": [
+                  "responses.thisResponse"
+                ],
                 "operator": "objectProperties"
               }
             ],
@@ -6954,7 +7918,9 @@
           {
             "key": "text",
             "value": {
-              "children": ["currentUser.email"],
+              "children": [
+                "currentUser.email"
+              ],
               "operator": "objectProperties"
             }
           }
@@ -6977,7 +7943,9 @@
       "validation": {
         "children": [
           {
-            "children": ["responses.thisResponse"],
+            "children": [
+              "responses.thisResponse"
+            ],
             "operator": "objectProperties"
           },
           "^\\S+@\\S+\\.\\S+$"
@@ -7001,7 +7969,9 @@
       "parameters": {
         "type": "toggle",
         "label": "Do you wish to change your password?",
-        "checkboxes": ["Yes"]
+        "checkboxes": [
+          "Yes"
+        ]
       },
       "sectionId": 1,
       "templateCode": "UserEdit",
@@ -7030,20 +8000,29 @@
             {
               "children": [
                 {
-                  "children": ["applicationData.config.serverREST"],
+                  "children": [
+                    "applicationData.config.serverREST"
+                  ],
                   "operator": "objectProperties"
                 },
                 "/public/login"
               ],
               "operator": "+"
             },
-            ["username", "password"],
+            [
+              "username",
+              "password"
+            ],
             {
-              "children": ["currentUser.username"],
+              "children": [
+                "currentUser.username"
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["responses.thisResponse"],
+              "children": [
+                "responses.thisResponse"
+              ],
               "operator": "objectProperties"
             },
             "success"
@@ -7062,7 +8041,9 @@
       "visibilityCondition": {
         "children": [
           {
-            "children": ["responses.passwordCheckbox.values.0.selected"],
+            "children": [
+              "responses.passwordCheckbox.values.0.selected"
+            ],
             "operator": "objectProperties"
           },
           true
@@ -7088,7 +8069,9 @@
         "validationInternal": {
           "children": [
             {
-              "children": ["responses.thisResponse"],
+              "children": [
+                "responses.thisResponse"
+              ],
               "operator": "objectProperties"
             },
             {
@@ -7108,7 +8091,10 @@
       "visibilityCondition": {
         "children": [
           {
-            "children": ["responses.currentPassword.isValid", false],
+            "children": [
+              "responses.currentPassword.isValid",
+              false
+            ],
             "operator": "objectProperties"
           },
           true
@@ -7209,17 +8195,24 @@
               {
                 "children": [
                   {
-                    "children": ["applicationData.config.serverREST"],
+                    "children": [
+                      "applicationData.config.serverREST"
+                    ],
                     "operator": "objectProperties"
                   },
                   "/check-unique"
                 ],
                 "operator": "+"
               },
-              ["type", "value"],
+              [
+                "type",
+                "value"
+              ],
               "username",
               {
-                "children": ["responses.thisResponse"],
+                "children": [
+                  "responses.thisResponse"
+                ],
                 "operator": "objectProperties"
               },
               "unique"
@@ -7231,7 +8224,9 @@
               {
                 "children": [
                   {
-                    "children": ["responses.thisResponse"],
+                    "children": [
+                      "responses.thisResponse"
+                    ],
                     "operator": "objectProperties"
                   },
                   "^[a-zA-Z0-9_.-@]{3,50}$"
@@ -7269,7 +8264,9 @@
       "validation": {
         "children": [
           {
-            "children": ["responses.thisResponse"],
+            "children": [
+              "responses.thisResponse"
+            ],
             "operator": "objectProperties"
           },
           "^\\S+@\\S+\\.\\S+$"
@@ -7297,7 +8294,9 @@
         "validationInternal": {
           "children": [
             {
-              "children": ["responses.thisResponse"],
+              "children": [
+                "responses.thisResponse"
+              ],
               "operator": "objectProperties"
             },
             {
@@ -7362,17 +8361,24 @@
           {
             "children": [
               {
-                "children": ["applicationData.config.serverREST"],
+                "children": [
+                  "applicationData.config.serverREST"
+                ],
                 "operator": "objectProperties"
               },
               "/check-unique"
             ],
             "operator": "CONCAT"
           },
-          ["type", "value"],
+          [
+            "type",
+            "value"
+          ],
           "organisation",
           {
-            "children": ["responses.thisResponse"],
+            "children": [
+              "responses.thisResponse"
+            ],
             "operator": "objectProperties"
           },
           "unique"
@@ -7405,18 +8411,26 @@
           {
             "children": [
               {
-                "children": ["applicationData.config.serverREST"],
+                "children": [
+                  "applicationData.config.serverREST"
+                ],
                 "operator": "objectProperties"
               },
               "/check-unique"
             ],
             "operator": "CONCAT"
           },
-          ["table", "field", "value"],
+          [
+            "table",
+            "field",
+            "value"
+          ],
           "organisation",
           "registration",
           {
-            "children": ["responses.thisResponse"],
+            "children": [
+              "responses.thisResponse"
+            ],
             "operator": "objectProperties"
           },
           "unique"
@@ -7501,7 +8515,9 @@
       "visibilityCondition": {
         "children": [
           {
-            "children": ["responses.addressCheckbox.text"],
+            "children": [
+              "responses.addressCheckbox.text"
+            ],
             "operator": "objectProperties"
           },
           "Yes"
@@ -7545,7 +8561,13 @@
         "description": "File must be an image type (.jpg, .jpeg, .png, .gif, .svg) and less than 5MB",
         "fileSizeLimit": 5000,
         "fileCountLimit": 1,
-        "fileExtensions": ["jpg", "jpeg", "png", "gif", "svg"]
+        "fileExtensions": [
+          "jpg",
+          "jpeg",
+          "png",
+          "gif",
+          "svg"
+        ]
       },
       "sectionId": 11,
       "templateCode": "OrgRegistration",
@@ -7568,7 +8590,11 @@
       "isReviewable": null,
       "parameters": {
         "label": "What is your organisation's primary activity",
-        "options": ["Manufacturer", "Importer", "Producer"]
+        "options": [
+          "Manufacturer",
+          "Importer",
+          "Producer"
+        ]
       },
       "sectionId": 11,
       "templateCode": "OrgRegistration",
@@ -7594,7 +8620,9 @@
           "children": [
             "Registration no. **%1**",
             {
-              "children": ["responses.rego.text"],
+              "children": [
+                "responses.rego.text"
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -7605,7 +8633,9 @@
           "children": [
             "**Documentation for Organisation: %1**",
             {
-              "children": ["responses.name.text"],
+              "children": [
+                "responses.name.text"
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -7635,11 +8665,15 @@
         "url": {
           "children": [
             {
-              "children": ["applicationData.config.serverREST"],
+              "children": [
+                "applicationData.config.serverREST"
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["responses.logo.files.fileUrl"],
+              "children": [
+                "responses.logo.files.fileUrl"
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -7673,7 +8707,14 @@
         "description": "Allowed formats: .pdf, .doc, .jpg, .png",
         "fileSizeLimit": 5000,
         "fileCountLimit": 1,
-        "fileExtensions": ["jpg", "jpeg", "png", "pdf", "doc", "docx"]
+        "fileExtensions": [
+          "jpg",
+          "jpeg",
+          "png",
+          "pdf",
+          "doc",
+          "docx"
+        ]
       },
       "sectionId": 12,
       "templateCode": "OrgRegistration",
@@ -7698,7 +8739,14 @@
         "label": "Please provide any other documentation pertinent to your organisation's activities",
         "description": "Allowed formats: .pdf, .doc, .jpg, .png",
         "fileSizeLimit": 5000,
-        "fileExtensions": ["jpg", "jpeg", "png", "pdf", "doc", "docx"]
+        "fileExtensions": [
+          "jpg",
+          "jpeg",
+          "png",
+          "pdf",
+          "doc",
+          "docx"
+        ]
       },
       "sectionId": 12,
       "templateCode": "OrgRegistration",
@@ -7725,7 +8773,9 @@
           "children": [
             "### Welcome, **%1**.",
             {
-              "children": ["applicationData.user.firstName"],
+              "children": [
+                "applicationData.user.firstName"
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -7855,7 +8905,12 @@
         "description": "Please upload a copy of your photo ID. Must be in **image** or **PDF** format and under 5MB.",
         "fileSizeLimit": 5000,
         "fileCountLimit": 1,
-        "fileExtensions": ["pdf", "png", "jpg", "jpeg"]
+        "fileExtensions": [
+          "pdf",
+          "png",
+          "jpg",
+          "jpeg"
+        ]
       },
       "sectionId": 13,
       "templateCode": "OrgJoin",
@@ -7881,7 +8936,12 @@
         "description": "If necessary, please provide additional documentation showing your relationship to this organisation.\nYou can upload more than one file if necessary, with same restrictions as above.",
         "fileSizeLimit": 5000,
         "fileCountLimit": 5,
-        "fileExtensions": ["pdf", "png", "jpg", "jpeg"]
+        "fileExtensions": [
+          "pdf",
+          "png",
+          "jpg",
+          "jpeg"
+        ]
       },
       "sectionId": 13,
       "templateCode": "OrgJoin",
@@ -7929,7 +8989,10 @@
           "children": [
             "%1, what is your last name?",
             {
-              "children": ["responses.Q1.text", ""],
+              "children": [
+                "responses.Q1.text",
+                ""
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -7945,7 +9008,9 @@
           {
             "children": [
               {
-                "children": ["responses.Q1.text"],
+                "children": [
+                  "responses.Q1.text"
+                ],
                 "operator": "objectProperties"
               },
               {
@@ -7957,7 +9022,9 @@
           {
             "children": [
               {
-                "children": ["responses.Q1.text"],
+                "children": [
+                  "responses.Q1.text"
+                ],
                 "operator": "objectProperties"
               },
               {
@@ -7988,11 +9055,17 @@
           "children": [
             "The new user's name is: %1 %2",
             {
-              "children": ["responses.Q1.text", ""],
+              "children": [
+                "responses.Q1.text",
+                ""
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["responses.Q2.text", ""],
+              "children": [
+                "responses.Q2.text",
+                ""
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -8003,11 +9076,16 @@
           "children": [
             "**Current User: %1 %2**",
             {
-              "children": ["applicationData.user.firstName"],
+              "children": [
+                "applicationData.user.firstName"
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["applicationData.user.lastName", ""],
+              "children": [
+                "applicationData.user.lastName",
+                ""
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -8046,7 +9124,9 @@
       "validation": {
         "children": [
           {
-            "children": ["responses.thisResponse"],
+            "children": [
+              "responses.thisResponse"
+            ],
             "operator": "objectProperties"
           },
           "^[\\s\\S]{0,100}$"
@@ -8074,7 +9154,9 @@
         "validationInternal": {
           "children": [
             {
-              "children": ["responses.thisResponse"],
+              "children": [
+                "responses.thisResponse"
+              ],
               "operator": "objectProperties"
             },
             {
@@ -8149,7 +9231,11 @@
       "isReviewable": null,
       "parameters": {
         "label": "Organisation Type",
-        "options": ["Manufacturer", "Distributor", "Importer"],
+        "options": [
+          "Manufacturer",
+          "Distributor",
+          "Importer"
+        ],
         "validation": {
           "value": true
         },
@@ -8176,7 +9262,11 @@
       "isReviewable": null,
       "parameters": {
         "label": "Select Manufacturer",
-        "options": ["Manufacturer A", "Manufacturer B", "Manufacturer C"],
+        "options": [
+          "Manufacturer A",
+          "Manufacturer B",
+          "Manufacturer C"
+        ],
         "placeholder": "Select"
       },
       "sectionId": 14,
@@ -8188,7 +9278,9 @@
       "visibilityCondition": {
         "children": [
           {
-            "children": ["responses.Q5.text"],
+            "children": [
+              "responses.Q5.text"
+            ],
             "operator": "objectProperties"
           },
           {
@@ -8211,7 +9303,11 @@
       "isReviewable": null,
       "parameters": {
         "label": "Select Distributor",
-        "options": ["Distributor A", "Distributor B", "Distributor C"],
+        "options": [
+          "Distributor A",
+          "Distributor B",
+          "Distributor C"
+        ],
         "placeholder": "Select"
       },
       "sectionId": 14,
@@ -8223,7 +9319,9 @@
       "visibilityCondition": {
         "children": [
           {
-            "children": ["responses.Q5.text"],
+            "children": [
+              "responses.Q5.text"
+            ],
             "operator": "objectProperties"
           },
           {
@@ -8246,7 +9344,11 @@
       "isReviewable": null,
       "parameters": {
         "label": "Select Importer",
-        "options": ["Importer A", "Importer B", "Importer C"],
+        "options": [
+          "Importer A",
+          "Importer B",
+          "Importer C"
+        ],
         "placeholder": "Select"
       },
       "sectionId": 14,
@@ -8258,7 +9360,9 @@
       "visibilityCondition": {
         "children": [
           {
-            "children": ["responses.Q5.text"],
+            "children": [
+              "responses.Q5.text"
+            ],
             "operator": "objectProperties"
           },
           {
@@ -8301,7 +9405,11 @@
       "isReviewable": null,
       "parameters": {
         "label": "This Radio button group has no default",
-        "options": ["Option A", "Option B", "Option C"],
+        "options": [
+          "Option A",
+          "Option B",
+          "Option C"
+        ],
         "hasOther": true,
         "otherPlaceholder": "Enter other answer"
       },
@@ -8402,7 +9510,9 @@
       "isReviewable": null,
       "parameters": {
         "label": "This is a single checkbox",
-        "checkboxes": ["Tick me"]
+        "checkboxes": [
+          "Tick me"
+        ]
       },
       "sectionId": 14,
       "templateCode": "Demo",
@@ -8457,7 +9567,9 @@
       "parameters": {
         "type": "toggle",
         "label": "Behold! a **toggle** switch:",
-        "checkboxes": ["ON"]
+        "checkboxes": [
+          "ON"
+        ]
       },
       "sectionId": 14,
       "templateCode": "Demo",
@@ -8487,7 +9599,9 @@
                 {
                   "children": [
                     {
-                      "children": ["responses.CB3.text"],
+                      "children": [
+                        "responses.CB3.text"
+                      ],
                       "operator": "objectProperties"
                     },
                     "ON"
@@ -8565,7 +9679,9 @@
             {
               "children": [
                 {
-                  "children": ["responses.CB4.values.Opt1.selected"],
+                  "children": [
+                    "responses.CB4.values.Opt1.selected"
+                  ],
                   "operator": "objectProperties"
                 },
                 "\n- Ice Cream",
@@ -8576,7 +9692,9 @@
             {
               "children": [
                 {
-                  "children": ["responses.CB4.values.Opt2.selected"],
+                  "children": [
+                    "responses.CB4.values.Opt2.selected"
+                  ],
                   "operator": "objectProperties"
                 },
                 "\n- Cake",
@@ -8731,11 +9849,15 @@
           "children": [
             "You chose %1 (index number %2) in the API lookup",
             {
-              "children": ["responses.D1.text"],
+              "children": [
+                "responses.D1.text"
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["responses.D1.optionIndex"],
+              "children": [
+                "responses.D1.optionIndex"
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -8753,7 +9875,9 @@
       "visibilityCondition": {
         "children": [
           {
-            "children": ["responses.D2.text"],
+            "children": [
+              "responses.D2.text"
+            ],
             "operator": "objectProperties"
           },
           {
@@ -8777,7 +9901,9 @@
       "parameters": {
         "text": "A text info box can be presented in a number of **styles**.\n\n*Please select one below*",
         "style": {
-          "children": ["responses.D3.text"],
+          "children": [
+            "responses.D3.text"
+          ],
           "operator": "objectProperties"
         },
         "title": "## Many ways to deliver information!"
@@ -8804,7 +9930,16 @@
       "parameters": {
         "label": "Select a style",
         "default": "none",
-        "options": ["none", "basic", "info", "warning", "success", "positive", "error", "negative"],
+        "options": [
+          "none",
+          "basic",
+          "info",
+          "warning",
+          "success",
+          "positive",
+          "error",
+          "negative"
+        ],
         "placeholder": "Select"
       },
       "sectionId": 14,
@@ -8855,7 +9990,11 @@
         "description": "You can provide multiple files.  \nFiles must be **image** files or **PDF** and under 5MB.",
         "fileSizeLimit": 5000,
         "fileCountLimit": 6,
-        "fileExtensions": ["pdf", "png", "jpg"]
+        "fileExtensions": [
+          "pdf",
+          "png",
+          "jpg"
+        ]
       },
       "sectionId": 15,
       "templateCode": "Demo",
@@ -8902,7 +10041,10 @@
           "children": [
             "No restrictions on this one, but we're testing dynamic description:\n\n_The files uploaded in the last page were:_  \n- _%1_",
             {
-              "children": ["responses.Q_upload1.text", "No files uploaded"],
+              "children": [
+                "responses.Q_upload1.text",
+                "No files uploaded"
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -8954,7 +10096,13 @@
         "description": "Only 1 file allowed, must be an image type (.jpg, .jpeg, .png, .gif, .svg) and less than 5MB",
         "fileSizeLimit": 5000,
         "fileCountLimit": 1,
-        "fileExtensions": ["jpg", "jpeg", "png", "gif", "svg"]
+        "fileExtensions": [
+          "jpg",
+          "jpeg",
+          "png",
+          "gif",
+          "svg"
+        ]
       },
       "sectionId": 15,
       "templateCode": "Demo",
@@ -8979,23 +10127,31 @@
         "url": {
           "children": [
             {
-              "children": ["applicationData.config.serverREST"],
+              "children": [
+                "applicationData.config.serverREST"
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["responses.Q_upload3.files.fileUrl"],
+              "children": [
+                "responses.Q_upload3.files.fileUrl"
+              ],
               "operator": "objectProperties"
             }
           ],
           "operator": "CONCAT"
         },
         "size": {
-          "children": ["responses.ImgOpt1.text"],
+          "children": [
+            "responses.ImgOpt1.text"
+          ],
           "operator": "objectProperties"
         },
         "altText": "This is the image you uploaded",
         "alignment": {
-          "children": ["responses.ImgOpt2.text"],
+          "children": [
+            "responses.ImgOpt2.text"
+          ],
           "operator": "objectProperties"
         }
       },
@@ -9008,7 +10164,9 @@
       "visibilityCondition": {
         "children": [
           {
-            "children": ["responses.Q_upload3.text"],
+            "children": [
+              "responses.Q_upload3.text"
+            ],
             "operator": "objectProperties"
           },
           ""
@@ -9030,7 +10188,16 @@
       "parameters": {
         "label": "Select image size",
         "default": 3,
-        "options": ["mini", "tiny", "small", "medium", "large", "big", "huge", "massive"]
+        "options": [
+          "mini",
+          "tiny",
+          "small",
+          "medium",
+          "large",
+          "big",
+          "huge",
+          "massive"
+        ]
       },
       "sectionId": 15,
       "templateCode": "Demo",
@@ -9041,7 +10208,9 @@
       "visibilityCondition": {
         "children": [
           {
-            "children": ["responses.Q_upload3.text"],
+            "children": [
+              "responses.Q_upload3.text"
+            ],
             "operator": "objectProperties"
           },
           ""
@@ -9063,7 +10232,11 @@
       "parameters": {
         "label": "Select image alignment",
         "default": 1,
-        "options": ["left", "center", "right"]
+        "options": [
+          "left",
+          "center",
+          "right"
+        ]
       },
       "sectionId": 15,
       "templateCode": "Demo",
@@ -9074,7 +10247,9 @@
       "visibilityCondition": {
         "children": [
           {
-            "children": ["responses.Q_upload3.text"],
+            "children": [
+              "responses.Q_upload3.text"
+            ],
             "operator": "objectProperties"
           },
           ""
@@ -9121,7 +10296,9 @@
         "label": "Ingredients list",
         "modalText": "## Ingredient item \n\nPlease enter details for **one** ingredient",
         "displayType": {
-          "children": ["responses.listDisplay.text"],
+          "children": [
+            "responses.listDisplay.text"
+          ],
           "operator": "objectProperties"
         },
         "inputFields": [
@@ -9154,7 +10331,9 @@
             "validation": {
               "children": [
                 {
-                  "children": ["responses.thisResponse"],
+                  "children": [
+                    "responses.thisResponse"
+                  ],
                   "operator": "objectProperties"
                 },
                 "^[0-9.]+$"
@@ -9169,7 +10348,11 @@
             "title": "Unit",
             "parameters": {
               "label": "Unit",
-              "options": ["Milligram", "Microgram", "International Unit"],
+              "options": [
+                "Milligram",
+                "Microgram",
+                "International Unit"
+              ],
               "hasOther": true
             },
             "elementTypePluginCode": "radioChoice"
@@ -9180,7 +10363,10 @@
             "parameters": {
               "label": "Type",
               "default": 0,
-              "options": ["Active", "Inactive"]
+              "options": [
+                "Active",
+                "Inactive"
+              ]
             },
             "elementTypePluginCode": "dropdownChoice"
           },
@@ -9190,7 +10376,10 @@
             "parameters": {
               "label": "Substance present in end product",
               "layout": "inline",
-              "options": ["Yes", "No"]
+              "options": [
+                "Yes",
+                "No"
+              ]
             },
             "elementTypePluginCode": "radioChoice"
           }
@@ -9224,7 +10413,10 @@
       "parameters": {
         "label": "Display style for Ingredients list",
         "default": "cards",
-        "options": ["cards", "table"],
+        "options": [
+          "cards",
+          "table"
+        ],
         "placeholder": "Select"
       },
       "sectionId": 16,
@@ -9273,9 +10465,13 @@
           "children": [
             "query GetUsers($user: String!) { users(filter: { username: {includesInsensitive: $user } }) {nodes { username, firstName, lastName }}}",
             "graphQLEndpoint",
-            ["user"],
+            [
+              "user"
+            ],
             {
-              "children": ["search.text"],
+              "children": [
+                "search.text"
+              ],
               "operator": "objectProperties"
             },
             "users.nodes"
@@ -9315,9 +10511,13 @@
           "children": [
             "query countries($code: ID!) {country(code: $code) {name, capital, emoji, code}}",
             "https://countries.trevorblades.com",
-            ["code"],
+            [
+              "code"
+            ],
             {
-              "children": ["search.text"],
+              "children": [
+                "search.text"
+              ],
               "operator": "objectProperties"
             },
             "country"
@@ -9359,9 +10559,13 @@
           "children": [
             "query GetEntitiesByName($search: String!) {entities (filter: { code: \"\" description: $search type: \"[drug]\" match: \"contains\"},offset: 0,first: 25) {data {        code,     description,        type,        uid  }, totalLength }}",
             "https://codes.msupply.foundation:2048/graphql",
-            ["search"],
+            [
+              "search"
+            ],
             {
-              "children": ["search.text"],
+              "children": [
+                "search.text"
+              ],
               "operator": "objectProperties"
             },
             "entities.data"
@@ -9407,9 +10611,13 @@
           "children": [
             "query GetOrgs($registration: String!) { organisations(filter: {registration: {startsWithInsensitive: $registration}}) { nodes { name registration } } }",
             "graphQLEndpoint",
-            ["registration"],
+            [
+              "registration"
+            ],
             {
-              "children": ["search.text"],
+              "children": [
+                "search.text"
+              ],
               "operator": "objectProperties"
             },
             "organisations.nodes"
@@ -9474,17 +10682,24 @@
           {
             "children": [
               {
-                "children": ["applicationData.config.serverREST"],
+                "children": [
+                  "applicationData.config.serverREST"
+                ],
                 "operator": "objectProperties"
               },
               "/check-unique"
             ],
             "operator": "CONCAT"
           },
-          ["type", "value"],
+          [
+            "type",
+            "value"
+          ],
           "organisation",
           {
-            "children": ["responses.thisResponse"],
+            "children": [
+              "responses.thisResponse"
+            ],
             "operator": "objectProperties"
           },
           "unique"
@@ -9517,18 +10732,26 @@
           {
             "children": [
               {
-                "children": ["applicationData.config.serverREST"],
+                "children": [
+                  "applicationData.config.serverREST"
+                ],
                 "operator": "objectProperties"
               },
               "/check-unique"
             ],
             "operator": "CONCAT"
           },
-          ["table", "field", "value"],
+          [
+            "table",
+            "field",
+            "value"
+          ],
           "organisation",
           "registration",
           {
-            "children": ["responses.thisResponse"],
+            "children": [
+              "responses.thisResponse"
+            ],
             "operator": "objectProperties"
           },
           "unique"
@@ -9613,7 +10836,9 @@
       "visibilityCondition": {
         "children": [
           {
-            "children": ["responses.addressCheckbox.text"],
+            "children": [
+              "responses.addressCheckbox.text"
+            ],
             "operator": "objectProperties"
           },
           "Yes"
@@ -9657,7 +10882,13 @@
         "description": "File must be an image type (.jpg, .jpeg, .png, .gif, .svg) and less than 5MB",
         "fileSizeLimit": 5000,
         "fileCountLimit": 1,
-        "fileExtensions": ["jpg", "jpeg", "png", "gif", "svg"]
+        "fileExtensions": [
+          "jpg",
+          "jpeg",
+          "png",
+          "gif",
+          "svg"
+        ]
       },
       "sectionId": 17,
       "templateCode": "CoreActions",
@@ -9680,7 +10911,11 @@
       "isReviewable": null,
       "parameters": {
         "label": "What is your organisation's primary activity",
-        "options": ["Manufacturer", "Importer", "Producer"]
+        "options": [
+          "Manufacturer",
+          "Importer",
+          "Producer"
+        ]
       },
       "sectionId": 17,
       "templateCode": "CoreActions",
@@ -9706,7 +10941,9 @@
           "children": [
             "Registration no. **%1**",
             {
-              "children": ["responses.rego.text"],
+              "children": [
+                "responses.rego.text"
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -9717,7 +10954,9 @@
           "children": [
             "**Documentation for Organisation: %1**",
             {
-              "children": ["responses.name.text"],
+              "children": [
+                "responses.name.text"
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -9747,11 +10986,15 @@
         "url": {
           "children": [
             {
-              "children": ["applicationData.config.serverREST"],
+              "children": [
+                "applicationData.config.serverREST"
+              ],
               "operator": "objectProperties"
             },
             {
-              "children": ["responses.logo.files.fileUrl"],
+              "children": [
+                "responses.logo.files.fileUrl"
+              ],
               "operator": "objectProperties"
             }
           ],
@@ -9785,7 +11028,14 @@
         "description": "Allowed formats: .pdf, .doc, .jpg, .png",
         "fileSizeLimit": 5000,
         "fileCountLimit": 1,
-        "fileExtensions": ["jpg", "jpeg", "png", "pdf", "doc", "docx"]
+        "fileExtensions": [
+          "jpg",
+          "jpeg",
+          "png",
+          "pdf",
+          "doc",
+          "docx"
+        ]
       },
       "sectionId": 18,
       "templateCode": "CoreActions",
@@ -9810,7 +11060,14 @@
         "label": "Please provide any other documentation pertinent to your organisation's activities",
         "description": "Allowed formats: .pdf, .doc, .jpg, .png",
         "fileSizeLimit": 5000,
-        "fileExtensions": ["jpg", "jpeg", "png", "pdf", "doc", "docx"]
+        "fileExtensions": [
+          "jpg",
+          "jpeg",
+          "png",
+          "pdf",
+          "doc",
+          "docx"
+        ]
       },
       "sectionId": 18,
       "templateCode": "CoreActions",
@@ -9855,7 +11112,10 @@
         "children": [
           1,
           {
-            "children": ["applicationData.current.stage.number", null],
+            "children": [
+              "applicationData.current.stage.number",
+              null
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -9878,18 +11138,26 @@
               {
                 "children": [
                   {
-                    "children": ["applicationData.config.serverREST"],
+                    "children": [
+                      "applicationData.config.serverREST"
+                    ],
                     "operator": "objectProperties"
                   },
                   "/check-unique"
                 ],
                 "operator": "+"
               },
-              ["type", "caseInsensitive", "value"],
+              [
+                "type",
+                "caseInsensitive",
+                "value"
+              ],
               "username",
               "false",
               {
-                "children": ["responses.thisResponse"],
+                "children": [
+                  "responses.thisResponse"
+                ],
                 "operator": "objectProperties"
               },
               "unique"
@@ -9920,7 +11188,9 @@
         "validationInternal": {
           "children": [
             {
-              "children": ["responses.thisResponse"],
+              "children": [
+                "responses.thisResponse"
+              ],
               "operator": "objectProperties"
             },
             {
@@ -9941,7 +11211,10 @@
         "children": [
           2,
           {
-            "children": ["applicationData.current.stage.number", null],
+            "children": [
+              "applicationData.current.stage.number",
+              null
+            ],
             "operator": "objectProperties"
           }
         ],
@@ -9966,9 +11239,13 @@
           "children": [
             "query findUser($search: String!) {\n  users(\n    filter: {\n      or: [\n        { email: { includesInsensitive: $search } }\n        { firstName: { includesInsensitive: $search } }\n        { lastName: { includesInsensitive: $search } }\n        { username: { includesInsensitive: $search } }\n      ]\n    }\n  ) {\n    nodes {\n      email\n      firstName\n      lastName\n      username\n      id\n    }\n  }\n}\n",
             "graphQLEndpoint",
-            ["search"],
+            [
+              "search"
+            ],
             {
-              "children": ["search.text"],
+              "children": [
+                "search.text"
+              ],
               "operator": "objectProperties"
             },
             "users.nodes"
@@ -10044,9 +11321,13 @@
           "children": [
             "query findOrg($search: String!) {\n  organisations(filter: { name: { includesInsensitive: $search } }) {\n    nodes {\n      name\n      id\n    }\n  }\n}\n",
             "graphQLEndpoint",
-            ["search"],
+            [
+              "search"
+            ],
             {
-              "children": ["search.text"],
+              "children": [
+                "search.text"
+              ],
               "operator": "objectProperties"
             },
             "organisations.nodes"
@@ -10089,9 +11370,13 @@
           "children": [
             "query findUser($search: String!) {\n  users(\n    filter: {\n      or: [\n        { email: { includesInsensitive: $search } }\n        { firstName: { includesInsensitive: $search } }\n        { lastName: { includesInsensitive: $search } }\n        { username: { includesInsensitive: $search } }\n      ]\n    }\n  ) {\n    nodes {\n      email\n      firstName\n      lastName\n      username\n      id\n    }\n  }\n}\n",
             "graphQLEndpoint",
-            ["search"],
+            [
+              "search"
+            ],
             {
-              "children": ["search.text"],
+              "children": [
+                "search.text"
+              ],
               "operator": "objectProperties"
             },
             "users.nodes"
@@ -10204,7 +11489,6 @@
     }
   ],
   "triggerSchedule": [],
-  "userApplicationJoin": [],
   "verification": [],
   "applicationResponse": [
     {
