@@ -15958,6 +15958,7 @@ export type QueryReviewLevelArgs = {
 export type QueryReviewListArgs = {
   stageid?: Maybe<Scalars['Int']>;
   reviewerid?: Maybe<Scalars['Int']>;
+  appstatus?: Maybe<ApplicationStatus>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -18300,7 +18301,8 @@ export enum ReviewerAction {
   ContinueReview = 'CONTINUE_REVIEW',
   MakeDecision = 'MAKE_DECISION',
   RestartReview = 'RESTART_REVIEW',
-  UpdateReview = 'UPDATE_REVIEW'
+  UpdateReview = 'UPDATE_REVIEW',
+  AwaitingResponse = 'AWAITING_RESPONSE'
 }
 
 /** A filter to be used against ReviewerAction fields. All fields are combined with a logical ‘and.’ */
@@ -23729,8 +23731,6 @@ export enum Trigger {
   OnReviewRestart = 'ON_REVIEW_RESTART',
   OnReviewAssign = 'ON_REVIEW_ASSIGN',
   OnReviewUnassign = 'ON_REVIEW_UNASSIGN',
-  OnReviewReassign = 'ON_REVIEW_REASSIGN',
-  OnReviewSelfAssign = 'ON_REVIEW_SELF_ASSIGN',
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
   OnVerification = 'ON_VERIFICATION',
   OnSchedule = 'ON_SCHEDULE',
