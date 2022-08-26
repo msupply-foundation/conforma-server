@@ -6,7 +6,11 @@ CREATE TYPE public.template_element_category AS ENUM (
 
 CREATE TYPE public.is_reviewable_status AS ENUM (
     'ALWAYS',
-    'NEVER'
+    'NEVER',
+    'OPTIONAL_IF_NO_RESPONSE'
+    -- TO-DO:
+    -- 'OPTIONAL_IF_RESPONSE',
+    -- 'OPTIONAL' (the above two combined)
 );
 
 -- FUNCTION to return template_code for current element/section
