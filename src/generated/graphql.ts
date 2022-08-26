@@ -10147,7 +10147,8 @@ export type IntFilter = {
 
 export enum IsReviewableStatus {
   Always = 'ALWAYS',
-  Never = 'NEVER'
+  Never = 'NEVER',
+  OptionalIfNoResponse = 'OPTIONAL_IF_NO_RESPONSE'
 }
 
 /** A filter to be used against IsReviewableStatus fields. All fields are combined with a logical ‘and.’ */
