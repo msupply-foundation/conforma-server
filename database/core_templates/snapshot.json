@@ -2600,31 +2600,6 @@
    "trigger": "ON_REVIEW_SUBMIT"
   },
   {
-   "actionCode": "updateReviewAssignmentsStatus",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 140,
-   "parameterQueries": {
-    "trigger": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.trigger"
-     ],
-     "operator": "objectProperties"
-    },
-    "reviewAssignmentId": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.record_id"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": null,
-   "templateId": 7,
-   "trigger": "ON_REVIEW_SELF_ASSIGN"
-  },
-  {
    "actionCode": "generateName",
    "code": null,
    "condition": true,
@@ -3239,31 +3214,6 @@
    "sequence": 56,
    "templateId": 8,
    "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "updateReviewAssignmentsStatus",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 166,
-   "parameterQueries": {
-    "trigger": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.trigger"
-     ],
-     "operator": "objectProperties"
-    },
-    "reviewAssignmentId": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.record_id"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": null,
-   "templateId": 8,
-   "trigger": "ON_REVIEW_SELF_ASSIGN"
   },
   {
    "actionCode": "generateName",
@@ -3937,31 +3887,6 @@
    "trigger": "ON_REVIEW_SUBMIT"
   },
   {
-   "actionCode": "updateReviewAssignmentsStatus",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 194,
-   "parameterQueries": {
-    "trigger": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.trigger"
-     ],
-     "operator": "objectProperties"
-    },
-    "reviewAssignmentId": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.record_id"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": null,
-   "templateId": 9,
-   "trigger": "ON_REVIEW_SELF_ASSIGN"
-  },
-  {
    "actionCode": "generateName",
    "code": null,
    "condition": true,
@@ -4441,31 +4366,6 @@
    "sequence": 56,
    "templateId": 10,
    "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "updateReviewAssignmentsStatus",
-   "code": null,
-   "condition": true,
-   "description": "**CORE-ACTION** Change other review assignment statuses to SELF_ASSIGNED_BY_ANOTHER after one of the review assignment with AVAILABLE_FOR_SELF_ASSIGNMENT is self-assigned by the reviewer",
-   "eventCode": null,
-   "id": 217,
-   "parameterQueries": {
-    "trigger": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.trigger"
-     ],
-     "operator": "objectProperties"
-    },
-    "reviewAssignmentId": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.record_id"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": null,
-   "templateId": 10,
-   "trigger": "ON_REVIEW_SELF_ASSIGN"
   },
   {
    "actionCode": "cLog",
@@ -6655,31 +6555,6 @@
    "actionCode": "updateReviewAssignmentsStatus",
    "code": null,
    "condition": true,
-   "description": "**CORE-ACTION** On Re-assignment change other self_assignment reviewAssignment flag is_locked to True",
-   "eventCode": null,
-   "id": 268,
-   "parameterQueries": {
-    "trigger": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.trigger"
-     ],
-     "operator": "objectProperties"
-    },
-    "reviewAssignmentId": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.record_id"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": null,
-   "templateId": 7,
-   "trigger": "ON_REVIEW_SELF_ASSIGN"
-  },
-  {
-   "actionCode": "updateReviewAssignmentsStatus",
-   "code": null,
-   "condition": true,
    "description": "**CORE-ACTION** On Assignment change other self_assignment reviewAssignment flag is_locked to True",
    "eventCode": null,
    "id": 269,
@@ -6705,31 +6580,6 @@
    "actionCode": "updateReviewAssignmentsStatus",
    "code": null,
    "condition": true,
-   "description": "**CORE-ACTION** On Self-assignment change other self_assignment reviewAssignment flag is_locked to True",
-   "eventCode": "",
-   "id": 270,
-   "parameterQueries": {
-    "trigger": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.trigger"
-     ],
-     "operator": "objectProperties"
-    },
-    "reviewAssignmentId": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.record_id"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": null,
-   "templateId": 8,
-   "trigger": "ON_REVIEW_SELF_ASSIGN"
-  },
-  {
-   "actionCode": "updateReviewAssignmentsStatus",
-   "code": null,
-   "condition": true,
    "description": "**CORE-ACTION** On Assignment change other self_assignment reviewAssignment flag is_locked to True",
    "eventCode": null,
    "id": 271,
@@ -6750,31 +6600,6 @@
    "sequence": null,
    "templateId": 8,
    "trigger": "ON_REVIEW_ASSIGN"
-  },
-  {
-   "actionCode": "updateReviewAssignmentsStatus",
-   "code": null,
-   "condition": true,
-   "description": "**CORE-ACTION** On Re-assignment change other self_assignment reviewAssignment flag is_locked to True",
-   "eventCode": null,
-   "id": 272,
-   "parameterQueries": {
-    "trigger": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.trigger"
-     ],
-     "operator": "objectProperties"
-    },
-    "reviewAssignmentId": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.record_id"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": null,
-   "templateId": 9,
-   "trigger": "ON_REVIEW_SELF_ASSIGN"
   },
   {
    "actionCode": "updateReviewAssignmentsStatus",
@@ -6825,31 +6650,6 @@
    "sequence": null,
    "templateId": 10,
    "trigger": "ON_REVIEW_ASSIGN"
-  },
-  {
-   "actionCode": "updateReviewAssignmentsStatus",
-   "code": null,
-   "condition": true,
-   "description": "**CORE-ACTION** On Self-assignment change other self_assignment reviewAssignment flag is_locked to True",
-   "eventCode": null,
-   "id": 275,
-   "parameterQueries": {
-    "trigger": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.trigger"
-     ],
-     "operator": "objectProperties"
-    },
-    "reviewAssignmentId": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.record_id"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": null,
-   "templateId": 10,
-   "trigger": "ON_REVIEW_SELF_ASSIGN"
   },
   {
    "actionCode": "updateReviewAssignmentsStatus",

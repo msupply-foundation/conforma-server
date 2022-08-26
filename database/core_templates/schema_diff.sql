@@ -1,6 +1,6 @@
 /***********************************************/
 /*** SCRIPT AUTHOR: conforma-server          ***/
-/***    CREATED ON: 2022-08-24T23:37:16.030Z ***/
+/***    CREATED ON: 2022-08-26T02:42:26.606Z ***/
 /***********************************************/
 
 --- BEGIN CREATE SEQUENCE "public"."user_application_join_id_seq" ---
@@ -215,58 +215,45 @@ COMMENT ON FUNCTION "public"."application_list"(integer)  IS '@sortable';
 
 --- END ALTER FUNCTION "public"."application_list"(integer) ---
 
---- BEGIN ALTER FUNCTION "public"."notify_action_queue"() ---
+--- BEGIN ALTER FUNCTION "public"."assigned_questions_count"(integer, integer, integer) ---
 
-DROP FUNCTION IF EXISTS "public"."notify_action_queue"();
+DROP FUNCTION IF EXISTS "public"."assigned_questions_count"(integer, integer, integer);
 
-CREATE OR REPLACE FUNCTION public.notify_action_queue()
- RETURNS trigger
- LANGUAGE plpgsql
+CREATE OR REPLACE FUNCTION public.assigned_questions_count(app_id integer, stage_id integer, level integer)
+ RETURNS bigint
+ LANGUAGE sql
+ STABLE
 AS $function$
-        BEGIN
-            -- IF NEW.status = 'QUEUED' THEN
-            PERFORM
-                pg_notify('action_notifications', json_build_object('id', NEW.id, 'code', NEW.action_code, 'condition_expression', NEW.condition_expression, 'parameter_queries', NEW.parameter_queries)::text);
-            -- END IF;
-            RETURN NULL;
-        END;
-        $function$
+    SELECT COUNT(DISTINCT (te.id))
+    FROM (
+            SELECT
+                id,
+                application_id,
+                stage_id,
+                level_number,
+                status,
+                UNNEST(assigned_sections) AS section_code
+            FROM
+                review_assignment) ra
+        JOIN template_section ts ON ra.section_code = ts.code
+        JOIN template_element te ON ts.id = te.section_id
+    WHERE
+        ra.application_id = $1
+        AND ra.stage_id = $2
+        AND ra.level_number = $3
+        AND ra.status = 'ASSIGNED'
+        AND te.category = 'QUESTION'
+        AND te.template_code = (SELECT code FROM TEMPLATE
+            WHERE id = (
+                    SELECT template_id FROM application
+                    WHERE id = $1));
+    $function$
 ;
-ALTER FUNCTION "public"."notify_action_queue"() OWNER TO postgres;
+ALTER FUNCTION "public"."assigned_questions_count"(integer, integer, integer) OWNER TO postgres;
 
-COMMENT ON FUNCTION "public"."notify_action_queue"()  IS NULL;
+COMMENT ON FUNCTION "public"."assigned_questions_count"(integer, integer, integer)  IS NULL;
 
---- END ALTER FUNCTION "public"."notify_action_queue"() ---
-
---- BEGIN ALTER FUNCTION "public"."outcome_reverted"() ---
-
-DROP FUNCTION IF EXISTS "public"."outcome_reverted"();
-
-CREATE OR REPLACE FUNCTION public.outcome_reverted()
- RETURNS trigger
- LANGUAGE plpgsql
-AS $function$
-    BEGIN
-      UPDATE public.application
-      SET is_active = TRUE
-      WHERE id = NEW.id;
-
-      INSERT INTO public.application_status_history (application_stage_history_id, status)
-          VALUES ((SELECT id FROM application_stage_history
-                  WHERE application_id = NEW.id AND is_current = TRUE),
-                  (SELECT status FROM application_status_history
-                    WHERE time_created = (SELECT MAX(time_created)
-                              FROM application_status_history
-                              WHERE is_current = FALSE AND application_id = NEW.id)));
-      RETURN NULL;
-    END;
-      $function$
-;
-ALTER FUNCTION "public"."outcome_reverted"() OWNER TO postgres;
-
-COMMENT ON FUNCTION "public"."outcome_reverted"()  IS NULL;
-
---- END ALTER FUNCTION "public"."outcome_reverted"() ---
+--- END ALTER FUNCTION "public"."assigned_questions_count"(integer, integer, integer) ---
 
 --- BEGIN ALTER FUNCTION "public"."empty_assigned_sections"() ---
 
@@ -440,45 +427,132 @@ COMMENT ON FUNCTION "public"."deadline_extension_activity_log"()  IS NULL;
 
 --- END ALTER FUNCTION "public"."deadline_extension_activity_log"() ---
 
---- BEGIN ALTER FUNCTION "public"."assigned_questions_count"(integer, integer, integer) ---
+--- BEGIN ALTER FUNCTION "public"."mark_file_for_deletion"() ---
 
-DROP FUNCTION IF EXISTS "public"."assigned_questions_count"(integer, integer, integer);
+DROP FUNCTION IF EXISTS "public"."mark_file_for_deletion"();
 
-CREATE OR REPLACE FUNCTION public.assigned_questions_count(app_id integer, stage_id integer, level integer)
- RETURNS bigint
- LANGUAGE sql
- STABLE
+CREATE OR REPLACE FUNCTION public.mark_file_for_deletion()
+ RETURNS trigger
+ LANGUAGE plpgsql
 AS $function$
-    SELECT COUNT(DISTINCT (te.id))
-    FROM (
-            SELECT
-                id,
-                application_id,
-                stage_id,
-                level_number,
-                status,
-                UNNEST(assigned_sections) AS section_code
-            FROM
-                review_assignment) ra
-        JOIN template_section ts ON ra.section_code = ts.code
-        JOIN template_element te ON ts.id = te.section_id
-    WHERE
-        ra.application_id = $1
-        AND ra.stage_id = $2
-        AND ra.level_number = $3
-        AND ra.status = 'ASSIGNED'
-        AND te.category = 'QUESTION'
-        AND te.template_code = (SELECT code FROM TEMPLATE
-            WHERE id = (
-                    SELECT template_id FROM application
-                    WHERE id = $1));
+    BEGIN
+        UPDATE public.file
+        SET to_be_deleted = TRUE
+        WHERE id = NEW.id;
+        RETURN NULL;
+    END;
     $function$
 ;
-ALTER FUNCTION "public"."assigned_questions_count"(integer, integer, integer) OWNER TO postgres;
+ALTER FUNCTION "public"."mark_file_for_deletion"() OWNER TO postgres;
 
-COMMENT ON FUNCTION "public"."assigned_questions_count"(integer, integer, integer)  IS NULL;
+COMMENT ON FUNCTION "public"."mark_file_for_deletion"()  IS NULL;
 
---- END ALTER FUNCTION "public"."assigned_questions_count"(integer, integer, integer) ---
+--- END ALTER FUNCTION "public"."mark_file_for_deletion"() ---
+
+--- BEGIN ALTER FUNCTION "public"."notify_action_queue"() ---
+
+DROP FUNCTION IF EXISTS "public"."notify_action_queue"();
+
+CREATE OR REPLACE FUNCTION public.notify_action_queue()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+        BEGIN
+            -- IF NEW.status = 'QUEUED' THEN
+            PERFORM
+                pg_notify('action_notifications', json_build_object('id', NEW.id, 'code', NEW.action_code, 'condition_expression', NEW.condition_expression, 'parameter_queries', NEW.parameter_queries)::text);
+            -- END IF;
+            RETURN NULL;
+        END;
+        $function$
+;
+ALTER FUNCTION "public"."notify_action_queue"() OWNER TO postgres;
+
+COMMENT ON FUNCTION "public"."notify_action_queue"()  IS NULL;
+
+--- END ALTER FUNCTION "public"."notify_action_queue"() ---
+
+--- BEGIN ALTER FUNCTION "public"."notify_trigger_queue"() ---
+
+DROP FUNCTION IF EXISTS "public"."notify_trigger_queue"();
+
+CREATE OR REPLACE FUNCTION public.notify_trigger_queue()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+        BEGIN
+            PERFORM
+                pg_notify('trigger_notifications', json_build_object('trigger_id', NEW.id, 'trigger', NEW.trigger_type, 'table', NEW.table, 'record_id', NEW.record_id, 'event_code', NEW.event_code)::text);
+            RETURN NULL;
+        END;
+        $function$
+;
+ALTER FUNCTION "public"."notify_trigger_queue"() OWNER TO postgres;
+
+COMMENT ON FUNCTION "public"."notify_trigger_queue"()  IS NULL;
+
+--- END ALTER FUNCTION "public"."notify_trigger_queue"() ---
+
+--- BEGIN ALTER FUNCTION "public"."outcome_reverted"() ---
+
+DROP FUNCTION IF EXISTS "public"."outcome_reverted"();
+
+CREATE OR REPLACE FUNCTION public.outcome_reverted()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+    BEGIN
+      UPDATE public.application
+      SET is_active = TRUE
+      WHERE id = NEW.id;
+
+      INSERT INTO public.application_status_history (application_stage_history_id, status)
+          VALUES ((SELECT id FROM application_stage_history
+                  WHERE application_id = NEW.id AND is_current = TRUE),
+                  (SELECT status FROM application_status_history
+                    WHERE time_created = (SELECT MAX(time_created)
+                              FROM application_status_history
+                              WHERE is_current = FALSE AND application_id = NEW.id)));
+      RETURN NULL;
+    END;
+      $function$
+;
+ALTER FUNCTION "public"."outcome_reverted"() OWNER TO postgres;
+
+COMMENT ON FUNCTION "public"."outcome_reverted"()  IS NULL;
+
+--- END ALTER FUNCTION "public"."outcome_reverted"() ---
+
+--- BEGIN ALTER FUNCTION "public"."set_original_response"() ---
+
+DROP FUNCTION IF EXISTS "public"."set_original_response"();
+
+CREATE OR REPLACE FUNCTION public.set_original_response()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$ BEGIN IF NEW.review_response_link_id IS NOT NULL THEN NEW.original_review_response_id = (
+        SELECT original_review_response_id 
+        FROM review_response 
+        WHERE id = NEW.review_response_link_id);
+      NEW.application_response_id = (
+        SELECT application_response_id 
+        FROM review_response 
+        WHERE id = NEW.review_response_link_id);
+      ELSE NEW.original_review_response_id = NEW.id;
+      END IF;
+      -- application_response should always exist
+      NEW.template_element_id = (
+        SELECT template_element_id 
+        FROM application_response 
+        WHERE id = NEW.application_response_id);
+      RETURN NEW; END;
+      $function$
+;
+ALTER FUNCTION "public"."set_original_response"() OWNER TO postgres;
+
+COMMENT ON FUNCTION "public"."set_original_response"()  IS NULL;
+
+--- END ALTER FUNCTION "public"."set_original_response"() ---
 
 --- BEGIN ALTER FUNCTION "public"."submitted_assigned_questions_count"(integer, integer, integer) ---
 
@@ -516,77 +590,3 @@ ALTER FUNCTION "public"."submitted_assigned_questions_count"(integer, integer, i
 COMMENT ON FUNCTION "public"."submitted_assigned_questions_count"(integer, integer, integer)  IS NULL;
 
 --- END ALTER FUNCTION "public"."submitted_assigned_questions_count"(integer, integer, integer) ---
-
---- BEGIN ALTER FUNCTION "public"."mark_file_for_deletion"() ---
-
-DROP FUNCTION IF EXISTS "public"."mark_file_for_deletion"();
-
-CREATE OR REPLACE FUNCTION public.mark_file_for_deletion()
- RETURNS trigger
- LANGUAGE plpgsql
-AS $function$
-    BEGIN
-        UPDATE public.file
-        SET to_be_deleted = TRUE
-        WHERE id = NEW.id;
-        RETURN NULL;
-    END;
-    $function$
-;
-ALTER FUNCTION "public"."mark_file_for_deletion"() OWNER TO postgres;
-
-COMMENT ON FUNCTION "public"."mark_file_for_deletion"()  IS NULL;
-
---- END ALTER FUNCTION "public"."mark_file_for_deletion"() ---
-
---- BEGIN ALTER FUNCTION "public"."notify_trigger_queue"() ---
-
-DROP FUNCTION IF EXISTS "public"."notify_trigger_queue"();
-
-CREATE OR REPLACE FUNCTION public.notify_trigger_queue()
- RETURNS trigger
- LANGUAGE plpgsql
-AS $function$
-        BEGIN
-            PERFORM
-                pg_notify('trigger_notifications', json_build_object('trigger_id', NEW.id, 'trigger', NEW.trigger_type, 'table', NEW.table, 'record_id', NEW.record_id, 'event_code', NEW.event_code)::text);
-            RETURN NULL;
-        END;
-        $function$
-;
-ALTER FUNCTION "public"."notify_trigger_queue"() OWNER TO postgres;
-
-COMMENT ON FUNCTION "public"."notify_trigger_queue"()  IS NULL;
-
---- END ALTER FUNCTION "public"."notify_trigger_queue"() ---
-
---- BEGIN ALTER FUNCTION "public"."set_original_response"() ---
-
-DROP FUNCTION IF EXISTS "public"."set_original_response"();
-
-CREATE OR REPLACE FUNCTION public.set_original_response()
- RETURNS trigger
- LANGUAGE plpgsql
-AS $function$ BEGIN IF NEW.review_response_link_id IS NOT NULL THEN NEW.original_review_response_id = (
-        SELECT original_review_response_id 
-        FROM review_response 
-        WHERE id = NEW.review_response_link_id);
-      NEW.application_response_id = (
-        SELECT application_response_id 
-        FROM review_response 
-        WHERE id = NEW.review_response_link_id);
-      ELSE NEW.original_review_response_id = NEW.id;
-      END IF;
-      -- application_response should always exist
-      NEW.template_element_id = (
-        SELECT template_element_id 
-        FROM application_response 
-        WHERE id = NEW.application_response_id);
-      RETURN NEW; END;
-      $function$
-;
-ALTER FUNCTION "public"."set_original_response"() OWNER TO postgres;
-
-COMMENT ON FUNCTION "public"."set_original_response"()  IS NULL;
-
---- END ALTER FUNCTION "public"."set_original_response"() ---
