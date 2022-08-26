@@ -24506,8 +24506,6 @@ export enum Trigger {
   OnReviewRestart = 'ON_REVIEW_RESTART',
   OnReviewAssign = 'ON_REVIEW_ASSIGN',
   OnReviewUnassign = 'ON_REVIEW_UNASSIGN',
-  OnReviewReassign = 'ON_REVIEW_REASSIGN',
-  OnReviewSelfAssign = 'ON_REVIEW_SELF_ASSIGN',
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
   OnVerification = 'ON_VERIFICATION',
   OnSchedule = 'ON_SCHEDULE',

@@ -645,12 +645,109 @@ const migrateData = async () => {
 
   // v0.4.4
   if (databaseVersionLessThan('0.4.4')) {
-    console.log(' - Removes events in Trigger list: ON_REVIEW_REASSIGN and ON_REVIEW_SELF_ASSIGN')
+    console.log(' - Removes Trigger values: ON_REVIEW_REASSIGN and ON_REVIEW_SELF_ASSIGN')
 
-    // await DB.changeSchema(`
-    //   ALTER TYPE public.trigger DROP ATTRIBUTE IF EXISTS "ON_REVIEW_SELF_ASSIGN";
-    //   ALTER TYPE public.trigger DROP ATTRIBUTE IF EXISTS "ON_REVIEW_REASSIGN";
-    // `)
+    // This step seperate as it'll fail if the type has already been redefined
+    await DB.changeSchema(`
+      UPDATE template_action SET trigger='ON_REVIEW_ASSIGN'
+        WHERE trigger='ON_REVIEW_REASSIGN' OR trigger='ON_REVIEW_SELF_ASSIGN';	
+    `)
+
+    await DB.changeSchema(`
+      ALTER TYPE public.trigger RENAME to trigger_old;
+
+      CREATE TYPE public.trigger AS ENUM
+      (
+        'ON_APPLICATION_CREATE',
+        'ON_APPLICATION_RESTART',
+        'ON_APPLICATION_SUBMIT',
+        'ON_APPLICATION_SAVE',
+        'ON_APPLICATION_WITHDRAW',
+        'ON_REVIEW_CREATE',
+        'ON_REVIEW_SUBMIT',
+        'ON_REVIEW_RESTART',
+        'ON_REVIEW_ASSIGN',
+        'ON_REVIEW_UNASSIGN',
+        'ON_APPROVAL_SUBMIT',
+        'ON_VERIFICATION',
+        'ON_SCHEDULE',
+        'ON_PREVIEW',
+        'ON_EXTEND',
+        'DEV_TEST',
+        'PROCESSING',
+        'ERROR'
+      );
+
+      ALTER TABLE trigger_queue
+        ALTER COLUMN trigger_type TYPE public.trigger
+        USING trigger_type::text::public.trigger;    
+        
+      ALTER TABLE template_action
+        ALTER COLUMN trigger TYPE public.trigger
+        USING trigger::text::public.trigger;
+
+      DROP TRIGGER IF EXISTS application_trigger ON application;
+
+      ALTER TABLE application
+          ALTER COLUMN TRIGGER TYPE public.trigger
+          USING TRIGGER::text::public.trigger;
+      
+      CREATE TRIGGER application_trigger
+          AFTER INSERT OR UPDATE OF trigger ON public.application
+          FOR EACH ROW
+          WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
+          EXECUTE FUNCTION public.add_event_to_trigger_queue ();
+      
+      DROP TRIGGER IF EXISTS trigger_schedule_trigger ON trigger_schedule;
+      
+      ALTER TABLE trigger_schedule
+          ALTER COLUMN TRIGGER TYPE public.trigger
+          USING TRIGGER::text::public.trigger;
+      
+      CREATE TRIGGER trigger_schedule_trigger
+          AFTER INSERT OR UPDATE OF trigger ON public.trigger_schedule
+          FOR EACH ROW
+          WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
+          EXECUTE FUNCTION public.add_event_to_trigger_queue ();
+      
+      DROP TRIGGER IF EXISTS review_assignment_trigger ON review_assignment;
+      
+      ALTER TABLE review_assignment
+          ALTER COLUMN TRIGGER TYPE public.trigger
+          USING TRIGGER::text::public.trigger;
+      
+      CREATE TRIGGER review_assignment_trigger
+          AFTER INSERT OR UPDATE OF trigger ON public.review_assignment
+          FOR EACH ROW
+          WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
+          EXECUTE FUNCTION public.add_event_to_trigger_queue ();
+      
+      DROP TRIGGER IF EXISTS review_trigger ON review;
+      
+      ALTER TABLE review
+          ALTER COLUMN TRIGGER TYPE public.trigger
+          USING TRIGGER::text::public.trigger;
+      
+      CREATE TRIGGER review_trigger
+          AFTER INSERT OR UPDATE OF trigger ON public.review
+          FOR EACH ROW
+          WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
+          EXECUTE FUNCTION public.add_event_to_trigger_queue ();
+      
+      DROP TRIGGER IF EXISTS verification_trigger ON verification;
+      
+      ALTER TABLE verification
+          ALTER COLUMN TRIGGER TYPE public.trigger
+          USING TRIGGER::text::public.trigger;
+      
+      CREATE TRIGGER verification_trigger
+          AFTER INSERT OR UPDATE OF trigger ON public.verification
+          FOR EACH ROW
+          WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
+          EXECUTE FUNCTION public.add_event_to_trigger_queue ();
+      
+      DROP TYPE public.trigger_old;    
+    `)
 
     console.log(' - Adding AWAITING_RESPONSE action to reviewer_action')
 
@@ -724,7 +821,9 @@ const migrateData = async () => {
     STABLE;
       `)
 
-    console.log(' - Update caller function application_list to pass along stage_status')
+    console.log(
+      ' - Update function application_list to pass along stage_status to review_list function'
+    )
     await DB.changeSchema(`CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
     RETURNS SETOF application_list_shape
     AS $$
@@ -746,12 +845,6 @@ const migrateData = async () => {
             reviewers,
             reviewer_action,
             assigner_action,
-            -- CASE WHEN is_fully_assigned_level_1 IS NULL THEN
-            --     FALSE
-            -- ELSE
-            --     is_fully_assigned_level_1
-            -- END,
-            -- assigned_questions_level_1,
             total_questions,
             total_assigned,
             total_assign_locked
