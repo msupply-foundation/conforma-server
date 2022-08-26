@@ -110,8 +110,6 @@ CREATE TYPE public.trigger AS ENUM (
     'ON_REVIEW_RESTART',
     'ON_REVIEW_ASSIGN',
     'ON_REVIEW_UNASSIGN',
-    'ON_REVIEW_REASSIGN',
-    'ON_REVIEW_SELF_ASSIGN', -- Not used (not removed for consitency with previous snapshots)
     'ON_APPROVAL_SUBMIT',
     'ON_VERIFICATION',
     'ON_SCHEDULE',
