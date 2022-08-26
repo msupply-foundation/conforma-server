@@ -645,6 +645,12 @@ const migrateData = async () => {
 
   // v0.4.4
   if (databaseVersionLessThan('0.4.4')) {
+    console.log(' - Add "Optional if no response" option to "is_reviewable"')
+    await DB.changeSchema(`
+      ALTER TYPE public.is_reviewable_status ADD VALUE IF NOT EXISTS
+      'OPTIONAL_IF_NO_RESPONSE' AFTER 'NEVER';
+    `)
+
     console.log(' - Removes Trigger values: ON_REVIEW_REASSIGN and ON_REVIEW_SELF_ASSIGN')
 
     // This step seperate as it'll fail if the type has already been redefined
