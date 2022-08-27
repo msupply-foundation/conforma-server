@@ -9,7 +9,6 @@ import { makeFolder } from './components/utilityFunctions'
 
 try {
   if (!fs.existsSync('preferences') || !fs.existsSync('preferences/preferences.json')) {
-    console.log('Trying...')
     makeFolder('preferences', 'Restoring default preferences...\n')
     execSync('cp database/core_templates/preferences.json preferences')
   }
