@@ -1,7 +1,8 @@
 /*
-Script to ensure preferences are present before server loads. Checks for /preferences/preferences.json and if not present copies it from core_templates.
+Script to ensure preferences are present before server loads. Checks for
+/preferences/preferences.json and if not present copies it from core_templates.
 
-Called by nodemon before launching server.ts
+Called by nodemon before launching server.ts and as part of build script.
 */
 import fs from 'fs'
 import { execSync } from 'child_process'
