@@ -42,7 +42,7 @@ typings/
 
 # Localisation & Preferences folder -- gets restored from core_templates
 /localisation
-# /preferences
+/preferences
 
 #GraphQL schema auto-generated
 database/schema.graphql
