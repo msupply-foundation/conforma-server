@@ -6,10 +6,11 @@ CREATE TYPE public.reviewer_action AS ENUM (
     'CONTINUE_REVIEW',
     'MAKE_DECISION',
     'RESTART_REVIEW',
-    'UPDATE_REVIEW'
+    'UPDATE_REVIEW',
+    'AWAITING_RESPONSE'
 );
 
-CREATE FUNCTION review_list (stageid int, reviewerid int)
+CREATE FUNCTION review_list (stageid int, reviewerid int, appstatus public.application_status)
     RETURNS TABLE (
         application_id int,
         reviewer_action public.reviewer_action
@@ -37,6 +38,11 @@ CREATE FUNCTION review_list (stageid int, reviewerid int)
             AND (review = NULL
             OR is_locked = FALSE)) != 0 THEN
             'SELF_ASSIGN'
+        WHEN COUNT(*) FILTER (WHERE (appstatus = 'CHANGES_REQUIRED'
+            OR appstatus = 'DRAFT')
+            AND review_assignment.status = 'ASSIGNED'
+            AND review_status_history.status = 'SUBMITTED') != 0 THEN
+            'AWAITING_RESPONSE'
         WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
             OR review_status_history.status = 'SUBMITTED') != 0 THEN
             'VIEW_REVIEW'

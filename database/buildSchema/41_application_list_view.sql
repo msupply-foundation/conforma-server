@@ -63,7 +63,7 @@ CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
     LEFT JOIN application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
     LEFT JOIN organisation org ON app.org_id = org.id
     LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
-    LEFT JOIN review_list (stage_status.stage_id, $1) ON app.id = review_list.application_id
+    LEFT JOIN review_list (stage_status.stage_id, $1, stage_status.status) ON app.id = review_list.application_id
     LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
     LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
         AND ts.is_active = TRUE
