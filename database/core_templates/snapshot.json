@@ -824,7 +824,8 @@
       "isSystemOrg": true,
       "logoUrl": "/file?uid=CylhAzxRhSX_QjtArq3bi",
       "name": "Food and Drug Authority",
-      "registration": "fda"
+      "registration": "fda",
+      "registrationDocumentation": null
     }
   ],
   "permissionPolicy": [
@@ -1019,11 +1020,43 @@
         },
         "application": {
           "view": {
+            "id": {
+              "$in": {
+                "$select": {
+                  "$from": "review_assignment",
+                  "$where": {
+                    "id": {
+                      "$in": {
+                        "$select": {
+                          "$from": "review_assignment_assigner_join",
+                          "$where": {
+                            "assigner_id": "jwtUserDetails_bigint_userId"
+                          },
+                          "review_assignment_id": true
+                        }
+                      }
+                    }
+                  },
+                  "application_id": true
+                }
+              }
+            },
             "template_id": "jwtPermission_array_bigint_template_ids"
           }
         },
         "review_assignment": {
           "view": {
+            "id": {
+              "$in": {
+                "$select": {
+                  "$from": "review_assignment_assigner_join",
+                  "$where": {
+                    "assigner_id": "jwtUserDetails_bigint_userId"
+                  },
+                  "review_assignment_id": true
+                }
+              }
+            },
             "template_id": "jwtPermission_array_bigint_template_ids"
           }
         }
@@ -1102,6 +1135,12 @@
       "name": "version",
       "timestamp": "2022-08-26T20:58:41.134134+12:00",
       "value": "0.4.3"
+    },
+    {
+      "id": 11,
+      "name": "version",
+      "timestamp": "2022-08-29T14:42:00.27181+12:00",
+      "value": "0.4.4-1"
     }
   ],
   "templateCategory": [
@@ -1338,7 +1377,7 @@
       "name": "User Registration",
       "namePlural": null,
       "startMessage": null,
-      "status": "AVAILABLE",
+      "status": "DRAFT",
       "submissionMessage": "Thanks. Please check your email to verify your registration.",
       "templateCategoryId": null,
       "version": 1,
@@ -2131,10 +2170,11 @@
       "actionCode": "grantPermissions",
       "code": null,
       "condition": true,
-      "description": null,
+      "description": "",
       "eventCode": null,
       "id": 16,
       "parameterQueries": {
+        "orgId": null,
         "username": {
           "children": [
             "applicationData.responses.Q3Username.text"
@@ -6704,31 +6744,6 @@
       "actionCode": "updateReviewAssignmentsStatus",
       "code": null,
       "condition": true,
-      "description": "**CORE-ACTION** On Self-assignment change other self_assignment reviewAssignment flag is_locked to True",
-      "eventCode": "",
-      "id": 270,
-      "parameterQueries": {
-        "trigger": {
-          "children": [
-            "applicationData.action_payload.trigger_payload.trigger"
-          ],
-          "operator": "objectProperties"
-        },
-        "reviewAssignmentId": {
-          "children": [
-            "applicationData.action_payload.trigger_payload.record_id"
-          ],
-          "operator": "objectProperties"
-        }
-      },
-      "sequence": null,
-      "templateId": 8,
-      "trigger": "ON_REVIEW_ASSIGN"
-    },
-    {
-      "actionCode": "updateReviewAssignmentsStatus",
-      "code": null,
-      "condition": true,
       "description": "**CORE-ACTION** On Assignment change other self_assignment reviewAssignment flag is_locked to True",
       "eventCode": null,
       "id": 271,
@@ -6807,31 +6822,6 @@
       "description": "**CORE-ACTION** On Assignment change other self_assignment reviewAssignment flag is_locked to True",
       "eventCode": null,
       "id": 274,
-      "parameterQueries": {
-        "trigger": {
-          "children": [
-            "applicationData.action_payload.trigger_payload.trigger"
-          ],
-          "operator": "objectProperties"
-        },
-        "reviewAssignmentId": {
-          "children": [
-            "applicationData.action_payload.trigger_payload.record_id"
-          ],
-          "operator": "objectProperties"
-        }
-      },
-      "sequence": null,
-      "templateId": 10,
-      "trigger": "ON_REVIEW_ASSIGN"
-    },
-    {
-      "actionCode": "updateReviewAssignmentsStatus",
-      "code": null,
-      "condition": true,
-      "description": "**CORE-ACTION** On Self-assignment change other self_assignment reviewAssignment flag is_locked to True",
-      "eventCode": null,
-      "id": 275,
       "parameterQueries": {
         "trigger": {
           "children": [
@@ -7718,6 +7708,7 @@
       "timeCreated": "2022-08-11T10:15:21.714024+12:00"
     }
   ],
+  "organisationApplicationJoin": [],
   "templateElement": [
     {
       "category": "INFORMATION",
@@ -11489,6 +11480,7 @@
     }
   ],
   "triggerSchedule": [],
+  "userApplicationJoin": [],
   "verification": [],
   "applicationResponse": [
     {
