@@ -24,4 +24,9 @@ const getFormattedDate = (formatString: string, date?: string | Date) =>
 // no parameter supplied
 const getJSDate = (date?: string) => (date ? DateTime.fromISO(date).toJSDate() : new Date())
 
-export default { generateExpiry, getYear, getFormattedDate, getJSDate }
+// Returns ISO date-time string from JS Date object. Returns current timestamp
+// if no parameter supplied
+const getISODate = (date?: Date) =>
+  date ? DateTime.fromJSDate(date).toISO() : DateTime.now().toISO()
+
+export default { generateExpiry, getYear, getFormattedDate, getJSDate, getISODate }
