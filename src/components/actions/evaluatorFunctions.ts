@@ -20,4 +20,8 @@ const getFormattedDate = (formatString: string, date?: string | Date) =>
     : DateTime.now()
   ).toFormat(formatString)
 
-export default { generateExpiry, getYear, getFormattedDate }
+// Returns JS Date object from ISO date string. Returns current timestamp if
+// no parameter supplied
+const getJSDate = (date?: string) => (date ? DateTime.fromISO(date).toJSDate() : new Date())
+
+export default { generateExpiry, getYear, getFormattedDate, getJSDate }
