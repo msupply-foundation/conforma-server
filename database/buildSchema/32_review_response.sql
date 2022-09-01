@@ -35,29 +35,37 @@ CREATE TABLE public.review_response (
     status public.review_response_status DEFAULT 'DRAFT'
 );
 
--- Function to automatically set previous review_responses 
+-- Function to automatically set previous review_responses
 -- (for same review & templateElement) as is_latest_review_submitted = false
-CREATE OR REPLACE FUNCTION public.set_previous_review_response ()
+CREATE OR REPLACE FUNCTION public.set_latest_review_response_submission ()
     RETURNS TRIGGER
     AS $review_response_event$
 BEGIN
     UPDATE
         public.review_response
     SET
+        is_latest_review_submission = TRUE
+    WHERE
+        id = NEW.id;
+    UPDATE
+        public.review_response
+    SET
         is_latest_review_submission = FALSE
     WHERE
         template_element_id = NEW.template_element_id
-        AND review_id = NEW.review_id;
+        AND review_id = NEW.review_id
+        AND id <> NEW.id;
     RETURN NULL;
 END;
 $review_response_event$
 LANGUAGE plpgsql;
 
 -- TRIGGER (Listener) on review_response table: Run set_previous_review_response
-CREATE TRIGGER review_response_trigger
-    AFTER INSERT ON public.review_response
+CREATE TRIGGER review_response_latest
+    AFTER UPDATE ON public.review_response
     FOR EACH ROW
-    EXECUTE FUNCTION public.set_previous_review_response ();
+    WHEN (NEW.time_submitted > OLD.time_submitted OR OLD.time_submitted IS NULL)
+    EXECUTE FUNCTION public.set_latest_review_response_submission ();
 
 -- Function to automatically update "time_updated"
 CREATE OR REPLACE FUNCTION public.update_review_response_timestamp ()

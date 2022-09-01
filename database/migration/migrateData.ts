@@ -876,36 +876,47 @@ const migrateData = async () => {
   // 0.4.5
   if (databaseVersionLessThan('0.4.5')) {
     // Add "is_latest_review_submission" column to table review_response in schema
-    console.log(' - Add review_response TABLE field: is_latest_review_submission')
+    console.log(
+      ' - Add is_latest_review_submission to review_response with automatic trigger/update function'
+    )
 
     await DB.changeSchema(`ALTER TABLE review_response
         ADD COLUMN IF NOT EXISTS is_latest_review_submission boolean DEFAULT FALSE;`)
 
-    console.log(' - New FUNTION to set previous review_response.is_latest_review_submission')
-
-    await DB.changeSchema(`CREATE OR REPLACE FUNCTION public.set_previous_review_response ()
-    RETURNS TRIGGER
+    await DB.changeSchema(`CREATE OR REPLACE FUNCTION public.set_latest_review_response_submission ()
+        RETURNS TRIGGER
         AS $review_response_event$
     BEGIN
+        UPDATE
+            public.review_response
+        SET
+            is_latest_review_submission = TRUE
+        WHERE
+            id = NEW.id;
         UPDATE
             public.review_response
         SET
             is_latest_review_submission = FALSE
         WHERE
             template_element_id = NEW.template_element_id
-            AND review_id = NEW.review_id;
+            AND review_id = NEW.review_id
+            AND id <> NEW.id;
         RETURN NULL;
     END;
     $review_response_event$
-    LANGUAGE plpgsql;`)
+    LANGUAGE plpgsql;
+    `)
 
-    console.log(
-      ' - New TRIGGER to run for other review_responses when new review_response is created (same review_id)'
-    )
-    await DB.changeSchema(`CREATE TRIGGER review_response_trigger
-    AFTER INSERT ON public.review_response
-    FOR EACH ROW
-    EXECUTE FUNCTION public.set_previous_review_response ();`)
+    await DB.changeSchema(`
+      DROP TRIGGER IF EXISTS review_response_latest ON review_response;
+    `)
+
+    await DB.changeSchema(`CREATE TRIGGER review_response_latest
+      AFTER UPDATE ON public.review_response
+      FOR EACH ROW
+      WHEN (NEW.time_submitted > OLD.time_submitted OR OLD.time_submitted IS NULL)
+      EXECUTE FUNCTION public.set_latest_review_response_submission ();
+      `)
   }
 
   // Other version migrations continue here...
