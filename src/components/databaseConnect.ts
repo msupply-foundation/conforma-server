@@ -156,6 +156,8 @@ class DBConnect {
 
   public getApplicationSections = PostgresDB.getApplicationSections
 
+  public getLatestSnapshotName = PostgresDB.getLatestSnapshotName
+
   public waitForDatabaseValue = PostgresDB.waitForDatabaseValue
 
   // GraphQL

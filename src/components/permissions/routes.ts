@@ -206,7 +206,8 @@ const routeGetPrefs = async (request: any, reply: any) => {
     readFileSync(path.join(getAppEntryPointDir(), '../preferences/preferences.json'), 'utf8')
   )
   const languageOptions = readLanguageOptions()
-  reply.send({ preferences: prefs.web, languageOptions })
+  const latestSnapshot = await databaseConnect.getLatestSnapshotName()
+  reply.send({ preferences: prefs.web, languageOptions, latestSnapshot })
 }
 
 // Unique name/email/organisation/other check
