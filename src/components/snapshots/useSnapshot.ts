@@ -3,6 +3,7 @@ import fsSync from 'fs'
 import path from 'path'
 import { execSync } from 'child_process'
 import insertData from '../../../database/insertData'
+import DBConnect from '../../../src/components/databaseConnect'
 import updateRowPolicies from '../../../database/updateRowPolicies'
 import { SnapshotOperation, ExportAndImportOptions, ObjectRecord } from '../exportAndImport/types'
 import importFromJson from '../exportAndImport/importFromJson'
@@ -132,6 +133,14 @@ const useSnapshot: SnapshotOperation = async ({
 
     // To ensure generic thumbnails are not wiped out, even if server doesn't restart
     createDefaultDataFolders()
+
+    // Store snapshot name in database
+    const text = `INSERT INTO system_info (name, value)
+    VALUES('snapshot', $1)`
+    await DBConnect.query({
+      text,
+      values: [JSON.stringify(snapshotName)],
+    })
 
     return { success: true, message: `snapshot loaded ${snapshotName}` }
   } catch (e) {

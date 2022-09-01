@@ -1123,6 +1123,22 @@ class PostgresDB {
     }
   }
 
+  public getLatestSnapshotName = async () => {
+    const text = `SELECT value
+    FROM system_info
+    WHERE timestamp =
+      (SELECT MAX(timestamp) FROM system_info
+      WHERE name='snapshot')
+     `
+    try {
+      const result = await this.query({ text })
+      return result.rows[0].value
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
   public waitForDatabaseValue = async ({
     table,
     column,
