@@ -872,6 +872,42 @@ const migrateData = async () => {
   LANGUAGE sql
   STABLE;`)
   }
+
+  // 0.4.5
+  if (databaseVersionLessThan('0.4.5')) {
+    // Add "is_latest_review_submission" column to table review_response in schema
+    console.log(' - Add review_response TABLE field: is_latest_review_submission')
+
+    await DB.changeSchema(`ALTER TABLE review_response
+        ADD COLUMN IF NOT EXISTS is_latest_review_submission boolean DEFAULT FALSE;`)
+
+    console.log(' - New FUNTION to set previous review_response.is_latest_review_submission')
+
+    await DB.changeSchema(`CREATE OR REPLACE FUNCTION public.set_previous_review_response ()
+    RETURNS TRIGGER
+        AS $review_response_event$
+    BEGIN
+        UPDATE
+            public.review_response
+        SET
+            is_latest_review_submission = FALSE
+        WHERE
+            template_element_id = NEW.template_element_id
+            AND review_id = NEW.review_id;
+        RETURN NULL;
+    END;
+    $review_response_event$
+    LANGUAGE plpgsql;`)
+
+    console.log(
+      ' - New TRIGGER to run for other review_responses when new review_response is created (same review_id)'
+    )
+    await DB.changeSchema(`CREATE TRIGGER review_response_trigger
+    AFTER INSERT ON public.review_response
+    FOR EACH ROW
+    EXECUTE FUNCTION public.set_previous_review_response ();`)
+  }
+
   // Other version migrations continue here...
 
   // Finally, set the database version to the current version

@@ -29,10 +29,35 @@ CREATE TABLE public.review_response (
     time_updated timestamptz DEFAULT CURRENT_TIMESTAMP,
     time_submitted timestamptz,
     is_visible_to_applicant boolean DEFAULT FALSE,
+    is_latest_review_submission boolean DEFAULT FALSE,
     template_element_id integer REFERENCES public.template_element ON DELETE CASCADE,
     recommended_applicant_visibility public.review_response_recommended_applicant_visibility DEFAULT 'ORIGINAL_RESPONSE_NOT_VISIBLE_TO_APPLICANT',
     status public.review_response_status DEFAULT 'DRAFT'
 );
+
+-- Function to automatically set previous review_responses 
+-- (for same review & templateElement) as is_latest_review_submitted = false
+CREATE OR REPLACE FUNCTION public.set_previous_review_response ()
+    RETURNS TRIGGER
+    AS $review_response_event$
+BEGIN
+    UPDATE
+        public.review_response
+    SET
+        is_latest_review_submission = FALSE
+    WHERE
+        template_element_id = NEW.template_element_id
+        AND review_id = NEW.review_id;
+    RETURN NULL;
+END;
+$review_response_event$
+LANGUAGE plpgsql;
+
+-- TRIGGER (Listener) on review_response table: Run set_previous_review_response
+CREATE TRIGGER review_response_trigger
+    AFTER INSERT ON public.review_response
+    FOR EACH ROW
+    EXECUTE FUNCTION public.set_previous_review_response ();
 
 -- Function to automatically update "time_updated"
 CREATE OR REPLACE FUNCTION public.update_review_response_timestamp ()
