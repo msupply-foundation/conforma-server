@@ -64,7 +64,7 @@ LANGUAGE plpgsql;
 CREATE TRIGGER review_response_latest
     AFTER UPDATE ON public.review_response
     FOR EACH ROW
-    WHEN (NEW.time_submitted > OLD.time_submitted OR OLD.time_submitted IS NULL)
+    WHEN (NEW.time_submitted > OLD.time_submitted OR (OLD.time_submitted IS NULL AND NEW.time_submitted IS NOT NULL))
     EXECUTE FUNCTION public.set_latest_review_response_submission ();
 
 -- Function to automatically update "time_updated"
