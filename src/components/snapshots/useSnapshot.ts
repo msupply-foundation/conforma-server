@@ -99,7 +99,7 @@ const useSnapshot: SnapshotOperation = async ({
     // Import localisations
     if (options?.includeLocalisation) {
       try {
-        execSync(`rm -rf ${LOCALISATION_FOLDER}/*`)
+        // execSync(`rm -rf ${LOCALISATION_FOLDER}/*`)
         execSync(`cp -r  '${snapshotFolder}/localisation/.' '${LOCALISATION_FOLDER}' `)
       } catch (e) {
         console.log("Couldn't import localisations")
@@ -109,7 +109,7 @@ const useSnapshot: SnapshotOperation = async ({
     // Import preferences
     if (options?.includePrefs) {
       try {
-        execSync(`rm -rf ${PREFERENCES_FOLDER}/*`)
+        // execSync(`rm -rf ${PREFERENCES_FOLDER}/*`)
         execSync(`cp '${snapshotFolder}/preferences.json' '${PREFERENCES_FILE}'`)
       } catch (e) {
         console.log("Couldn't import preferences")
