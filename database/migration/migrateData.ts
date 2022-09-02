@@ -917,6 +917,8 @@ const migrateData = async () => {
       WHEN (NEW.time_submitted > OLD.time_submitted OR OLD.time_submitted IS NULL)
       EXECUTE FUNCTION public.set_latest_review_response_submission ();
       `)
+
+    await DB.changeSchema(`ALTER TYPE permission_policy_type ADD VALUE 'VIEW' after 'ASSIGN'`)
   }
 
   // Other version migrations continue here...
