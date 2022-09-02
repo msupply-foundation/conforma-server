@@ -1148,9 +1148,9 @@
       "value": "0.4.5-2"
     },
     {
-      "id": 13,
+      "id": 14,
       "name": "snapshot",
-      "timestamp": "2022-09-02T14:14:10.907616+12:00",
+      "timestamp": "2022-09-02T14:16:21.70272+12:00",
       "value": "core_templates"
     }
   ],
@@ -1388,7 +1388,7 @@
       "name": "User Registration",
       "namePlural": null,
       "startMessage": null,
-      "status": "DRAFT",
+      "status": "AVAILABLE",
       "submissionMessage": "Thanks. Please check your email to verify your registration.",
       "templateCategoryId": null,
       "version": 1,
