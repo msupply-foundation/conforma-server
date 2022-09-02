@@ -824,8 +824,7 @@
       "isSystemOrg": true,
       "logoUrl": "/file?uid=CylhAzxRhSX_QjtArq3bi",
       "name": "Food and Drug Authority",
-      "registration": "fda",
-      "registrationDocumentation": null
+      "registration": "fda"
     }
   ],
   "permissionPolicy": [
@@ -1141,6 +1140,18 @@
       "name": "version",
       "timestamp": "2022-08-29T14:42:00.27181+12:00",
       "value": "0.4.4-1"
+    },
+    {
+      "id": 12,
+      "name": "version",
+      "timestamp": "2022-09-02T14:14:10.808863+12:00",
+      "value": "0.4.5-2"
+    },
+    {
+      "id": 13,
+      "name": "snapshot",
+      "timestamp": "2022-09-02T14:14:10.907616+12:00",
+      "value": "core_templates"
     }
   ],
   "templateCategory": [
@@ -7708,7 +7719,6 @@
       "timeCreated": "2022-08-11T10:15:21.714024+12:00"
     }
   ],
-  "organisationApplicationJoin": [],
   "templateElement": [
     {
       "category": "INFORMATION",
@@ -11480,7 +11490,6 @@
     }
   ],
   "triggerSchedule": [],
-  "userApplicationJoin": [],
   "verification": [],
   "applicationResponse": [
     {
