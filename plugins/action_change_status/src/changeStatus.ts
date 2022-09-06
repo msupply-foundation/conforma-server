@@ -42,7 +42,7 @@ const changeApplicationStatus = async (
     status: ActionQueueStatus.Fail,
     error_log: '',
   }
-  console.log(`Changing the Status of Application ${applicationId}...`)
+  console.log(`Changing the Status of Application ${applicationId} to ${newStatus}...`)
 
   try {
     const current =
@@ -109,10 +109,22 @@ const changeReviewStatus = async (
     status: ActionQueueStatus.Fail,
     error_log: 'uknown error',
   }
-  console.log(`Changing the Status of Review ${reviewId}...`)
+  console.log(`Changing the Status of Review ${reviewId} to ${newStatus}...`)
 
   try {
     const currentStatus = await DBConnect.getReviewCurrentStatusHistory(reviewId)
+
+    if (newStatus === undefined) {
+      console.log(`WARNING: Review newStatus property is undefined. No changes were made.`)
+      returnObject.status = ActionQueueStatus.Success
+      returnObject.error_log = 'Status not changed'
+      returnObject.output = {
+        status: currentStatus.status,
+        statusId: currentStatus.status_history_id,
+        reviewStatusHistoryTimestamp: currentStatus.status_history_time_created,
+      }
+      return returnObject
+    }
 
     if (currentStatus?.status === newStatus) {
       // Do nothing
