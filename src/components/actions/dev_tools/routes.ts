@@ -4,8 +4,8 @@ import { combineRequestParams } from '../../utilityFunctions'
 import DBConnect from '../../databaseConnect'
 import db from './databaseMethods'
 import { processTrigger } from '.././processTrigger'
-import { Trigger } from '../../../generated/graphql'
-import { selectRandomReviewAssignment } from './helpers'
+import { Decision, Trigger } from '../../../generated/graphql'
+import { selectRandomReviewAssignment, getRandomReviewId } from './helpers'
 
 // These routes should only be used for testing in development. They should
 // NEVER be used in the app.
@@ -26,13 +26,21 @@ interface RequestProps {
   trigger: Trigger | 'Reset'
   assignmentId?: number
   sections?: string[]
+  reviewId?: number
+  decision?: Decision
+  comment?: string
 }
 
 export const routeTestTrigger = async (request: any, reply: any) => {
-  const { templateCode, trigger, assignmentId, sections }: RequestProps = combineRequestParams(
-    request,
-    'camel'
-  )
+  const {
+    templateCode,
+    trigger,
+    assignmentId,
+    sections,
+    reviewId,
+    decision,
+    comment,
+  }: RequestProps = combineRequestParams(request, 'camel')
   const { applicationId, serial, templateId, sectionCodes } = await db.getConfigApplicationInfo(
     templateCode
   )
@@ -99,20 +107,37 @@ export const routeTestTrigger = async (request: any, reply: any) => {
           ? await db.getSingleReviewAssignment(assignmentId)
           : await selectRandomReviewAssignment(applicationId, sectionCodes)
         //   Create a review record and review_decision record
-        const { id } = await db.createReview(assignment.id)
+        const { id: reviewId } = await db.createReview(assignment.id)
+        await db.createReviewDecision(reviewId)
 
         triggerPayload.trigger = Trigger.OnReviewCreate
         triggerPayload.table = 'review'
-        triggerPayload.record_id = id
+        triggerPayload.record_id = reviewId
 
         result = await processTrigger(triggerPayload)
       }
       break
     case 'ON_REVIEW_SUBMIT':
-      // reviewId -- either passed in or pick highest stage/level associated with applicationId
-      // "decision" and "comment" (passed in)
-      // Trigger review record
+      {
+        const revId = reviewId ?? (await getRandomReviewId(applicationId))
+        await db.updateReviewDecision(revId, decision ?? Decision.Conform, comment ?? 'Okay')
+        // Trigger review record
+        triggerPayload.trigger = Trigger.OnReviewSubmit
+        triggerPayload.table = 'review'
+        triggerPayload.record_id = revId
+
+        result = await processTrigger(triggerPayload)
+      }
       break
+    case 'Reset':
+      // TO-DO:
+      // Delete
+      // -review_assignments,
+      // -application_status_history except first one
+      // application_stauge_history except first one
+      break
+    default:
+      return reply.send('Trigger not recognised')
   }
 
   reply.send({ applicationId, serial, result })

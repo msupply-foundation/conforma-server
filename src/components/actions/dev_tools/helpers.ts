@@ -25,3 +25,8 @@ export const selectRandomReviewAssignment = async (
 
   return reviewAssignments[Math.floor(Math.random() * reviewAssignments.length)]
 }
+
+export const getRandomReviewId = async (applicationId: number) => {
+  const reviews = await db.getValidReviews(applicationId)
+  return reviews[Math.floor(Math.random() * reviews.length)].reviewId
+}

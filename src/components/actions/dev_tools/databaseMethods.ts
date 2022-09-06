@@ -1,3 +1,4 @@
+import { Decision } from '../../../generated/graphql'
 import DBConnect from '../../databaseConnect'
 
 const databaseMethods = {
@@ -90,14 +91,63 @@ const databaseMethods = {
       throw err
     }
   },
-
-  createReview: async (id: number) => {
+  createReview: async (assignmentId: number) => {
     const text = `
       INSERT INTO review (review_assignment_id) VALUES($1)
       returning id;
     `
     try {
-      const result = await DBConnect.query({ text, values: [id] })
+      const result = await DBConnect.query({ text, values: [assignmentId] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
+  createReviewDecision: async (reviewId: number) => {
+    const text = `
+      INSERT INTO review_decision (review_id) VALUES($1)
+      returning id;
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [reviewId] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
+  getValidReviews: async (applicationId: number) => {
+    const text = `
+      WITH max_stage AS (
+        SELECT MAX(stage_number) FROM review
+        WHERE application_id = $1
+      ), max_review_level AS (
+        SELECT MAX(level_number) FROM review
+        WHERE application_id = $1
+        AND stage_number = (SELECT max FROM max_stage)
+      )
+      SELECT id AS "reviewId" FROM review
+        WHERE application_id = $1
+        AND stage_number = (SELECT max FROM max_stage)
+        AND level_number = (SELECT max FROM max_review_level);
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [applicationId] })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
+  updateReviewDecision: async (reviewId: number, decision: Decision, comment: string) => {
+    const text = `
+    UPDATE review_decision
+    SET decision = $1, comment = $2
+    WHERE review_id = $3;
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [decision, comment, reviewId] })
       return result.rows[0]
     } catch (err) {
       console.log(err.message)
