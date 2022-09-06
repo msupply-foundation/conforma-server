@@ -296,16 +296,16 @@ BEGIN
                                 SELECT
                                     title, code, "index"
                                 FROM template_section
-                                WHERE
-                                    code = ANY (ARRAY (
-                                            SELECT
-                                                assigned_sections
-                                            FROM review_assignment
-                                            WHERE
-                                                id = assignment_id
-                                                and template_id = templ_id
-                                                and assigned_sections <> '{}' ))
-                                    AND template_id = 10 ORDER BY "index") t), 'level', level_num, 'isLastLevel', is_last_level, 'finalDecision', is_final_decision));
+                            WHERE
+                                code = ANY (ARRAY (
+                                        SELECT
+                                            assigned_sections
+                                        FROM review_assignment
+                                    WHERE
+                                        id = assignment_id
+                                        AND template_id = templ_id
+                                        AND assigned_sections <> '{}'))
+                                AND template_id = templ_id ORDER BY "index") t), 'level', level_num, 'isLastLevel', is_last_level, 'finalDecision', is_final_decision));
     RETURN NEW;
 END;
 $application_event$
@@ -365,9 +365,9 @@ BEGIN
                                         SELECT
                                             assigned_sections
                                         FROM review_assignment
-                                        WHERE
-                                            id = rev_assignment_id
-                                            and assigned_sections <> '{}' ))
+                                    WHERE
+                                        id = rev_assignment_id
+                                        AND assigned_sections <> '{}'))
                                 AND template_id = templ_id ORDER BY "index") t)));
     RETURN NULL;
 END;
