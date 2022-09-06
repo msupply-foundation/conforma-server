@@ -105,10 +105,12 @@ export const routeTestTrigger = async (request: any, reply: any) => {
       {
         const assignment = assignmentId
           ? await db.getSingleReviewAssignment(assignmentId)
-          : await selectRandomReviewAssignment(applicationId, sectionCodes)
+          : await selectRandomReviewAssignment(applicationId, sectionCodes, true)
         //   Create a review record and review_decision record
         const { id: reviewId } = await db.createReview(assignment.id)
         await db.createReviewDecision(reviewId)
+
+        // TO-DO: Make some review responses and give them dummy values?
 
         triggerPayload.trigger = Trigger.OnReviewCreate
         triggerPayload.table = 'review'
@@ -121,7 +123,7 @@ export const routeTestTrigger = async (request: any, reply: any) => {
       {
         const revId = reviewId ?? (await getRandomReviewId(applicationId))
         await db.updateReviewDecision(revId, decision ?? Decision.Conform, comment ?? 'Okay')
-        // Trigger review record
+
         triggerPayload.trigger = Trigger.OnReviewSubmit
         triggerPayload.table = 'review'
         triggerPayload.record_id = revId
@@ -141,10 +143,5 @@ export const routeTestTrigger = async (request: any, reply: any) => {
   }
 
   reply.send({ applicationId, serial, result })
-
-  // const appDataParams: { applicationId: number; reviewId?: number } = {
-  //   applicationId: Number(applicationId),
-  // }
-  // if (reviewId) appDataParams.reviewId = Number(reviewId)
   reply.send({ applicationId })
 }

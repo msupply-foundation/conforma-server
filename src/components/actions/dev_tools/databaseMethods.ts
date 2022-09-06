@@ -78,6 +78,31 @@ const databaseMethods = {
       throw err
     }
   },
+  // Gets all ASSIGNED review assignments for the specified application at the
+  // highest possible stage and review_level
+  getAssignedReviewAssignments: async (applicationId: number) => {
+    const text = `
+      WITH max_stage AS (
+        SELECT MAX(stage_number) FROM review_assignment
+        WHERE application_id = $1 AND status = 'ASSIGNED'
+      ), max_review_level AS (
+        SELECT MAX(level_number) FROM review_assignment
+        WHERE application_id = $1 AND status = 'ASSIGNED'
+        AND stage_number = (SELECT max FROM max_stage)
+      )
+      SELECT id, allowed_sections FROM public.review_assignment
+      where application_id = $1 AND status = 'ASSIGNED'
+      AND stage_number = (SELECT max FROM max_stage)
+      AND level_number = (SELECT max FROM max_review_level)
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [applicationId] })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
   assignReview: async ({ id, allowedSections }: { id: number; allowedSections: string[] }) => {
     const text = `
       UPDATE review_assignment SET status = 'ASSIGNED', assigned_sections = $1

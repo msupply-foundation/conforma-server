@@ -1,17 +1,13 @@
-import { actionLibrary } from '../../pluginsConnect'
-import { getApplicationData } from '.././getApplicationData'
-import { combineRequestParams } from '../../utilityFunctions'
-import DBConnect from '../../databaseConnect'
 import db from './databaseMethods'
-import { processTrigger } from '.././processTrigger'
-import { Trigger } from '../../../generated/graphql'
 
 export const selectRandomReviewAssignment = async (
   applicationId: number,
-  sectionCodes: string[]
+  sectionCodes: string[],
+  assigned: boolean = false
 ) => {
-  const reviewAssignments = await (
-    await db.getReviewAssignments(applicationId)
+  const reviewAssignments = await (assigned
+    ? await db.getAssignedReviewAssignments(applicationId)
+    : await db.getReviewAssignments(applicationId)
   )
     .map(({ id, allowed_sections }) => ({
       id,
