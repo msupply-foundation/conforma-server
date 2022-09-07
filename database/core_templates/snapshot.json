@@ -1164,6 +1164,12 @@
       "name": "snapshot",
       "timestamp": "2022-09-07T17:12:18.598825+12:00",
       "value": "core_templates"
+    },
+    {
+      "id": 17,
+      "name": "snapshot",
+      "timestamp": "2022-09-07T18:09:06.216504+12:00",
+      "value": "core_templates"
     }
   ],
   "templateCategory": [
