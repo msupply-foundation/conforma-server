@@ -7,6 +7,7 @@ import { processTrigger } from '.././processTrigger'
 import { ActionQueueStatus, Decision, Trigger } from '../../../generated/graphql'
 import { selectRandomReviewAssignment, getRandomReviewId } from './helpers'
 import { ActionQueueExecutePayload, ActionResult } from '../../../types'
+import { routePreviewActions } from '../previewActionsRoute'
 
 // These routes should only be used for testing in development. They should
 // NEVER be used in the app.
@@ -66,6 +67,7 @@ export const routeTestTrigger = async (request: any, reply: any) => {
       actionsOutput = await processTrigger(triggerPayload)
       finalApplicationData = await getApplicationData({ applicationId })
       break
+
     case 'ON_APPLICATION_CREATE':
       // To-do: actually create an "is_config" application -- currently relies
       // on one already existing
@@ -73,27 +75,38 @@ export const routeTestTrigger = async (request: any, reply: any) => {
       actionsOutput = await processTrigger(triggerPayload)
       finalApplicationData = await getApplicationData({ applicationId })
       break
+
     case 'ON_APPLICATION_RESTART':
       triggerPayload.trigger = Trigger.OnApplicationRestart
       actionsOutput = await processTrigger(triggerPayload)
       finalApplicationData = await getApplicationData({ applicationId })
       break
+
     case 'ON_APPLICATION_SUBMIT':
       triggerPayload.trigger = Trigger.OnApplicationSubmit
       actionsOutput = await processTrigger(triggerPayload)
       finalApplicationData = await getApplicationData({ applicationId })
       break
+
     case 'ON_EXTEND':
       triggerPayload.trigger = Trigger.OnExtend
       actionsOutput = await processTrigger(triggerPayload)
       finalApplicationData = await getApplicationData({ applicationId })
       break
+
     case 'ON_PREVIEW':
-      console.log('To-do: ON_PREVIEW')
-      return reply.send('ON_PREVIEW Trigger not implemented yet')
+      const revId = reviewId ?? (await getRandomReviewId(applicationId))
+      triggerPayload.trigger = Trigger.OnPreview
+      triggerPayload.table = 'review'
+      triggerPayload.record_id = revId
+      triggerPayload.applicationDataOverride = {
+        reviewData: { latestDecision: { decision: decision ?? Decision.Conform } },
+      }
+
+      actionsOutput = await processTrigger(triggerPayload)
+      finalApplicationData = await getApplicationData({ applicationId, reviewId: revId })
       break
-    //   triggerPayload.trigger = Trigger.OnExtend
-    //   result = await processTrigger(triggerPayload)
+
     case 'ON_REVIEW_ASSIGN':
       // If no assignment id, select one at random (using latest stage and level) and assign all possible sections to it
       {
@@ -118,6 +131,7 @@ export const routeTestTrigger = async (request: any, reply: any) => {
         })
       }
       break
+
     case 'ON_REVIEW_CREATE':
       // Get assignment id -- either passed in, or pick one at random (assigned and highest stage/level)
       {
@@ -138,6 +152,7 @@ export const routeTestTrigger = async (request: any, reply: any) => {
         finalApplicationData = await getApplicationData({ applicationId, reviewId: revId })
       }
       break
+
     case 'ON_REVIEW_SUBMIT':
       {
         const revId = reviewId ?? (await getRandomReviewId(applicationId))
@@ -151,10 +166,12 @@ export const routeTestTrigger = async (request: any, reply: any) => {
         finalApplicationData = await getApplicationData({ applicationId, reviewId: revId })
       }
       break
+
     case 'RESET':
       await db.resetApplication(applicationId)
       finalApplicationData = await getApplicationData({ applicationId })
       break
+
     default:
       return reply.send('Trigger not recognised')
   }
