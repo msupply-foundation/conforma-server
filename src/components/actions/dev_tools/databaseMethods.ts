@@ -179,6 +179,28 @@ const databaseMethods = {
       throw err
     }
   },
+  resetApplication: async (applicationId: number) => {
+    // Will cascade to also delete reviews, decisions, responses...
+    // Only the application and its responses should remain
+
+    // Using manual parameter replacement here otherwise it doesn't allow
+    // multiple statements
+    const text = `
+      DELETE FROM review_assignment WHERE application_id = $1;
+      DELETE FROM application_status_history WHERE application_id = $1;
+      DELETE FROM application_stage_history WHERE application_id = $1;
+      ALTER TABLE application DISABLE TRIGGER ALL;
+      UPDATE application SET outcome = 'PENDING', is_active = true  WHERE id = $1;
+      ALTER TABLE application ENABLE TRIGGER ALL;
+    `.replace(/\$1/g, String(applicationId))
+    try {
+      await DBConnect.query({ text })
+      return
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
 }
 
 export default databaseMethods

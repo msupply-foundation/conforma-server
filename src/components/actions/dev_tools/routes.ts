@@ -24,7 +24,7 @@ export const routeRunAction = async (request: any, reply: any) => {
 
 interface RequestProps {
   templateCode: string
-  trigger: Trigger | 'Reset'
+  trigger: Trigger | 'RESET'
   assignmentId?: number
   sections?: string[]
   reviewId?: number
@@ -150,12 +150,9 @@ export const routeTestTrigger = async (request: any, reply: any) => {
         finalApplicationData = await getApplicationData({ applicationId, reviewId: revId })
       }
       break
-    case 'Reset':
-      // TO-DO:
-      // Delete
-      // -review_assignments,
-      // -application_status_history except first one
-      // application_stauge_history except first one
+    case 'RESET':
+      await db.resetApplication(applicationId)
+      finalApplicationData = await getApplicationData({ applicationId })
       break
     default:
       return reply.send('Trigger not recognised')
