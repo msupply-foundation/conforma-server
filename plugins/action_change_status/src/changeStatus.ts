@@ -15,6 +15,14 @@ async function changeStatus({
       : parameters?.isReview || applicationData?.action_payload?.trigger_payload?.table === 'review'
   const newStatus = parameters?.newStatus
 
+  console.log(`Changing status of ${isReview ? 'Review' : 'Application'} to ${newStatus}`)
+
+  if (!newStatus)
+    return {
+      status: ActionQueueStatus.Fail,
+      error_log: 'Missing property: "newStatus"',
+    }
+
   if (!isReview) {
     return await changeApplicationStatus(
       applicationId,
@@ -113,18 +121,6 @@ const changeReviewStatus = async (
 
   try {
     const currentStatus = await DBConnect.getReviewCurrentStatusHistory(reviewId)
-
-    if (newStatus === undefined) {
-      console.log(`WARNING: Review newStatus property is undefined. No changes were made.`)
-      returnObject.status = ActionQueueStatus.Success
-      returnObject.error_log = 'Status not changed'
-      returnObject.output = {
-        status: currentStatus.status,
-        statusId: currentStatus.status_history_id,
-        reviewStatusHistoryTimestamp: currentStatus.status_history_time_created,
-      }
-      return returnObject
-    }
 
     if (currentStatus?.status === newStatus) {
       // Do nothing
