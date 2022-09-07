@@ -1363,14 +1363,14 @@ CREATE TABLE public.review_response (
     time_updated timestamptz DEFAULT CURRENT_TIMESTAMP,
     time_submitted timestamptz,
     is_visible_to_applicant boolean DEFAULT FALSE,
-    is_latest_review_submission boolean DEFAULT FALSE,
+    is_latest_review boolean DEFAULT FALSE,
     template_element_id integer REFERENCES public.template_element ON DELETE CASCADE,
     recommended_applicant_visibility public.review_response_recommended_applicant_visibility DEFAULT 'ORIGINAL_RESPONSE_NOT_VISIBLE_TO_APPLICANT',
     status public.review_response_status DEFAULT 'DRAFT'
 );
 
 -- Function to automatically set previous review_responses
--- (for same review & templateElement) as is_latest_review_submitted = false
+-- (for same review & templateElement) as is_latest_review = false
 CREATE OR REPLACE FUNCTION public.set_latest_review_response_submission ()
     RETURNS TRIGGER
     AS $review_response_event$
@@ -1378,13 +1378,13 @@ BEGIN
     UPDATE
         public.review_response
     SET
-        is_latest_review_submission = TRUE
+        is_latest_review = TRUE
     WHERE
         id = NEW.id;
     UPDATE
         public.review_response
     SET
-        is_latest_review_submission = FALSE
+        is_latest_review = FALSE
     WHERE
         template_element_id = NEW.template_element_id
         AND review_id = NEW.review_id
@@ -1398,7 +1398,7 @@ LANGUAGE plpgsql;
 CREATE TRIGGER review_response_latest
     AFTER UPDATE ON public.review_response
     FOR EACH ROW
-    WHEN (NEW.time_submitted > OLD.time_submitted OR OLD.time_submitted IS NULL)
+    WHEN (NEW.time_updated > OLD.time_created)
     EXECUTE FUNCTION public.set_latest_review_response_submission ();
 
 -- Function to automatically update "time_updated"
@@ -2388,7 +2388,9 @@ BEGIN
                                             assigned_sections
                                         FROM review_assignment
                                     WHERE
-                                        id = assignment_id))
+                                        id = assignment_id
+                                        AND template_id = templ_id
+                                        AND assigned_sections <> '{}'))
                                 AND template_id = templ_id ORDER BY "index") t), 'level', level_num, 'isLastLevel', is_last_level, 'finalDecision', is_final_decision));
     RETURN NEW;
 END;
@@ -2450,7 +2452,8 @@ BEGIN
                                             assigned_sections
                                         FROM review_assignment
                                     WHERE
-                                        id = rev_assignment_id))
+                                        id = rev_assignment_id
+                                        AND assigned_sections <> '{}'))
                                 AND template_id = templ_id ORDER BY "index") t)));
     RETURN NULL;
 END;

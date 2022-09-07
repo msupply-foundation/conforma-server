@@ -1152,6 +1152,18 @@
       "name": "snapshot",
       "timestamp": "2022-09-02T14:16:21.70272+12:00",
       "value": "core_templates"
+    },
+    {
+      "id": 15,
+      "name": "version",
+      "timestamp": "2022-09-07T17:12:18.434533+12:00",
+      "value": "0.4.5-5"
+    },
+    {
+      "id": 16,
+      "name": "snapshot",
+      "timestamp": "2022-09-07T17:12:18.598825+12:00",
+      "value": "core_templates"
     }
   ],
   "templateCategory": [
@@ -1224,6 +1236,7 @@
       ]
     }
   ],
+  "triggerQueue": [],
   "user": [
     {
       "dateOfBirth": null,
@@ -1555,6 +1568,7 @@
       "userRole": null
     }
   ],
+  "actionQueue": [],
   "application": [
     {
       "id": 1,
@@ -6487,6 +6501,13 @@
       "id": 260,
       "parameterQueries": {
         "isReview": true,
+        "reviewId": {
+          "children": [
+            "applicationData.reviewData.reviewId",
+            null
+          ],
+          "operator": "objectProperties"
+        },
         "newStatus": "DISCONTINUED"
       },
       "sequence": 2,
@@ -6502,6 +6523,13 @@
       "id": 261,
       "parameterQueries": {
         "isReview": true,
+        "reviewId": {
+          "children": [
+            "applicationData.reviewData.reviewId",
+            null
+          ],
+          "operator": "objectProperties"
+        },
         "newStatus": "DISCONTINUED"
       },
       "sequence": 2,
@@ -6517,6 +6545,13 @@
       "id": 262,
       "parameterQueries": {
         "isReview": true,
+        "reviewId": {
+          "children": [
+            "applicationData.reviewData.reviewId",
+            null
+          ],
+          "operator": "objectProperties"
+        },
         "newStatus": "DISCONTINUED"
       },
       "sequence": 2,
@@ -6535,6 +6570,13 @@
       "id": 263,
       "parameterQueries": {
         "isReview": true,
+        "reviewId": {
+          "children": [
+            "applicationData.reviewData.reviewId",
+            null
+          ],
+          "operator": "objectProperties"
+        },
         "newStatus": "DISCONTINUED"
       },
       "sequence": 2,
@@ -6562,6 +6604,13 @@
       "id": 264,
       "parameterQueries": {
         "isReview": true,
+        "reviewId": {
+          "children": [
+            "applicationData.reviewData.reviewId",
+            null
+          ],
+          "operator": "objectProperties"
+        },
         "newStatus": {
           "children": [
             {
@@ -6602,6 +6651,13 @@
       "id": 265,
       "parameterQueries": {
         "isReview": true,
+        "reviewId": {
+          "children": [
+            "applicationData.reviewData.reviewId",
+            null
+          ],
+          "operator": "objectProperties"
+        },
         "newStatus": {
           "children": [
             {
@@ -6642,6 +6698,13 @@
       "id": 266,
       "parameterQueries": {
         "isReview": true,
+        "reviewId": {
+          "children": [
+            "applicationData.reviewData.reviewId",
+            null
+          ],
+          "operator": "objectProperties"
+        },
         "newStatus": {
           "children": [
             {
@@ -6682,6 +6745,13 @@
       "id": 267,
       "parameterQueries": {
         "isReview": true,
+        "reviewId": {
+          "children": [
+            "applicationData.reviewData.reviewId",
+            null
+          ],
+          "operator": "objectProperties"
+        },
         "newStatus": {
           "children": [
             {
