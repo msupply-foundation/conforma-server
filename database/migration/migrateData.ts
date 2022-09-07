@@ -910,7 +910,7 @@ const migrateData = async () => {
     `)
 
     await DB.changeSchema(`CREATE TRIGGER review_response_latest
-      AFTER UPDATE ON public.review_response
+      AFTER UPDATE OF time_updated ON public.review_response
       FOR EACH ROW
       WHEN (NEW.time_updated > OLD.time_created)
       EXECUTE FUNCTION public.set_latest_review_response_submission ();
