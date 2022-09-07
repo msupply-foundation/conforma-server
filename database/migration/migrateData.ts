@@ -875,13 +875,11 @@ const migrateData = async () => {
 
   // 0.4.5
   if (databaseVersionLessThan('0.4.5')) {
-    // Add "is_latest_review_submission" column to table review_response in schema
-    console.log(
-      ' - Add is_latest_review_submission to review_response with automatic trigger/update function'
-    )
+    // Add "is_latest_review" column to table review_response in schema
+    console.log(' - Add is_latest_review to review_response with automatic trigger/update function')
 
     await DB.changeSchema(`ALTER TABLE review_response
-        ADD COLUMN IF NOT EXISTS is_latest_review_submission boolean DEFAULT FALSE;`)
+        ADD COLUMN IF NOT EXISTS is_latest_review boolean DEFAULT FALSE;`)
 
     await DB.changeSchema(`CREATE OR REPLACE FUNCTION public.set_latest_review_response_submission ()
         RETURNS TRIGGER
@@ -890,13 +888,13 @@ const migrateData = async () => {
         UPDATE
             public.review_response
         SET
-            is_latest_review_submission = TRUE
+            is_latest_review = TRUE
         WHERE
             id = NEW.id;
         UPDATE
             public.review_response
         SET
-            is_latest_review_submission = FALSE
+            is_latest_review = FALSE
         WHERE
             template_element_id = NEW.template_element_id
             AND review_id = NEW.review_id
@@ -914,7 +912,7 @@ const migrateData = async () => {
     await DB.changeSchema(`CREATE TRIGGER review_response_latest
       AFTER UPDATE ON public.review_response
       FOR EACH ROW
-      WHEN (NEW.time_submitted > OLD.time_submitted OR (OLD.time_submitted IS NULL AND NEW.time_submitted IS NOT NULL))
+      WHEN (NEW.time_updated > OLD.time_created)
       EXECUTE FUNCTION public.set_latest_review_response_submission ();
       `)
 
