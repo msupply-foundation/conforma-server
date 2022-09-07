@@ -1061,6 +1061,14 @@ const migrateData = async () => {
     $application_event$
     LANGUAGE plpgsql;
       `)
+
+    console.log(
+      ' - Change foreign key constraint on file table to allow changing of application serial'
+    )
+    await DB.changeSchema(`
+      ALTER TABLE file DROP CONSTRAINT IF EXISTS file_application_serial_fkey; 
+      ALTER TABLE file ADD CONSTRAINT file_application_serial_fkey FOREIGN KEY (application_serial) REFERENCES application (serial) ON UPDATE CASCADE;
+    `)
   }
 
   // Other version migrations continue here...
