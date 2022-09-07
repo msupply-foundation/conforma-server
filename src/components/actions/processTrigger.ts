@@ -71,7 +71,7 @@ export async function processTrigger(payload: TriggerPayload): Promise<ActionRes
     if (actionFailed) {
       await DBConnect.executedActionStatusUpdate({
         status: ActionQueueStatus.Fail,
-        error_log: 'Action cancelled due to failure of previous sequential action ' + actionFailed,
+        error_log: 'Action cancelled due to failure of previous sequential action: ' + actionFailed,
         parameters_evaluated: null,
         output: null,
         id: action.id,
@@ -106,7 +106,10 @@ export async function processTrigger(payload: TriggerPayload): Promise<ActionRes
 
       // Debug helper console.log to inspect action outputs:
       if (showActionOutcomeLog) console.log('outputCumulative:', outputCumulative)
-      if (result.status === ActionQueueStatus.Fail) console.log(result.error_log)
+      if (result.status === ActionQueueStatus.Fail) {
+        console.log(result.error_log)
+        actionFailed = action.action_code
+      }
     } catch (err) {
       actionFailed = action.action_code
     }
