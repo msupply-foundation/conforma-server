@@ -6,8 +6,7 @@ import db from './databaseMethods'
 import { processTrigger } from '.././processTrigger'
 import { ActionQueueStatus, Decision, Trigger } from '../../../generated/graphql'
 import { selectRandomReviewAssignment, getRandomReviewId } from './helpers'
-import { ActionQueueExecutePayload, ActionResult } from '../../../types'
-import { routePreviewActions } from '../previewActionsRoute'
+import { ActionResult } from '../../../types'
 
 // These routes should only be used for testing in development. They should
 // NEVER be used in the app.
