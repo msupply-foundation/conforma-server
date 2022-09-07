@@ -47,7 +47,7 @@ export const routeTestTrigger = async (request: any, reply: any) => {
 
   if (!applicationId) reply.send('Invalid template code, or no config application available')
 
-  let result
+  let actionResult
   // A dummy triggerPayload object, as though it was retrieved from the
   // trigger_queue table
   const triggerPayload = {
@@ -59,21 +59,26 @@ export const routeTestTrigger = async (request: any, reply: any) => {
   }
 
   switch (trigger) {
+    case 'DEV_TEST':
+      actionResult = await processTrigger(triggerPayload)
+      break
     case 'ON_APPLICATION_CREATE':
+      // To-do: actually create an "is_config" application -- currently relies
+      // on one already existing
       triggerPayload.trigger = Trigger.OnApplicationCreate
-      result = await processTrigger(triggerPayload)
+      actionResult = await processTrigger(triggerPayload)
       break
     case 'ON_APPLICATION_RESTART':
       triggerPayload.trigger = Trigger.OnApplicationRestart
-      result = await processTrigger(triggerPayload)
+      actionResult = await processTrigger(triggerPayload)
       break
     case 'ON_APPLICATION_SUBMIT':
       triggerPayload.trigger = Trigger.OnApplicationSubmit
-      result = await processTrigger(triggerPayload)
+      actionResult = await processTrigger(triggerPayload)
       break
     case 'ON_EXTEND':
       triggerPayload.trigger = Trigger.OnExtend
-      result = await processTrigger(triggerPayload)
+      actionResult = await processTrigger(triggerPayload)
       break
     case 'ON_PREVIEW':
       console.log('To-do: ON_PREVIEW')
@@ -97,7 +102,7 @@ export const routeTestTrigger = async (request: any, reply: any) => {
         triggerPayload.table = 'review_assignment'
         triggerPayload.record_id = assignment.id
 
-        result = await processTrigger(triggerPayload)
+        actionResult = await processTrigger(triggerPayload)
       }
       break
     case 'ON_REVIEW_CREATE':
@@ -116,7 +121,7 @@ export const routeTestTrigger = async (request: any, reply: any) => {
         triggerPayload.table = 'review'
         triggerPayload.record_id = reviewId
 
-        result = await processTrigger(triggerPayload)
+        actionResult = await processTrigger(triggerPayload)
       }
       break
     case 'ON_REVIEW_SUBMIT':
@@ -128,7 +133,7 @@ export const routeTestTrigger = async (request: any, reply: any) => {
         triggerPayload.table = 'review'
         triggerPayload.record_id = revId
 
-        result = await processTrigger(triggerPayload)
+        actionResult = await processTrigger(triggerPayload)
       }
       break
     case 'Reset':
@@ -142,6 +147,6 @@ export const routeTestTrigger = async (request: any, reply: any) => {
       return reply.send('Trigger not recognised')
   }
 
-  reply.send({ applicationId, serial, result })
+  reply.send({ applicationId, serial, actionResult })
   reply.send({ applicationId })
 }
