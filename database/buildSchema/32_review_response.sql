@@ -37,7 +37,7 @@ CREATE TABLE public.review_response (
 
 -- Function to automatically set previous review_responses
 -- (for same review & templateElement) as is_latest_review = false
-CREATE OR REPLACE FUNCTION public.set_latest_review_response_submission ()
+CREATE OR REPLACE FUNCTION public.set_latest_review_response ()
     RETURNS TRIGGER
     AS $review_response_event$
 BEGIN
@@ -65,7 +65,7 @@ CREATE TRIGGER review_response_latest
     AFTER UPDATE OF time_updated ON public.review_response
     FOR EACH ROW
     WHEN (NEW.time_updated > OLD.time_created)
-    EXECUTE FUNCTION public.set_latest_review_response_submission ();
+    EXECUTE FUNCTION public.set_latest_review_response ();
 
 -- Function to automatically update "time_updated"
 CREATE OR REPLACE FUNCTION public.update_review_response_timestamp ()

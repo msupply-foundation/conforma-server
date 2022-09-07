@@ -881,7 +881,7 @@ const migrateData = async () => {
     await DB.changeSchema(`ALTER TABLE review_response
         ADD COLUMN IF NOT EXISTS is_latest_review boolean DEFAULT FALSE;`)
 
-    await DB.changeSchema(`CREATE OR REPLACE FUNCTION public.set_latest_review_response_submission ()
+    await DB.changeSchema(`CREATE OR REPLACE FUNCTION public.set_latest_review_response ()
         RETURNS TRIGGER
         AS $review_response_event$
     BEGIN
@@ -913,7 +913,7 @@ const migrateData = async () => {
       AFTER UPDATE OF time_updated ON public.review_response
       FOR EACH ROW
       WHEN (NEW.time_updated > OLD.time_created)
-      EXECUTE FUNCTION public.set_latest_review_response_submission ();
+      EXECUTE FUNCTION public.set_latest_review_response ();
       `)
 
     console.log(
