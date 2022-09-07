@@ -14133,7 +14133,8 @@ export type PermissionPolicyToManyPermissionNameFilter = {
 export enum PermissionPolicyType {
   Review = 'REVIEW',
   Apply = 'APPLY',
-  Assign = 'ASSIGN'
+  Assign = 'ASSIGN',
+  View = 'VIEW'
 }
 
 /** A filter to be used against PermissionPolicyType fields. All fields are combined with a logical ‘and.’ */
