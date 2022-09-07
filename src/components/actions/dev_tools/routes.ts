@@ -4,8 +4,9 @@ import { combineRequestParams } from '../../utilityFunctions'
 import DBConnect from '../../databaseConnect'
 import db from './databaseMethods'
 import { processTrigger } from '.././processTrigger'
-import { Decision, Trigger } from '../../../generated/graphql'
+import { ActionQueueStatus, Decision, Trigger } from '../../../generated/graphql'
 import { selectRandomReviewAssignment, getRandomReviewId } from './helpers'
+import { ActionQueueExecutePayload, ActionResult } from '../../../types'
 
 // These routes should only be used for testing in development. They should
 // NEVER be used in the app.
@@ -47,7 +48,9 @@ export const routeTestTrigger = async (request: any, reply: any) => {
 
   if (!applicationId) reply.send('Invalid template code, or no config application available')
 
-  let actionResult
+  let actionsOutput: ActionResult[] = []
+  let finalApplicationData
+
   // A dummy triggerPayload object, as though it was retrieved from the
   // trigger_queue table
   const triggerPayload = {
@@ -60,25 +63,30 @@ export const routeTestTrigger = async (request: any, reply: any) => {
 
   switch (trigger) {
     case 'DEV_TEST':
-      actionResult = await processTrigger(triggerPayload)
+      actionsOutput = await processTrigger(triggerPayload)
+      finalApplicationData = await getApplicationData({ applicationId })
       break
     case 'ON_APPLICATION_CREATE':
       // To-do: actually create an "is_config" application -- currently relies
       // on one already existing
       triggerPayload.trigger = Trigger.OnApplicationCreate
-      actionResult = await processTrigger(triggerPayload)
+      actionsOutput = await processTrigger(triggerPayload)
+      finalApplicationData = await getApplicationData({ applicationId })
       break
     case 'ON_APPLICATION_RESTART':
       triggerPayload.trigger = Trigger.OnApplicationRestart
-      actionResult = await processTrigger(triggerPayload)
+      actionsOutput = await processTrigger(triggerPayload)
+      finalApplicationData = await getApplicationData({ applicationId })
       break
     case 'ON_APPLICATION_SUBMIT':
       triggerPayload.trigger = Trigger.OnApplicationSubmit
-      actionResult = await processTrigger(triggerPayload)
+      actionsOutput = await processTrigger(triggerPayload)
+      finalApplicationData = await getApplicationData({ applicationId })
       break
     case 'ON_EXTEND':
       triggerPayload.trigger = Trigger.OnExtend
-      actionResult = await processTrigger(triggerPayload)
+      actionsOutput = await processTrigger(triggerPayload)
+      finalApplicationData = await getApplicationData({ applicationId })
       break
     case 'ON_PREVIEW':
       console.log('To-do: ON_PREVIEW')
@@ -102,7 +110,11 @@ export const routeTestTrigger = async (request: any, reply: any) => {
         triggerPayload.table = 'review_assignment'
         triggerPayload.record_id = assignment.id
 
-        actionResult = await processTrigger(triggerPayload)
+        actionsOutput = await processTrigger(triggerPayload)
+        finalApplicationData = await getApplicationData({
+          applicationId,
+          reviewAssignmentId: assignmentId,
+        })
       }
       break
     case 'ON_REVIEW_CREATE':
@@ -112,28 +124,30 @@ export const routeTestTrigger = async (request: any, reply: any) => {
           ? await db.getSingleReviewAssignment(assignmentId)
           : await selectRandomReviewAssignment(applicationId, sectionCodes, true)
         //   Create a review record and review_decision record
-        const { id: reviewId } = await db.createReview(assignment.id)
-        await db.createReviewDecision(reviewId)
+        const { id: revId } = await db.createReview(assignment.id)
+        await db.createReviewDecision(revId)
 
         // TO-DO: Make some review responses and give them dummy values?
 
         triggerPayload.trigger = Trigger.OnReviewCreate
         triggerPayload.table = 'review'
-        triggerPayload.record_id = reviewId
+        triggerPayload.record_id = revId
 
-        actionResult = await processTrigger(triggerPayload)
+        actionsOutput = await processTrigger(triggerPayload)
+        finalApplicationData = await getApplicationData({ applicationId, reviewId: revId })
       }
       break
     case 'ON_REVIEW_SUBMIT':
       {
         const revId = reviewId ?? (await getRandomReviewId(applicationId))
-        await db.updateReviewDecision(revId, decision ?? Decision.Conform, comment ?? 'Okay')
+        await db.updateReviewDecision(revId, decision ?? Decision.Conform, comment ?? 'No comment')
 
         triggerPayload.trigger = Trigger.OnReviewSubmit
         triggerPayload.table = 'review'
         triggerPayload.record_id = revId
 
-        actionResult = await processTrigger(triggerPayload)
+        actionsOutput = await processTrigger(triggerPayload)
+        finalApplicationData = await getApplicationData({ applicationId, reviewId: revId })
       }
       break
     case 'Reset':
@@ -147,6 +161,15 @@ export const routeTestTrigger = async (request: any, reply: any) => {
       return reply.send('Trigger not recognised')
   }
 
-  reply.send({ applicationId, serial, actionResult })
-  reply.send({ applicationId })
+  const failedActions = actionsOutput.filter(
+    (action) => action.status !== ActionQueueStatus.Success
+  )
+
+  reply.send({
+    applicationId,
+    serial,
+    failedActions,
+    actionResult: actionsOutput,
+    finalApplicationData,
+  })
 }
