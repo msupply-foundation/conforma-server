@@ -302,7 +302,9 @@ BEGIN
                                             assigned_sections
                                         FROM review_assignment
                                     WHERE
-                                        id = assignment_id))
+                                        id = assignment_id
+                                        AND template_id = templ_id
+                                        AND assigned_sections <> '{}'))
                                 AND template_id = templ_id ORDER BY "index") t), 'level', level_num, 'isLastLevel', is_last_level, 'finalDecision', is_final_decision));
     RETURN NEW;
 END;
@@ -364,7 +366,8 @@ BEGIN
                                             assigned_sections
                                         FROM review_assignment
                                     WHERE
-                                        id = rev_assignment_id))
+                                        id = rev_assignment_id
+                                        AND assigned_sections <> '{}'))
                                 AND template_id = templ_id ORDER BY "index") t)));
     RETURN NULL;
 END;

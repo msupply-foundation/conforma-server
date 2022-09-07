@@ -15,6 +15,14 @@ async function changeStatus({
       : parameters?.isReview || applicationData?.action_payload?.trigger_payload?.table === 'review'
   const newStatus = parameters?.newStatus
 
+  console.log(`Changing status of ${isReview ? 'Review' : 'Application'} to ${newStatus}`)
+
+  if (!newStatus)
+    return {
+      status: ActionQueueStatus.Fail,
+      error_log: 'Missing property: "newStatus"',
+    }
+
   if (!isReview) {
     return await changeApplicationStatus(
       applicationId,

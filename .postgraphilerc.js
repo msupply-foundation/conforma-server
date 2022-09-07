@@ -16,5 +16,6 @@ module.exports = {
     graphileBuildOptions: {
       connectionFilterRelations: true,
     },
+    bodySizeLimit: '500kb',
   },
 }

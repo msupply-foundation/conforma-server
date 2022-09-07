@@ -917,6 +917,150 @@ const migrateData = async () => {
       WHEN (NEW.time_submitted > OLD.time_submitted OR (OLD.time_submitted IS NULL AND NEW.time_submitted IS NOT NULL))
       EXECUTE FUNCTION public.set_latest_review_response_submission ();
       `)
+
+    console.log(
+      '- Update to Functions of Activity_log to fix problem with aggregation of assigned_section'
+    )
+
+    await DB.changeSchema(`
+    -- REVIEW STATUS CHANGES
+    CREATE OR REPLACE FUNCTION public.review_status_activity_log ()
+        RETURNS TRIGGER
+        AS $application_event$
+    DECLARE
+        app_id integer;
+        reviewer_id integer;
+        assignment_id integer;
+        stage_number integer;
+        prev_status varchar;
+        level_num integer;
+        is_last_level boolean;
+        is_final_decision boolean;
+        templ_id integer;
+    BEGIN
+        SELECT
+            r.application_id,
+            r.reviewer_id,
+            r.review_assignment_id,
+            r.stage_number,
+            r.level_number,
+            r.is_last_level,
+            r.is_final_decision INTO app_id,
+            reviewer_id,
+            assignment_id,
+            stage_number,
+            level_num,
+            is_last_level,
+            is_final_decision
+        FROM
+            review r
+        WHERE
+            id = NEW.review_id;
+        templ_id = (
+            SELECT
+                template_id
+            FROM
+                application
+            WHERE
+                id = app_id);
+        prev_status = (
+            SELECT
+                status
+            FROM
+                review_status_history
+            WHERE
+                review_id = NEW.review_id
+                AND is_current = TRUE);
+        INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
+            VALUES ('REVIEW', NEW.status, app_id, TG_TABLE_NAME, NEW.id, json_build_object('prevStatus', prev_status, 'status', NEW.status, 'reviewId', NEW.review_id, 'reviewer', json_build_object('id', reviewer_id, 'name', (
+                            SELECT
+                                full_name
+                            FROM "user"
+                            WHERE
+                                id = reviewer_id), 'stage', json_build_object('number', stage_number, 'name', (
+                                    SELECT
+                                        title
+                                    FROM public.template_stage
+                                    WHERE
+                                        number = stage_number
+                                        AND template_id = templ_id))), 'sections', (
+                                SELECT
+                                    json_agg(t)
+                                FROM (
+                                    SELECT
+                                        title, code, "index"
+                                    FROM template_section
+                                WHERE
+                                    code = ANY (ARRAY (
+                                            SELECT
+                                                assigned_sections
+                                            FROM review_assignment
+                                        WHERE
+                                            id = assignment_id
+                                            AND template_id = templ_id
+                                            AND assigned_sections <> '{}'))
+                                    AND template_id = templ_id ORDER BY "index") t), 'level', level_num, 'isLastLevel', is_last_level, 'finalDecision', is_final_decision));
+        RETURN NEW;
+    END;
+    $application_event$
+    LANGUAGE plpgsql;
+      `)
+
+    DB.changeSchema(`
+    -- REVIEW_DECISION changes
+    CREATE OR REPLACE FUNCTION public.review_decision_activity_log ()
+        RETURNS TRIGGER
+        AS $application_event$
+    DECLARE
+        app_id integer;
+        reviewer_id integer;
+        rev_assignment_id integer;
+        templ_id integer;
+    BEGIN
+        SELECT
+            r.application_id,
+            r.reviewer_id,
+            r.review_assignment_id INTO app_id,
+            reviewer_id,
+            rev_assignment_id
+        FROM
+            review r
+        WHERE
+            id = NEW.review_id;
+        templ_id = (
+            SELECT
+                template_id
+            FROM
+                application
+            WHERE
+                id = app_id);
+        INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
+            VALUES ('REVIEW_DECISION', NEW.decision, app_id, TG_TABLE_NAME, NEW.id, json_build_object('reviewId', NEW.review_id, 'decision', NEW.decision, 'comment', NEW.comment, 'reviewer', json_build_object('id', reviewer_id, 'name', (
+                            SELECT
+                                full_name
+                            FROM "user"
+                            WHERE
+                                id = reviewer_id)), 'sections', (
+                            SELECT
+                                json_agg(t)
+                            FROM (
+                                SELECT
+                                    title, code, "index"
+                                FROM template_section
+                                WHERE
+                                    code = ANY (ARRAY (
+                                            SELECT
+                                                assigned_sections
+                                            FROM review_assignment
+                                        WHERE
+                                            id = rev_assignment_id
+                                            AND assigned_sections <> '{}'))
+                                    AND template_id = templ_id ORDER BY "index") t)));
+        RETURN NULL;
+    END;
+    $application_event$
+    LANGUAGE plpgsql;
+      `)
   }
 
   // Other version migrations continue here...
