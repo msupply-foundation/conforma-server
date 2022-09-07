@@ -50,7 +50,7 @@ const changeApplicationStatus = async (
     status: ActionQueueStatus.Fail,
     error_log: '',
   }
-  console.log(`Changing the Status of Application ${applicationId} to ${newStatus}...`)
+  console.log(`Changing the Status of Application ${applicationId}...`)
 
   try {
     const current =
@@ -117,7 +117,7 @@ const changeReviewStatus = async (
     status: ActionQueueStatus.Fail,
     error_log: 'uknown error',
   }
-  console.log(`Changing the Status of Review ${reviewId} to ${newStatus}...`)
+  console.log(`Changing the Status of Review ${reviewId}...`)
 
   try {
     const currentStatus = await DBConnect.getReviewCurrentStatusHistory(reviewId)
