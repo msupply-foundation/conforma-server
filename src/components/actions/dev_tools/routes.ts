@@ -90,6 +90,7 @@ export const routeTestTrigger = async (request: any, reply: any) => {
       break
     case 'ON_PREVIEW':
       console.log('To-do: ON_PREVIEW')
+      return reply.send('ON_PREVIEW Trigger not implemented yet')
       break
     //   triggerPayload.trigger = Trigger.OnExtend
     //   result = await processTrigger(triggerPayload)
@@ -165,7 +166,7 @@ export const routeTestTrigger = async (request: any, reply: any) => {
   reply.send({
     applicationId,
     serial,
-    failedActions,
+    failedActions: failedActions.length > 0 ? failedActions : undefined,
     actionResult: actionsOutput,
     finalApplicationData,
   })
