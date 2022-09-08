@@ -13,7 +13,7 @@ const databaseMethods = {
       WHERE code = $1
       AND status = 'AVAILABLE'
     )
-    SELECT app.id as "applicationId", app.serial,
+    SELECT app.id as "configId", app.serial as "configSerial",
     app.template_id as "templateId", ts."sectionCodes"
     FROM application app
     JOIN (
@@ -35,6 +35,34 @@ const databaseMethods = {
     try {
       const result = await DBConnect.query({ text, values: [templateCode] })
       return result.rows[0] ?? {}
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
+  getSerialFromAppId: async (applicationId: number) => {
+    const text = `
+      SELECT serial FROM application
+      WHERE id = $1;
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [applicationId] })
+      console.log('result', result.rows)
+      return result.rows[0].serial
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
+  getAppIdFromSerial: async (serial: string) => {
+    const text = `
+      SELECT id FROM application
+      WHERE serial = $1;
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [serial] })
+      console.log('result', result.rows)
+      return result.rows[0].serial
     } catch (err) {
       console.log(err.message)
       throw err
@@ -173,6 +201,20 @@ const databaseMethods = {
     `
     try {
       const result = await DBConnect.query({ text, values: [decision, comment, reviewId] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
+  getScheduledEvent: async (applicationId: number, eventCode: string) => {
+    const text = `
+      SELECT * FROM trigger_schedule
+      WHERE application_id = $1
+      AND event_code = $2;
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [applicationId, eventCode] })
       return result.rows[0]
     } catch (err) {
       console.log(err.message)

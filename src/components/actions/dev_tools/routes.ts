@@ -5,8 +5,8 @@ import DBConnect from '../../databaseConnect'
 import db from './databaseMethods'
 import { processTrigger } from '.././processTrigger'
 import { ActionQueueStatus, Decision, Trigger } from '../../../generated/graphql'
-import { selectRandomReviewAssignment, getRandomReviewId } from './helpers'
-import { ActionResult } from '../../../types'
+import { selectRandomReviewAssignment, getRandomReviewId, getApplicationBasics } from './helpers'
+import { ActionResult, TriggerPayload } from '../../../types'
 
 // These routes should only be used for testing in development. They should
 // NEVER be used in the app.
@@ -30,9 +30,14 @@ interface RequestProps {
   reviewId?: number
   decision?: Decision
   comment?: string
+  eventCode?: string
+  applicationId?: number
+  serial?: string
 }
 
 export const routeTestTrigger = async (request: any, reply: any) => {
+  const params: RequestProps = combineRequestParams(request, 'camel')
+  let { applicationId, serial } = params
   const {
     templateCode,
     trigger,
@@ -41,23 +46,35 @@ export const routeTestTrigger = async (request: any, reply: any) => {
     reviewId,
     decision,
     comment,
-  }: RequestProps = combineRequestParams(request, 'camel')
-  const { applicationId, serial, templateId, sectionCodes } = await db.getConfigApplicationInfo(
+    eventCode,
+  }: RequestProps = params
+
+  const { configId, configSerial, templateId, sectionCodes } = await db.getConfigApplicationInfo(
     templateCode
   )
 
-  if (!applicationId) reply.send('Invalid template code, or no config application available')
+  if (!configId) reply.send('Invalid template code, or no config application available')
+
+  const { appId, appSerial } = await getApplicationBasics(
+    applicationId,
+    serial,
+    configId,
+    configSerial
+  )
+
+  applicationId = appId
+  serial = appSerial
 
   let actionsOutput: ActionResult[] = []
   let finalApplicationData
 
   // A dummy triggerPayload object, as though it was retrieved from the
   // trigger_queue table
-  const triggerPayload = {
+  const triggerPayload: TriggerPayload = {
     trigger_id: null,
     trigger: Trigger.DevTest,
     table: 'application',
-    record_id: applicationId,
+    record_id: appId,
     applicationDataOverride: {},
   }
 
@@ -93,13 +110,30 @@ export const routeTestTrigger = async (request: any, reply: any) => {
       finalApplicationData = await getApplicationData({ applicationId })
       break
 
+    case 'ON_SCHEDULE':
+      if (!eventCode) return reply.send('eventCode required')
+      const { id, data } = await db.getScheduledEvent(applicationId, eventCode)
+      console.log(id)
+      triggerPayload.trigger = Trigger.OnSchedule
+      triggerPayload.table = 'trigger_schedule'
+      triggerPayload.record_id = id
+      triggerPayload.data = data
+      actionsOutput = await processTrigger(triggerPayload)
+      finalApplicationData = await getApplicationData({ applicationId })
+      break
+
     case 'ON_PREVIEW':
       const revId = reviewId ?? (await getRandomReviewId(applicationId))
       triggerPayload.trigger = Trigger.OnPreview
       triggerPayload.table = 'review'
       triggerPayload.record_id = revId
       triggerPayload.applicationDataOverride = {
-        reviewData: { latestDecision: { decision: decision ?? Decision.Conform } },
+        reviewData: {
+          latestDecision: {
+            decision: decision ?? Decision.Conform,
+            comment: comment ?? 'Test comment',
+          },
+        },
       }
 
       actionsOutput = await processTrigger(triggerPayload)
