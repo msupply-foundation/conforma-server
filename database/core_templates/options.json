@@ -4,8 +4,6 @@
  "filters": {},
  "includeTables": [],
  "excludeTables": [
-  "actionQueue",
-  "triggerQueue",
   "applicationListShape",
   "elementTypePlugin",
   "notification"
