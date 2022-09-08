@@ -1096,26 +1096,34 @@ const migrateData = async () => {
         assignable_questions_count (application_id) AS total_questions,
         assigned_questions_count (application_id, $1, level_number) AS total_assigned,
         submitted_assigned_questions_count (application_id, $1, level_number) AS total_assign_locked
-    FROM
-        review_assignment
-    LEFT JOIN review_assignment_assigner_join ON review_assignment.id = review_assignment_assigner_join.review_assignment_id
-WHERE
-    review_assignment.stage_id = $1
-    AND review_assignment_assigner_join.assigner_id = $2
-    AND (
-        SELECT
-            outcome
         FROM
-            application
-        WHERE
-            id = review_assignment.application_id) = 'PENDING'
-GROUP BY
-    review_assignment.application_id,
-    review_assignment.level_number;
+            review_assignment
+        LEFT JOIN review_assignment_assigner_join ON review_assignment.id = review_assignment_assigner_join.review_assignment_id
+          WHERE
+              review_assignment.stage_id = $1
+              AND review_assignment_assigner_join.assigner_id = $2
+              AND (
+                  SELECT
+                      outcome
+                  FROM
+                      application
+                  WHERE
+                      id = review_assignment.application_id) = 'PENDING'
+          GROUP BY
+              review_assignment.application_id,
+              review_assignment.level_number;
 
-$$
-LANGUAGE sql
-STABLE;
+          $$
+          LANGUAGE sql
+          STABLE;
+    `)
+
+    console.log(
+      ' - Change foreign key constraint on file table to allow changing of application serial'
+    )
+    await DB.changeSchema(`
+      ALTER TABLE file DROP CONSTRAINT IF EXISTS file_application_serial_fkey; 
+      ALTER TABLE file ADD CONSTRAINT file_application_serial_fkey FOREIGN KEY (application_serial) REFERENCES application (serial) ON UPDATE CASCADE;
     `)
   }
 
