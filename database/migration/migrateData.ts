@@ -875,28 +875,26 @@ const migrateData = async () => {
 
   // 0.4.5
   if (databaseVersionLessThan('0.4.5')) {
-    // Add "is_latest_review_submission" column to table review_response in schema
-    console.log(
-      ' - Add is_latest_review_submission to review_response with automatic trigger/update function'
-    )
+    // Add "is_latest_review" column to table review_response in schema
+    console.log(' - Add is_latest_review to review_response with automatic trigger/update function')
 
     await DB.changeSchema(`ALTER TABLE review_response
-        ADD COLUMN IF NOT EXISTS is_latest_review_submission boolean DEFAULT FALSE;`)
+        ADD COLUMN IF NOT EXISTS is_latest_review boolean DEFAULT FALSE;`)
 
-    await DB.changeSchema(`CREATE OR REPLACE FUNCTION public.set_latest_review_response_submission ()
+    await DB.changeSchema(`CREATE OR REPLACE FUNCTION public.set_latest_review_response ()
         RETURNS TRIGGER
         AS $review_response_event$
     BEGIN
         UPDATE
             public.review_response
         SET
-            is_latest_review_submission = TRUE
+            is_latest_review = TRUE
         WHERE
             id = NEW.id;
         UPDATE
             public.review_response
         SET
-            is_latest_review_submission = FALSE
+            is_latest_review = FALSE
         WHERE
             template_element_id = NEW.template_element_id
             AND review_id = NEW.review_id
@@ -912,10 +910,10 @@ const migrateData = async () => {
     `)
 
     await DB.changeSchema(`CREATE TRIGGER review_response_latest
-      AFTER UPDATE ON public.review_response
+      AFTER UPDATE OF time_updated ON public.review_response
       FOR EACH ROW
-      WHEN (NEW.time_submitted > OLD.time_submitted OR (OLD.time_submitted IS NULL AND NEW.time_submitted IS NOT NULL))
-      EXECUTE FUNCTION public.set_latest_review_response_submission ();
+      WHEN (NEW.time_updated > OLD.time_created)
+      EXECUTE FUNCTION public.set_latest_review_response ();
       `)
 
     await DB.changeSchema(`ALTER TYPE permission_policy_type ADD VALUE 'VIEW' after 'ASSIGN'`)
@@ -1063,6 +1061,64 @@ const migrateData = async () => {
       $application_event$
       LANGUAGE plpgsql;
         `)
+
+    // Fix assigner_actions to only return active applications
+    console.log(' - Fix assigner_actions to only return active applications')
+
+    await DB.changeSchema(`
+    CREATE OR REPLACE FUNCTION assigner_list (stage_id int, assigner_id int)
+    RETURNS TABLE (
+        application_id int,
+        assigner_action public.assigner_action,
+        -- is_fully_assigned_level_1 boolean,
+        -- assigned_questions_level_1 bigint,
+        total_questions bigint,
+        total_assigned bigint,
+        total_assign_locked bigint
+    )
+    AS $$
+    SELECT
+        review_assignment.application_id AS application_id,
+        CASE WHEN COUNT(DISTINCT (review_assignment.id)) != 0
+            AND assigned_questions_count (application_id, $1, level_number) >= assignable_questions_count (application_id)
+            AND submitted_assigned_questions_count (application_id, $1, level_number) < assigned_questions_count (application_id, $1, level_number) THEN
+            'RE_ASSIGN'
+        WHEN COUNT(DISTINCT (review_assignment.id)) != 0
+            AND assigned_questions_count (application_id, $1, level_number) >= assignable_questions_count (application_id)
+            AND submitted_assigned_questions_count (application_id, $1, level_number) >= assigned_questions_count (application_id, $1, level_number) THEN
+            'ASSIGN_LOCKED'
+        WHEN COUNT(DISTINCT (review_assignment.id)) != 0
+            AND assigned_questions_count (application_id, $1, level_number) < assignable_questions_count (application_id) THEN
+            'ASSIGN'
+        ELSE
+            NULL
+        END::assigner_action,
+        -- assigned_questions_count(application_id, $1, 1) = assignable_questions_count(application_id) AS is_fully_assigned_level_1,
+        -- assigned_questions_count(application_id, $1, 1) AS assigned_questions_level_1,
+        assignable_questions_count (application_id) AS total_questions,
+        assigned_questions_count (application_id, $1, level_number) AS total_assigned,
+        submitted_assigned_questions_count (application_id, $1, level_number) AS total_assign_locked
+    FROM
+        review_assignment
+    LEFT JOIN review_assignment_assigner_join ON review_assignment.id = review_assignment_assigner_join.review_assignment_id
+WHERE
+    review_assignment.stage_id = $1
+    AND review_assignment_assigner_join.assigner_id = $2
+    AND (
+        SELECT
+            outcome
+        FROM
+            application
+        WHERE
+            id = review_assignment.application_id) = 'PENDING'
+GROUP BY
+    review_assignment.application_id,
+    review_assignment.level_number;
+
+$$
+LANGUAGE sql
+STABLE;
+    `)
   }
 
   // Other version migrations continue here...
