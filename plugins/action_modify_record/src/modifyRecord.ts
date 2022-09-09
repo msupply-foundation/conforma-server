@@ -32,7 +32,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
 
   // Don't update fields with NULL
   for (const key in record) {
-    if (record[key] === null) delete record[key]
+    if (record[key] === null || record[key] === undefined) delete record[key]
   }
 
   // Build full record

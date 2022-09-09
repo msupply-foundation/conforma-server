@@ -4,10 +4,10 @@ SET check_function_bodies = FALSE;
 -- Name: jwt_get_text(text); Type: FUNCTION; Schema: public; Owner: -
 --
 CREATE FUNCTION jwt_get_text (jwt_key text)
-  RETURNS text
-  AS $$
-  SELECT
-    COALESCE(current_setting('jwt.claims.' || $1, TRUE)::text, '')
+    RETURNS text
+    AS $$
+    SELECT
+        COALESCE(current_setting('jwt.claims.' || $1, TRUE)::text, '')
 $$
 LANGUAGE sql
 STABLE;
@@ -16,14 +16,14 @@ STABLE;
 -- Name: jwt_get_boolean(text); Type: FUNCTION; Schema: public; Owner: -
 --
 CREATE FUNCTION jwt_get_boolean (jwt_key text)
-  RETURNS boolean
-  AS $$
+    RETURNS boolean
+    AS $$
 BEGIN
-  IF jwt_get_text ($1) = 'true' THEN
-    RETURN TRUE;
-  ELSE
-    RETURN FALSE;
-  END IF;
+    IF jwt_get_text ($1) = 'true' THEN
+        RETURN TRUE;
+    ELSE
+        RETURN FALSE;
+    END IF;
 END;
 $$
 LANGUAGE plpgsql
@@ -33,14 +33,14 @@ STABLE;
 -- Name: jwt_get_bigint(text); Type: FUNCTION; Schema: public; Owner: -
 --
 CREATE FUNCTION jwt_get_bigint (jwt_key text)
-  RETURNS bigint
-  AS $$
+    RETURNS bigint
+    AS $$
 BEGIN
-  IF jwt_get_text ($1) = '' THEN
-    RETURN 0;
-  ELSE
-    RETURN jwt_get_text ($1)::bigint;
-  END IF;
+    IF jwt_get_text ($1) = '' THEN
+        RETURN 0;
+    ELSE
+        RETURN jwt_get_text ($1)::bigint;
+    END IF;
 END;
 $$
 LANGUAGE plpgsql
@@ -218,7 +218,6 @@ CREATE TABLE public.template (
     template_category_id integer REFERENCES public.template_category (id),
     version_timestamp timestamptz DEFAULT CURRENT_TIMESTAMP,
     version integer DEFAULT 1
-
 );
 
 -- FUNCTION to generate a new version of template (should run as a trigger)
@@ -700,62 +699,62 @@ CREATE TRIGGER application_stage_history_trigger
 
 -- application status history
 CREATE TYPE public.application_status AS ENUM (
-  'DRAFT',
-  'SUBMITTED',
-  'CHANGES_REQUIRED',
-  'RE_SUBMITTED',
-  'COMPLETED'
+    'DRAFT',
+    'SUBMITTED',
+    'CHANGES_REQUIRED',
+    'RE_SUBMITTED',
+    'COMPLETED'
 );
 
 CREATE TABLE public.application_status_history (
-  id serial PRIMARY KEY,
-  application_stage_history_id integer REFERENCES public.application_stage_history (id) ON DELETE CASCADE NOT NULL,
-  status public.application_status,
-  time_created timestamptz DEFAULT CURRENT_TIMESTAMP,
-  is_current bool DEFAULT TRUE
+    id serial PRIMARY KEY,
+    application_stage_history_id integer REFERENCES public.application_stage_history (id) ON DELETE CASCADE NOT NULL,
+    status public.application_status,
+    time_created timestamptz DEFAULT CURRENT_TIMESTAMP,
+    is_current bool DEFAULT TRUE
 );
 
 -- FUNCTION to auto-add application_id to application_status_history table
 CREATE OR REPLACE FUNCTION public.application_status_history_application_id (application_stage_history_id int)
-  RETURNS int
-  AS $$
-  SELECT
-    application_id
-  FROM
-    application_stage_history
-  WHERE
-    id = $1;
+    RETURNS int
+    AS $$
+    SELECT
+        application_id
+    FROM
+        application_stage_history
+    WHERE
+        id = $1;
 
 $$
 LANGUAGE SQL
 IMMUTABLE;
 
 ALTER TABLE application_status_history
-  ADD application_id INT GENERATED ALWAYS AS (application_status_history_application_id (application_stage_history_id)) STORED;
+    ADD application_id INT GENERATED ALWAYS AS (application_status_history_application_id (application_stage_history_id)) STORED;
 
 -- FUNCTION to set `is_current` to false on all other status_histories of current application
 CREATE OR REPLACE FUNCTION public.status_is_current_update ()
-  RETURNS TRIGGER
-  AS $application_status_history_event$
+    RETURNS TRIGGER
+    AS $application_status_history_event$
 BEGIN
-  UPDATE
-    public.application_status_history
-  SET
-    is_current = FALSE
-  WHERE
-    application_id = NEW.application_id
-    AND id <> NEW.id;
-  RETURN NULL;
+    UPDATE
+        public.application_status_history
+    SET
+        is_current = FALSE
+    WHERE
+        application_id = NEW.application_id
+        AND id <> NEW.id;
+    RETURN NULL;
 END;
 $application_status_history_event$
 LANGUAGE plpgsql;
 
 --TRIGGER to run above function when is_current is updated
 CREATE TRIGGER application_status_history_trigger
-  AFTER INSERT OR UPDATE OF is_current ON public.application_status_history
-  FOR EACH ROW
-  WHEN (NEW.is_current = TRUE)
-  EXECUTE FUNCTION public.status_is_current_update ();
+    AFTER INSERT OR UPDATE OF is_current ON public.application_status_history
+    FOR EACH ROW
+    WHEN (NEW.is_current = TRUE)
+    EXECUTE FUNCTION public.status_is_current_update ();
 
 -- Create VIEW which collects ALL application, stage, stage_history, and status_history together
 CREATE OR REPLACE VIEW public.application_stage_status_all AS
@@ -1727,7 +1726,7 @@ LANGUAGE sql
 STABLE;
 
 -- Aggregated VIEW method of all related assigner data to each application on application list page
-CREATE TYPE public.assigner_action as ENUM (
+CREATE TYPE public.assigner_action AS ENUM (
     'ASSIGN',
     'ASSIGN_LOCKED',
     'RE_ASSIGN'
@@ -1746,34 +1745,35 @@ CREATE FUNCTION assigner_list (stage_id int, assigner_id int)
     AS $$
     SELECT
         review_assignment.application_id AS application_id,
-        CASE
-            WHEN COUNT(DISTINCT (review_assignment.id)) != 0 
-                AND assigned_questions_count(application_id, $1, level_number) >= assignable_questions_count(application_id)
-                AND submitted_assigned_questions_count(application_id, $1, level_number) < assigned_questions_count(application_id, $1, level_number)
-                THEN 'RE_ASSIGN'
-            WHEN COUNT(DISTINCT (review_assignment.id)) != 0 
-                AND assigned_questions_count(application_id, $1, level_number) >= assignable_questions_count(application_id)
-                AND submitted_assigned_questions_count(application_id, $1, level_number) >= assigned_questions_count(application_id, $1, level_number)
-                THEN 'ASSIGN_LOCKED'
-            WHEN COUNT(DISTINCT (review_assignment.id)) != 0 
-                AND assigned_questions_count(application_id, $1, level_number) < assignable_questions_count(application_id)
-                THEN 'ASSIGN'
-            ELSE NULL
+        CASE WHEN COUNT(DISTINCT (review_assignment.id)) != 0
+            AND assigned_questions_count (application_id, $1, level_number) >= assignable_questions_count (application_id)
+            AND submitted_assigned_questions_count (application_id, $1, level_number) < assigned_questions_count (application_id, $1, level_number) THEN
+            'RE_ASSIGN'
+        WHEN COUNT(DISTINCT (review_assignment.id)) != 0
+            AND assigned_questions_count (application_id, $1, level_number) >= assignable_questions_count (application_id)
+            AND submitted_assigned_questions_count (application_id, $1, level_number) >= assigned_questions_count (application_id, $1, level_number) THEN
+            'ASSIGN_LOCKED'
+        WHEN COUNT(DISTINCT (review_assignment.id)) != 0
+            AND assigned_questions_count (application_id, $1, level_number) < assignable_questions_count (application_id) THEN
+            'ASSIGN'
+        ELSE
+            NULL
         END::assigner_action,
         -- assigned_questions_count(application_id, $1, 1) = assignable_questions_count(application_id) AS is_fully_assigned_level_1,
         -- assigned_questions_count(application_id, $1, 1) AS assigned_questions_level_1,
-        assignable_questions_count(application_id) AS total_questions,
-        assigned_questions_count(application_id, $1, level_number) AS total_assigned,
-        submitted_assigned_questions_count(application_id, $1, level_number) AS total_assign_locked
+        assignable_questions_count (application_id) AS total_questions,
+        assigned_questions_count (application_id, $1, level_number) AS total_assigned,
+        submitted_assigned_questions_count (application_id, $1, level_number) AS total_assign_locked
     FROM
         review_assignment
     LEFT JOIN review_assignment_assigner_join ON review_assignment.id = review_assignment_assigner_join.review_assignment_id
-WHERE 
+WHERE
     review_assignment.stage_id = $1
     AND review_assignment_assigner_join.assigner_id = $2
 GROUP BY
     review_assignment.application_id,
     review_assignment.level_number;
+
 $$
 LANGUAGE sql
 STABLE;
@@ -2355,7 +2355,9 @@ BEGIN
                                             assigned_sections
                                         FROM review_assignment
                                     WHERE
-                                        id = assignment_id))
+                                        id = assignment_id
+                                        AND template_id = templ_id
+                                        AND assigned_sections <> '{}'))
                                 AND template_id = templ_id ORDER BY "index") t), 'level', level_num, 'isLastLevel', is_last_level, 'finalDecision', is_final_decision));
     RETURN NEW;
 END;
@@ -2417,7 +2419,8 @@ BEGIN
                                             assigned_sections
                                         FROM review_assignment
                                     WHERE
-                                        id = rev_assignment_id))
+                                        id = rev_assignment_id
+                                        AND assigned_sections <> '{}'))
                                 AND template_id = templ_id ORDER BY "index") t)));
     RETURN NULL;
 END;

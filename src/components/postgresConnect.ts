@@ -1132,7 +1132,7 @@ class PostgresDB {
      `
     try {
       const result = await this.query({ text })
-      return result.rows[0].value
+      return result.rows[0]?.value ?? 'init'
     } catch (err) {
       console.log(err.message)
       throw err

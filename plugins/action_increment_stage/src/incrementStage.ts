@@ -14,7 +14,7 @@ async function incrementStage({
   const outcome = applicationData?.outcome
   const returnObject: ActionPluginOutput = {
     status: ActionQueueStatus.Fail,
-    error_log: 'unknown error',
+    error_log: '',
   }
   console.log(`Incrementing the Stage for Application ${applicationId}...`)
 

@@ -875,28 +875,26 @@ const migrateData = async () => {
 
   // 0.4.5
   if (databaseVersionLessThan('0.4.5')) {
-    // Add "is_latest_review_submission" column to table review_response in schema
-    console.log(
-      ' - Add is_latest_review_submission to review_response with automatic trigger/update function'
-    )
+    // Add "is_latest_review" column to table review_response in schema
+    console.log(' - Add is_latest_review to review_response with automatic trigger/update function')
 
     await DB.changeSchema(`ALTER TABLE review_response
-        ADD COLUMN IF NOT EXISTS is_latest_review_submission boolean DEFAULT FALSE;`)
+        ADD COLUMN IF NOT EXISTS is_latest_review boolean DEFAULT FALSE;`)
 
-    await DB.changeSchema(`CREATE OR REPLACE FUNCTION public.set_latest_review_response_submission ()
+    await DB.changeSchema(`CREATE OR REPLACE FUNCTION public.set_latest_review_response ()
         RETURNS TRIGGER
         AS $review_response_event$
     BEGIN
         UPDATE
             public.review_response
         SET
-            is_latest_review_submission = TRUE
+            is_latest_review = TRUE
         WHERE
             id = NEW.id;
         UPDATE
             public.review_response
         SET
-            is_latest_review_submission = FALSE
+            is_latest_review = FALSE
         WHERE
             template_element_id = NEW.template_element_id
             AND review_id = NEW.review_id
@@ -912,11 +910,213 @@ const migrateData = async () => {
     `)
 
     await DB.changeSchema(`CREATE TRIGGER review_response_latest
-      AFTER UPDATE ON public.review_response
+      AFTER UPDATE OF time_updated ON public.review_response
       FOR EACH ROW
-      WHEN (NEW.time_submitted > OLD.time_submitted OR OLD.time_submitted IS NULL)
-      EXECUTE FUNCTION public.set_latest_review_response_submission ();
+      WHEN (NEW.time_updated > OLD.time_created)
+      EXECUTE FUNCTION public.set_latest_review_response ();
       `)
+
+    console.log(
+      '- Update to Functions of Activity_log to fix problem with aggregation of assigned_section'
+    )
+
+    await DB.changeSchema(`
+    -- REVIEW STATUS CHANGES
+    CREATE OR REPLACE FUNCTION public.review_status_activity_log ()
+        RETURNS TRIGGER
+        AS $application_event$
+    DECLARE
+        app_id integer;
+        reviewer_id integer;
+        assignment_id integer;
+        stage_number integer;
+        prev_status varchar;
+        level_num integer;
+        is_last_level boolean;
+        is_final_decision boolean;
+        templ_id integer;
+    BEGIN
+        SELECT
+            r.application_id,
+            r.reviewer_id,
+            r.review_assignment_id,
+            r.stage_number,
+            r.level_number,
+            r.is_last_level,
+            r.is_final_decision INTO app_id,
+            reviewer_id,
+            assignment_id,
+            stage_number,
+            level_num,
+            is_last_level,
+            is_final_decision
+        FROM
+            review r
+        WHERE
+            id = NEW.review_id;
+        templ_id = (
+            SELECT
+                template_id
+            FROM
+                application
+            WHERE
+                id = app_id);
+        prev_status = (
+            SELECT
+                status
+            FROM
+                review_status_history
+            WHERE
+                review_id = NEW.review_id
+                AND is_current = TRUE);
+        INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
+            VALUES ('REVIEW', NEW.status, app_id, TG_TABLE_NAME, NEW.id, json_build_object('prevStatus', prev_status, 'status', NEW.status, 'reviewId', NEW.review_id, 'reviewer', json_build_object('id', reviewer_id, 'name', (
+                            SELECT
+                                full_name
+                            FROM "user"
+                            WHERE
+                                id = reviewer_id), 'stage', json_build_object('number', stage_number, 'name', (
+                                    SELECT
+                                        title
+                                    FROM public.template_stage
+                                    WHERE
+                                        number = stage_number
+                                        AND template_id = templ_id))), 'sections', (
+                                SELECT
+                                    json_agg(t)
+                                FROM (
+                                    SELECT
+                                        title, code, "index"
+                                    FROM template_section
+                                WHERE
+                                    code = ANY (ARRAY (
+                                            SELECT
+                                                assigned_sections
+                                            FROM review_assignment
+                                        WHERE
+                                            id = assignment_id
+                                            AND template_id = templ_id
+                                            AND assigned_sections <> '{}'))
+                                    AND template_id = templ_id ORDER BY "index") t), 'level', level_num, 'isLastLevel', is_last_level, 'finalDecision', is_final_decision));
+        RETURN NEW;
+    END;
+    $application_event$
+    LANGUAGE plpgsql;
+      `)
+
+    DB.changeSchema(`
+    -- REVIEW_DECISION changes
+    CREATE OR REPLACE FUNCTION public.review_decision_activity_log ()
+        RETURNS TRIGGER
+        AS $application_event$
+    DECLARE
+        app_id integer;
+        reviewer_id integer;
+        rev_assignment_id integer;
+        templ_id integer;
+    BEGIN
+        SELECT
+            r.application_id,
+            r.reviewer_id,
+            r.review_assignment_id INTO app_id,
+            reviewer_id,
+            rev_assignment_id
+        FROM
+            review r
+        WHERE
+            id = NEW.review_id;
+        templ_id = (
+            SELECT
+                template_id
+            FROM
+                application
+            WHERE
+                id = app_id);
+        INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
+            VALUES ('REVIEW_DECISION', NEW.decision, app_id, TG_TABLE_NAME, NEW.id, json_build_object('reviewId', NEW.review_id, 'decision', NEW.decision, 'comment', NEW.comment, 'reviewer', json_build_object('id', reviewer_id, 'name', (
+                            SELECT
+                                full_name
+                            FROM "user"
+                            WHERE
+                                id = reviewer_id)), 'sections', (
+                            SELECT
+                                json_agg(t)
+                            FROM (
+                                SELECT
+                                    title, code, "index"
+                                FROM template_section
+                                WHERE
+                                    code = ANY (ARRAY (
+                                            SELECT
+                                                assigned_sections
+                                            FROM review_assignment
+                                        WHERE
+                                            id = rev_assignment_id
+                                            AND assigned_sections <> '{}'))
+                                    AND template_id = templ_id ORDER BY "index") t)));
+        RETURN NULL;
+    END;
+    $application_event$
+    LANGUAGE plpgsql;
+      `)
+
+    // Fix assigner_actions to only return active applications
+    console.log(' - Fix assigner_actions to only return active applications')
+
+    await DB.changeSchema(`
+    CREATE OR REPLACE FUNCTION assigner_list (stage_id int, assigner_id int)
+    RETURNS TABLE (
+        application_id int,
+        assigner_action public.assigner_action,
+        -- is_fully_assigned_level_1 boolean,
+        -- assigned_questions_level_1 bigint,
+        total_questions bigint,
+        total_assigned bigint,
+        total_assign_locked bigint
+    )
+    AS $$
+    SELECT
+        review_assignment.application_id AS application_id,
+        CASE WHEN COUNT(DISTINCT (review_assignment.id)) != 0
+            AND assigned_questions_count (application_id, $1, level_number) >= assignable_questions_count (application_id)
+            AND submitted_assigned_questions_count (application_id, $1, level_number) < assigned_questions_count (application_id, $1, level_number) THEN
+            'RE_ASSIGN'
+        WHEN COUNT(DISTINCT (review_assignment.id)) != 0
+            AND assigned_questions_count (application_id, $1, level_number) >= assignable_questions_count (application_id)
+            AND submitted_assigned_questions_count (application_id, $1, level_number) >= assigned_questions_count (application_id, $1, level_number) THEN
+            'ASSIGN_LOCKED'
+        WHEN COUNT(DISTINCT (review_assignment.id)) != 0
+            AND assigned_questions_count (application_id, $1, level_number) < assignable_questions_count (application_id) THEN
+            'ASSIGN'
+        ELSE
+            NULL
+        END::assigner_action,
+        -- assigned_questions_count(application_id, $1, 1) = assignable_questions_count(application_id) AS is_fully_assigned_level_1,
+        -- assigned_questions_count(application_id, $1, 1) AS assigned_questions_level_1,
+        assignable_questions_count (application_id) AS total_questions,
+        assigned_questions_count (application_id, $1, level_number) AS total_assigned,
+        submitted_assigned_questions_count (application_id, $1, level_number) AS total_assign_locked
+    FROM
+        review_assignment
+    LEFT JOIN review_assignment_assigner_join ON review_assignment.id = review_assignment_assigner_join.review_assignment_id
+WHERE
+    review_assignment.stage_id = $1
+    AND review_assignment_assigner_join.assigner_id = $2
+    AND (
+        SELECT
+            outcome
+        FROM
+            application
+        WHERE
+            id = review_assignment.application_id) = 'PENDING'
+GROUP BY
+    review_assignment.application_id,
+    review_assignment.level_number;
+
+$$
+LANGUAGE sql
+STABLE;
+    `)
 
     await DB.changeSchema(`ALTER TYPE permission_policy_type ADD VALUE 'VIEW' after 'ASSIGN'`)
   }
