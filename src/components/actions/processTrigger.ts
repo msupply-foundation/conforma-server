@@ -111,6 +111,12 @@ export async function processTrigger(payload: TriggerPayload): Promise<ActionRes
         actionFailed = action.action_code
       }
     } catch (err) {
+      actionOutputs.push({
+        action: action.action_code,
+        status: ActionQueueStatus.Fail,
+        output: null,
+        errorLog: err.message,
+      })
       actionFailed = action.action_code
     }
   }

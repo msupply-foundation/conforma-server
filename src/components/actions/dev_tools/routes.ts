@@ -5,7 +5,12 @@ import DBConnect from '../../databaseConnect'
 import db from './databaseMethods'
 import { processTrigger } from '.././processTrigger'
 import { ActionQueueStatus, Decision, Trigger } from '../../../generated/graphql'
-import { selectRandomReviewAssignment, getRandomReviewId, getApplicationBasics } from './helpers'
+import {
+  selectRandomReviewAssignment,
+  getRandomReviewId,
+  getApplicationBasics,
+  mapTriggerShortcut,
+} from './helpers'
 import { ActionResult, TriggerPayload } from '../../../types'
 
 // These routes should only be used for testing in development. They should
@@ -49,6 +54,8 @@ export const routeTestTrigger = async (request: any, reply: any) => {
     eventCode,
   }: RequestProps = params
 
+  const triggerFull = mapTriggerShortcut(trigger)
+
   const { configId, configSerial, templateId, sectionCodes } = await db.getConfigApplicationInfo(
     templateCode
   )
@@ -78,7 +85,7 @@ export const routeTestTrigger = async (request: any, reply: any) => {
     applicationDataOverride: {},
   }
 
-  switch (trigger) {
+  switch (triggerFull) {
     case 'DEV_TEST':
       actionsOutput = await processTrigger(triggerPayload)
       finalApplicationData = await getApplicationData({ applicationId })
@@ -171,13 +178,27 @@ export const routeTestTrigger = async (request: any, reply: any) => {
         const assignment = assignmentId
           ? await db.getSingleReviewAssignment(assignmentId)
           : await selectRandomReviewAssignment(applicationId, sectionCodes, true)
-        //   Create a review record and review_decision record
+        // Create a review record and review_decision record
         const { id: revId } = await db.createReview(assignment.id)
         await db.createReviewDecision(revId)
+        // Create one review response
 
         // TO-DO: Make some review responses and give them dummy values?
 
         triggerPayload.trigger = Trigger.OnReviewCreate
+        triggerPayload.table = 'review'
+        triggerPayload.record_id = revId
+
+        actionsOutput = await processTrigger(triggerPayload)
+        finalApplicationData = await getApplicationData({ applicationId, reviewId: revId })
+      }
+      break
+
+    case 'ON_REVIEW_RESTART':
+      {
+        const revId = reviewId ?? (await getRandomReviewId(applicationId))
+
+        triggerPayload.trigger = Trigger.OnReviewRestart
         triggerPayload.table = 'review'
         triggerPayload.record_id = revId
 
@@ -216,6 +237,7 @@ export const routeTestTrigger = async (request: any, reply: any) => {
   reply.send({
     applicationId,
     serial,
+    trigger: triggerFull,
     failedActions: failedActions.length > 0 ? failedActions : undefined,
     actionResult: actionsOutput,
     finalApplicationData,

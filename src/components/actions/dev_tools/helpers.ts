@@ -1,3 +1,4 @@
+import { Trigger } from '../../../generated/graphql'
 import db from './databaseMethods'
 
 export const selectRandomReviewAssignment = async (
@@ -44,4 +45,30 @@ export const getApplicationBasics = async (
 
   const appId = await db.getAppIdFromSerial(serial as string)
   return { appId, appSerial: serial as string }
+}
+
+const triggerMap: { [key: string]: Trigger | 'RESET' } = {
+  reset: 'RESET',
+  test: Trigger.DevTest,
+  devtest: Trigger.DevTest,
+  start: Trigger.OnApplicationCreate,
+  create: Trigger.OnApplicationCreate,
+  restart: Trigger.OnApplicationRestart,
+  submit: Trigger.OnApplicationSubmit,
+  extend: Trigger.OnExtend,
+  schedule: Trigger.OnSchedule,
+  preview: Trigger.OnPreview,
+  assign: Trigger.OnReviewAssign,
+  unassign: Trigger.OnReviewUnassign,
+  reviewcreate: Trigger.OnReviewCreate,
+  reviewstart: Trigger.OnReviewCreate,
+  reviewrestart: Trigger.OnReviewRestart,
+  reviewsubmit: Trigger.OnReviewSubmit,
+  verify: Trigger.OnVerification,
+  verification: Trigger.OnVerification,
+}
+
+export const mapTriggerShortcut = (inputTrigger: string): Trigger | 'RESET' => {
+  const trigger = triggerMap[inputTrigger.toLowerCase()]
+  return trigger ? trigger : (inputTrigger as Trigger | 'RESET')
 }
