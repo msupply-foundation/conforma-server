@@ -122,8 +122,6 @@ const changeReviewStatus = async (
   try {
     const currentStatus = await DBConnect.getReviewCurrentStatusHistory(reviewId)
 
-    console.log('currentStatus', currentStatus)
-
     if (currentStatus?.status === newStatus) {
       // Do nothing
       console.log(
