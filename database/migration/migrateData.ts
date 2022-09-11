@@ -1118,6 +1118,8 @@ LANGUAGE sql
 STABLE;
     `)
 
+    console.log('- Add VIEW permission policy type')
+
     await DB.changeSchema(`ALTER TYPE permission_policy_type ADD VALUE 'VIEW' after 'ASSIGN'`)
   }
 
