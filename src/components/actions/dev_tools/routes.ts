@@ -4,14 +4,20 @@ import { combineRequestParams } from '../../utilityFunctions'
 import DBConnect from '../../databaseConnect'
 import db from './databaseMethods'
 import { processTrigger } from '.././processTrigger'
-import { ActionQueueStatus, Decision, Trigger } from '../../../generated/graphql'
+import {
+  ActionQueueStatus,
+  ApplicationOutcome,
+  ApplicationStatus,
+  Decision,
+  Trigger,
+} from '../../../generated/graphql'
 import {
   selectRandomReviewAssignment,
   getRandomReviewId,
   getApplicationBasics,
   mapTriggerShortcut,
 } from './helpers'
-import { ActionResult, TriggerPayload } from '../../../types'
+import { ActionApplicationData, ActionResult, TriggerPayload } from '../../../types'
 
 // These routes should only be used for testing in development. They should
 // NEVER be used in the app.
@@ -38,6 +44,10 @@ interface RequestProps {
   eventCode?: string
   applicationId?: number
   serial?: string
+  stageNumber?: number
+  status?: ApplicationStatus
+  outcome?: ApplicationOutcome
+  applicationDataOverride: Partial<ActionApplicationData>
 }
 
 export const routeTestTrigger = async (request: any, reply: any) => {
@@ -52,6 +62,10 @@ export const routeTestTrigger = async (request: any, reply: any) => {
     decision,
     comment,
     eventCode,
+    stageNumber,
+    status,
+    outcome,
+    applicationDataOverride = {},
   }: RequestProps = params
 
   const triggerFull = mapTriggerShortcut(trigger)
@@ -75,6 +89,10 @@ export const routeTestTrigger = async (request: any, reply: any) => {
   let actionsOutput: ActionResult[] = []
   let finalApplicationData
 
+  if (stageNumber) applicationDataOverride.stageNumber = stageNumber
+  if (status) applicationDataOverride.status = status
+  if (outcome) applicationDataOverride.outcome = outcome
+
   // A dummy triggerPayload object, as though it was retrieved from the
   // trigger_queue table
   const triggerPayload: TriggerPayload = {
@@ -82,7 +100,7 @@ export const routeTestTrigger = async (request: any, reply: any) => {
     trigger: Trigger.DevTest,
     table: 'application',
     record_id: appId,
-    applicationDataOverride: {},
+    applicationDataOverride,
   }
 
   switch (triggerFull) {
@@ -135,6 +153,7 @@ export const routeTestTrigger = async (request: any, reply: any) => {
       triggerPayload.table = 'review'
       triggerPayload.record_id = revId
       triggerPayload.applicationDataOverride = {
+        ...applicationDataOverride,
         reviewData: {
           latestDecision: {
             decision: decision ?? Decision.Conform,
