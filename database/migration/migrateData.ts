@@ -1125,6 +1125,10 @@ const migrateData = async () => {
       ALTER TABLE file DROP CONSTRAINT IF EXISTS file_application_serial_fkey; 
       ALTER TABLE file ADD CONSTRAINT file_application_serial_fkey FOREIGN KEY (application_serial) REFERENCES application (serial) ON UPDATE CASCADE;
     `)
+
+    console.log('- Add VIEW permission policy type')
+
+    await DB.changeSchema(`ALTER TYPE permission_policy_type ADD VALUE 'VIEW' after 'ASSIGN'`)
   }
 
   // Other version migrations continue here...
