@@ -12,6 +12,9 @@ CREATE TABLE public.template_action (
     sequence integer
 );
 
+-- Constraint ensuring that the "code" value must be unique per template
+CREATE UNIQUE INDEX unique_template_action_code ON template_action (code, template_id);
+
 CREATE FUNCTION public.template_action_parameters_queries_string (template_action public.template_action)
     RETURNS text
     AS $$

@@ -3,6 +3,7 @@ import fsSync from 'fs'
 import path from 'path'
 import { execSync } from 'child_process'
 import insertData from '../../../database/insertData'
+import DBConnect from '../../../src/components/databaseConnect'
 import updateRowPolicies from '../../../database/updateRowPolicies'
 import { SnapshotOperation, ExportAndImportOptions, ObjectRecord } from '../exportAndImport/types'
 import importFromJson from '../exportAndImport/importFromJson'
@@ -27,6 +28,7 @@ import {
   PREFERENCES_FILE,
   SCHEMA_FILE_NAME,
   INFO_FILE_NAME,
+  PREFERENCES_FOLDER,
 } from '../../constants'
 
 const useSnapshot: SnapshotOperation = async ({
@@ -97,6 +99,7 @@ const useSnapshot: SnapshotOperation = async ({
     // Import localisations
     if (options?.includeLocalisation) {
       try {
+        execSync(`rm -rf ${LOCALISATION_FOLDER}/*`)
         execSync(`cp -r  '${snapshotFolder}/localisation/.' '${LOCALISATION_FOLDER}' `)
       } catch (e) {
         console.log("Couldn't import localisations")
@@ -106,6 +109,7 @@ const useSnapshot: SnapshotOperation = async ({
     // Import preferences
     if (options?.includePrefs) {
       try {
+        execSync(`rm -rf ${PREFERENCES_FOLDER}/*`)
         execSync(`cp '${snapshotFolder}/preferences.json' '${PREFERENCES_FILE}'`)
       } catch (e) {
         console.log("Couldn't import preferences")
@@ -132,6 +136,14 @@ const useSnapshot: SnapshotOperation = async ({
 
     // To ensure generic thumbnails are not wiped out, even if server doesn't restart
     createDefaultDataFolders()
+
+    // Store snapshot name in database
+    const text = `INSERT INTO system_info (name, value)
+    VALUES('snapshot', $1)`
+    await DBConnect.query({
+      text,
+      values: [JSON.stringify(snapshotName)],
+    })
 
     return { success: true, message: `snapshot loaded ${snapshotName}` }
   } catch (e) {

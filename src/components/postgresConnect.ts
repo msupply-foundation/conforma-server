@@ -1,4 +1,4 @@
-import { processTrigger, executeAction } from './actions/triggersAndActions'
+import { processTrigger, executeAction } from './actions'
 import { actionLibrary } from './pluginsConnect'
 import { deleteFile } from './files/deleteFiles'
 import config from '../config'
@@ -9,7 +9,6 @@ import {
   ActionPlugin,
   FileDownloadInfo,
   ActionQueueExecutePayload,
-  ActionQueueGetPayload,
   ActionQueuePayload,
   FilePayload,
   TriggerQueueUpdatePayload,
@@ -188,6 +187,41 @@ class PostgresDB {
     }
   }
 
+  public getScheduledEvent = async (applicationId: number, eventCode: string) => {
+    const text = `
+      SELECT * FROM trigger_schedule
+      WHERE application_id = $1
+      AND event_code = $2
+    `
+    try {
+      const result = await this.query({ text, values: [applicationId, eventCode] })
+      return result.rows[0] ?? null
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public updateScheduledEventTime = async (
+    applicationId: number,
+    eventCode: string,
+    newTime: string, // ISO string
+    userId: number
+  ) => {
+    const text = `
+      UPDATE trigger_schedule
+        SET time_scheduled = $1, is_active = TRUE, editor_user_id = $2
+        WHERE application_id = $3
+        AND event_code = $4
+        RETURNING *
+    `
+    try {
+      const result = await this.query({ text, values: [newTime, userId, applicationId, eventCode] })
+      return result.rows[0] ?? null
+    } catch (err) {
+      throw err
+    }
+  }
+
   public triggerScheduledActions = async () => {
     const text = `
       UPDATE trigger_schedule SET trigger = 'ON_SCHEDULE'
@@ -220,6 +254,40 @@ class PostgresDB {
     }
   }
 
+  // Normally triggers are added automatically by the database when trigger
+  // fields are set, but we can add them via a function call if we need to, such
+  // as in the "extend-application" endpoint.
+  public addTriggerEvent = async ({
+    trigger,
+    table,
+    recordId,
+    eventCode,
+    data,
+  }: {
+    trigger: Trigger
+    table: string
+    recordId: number
+    eventCode?: string
+    data?: { [key: string]: any }
+  }) => {
+    console.log('eventCode', eventCode)
+    const text = `
+      INSERT INTO trigger_queue
+        (trigger_type, "table", record_id, event_code, data)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING id
+    `
+    try {
+      const result = await this.query({
+        text,
+        values: [trigger, table, recordId, eventCode, data],
+      })
+      return result.rows[0].id
+    } catch (err) {
+      throw err
+    }
+  }
+
   public setScheduledActionDone = async (table: string, record_id: number): Promise<boolean> => {
     const text = `UPDATE ${table} SET is_active = false WHERE id = $1`
     try {
@@ -247,6 +315,21 @@ class PostgresDB {
     }
   }
 
+  public updateFileDescription = async (
+    unique_id: string,
+    description: string
+  ): Promise<{ unique_id: string; original_filename: string; mimetype: string }> => {
+    const text = `UPDATE file SET description = $1 
+      WHERE unique_id = $2
+      RETURNING unique_id, original_filename, mimetype`
+    try {
+      const result = await this.query({ text, values: [description, unique_id] })
+      return result.rows[0]
+    } catch (err) {
+      throw err
+    }
+  }
+
   public getFileDownloadInfo = async (
     uid: string,
     thumbnail = false
@@ -256,6 +339,21 @@ class PostgresDB {
     try {
       const result = await this.query({ text, values: [uid] })
       return result.rows[0] as FileDownloadInfo
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public cleanUpPreviewFiles = async () => {
+    const text = `
+      DELETE FROM file
+      WHERE to_be_deleted = true
+      AND timestamp < now() - interval '${config?.previewDocsMinKeepTime ?? '2 hours'}'
+      RETURNING id;
+    `
+    try {
+      const result = await this.query({ text })
+      return result.rows.length
     } catch (err) {
       throw err
     }
@@ -419,6 +517,25 @@ class PostgresDB {
     }
   }
 
+  public getSingleTemplateAction = async (
+    templateId: number,
+    code: string
+  ): Promise<ActionInTemplate> => {
+    const text = `
+      SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, template_action.event_code AS event_code, sequence, condition, parameter_queries 
+      FROM template 
+      JOIN template_action ON template.id = template_action.template_id 
+      JOIN action_plugin ON template_action.action_code = action_plugin.code 
+      WHERE template_id = $1 AND template_action.code = $2
+    `
+    try {
+      const result = await this.query({ text, values: [templateId, code] })
+      return result.rows[0] as ActionInTemplate
+    } catch (err) {
+      throw err
+    }
+  }
+
   public updateActionPlugin = async (plugin: ActionPlugin): Promise<boolean> => {
     const setMapping = Object.keys(plugin).map((key, index) => `${key} = $${index + 1}`)
     const text = `UPDATE action_plugin SET ${setMapping.join(',')} WHERE code = $${
@@ -539,8 +656,15 @@ class PostgresDB {
     }
   }
 
-  public isUnique = async (table: string, field: string, value: string): Promise<boolean> => {
-    const text = `SELECT COUNT(*) FROM "${table}" WHERE LOWER(${field}) = LOWER($1)`
+  public isUnique = async (
+    table: string,
+    field: string,
+    value: string,
+    caseInsensitive: boolean
+  ): Promise<boolean> => {
+    const text = caseInsensitive
+      ? `SELECT COUNT(*) FROM "${table}" WHERE LOWER(${field}) = LOWER($1)`
+      : `SELECT COUNT(*) FROM "${table}" WHERE ${field} = $1`
     try {
       const result = await this.query({ text, values: [value] })
       return !Boolean(Number(result.rows[0].count))
@@ -862,7 +986,7 @@ class PostgresDB {
 
   public getAllApplicationResponses = async (applicationId: number) => {
     const text = `
-    SELECT ar.id, template_element_id, code, value, time_updated
+    SELECT ar.id, template_element_id, code, value, time_updated, te.is_reviewable
     FROM application_response ar JOIN template_element te
     ON ar.template_element_id = te.id
     WHERE application_id = $1
@@ -993,6 +1117,63 @@ class PostgresDB {
     try {
       const result = await this.query({ text, values: [tableName, columnMatches] })
       return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getLatestSnapshotName = async () => {
+    const text = `SELECT value
+    FROM system_info
+    WHERE timestamp =
+      (SELECT MAX(timestamp) FROM system_info
+      WHERE name='snapshot')
+     `
+    try {
+      const result = await this.query({ text })
+      return result.rows[0]?.value ?? 'init'
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public waitForDatabaseValue = async ({
+    table,
+    column,
+    matchColumn = 'id',
+    matchValue,
+    waitValue,
+    errorValue,
+    refetchInterval = 0.5, // seconds
+    maxAttempts = 20,
+  }: {
+    table: string
+    column: string
+    matchColumn: string
+    matchValue: any
+    waitValue: any
+    errorValue?: any
+    refetchInterval?: number
+    maxAttempts?: number
+  }): Promise<'SUCCESS' | 'ERROR' | 'TIMEOUT'> => {
+    const text = `
+      SELECT ${column} FROM ${table}
+      WHERE ${matchColumn} = $1;
+    `
+    try {
+      for (let i = 0; i < maxAttempts; i++) {
+        const result = await this.query({ text, values: [matchValue] })
+        const value = result.rows[0][column]
+
+        if (value === waitValue) return 'SUCCESS'
+
+        if (errorValue !== undefined && value === errorValue) return 'ERROR'
+
+        await this.query({ text: 'SELECT pg_sleep($1)', values: [refetchInterval] })
+      }
+      return 'TIMEOUT'
     } catch (err) {
       console.log(err.message)
       throw err

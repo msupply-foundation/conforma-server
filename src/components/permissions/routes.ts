@@ -138,13 +138,17 @@ const routeUserPermissions = async (request: any, reply: any) => {
   // Store array of object per permissionNames with properties and an array of templateCodes
   const templatePermissions: PermissionDetails[] = Object.values(
     templatePermissionRows.reduce(
-      (templatePermissions, { permissionNameId, permissionName, templateCode, description }) => {
+      (
+        templatePermissions,
+        { permissionNameId, permissionName, templateCode, description, isSystemOrgPermission }
+      ) => {
         if (!templatePermissions[permissionName])
           templatePermissions[permissionName] = {
             id: permissionNameId,
             name: permissionName,
             description,
             displayName: startCase(permissionName),
+            isSystemOrgPermission,
             isUserGranted: grantedPermissions.includes(permissionName),
             templateCodes: [],
           }
@@ -202,12 +206,13 @@ const routeGetPrefs = async (request: any, reply: any) => {
     readFileSync(path.join(getAppEntryPointDir(), '../preferences/preferences.json'), 'utf8')
   )
   const languageOptions = readLanguageOptions()
-  reply.send({ preferences: prefs.web, languageOptions })
+  const latestSnapshot = await databaseConnect.getLatestSnapshotName()
+  reply.send({ preferences: prefs.web, languageOptions, latestSnapshot })
 }
 
 // Unique name/email/organisation/other check
 const routecheckUnique = async (request: any, reply: any) => {
-  const { type, value, table, field } = request.query
+  const { type, value, table, field, caseInsensitive } = request.query
   if (value === '' || value === undefined) {
     reply.send({
       unique: false,
@@ -242,7 +247,12 @@ const routecheckUnique = async (request: any, reply: any) => {
       }
   }
   try {
-    const isUnique = await databaseConnect.isUnique(tableName, fieldName, value)
+    const isUnique = await databaseConnect.isUnique(
+      tableName,
+      fieldName,
+      value,
+      caseInsensitive == 'false' ? false : true
+    )
     reply.send({
       unique: isUnique,
       message: '',

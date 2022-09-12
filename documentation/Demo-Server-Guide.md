@@ -40,7 +40,7 @@ Example:
 
 **Note** that the previously-mentioned `yarn release` script will offer to start this build process automatically with the tag you've just created.
 
-If building from a *branch* (as opposed to a *tag*), be aware of the following:
+If building from a _branch_ (as opposed to a _tag_), be aware of the following:
 
 - the branch name cannot have a `#` character in it, like our branches normally begin with.
 - the front-end and back-end branch need to have the same name, so if you're not building from `develop` or `main`, you'll probably need to create a "dummy" branch on the other repo so the branch names match.
@@ -63,13 +63,13 @@ _To see what's going on under the hood when this command is run, please inspect 
 If you don't auto-push the image as part of the build process, you can do so manually by running: `docker push <full image name>`, where `<full-image-name>` includes the account name, repo name ("conforma-demo") and tag.
 
 Example:  
-`docker push msupplyfoundation/conforma-demo:build-v0.2.0-7_2022-04-07_ee35c8`
+`docker push msupplyfoundation/conforma:build-v0.2.0-7_2022-04-07_ee35c8`
 
 ## Test locally
 
 When the build (above) completes, it should print a command for running the new image locally, which you can copy and paste. It will be something like:
 
-`yarn docker_run msupplyfoundation/conforma-demo:build-v0.2.0-7_2022-04-07_ee35c8`
+`yarn docker_run msupplyfoundation/conforma:build-v0.2.0-7_2022-04-07_ee35c8`
 
 You'll need to make sure you have the SMTP_PASSWORD in your local `.env` file.
 
@@ -81,7 +81,7 @@ _To see the actual Docker commands that are constructued, please inspect the fil
 - SSH login to server:
   ```bash
   export KEY_LOC='/Users/<you>/Documents/private/conformakey.pem' (or your local location)
-  sudo ssh -i $KEY_LOC ubuntu@irims-demo.msupply.org
+  sudo ssh -i $KEY_LOC ubuntu@conforma-demo.msupply.org
   ```
 - Alternatively, log in to any specific country server
 - View a list of currently running images:  
@@ -90,7 +90,7 @@ _To see the actual Docker commands that are constructued, please inspect the fil
   `sudo docker stop <hashes… >`
 - Pull image from docker hub:  
   `sudo docker pull <full-image-name>`
-  Example: `sudo docker pull msupplyfoundation/conforma-demo:build-v0.2.0-7_2022-04-07_ee35c8`
+  Example: `sudo docker pull msupplyfoundation/conforma:build-v0.2.0-7_2022-04-07_ee35c8`
 - Run image:  
   `sudo docker run -dti -p 8000:3000 -e 'SMTP_PASSWORD=<password>' -e 'WEB_HOST=<host-domain>' -e 'JWT_SECRET=<some-random-secret>' --name conforma-demo-on-8000 <full-image-name>`  
    This will launch one instance. To launch other instances in their own container, run the same command, but change:
@@ -99,8 +99,8 @@ _To see the actual Docker commands that are constructued, please inspect the fil
   - port 8000
   - WEB_HOST url
   - JWT_SECRET (this can be any random string, but should be a decent length, say > 24 alphanumeric characters. There's no need to record this key anywhere, as it can change anytime -- that just means existing JWTs become invalid, so users will need to re-login)
-  
-  The system will be launched with “core_snapshot” data. Upload and load a new snapshot as required. 
+
+  The system will be launched with “core_snapshot” data. Upload and load a new snapshot as required.
 
   Note that this `docker run` procedure resets the container every time it is restarted, so any data changes are wiped out. In order to avoid this, we need persist the data using Docker volumes. See the [docker-compose](#docker-compose) section below for information regarding this.
 

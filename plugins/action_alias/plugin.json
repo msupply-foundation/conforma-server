@@ -1,0 +1,24 @@
+{
+  "type": "action_plugin",
+  "code": "alias",
+  "name": "Alias Action",
+  "description": "Dummy plugin to facilitate aliasing of template actions",
+  "required_parameters": ["code"],
+  "optional_parameters": ["shouldOverrideCondition", "...anyPluginFields"],
+  "output_properties": [],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "update"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2022-06-30"
+  }
+}

@@ -26,15 +26,25 @@ class DBConnect {
 
   public updateActionParametersEvaluated = PostgresDB.updateActionParametersEvaluated
 
+  public getScheduledEvent = PostgresDB.getScheduledEvent
+
+  public updateScheduledEventTime = PostgresDB.updateScheduledEventTime
+
   public triggerScheduledActions = PostgresDB.triggerScheduledActions
 
   public resetTrigger = PostgresDB.resetTrigger
+
+  public addTriggerEvent = PostgresDB.addTriggerEvent
 
   public setScheduledActionDone = PostgresDB.setScheduledActionDone
 
   public addFile = PostgresDB.addFile
 
+  public updateFileDescription = PostgresDB.updateFileDescription
+
   public getFileDownloadInfo = PostgresDB.getFileDownloadInfo
+
+  public cleanUpPreviewFiles = PostgresDB.cleanUpPreviewFiles
 
   public addActionPlugin = PostgresDB.addActionPlugin
 
@@ -43,6 +53,8 @@ class DBConnect {
   public getActionPlugins = PostgresDB.getActionPlugins
 
   public getActionsByTemplateId = PostgresDB.getActionsByTemplateId
+
+  public getSingleTemplateAction = PostgresDB.getSingleTemplateAction
 
   public updateActionPlugin = PostgresDB.updateActionPlugin
 
@@ -144,6 +156,10 @@ class DBConnect {
 
   public getApplicationSections = PostgresDB.getApplicationSections
 
+  public getLatestSnapshotName = PostgresDB.getLatestSnapshotName
+
+  public waitForDatabaseValue = PostgresDB.waitForDatabaseValue
+
   // GraphQL
 
   public gqlQuery = GraphQLdb.gqlQuery
@@ -155,6 +171,8 @@ class DBConnect {
   public isInternalOrg = GraphQLdb.isInternalOrg
 
   public getAllApplicationTriggers = GraphQLdb.getAllApplicationTriggers
+
+  public getTemplatePermissionsFromApplication = GraphQLdb.getTemplatePermissionsFromApplication
 }
 
 const dbConnectInstance = DBConnect.Instance

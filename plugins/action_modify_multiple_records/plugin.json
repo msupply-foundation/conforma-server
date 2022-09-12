@@ -1,0 +1,30 @@
+{
+  "type": "action_plugin",
+  "code": "modifyMultipleRecords",
+  "name": "Modify Multiple Records",
+  "description": "Inserts or updates multiple database records",
+  "required_parameters": ["records"],
+  "optional_parameters": [
+    "tableName",
+    "matchField",
+    "matchValue",
+    "shouldCreateJoinTable",
+    "<other record fields>"
+  ],
+  "output_properties": ["records"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "insert"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2021-05-10"
+  }
+}

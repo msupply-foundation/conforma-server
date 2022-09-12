@@ -26,9 +26,11 @@ const pump = util.promisify(pipeline)
 
 export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
   const filesInfo = []
+  let fileCount = 0
   try {
     // data is a Promise, so we await it before looping
     for await (const file of data) {
+      fileCount++
       const ext = path.extname(file.filename)
       const basename = path.basename(file.filename, ext)
       const unique_id = queryParams?.unique_id ?? nanoid()
@@ -62,6 +64,24 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
         mimetype: file.mimetype,
       })
     }
+    // For updating file description without re-uploading file
+  } catch (err) {
+    // If no file provided, we'll get this 406 error, so we continue.
+    if (err?.statusCode !== 406) throw err
+  }
+  try {
+    if (fileCount === 0) {
+      const { unique_id, description } = queryParams
+      if (!unique_id) throw new Error('No uniqueId provided')
+      const result = await DBConnect.updateFileDescription(unique_id, description)
+      filesInfo.push({
+        filename: result.original_filename,
+        uniqueId: unique_id,
+        fileUrl: `/file?uid=${unique_id}`,
+        thumbnailUrl: `/file?uid=${unique_id}&thumbnail=true`,
+        mimetype: result.mimetype,
+      })
+    }
   } catch (err) {
     throw err
   }
@@ -81,6 +101,7 @@ export async function registerFileInDB({
   description,
   application_note_id,
   is_output_doc = false,
+  to_be_deleted = false,
   mimetype,
 }: any) {
   try {
@@ -95,6 +116,7 @@ export async function registerFileInDB({
         description,
         application_note_id,
         is_output_doc,
+        to_be_deleted,
         file_path,
         thumbnail_path,
         mimetype: file ? file.mimetype : mimetype,

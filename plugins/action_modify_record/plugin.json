@@ -10,7 +10,7 @@
     "shouldCreateJoinTable",
     "<other record fields>"
   ],
-  "output_properties": ["[record]"],
+  "output_properties": ["<tableName>"],
   "info": {
     "author": {
       "name": "The mSupply Foundation",

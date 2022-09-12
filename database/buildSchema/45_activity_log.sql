@@ -4,6 +4,7 @@ CREATE TYPE public.event_type AS ENUM (
     'STAGE',
     'STATUS',
     'OUTCOME',
+    'EXTENSION',
     'ASSIGNMENT',
     'REVIEW',
     'REVIEW_DECISION',
@@ -124,6 +125,31 @@ CREATE TRIGGER outcome_update_activity_trigger
     FOR EACH ROW
     WHEN (NEW.outcome <> OLD.outcome)
     EXECUTE FUNCTION outcome_activity_log ();
+
+-- SCHEDULED EVENT (Deadline) changes
+CREATE OR REPLACE FUNCTION public.deadline_extension_activity_log ()
+    RETURNS TRIGGER
+    AS $application_event$
+BEGIN
+    INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
+        VALUES ('EXTENSION', NEW.event_code, NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('newDeadline', NEW.time_scheduled, 'extendedBy', json_build_object('userId', NEW.editor_user_id, 'name', (
+                        SELECT
+                            full_name
+                        FROM "user"
+                        WHERE
+                            id = NEW.editor_user_id))));
+    RETURN NULL;
+END;
+$application_event$
+LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS deadline_extension_activity_trigger ON public.application;
+
+CREATE TRIGGER deadline_extension_activity_trigger
+    AFTER UPDATE ON public.trigger_schedule
+    FOR EACH ROW
+    WHEN (NEW.time_scheduled > OLD.time_scheduled AND NEW.event_code = 'applicantDeadline' AND NEW.editor_user_id IS NOT NULL)
+    EXECUTE FUNCTION deadline_extension_activity_log ();
 
 -- ASSIGNMENT changes
 CREATE OR REPLACE FUNCTION public.assignment_activity_log ()
@@ -276,7 +302,9 @@ BEGIN
                                             assigned_sections
                                         FROM review_assignment
                                     WHERE
-                                        id = assignment_id))
+                                        id = assignment_id
+                                        AND template_id = templ_id
+                                        AND assigned_sections <> '{}'))
                                 AND template_id = templ_id ORDER BY "index") t), 'level', level_num, 'isLastLevel', is_last_level, 'finalDecision', is_final_decision));
     RETURN NEW;
 END;
@@ -338,7 +366,8 @@ BEGIN
                                             assigned_sections
                                         FROM review_assignment
                                     WHERE
-                                        id = rev_assignment_id))
+                                        id = rev_assignment_id
+                                        AND assigned_sections <> '{}'))
                                 AND template_id = templ_id ORDER BY "index") t)));
     RETURN NULL;
 END;

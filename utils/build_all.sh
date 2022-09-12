@@ -1,5 +1,7 @@
 #!/bin/bash
 set -e
+echo 'checking preferences exist'
+ts-node ./src/loadPrefs.ts
 echo 'removing build folder'
 rm -rf ./build
 echo 'building app with tsc'

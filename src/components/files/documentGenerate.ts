@@ -14,7 +14,7 @@ import { render, RenderCallback, RenderOptions } from 'carbone'
 
 const appRootFolder = getAppEntryPointDir()
 const filesFolder = config.filesFolder
-const PDF_THUMBNAIL = 'noun_PDF_3283219.png'
+const PDF_THUMBNAIL = `${config.genericThumbnailsFolderName}/noun_PDF_3283219.png`
 const PDF_MIMETYPE = 'application/pdf'
 
 // Carbone render function wrapped in anonymous function so Promisify has a fixed number of args
@@ -43,6 +43,7 @@ interface GeneratePDFInput {
   subFolder?: string
   description?: string
   isOutputDoc?: boolean
+  toBeDeleted?: boolean
 }
 
 export async function generatePDF({
@@ -56,6 +57,7 @@ export async function generatePDF({
   subFolder,
   description,
   isOutputDoc,
+  toBeDeleted,
 }: GeneratePDFInput) {
   // Existing Carbone Template properties
   const templateFileInfo = await getFilePath(fileId)
@@ -88,13 +90,14 @@ export async function generatePDF({
         applicationResponseId,
         description,
         isOutputDoc,
+        toBeDeleted,
         filePath: outputFilePath,
         thumbnailPath: PDF_THUMBNAIL,
         mimetype: PDF_MIMETYPE,
       })
     )
     console.log('Document creation complete\n')
-    return { uniqueId, filename: originalFilename, filePath: outputFilePath }
+    return { uniqueId, filename: originalFilename, filePath: outputFilePath, description }
   } catch (err) {
     throw err
   }

@@ -9,6 +9,7 @@
   - [Change Status](#change-status)
   - [Modify Record](#modify-record)
     - [How the record is built](#how-the-record-is-built)
+  - [Modify Multiple Records](#modify-multiple-records)
   - [Generate Text String](#generate-text-string)
     - [Parameters summary](#parameters-summary)
   - [Join User to Organsation](#join-user-to-organsation)
@@ -24,6 +25,7 @@
   - [Send Notification](#send-notification)
   - [Schedule Action](#schedule-action)
   - [Clean Up Files](#clean-up-files)
+  - [Aliasing existing template actions](#aliasing-existing-template-actions)
 - [Core Actions](#core-actions)
     - [On Application Create:](#on-application-create)
     - [On Application Submit](#on-application-submit)
@@ -217,6 +219,43 @@ It is recommended to use the `data` parameter object when possible. The standalo
 - fields with a value of `null` will be omitted from the database update, so any current values will remain unchanged.
 - you can create/update an record without creating/updating the JOIN table by explicitly setting `shouldCreateJoinTable: false`
 - the data type of each field is set the first time a record is added with that field in it, so subsequent insertions/updates *must* match the data type for that field.
+
+---
+
+### Modify Multiple Records
+
+- Allows creating or updating *multiple* database records. It basically just calls the above `modifyRecord` action multiple times.
+
+- _Action Code:_ **`modifyMultipleRecords`**
+
+| Input parameters<br />(\*required) <br/>       | Output properties      |
+| ---------------------------------------------- | ---------------------- |
+| `tableName`                                    | `records: [<results>]` |
+| `matchField`                                   |                        |
+| `matchValue`                                   |                        |
+| `shouldCreateJoinTable` (default `true`)       |                        |
+| `data` (shorthand for multiple fields at once) |                        |
+| `records`\*                                    |                        |
+| `keyMap`                                       |                        |
+
+Most of these parameters are the same as for `modifyRecord`. The `records` parameter is an array of records, structured similarly. Each record can have its own `tableName`, `matchField`, etc. within it, but if they're all going to be the same, then global values can be used. Parameters within each record will take priority over the global ones.
+
+The output `records` property is an array of results, each structured as per a single `modifyRecord` output.
+
+The `keyMap` property is used if the `records` have field names different from what you need the database field to be named. You provide an object which maps record field names to database field names -- the `keys` are the names of the fields in the database, and the `values` are the record fields that get mapped to them. 
+
+For example:
+
+```
+{
+  name: "entered_name",
+  age: "entered_age"
+}
+```
+This will look for fields `entered_name` and `entered_age` on the incoming records and insert the associated values in to database fields `name` and `age`, respectively.
+
+Note that when a `keyMap` is present, *only* the fields explicitly named in the map will be inserted into the database; all other fields in the records will be ignored. By default, *all* record fields are inserted into the database, so if you want to only include a subset, you can just provide a `keyMap` of the fields you want to keep mapped to themselves. For example if you have a record `{name: "John", age: 28, isStaff: true}` but you only want to write the `name` field to the database, just provide `keyMap: {name: "name"}`.
+
 
 ---
 
@@ -657,6 +696,28 @@ Action to remove files no longer connected to application responses -- for examp
 Can supply *either* `applicationId` or `applicationSerial`, although this can be inferred from `applicationData` if neither is supplied.
 
 Note: There is a database trigger/postgres listener to automatically delete files when their database record is deleted, so we only need to delete the records, not the files themselves.
+
+### Aliasing existing template actions
+
+Finally, we have this "special" action which allows us to create an alias to an existing template action. The use for this is if you have configured a complex action with a lot of parameters or queries, and you wish to run it with slight differences for a document preview (for example), you can just set an alias to the original action instead of configuring and maintaining the same thing twice within the template (LINK TO PREVIEW DOCUMENTATION WHEN ITS DONE)
+
+In fact, this is not really an action at all -- it's just a dummy plugin that makes the action library and front-end (and therefore template_actions) see it as an available action. But all the logic is handled internally as part of the `processTrigger` functionality -- if it sees an "alias" action, the function simply swaps it out with the template action it is referencing.
+
+- _Action Code:_ **`alias`**
+
+| Input parameters<br />(\*required) <br/> | Output properties                  |
+| ---------------------------------------- | ---------------------------------- |
+| `code`\*                                 | `output as per the aliased action` |
+| `shouldOverrideCondition`                |                                    |
+| `...any other aliased action parameters` |                                    |
+
+To be able to reference an existing template action, it needs to have a unique (per template) code in its template_action record.
+
+Then this alias action just passes in the code of the action it's referencing and the trigger processor will swap it out for that one.
+
+By default the (original/aliased) action runs with the condition and parameters it has defined, but these can be overridden by the alias. For example, if you have a `sendNotification` action which normally runs with `sendEmail: true` (the default), but you don't want emails going out when previewing, you'd just supply the parameter `sendEmail: false` to the alias and that would override the `sendNotification` parameter on this occasion.
+
+The "condition" field (common to all template_actions) can also override the original action's condition. However, every action has `condition: true` by default, so we ignore the alias action's condition if it's set to `true`. In the event that you actually *want* this to override the original action's condition (i.e. run the original action no matter what), then you'll need to set the `shouldOverrideConditon` to `true` (that's the only condition this parameter would need to be specified).
 
 ---
 
