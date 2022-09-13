@@ -22,7 +22,6 @@ export const triggerTables = [
   'application_response',
   'application_stage_history',
   'application_status_history',
-  'template',
   'review',
   'review_decision',
   'review_response',
@@ -32,3 +31,11 @@ export const triggerTables = [
   'permission_join',
   'file',
 ]
+
+/*
+The following tables have triggers, but *shouldn't* be disabled, as
+they're required for the snapshot import process:
+
+- template
+
+*/
