@@ -111,11 +111,12 @@ export interface ActionApplicationData {
     levelNumber?: number
     isLastLevel?: boolean
     status?: string
-    reviewer: {
-      username?: string
-      firstName?: string
-      lastName?: string
-      email?: string
+    reviewer?: {
+      id: number
+      username: string
+      firstName: string
+      lastName: string
+      email: string
     }
     latestDecision?: {
       decision: string
