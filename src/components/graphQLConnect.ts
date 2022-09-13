@@ -50,10 +50,11 @@ class GraphQLdb {
           isLastStage
           status
           reviewer {
-            username?: string
-            firstName?: string
-            lastName?: string
-            email?: string
+            id
+            username
+            firstName
+            lastName
+            email
           }
           latestDecision {
               decision
