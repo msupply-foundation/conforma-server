@@ -49,6 +49,13 @@ class GraphQLdb {
           isLastLevel
           isLastStage
           status
+          reviewer {
+            id
+            username
+            firstName
+            lastName
+            email
+          }
           latestDecision {
               decision
               comment
@@ -75,6 +82,13 @@ class GraphQLdb {
             isLastLevel
             isLastStage
             status
+            reviewer {
+              id
+              username
+              firstName
+              lastName
+              email
+            }
             latestDecision {
                 decision
                 comment
