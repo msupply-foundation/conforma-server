@@ -62,7 +62,7 @@ const databaseMethods = {
     try {
       const result = await DBConnect.query({ text, values: [serial] })
       console.log('result', result.rows)
-      return result.rows[0].serial
+      return result.rows[0].id
     } catch (err) {
       console.log(err.message)
       throw err
