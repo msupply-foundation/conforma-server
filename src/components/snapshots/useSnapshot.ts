@@ -73,10 +73,14 @@ const useSnapshot: SnapshotOperation = async ({
       execSync(`rm -rf ${FILES_FOLDER}/*`)
     }
 
-    // Prevent triggers from running while we insert data
-    triggerTables.forEach((table) => {
-      execSync(`psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} DISABLE TRIGGER ALL"`)
-    })
+    // Prevent triggers from running while we insert data, but only for full re-init
+    if (options.shouldReInitialise) {
+      triggerTables.forEach((table) => {
+        execSync(
+          `psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} DISABLE TRIGGER ALL"`
+        )
+      })
+    }
 
     // Pause to allow postgraphile "watch" to detect changed schema
     delay(2500)

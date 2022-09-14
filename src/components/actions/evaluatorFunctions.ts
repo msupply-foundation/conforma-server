@@ -1,5 +1,10 @@
-// Utility functions to extend capabilities of expression evaluator via the
-// "objectFunctions" operator
+/*
+Utility functions to extend capabilities of expression evaluator via the
+"objectFunctions" operator.
+
+Any changes done here should also be replicated in front-end
+"evaluatorFunctions.ts"so they can be simulated in the Template Builder.
+ */
 
 import { DateTime, Duration } from 'luxon'
 
