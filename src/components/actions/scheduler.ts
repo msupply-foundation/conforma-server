@@ -55,9 +55,14 @@ export const cleanUpFiles = async () => {
 const basePath = filesFolder
 
 const crawlFileSystem = async (path: string) => {
-  fs.readdirSync(path).forEach((file) => {
+  fs.readdirSync(path).forEach(async (file) => {
     const subPath = basePath.join(path, file)
     if (fs.statSync(subPath).isDirectory()) crawlFileSystem(subPath)
-    else DBConnect.deleteIfNotRecorded(subPath)
+    else if ((await DBConnect.checkIfInFileTable(subPath)) === 0) {
+      fs.unlink(subPath, function (err) {
+        if (err) throw err
+        else console.log(`Deleted file at ${subPath}`)
+      })
+    }
   })
 }

@@ -359,7 +359,19 @@ class PostgresDB {
     }
   }
 
-  public deleteIfNotRecorded = async (subPath) => {}
+  public checkIfInFileTable = async (subPath: string) => {
+    const text = `
+    SELECT * FROM file
+    WHERE file_path = $1
+    RETURNING id;
+    `
+    try {
+      const result = await this.query({ text })
+      return result.rows.length
+    } catch (err) {
+      throw err
+    }
+  }
 
   public addActionPlugin = async (plugin: ActionPlugin): Promise<boolean> => {
     const text = `INSERT INTO action_plugin (${Object.keys(plugin)}) 

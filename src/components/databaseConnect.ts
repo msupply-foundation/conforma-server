@@ -46,7 +46,7 @@ class DBConnect {
 
   public cleanUpFiles = PostgresDB.cleanUpFiles
 
-  public deleteIfNotRecorded = PostgresDB.deleteIfNotRecorded
+  public checkIfInFileTable = PostgresDB.checkIfInFileTable
 
   public addActionPlugin = PostgresDB.addActionPlugin
 
