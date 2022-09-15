@@ -11,18 +11,19 @@ import {
   queryDataTableSingleItem,
   queryLinkedApplications,
 } from './gqlDynamicQueries'
-import { camelCase } from 'lodash'
+import { camelCase, kebabCase } from 'lodash'
 import { ColumnDefinition, LinkedApplication, DataViewsResponse } from './types'
 
 const routeDataViews = async (request: any, reply: any) => {
   const { permissionNames } = await getPermissionNamesFromJWT(request)
   const dataViews = await DBConnect.getAllowedDataViews(permissionNames)
-  const distinctDataViews = getDistinctObjects(dataViews, 'table_name', 'priority')
+  const distinctDataViews = getDistinctObjects(dataViews, 'code', 'priority')
   const dataViewResponse: DataViewsResponse = distinctDataViews.map(
     ({ table_name, title, code }) => ({
       tableName: camelCase(table_name),
       title,
       code,
+      urlSlug: kebabCase(code),
     })
   )
   return reply.send(dataViewResponse)
