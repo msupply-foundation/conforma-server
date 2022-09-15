@@ -175,7 +175,7 @@ const copyFiles = async (
   filePaths.push(...fileRecords.map((fileRecord) => fileRecord.thumbnailPath))
   const baseFilePaths = options.resetFiles ? await getBaseFiles(FILES_FOLDER) : []
 
-  for (const filePath of [...filePaths, ...baseFilePaths]) {
+  for (const filePath of [...filePaths]) {
     try {
       console.log('copying file', filePath)
       const destinationDirectory = `${newSnapshotFolder}/files/${getDirectoryFromPath(filePath)}`
