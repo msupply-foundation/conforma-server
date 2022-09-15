@@ -25,7 +25,7 @@ import {
   routeGetApplicationData,
   routePreviewActions,
   routeExtendApplication,
-  cleanUpPreviewFiles,
+  cleanUpFiles,
 } from './components/actions'
 import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
@@ -47,7 +47,7 @@ require('dotenv').config()
 const startServer = async () => {
   await migrateData()
   await loadActionPlugins() // Connects to Database and listens for Triggers
-  await cleanUpPreviewFiles() // Runs on schedule as well as startup
+  await cleanUpFiles() // Runs on schedule as well as startup
 
   createDefaultDataFolders()
 

@@ -44,7 +44,7 @@ class DBConnect {
 
   public getFileDownloadInfo = PostgresDB.getFileDownloadInfo
 
-  public cleanUpPreviewFiles = PostgresDB.cleanUpPreviewFiles
+  public cleanUpFiles = PostgresDB.cleanUpFiles
 
   public addActionPlugin = PostgresDB.addActionPlugin
 

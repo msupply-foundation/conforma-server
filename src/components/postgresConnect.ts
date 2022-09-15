@@ -344,7 +344,7 @@ class PostgresDB {
     }
   }
 
-  public cleanUpPreviewFiles = async () => {
+  public cleanUpFiles = async () => {
     const text = `
       DELETE FROM file
       WHERE to_be_deleted = true

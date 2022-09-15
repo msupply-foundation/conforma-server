@@ -29,7 +29,7 @@ scheduler.scheduleJob(checkActionSchedule, () => {
   triggerScheduledActions()
 })
 scheduler.scheduleJob(cleanUpPreviewsSchedule, () => {
-  cleanUpPreviewFiles()
+  cleanUpFiles()
 })
 
 export const triggerScheduledActions = async () => {
@@ -40,11 +40,11 @@ export const triggerScheduledActions = async () => {
   DBConnect.triggerScheduledActions()
 }
 
-export const cleanUpPreviewFiles = async () => {
+export const cleanUpFiles = async () => {
   console.log(
     DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
     'Cleaning up preview files...'
   )
-  const deleteCount = await DBConnect.cleanUpPreviewFiles()
+  const deleteCount = await DBConnect.cleanUpFiles()
   if (deleteCount > 0) console.log(`${deleteCount} files removed.`)
 }
