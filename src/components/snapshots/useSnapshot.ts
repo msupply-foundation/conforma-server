@@ -141,13 +141,15 @@ const useSnapshot: SnapshotOperation = async ({
     // To ensure generic thumbnails are not wiped out, even if server doesn't restart
     createDefaultDataFolders()
 
-    // Store snapshot name in database
-    const text = `INSERT INTO system_info (name, value)
-    VALUES('snapshot', $1)`
-    await DBConnect.query({
-      text,
-      values: [JSON.stringify(snapshotName)],
-    })
+    // Store snapshot name in database (for full imports only)
+    if (options.shouldReInitialise) {
+      const text = `INSERT INTO system_info (name, value)
+      VALUES('snapshot', $1)`
+      await DBConnect.query({
+        text,
+        values: [JSON.stringify(snapshotName)],
+      })
+    }
 
     return { success: true, message: `snapshot loaded ${snapshotName}` }
   } catch (e) {
