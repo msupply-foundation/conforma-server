@@ -14,6 +14,7 @@ import {
   TriggerQueueUpdatePayload,
 } from '../types'
 import { ApplicationOutcome, ApplicationStatus, ReviewStatus, Trigger } from '../generated/graphql'
+import { FSWatcher } from 'fs'
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -368,6 +369,32 @@ class PostgresDB {
     try {
       const result = await this.query({ text })
       return result.rows.length
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public filePaths = async () => {
+    const text = `
+    SELECT * FROM file
+    RETURNING file_path;
+    `
+    try {
+      const result = await this.query({ text })
+      return result
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public setIsMissing = async (filePath: string) => {
+    const text = `
+    UPDATE file SET is_missing = true
+    WHERE file_path = $1;
+    `
+    try {
+      const result = await this.query({ text })
+      return true
     } catch (err) {
       throw err
     }

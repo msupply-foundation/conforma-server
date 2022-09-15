@@ -44,6 +44,10 @@ class DBConnect {
 
   public getFileDownloadInfo = PostgresDB.getFileDownloadInfo
 
+  public filePaths = PostgresDB.filePaths
+
+  public setIsMissing = PostgresDB.setIsMissing
+
   public cleanUpFiles = PostgresDB.cleanUpFiles
 
   public checkIfInFileTable = PostgresDB.checkIfInFileTable
