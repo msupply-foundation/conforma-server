@@ -12,7 +12,7 @@ CREATE TABLE public.file (
     is_output_doc boolean DEFAULT FALSE NOT NULL,
     is_internal_reference_doc boolean DEFAULT FALSE NOT NULL,
     is_external_reference_doc boolean DEFAULT FALSE NOT NULL,
-    file_missing boolean DEFAULT FALSE NOT NULL,
+    is_missing boolean DEFAULT FALSE NOT NULL,
     to_be_deleted boolean DEFAULT FALSE NOT NULL,
     file_path varchar NOT NULL,
     thumbnail_path varchar,

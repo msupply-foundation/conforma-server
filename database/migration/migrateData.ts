@@ -400,7 +400,7 @@ const migrateData = async () => {
     `)
 
     console.log(
-      ' - Adding columns to file table: to_be_deleted, is_internal_reference_doc, is_external_reference_doc, file_missing'
+      ' - Adding columns to file table: to_be_deleted, is_internal_reference_doc, is_external_reference_doc, is_missing'
     )
     await DB.changeSchema(`
       ALTER TABLE file
@@ -410,7 +410,7 @@ const migrateData = async () => {
       ALTER TABLE file
       ADD COLUMN IF NOT EXISTS is_external_reference_doc boolean DEFAULT FALSE NOT NULL;
       ALTER TABLE file
-      ADD COLUMN IF NOT EXISTS file_missing boolean DEFAULT FALSE NOT NULL;
+      ADD COLUMN IF NOT EXISTS is_missing boolean DEFAULT FALSE NOT NULL;
     `)
 
     console.log(' - Adding function/trigger to delete unused reference docs')
