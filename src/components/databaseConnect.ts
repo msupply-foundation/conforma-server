@@ -46,6 +46,8 @@ class DBConnect {
 
   public cleanUpFiles = PostgresDB.cleanUpFiles
 
+  public deleteIfNotRecorded = PostgresDB.deleteIfNotRecorded
+
   public addActionPlugin = PostgresDB.addActionPlugin
 
   public deleteActionPlugin = PostgresDB.deleteActionPlugin

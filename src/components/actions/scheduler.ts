@@ -2,6 +2,9 @@ import DBConnect from '../databaseConnect'
 import scheduler from 'node-schedule'
 import config from '../../config'
 import { DateTime } from 'luxon'
+import { CsvFormatterStream } from 'fast-csv'
+import fs from 'fs'
+import { filesFolder } from '../files/fileHandler'
 
 // Dev config option
 const schedulerTestMode = false // Runs scheduler every 30 seconds
@@ -43,8 +46,18 @@ export const triggerScheduledActions = async () => {
 export const cleanUpFiles = async () => {
   console.log(
     DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
-    'Cleaning up preview files...'
+    'Cleaning up preview files and files table...'
   )
   const deleteCount = await DBConnect.cleanUpFiles()
   if (deleteCount > 0) console.log(`${deleteCount} files removed.`)
+}
+
+const basePath = filesFolder
+
+const crawlFileSystem = async (path: string) => {
+  fs.readdirSync(path).forEach((file) => {
+    const subPath = basePath.join(path, file)
+    if (fs.statSync(subPath).isDirectory()) crawlFileSystem(subPath)
+    else DBConnect.deleteIfNotRecorded(subPath)
+  })
 }

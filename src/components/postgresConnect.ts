@@ -359,6 +359,8 @@ class PostgresDB {
     }
   }
 
+  public deleteIfNotRecorded = async (subPath) => {}
+
   public addActionPlugin = async (plugin: ActionPlugin): Promise<boolean> => {
     const text = `INSERT INTO action_plugin (${Object.keys(plugin)}) 
       VALUES (${this.getValuesPlaceholders(plugin)})`
