@@ -8,6 +8,7 @@ import { filesFolder } from '../files/fileHandler'
 
 // Dev config option
 const schedulerTestMode = false // Runs scheduler every 30 seconds
+const basePath = filesFolder // declares the file storage path
 
 // Node-scheduler to run scheduled actions periodically
 const checkActionSchedule = schedulerTestMode
@@ -48,11 +49,10 @@ export const cleanUpFiles = async () => {
     DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
     'Cleaning up preview files and files table...'
   )
+  crawlFileSystem(basePath)
   const deleteCount = await DBConnect.cleanUpFiles()
   if (deleteCount > 0) console.log(`${deleteCount} files removed.`)
 }
-
-const basePath = filesFolder
 
 const crawlFileSystem = async (path: string) => {
   fs.readdirSync(path).forEach(async (file) => {
