@@ -16,18 +16,19 @@ type FormatDate =
       format: string
       locale?: string
     }
+
 // Returns ISO date string or JS Date as formatted Date (Luxon). Returns current
 // date if date not supplied
-const getFormattedDate = (formatString: FormatDate, date?: string | Date) => {
-  const tempDate = date
-    ? typeof date === 'string'
-      ? DateTime.fromISO(date)
-      : DateTime.fromJSDate(date)
+const getFormattedDate = (formatString: FormatDate, inputDate?: string | Date) => {
+  const date = inputDate
+    ? typeof inputDate === 'string'
+      ? DateTime.fromISO(inputDate)
+      : DateTime.fromJSDate(inputDate)
     : DateTime.now()
 
-  if (typeof formatString === 'string') return tempDate.toFormat(formatString)
+  if (typeof formatString === 'string') return date.toFormat(formatString)
   const { format, locale } = formatString
-  return tempDate.setLocale(locale).toFormat(format)
+  return locale ? date.setLocale(locale).toFormat(format) : date.toFormat(format)
 }
 
 // Returns JS Date object from ISO date string. Returns current timestamp if
