@@ -58,16 +58,18 @@ export const buildAllColumnDefinitions = async ({
 
   if (dataViews.length === 0) throw new Error(`No matching data views: "${dataViewCode}"`)
 
-  const { tableName, title, code } = dataViews[0]
+  const dataView = dataViews[0]
+
+  const { tableName, title, code } = dataView
 
   const tableNameProper = camelCase(getValidTableName(tableName))
 
   // Generate graphQL filter object
-  const gqlFilters = getFilters(dataViews, userId, orgId)
+  const gqlFilters = getFilters(dataView, userId, orgId)
 
   // Only for details view
-  const headerColumnName = dataViews[0]?.detailViewHeaderColumn ?? ''
-  const showLinkedApplications = dataViews[0].showLinkedApplications
+  const headerColumnName = dataView.detailViewHeaderColumn ?? ''
+  const showLinkedApplications = dataView.showLinkedApplications
 
   // Get all Fields on Data table (schema query)
   const fields: { name: string; dataType: PostgresDataType }[] = (
@@ -83,7 +85,7 @@ export const buildAllColumnDefinitions = async ({
   }, {})
 
   // Get all returning column names (include/exclude + custom columns)
-  const columnsToReturn: string[] = buildColumnList(dataViews, fieldNames, type)
+  const columnsToReturn: string[] = buildColumnList(dataView, fieldNames, type)
 
   // Get all associated display column_definition records
   const customDisplayDefinitions = await buildColumnDisplayDefinitions(tableNameProper, [
@@ -123,12 +125,11 @@ export const buildAllColumnDefinitions = async ({
   }
 }
 
-const getFilters = (dataViews: DataView[], userId: number, orgId: number | undefined): object => {
-  // We're only interested in the highest priority restrictions
+const getFilters = (dataView: DataView, userId: number, orgId: number | undefined): object => {
   const restrictions =
-    dataViews[0].rowRestrictions == null || Object.keys(dataViews[0].rowRestrictions).length === 0
+    dataView.rowRestrictions == null || Object.keys(dataView.rowRestrictions).length === 0
       ? { id: { isNull: false } }
-      : dataViews[0].rowRestrictions
+      : dataView.rowRestrictions
   // Substitute userId/orgId placeholder with actual values
   return mapValuesDeep(restrictions, (node: any) => {
     if (typeof node !== 'string') return node
@@ -144,27 +145,27 @@ const getFilters = (dataViews: DataView[], userId: number, orgId: number | undef
 }
 
 const buildColumnList = (
-  dataViews: DataView[],
-  fieldNames: string[],
+  dataView: DataView,
+  allColumns: string[],
   type: 'TABLE' | 'DETAIL'
 ): string[] => {
-  const includeColumns: string[] = []
-  const excludeColumns: string[] = []
   const includeField = type === 'TABLE' ? 'tableViewIncludeColumns' : 'detailViewIncludeColumns'
   const excludeField = type === 'TABLE' ? 'tableViewExcludeColumns' : 'detailViewExcludeColumns'
-  dataViews.forEach((dataView) => {
-    if (dataView[includeField] === null) includeColumns.push(...fieldNames)
-    else includeColumns.push(...(dataView[includeField] as string[]))
-    dataView[excludeField] !== null && excludeColumns.push(...(dataView[excludeField] as string[]))
-  })
-  // Convert to Sets to remove duplicate column names from multiple data views
-  // and expand "..." to all fields (so we don't have to enter the full field
-  // list in "includeColumns" when also adding a "custom" field)
-  const includeSet = new Set(
-    includeColumns.map((col) => (col === REST_OF_DATAVIEW_FIELDS ? fieldNames : col)).flat()
-  )
-  const excludeSet = new Set(excludeColumns)
-  return [...includeSet].filter((x) => !excludeSet.has(x))
+
+  const includeColumns =
+    dataView[includeField] === null
+      ? allColumns
+      : (dataView[includeField] as string[])
+          // Expand "..." to all fields (so we don't have to enter the full
+          // field list in "includeColumns" when also adding a "custom" field)
+          .map((col) => (col === REST_OF_DATAVIEW_FIELDS ? allColumns : col))
+          .flat()
+
+  const excludeColumns = dataView[excludeField] !== null ? (dataView[excludeField] as string[]) : []
+
+  // Convert to Set to remove duplicate columns due to expanded (...) field list
+  const includeSet = new Set(includeColumns)
+  return [...includeSet].filter((x) => !excludeColumns.includes(x))
 }
 
 const buildColumnDisplayDefinitions = async (
