@@ -18,8 +18,6 @@ Display of (custom) **Data** tables (e.g. Products, Users, Orgs) (or any table, 
 - "special" columns, which show the result of an [evaluator](Query-Syntax.md) expression, so can show some fields combined, or queries to another table, for example
 - how columns should be formatted in the UI
 
-
-
 The data is served to the front-end via the `/data-views` API end-points, and serves data based on the request's JWT header, so we can ensure that no user can receive data that they haven't been configured to be allowed to see.
 
 The database's row-level permissions ensure that only allowed rows are returned to the user, and the logic in the "dataViews" code returns allowed columns. We also support custom "rowRestrictions" for limiting the individual records a given user is allowed to see (see below).
