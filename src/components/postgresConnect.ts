@@ -1096,7 +1096,7 @@ class PostgresDB {
               OR permission_names IS NULL
               OR cardinality(permission_names) = 0
             )
-      AND table_name LIKE $2
+      AND code = $2
     `
     const values = [userPermissions, tableName]
     try {

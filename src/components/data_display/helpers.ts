@@ -41,13 +41,15 @@ export const getPermissionNamesFromJWT = async (request: any): Promise<JWTData> 
 
 export const buildAllColumnDefinitions = async ({
   permissionNames,
-  tableName,
+  tableName = 'organisation',
+  dataViewCode,
   type,
   userId,
   orgId,
 }: {
   permissionNames: string[]
   tableName: string
+  dataViewCode: string
   type: 'TABLE' | 'DETAIL'
   userId: number
   orgId: number | undefined
@@ -55,15 +57,21 @@ export const buildAllColumnDefinitions = async ({
   // Look up allowed Data views
   const dataTables = (await DBConnect.getAllTableNames()).map((tableName) => camelCase(tableName))
 
-  const matchingTableName = dataTables.find(
-    (table) => table === dataTablePrefix + capitaliseFirstLetter(tableName) || table === tableName
-  )
+  const matchingTableName = 'user'
+
+  // dataTables.find(
+  //   (table) => table === dataTablePrefix + capitaliseFirstLetter(tableName) || table === tableName
+  // )
 
   if (!matchingTableName) throw new Error(`Invalid table name: ${tableName}`)
 
-  const dataViews = (await DBConnect.getAllowedDataViews(permissionNames, tableName))
+  console.log('permissionNames', permissionNames)
+
+  const dataViews = (await DBConnect.getAllowedDataViews(permissionNames, dataViewCode))
     .map((dataView) => objectKeysToCamelCase(dataView))
     .sort((a, b) => b.priority - a.priority) as DataView[]
+
+  console.log('dataViews', dataViews)
 
   if (dataViews.length === 0) throw new Error(`No views available for table "${tableName}"`)
 
