@@ -350,10 +350,11 @@ class PostgresDB {
       DELETE FROM file
       WHERE to_be_deleted = true
       AND timestamp < now() - interval '${config?.previewDocsMinKeepTime ?? '2 hours'}'
-      RETURNING id;
+      RETURNING id
     `
     try {
       const result = await this.query({ text })
+      console.log(result)
       return result.rows.length
     } catch (err) {
       throw err
@@ -362,9 +363,9 @@ class PostgresDB {
 
   public checkIfInFileTable = async (subPath: string) => {
     const text = `
-    SELECT * FROM file
-    WHERE file_path = $1
-    RETURNING id;
+    SELECT id  
+    FROM file
+    WHERE file_path = '${subPath}'
     `
     try {
       const result = await this.query({ text })
@@ -376,8 +377,7 @@ class PostgresDB {
 
   public filePaths = async () => {
     const text = `
-    SELECT * FROM file
-    RETURNING file_path;
+    SELECT file_path FROM file
     `
     try {
       const result = await this.query({ text })
