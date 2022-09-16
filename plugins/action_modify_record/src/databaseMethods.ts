@@ -1,4 +1,6 @@
-import { DATA_TABLE_PREFIX } from './modifyRecord'
+import config from '../../../src/config'
+
+const DATA_TABLE_PREFIX = config.dataTablePrefix
 
 const databaseMethods = (DBConnect: any) => {
   const createRecord = async (tableName: string, record: { [key: string]: any }) => {

@@ -1,5 +1,5 @@
 import DBConnect from '../databaseConnect'
-import { objectKeysToCamelCase, capitaliseFirstLetter } from '../utilityFunctions'
+import { objectKeysToCamelCase, getValidTableName } from '../utilityFunctions'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import fetch from 'node-fetch'
 import { camelCase, snakeCase, startCase } from 'lodash'
@@ -60,6 +60,8 @@ export const buildAllColumnDefinitions = async ({
 
   const { tableName, title, code } = dataViews[0]
 
+  const tableNameProper = camelCase(getValidTableName(tableName))
+
   // Generate graphQL filter object
   const gqlFilters = getFilters(dataViews, userId, orgId)
 
@@ -69,7 +71,7 @@ export const buildAllColumnDefinitions = async ({
 
   // Get all Fields on Data table (schema query)
   const fields: { name: string; dataType: PostgresDataType }[] = (
-    await DBConnect.getDataTableColumns(snakeCase(tableName))
+    await DBConnect.getDataTableColumns(snakeCase(tableNameProper))
   ).map(({ name, dataType }) => ({
     name: camelCase(name),
     dataType: dataTypeMap?.[dataType as PostgresDataType] ?? dataType,
@@ -84,7 +86,7 @@ export const buildAllColumnDefinitions = async ({
   const columnsToReturn: string[] = buildColumnList(dataViews, fieldNames, type)
 
   // Get all associated display column_definition records
-  const customDisplayDefinitions = await buildColumnDisplayDefinitions(tableName, [
+  const customDisplayDefinitions = await buildColumnDisplayDefinitions(tableNameProper, [
     ...columnsToReturn,
     headerColumnName,
   ])
@@ -110,7 +112,7 @@ export const buildAllColumnDefinitions = async ({
       : undefined
 
   return {
-    tableName,
+    tableName: tableNameProper,
     title: title ?? plural(startCase(tableName)),
     code,
     columnDefinitionMasterList,
