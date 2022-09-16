@@ -221,7 +221,7 @@ export const constructTableResponse = async (
   const tableRows = fetchedRecords.map((record, rowIndex) => {
     const thisRow = columnDefinitionMasterList.map((cell, colIndex) => {
       const { columnName, isBasicField, columnDefinition } = cell
-      if (isBasicField) return record[columnName]
+      if (isBasicField && !columnDefinition?.valueExpression) return record[columnName]
       else if (!columnDefinition?.valueExpression) return 'Field not defined'
       else {
         evaluationPromiseArray.push(
