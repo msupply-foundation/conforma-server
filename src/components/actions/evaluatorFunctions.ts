@@ -14,9 +14,8 @@ type FormatDate =
   | string
   | {
       format: string
-      locale: string
+      locale?: string
     }
-
 // Returns ISO date string or JS Date as formatted Date (Luxon). Returns current
 // date if date not supplied
 const getFormattedDate = (formatString: FormatDate, date?: string | Date) => {
