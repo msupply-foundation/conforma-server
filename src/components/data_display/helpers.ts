@@ -88,7 +88,7 @@ export const buildAllColumnDefinitions = async ({
   const columnsToReturn: string[] = buildColumnList(dataView, fieldNames, type)
 
   // Get all associated display column_definition records
-  const customDisplayDefinitions = await buildColumnDisplayDefinitions(tableNameProper, [
+  const customDisplayDefinitions = await buildColumnDisplayDefinitions(tableName, [
     ...columnsToReturn,
     headerColumnName,
   ])
