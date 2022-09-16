@@ -28,7 +28,7 @@ const getFormattedDate = (formatString: FormatDate, inputDate?: string | Date) =
 
   if (typeof formatString === 'string') return date.toFormat(formatString)
   const { format, locale } = formatString
-  return locale ? date.setLocale(locale).toFormat(format) : date.toFormat(format)
+  return date.toFormat(format, { locale })
 }
 
 // Returns JS Date object from ISO date string. Returns current timestamp if
