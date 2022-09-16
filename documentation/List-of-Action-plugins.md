@@ -8,10 +8,8 @@
   - [Increment Stage](#increment-stage)
   - [Change Status](#change-status)
   - [Modify Record](#modify-record)
-    - [How the record is built](#how-the-record-is-built)
   - [Modify Multiple Records](#modify-multiple-records)
   - [Generate Text String](#generate-text-string)
-    - [Parameters summary](#parameters-summary)
   - [Join User to Organsation](#join-user-to-organsation)
   - [Grant Permissions](#grant-permissions)
   - [Revoke Permissions](#revoke-permissions)
@@ -27,14 +25,6 @@
   - [Clean Up Files](#clean-up-files)
   - [Aliasing existing template actions](#aliasing-existing-template-actions)
 - [Core Actions](#core-actions)
-    - [On Application Create:](#on-application-create)
-    - [On Application Submit](#on-application-submit)
-    - [On Application Restart (i.e. after "Changes Requested"):](#on-application-restart-ie-after-changes-requested)
-    - [On Review Self-Assign:](#on-review-self-assign)
-    - [On Review Assign (by other)](#on-review-assign-by-other)
-    - [On Review Create](#on-review-create)
-    - [On Review Submit:](#on-review-submit)
-    - [On Review Restart: (i.e. review making changes based on higher level requests)](#on-review-restart-ie-review-making-changes-based-on-higher-level-requests)
 
 * [Core Actions](#core-actions)
 
@@ -440,6 +430,8 @@ Revokes permissions from to user/org -- i.e. sets the `is_active` field to `fals
 | `orgName` or `orgId`                     |                                                                                      |
 | `permissionNames`\* [Array of names]     |                                                                                      |
 | `isRemovingPermission` (default: `true`) |                                                                                      |
+
+`revokePermissions` works differently to `grantPermissions`, in that you *can* omit the user or the org. In that case, it is treated as "apply to ALL". So if you only provide an `orgId`, it'll remove any permission for that organisation, regardless of which user (or `null`) is linked with it. However, if you explicitly set `null` for one of the values, it'll only match `null`.
 
 The `isRemovingPermission` parameter specifies whether or not the `permission_join` record should be _deleted_ (the default behaviour) or just set to inactive (which would mean the user can still _view_ their applications but not create new ones, or submit existing). _**NOTE**: This functionality not actually implemented yet in policies/front-end, so only full removal should be used currently -- TO-DO_
 
