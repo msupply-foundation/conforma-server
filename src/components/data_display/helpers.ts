@@ -300,7 +300,8 @@ export const constructDetailsResponse = async (
   const evaluationFieldArray: string[] = []
   const item = columnDefinitionMasterList.reduce(
     (obj: { [key: string]: any }, { columnName, isBasicField, columnDefinition }) => {
-      if (isBasicField) obj[columnName] = fetchedRecord[columnName]
+      if (isBasicField && !columnDefinition?.valueExpression)
+        obj[columnName] = fetchedRecord[columnName]
       else if (!columnDefinition?.valueExpression) obj[columnName] = 'Field not defined'
       else {
         evaluationPromiseArray.push(
