@@ -24,7 +24,6 @@ import { plural } from 'pluralize'
 // CONSTANTS
 const REST_OF_DATAVIEW_FIELDS = '...'
 const graphQLEndpoint = config.graphQLendpoint
-const dataTablePrefix = camelCase(config.dataTablePrefix)
 
 type JWTData = {
   userId: number
@@ -41,41 +40,25 @@ export const getPermissionNamesFromJWT = async (request: any): Promise<JWTData> 
 
 export const buildAllColumnDefinitions = async ({
   permissionNames,
-  tableName = 'organisation',
   dataViewCode,
   type,
   userId,
   orgId,
 }: {
   permissionNames: string[]
-  tableName: string
   dataViewCode: string
   type: 'TABLE' | 'DETAIL'
   userId: number
   orgId: number | undefined
 }): Promise<ColumnDetailOutput> => {
   // Look up allowed Data views
-  const dataTables = (await DBConnect.getAllTableNames()).map((tableName) => camelCase(tableName))
-
-  const matchingTableName = 'user'
-
-  // dataTables.find(
-  //   (table) => table === dataTablePrefix + capitaliseFirstLetter(tableName) || table === tableName
-  // )
-
-  if (!matchingTableName) throw new Error(`Invalid table name: ${tableName}`)
-
-  console.log('permissionNames', permissionNames)
-
   const dataViews = (await DBConnect.getAllowedDataViews(permissionNames, dataViewCode))
     .map((dataView) => objectKeysToCamelCase(dataView))
     .sort((a, b) => b.priority - a.priority) as DataView[]
 
-  console.log('dataViews', dataViews)
+  if (dataViews.length === 0) throw new Error(`No matching data views: "${dataViewCode}"`)
 
-  if (dataViews.length === 0) throw new Error(`No views available for table "${tableName}"`)
-
-  const { title, code } = dataViews[0]
+  const { tableName, title, code } = dataViews[0]
 
   // Generate graphQL filter object
   const gqlFilters = getFilters(dataViews, userId, orgId)
@@ -86,7 +69,7 @@ export const buildAllColumnDefinitions = async ({
 
   // Get all Fields on Data table (schema query)
   const fields: { name: string; dataType: PostgresDataType }[] = (
-    await DBConnect.getDataTableColumns(snakeCase(matchingTableName))
+    await DBConnect.getDataTableColumns(snakeCase(tableName))
   ).map(({ name, dataType }) => ({
     name: camelCase(name),
     dataType: dataTypeMap?.[dataType as PostgresDataType] ?? dataType,
@@ -127,7 +110,7 @@ export const buildAllColumnDefinitions = async ({
       : undefined
 
   return {
-    matchingTableName,
+    tableName,
     title: title ?? plural(startCase(tableName)),
     code,
     columnDefinitionMasterList,
