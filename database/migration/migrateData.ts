@@ -409,8 +409,6 @@ const migrateData = async () => {
       ADD COLUMN IF NOT EXISTS is_internal_reference_doc boolean DEFAULT FALSE NOT NULL;
       ALTER TABLE file
       ADD COLUMN IF NOT EXISTS is_external_reference_doc boolean DEFAULT FALSE NOT NULL;
-      ALTER TABLE file
-      ADD COLUMN IF NOT EXISTS is_missing boolean DEFAULT FALSE NOT NULL;
     `)
 
     console.log(' - Adding function/trigger to delete unused reference docs')
@@ -1123,6 +1121,13 @@ STABLE;
     console.log('- Add VIEW permission policy type')
 
     await DB.changeSchema(`ALTER TYPE permission_policy_type ADD VALUE 'VIEW' after 'ASSIGN'`)
+
+    console.log('- Add is_missing column to table VIEW')
+
+    await DB.changeSchema(`
+    ALTER TABLE file
+    ADD COLUMN IF NOT EXISTS is_missing boolean DEFAULT FALSE NOT NULL;
+    `)
   }
 
   // Other version migrations continue here...
