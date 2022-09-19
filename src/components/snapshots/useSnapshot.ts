@@ -242,7 +242,7 @@ const copyFiles = async (snapshotFolder: string, fileRecords: ObjectRecord[] = [
   const snapshotFilesFolder = `${snapshotFolder}/files`
   const baseFilePaths = await getBaseFiles(snapshotFilesFolder)
 
-  for (const filePath of [...filePaths, ...baseFilePaths]) {
+  for (const filePath of [...filePaths]) {
     try {
       console.log('copying file', filePath)
 
