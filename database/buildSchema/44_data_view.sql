@@ -8,6 +8,7 @@ CREATE TABLE data_view (
     row_restrictions jsonb DEFAULT '{}',
     table_view_include_columns varchar[],
     table_view_exclude_columns varchar[],
+    table_search_columns varchar[],
     detail_view_include_columns varchar[],
     detail_view_exclude_columns varchar[],
     detail_view_header_column varchar NOT NULL,

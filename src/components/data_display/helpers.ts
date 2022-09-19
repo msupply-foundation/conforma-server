@@ -62,7 +62,7 @@ export const buildAllColumnDefinitions = async ({
 
   const dataView = dataViews[0]
 
-  const { tableName, title, code } = dataView
+  const { tableName, title, code, tableSearchColumns } = dataView
 
   const tableNameProper = camelCase(getValidTableName(tableName))
 
@@ -123,6 +123,7 @@ export const buildAllColumnDefinitions = async ({
     gqlFilters,
     fieldNames,
     headerDefinition,
+    searchFields: (tableSearchColumns as string[]) || [],
     showLinkedApplications,
   }
 }
@@ -190,7 +191,8 @@ export const constructTableResponse = async (
   code: string,
   columnDefinitionMasterList: ColumnDefinitionMasterList,
   fetchedRecords: { id: number; [key: string]: any }[],
-  totalCount: number
+  totalCount: number,
+  searchFields: string[]
 ): Promise<DataViewsTableResponse> => {
   // Build table headers, which also carry any additional display/format
   // definitions for each column
@@ -259,7 +261,7 @@ export const constructTableResponse = async (
     row.item = item
   })
 
-  return { tableName, title, code, headerRow, tableRows, totalCount }
+  return { tableName, title, code, headerRow, tableRows, searchFields, totalCount }
 }
 
 export const constructDetailsResponse = async (

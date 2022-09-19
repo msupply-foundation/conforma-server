@@ -1123,9 +1123,14 @@ STABLE;
     await DB.changeSchema(`ALTER TYPE permission_policy_type ADD VALUE 'VIEW' after 'ASSIGN'`)
   }
 
-  console.log(' - Remove uniqueness constraint from data_view table')
+  console.log(' - Remove uniqueness constraint from and add search fields to data_view table')
   await DB.changeSchema(`
     ALTER TABLE data_view DROP CONSTRAINT IF EXISTS outcome_display_table_name_code_key; 
+  `)
+
+  await DB.changeSchema(`
+    ALTER TABLE data_view 
+    ADD COLUMN IF NOT EXISTS table_search_columns varchar[];
   `)
 
   // Other version migrations continue here...
