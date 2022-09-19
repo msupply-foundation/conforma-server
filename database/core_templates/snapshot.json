@@ -1170,6 +1170,18 @@
       "name": "snapshot",
       "timestamp": "2022-09-07T18:09:06.216504+12:00",
       "value": "core_templates"
+    },
+    {
+      "id": 18,
+      "name": "version",
+      "timestamp": "2022-09-19T14:31:06.195383+12:00",
+      "value": "0.4.5-13"
+    },
+    {
+      "id": 19,
+      "name": "snapshot",
+      "timestamp": "2022-09-19T14:31:06.36259+12:00",
+      "value": "core_templates"
     }
   ],
   "templateCategory": [
@@ -4259,7 +4271,7 @@
       "parameterQueries": {
         "newStatus": "SUBMITTED"
       },
-      "sequence": 50,
+      "sequence": 6,
       "templateId": 10,
       "trigger": "ON_REVIEW_SUBMIT"
     },
@@ -4278,7 +4290,7 @@
           "operator": "objectProperties"
         }
       },
-      "sequence": 51,
+      "sequence": 50,
       "templateId": 10,
       "trigger": "ON_REVIEW_SUBMIT"
     },
@@ -4304,7 +4316,7 @@
           "operator": "objectProperties"
         }
       },
-      "sequence": 52,
+      "sequence": 51,
       "templateId": 10,
       "trigger": "ON_REVIEW_SUBMIT"
     },
@@ -4355,7 +4367,7 @@
       "eventCode": null,
       "id": 212,
       "parameterQueries": {},
-      "sequence": 53,
+      "sequence": 52,
       "templateId": 10,
       "trigger": "ON_REVIEW_SUBMIT"
     },
@@ -4367,7 +4379,7 @@
       "eventCode": null,
       "id": 213,
       "parameterQueries": {},
-      "sequence": 54,
+      "sequence": 53,
       "templateId": 10,
       "trigger": "ON_REVIEW_SUBMIT"
     },
@@ -4401,7 +4413,7 @@
       "eventCode": null,
       "id": 214,
       "parameterQueries": {},
-      "sequence": 6,
+      "sequence": 54,
       "templateId": 10,
       "trigger": "ON_REVIEW_SUBMIT"
     },
@@ -4451,37 +4463,50 @@
             "children": [
               {
                 "children": [
-                  "applicationData.reviewData.latestDecision.decision",
-                  null
+                  {
+                    "children": [
+                      "applicationData.reviewData.latestDecision.decision"
+                    ],
+                    "operator": "objectProperties"
+                  },
+                  "CONFORM"
                 ],
-                "operator": "objectProperties"
+                "operator": "="
               },
               {
-                "type": "string",
                 "children": [
-                  "CONFORM",
-                  "NON_CONFORM"
+                  "applicationData.reviewData.isLastStage"
                 ],
-                "operator": "OR"
+                "operator": "objectProperties"
               }
             ],
-            "operator": "="
+            "operator": "AND"
           },
           {
             "children": [
-              "applicationData.reviewData.isLastLevel"
+              {
+                "children": [
+                  {
+                    "children": [
+                      "applicationData.reviewData.latestDecision.decision"
+                    ],
+                    "operator": "objectProperties"
+                  },
+                  "NON_CONFORM"
+                ],
+                "operator": "="
+              },
+              {
+                "children": [
+                  "applicationData.reviewData.isLastLevel"
+                ],
+                "operator": "objectProperties"
+              }
             ],
-            "operator": "objectProperties"
-          },
-          {
-            "children": [
-              "applicationData.reviewData.isLastStage",
-              null
-            ],
-            "operator": "objectProperties"
+            "operator": "AND"
           }
         ],
-        "operator": "AND"
+        "operator": "OR"
       },
       "description": "**CORE-ACTION** Change application outcome when last level and last stage - usually a final decision - submits a review as CONFORM or NON_CONFORM. Outcome will be APPROVED or REJECTED accordingly",
       "eventCode": "",
@@ -4513,31 +4538,6 @@
       "trigger": "ON_REVIEW_SUBMIT"
     },
     {
-      "actionCode": "updateReviewAssignmentsStatus",
-      "code": null,
-      "condition": true,
-      "description": "**CORE-ACTION** Change other review assignment statuses to SELF_ASSIGNED_BY_ANOTHER after one of the review assignment with AVAILABLE_FOR_SELF_ASSIGNMENT is self-assigned by the reviewer",
-      "eventCode": null,
-      "id": 217,
-      "parameterQueries": {
-        "trigger": {
-          "children": [
-            "applicationData.action_payload.trigger_payload.trigger"
-          ],
-          "operator": "objectProperties"
-        },
-        "reviewAssignmentId": {
-          "children": [
-            "applicationData.action_payload.trigger_payload.record_id"
-          ],
-          "operator": "objectProperties"
-        }
-      },
-      "sequence": null,
-      "templateId": 10,
-      "trigger": "ON_REVIEW_ASSIGN"
-    },
-    {
       "actionCode": "cLog",
       "code": null,
       "condition": true,
@@ -4554,7 +4554,7 @@
           "operator": "stringSubstitution"
         }
       },
-      "sequence": null,
+      "sequence": 6,
       "templateId": 10,
       "trigger": "ON_APPLICATION_SUBMIT"
     },
@@ -4577,17 +4577,11 @@
       "eventCode": null,
       "id": 219,
       "parameterQueries": {
-        "name": {
-          "children": [
-            "applicationData.responses.name.text"
-          ],
-          "operator": "objectProperties"
-        },
-        "address": {
-          "children": [
-            "applicationData.responses.physAdd.text"
-          ],
-          "operator": "objectProperties"
+        "data": {
+          "name": "responses.name.text",
+          "address": "responses.physAdd.text",
+          "registration": "responses.rego.text",
+          "registration_documentation": "responses.regoDoc"
         },
         "logo_url": {
           "children": [
@@ -4601,19 +4595,7 @@
           ],
           "operator": "CONCAT"
         },
-        "tableName": "organisation",
-        "registration": {
-          "children": [
-            "applicationData.responses.rego.text"
-          ],
-          "operator": "objectProperties"
-        },
-        "registration_documentation": {
-          "children": [
-            "applicationData.responses.regoDoc"
-          ],
-          "operator": "objectProperties"
-        }
+        "tableName": "organisation"
       },
       "sequence": 101,
       "templateId": 10,
@@ -5154,9 +5136,7 @@
             }
           ],
           "operator": "stringSubstitution"
-        },
-        "fromName": "Application Manager",
-        "fromEmail": "no-reply@sussol.net"
+        }
       },
       "sequence": 105,
       "templateId": 10,
@@ -6568,8 +6548,23 @@
       "actionCode": "changeStatus",
       "code": null,
       "condition": {
-        "children": true,
-        "operator": "objectProperties"
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  "applicationData.reviewData.reviewId",
+                  null
+                ],
+                "operator": "objectProperties"
+              },
+              null
+            ],
+            "operator": "objectProperties"
+          },
+          null
+        ],
+        "operator": "!="
       },
       "description": "**CORE-ACTION** On Re-assignment happens change previous review status to DISCONTINUED",
       "eventCode": "",
@@ -6923,7 +6918,7 @@
           "operator": "objectProperties"
         }
       },
-      "sequence": null,
+      "sequence": 2,
       "templateId": 10,
       "trigger": "ON_REVIEW_ASSIGN"
     },
@@ -11742,14 +11737,39 @@
     {
       "applicationId": 10,
       "id": 130,
-      "isValid": null,
-      "stageNumber": null,
+      "isValid": true,
+      "stageNumber": 1,
       "status": "DRAFT",
       "templateElementId": 164,
       "timeCreated": "2021-09-08T19:33:44.292633+12:00",
       "timeSubmitted": null,
-      "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
-      "value": null
+      "timeUpdated": "2022-09-19T14:40:05.752533+12:00",
+      "value": {
+        "text": "*Nenhum selecionado*",
+        "values": {
+          "1": {
+            "key": "1",
+            "text": "Yes",
+            "label": "Yes",
+            "selected": false,
+            "textNegative": ""
+          }
+        },
+        "textUnselected": "Yes",
+        "textMarkdownList": "- *Nenhum selecionado*\n",
+        "selectedValuesArray": [],
+        "unselectedValuesArray": [
+          {
+            "key": "1",
+            "text": "Yes",
+            "label": "Yes",
+            "selected": false,
+            "textNegative": ""
+          }
+        ],
+        "textMarkdownPropertyList": "- Yes: \n",
+        "textUnselectedMarkdownList": "- Yes\n"
+      }
     },
     {
       "applicationId": 10,
@@ -11767,12 +11787,12 @@
       "applicationId": 10,
       "id": 132,
       "isValid": null,
-      "stageNumber": null,
+      "stageNumber": 1,
       "status": "DRAFT",
       "templateElementId": 167,
       "timeCreated": "2021-09-08T19:33:44.292633+12:00",
       "timeSubmitted": null,
-      "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
+      "timeUpdated": "2022-09-19T14:40:13.263232+12:00",
       "value": null
     },
     {
@@ -11815,24 +11835,24 @@
       "applicationId": 10,
       "id": 136,
       "isValid": null,
-      "stageNumber": null,
+      "stageNumber": 1,
       "status": "DRAFT",
       "templateElementId": 171,
       "timeCreated": "2021-09-08T19:33:44.292633+12:00",
       "timeSubmitted": null,
-      "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
+      "timeUpdated": "2022-09-19T14:40:15.932352+12:00",
       "value": null
     },
     {
       "applicationId": 10,
       "id": 137,
       "isValid": null,
-      "stageNumber": null,
+      "stageNumber": 1,
       "status": "DRAFT",
       "templateElementId": 172,
       "timeCreated": "2021-09-08T19:33:44.292633+12:00",
       "timeSubmitted": null,
-      "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
+      "timeUpdated": "2022-09-19T14:40:15.937243+12:00",
       "value": null
     },
     {
