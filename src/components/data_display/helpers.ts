@@ -42,12 +42,14 @@ export const buildAllColumnDefinitions = async ({
   permissionNames,
   dataViewCode,
   type,
+  filter,
   userId,
   orgId,
 }: {
   permissionNames: string[]
   dataViewCode: string
   type: 'TABLE' | 'DETAIL'
+  filter?: object
   userId: number
   orgId: number | undefined
 }): Promise<ColumnDetailOutput> => {
@@ -65,7 +67,7 @@ export const buildAllColumnDefinitions = async ({
   const tableNameProper = camelCase(getValidTableName(tableName))
 
   // Generate graphQL filter object
-  const gqlFilters = getFilters(dataView, userId, orgId)
+  const gqlFilters = { ...filter, ...getFilters(dataView, userId, orgId) }
 
   // Only for details view
   const headerColumnName = dataView.detailViewHeaderColumn ?? ''

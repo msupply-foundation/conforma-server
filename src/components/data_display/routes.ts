@@ -34,11 +34,12 @@ const routeDataViewTable = async (request: any, reply: any) => {
   const dataViewCode = camelCase(request.params.dataViewCode)
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
   const query = objectKeysToCamelCase(request.query)
+  const filter = request.body || {}
 
   // GraphQL pagination parameters
   const first = query?.first ? Number(query.first) : 20
   const offset = query?.offset ? Number(query.offset) : 0
-  const orderBy = query?.orderBy ?? 'id'
+  const orderBy = query?.sortBy ?? 'id'
   const ascending = query?.ascending ? query?.ascending === 'true' : true
 
   const { tableName, columnDefinitionMasterList, fieldNames, gqlFilters, title, code } =
@@ -46,6 +47,7 @@ const routeDataViewTable = async (request: any, reply: any) => {
       permissionNames,
       dataViewCode,
       type: 'TABLE',
+      filter,
       userId,
       orgId,
     })

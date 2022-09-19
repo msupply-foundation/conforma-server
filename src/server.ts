@@ -138,7 +138,7 @@ const startServer = async () => {
     server.post('/create-hash', routeCreateHash)
     server.post('/generate-pdf', routeGeneratePDF)
     server.get('/data-views', routeDataViews)
-    server.get('/data-views/:dataViewCode', routeDataViewTable)
+    server.post('/data-views/:dataViewCode', routeDataViewTable)
     server.get('/data-views/:dataViewCode/:id', routeDataViewDetail)
     server.get('/check-triggers', routeTriggers)
     server.post('/preview-actions', routePreviewActions)
