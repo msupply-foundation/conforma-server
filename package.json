@@ -63,7 +63,8 @@
     "dockerise": "cd docker && ./dockerise.sh",
     "docker_run": "cd docker && ./run.sh",
     "release": "./utils/release.sh",
-    "migrate": "ts-node ./database/migration/migrateData.ts --migrate"
+    "migrate": "ts-node ./database/migration/migrateData.ts --migrate",
+    "cleanup": "ts-node ./src/components/actions/scheduler.ts"
   },
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^6.0.0",
