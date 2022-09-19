@@ -2,13 +2,14 @@ import DBConnect from '../databaseConnect'
 import scheduler from 'node-schedule'
 import config from '../../config'
 import { DateTime } from 'luxon'
-import { CsvFormatterStream } from 'fast-csv'
 import fs from 'fs'
 import { filesFolder } from '../files/fileHandler'
+import path from 'path'
+import { getAppEntryPointDir } from '../utilityFunctions'
 
 // Dev config option
 const schedulerTestMode = false // Runs scheduler every 30 seconds
-const basePath = filesFolder // declares the file storage path
+const basePath: string = path.join(getAppEntryPointDir(), filesFolder) // declares the file storage path
 
 // Node-scheduler to run scheduled actions periodically
 const checkActionSchedule = schedulerTestMode
@@ -54,9 +55,9 @@ export const cleanUpFiles = async () => {
   if (deleteCount > 0) console.log(`${deleteCount} files removed.`)
 }
 
-const crawlFileSystem = async (path: string) => {
-  fs.readdirSync(path).forEach(async (file) => {
-    const subPath = basePath.join(path, file)
+const crawlFileSystem = async (newPath: string) => {
+  fs.readdirSync(newPath).forEach(async (file) => {
+    const subPath = path.join(newPath, file)
     if (fs.statSync(subPath).isDirectory()) crawlFileSystem(subPath)
     else if ((await DBConnect.checkIfInFileTable(subPath)) === 0) {
       fs.unlink(subPath, function (err) {

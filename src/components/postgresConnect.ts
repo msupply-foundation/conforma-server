@@ -361,9 +361,9 @@ class PostgresDB {
 
   public checkIfInFileTable = async (subPath: string) => {
     const text = `
-    SELECT * FROM file
-    WHERE file_path = $1
-    RETURNING id;
+    SELECT id 
+    FROM file
+    WHERE file_path = '${subPath}'
     `
     try {
       const result = await this.query({ text })
