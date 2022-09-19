@@ -6,6 +6,7 @@ import fs from 'fs'
 import { filesFolder } from '../files/fileHandler'
 import path from 'path'
 import { getAppEntryPointDir } from '../utilityFunctions'
+import { crawlFileSystem } from '../utilityFunctions'
 
 // Dev config option
 const schedulerTestMode = false // Runs scheduler every 30 seconds
@@ -50,22 +51,18 @@ export const cleanUpFiles = async () => {
     DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
     'Cleaning up filess and file records...'
   )
-  await crawlFileSystem(basePath)
+  await crawlFileSystem(basePath, checkFile)
   const deleteCount = await DBConnect.cleanUpFiles()
   if (deleteCount > 0) console.log(`${deleteCount} files removed.`)
 }
 
-const crawlFileSystem = async (newPath: string) => {
-  fs.readdirSync(newPath).forEach(async (file) => {
-    const subPath = path.join(newPath, file)
-    if (fs.statSync(subPath).isDirectory()) crawlFileSystem(subPath)
-    else if ((await DBConnect.checkIfInFileTable(subPath)) === 0) {
-      fs.unlink(subPath, function (err) {
-        if (err) throw err
-        else console.log(`Deleted file at ${subPath}`)
-      })
-    }
-  })
+const checkFile = async (filePath: string) => {
+  if ((await DBConnect.checkIfInFileTable(filePath)) === 0) {
+    fs.unlink(filePath, function (err) {
+      if (err) throw err
+      else console.log(`Deleted file at ${filePath}`)
+    })
+  }
 }
 
 export default cleanUpFiles

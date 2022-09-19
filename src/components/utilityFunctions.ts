@@ -85,7 +85,7 @@ export const filterObject = (
   return Object.fromEntries(filtered)
 }
 
-export const crawlFileSystem = async(newPath: string, checkFile: (newPath:string) => void ) {
+export const crawlFileSystem = async (newPath: string, checkFile: (newPath: string) => void) => {
   fs.readdirSync(newPath).forEach(async (file) => {
     const subPath = path.join(newPath, file)
     if (fs.statSync(subPath).isDirectory()) crawlFileSystem(subPath, checkFile)
