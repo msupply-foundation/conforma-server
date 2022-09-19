@@ -290,7 +290,10 @@ class PostgresDB {
   }
 
   public setScheduledActionDone = async (table: string, record_id: number): Promise<boolean> => {
-    const text = `UPDATE ${table} SET is_active = false WHERE id = $1`
+    const text = `
+    UPDATE ${table} 
+    SET is_active = false 
+    WHERE id = $1`
     try {
       const result = await this.query({
         text,
@@ -354,7 +357,6 @@ class PostgresDB {
     `
     try {
       const result = await this.query({ text })
-      console.log(result)
       return result.rows.length
     } catch (err) {
       throw err
@@ -389,8 +391,9 @@ class PostgresDB {
 
   public setIsMissing = async (filePath: string) => {
     const text = `
-    UPDATE file SET is_missing = true
-    WHERE file_path = $1;
+    UPDATE file
+    SET is_missing = true
+    WHERE file_path = ${filePath};
     `
     try {
       const result = await this.query({ text })

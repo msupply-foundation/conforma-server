@@ -2,8 +2,7 @@ import DBConnect from '../databaseConnect'
 import scheduler from 'node-schedule'
 import config from '../../config'
 import { DateTime } from 'luxon'
-import { CsvFormatterStream } from 'fast-csv'
-import fs from 'fs'
+import fs, { PathLike } from 'fs'
 import { filesFolder } from '../files/fileHandler'
 import { getAppEntryPointDir } from '../utilityFunctions'
 import path from 'path'
@@ -72,9 +71,10 @@ const crawlFileSystem = async (newPath: string) => {
 
 const processMissingFileLinks = async () => {
   const filePaths: any = await DBConnect.filePaths()
-  filePaths.forEach((filePath: string) => {
-    if (!fs.existsSync(filePath)) {
-      DBConnect.setIsMissing(filePath)
+  filePaths.rows.forEach((filePathObject: { file_path: string }) => {
+    if (!fs.existsSync(filePathObject.file_path)) {
+      console.log(filePathObject.file_path)
+      //DBConnect.setIsMissing(filePathObject.file_path)
     }
   })
 }
