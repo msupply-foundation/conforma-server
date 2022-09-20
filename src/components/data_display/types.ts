@@ -50,7 +50,8 @@ export type ColumnDisplayDefinitions = {
 export interface ColumnDefinition {
   columnName: string
   isBasicField: boolean
-  dataType: string | undefined
+  dataType?: string
+  sortColumn?: string
   columnDefinition: DataViewColumnDefinition | undefined
 }
 export type ColumnDefinitionMasterList = ColumnDefinition[]

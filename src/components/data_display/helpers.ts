@@ -101,6 +101,7 @@ export const buildAllColumnDefinitions = async ({
     columnName: column,
     isBasicField: fieldNameSet.has(column),
     dataType: fieldDataTypes[column],
+    sortColumn: getSortColumn(column, fieldNameSet, customDisplayDefinitions),
     columnDefinition: customDisplayDefinitions[column],
   }))
 
@@ -145,6 +146,19 @@ const getFilters = (dataView: DataView, userId: number, orgId: number | undefine
         return node
     }
   })
+}
+
+const getSortColumn = (
+  column: string,
+  fieldNameSet: Set<string>,
+  customDisplayDefinitions: ColumnDisplayDefinitions
+) => {
+  const definedSortColumn = customDisplayDefinitions[column].sortColumn
+  if (definedSortColumn && !fieldNameSet.has(definedSortColumn))
+    throw new Error('Invalid sort column name')
+  if (definedSortColumn) return definedSortColumn
+  if (fieldNameSet.has(column)) return column
+  return undefined
 }
 
 const buildColumnList = (
@@ -196,8 +210,9 @@ export const constructTableResponse = async (
 ): Promise<DataViewsTableResponse> => {
   // Build table headers, which also carry any additional display/format
   // definitions for each column
+
   const headerRow = columnDefinitionMasterList.map(
-    ({ columnName, isBasicField, dataType, columnDefinition = {} }) => {
+    ({ columnName, isBasicField, dataType, columnDefinition = {}, sortColumn }) => {
       const { title, elementTypePluginCode, elementParameters, additionalFormatting } =
         columnDefinition
       return {
@@ -205,6 +220,7 @@ export const constructTableResponse = async (
         title: title ?? startCase(columnName),
         isBasicField,
         dataType,
+        sortColumn,
         formatting: {
           elementTypePluginCode: elementTypePluginCode || undefined,
           elementParameters: elementParameters || undefined,

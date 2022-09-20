@@ -26,6 +26,7 @@ CREATE TABLE data_view_column_definition (
     element_parameters jsonb,
     additional_formatting jsonb,
     value_expression jsonb,
+    sort_column varchar,
     UNIQUE (table_name, column_name)
 );
 
