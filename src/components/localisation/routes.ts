@@ -170,8 +170,7 @@ const checkLanguageFormat = (language: LanguageOption) => {
     typeof language.description === 'string' &&
     language.flag &&
     typeof language.flag === 'string' &&
-    language.locale &&
-    typeof language.locale === 'string'
+    (language.locale ? typeof language.locale === 'string' : true)
   )
 }
 
