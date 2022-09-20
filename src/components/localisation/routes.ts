@@ -7,6 +7,7 @@ import {
   makeFolder,
 } from '../../components/utilityFunctions'
 import config from '../../config'
+import { DateTime } from 'luxon'
 
 const { localisationsFolder } = config
 
@@ -16,6 +17,7 @@ export type LanguageOption = {
   languageName: string
   description: string
   code: string
+  locale?: string
   flag: string // To-do: limit to flag emojis
   enabled: boolean
 }
@@ -150,6 +152,8 @@ export const routeRemoveLanguage = async (request: any, reply: any) => {
 export const readLanguageOptions = (): LanguageOption[] =>
   JSON.parse(
     readFileSync(path.join(getAppEntryPointDir(), '../localisation/languages.json'), 'utf8')
+  ).map((option: Partial<LanguageOption>) =>
+    'locale' in option ? option : { ...option, locale: DateTime.local().locale }
   )
 
 export const writeLanguageOptions = async (languageOptions: LanguageOption[]) =>
@@ -168,7 +172,8 @@ const checkLanguageFormat = (language: LanguageOption) => {
     language.description &&
     typeof language.description === 'string' &&
     language.flag &&
-    typeof language.flag === 'string'
+    typeof language.flag === 'string' &&
+    (language.locale ? typeof language.locale === 'string' : true)
   )
 }
 
