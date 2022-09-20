@@ -7,6 +7,7 @@ import {
   makeFolder,
 } from '../../components/utilityFunctions'
 import config from '../../config'
+import { DateTime } from 'luxon'
 
 const { localisationsFolder } = config
 
@@ -152,7 +153,7 @@ export const readLanguageOptions = (): LanguageOption[] =>
   JSON.parse(
     readFileSync(path.join(getAppEntryPointDir(), '../localisation/languages.json'), 'utf8')
   ).map((option: Partial<LanguageOption>) =>
-    'locale' in option ? option : { ...option, locale: 'en_NZ' }
+    'locale' in option ? option : { ...option, locale: DateTime.local().locale }
   )
 
 export const writeLanguageOptions = async (languageOptions: LanguageOption[]) =>
