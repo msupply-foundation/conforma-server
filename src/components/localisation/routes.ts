@@ -16,7 +16,7 @@ export type LanguageOption = {
   languageName: string
   description: string
   code: string
-  locale: string
+  locale?: string
   flag: string // To-do: limit to flag emojis
   enabled: boolean
 }
@@ -151,6 +151,8 @@ export const routeRemoveLanguage = async (request: any, reply: any) => {
 export const readLanguageOptions = (): LanguageOption[] =>
   JSON.parse(
     readFileSync(path.join(getAppEntryPointDir(), '../localisation/languages.json'), 'utf8')
+  ).map((option: Partial<LanguageOption>) =>
+    'locale' in option ? option : { ...option, locale: 'en_NZ' }
   )
 
 export const writeLanguageOptions = async (languageOptions: LanguageOption[]) =>
