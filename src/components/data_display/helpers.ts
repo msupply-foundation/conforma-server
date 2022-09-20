@@ -153,7 +153,7 @@ const getSortColumn = (
   fieldNameSet: Set<string>,
   customDisplayDefinitions: ColumnDisplayDefinitions
 ) => {
-  const definedSortColumn = customDisplayDefinitions[column].sortColumn
+  const definedSortColumn = customDisplayDefinitions[column]?.sortColumn
   if (definedSortColumn && !fieldNameSet.has(definedSortColumn))
     throw new Error('Invalid sort column name')
   if (definedSortColumn) return definedSortColumn
