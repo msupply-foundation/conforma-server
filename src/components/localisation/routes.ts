@@ -16,6 +16,7 @@ export type LanguageOption = {
   languageName: string
   description: string
   code: string
+  locale: string
   flag: string // To-do: limit to flag emojis
   enabled: boolean
 }
@@ -168,7 +169,9 @@ const checkLanguageFormat = (language: LanguageOption) => {
     language.description &&
     typeof language.description === 'string' &&
     language.flag &&
-    typeof language.flag === 'string'
+    typeof language.flag === 'string' &&
+    language.locale &&
+    typeof language.locale === 'string'
   )
 }
 
