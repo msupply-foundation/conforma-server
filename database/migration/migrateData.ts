@@ -1123,6 +1123,11 @@ STABLE;
     await DB.changeSchema(`ALTER TYPE permission_policy_type ADD VALUE 'VIEW' after 'ASSIGN'`)
   }
 
+  console.log(' - Remove uniqueness constraint from data_view table')
+  await DB.changeSchema(`
+    ALTER TABLE data_view DROP CONSTRAINT IF EXISTS outcome_display_table_name_code_key; 
+  `)
+
   // Other version migrations continue here...
 
   // Finally, set the database version to the current version
