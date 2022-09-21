@@ -1090,7 +1090,7 @@ class PostgresDB {
 
   // DATA TABLE / VIEWS QUERIES
 
-  public getAllowedDataViews = async (userPermissions: string[], tableName: string = '%') => {
+  public getAllowedDataViews = async (userPermissions: string[], dataViewCode?: string) => {
     // Returns any records that have ANY permissionNames in common with input
     // userPermissions, or are empty (i.e. public)
     const text = `
@@ -1100,9 +1100,9 @@ class PostgresDB {
               OR permission_names IS NULL
               OR cardinality(permission_names) = 0
             )
-      AND table_name LIKE $2
+      ${dataViewCode ? 'AND code = $2' : ''}
     `
-    const values = [userPermissions, tableName]
+    const values = dataViewCode ? [userPermissions, dataViewCode] : [userPermissions]
     try {
       const result = await this.query({ text, values })
       return result.rows

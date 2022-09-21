@@ -6,7 +6,16 @@ Called by nodemon before launching server.ts and as part of build script.
 */
 import fs from 'fs'
 import { execSync } from 'child_process'
-import { makeFolder } from './components/utilityFunctions'
+
+// This function exists in `utilityFunctions.ts`, but we can't import it from
+// there in this script, otherwise this script fails due to `utilityFunctions`
+// calling "config", which requires preferences to already exist.
+const makeFolder = (folderPath: string, message?: string) => {
+  if (!fs.existsSync(folderPath)) {
+    message && console.log(message)
+    fs.mkdirSync(folderPath)
+  }
+}
 
 try {
   if (!fs.existsSync('preferences') || !fs.existsSync('preferences/preferences.json')) {
