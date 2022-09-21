@@ -2,14 +2,17 @@ import DBConnect from '../databaseConnect'
 import scheduler from 'node-schedule'
 import config from '../../config'
 import { DateTime } from 'luxon'
-import fs, { PathLike } from 'fs'
+import fs from 'fs'
 import { filesFolder } from '../files/fileHandler'
-import { getAppEntryPointDir } from '../utilityFunctions'
 import path from 'path'
+import { getAppEntryPointDir } from '../utilityFunctions'
+import { crawlFileSystem } from '../utilityFunctions'
+import { deleteFile } from '../files/deleteFiles'
 
 // Dev config option
 const schedulerTestMode = false // Runs scheduler every 30 seconds
 const basePath: string = path.join(getAppEntryPointDir(), filesFolder) // declares the file storage path
+const isManualCleanup: Boolean = process.argv[2] === '--cleanup'
 
 // Node-scheduler to run scheduled actions periodically
 const checkActionSchedule = schedulerTestMode
@@ -45,28 +48,30 @@ export const triggerScheduledActions = async () => {
   DBConnect.triggerScheduledActions()
 }
 
+const checkFile = async (filePath: string) => {
+  if (await DBConnect.checkIfInFileTable(filePath)) {
+    fs.unlink(filePath, function (err) {
+      if (err) throw err
+      else console.log(`Deleted file at ${filePath}`)
+    })
+  }
+}
+
 export const cleanUpFiles = async () => {
   console.log(
     DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
-    'Cleaning up preview files and files table...'
+    'Cleaning up filess and file records...'
   )
-  crawlFileSystem(basePath)
+  await crawlFileSystem(basePath, checkFile)
   processMissingFileLinks()
   const deleteCount = await DBConnect.cleanUpFiles()
   if (deleteCount > 0) console.log(`${deleteCount} files removed.`)
+  else console.log('no files removed.')
 }
 
-const crawlFileSystem = async (newPath: string) => {
-  fs.readdirSync(newPath).forEach(async (file) => {
-    const subPath = path.join(newPath, file)
-    if (fs.statSync(subPath).isDirectory()) crawlFileSystem(subPath)
-    else if ((await DBConnect.checkIfInFileTable(subPath)) === 0) {
-      fs.unlink(subPath, function (err) {
-        if (err) throw err
-        else console.log(`Deleted file at ${subPath}`)
-      })
-    }
-  })
+// Manually launch cleanup with command
+if (isManualCleanup) {
+  cleanUpFiles()
 }
 
 const processMissingFileLinks = async () => {
@@ -78,3 +83,5 @@ const processMissingFileLinks = async () => {
     }
   })
 }
+
+export default cleanUpFiles
