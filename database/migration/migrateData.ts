@@ -1120,7 +1120,9 @@ STABLE;
 
     console.log('- Add VIEW permission policy type')
 
-    await DB.changeSchema(`ALTER TYPE permission_policy_type ADD VALUE 'VIEW' after 'ASSIGN'`)
+    await DB.changeSchema(
+      `ALTER TYPE permission_policy_type ADD VALUE IF NOT EXISTS 'VIEW' after 'ASSIGN'`
+    )
   }
 
   console.log(' - Remove uniqueness constraint from and add search/sort fields to data_view tables')
