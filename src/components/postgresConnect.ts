@@ -367,7 +367,7 @@ class PostgresDB {
     `
     try {
       const result = await this.query({ text })
-      return result.rows.length
+      return result.rows.length === 0
     } catch (err) {
       throw err
     }
