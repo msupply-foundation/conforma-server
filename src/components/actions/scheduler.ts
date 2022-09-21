@@ -66,7 +66,6 @@ export const cleanUpFiles = async () => {
   processMissingFileLinks()
   const deleteCount = await DBConnect.cleanUpFiles()
   if (deleteCount > 0) console.log(`${deleteCount} files removed.`)
-  else console.log('no files removed.')
 }
 
 // Manually launch cleanup with command
