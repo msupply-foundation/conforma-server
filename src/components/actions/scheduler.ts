@@ -11,6 +11,7 @@ import { crawlFileSystem } from '../utilityFunctions'
 // Dev config option
 const schedulerTestMode = false // Runs scheduler every 30 seconds
 const basePath: string = path.join(getAppEntryPointDir(), filesFolder) // declares the file storage path
+const isManualCleanup: Boolean = process.argv[2] === '--cleanup'
 
 // Node-scheduler to run scheduled actions periodically
 const checkActionSchedule = schedulerTestMode
@@ -46,6 +47,15 @@ export const triggerScheduledActions = async () => {
   DBConnect.triggerScheduledActions()
 }
 
+const checkFile = async (filePath: string) => {
+  if ((await DBConnect.checkIfInFileTable(filePath)) === 0) {
+    fs.unlink(filePath, function (err) {
+      if (err) throw err
+      else console.log(`Deleted file at ${filePath}`)
+    })
+  }
+}
+
 export const cleanUpFiles = async () => {
   console.log(
     DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
@@ -54,15 +64,12 @@ export const cleanUpFiles = async () => {
   await crawlFileSystem(basePath, checkFile)
   const deleteCount = await DBConnect.cleanUpFiles()
   if (deleteCount > 0) console.log(`${deleteCount} files removed.`)
+  else console.log('no files removed.')
 }
 
-const checkFile = async (filePath: string) => {
-  if ((await DBConnect.checkIfInFileTable(filePath)) === 0) {
-    fs.unlink(filePath, function (err) {
-      if (err) throw err
-      else console.log(`Deleted file at ${filePath}`)
-    })
-  }
+// Manually launch cleanup with command
+if (isManualCleanup) {
+  cleanUpFiles()
 }
 
 export default cleanUpFiles
