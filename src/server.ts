@@ -15,7 +15,12 @@ import {
   routeGetPrefs,
   routecheckUnique,
 } from './components/permissions'
-import { routeDataViews, routeDataViewTable, routeDataViewDetail } from './components/data_display'
+import {
+  routeDataViews,
+  routeDataViewTable,
+  routeDataViewDetail,
+  routeDataViewFilterList,
+} from './components/data_display'
 import { routeGeneratePDF } from './components/files/documentGenerate'
 import { saveFiles, getFilePath, filesFolder } from './components/files/fileHandler'
 import { createDefaultDataFolders } from './components/files/createDefaultFolders'
@@ -140,6 +145,7 @@ const startServer = async () => {
     server.get('/data-views', routeDataViews)
     server.post('/data-views/:dataViewCode', routeDataViewTable)
     server.get('/data-views/:dataViewCode/:id', routeDataViewDetail)
+    server.get('/data-views/:dataViewCode/filterList/:column', routeDataViewFilterList)
     server.get('/check-triggers', routeTriggers)
     server.post('/preview-actions', routePreviewActions)
     server.post('/extend-application', routeExtendApplication)

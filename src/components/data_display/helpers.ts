@@ -129,7 +129,11 @@ export const buildAllColumnDefinitions = async ({
   }
 }
 
-const getFilters = (dataView: DataView, userId: number, orgId: number | undefined): object => {
+export const getFilters = (
+  dataView: DataView,
+  userId: number,
+  orgId: number | undefined
+): object => {
   const restrictions =
     dataView.rowRestrictions == null || Object.keys(dataView.rowRestrictions).length === 0
       ? { id: { isNull: false } }
