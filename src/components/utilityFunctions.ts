@@ -86,11 +86,12 @@ export const filterObject = (
 }
 
 export const crawlFileSystem = async (newPath: string, checkFile: (newPath: string) => void) => {
-  fs.readdirSync(newPath).forEach(async (file) => {
+  const files = fs.readdirSync(newPath)
+  for (const file of files) {
     const subPath = path.join(newPath, file)
     if (fs.statSync(subPath).isDirectory()) crawlFileSystem(subPath, checkFile)
     else checkFile(subPath)
-  })
+  }
 }
 
 export const capitaliseFirstLetter = (str: string) => str[0].toUpperCase() + str.slice(1)
