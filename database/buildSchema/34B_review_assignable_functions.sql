@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION public.reviewable_questions (app_id int)
         is_optional boolean
     )
     AS $$
-    SELECT DISTINCT ON (code)
+    SELECT
         te.code AS code,
         ar.id AS response_id,
         te.is_reviewable AS is_reviewable,
@@ -26,20 +26,8 @@ CREATE OR REPLACE FUNCTION public.reviewable_questions (app_id int)
     WHERE
         ar.application_id = $1
         AND te.category = 'QUESTION'
-        AND ((ar.value IS NULL
-                AND te.is_reviewable = 'OPTIONAL_IF_NO_RESPONSE')
-            OR (ar.value IS NOT NULL
-                AND te.is_reviewable != 'NEVER'))
-    GROUP BY
-        te.code,
-        ar.time_submitted,
-        ar.id,
-        te,
-        is_reviewable,
-        ar.value
-    ORDER BY
-        code,
-        ar.time_submitted DESC
+        AND (te.is_reviewable IS NULL
+            OR te.is_reviewable != 'NEVER')
 $$
 LANGUAGE sql
 STABLE;
@@ -53,19 +41,17 @@ CREATE OR REPLACE FUNCTION public.assigned_questions (app_id int, stage_id int, 
         review_response_code varchar,
         review_response_status public.review_response_status,
         decision public.review_response_decision,
-        is_optional boolean,
-        is_lastest_review boolean
+        is_optional boolean
     )
     AS $$
-    SELECT DISTINCT ON (review_response_code)
+    SELECT
         rr.review_id,
         rq.response_id,
         ra.id AS review_assignment_id,
         rq.code AS review_response_code,
         rr.status AS review_response_status,
         rr.decision,
-        rq.is_optional,
-        rr.is_latest_review
+        rq.is_optional
     FROM (
         SELECT
             id,
@@ -79,9 +65,7 @@ CREATE OR REPLACE FUNCTION public.assigned_questions (app_id int, stage_id int, 
     JOIN template_section ts ON ra.section_code = ts.code
     JOIN template_element te ON ts.id = te.section_id
     JOIN reviewable_questions (app_id) rq ON rq.code = te.code
-    LEFT JOIN review ON review.review_assignment_id = ra.id
-    LEFT JOIN review_response rr ON (rr.application_response_id = rq.response_id
-            AND rr.review_id = review.id)
+    JOIN review_response rr ON rr.application_response_id = rq.response_id
 WHERE
     ra.application_id = $1
     AND ra.stage_id = $2
@@ -90,15 +74,11 @@ WHERE
 GROUP BY
     ra.id,
     rr.review_id,
-    rr.is_latest_review,
     rq.is_optional,
     rr.status,
     rr.decision,
     rq.code,
     rq.response_id
-ORDER BY
-    review_response_code,
-    is_latest_review DESC
 $$
 LANGUAGE sql
 STABLE;

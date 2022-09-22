@@ -8,7 +8,11 @@ CREATE TYPE public.assigner_action AS ENUM (
 CREATE OR REPLACE FUNCTION assigner_list (stage_id int, assigner_id int)
     RETURNS TABLE (
         application_id int,
-        assigner_action public.assigner_action
+        << << << < HEAD assigner_action public.assigner_action == == == = assigner_action public.assigner_action,
+        reviewable_questions bigint,
+        total_questions bigint,
+        total_assigned_submitted bigint,
+        total_assigned bigint >> >> >> > 6ea4192b (START adding changes TO reviewable AND assigned questions FOR EACH application IN a given stage AND level)
     )
     AS $$
     SELECT
@@ -26,7 +30,11 @@ CREATE OR REPLACE FUNCTION assigner_list (stage_id int, assigner_id int)
             'ASSIGN'
         ELSE
             NULL
-        END::assigner_action
+        END::assigner_action,
+        reviewable_questions_count (application_id) AS reviewable_questions,
+        reviewable_questions_count (application_id) AS total_questions,
+        submitted_assigned_questions_count (application_id, $1, level_number) AS total_assigned_submitted,
+        assigned_questions_count (application_id, $1, level_number) AS total_assigned
     FROM
         review_assignment
     LEFT JOIN review_assignment_assigner_join ON review_assignment.id = review_assignment_assigner_join.review_assignment_id
