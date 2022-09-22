@@ -4,6 +4,7 @@
     "description": "NZ English",
     "code": "en_nz",
     "flag": "🇳🇿",
+    "locale": "en-GB",
     "enabled": true
   },
   {
@@ -11,6 +12,7 @@
     "description": "Portugese translation for Angola users",
     "code": "pt_an",
     "flag": "🇦🇴",
+    "locale": "pt_an",
     "enabled": true
   },
   {
@@ -18,6 +20,7 @@
     "description": "Certain string replacements for DTAC scholarship",
     "code": "en_dtac",
     "flag": "🇦🇺",
+    "locale": "en-GB",
     "enabled": false
   }
 ]
