@@ -77,7 +77,7 @@ _To see the actual Docker commands that are constructued, please inspect the fil
 
 ## Log in to the demo server with ssh
 
-- Get key file from Bitwarden (openstack-irims-demo-keypair) and save locally (e.g. in `~/Documents/private/conformakey.pem`)
+- Get key file from Bitwarden (Conforma demo (5 instances) server) and save locally (e.g. in `~/Documents/private/conformakey.pem`)
 - SSH login to server:
   ```bash
   export KEY_LOC='/Users/<you>/Documents/private/conformakey.pem' (or your local location)
