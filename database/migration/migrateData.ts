@@ -1119,48 +1119,59 @@ const migrateData = async () => {
       `-- Function to return elements of assigned questions for current stage/level
       DROP FUNCTION public.assigned_questions;
       CREATE OR REPLACE FUNCTION public.assigned_questions (app_id int, stage_id int, level_number int)
-          RETURNS TABLE (
-              review_id int,
-              response_id int,
-              review_assignment_id int,
-              review_response_code varchar,
-              review_response_status public.review_response_status,
-              decision public.review_response_decision,
-              is_optional boolean
-          )
-          AS $$
-          SELECT
-              rr.review_id,
-              rq.response_id,
-              ra.id AS review_assignment_id,
-              rq.code AS review_response_code,
-              rr.status AS review_response_status,
-              rr.decision,
-              rq.is_optional
-          FROM (
-              SELECT
-                  id,
-                  application_id,
-                  stage_id,
-                  level_number,
-                  status,
-                  UNNEST(assigned_sections) AS section_code
-              FROM
-                  review_assignment) ra
-          JOIN template_section ts ON ra.section_code = ts.code
-          JOIN template_element te ON ts.id = te.section_id
-          JOIN reviewable_questions (app_id) rq ON rq.code = te.code
-          JOIN review_response rr ON rr.application_response_id = rq.response_id
-      WHERE
-          ra.application_id = $1
-          AND ra.stage_id = $2
-          AND ra.level_number = $3
-          AND ra.status = 'ASSIGNED'
-      GROUP BY 
-          ra.id, rr.review_id, rq.is_optional, rr.status, rr.decision, rq.code, rq.response_id
-      $$
-      LANGUAGE sql
-      STABLE;`
+        RETURNS TABLE (
+            review_id int,
+            response_id int,
+            review_assignment_id int,
+            review_response_code varchar,
+            review_response_status public.review_response_status,
+            decision public.review_response_decision,
+            is_optional boolean,
+            is_lastest_review boolean
+        )
+        AS $$
+        SELECT
+            rr.review_id,
+            rq.response_id,
+            ra.id AS review_assignment_id,
+            rq.code AS review_response_code,
+            rr.status AS review_response_status,
+            rr.decision,
+            rq.is_optional,
+            rr.is_latest_review
+        FROM (
+            SELECT
+                id,
+                application_id,
+                stage_id,
+                level_number,
+                status,
+                UNNEST(assigned_sections) AS section_code
+            FROM
+                review_assignment) ra
+        JOIN template_section ts ON ra.section_code = ts.code
+        JOIN template_element te ON ts.id = te.section_id
+        JOIN reviewable_questions (app_id) rq ON rq.code = te.code
+        JOIN review ON review.review_assignment_id = ra.id
+        JOIN review_response rr ON (rr.application_response_id = rq.response_id
+                AND rr.review_id = review.id)
+    WHERE
+        ra.application_id = $1
+        AND ra.stage_id = $2
+        AND ra.level_number = $3
+        AND ra.status = 'ASSIGNED'
+    GROUP BY
+        ra.id,
+        rr.review_id,
+        rq.is_optional,
+        rr.status,
+        rr.decision,
+        rq.code,
+        rq.response_id,
+        rr.is_latest_review
+    $$
+    LANGUAGE sql
+    STABLE;`
     )
 
     await DB.changeSchema(
