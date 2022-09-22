@@ -1060,64 +1060,6 @@ const migrateData = async () => {
     LANGUAGE plpgsql;
       `)
 
-    // Fix assigner_actions to only return active applications
-    console.log(' - Fix assigner_actions to only return active applications')
-
-    await DB.changeSchema(`
-    CREATE OR REPLACE FUNCTION assigner_list (stage_id int, assigner_id int)
-    RETURNS TABLE (
-        application_id int,
-        assigner_action public.assigner_action,
-        -- is_fully_assigned_level_1 boolean,
-        -- assigned_questions_level_1 bigint,
-        total_questions bigint,
-        total_assigned bigint,
-        total_assign_locked bigint
-    )
-    AS $$
-    SELECT
-        review_assignment.application_id AS application_id,
-        CASE WHEN COUNT(DISTINCT (review_assignment.id)) != 0
-            AND assigned_questions_count (application_id, $1, level_number) >= assignable_questions_count (application_id)
-            AND submitted_assigned_questions_count (application_id, $1, level_number) < assigned_questions_count (application_id, $1, level_number) THEN
-            'RE_ASSIGN'
-        WHEN COUNT(DISTINCT (review_assignment.id)) != 0
-            AND assigned_questions_count (application_id, $1, level_number) >= assignable_questions_count (application_id)
-            AND submitted_assigned_questions_count (application_id, $1, level_number) >= assigned_questions_count (application_id, $1, level_number) THEN
-            'ASSIGN_LOCKED'
-        WHEN COUNT(DISTINCT (review_assignment.id)) != 0
-            AND assigned_questions_count (application_id, $1, level_number) < assignable_questions_count (application_id) THEN
-            'ASSIGN'
-        ELSE
-            NULL
-        END::assigner_action,
-        -- assigned_questions_count(application_id, $1, 1) = assignable_questions_count(application_id) AS is_fully_assigned_level_1,
-        -- assigned_questions_count(application_id, $1, 1) AS assigned_questions_level_1,
-        assignable_questions_count (application_id) AS total_questions,
-        assigned_questions_count (application_id, $1, level_number) AS total_assigned,
-        submitted_assigned_questions_count (application_id, $1, level_number) AS total_assign_locked
-    FROM
-        review_assignment
-    LEFT JOIN review_assignment_assigner_join ON review_assignment.id = review_assignment_assigner_join.review_assignment_id
-WHERE
-    review_assignment.stage_id = $1
-    AND review_assignment_assigner_join.assigner_id = $2
-    AND (
-        SELECT
-            outcome
-        FROM
-            application
-        WHERE
-            id = review_assignment.application_id) = 'PENDING'
-GROUP BY
-    review_assignment.application_id,
-    review_assignment.level_number;
-
-$$
-LANGUAGE sql
-STABLE;
-    `)
-
     console.log('- Add VIEW permission policy type')
 
     await DB.changeSchema(
@@ -1138,6 +1080,7 @@ STABLE;
     console.log(' - Updating functions to retrieve reviewable vs assigned questions')
     await DB.changeSchema(
       `-- Function to return elements reviewable questions (per application)
+      DROP FUNCTION public.reviewable_questions;
       CREATE OR REPLACE FUNCTION public.reviewable_questions (app_id int)
           RETURNS TABLE (
               code varchar,
@@ -1174,6 +1117,7 @@ STABLE;
 
     await DB.changeSchema(
       `-- Function to return elements of assigned questions for current stage/level
+      DROP FUNCTION public.assigned_questions;
       CREATE OR REPLACE FUNCTION public.assigned_questions (app_id int, stage_id int, level_number int)
           RETURNS TABLE (
               review_id int,
@@ -1318,12 +1262,11 @@ STABLE;
     )
 
     console.log(' - Add extra returned field reviewable_questions in application_list')
-
     await DB.changeSchema(
       `ALTER TABLE application_list_shape 
         ADD COLUMN IF NOT EXISTS reviewable_questions bigint;
       ALTER TABLE application_list_shape
-        DROP COLUMN total_assign_locked;`
+        DROP COLUMN IF EXISTS total_assign_locked;`
     )
 
     await DB.changeSchema(
