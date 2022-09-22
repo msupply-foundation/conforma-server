@@ -91,18 +91,6 @@ _To see the actual Docker commands that are constructued, please inspect the fil
 - Pull image from docker hub:  
   `sudo docker pull <full-image-name>`
   Example: `sudo docker pull msupplyfoundation/conforma:build-v0.2.0-7_2022-04-07_ee35c8`
-- Run image:  
-  `sudo docker run -dti -p 8000:3000 -e 'SMTP_PASSWORD=<password>' -e 'WEB_HOST=<host-domain>' -e 'JWT_SECRET=<some-random-secret>' --name conforma-demo-on-8000 <full-image-name>`  
-   This will launch one instance. To launch other instances in their own container, run the same command, but change:
-
-  - name
-  - port 8000
-  - WEB_HOST url
-  - JWT_SECRET (this can be any random string, but should be a decent length, say > 24 alphanumeric characters. There's no need to record this key anywhere, as it can change anytime -- that just means existing JWTs become invalid, so users will need to re-login)
-
-  The system will be launched with “core_snapshot” data. Upload and load a new snapshot as required.
-
-  Note that this `docker run` procedure resets the container every time it is restarted, so any data changes are wiped out. In order to avoid this, we need persist the data using Docker volumes. See the [docker-compose](#docker-compose) section below for information regarding this.
 
 ## Move files/folder to/from instance
 
