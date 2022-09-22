@@ -5,38 +5,36 @@ CREATE TYPE public.assigner_action AS ENUM (
     'RE_ASSIGN'
 );
 
-CREATE FUNCTION assigner_list (stage_id int, assigner_id int)
+CREATE OR REPLACE FUNCTION assigner_list (stage_id int, assigner_id int)
     RETURNS TABLE (
         application_id int,
         assigner_action public.assigner_action,
-        -- is_fully_assigned_level_1 boolean,
-        -- assigned_questions_level_1 bigint,
+        reviewable_questions bigint,
         total_questions bigint,
-        total_assigned bigint,
-        total_assign_locked bigint
+        total_assigned_submitted bigint,
+        total_assigned bigint
     )
     AS $$
     SELECT
         review_assignment.application_id AS application_id,
         CASE WHEN COUNT(DISTINCT (review_assignment.id)) != 0
-            AND assigned_questions_count (application_id, $1, level_number) >= assignable_questions_count (application_id)
+            AND assigned_questions_count (application_id, $1, level_number) >= reviewable_questions_count (application_id)
             AND submitted_assigned_questions_count (application_id, $1, level_number) < assigned_questions_count (application_id, $1, level_number) THEN
             'RE_ASSIGN'
         WHEN COUNT(DISTINCT (review_assignment.id)) != 0
-            AND assigned_questions_count (application_id, $1, level_number) >= assignable_questions_count (application_id)
+            AND assigned_questions_count (application_id, $1, level_number) >= reviewable_questions_count (application_id)
             AND submitted_assigned_questions_count (application_id, $1, level_number) >= assigned_questions_count (application_id, $1, level_number) THEN
             'ASSIGN_LOCKED'
         WHEN COUNT(DISTINCT (review_assignment.id)) != 0
-            AND assigned_questions_count (application_id, $1, level_number) < assignable_questions_count (application_id) THEN
+            AND assigned_questions_count (application_id, $1, level_number) < reviewable_questions_count (application_id) THEN
             'ASSIGN'
         ELSE
             NULL
         END::assigner_action,
-        -- assigned_questions_count(application_id, $1, 1) = assignable_questions_count(application_id) AS is_fully_assigned_level_1,
-        -- assigned_questions_count(application_id, $1, 1) AS assigned_questions_level_1,
-        assignable_questions_count (application_id) AS total_questions,
-        assigned_questions_count (application_id, $1, level_number) AS total_assigned,
-        submitted_assigned_questions_count (application_id, $1, level_number) AS total_assign_locked
+        reviewable_questions_count (application_id) AS reviewable_questions,
+        reviewable_questions_count (application_id) AS total_questions,
+        submitted_assigned_questions_count (application_id, $1, level_number) AS total_assigned_submitted,
+        assigned_questions_count (application_id, $1, level_number) AS total_assigned
     FROM
         review_assignment
     LEFT JOIN review_assignment_assigner_join ON review_assignment.id = review_assignment_assigner_join.review_assignment_id

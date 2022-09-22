@@ -19,11 +19,9 @@ CREATE TABLE application_list_shape (
     reviewers varchar[],
     reviewer_action public.reviewer_action,
     assigner_action public.assigner_action,
-    -- is_fully_assigned_level_1 boolean,
-    -- assigned_questions_level_1 bigint,
+    reviewable_questions bigint,
     total_questions bigint,
-    total_assigned bigint,
-    total_assign_locked bigint
+    total_assigned bigint
 );
 
 CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
@@ -47,15 +45,9 @@ CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
         reviewers,
         reviewer_action,
         assigner_action,
-        -- CASE WHEN is_fully_assigned_level_1 IS NULL THEN
-        --     FALSE
-        -- ELSE
-        --     is_fully_assigned_level_1
-        -- END,
-        -- assigned_questions_level_1,
+        reviewable_questions,
         total_questions,
-        total_assigned,
-        total_assign_locked
+        total_assigned
     FROM
         application app
     LEFT JOIN TEMPLATE ON app.template_id = template.id

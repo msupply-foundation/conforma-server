@@ -61,7 +61,7 @@ CREATE TABLE public.template_element (
     validation_message varchar,
     help_text varchar,
     parameters jsonb,
-    is_reviewable public.is_reviewable_status DEFAULT NULL,
+    is_reviewable public.is_reviewable_status DEFAULT 'NEVER' NOT NULL,
     -- review_required boolean NOT NULL DEFAULT TRUE,
     template_code varchar GENERATED ALWAYS AS (public.get_template_code (section_id)) STORED,
     template_version integer GENERATED ALWAYS AS (public.get_template_version (section_id)) STORED,
