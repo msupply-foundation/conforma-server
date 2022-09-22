@@ -1125,13 +1125,19 @@ STABLE;
     )
   }
 
-  console.log(' - Remove uniqueness constraint from and add search/sort fields to data_view tables')
+  console.log(' - Update data-view tables for filtering')
   await DB.changeSchema(`
     ALTER TABLE data_view DROP CONSTRAINT IF EXISTS outcome_display_table_name_code_key; 
     ALTER TABLE data_view 
     ADD COLUMN IF NOT EXISTS table_search_columns varchar[];
+    ALTER TABLE data_view 
+    ADD COLUMN IF NOT EXISTS filter_include_columns varchar[];
+    ALTER TABLE data_view 
+    ADD COLUMN IF NOT EXISTS filter_exclude_columns varchar[];
     ALTER TABLE data_view_column_definition 
     ADD COLUMN IF NOT EXISTS sort_column varchar;
+    ALTER TABLE data_view_column_definition 
+    ADD COLUMN IF NOT EXISTS filter_parameters jsonb;
   `)
 
   // Other version migrations continue here...

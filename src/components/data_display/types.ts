@@ -39,6 +39,7 @@ export interface DataViewsTableResponse {
   headerRow: HeaderRow[]
   tableRows: TableRow[]
   searchFields: string[]
+  // filters: FilterDefinition[]
   totalCount: number
   message?: string
 }
@@ -66,6 +67,12 @@ export interface ColumnDetailOutput {
   searchFields: string[]
   headerDefinition: ColumnDefinition | undefined
   showLinkedApplications: boolean
+}
+
+export interface FilterDefinition {
+  type: 'list' | 'text'
+  searchColumns: string[]
+  valueMap: { [key: string]: string } | null
 }
 
 export interface LinkedApplication {

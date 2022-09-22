@@ -12,6 +12,8 @@ CREATE TABLE data_view (
     detail_view_include_columns varchar[],
     detail_view_exclude_columns varchar[],
     detail_view_header_column varchar NOT NULL,
+    filter_include_columns varchar[],
+    filter_exclude_columns varchar[],
     show_linked_applications boolean NOT NULL DEFAULT TRUE,
     priority integer DEFAULT 1
 );
@@ -27,6 +29,7 @@ CREATE TABLE data_view_column_definition (
     additional_formatting jsonb,
     value_expression jsonb,
     sort_column varchar,
+    filter_parameters jsonb,
     UNIQUE (table_name, column_name)
 );
 
