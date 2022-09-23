@@ -1071,48 +1071,54 @@ const migrateData = async () => {
       ALTER TABLE data_view DROP CONSTRAINT IF EXISTS outcome_display_table_name_code_key; 
     `)
 
-    console.log(' - Convert default for template_element.is_reviewable to NEVER')
-    await DB.changeSchema(`
-      ALTER TABLE public.template_element 
-        ALTER COLUMN is_reviewable
-        SET DEFAULT 'NEVER';`)
-
     console.log(' - Updating functions to retrieve reviewable vs assigned questions')
     await DB.changeSchema(
       `-- Function to return elements reviewable questions (per application)
       DROP FUNCTION public.reviewable_questions;
       CREATE OR REPLACE FUNCTION public.reviewable_questions (app_id int)
-          RETURNS TABLE (
-              code varchar,
-              response_id int,
-              is_reviewable public.is_reviewable_status,
-              response_value jsonb,
-              is_optional boolean
-          )
-          AS $$
-          SELECT
-              te.code AS code,
-              ar.id AS response_id,
-              te.is_reviewable AS is_reviewable,
-              ar.value AS response_value,
-              CASE WHEN ar.value IS NULL
-                  AND te.is_reviewable = 'OPTIONAL_IF_NO_RESPONSE' THEN
-                  TRUE
-              ELSE
-                  FALSE
-              END::boolean
-          FROM
-              application_response ar
-              JOIN application app ON ar.application_id = app.id
-              JOIN template_element te ON ar.template_element_id = te.id
-          WHERE
-              ar.application_id = $1
-              AND te.category = 'QUESTION'
-              AND (te.is_reviewable IS NULL
-                  OR te.is_reviewable != 'NEVER')
-      $$
-      LANGUAGE sql
-      STABLE;`
+        RETURNS TABLE (
+            code varchar,
+            response_id int,
+            is_reviewable public.is_reviewable_status,
+            response_value jsonb,
+            is_optional boolean
+        )
+        AS $$
+        SELECT DISTINCT ON (code)
+            te.code AS code,
+            ar.id AS response_id,
+            te.is_reviewable AS is_reviewable,
+            ar.value AS response_value,
+            CASE WHEN ar.value IS NULL
+                AND te.is_reviewable = 'OPTIONAL_IF_NO_RESPONSE' THEN
+                TRUE
+            ELSE
+                FALSE
+            END::boolean
+        FROM
+            application_response ar
+            JOIN application app ON ar.application_id = app.id
+            JOIN template_element te ON ar.template_element_id = te.id
+        WHERE
+            ar.application_id = $1
+            AND te.category = 'QUESTION'
+            AND ((ar.value IS NULL
+                  AND te.is_reviewable = 'OPTIONAL_IF_NO_RESPONSE')
+              OR (ar.value IS NOT NULL
+                  AND te.is_reviewable != 'NEVER'))
+        GROUP BY
+            te.code,
+            ar.time_submitted,
+            ar.id,
+            te,
+            is_reviewable,
+            ar.value
+        ORDER BY
+            code,
+            ar.time_submitted DESC
+    $$
+    LANGUAGE sql
+    STABLE;`
     )
 
     await DB.changeSchema(
@@ -1130,7 +1136,7 @@ const migrateData = async () => {
             is_lastest_review boolean
         )
         AS $$
-        SELECT
+        SELECT DISTINCT ON (review_response_code)
             rr.review_id,
             rq.response_id,
             ra.id AS review_assignment_id,
@@ -1163,12 +1169,15 @@ const migrateData = async () => {
     GROUP BY
         ra.id,
         rr.review_id,
+        rr.is_latest_review,
         rq.is_optional,
         rr.status,
         rr.decision,
         rq.code,
-        rq.response_id,
-        rr.is_latest_review
+        rq.response_id
+      ORDER BY
+          review_response_code,
+          is_latest_review DESC
     $$
     LANGUAGE sql
     STABLE;`
@@ -1323,6 +1332,22 @@ const migrateData = async () => {
     LANGUAGE sql
     STABLE;`
     )
+
+    console.log(' - Convert default for template_element.is_reviewable to ONLY_IF_APPLICANT_ANSWER')
+
+    await DB.changeSchema(`
+    ALTER TYPE public.is_reviewable_status ADD VALUE IF NOT EXISTS
+    'ONLY_IF_APPLICANT_ANSWER' AFTER  'NEVER';`)
+
+    await DB.changeSchema(`
+      ALTER TABLE public.template_element 
+        ALTER COLUMN is_reviewable
+        SET DEFAULT 'ONLY_IF_APPLICANT_ANSWER';`)
+
+    await DB.changeSchema(`
+    UPDATE template_element te SET is_reviewable = 'ONLY_IF_APPLICANT_ANSWER'
+      WHERE te.is_reviewable IS NULL
+        AND te.category = 'QUESTION'`)
   }
 
   // Other version migrations continue here...
