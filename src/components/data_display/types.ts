@@ -77,6 +77,7 @@ export interface FilterDefinition {
   title: string
   type: FilterType | null // Nulls will be filtered out before returning
   searchFields: string[]
+  delimiter?: string
   valueMap?: { [key: string]: string }
 }
 

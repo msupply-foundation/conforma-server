@@ -16,6 +16,7 @@ import {
 import { camelCase, kebabCase } from 'lodash'
 import { ColumnDefinition, LinkedApplication, DataViewsResponse } from './types'
 import { DataView } from '../../generated/graphql'
+import config from '../../config'
 
 const routeDataViews = async (request: any, reply: any) => {
   const { permissionNames } = await getPermissionNamesFromJWT(request)
@@ -144,6 +145,7 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
   const authHeaders = request?.headers?.authorization
   const dataViewCode = camelCase(request.params.dataViewCode)
   const columnName = request.params.column
+  const { searchColumns = [columnName], searchText = '', delimiter } = request.body ?? {}
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
 
   const dataViews = (await DBConnect.getAllowedDataViews(permissionNames, dataViewCode))
@@ -154,24 +156,52 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
 
   const dataView = dataViews[0]
 
-  // Check column exists on highest priority dataView
-  if (!dataView.tableViewIncludeColumns?.includes(columnName))
-    throw new Error(`Column "${dataViewCode}" not available on data view: "${dataView.title}"`)
+  // TO-DO: Create search filters for types other than string (number, bool, array)
+  const searchFilter = {
+    or: searchColumns.map((col: string) => ({
+      [col]: {
+        includesInsensitive: searchText,
+      },
+    })),
+  }
 
-  // GraphQL query column including row_restrictions
-  const gqlFilters = getFilters(dataView, userId, orgId)
+  const gqlFilters = { ...getFilters(dataView, userId, orgId), ...searchFilter }
 
-  const items = (
-    await queryFilterList(
+  const filterList = new Set()
+
+  let fetchedCount = 0
+  let offset = 0
+
+  while (filterList.size < config.filterListMaxLength) {
+    const { fetchedRecords, totalCount, error } = await queryFilterList(
       camelCase(getValidTableName(dataView.tableName)),
-      columnName,
+      searchColumns,
       gqlFilters,
+      config.filterListMaxLength,
+      offset,
       authHeaders
     )
-  ).map((item: { [key: string]: unknown }) => item[columnName])
 
-  // TO-DO: How to handle very large lists?
-  return reply.send([...new Set(items)])
+    if (error) return reply.send(error)
+
+    fetchedCount += fetchedRecords.length
+
+    fetchedRecords.forEach((record: { [key: string]: unknown }) => {
+      const values = Object.values(record)
+      values.forEach((value) => {
+        if (delimiter && typeof value === 'string') {
+          const splitString = value.split(delimiter).map((e) => e.trim())
+          splitString.forEach((string) => filterList.add(string))
+        } else filterList.add(value)
+      })
+    })
+
+    if (fetchedCount >= totalCount) break
+
+    offset += fetchedRecords.length
+  }
+
+  return reply.send([...filterList].sort().slice(0, config.filterListMaxLength))
 }
 
 export { routeDataViews, routeDataViewTable, routeDataViewDetail, routeDataViewFilterList }

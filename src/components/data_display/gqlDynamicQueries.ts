@@ -97,14 +97,21 @@ export const queryLinkedApplications = async (id: number, tableName: string) => 
 
 export const queryFilterList = async (
   tableName: string,
-  column: string,
+  columns: string[],
   gqlFilters: object,
+  first: number,
+  offset: number,
   authHeaders: string
 ) => {
   const tableNamePlural = plural(tableName)
   const filterType = upperFirst(camelCase(tableName)) + 'Filter'
-  const variables = { filter: gqlFilters }
-  const graphQLquery = `query getFilterList($filter: ${filterType}) { ${tableNamePlural}( filter: $filter) { nodes { ${column} }, totalCount}}`
+  const variables = { filter: gqlFilters, first, offset }
+  const graphQLquery = `query getFilterList($first: Int!, $offset: Int!, $filter: ${filterType}) { ${tableNamePlural}(first: $first, offset: $offset, filter: $filter) { nodes { ${columns.join(
+    ','
+  )} }, totalCount}}`
+
+  console.log('graphQLquery', graphQLquery)
+  console.log('variables', JSON.stringify(variables, null, 2))
 
   let queryResult
   try {
@@ -115,5 +122,8 @@ export const queryFilterList = async (
     }
   }
 
-  return queryResult?.[tableNamePlural]?.nodes
+  const fetchedRecords = queryResult?.[tableNamePlural]?.nodes
+  const totalCount = queryResult?.[tableNamePlural]?.totalCount
+
+  return { fetchedRecords, totalCount }
 }

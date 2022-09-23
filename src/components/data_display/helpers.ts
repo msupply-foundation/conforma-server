@@ -275,7 +275,7 @@ const buildFilterDefinitions = (
 
     const {
       title,
-      filterParameters: { type = defaultFilterType, searchFields, valueMap },
+      filterParameters: { type = defaultFilterType, delimiter, searchFields, valueMap },
     } = columnDefinitions[column]
 
     return {
@@ -283,6 +283,7 @@ const buildFilterDefinitions = (
       title: title ?? startCase(column),
       type,
       searchFields: searchFields ?? [column],
+      delimiter,
       valueMap,
     }
   })
