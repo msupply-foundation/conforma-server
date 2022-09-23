@@ -50,6 +50,7 @@ const routeDataViewTable = async (request: any, reply: any) => {
     columnDefinitionMasterList,
     fieldNames,
     searchFields,
+    filterDefinitions,
     gqlFilters,
     title,
     code,
@@ -82,7 +83,8 @@ const routeDataViewTable = async (request: any, reply: any) => {
     columnDefinitionMasterList,
     fetchedRecords,
     totalCount,
-    searchFields
+    searchFields,
+    filterDefinitions
   )
 
   return reply.send(response)

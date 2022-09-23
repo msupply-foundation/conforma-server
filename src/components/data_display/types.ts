@@ -39,7 +39,7 @@ export interface DataViewsTableResponse {
   headerRow: HeaderRow[]
   tableRows: TableRow[]
   searchFields: string[]
-  // filters: FilterDefinition[]
+  filterDefinitions: FilterDefinition[]
   totalCount: number
   message?: string
 }
@@ -65,14 +65,18 @@ export interface ColumnDetailOutput {
   gqlFilters: object
   fieldNames: string[]
   searchFields: string[]
+  filterDefinitions: FilterDefinition[]
   headerDefinition: ColumnDefinition | undefined
   showLinkedApplications: boolean
 }
 
+export type FilterType = 'LIST' | 'TEXT' | 'DATE'
+
 export interface FilterDefinition {
-  type: 'list' | 'text'
-  searchColumns: string[]
-  valueMap: { [key: string]: string } | null
+  column: string
+  type: FilterType | null // Nulls will be filtered out before returning
+  searchFields: string[]
+  valueMap?: { [key: string]: string }
 }
 
 export interface LinkedApplication {
