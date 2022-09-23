@@ -18,10 +18,7 @@ CREATE TABLE application_list_shape (
     assigners varchar[],
     reviewers varchar[],
     reviewer_action public.reviewer_action,
-    assigner_action public.assigner_action,
-    reviewable_questions bigint,
-    total_questions bigint,
-    total_assigned bigint
+    assigner_action public.assigner_action
 );
 
 CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
@@ -44,12 +41,7 @@ CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
         assigners,
         reviewers,
         reviewer_action,
-        << << << < HEAD assigner_action == == == = assigner_action,
-        reviewable_questions,
-        total_questions,
-        total_assigned >> >> >> > 6ea4192b (START adding changes TO reviewable
-            AND assigned questions FOR EACH application IN a given stage
-            AND level)
+        assigner_action
     FROM
         application app
     LEFT JOIN TEMPLATE ON app.template_id = template.id
