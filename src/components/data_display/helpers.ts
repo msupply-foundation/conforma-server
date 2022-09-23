@@ -261,16 +261,26 @@ const buildFilterDefinitions = (
       ? 'DATE'
       : 'LIST'
 
-    if (!customDefinition || !customDefinition.filterParameters)
+    if (!customDefinition)
       // "Standard" column with no special filter specifications
-      return { column, type: defaultFilterType, searchFields: [column] }
+      return { column, title: startCase(column), type: defaultFilterType, searchFields: [column] }
+
+    if (!customDefinition.filterParameters)
+      return {
+        column,
+        title: customDefinition.title ?? startCase(column),
+        type: defaultFilterType,
+        searchFields: [column],
+      }
 
     const {
+      title,
       filterParameters: { type = defaultFilterType, searchFields, valueMap },
     } = columnDefinitions[column]
 
     return {
       column,
+      title: title ?? startCase(column),
       type,
       searchFields: searchFields ?? [column],
       valueMap,

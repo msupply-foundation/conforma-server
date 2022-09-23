@@ -74,6 +74,7 @@ export type FilterType = 'LIST' | 'TEXT' | 'DATE'
 
 export interface FilterDefinition {
   column: string
+  title: string
   type: FilterType | null // Nulls will be filtered out before returning
   searchFields: string[]
   valueMap?: { [key: string]: string }
