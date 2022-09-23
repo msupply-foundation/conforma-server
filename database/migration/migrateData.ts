@@ -1074,7 +1074,6 @@ const migrateData = async () => {
     console.log(' - Updating functions to retrieve reviewable vs assigned questions')
     await DB.changeSchema(
       `-- Function to return elements reviewable questions (per application)
-      DROP FUNCTION public.reviewable_questions;
       CREATE OR REPLACE FUNCTION public.reviewable_questions (app_id int)
         RETURNS TABLE (
             code varchar,
@@ -1123,7 +1122,6 @@ const migrateData = async () => {
 
     await DB.changeSchema(
       `-- Function to return elements of assigned questions for current stage/level
-      DROP FUNCTION public.assigned_questions;
       CREATE OR REPLACE FUNCTION public.assigned_questions (app_id int, stage_id int, level_number int)
         RETURNS TABLE (
             review_id int,
@@ -1274,9 +1272,7 @@ const migrateData = async () => {
 
     console.log(' - Remove not used 4 fields from application_list')
     await DB.changeSchema(
-      `ALTER TABLE application_list_shape 
-        DROP COLUMN IF EXISTS reviewable_questions;
-      ALTER TABLE application_list_shape
+      `ALTER TABLE application_list_shape
         DROP COLUMN IF EXISTS total_questions;
       ALTER TABLE application_list_shape
         DROP COLUMN IF EXISTS total_assigned_submitted;
