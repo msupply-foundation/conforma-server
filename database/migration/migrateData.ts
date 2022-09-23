@@ -1231,12 +1231,7 @@ const migrateData = async () => {
       CREATE OR REPLACE FUNCTION assigner_list (stage_id int, assigner_id int)
         RETURNS TABLE (
             application_id int,
-            assigner_action public.assigner_action,
-            reviewable_questions bigint,
-            total_questions bigint,
-            total_assigned_submitted bigint,
-            total_assigned bigint,
-            total_assign_locked bigint
+            assigner_action public.assigner_action
         )
         AS $$
         SELECT
@@ -1254,16 +1249,11 @@ const migrateData = async () => {
                 'ASSIGN'
             ELSE
                 NULL
-            END::assigner_action,
-            reviewable_questions_count (application_id) AS reviewable_questions,
-            reviewable_questions_count (application_id) AS total_questions,
-            submitted_assigned_questions_count (application_id, $1, level_number) AS total_assigned_submitted,
-            assigned_questions_count (application_id, $1, level_number) AS total_assigned,
-            submitted_assigned_questions_count (application_id, $1, level_number) AS total_assign_locked
+            END::assigner_action
         FROM
             review_assignment
         LEFT JOIN review_assignment_assigner_join ON review_assignment.id = review_assignment_assigner_join.review_assignment_id
-      WHERE
+    WHERE
         review_assignment.stage_id = $1
         AND review_assignment_assigner_join.assigner_id = $2
         AND (
@@ -1273,18 +1263,25 @@ const migrateData = async () => {
                 application
             WHERE
                 id = review_assignment.application_id) = 'PENDING'
-        GROUP BY
-            review_assignment.application_id,
-            review_assignment.level_number;
-        $$
-        LANGUAGE sql
-        STABLE;`
+    GROUP BY
+        review_assignment.application_id,
+        review_assignment.level_number;
+
+    $$
+    LANGUAGE sql
+    STABLE;`
     )
 
-    console.log(' - Add extra returned field reviewable_questions in application_list')
+    console.log(' - Remove not used 4 fields from application_list')
     await DB.changeSchema(
       `ALTER TABLE application_list_shape 
-        ADD COLUMN IF NOT EXISTS reviewable_questions bigint;
+        DROP COLUMN IF EXISTS reviewable_questions;
+      ALTER TABLE application_list_shape
+        DROP COLUMN IF EXISTS total_questions;
+      ALTER TABLE application_list_shape
+        DROP COLUMN IF EXISTS total_assigned_submitted;
+      ALTER TABLE application_list_shape
+        DROP COLUMN IF EXISTS total_assigned;
       ALTER TABLE application_list_shape
         DROP COLUMN IF EXISTS total_assign_locked;`
     )
@@ -1310,10 +1307,7 @@ const migrateData = async () => {
             assigners,
             reviewers,
             reviewer_action,
-            assigner_action,
-            reviewable_questions,
-            total_questions,
-            total_assigned
+            assigner_action
         FROM
             application app
         LEFT JOIN TEMPLATE ON app.template_id = template.id
