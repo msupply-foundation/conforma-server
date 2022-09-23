@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION public.reviewable_questions (app_id int)
         is_optional boolean
     )
     AS $$
-    SELECT
+    SELECT DISTINCT ON (code)
         te.code AS code,
         ar.id AS response_id,
         te.is_reviewable AS is_reviewable,
@@ -26,8 +26,20 @@ CREATE OR REPLACE FUNCTION public.reviewable_questions (app_id int)
     WHERE
         ar.application_id = $1
         AND te.category = 'QUESTION'
-        AND (te.is_reviewable IS NULL
-            OR te.is_reviewable != 'NEVER')
+        AND ((ar.value IS NULL
+                AND te.is_reviewable = 'OPTIONAL_IF_NO_RESPONSE')
+            OR (ar.value IS NOT NULL
+                AND te.is_reviewable != 'NEVER'))
+    GROUP BY
+        te.code,
+        ar.time_submitted,
+        ar.id,
+        te,
+        is_reviewable,
+        ar.value
+    ORDER BY
+        code,
+        ar.time_submitted DESC
 $$
 LANGUAGE sql
 STABLE;
@@ -44,7 +56,7 @@ CREATE OR REPLACE FUNCTION public.assigned_questions (app_id int, stage_id int, 
         is_optional boolean
     )
     AS $$
-    SELECT
+    SELECT DISTINCT ON (review_response_code)
         rr.review_id,
         rq.response_id,
         ra.id AS review_assignment_id,
@@ -74,11 +86,15 @@ WHERE
 GROUP BY
     ra.id,
     rr.review_id,
+    rr.is_latest_review,
     rq.is_optional,
     rr.status,
     rr.decision,
     rq.code,
     rq.response_id
+ORDER BY
+    review_response_code,
+    is_latest_review DESC
 $$
 LANGUAGE sql
 STABLE;
