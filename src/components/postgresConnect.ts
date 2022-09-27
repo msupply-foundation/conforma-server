@@ -602,6 +602,27 @@ class PostgresDB {
     }
   }
 
+  // Remove a user from an org in user_organisation table
+  public removeUserOrg = async ({
+    userId,
+    orgId,
+  }: {
+    userId: number
+    orgId: number
+  }): Promise<object> => {
+    const text = `
+      DELETE FROM user_organisation WHERE
+      user_id = $1 AND organisation_id = $2
+      RETURNING id, user_id, organisation_id;
+      `
+    try {
+      const result = await this.query({ text, values: [userId, orgId] })
+      return { userOrgId: result.rows[0].id, success: true }
+    } catch (err) {
+      throw err
+    }
+  }
+
   // Used by triggers/actions -- please don't modify
   public getUserData = async (userId: number, orgId: number) => {
     const text = `

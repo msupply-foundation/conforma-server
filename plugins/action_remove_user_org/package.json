@@ -1,0 +1,13 @@
+{
+  "name": "remove_user_from_org_action",
+  "version": "0.1",
+  "description": "Removes a user from an organistion",
+  "author": "The mSupplyFoundation",
+  "license": "MIT",
+  "scripts": {
+    "build": "node ../../utils/pluginScripts/buildPluginFromPluginFolder.js",
+    "test": "node ../../utils/pluginScripts/testPluginFromPluginFolder.js"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}
