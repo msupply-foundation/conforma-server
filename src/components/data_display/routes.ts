@@ -145,7 +145,7 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
   const authHeaders = request?.headers?.authorization
   const dataViewCode = camelCase(request.params.dataViewCode)
   const columnName = request.params.column
-  const { searchColumns = [columnName], searchText = '', delimiter } = request.body ?? {}
+  const { searchFields = [columnName], searchText = '', delimiter } = request.body ?? {}
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
 
   const dataViews = (await DBConnect.getAllowedDataViews(permissionNames, dataViewCode))
@@ -158,7 +158,7 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
 
   // TO-DO: Create search filters for types other than string (number, bool, array)
   const searchFilter = {
-    or: searchColumns.map((col: string) => ({
+    or: searchFields.map((col: string) => ({
       [col]: {
         includesInsensitive: searchText,
       },
@@ -171,11 +171,12 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
 
   let fetchedCount = 0
   let offset = 0
+  let moreResultsAvailable = true
 
   while (filterList.size < config.filterListMaxLength) {
     const { fetchedRecords, totalCount, error } = await queryFilterList(
       camelCase(getValidTableName(dataView.tableName)),
-      searchColumns,
+      searchFields,
       gqlFilters,
       config.filterListMaxLength,
       offset,
@@ -196,12 +197,27 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
       })
     })
 
-    if (fetchedCount >= totalCount) break
+    if (fetchedCount >= totalCount) {
+      moreResultsAvailable = false
+      break
+    }
 
     offset += fetchedRecords.length
   }
 
-  return reply.send([...filterList].sort().slice(0, config.filterListMaxLength))
+  let results = [...filterList].sort()
+
+  // If searching multiple fields, then we'll also get back the *other* values
+  // in the record matching the search text. We need to filter those out:
+  if (searchFields.length > 1)
+    results = results.filter(
+      (value) =>
+        typeof value === 'string' && new RegExp(searchText.toLowerCase()).test(value.toLowerCase())
+    )
+
+  if (results.length > config.filterListMaxLength) moreResultsAvailable = true
+
+  return reply.send({ list: results.slice(0, config.filterListMaxLength), moreResultsAvailable })
 }
 
 export { routeDataViews, routeDataViewTable, routeDataViewDetail, routeDataViewFilterList }

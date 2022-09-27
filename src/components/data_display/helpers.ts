@@ -16,7 +16,6 @@ import {
   DataViewsDetailResponse,
   DataViewsTableResponse,
   FilterDefinition,
-  FilterType,
 } from './types'
 import { DataView, DataViewColumnDefinition } from '../../generated/graphql'
 import dataTypeMap, { PostgresDataType } from './postGresToJSDataTypes'
@@ -244,6 +243,13 @@ const getColumnDisplayDefinitions = async (
   return columnDisplayDefinitions
 }
 
+const dataTypeFilterListMap = {
+  string: true,
+  number: false,
+  boolean: true,
+  Date: false,
+}
+
 const buildFilterDefinitions = (
   filterColumns: string[],
   columnDefinitions: ColumnDisplayDefinitions,
@@ -251,37 +257,41 @@ const buildFilterDefinitions = (
 ): FilterDefinition[] =>
   filterColumns.map((column) => {
     const customDefinition = columnDefinitions[column]
-    const dataType = fieldDataTypes[column]
+    const dataType = fieldDataTypes[column] as keyof typeof dataTypeFilterListMap
 
-    const defaultFilterType: FilterType = !dataType
-      ? 'LIST'
-      : dataType === 'string' || dataType === 'number' || dataType === 'boolean'
-      ? 'LIST'
-      : dataType === 'Date'
-      ? 'DATE'
-      : 'LIST'
+    const defaultShowFilterList = dataTypeFilterListMap?.[dataType] ?? false
 
     if (!customDefinition)
       // "Standard" column with no special filter specifications
-      return { column, title: startCase(column), type: defaultFilterType, searchFields: [column] }
+      return {
+        column,
+        title: startCase(column),
+        // type: defaultFilterType,
+        dataType,
+        showFilterList: defaultShowFilterList,
+        searchFields: [column],
+      }
 
     if (!customDefinition.filterParameters)
       return {
         column,
         title: customDefinition.title ?? startCase(column),
-        type: defaultFilterType,
+        // type: defaultFilterType,
+        dataType,
+        showFilterList: defaultShowFilterList,
         searchFields: [column],
       }
 
     const {
       title,
-      filterParameters: { type = defaultFilterType, delimiter, searchFields, valueMap },
+      filterParameters: { showFilterList, delimiter, searchFields, valueMap },
     } = columnDefinitions[column]
 
     return {
       column,
       title: title ?? startCase(column),
-      type,
+      dataType,
+      showFilterList,
       searchFields: searchFields ?? [column],
       delimiter,
       valueMap,

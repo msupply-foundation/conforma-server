@@ -70,12 +70,11 @@ export interface ColumnDetailOutput {
   showLinkedApplications: boolean
 }
 
-export type FilterType = 'LIST' | 'TEXT' | 'DATE'
-
 export interface FilterDefinition {
   column: string
   title: string
-  type: FilterType | null // Nulls will be filtered out before returning
+  dataType: string
+  showFilterList: boolean
   searchFields: string[]
   delimiter?: string
   valueMap?: { [key: string]: string }

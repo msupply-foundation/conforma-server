@@ -110,9 +110,6 @@ export const queryFilterList = async (
     ','
   )} }, totalCount}}`
 
-  console.log('graphQLquery', graphQLquery)
-  console.log('variables', JSON.stringify(variables, null, 2))
-
   let queryResult
   try {
     queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
