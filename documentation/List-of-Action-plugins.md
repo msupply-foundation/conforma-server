@@ -395,11 +395,11 @@ Creates a link between a user and an organisation -- i.e. user is a "member" of 
 
 - _Action Code:_ **`joinUserOrg`**
 
-| Input parameters<br />(\*required) <br/>    | Output properties |
-| ------------------------------------------- | ----------------- |
-| `user_id`\*                                 | `userOrgId`       |
-| `org_id` \*                                 |                   |
-| `user_role` (Arbitrary title, e.g. "Owner") |                   |
+| Input parameters<br />(\*required) <br/>   | Output properties |
+| ------------------------------------------ | ----------------- |
+| `userId`\*                                 | `userOrgId`       |
+| `orgId` \*                                 |                   |
+| `userRole` (Arbitrary title, e.g. "Owner") |                   |
 
 ---
 

@@ -590,7 +590,11 @@ class PostgresDB {
   }
 
   // Join a user to an org in user_organisation table
-  public addUserOrg = async (userOrg: any): Promise<object> => {
+  public addUserOrg = async (userOrg: {
+    user_id: number
+    organisation_id: number
+    user_role?: string
+  }): Promise<object> => {
     const text = `INSERT INTO user_organisation (${Object.keys(userOrg)}) 
       VALUES (${this.getValuesPlaceholders(userOrg)})
       RETURNING id`
