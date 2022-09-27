@@ -617,7 +617,7 @@ class PostgresDB {
       `
     try {
       const result = await this.query({ text, values: [userId, orgId] })
-      return { userOrgId: result.rows[0].id, success: true }
+      return { ...result.rows[0], success: true }
     } catch (err) {
       throw err
     }

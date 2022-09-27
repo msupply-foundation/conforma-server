@@ -9,7 +9,10 @@ const removeUserOrg = async function ({ parameters, DBConnect }: ActionPluginInp
       userId: userId ?? user_id,
       orgId: orgId ?? org_id ?? organisation_id,
     })
-    if (result.success)
+    if (result.success) {
+      console.log(
+        `User ${userId ?? user_id} removed from organisation ${orgId ?? org_id ?? organisation_id}`
+      )
       return {
         status: ActionQueueStatus.Success,
         error_log: '',
@@ -19,7 +22,7 @@ const removeUserOrg = async function ({ parameters, DBConnect }: ActionPluginInp
           orgId: result.organisation_id,
         },
       }
-    else
+    } else
       return {
         status: ActionQueueStatus.Fail,
         error_log: 'There was a problem removing user from organisation.',
