@@ -2067,8 +2067,7 @@ CREATE TABLE data_view (
     detail_view_exclude_columns varchar[],
     detail_view_header_column varchar NOT NULL,
     show_linked_applications boolean NOT NULL DEFAULT TRUE,
-    priority integer DEFAULT 1,
-    UNIQUE (table_name, code)
+    priority integer DEFAULT 1
 );
 
 -- For columns that require more detail format or evaluation definitions
