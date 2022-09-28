@@ -266,7 +266,6 @@ const buildFilterDefinitions = (
       return {
         column,
         title: startCase(column),
-        // type: defaultFilterType,
         dataType,
         showFilterList: defaultShowFilterList,
         searchFields: [column],
@@ -276,7 +275,6 @@ const buildFilterDefinitions = (
       return {
         column,
         title: customDefinition.title ?? startCase(column),
-        // type: defaultFilterType,
         dataType,
         showFilterList: defaultShowFilterList,
         searchFields: [column],
@@ -284,17 +282,25 @@ const buildFilterDefinitions = (
 
     const {
       title,
-      filterParameters: { showFilterList, delimiter, searchFields, valueMap },
+      filterParameters: {
+        searchFields,
+        showFilterList,
+        delimiter,
+        valueMap,
+        booleanMapping,
+        ...other
+      },
     } = columnDefinitions[column]
 
     return {
       column,
       title: title ?? startCase(column),
       dataType,
-      showFilterList,
+      showFilterList: showFilterList ?? defaultShowFilterList,
       searchFields: searchFields ?? [column],
       delimiter,
-      valueMap,
+      booleanMapping: valueMap ?? booleanMapping,
+      ...other, // For any other custom parameters that might be added
     }
   })
 // TO-DO, maybe: Filter out filters are basic fields that aren't primitive types
