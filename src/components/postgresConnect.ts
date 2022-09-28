@@ -627,6 +627,26 @@ class PostgresDB {
     }
   }
 
+  // Remove all permissions for user-org
+  public deleteUserOrgPermissions = async ({
+    userId,
+    orgId,
+  }: {
+    userId: number
+    orgId: number
+  }) => {
+    const text = `
+      DELETE FROM permission_join WHERE
+      user_id = $1 AND organisation_id = $2;
+      `
+    try {
+      await this.query({ text, values: [userId, orgId] })
+      return { success: true }
+    } catch (err) {
+      throw err
+    }
+  }
+
   // Used by triggers/actions -- please don't modify
   public getUserData = async (userId: number, orgId: number) => {
     const text = `
