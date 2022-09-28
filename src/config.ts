@@ -39,7 +39,8 @@ const config: { [key: string]: any } = {
   // directly by modifyRecord or display as data views. All other names must
   // have "data_table_" prepended.
   allowedTableNames: ['user', 'organisation', 'application', 'file'],
-  filterListMaxLength: 5,
+  filterListMaxLength: 10,
+  filterTextColumnSuffix: '_filter_text',
   ...serverPrefs,
 }
 
