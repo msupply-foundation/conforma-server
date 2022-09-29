@@ -157,13 +157,16 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
   const dataView = dataViews[0]
 
   // TO-DO: Create search filters for types other than string (number, bool, array)
-  const searchFilter = {
-    or: searchFields.map((col: string) => ({
-      [col]: {
-        includesInsensitive: searchText,
-      },
-    })),
-  }
+  const searchFilter =
+    searchText === ''
+      ? {}
+      : {
+          or: searchFields.map((col: string) => ({
+            [col]: {
+              includesInsensitive: searchText,
+            },
+          })),
+        }
 
   const gqlFilters = { ...getFilters(dataView, userId, orgId), ...searchFilter }
 
@@ -188,6 +191,13 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
     fetchedCount += fetchedRecords.length
 
     fetchedRecords.forEach((record: { [key: string]: unknown }) => {
+      // For some reason, if a single field value is `null`, Postgraphile
+      // returns null instead of an object with a null value on one field, like
+      // the rest of the results
+      if (record === null) {
+        filterList.add(null)
+        return
+      }
       const values = Object.values(record)
       values.forEach((value) => {
         if (delimiter && typeof value === 'string') {
@@ -212,7 +222,9 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
   if (searchFields.length > 1)
     results = results.filter(
       (value) =>
-        typeof value === 'string' && new RegExp(searchText.toLowerCase()).test(value.toLowerCase())
+        (typeof value === 'string' &&
+          new RegExp(searchText.toLowerCase()).test(value.toLowerCase())) ||
+        value === null
     )
 
   if (results.length > config.filterListMaxLength) moreResultsAvailable = true

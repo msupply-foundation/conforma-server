@@ -148,7 +148,7 @@ export const getFilters = (
 ): object => {
   const restrictions =
     dataView.rowRestrictions == null || Object.keys(dataView.rowRestrictions).length === 0
-      ? { id: { isNull: false } }
+      ? {}
       : dataView.rowRestrictions
   // Substitute userId/orgId placeholder with actual values
   return mapValuesDeep(restrictions, (node: any) => {
