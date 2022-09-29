@@ -1137,7 +1137,8 @@ STABLE;
     ALTER TABLE data_view_column_definition 
     ADD COLUMN IF NOT EXISTS sort_column varchar,
     ADD COLUMN IF NOT EXISTS filter_parameters jsonb,
-    ADD COLUMN IF NOT EXISTS text_filter_expression jsonb;
+    ADD COLUMN IF NOT EXISTS filter_expression jsonb,
+    ADD COLUMN IF NOT EXISTS filter_data_type varchar;
   `)
 
   // Other version migrations continue here...

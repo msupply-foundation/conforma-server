@@ -20,6 +20,7 @@ import {
   routeDataViewTable,
   routeDataViewDetail,
   routeDataViewFilterList,
+  routeGenerateDataFilterFields,
 } from './components/data_display'
 import { routeGeneratePDF } from './components/files/documentGenerate'
 import { saveFiles, getFilePath, filesFolder } from './components/files/fileHandler'
@@ -130,6 +131,7 @@ const startServer = async () => {
         server.post('/install-language', routeInstallLanguage)
         server.post('/remove-language', routeRemoveLanguage)
         server.get('/all-languages', routeGetAllLanguageFiles)
+        server.get('/generate-data-filter-fields', routeGenerateDataFilterFields)
         done()
       },
       { prefix: '/admin' }

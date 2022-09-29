@@ -34,13 +34,13 @@ const config: { [key: string]: any } = {
     process.env.NODE_ENV === 'production' ? '../../node_modules' : '../node_modules',
   jwtSecret: process.env.JWT_SECRET || 'devsecret',
   RESTport: 8080,
-  dataTablePrefix: 'data_table_',
+  dataTablePrefix: 'data_table_', // snake_case
   // These are the only default tables in the system that we allow to be mutated
   // directly by modifyRecord or display as data views. All other names must
   // have "data_table_" prepended.
   allowedTableNames: ['user', 'organisation', 'application', 'file'],
   filterListMaxLength: 10,
-  filterTextColumnSuffix: '_filter_text',
+  filterColumnSuffix: '_filter', // snake_case
   ...serverPrefs,
 }
 
