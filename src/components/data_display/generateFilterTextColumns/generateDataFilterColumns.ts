@@ -64,14 +64,15 @@ const generateDataFilterColumns = async (table: string, fullUpdate: boolean = fa
     // Get all current columns from data table with "_filter" suffix
     let currentColumns: Column[] = await db.getCurrentFilterColumns(tableNameFull)
 
-    let columnsChanged = false
+    const changedColumns: string[] = []
 
     // Create or update database columns
     for (const { column, dataType } of filterTextColumnDefinitions) {
       if (!currentColumns.find((col) => column === col.name && dataType === col.dataType)) {
         await db.addOrUpdateColumn(tableNameFull, column, dataType)
-        columnsChanged = true
+        changedColumns.push(column)
       }
+
       // Remove from current columns list
       currentColumns = currentColumns.filter(({ name }) => name !== column)
     }
@@ -92,15 +93,15 @@ const generateDataFilterColumns = async (table: string, fullUpdate: boolean = fa
     let fetchedCount = 0
     let total = Infinity
 
-    // We only want to update records if they have null values, unless explicity
-    // instructed to by `fullUpdate: true`
+    // When not doing a full update, we only want to update *NEW* records, which
+    // will be the ones with NULL in all the filter data fields
     const filter = !fullUpdate
-      ? {
-          or: filterTextColumnDefinitions.map(({ column }) => ({
-            [camelCase(column)]: { isNull: true },
-          })),
-        }
+      ? Object.fromEntries(
+          filterTextColumnDefinitions.map(({ column }) => [[camelCase(column)], { isNull: true }])
+        )
       : {}
+
+    console.log(filter)
 
     while (fetchedCount < total) {
       const { fetchedRecords, totalCount, error } = await queryDataTable(
@@ -140,7 +141,11 @@ const generateDataFilterColumns = async (table: string, fullUpdate: boolean = fa
 
     return {
       success: true,
-      updatedDatabaseColumns: filterTextColumnDefinitions.map(({ column }) => column),
+      updatedDatabaseColumns: changedColumns,
+      unchangedDatabaseColumns: filterTextColumnDefinitions
+        .map(({ column }) => column)
+        .filter((column) => !changedColumns.includes(column)),
+      recordsProcessed: fetchedCount,
     }
   } catch (err) {
     return { success: false, error: err.message }
