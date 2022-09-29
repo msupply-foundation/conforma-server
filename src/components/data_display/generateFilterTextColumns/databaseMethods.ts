@@ -58,7 +58,7 @@ const databaseMethods = (DBConnect: any) => ({
   },
   dropColumn: async (table: string, columnName: string) => {
     const text = `
-      ALTER TABLE ${table}
+      ALTER TABLE "${table}"
         DROP COLUMN IF EXISTS ${columnName};
     `
     try {

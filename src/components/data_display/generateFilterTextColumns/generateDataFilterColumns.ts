@@ -10,7 +10,7 @@ import { camelCase, snakeCase } from 'lodash'
 import delay from 'delay-sync'
 
 const graphQLEndpoint = config.graphQLendpoint
-const blockSize = 10 // How many database records to process at once
+const blockSize = 100 // How many database records to process at once
 
 interface Column {
   name: string
@@ -25,14 +25,22 @@ interface FilterTextColumnDefinition {
 
 export const routeGenerateDataFilterFields = async (request: any, reply: any) => {
   const authHeaders = request?.headers?.authorization
-  const { table } = request.query
+  const { table, fullUpdate } = request.query
 
-  const result = await generateFilterTextColumns(table, authHeaders)
+  const result = await generateFilterTextColumns(
+    table,
+    authHeaders,
+    fullUpdate === 'true' ? true : false
+  )
 
   return reply.send(result)
 }
 
-const generateFilterTextColumns = async (table: string, authHeaders: string) => {
+const generateFilterTextColumns = async (
+  table: string,
+  authHeaders: string,
+  fullUpdate: boolean = false
+) => {
   try {
     const db = databaseMethods(DBConnect)
     const tableNameFull = snakeCase(getValidTableName(table))
@@ -51,10 +59,13 @@ const generateFilterTextColumns = async (table: string, authHeaders: string) => 
     // Get all current columns from data table with "_filter" suffix
     let currentColumns: Column[] = await db.getCurrentFilterColumns(tableNameFull)
 
+    let columnsChanged = false
+
     // Create or update database columns
     for (const { column, dataType } of filterTextColumnDefinitions) {
       if (!currentColumns.find((col) => column === col.name && dataType === col.dataType)) {
         await db.addOrUpdateColumn(tableNameFull, column, dataType)
+        columnsChanged = true
       }
       // Remove from current columns list
       currentColumns = currentColumns.filter(({ name }) => name !== column)
@@ -76,11 +87,21 @@ const generateFilterTextColumns = async (table: string, authHeaders: string) => 
     let fetchedCount = 0
     let total = Infinity
 
+    // We only want to update records if they have null values, unless explicity
+    // instructed to by `fullUpdate: true`
+    const filter = !fullUpdate
+      ? {
+          or: filterTextColumnDefinitions.map(({ column }) => ({
+            [camelCase(column)]: { isNull: true },
+          })),
+        }
+      : {}
+
     while (fetchedCount < total) {
       const { fetchedRecords, totalCount, error } = await queryDataTable(
         camelCase(tableNameFull),
         allFields,
-        {},
+        filter,
         blockSize,
         fetchedCount,
         'id',
