@@ -24,23 +24,28 @@ interface FilterTextColumnDefinition {
 }
 
 export const routeGenerateDataFilterFields = async (request: any, reply: any) => {
-  const authHeaders = request?.headers?.authorization
   const { table, fullUpdate } = request.query
 
-  const result = await generateFilterTextColumns(
-    table,
-    authHeaders,
-    fullUpdate === 'true' ? true : false
-  )
+  // For individual tables, default is NOT full update, but for all tables,
+  // default IS full update
+  const result = table
+    ? await generateDataFilterColumns(table, fullUpdate === 'true' ? true : false)
+    : await generateAllDataFilterColumns(fullUpdate === 'false' ? false : true)
 
   return reply.send(result)
 }
 
-const generateFilterTextColumns = async (
-  table: string,
-  authHeaders: string,
-  fullUpdate: boolean = false
-) => {
+export const generateAllDataFilterColumns = async (fullUpdate: boolean = true) => {
+  const db = databaseMethods(DBConnect)
+  const tables: string[] = (await db.getTablesWithFilterColumns()).map((table: string) =>
+    camelCase(table.replace(config.dataTablePrefix, ''))
+  )
+  const results = tables.map((table) => generateDataFilterColumns(table, fullUpdate))
+
+  return Promise.all(results)
+}
+
+const generateDataFilterColumns = async (table: string, fullUpdate: boolean = false) => {
   try {
     const db = databaseMethods(DBConnect)
     const tableNameFull = snakeCase(getValidTableName(table))
@@ -106,7 +111,7 @@ const generateFilterTextColumns = async (
         fetchedCount,
         'id',
         true,
-        authHeaders
+        ''
       )
 
       if (error) return error
@@ -127,7 +132,7 @@ const generateFilterTextColumns = async (
           // console.log('evaluatedResult', evaluatedResult)
           patch[camelCase(column)] = evaluatedResult
         }
-        const result = await updateRecord(camelCase(tableNameFull), record.id, patch, authHeaders)
+        const result = await updateRecord(camelCase(tableNameFull), record.id, patch, '')
 
         if (result?.error) return result.error
       }

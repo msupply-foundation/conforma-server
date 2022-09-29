@@ -5,6 +5,20 @@ import { capitaliseFirstLetter } from '../../utilityFunctions'
 const FILTER_TEXT_SUFFIX = capitaliseFirstLetter(camelCase(config.filterColumnSuffix))
 
 const databaseMethods = (DBConnect: any) => ({
+  getTablesWithFilterColumns: async () => {
+    const text = `
+    SELECT DISTINCT table_name
+      FROM information_schema.columns
+      WHERE column_name LIKE '%${config.filterColumnSuffix}'
+  `
+    try {
+      const result = await DBConnect.query({ text, rowMode: 'array' })
+      return result.rows.flat()
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
   getFilterColumnDefintions: async (tableName: string) => {
     const text = `
         SELECT column_name AS column,
