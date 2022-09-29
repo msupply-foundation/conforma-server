@@ -5,7 +5,7 @@ import {
   routeDataViewFilterList,
 } from './routes'
 
-import { routeGenerateDataFilterFields } from './generateFilterTextColumns/generateDataFilterColumns'
+import { routeGenerateDataFilterFields } from './generateDataFilterColumns/generateDataFilterColumns'
 
 export {
   routeDataViews,

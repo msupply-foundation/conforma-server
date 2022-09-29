@@ -45,7 +45,7 @@ export const generateAllDataFilterColumns = async (fullUpdate: boolean = true) =
   return Promise.all(results)
 }
 
-const generateDataFilterColumns = async (table: string, fullUpdate: boolean = false) => {
+export const generateDataFilterColumns = async (table: string, fullUpdate: boolean = false) => {
   try {
     const db = databaseMethods(DBConnect)
     const tableNameFull = snakeCase(getValidTableName(table))
@@ -95,19 +95,17 @@ const generateDataFilterColumns = async (table: string, fullUpdate: boolean = fa
 
     // When not doing a full update, we only want to update *NEW* records, which
     // will be the ones with NULL in all the filter data fields
-    const filter = !fullUpdate
+    const gqlFilter = !fullUpdate
       ? Object.fromEntries(
           filterTextColumnDefinitions.map(({ column }) => [[camelCase(column)], { isNull: true }])
         )
       : {}
 
-    console.log(filter)
-
     while (fetchedCount < total) {
       const { fetchedRecords, totalCount, error } = await queryDataTable(
         camelCase(tableNameFull),
         allFields,
-        filter,
+        gqlFilter,
         blockSize,
         fetchedCount,
         'id',
@@ -141,6 +139,7 @@ const generateDataFilterColumns = async (table: string, fullUpdate: boolean = fa
 
     return {
       success: true,
+      table: tableNameFull,
       updatedDatabaseColumns: changedColumns,
       unchangedDatabaseColumns: filterTextColumnDefinitions
         .map(({ column }) => column)
