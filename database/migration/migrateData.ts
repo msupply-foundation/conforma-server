@@ -1156,8 +1156,8 @@ const migrateData = async () => {
         JOIN template_section ts ON ra.section_code = ts.code
         JOIN template_element te ON ts.id = te.section_id
         JOIN reviewable_questions (app_id) rq ON rq.code = te.code
-        JOIN review ON review.review_assignment_id = ra.id
-        JOIN review_response rr ON (rr.application_response_id = rq.response_id
+        LEFT JOIN review ON review.review_assignment_id = ra.id
+        LEFT JOIN review_response rr ON (rr.application_response_id = rq.response_id
                 AND rr.review_id = review.id)
     WHERE
         ra.application_id = $1
