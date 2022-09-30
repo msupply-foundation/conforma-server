@@ -23,19 +23,19 @@ interface FilterTextColumnDefinition {
   dataType: string
 }
 
-export const routeGenerateDataFilterFields = async (request: any, reply: any) => {
+export const routeGenerateFilterDataFields = async (request: any, reply: any) => {
   const { table, fullUpdate } = request.query
 
   // For individual tables, default is NOT full update, but for all tables,
   // default IS full update
   const result = table
-    ? await generateDataFilterColumns(table, fullUpdate === 'true' ? true : false)
-    : await generateAllDataFilterColumns(fullUpdate === 'false' ? false : true)
+    ? await generateFilterDataFields(table, fullUpdate === 'true' ? true : false)
+    : await generateAllFilterFilterFields(fullUpdate === 'false' ? false : true)
 
   return reply.send(result)
 }
 
-export const generateAllDataFilterColumns = async (fullUpdate: boolean = true) => {
+export const generateAllFilterFilterFields = async (fullUpdate: boolean = true) => {
   const db = databaseMethods(DBConnect)
   const tablesWithColumns: string[] = await db.getTablesWithFilterColumns()
   const tablesWithDefinitions: string[] = await db.getTablesWithFilterColumnDefinitions()
@@ -48,12 +48,12 @@ export const generateAllDataFilterColumns = async (fullUpdate: boolean = true) =
     )
   )
 
-  const results = tables.map((table) => generateDataFilterColumns(table, fullUpdate))
+  const results = tables.map((table) => generateFilterDataFields(table, fullUpdate))
 
   return Promise.all(results)
 }
 
-export const generateDataFilterColumns = async (table: string, fullUpdate: boolean = false) => {
+export const generateFilterDataFields = async (table: string, fullUpdate: boolean = false) => {
   try {
     const db = databaseMethods(DBConnect)
     const tableNameFull = snakeCase(getValidTableName(table))
@@ -69,7 +69,7 @@ export const generateDataFilterColumns = async (table: string, fullUpdate: boole
       dataType: dataType ?? 'character varying',
     }))
 
-    // Get all current columns from data table with "_filter" suffix
+    // Get all current columns from whole database with "_filter_data" suffix
     let currentColumns: Column[] = await db.getCurrentFilterColumns(tableNameFull)
 
     const changedColumns: string[] = []

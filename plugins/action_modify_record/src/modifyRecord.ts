@@ -4,7 +4,7 @@ import databaseMethods, { DatabaseMethodsType } from './databaseMethods'
 import { DBConnectType } from '../../../src/components/databaseConnect'
 import { mapValues, get } from 'lodash'
 import { objectKeysToSnakeCase, getValidTableName } from '../../../src/components/utilityFunctions'
-import { generateDataFilterColumns } from '../../../src/components/data_display/generateDataFilterColumns/generateDataFilterColumns'
+import { generateFilterDataFields } from '../../../src/components/data_display/generateFilterDataFields/generateFilterDataFields'
 
 const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
@@ -57,7 +57,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
       await db.createJoinTableAndRecord(tableNameProper, applicationId, recordId)
 
     // Run this one async so we don't block action sequence
-    if (regenerateDataTableFilters) generateDataFilterColumns(tableName)
+    if (regenerateDataTableFilters) generateFilterDataFields(tableName)
 
     if (!result.success) throw new Error('Problem creating or updating record')
 
