@@ -7,9 +7,9 @@ const FILTER_TEXT_SUFFIX = capitaliseFirstLetter(camelCase(config.filterColumnSu
 const databaseMethods = (DBConnect: any) => ({
   getTablesWithFilterColumns: async () => {
     const text = `
-    SELECT DISTINCT table_name
-      FROM information_schema.columns
-      WHERE column_name LIKE '%${config.filterColumnSuffix}'
+      SELECT DISTINCT table_name
+        FROM information_schema.columns
+        WHERE column_name LIKE '%${config.filterColumnSuffix}'
   `
     try {
       const result = await DBConnect.query({ text, rowMode: 'array' })
@@ -19,7 +19,22 @@ const databaseMethods = (DBConnect: any) => ({
       throw err
     }
   },
-  getFilterColumnDefintions: async (tableName: string) => {
+  getTablesWithFilterColumnDefinitions: async () => {
+    const text = `
+      SELECT DISTINCT table_name
+        FROM data_view_column_definition
+         WHERE filter_expression IS NOT NULL
+         AND column_name LIKE '%${FILTER_TEXT_SUFFIX}';
+        `
+    try {
+      const result = await DBConnect.query({ text, rowMode: 'array' })
+      return result.rows.flat()
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
+  getTableFilterColumnDefintions: async (tableName: string) => {
     const text = `
         SELECT column_name AS column,
           filter_expression AS expression,

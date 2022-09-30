@@ -37,9 +37,17 @@ export const routeGenerateDataFilterFields = async (request: any, reply: any) =>
 
 export const generateAllDataFilterColumns = async (fullUpdate: boolean = true) => {
   const db = databaseMethods(DBConnect)
-  const tables: string[] = (await db.getTablesWithFilterColumns()).map((table: string) =>
-    camelCase(table.replace(config.dataTablePrefix, ''))
+  const tablesWithColumns: string[] = await db.getTablesWithFilterColumns()
+  const tablesWithDefinitions: string[] = await db.getTablesWithFilterColumnDefinitions()
+
+  const tables = Array.from(
+    new Set(
+      [...tablesWithColumns, ...tablesWithDefinitions].map((table: string) =>
+        camelCase(table.replace(config.dataTablePrefix, ''))
+      )
+    )
   )
+
   const results = tables.map((table) => generateDataFilterColumns(table, fullUpdate))
 
   return Promise.all(results)
@@ -54,7 +62,7 @@ export const generateDataFilterColumns = async (table: string, fullUpdate: boole
     // data_view_column_definitions (must have "filter_expression defined" and
     // have "Filter" as the column name suffix)
     const filterTextColumnDefinitions: FilterTextColumnDefinition[] = (
-      await db.getFilterColumnDefintions(table)
+      await db.getTableFilterColumnDefintions(table)
     ).map(({ column, expression, dataType }: FilterTextColumnDefinition) => ({
       column: snakeCase(column),
       expression,
