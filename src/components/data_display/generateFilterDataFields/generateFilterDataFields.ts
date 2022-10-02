@@ -1,6 +1,7 @@
 import databaseMethods from './databaseMethods'
 import DBConnect from '../../databaseConnect'
 import evaluateExpression from '@openmsupply/expression-evaluator'
+import functions from '../../actions/evaluatorFunctions'
 import { queryDataTable, updateRecord } from '../gqlDynamicQueries'
 import config from '../../../config'
 import { getValidTableName } from '../../utilityFunctions'
@@ -130,7 +131,7 @@ export const generateFilterDataFields = async (table: string, fullUpdate: boolea
         const patch: any = {}
         for (const { column, expression } of filterTextColumnDefinitions) {
           const evaluatedResult = await evaluateExpression(expression, {
-            objects: record,
+            objects: { ...record, functions },
             // pgConnection: DBConnect, probably don't want to allow SQL
             APIfetch: fetch,
             // TO-DO: Need to pass Auth headers to evaluator API calls
