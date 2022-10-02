@@ -1182,6 +1182,18 @@
       "name": "snapshot",
       "timestamp": "2022-09-19T14:31:06.36259+12:00",
       "value": "core_templates"
+    },
+    {
+      "id": 20,
+      "name": "version",
+      "timestamp": "2022-09-27T15:30:47.097853+13:00",
+      "value": "0.4.5-16"
+    },
+    {
+      "id": 21,
+      "name": "snapshot",
+      "timestamp": "2022-09-27T15:30:47.282514+13:00",
+      "value": "core_templates"
     }
   ],
   "templateCategory": [
@@ -6732,7 +6744,7 @@
         "children": [
           {
             "children": [
-              "applicationData.reviewData",
+              "applicationData.reviewData.reviewId",
               null
             ],
             "operator": "objectProperties"
@@ -12671,7 +12683,7 @@
       "templateElementId": 176,
       "timeCreated": "2021-10-04T10:57:44.305915+13:00",
       "timeSubmitted": null,
-      "timeUpdated": "2022-08-15T14:36:14.69687+12:00",
+      "timeUpdated": "2022-09-27T15:31:51.425497+13:00",
       "value": null
     },
     {
@@ -12683,7 +12695,7 @@
       "templateElementId": 178,
       "timeCreated": "2021-10-04T10:57:44.305915+13:00",
       "timeSubmitted": null,
-      "timeUpdated": "2022-08-15T14:36:14.694295+12:00",
+      "timeUpdated": "2022-09-27T15:32:09.29642+13:00",
       "value": null
     },
     {
@@ -12695,9 +12707,9 @@
       "templateElementId": 177,
       "timeCreated": "2021-10-04T10:57:44.305915+13:00",
       "timeSubmitted": null,
-      "timeUpdated": "2022-08-15T14:36:14.728519+12:00",
+      "timeUpdated": "2022-09-27T15:31:51.452271+13:00",
       "value": {
-        "text": "*Nothing Selected*",
+        "text": "*Nenhum selecionado*",
         "values": {
           "0": {
             "key": 0,
@@ -12806,7 +12818,7 @@
           }
         },
         "textUnselected": "admin, applyUserRegistration, applyUserEdit, applyGeneral, reviewOrgRego, reviewJoinOrg, assignGeneral, reviewGeneral, reviewScreening, reviewAssessmentSection1Level1, reviewAssessmentSection2Level1, reviewAssessmentLevel2, reviewFinalDecision, applyNonRegistered, systemManager",
-        "textMarkdownList": "- *Nothing Selected*\n",
+        "textMarkdownList": "- *Nenhum selecionado*\n",
         "selectedValuesArray": [],
         "unselectedValuesArray": [
           {
