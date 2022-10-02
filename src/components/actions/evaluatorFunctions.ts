@@ -47,7 +47,7 @@ const getISODate = (date?: Date) =>
 
 // Extracts any numeric content from a string
 export const extractNumber = (input: string) => {
-  const numberMatch = input.match(/((\d+\.\d+))|(((?<!\.)\.\d+))|\d+/gm)
+  const numberMatch = input.match(/(-?(\d+\.\d+))|(-?((?<!\.)\.\d+))|(-?\d+)/gm)
   if (!numberMatch) return 0
   return Number(numberMatch[0])
 }
