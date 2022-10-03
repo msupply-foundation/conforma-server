@@ -50,17 +50,15 @@ export const triggerScheduledActions = async () => {
 
 const checkFile = async (filePath: string) => {
   if (await DBConnect.checkIfInFileTable(filePath)) {
-    fs.unlink(filePath, function (err) {
-      if (err) throw err
-      else console.log(`Deleted file at ${filePath}`)
-    })
+    const file: any = { filePath: filePath }
+    deleteFile(file)
   }
 }
 
 export const cleanUpFiles = async () => {
   console.log(
     DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
-    'Cleaning up filess and file records...'
+    'Cleaning up files and file records...'
   )
   await crawlFileSystem(basePath, checkFile)
   const deleteCount = await DBConnect.cleanUpFiles()
