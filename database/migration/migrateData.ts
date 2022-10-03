@@ -1130,6 +1130,12 @@ STABLE;
     ALTER TABLE data_view DROP CONSTRAINT IF EXISTS outcome_display_table_name_code_key; 
   `)
 
+  console.log(' - Add timestamp to notification table')
+  await DB.changeSchema(`
+    ALTER TABLE notification ADD COLUMN
+    timestamp timestamptz DEFAULT CURRENT_TIMESTAMP NOT NULL; 
+  `)
+
   // Other version migrations continue here...
 
   // Finally, set the database version to the current version
