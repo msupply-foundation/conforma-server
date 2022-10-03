@@ -11,18 +11,19 @@ import {
   queryDataTableSingleItem,
   queryLinkedApplications,
 } from './gqlDynamicQueries'
-import { camelCase } from 'lodash'
+import { camelCase, kebabCase } from 'lodash'
 import { ColumnDefinition, LinkedApplication, DataViewsResponse } from './types'
 
 const routeDataViews = async (request: any, reply: any) => {
   const { permissionNames } = await getPermissionNamesFromJWT(request)
   const dataViews = await DBConnect.getAllowedDataViews(permissionNames)
-  const distinctDataViews = getDistinctObjects(dataViews, 'table_name', 'priority')
+  const distinctDataViews = getDistinctObjects(dataViews, 'code', 'priority')
   const dataViewResponse: DataViewsResponse = distinctDataViews.map(
     ({ table_name, title, code }) => ({
       tableName: camelCase(table_name),
       title,
       code,
+      urlSlug: kebabCase(code),
     })
   )
   return reply.send(dataViewResponse)
@@ -30,7 +31,7 @@ const routeDataViews = async (request: any, reply: any) => {
 
 const routeDataViewTable = async (request: any, reply: any) => {
   const authHeaders = request?.headers?.authorization
-  const tableName = camelCase(request.params.tableName)
+  const dataViewCode = camelCase(request.params.dataViewCode)
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
   const query = objectKeysToCamelCase(request.query)
 
@@ -40,10 +41,10 @@ const routeDataViewTable = async (request: any, reply: any) => {
   const orderBy = query?.orderBy ?? 'id'
   const ascending = query?.ascending ? query?.ascending === 'true' : true
 
-  const { matchingTableName, columnDefinitionMasterList, fieldNames, gqlFilters, title, code } =
+  const { tableName, columnDefinitionMasterList, fieldNames, gqlFilters, title, code } =
     await buildAllColumnDefinitions({
       permissionNames,
-      tableName,
+      dataViewCode,
       type: 'TABLE',
       userId,
       orgId,
@@ -51,7 +52,7 @@ const routeDataViewTable = async (request: any, reply: any) => {
 
   // GraphQL query -- get ALL fields (passing JWT), with pagination
   const { fetchedRecords, totalCount, error } = await queryDataTable(
-    matchingTableName,
+    tableName,
     fieldNames,
     gqlFilters,
     first,
@@ -76,23 +77,29 @@ const routeDataViewTable = async (request: any, reply: any) => {
 
 const routeDataViewDetail = async (request: any, reply: any) => {
   const authHeaders = request?.headers?.authorization
-  const tableName = camelCase(request.params.tableName)
+  const dataViewCode = camelCase(request.params.dataViewCode)
   const recordId = Number(request.params.id)
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
 
   const {
-    matchingTableName,
+    tableName,
     columnDefinitionMasterList,
     title,
     fieldNames,
     gqlFilters,
     headerDefinition,
     showLinkedApplications,
-  } = await buildAllColumnDefinitions({ permissionNames, tableName, type: 'DETAIL', userId, orgId })
+  } = await buildAllColumnDefinitions({
+    permissionNames,
+    dataViewCode,
+    type: 'DETAIL',
+    userId,
+    orgId,
+  })
 
   // GraphQL query -- get ALL fields (passing JWT), with pagination
   const fetchedRecord = await queryDataTableSingleItem(
-    matchingTableName,
+    tableName,
     fieldNames,
     gqlFilters,
     recordId,
@@ -103,7 +110,7 @@ const routeDataViewDetail = async (request: any, reply: any) => {
 
   // GraphQL query to get linked applications -- this one with Admin JWT!
   const linkedApplications = showLinkedApplications
-    ? await queryLinkedApplications(recordId, matchingTableName)
+    ? await queryLinkedApplications(recordId, tableName)
     : undefined
 
   const response = await constructDetailsResponse(

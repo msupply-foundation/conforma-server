@@ -2,16 +2,8 @@ import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import databaseMethods, { DatabaseMethodsType } from './databaseMethods'
 import { DBConnectType } from '../../../src/components/databaseConnect'
-import { mapValues, get, snakeCase } from 'lodash'
-import { objectKeysToSnakeCase } from '../../../src/components/utilityFunctions'
-import { singular } from 'pluralize'
-
-// This will be prepended to NEW table created if not already present
-export const DATA_TABLE_PREFIX = 'data_table_'
-
-// These are the only tables in the system that we allow to be mutated with this
-// plugin. All other names will have "data_table_" prepended.
-const ALLOWED_TABLE_NAMES = ['user', 'organisation', 'application', 'file']
+import { mapValues, get } from 'lodash'
+import { objectKeysToSnakeCase, getValidTableName } from '../../../src/components/utilityFunctions'
 
 const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
@@ -98,15 +90,6 @@ const createOrUpdateTable = async (
 }
 
 export default modifyRecord
-
-const getValidTableName = (inputName: string | undefined): string => {
-  if (!inputName) throw new Error('Missing table name')
-  if (ALLOWED_TABLE_NAMES.includes(inputName)) return inputName
-  const tableName = snakeCase(singular(inputName))
-  const namePattern = new RegExp(`^${DATA_TABLE_PREFIX}.+`)
-
-  return namePattern.test(tableName) ? tableName : `${DATA_TABLE_PREFIX}${tableName}`
-}
 
 const getPostgresType = (value: any): string => {
   if (value instanceof Date) return 'timestamptz'

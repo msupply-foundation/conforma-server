@@ -15,29 +15,15 @@ const revokePermissions = async ({ applicationData, parameters, DBConnect }: Act
         ? null
         : parameters?.userId ?? (await dbCommon.getUserIdFromUsername(username))
 
-    if (userId === undefined)
-      return {
-        status: ActionQueueStatus.Fail,
-        error_log: 'Invalid or missing userId or username',
-        output: {},
-      }
-
     const orgId =
       parameters?.orgId === null
         ? null
         : parameters?.orgId ?? (await dbCommon.getOrgIdFromOrgname(orgName))
 
-    if (orgId === undefined)
-      return {
-        status: ActionQueueStatus.Fail,
-        error_log: 'Invalid or missing orgId or orgName',
-        output: {},
-      }
-
     if (!userId && !orgId)
       return {
         status: ActionQueueStatus.Fail,
-        error_log: 'user and org cannot both be null',
+        error_log: 'user and org cannot both be null or undefined',
         output: {},
       }
 
@@ -59,9 +45,10 @@ const revokePermissions = async ({ applicationData, parameters, DBConnect }: Act
           await db.revokePermissionFromUserOrg(userId, orgId, permissionIds, isRemovingPermission)
         : userId
         ? // User only, no org
-          await db.revokePermissionFromUser(userId, permissionIds, isRemovingPermission)
+          await db.revokePermissionFromUser(userId, orgId, permissionIds, isRemovingPermission)
         : // Org only, no user
-          orgId && (await db.revokePermissionFromOrg(orgId, permissionIds, isRemovingPermission))
+          orgId &&
+          (await db.revokePermissionFromOrg(orgId, userId, permissionIds, isRemovingPermission))
 
     console.log('Revoked permissions:')
     console.log(
