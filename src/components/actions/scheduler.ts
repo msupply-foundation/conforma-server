@@ -66,9 +66,10 @@ export const cleanUpFiles = async () => {
   const deleteCount = await DBConnect.cleanUpFiles()
   if (deleteCount > 0) console.log(`${deleteCount} files removed.`)
   else console.log('no files removed.')
+  process.exit(0)
 }
 
-// Manually launch cleanup with command
+// Manually launch cleanup with command `yarn cleaup`
 if (isManualCleanup) {
   cleanUpFiles()
 }

@@ -363,10 +363,10 @@ class PostgresDB {
     const text = `
     SELECT id 
     FROM file
-    WHERE file_path = '${subPath}'
+    WHERE file_path = $1
     `
     try {
-      const result = await this.query({ text })
+      const result = await this.query({ text, values: [subPath] })
       return result.rows.length === 0
     } catch (err) {
       throw err
