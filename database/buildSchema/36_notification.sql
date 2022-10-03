@@ -9,7 +9,8 @@ CREATE TABLE public.notification (
     message varchar,
     attachments varchar[],
     timestamp timestamptz DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    is_read boolean DEFAULT FALSE,
     email_sent boolean DEFAULT FALSE,
-    is_read boolean DEFAULT FALSE
+    email_server_log varchar,
 );
 
