@@ -1327,17 +1327,18 @@ const migrateData = async () => {
 
     await DB.changeSchema(`
     ALTER TYPE public.is_reviewable_status ADD VALUE IF NOT EXISTS
-    'ONLY_IF_APPLICANT_ANSWER' AFTER  'NEVER';`)
-
-    await DB.changeSchema(`
-      ALTER TABLE public.template_element 
-        ALTER COLUMN is_reviewable
-        SET DEFAULT 'ONLY_IF_APPLICANT_ANSWER';`)
+    'ONLY_IF_APPLICANT_ANSWER' AFTER 'NEVER';`)
 
     await DB.changeSchema(`
     UPDATE template_element te SET is_reviewable = 'ONLY_IF_APPLICANT_ANSWER'
-      WHERE te.is_reviewable IS NULL
-        AND te.category = 'QUESTION'`)
+      WHERE te.is_reviewable IS NULL`)
+
+    await DB.changeSchema(`
+      ALTER TABLE public.template_element 
+        ALTER COLUMN is_reviewable 
+          SET NOT NULL,
+        ALTER COLUMN is_reviewable 
+          SET DEFAULT 'ONLY_IF_APPLICANT_ANSWER';`)
   }
 
   // Other version migrations continue here...
