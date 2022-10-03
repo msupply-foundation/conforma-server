@@ -204,6 +204,10 @@ PORT_APP=8008 PORT_DASH=8009 sudo -E docker-compose --project-name 'conforma-on-
 
 `-d` is for detached, if you want to see all output then start without `-d`
 
+`docker-compose` command may be `docker compose` in some of the servers.
+
+Note the above commands must be run within directory where compose.yml is contained. Typically this is `/demo_server`
+
 ## Stop instances and reset volumes
 
 Stop a particular docker-compose instance:
