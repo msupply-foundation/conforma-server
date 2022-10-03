@@ -51,6 +51,11 @@ export const triggerScheduledActions = async () => {
 const checkFile = async (filePath: string) => {
   if (await DBConnect.checkIfInFileTable(filePath)) {
     const file: any = { filePath: filePath }
+    // console.log(file)
+    console.log(basePath.length)
+    // console.log(basePath)
+    const subPath = basePath.slice(51)
+    console.log(subPath)
     deleteFile(file)
   }
 }
