@@ -1,4 +1,4 @@
-const TEST_MODE = true // Change to true to test with local Mailhog
+const TEST_MODE = false // Change to true to test with local Mailhog
 
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
