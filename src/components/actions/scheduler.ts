@@ -7,7 +7,7 @@ import { filesFolder } from '../files/fileHandler'
 import path from 'path'
 import { getAppEntryPointDir } from '../utilityFunctions'
 import { crawlFileSystem } from '../utilityFunctions'
-import { deleteFile } from '../files/deleteFiles'
+import { deleteFile, FileDetail } from '../files/deleteFiles'
 
 // Dev config option
 const schedulerTestMode = false // Runs scheduler every 30 seconds
@@ -50,12 +50,8 @@ export const triggerScheduledActions = async () => {
 
 const checkFile = async (filePath: string) => {
   if (await DBConnect.checkIfInFileTable(filePath)) {
-    const file: any = { filePath: filePath }
-    // console.log(file)
-    console.log(basePath.length)
-    // console.log(basePath)
-    const subPath = basePath.slice(51)
-    console.log(subPath)
+    const subPath = filePath.slice(basePath.length)
+    const file: any = { filePath: subPath }
     deleteFile(file)
   }
 }
