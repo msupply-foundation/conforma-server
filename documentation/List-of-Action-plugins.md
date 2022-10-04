@@ -11,6 +11,7 @@
   - [Modify Multiple Records](#modify-multiple-records)
   - [Generate Text String](#generate-text-string)
   - [Join User to Organsation](#join-user-to-organsation)
+  - [Remove User from Organsation](#remove-user-from-organsation)
   - [Grant Permissions](#grant-permissions)
   - [Revoke Permissions](#revoke-permissions)
   - [Generate Review Assignments](#generate-review-assignments)
@@ -394,11 +395,25 @@ Creates a link between a user and an organisation -- i.e. user is a "member" of 
 
 - _Action Code:_ **`joinUserOrg`**
 
-| Input parameters<br />(\*required) <br/>    | Output properties |
-| ------------------------------------------- | ----------------- |
-| `user_id`\*                                 | `userOrgId`       |
-| `org_id` \*                                 |                   |
-| `user_role` (Arbitrary title, e.g. "Owner") |                   |
+| Input parameters<br />(\*required) <br/>   | Output properties |
+| ------------------------------------------ | ----------------- |
+| `userId`\*                                 | `userOrgId`       |
+| `orgId` \*                                 |                   |
+| `userRole` (Arbitrary title, e.g. "Owner") |                   |
+
+---
+
+### Remove User from Organsation
+
+The opposite of `joinUserOrg`. Removes user from company by deleting the `user_organisation` record.
+
+- _Action Code:_ **`removeUserOrg`**
+
+| Input parameters<br />(\*required) <br/> | Output properties |
+| ---------------------------------------- | ----------------- |
+| `userId`\*                               | `userOrgId`       |
+| `orgId` \*                               | `userId`          |
+|                                          | `orgId`           |
 
 ---
 
