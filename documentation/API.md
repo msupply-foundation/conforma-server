@@ -372,18 +372,18 @@ The return object contains:
 
 The internal function called by this endpoint is the same one run by the ["generateDoc" action](List-of-Action-plugins.md).
 
-### Data Views
+#### Data Views
 
 GET:
 `/data-views`
-`/data-views/table/<tableName>`
-`/data-views/table/<tableName>/item/<id>`
+`/data-views/<dataViewCode>`
+`/data-views/<dataViewCode>/<itemId>`
 
 For displaying custom data (e.g. Users, Products, Orgs). User's JWT determines what they are allowed to see, and data is returned accordingly.
 
 Please see [Data View](Data-View.md) for more info.
 
-### Preview Actions
+#### Preview Actions
 
 POST: `/preview-actions`
 
@@ -441,7 +441,7 @@ See examples in the core/demo templates for how to configure action previews.
 
 
 
-### Extend application deadline
+#### Extend application deadline
 
 POST: `/extend-application`
 

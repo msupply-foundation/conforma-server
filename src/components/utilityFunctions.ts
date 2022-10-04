@@ -1,6 +1,8 @@
 import path from 'path'
 import fs from 'fs'
 import { camelCase, snakeCase, mapKeys } from 'lodash'
+import { singular } from 'pluralize'
+import config from '../config'
 
 // Determines the folder of the main entry file, as opposed to the
 // project root. Needed for components that traverse the local directory
@@ -85,13 +87,31 @@ export const filterObject = (
   return Object.fromEntries(filtered)
 }
 
-export const crawlFileSystem = async (newPath: string, checkFile: (newPath: string) => void) => {
+export const crawlFileSystem = async (
+  newPath: string,
+  fileOperation: (newPath: string) => void
+) => {
   const files = fs.readdirSync(newPath)
   for (const file of files) {
     const subPath = path.join(newPath, file)
-    if (fs.statSync(subPath).isDirectory()) crawlFileSystem(subPath, checkFile)
-    else checkFile(subPath)
+    if (fs.statSync(subPath).isDirectory()) crawlFileSystem(subPath, fileOperation)
+    else fileOperation(subPath)
   }
 }
 
 export const capitaliseFirstLetter = (str: string) => str[0].toUpperCase() + str.slice(1)
+
+// The only tables in the system that we allow to be mutated directly by
+// modifyRecord or displayed as data views. All other names must have
+// "data_table_" prepended.
+const DATA_TABLE_PREFIX = config.dataTablePrefix
+const ALLOWED_TABLE_NAMES = config.allowedTableNames
+
+export const getValidTableName = (inputName: string | undefined): string => {
+  if (!inputName) throw new Error('Missing table name')
+  if (ALLOWED_TABLE_NAMES.includes(inputName)) return inputName
+  const tableName = snakeCase(singular(inputName))
+  const namePattern = new RegExp(`^${DATA_TABLE_PREFIX}.+`)
+
+  return namePattern.test(tableName) ? tableName : `${DATA_TABLE_PREFIX}${tableName}`
+}

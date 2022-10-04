@@ -8,7 +8,7 @@ const { filesFolder, genericThumbnailsFolderName } = config
 
 export const filesPath = path.join(getAppEntryPointDir(), filesFolder)
 
-interface FileDetail {
+export interface FileDetail {
   id: number
   uniqueId: string
   originalFilename: string

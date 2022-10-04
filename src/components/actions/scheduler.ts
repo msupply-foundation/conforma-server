@@ -7,7 +7,7 @@ import { filesFolder } from '../files/fileHandler'
 import path from 'path'
 import { getAppEntryPointDir } from '../utilityFunctions'
 import { crawlFileSystem } from '../utilityFunctions'
-import { deleteFile } from '../files/deleteFiles'
+import { deleteFile, FileDetail } from '../files/deleteFiles'
 
 // Dev config option
 const schedulerTestMode = false // Runs scheduler every 30 seconds
@@ -50,17 +50,16 @@ export const triggerScheduledActions = async () => {
 
 const checkFile = async (filePath: string) => {
   if (await DBConnect.checkIfInFileTable(filePath)) {
-    fs.unlink(filePath, function (err) {
-      if (err) throw err
-      else console.log(`Deleted file at ${filePath}`)
-    })
+    const subPath = filePath.slice(basePath.length)
+    const file: any = { filePath: subPath }
+    deleteFile(file)
   }
 }
 
 export const cleanUpFiles = async () => {
   console.log(
     DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
-    'Cleaning up filess and file records...'
+    'Cleaning up files and file records...'
   )
   await crawlFileSystem(basePath, checkFile)
   processMissingFileLinks()
@@ -68,9 +67,12 @@ export const cleanUpFiles = async () => {
   if (deleteCount > 0) console.log(`${deleteCount} files removed.`)
 }
 
-// Manually launch cleanup with command
+// Manually launch cleanup with command `yarn cleaup`
 if (isManualCleanup) {
-  cleanUpFiles()
+  cleanUpFiles().then(() => {
+    console.log('Done!\n')
+    process.exit(0)
+  })
 }
 
 const processMissingFileLinks = async () => {

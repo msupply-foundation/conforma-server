@@ -367,10 +367,10 @@ class PostgresDB {
     const text = `
     SELECT id 
     FROM file
-    WHERE file_path = '${subPath}'
+    WHERE file_path = $1
     `
     try {
-      const result = await this.query({ text })
+      const result = await this.query({ text, values: [subPath] })
       return result.rows.length === 0
     } catch (err) {
       throw err
@@ -1130,7 +1130,7 @@ class PostgresDB {
 
   // DATA TABLE / VIEWS QUERIES
 
-  public getAllowedDataViews = async (userPermissions: string[], tableName: string = '%') => {
+  public getAllowedDataViews = async (userPermissions: string[], dataViewCode?: string) => {
     // Returns any records that have ANY permissionNames in common with input
     // userPermissions, or are empty (i.e. public)
     const text = `
@@ -1140,9 +1140,9 @@ class PostgresDB {
               OR permission_names IS NULL
               OR cardinality(permission_names) = 0
             )
-      AND table_name LIKE $2
+      ${dataViewCode ? 'AND code = $2' : ''}
     `
-    const values = [userPermissions, tableName]
+    const values = dataViewCode ? [userPermissions, dataViewCode] : [userPermissions]
     try {
       const result = await this.query({ text, values })
       return result.rows

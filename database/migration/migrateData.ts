@@ -400,7 +400,7 @@ const migrateData = async () => {
     `)
 
     console.log(
-      ' - Adding columns to file table: to_be_deleted, is_internal_reference_doc, is_external_reference_doc, is_missing'
+      ' - Adding columns to file table: to_be_deleted, is_internal_reference_doc, is_external_reference_doc'
     )
     await DB.changeSchema(`
       ALTER TABLE file
@@ -1129,6 +1129,11 @@ STABLE;
     ADD COLUMN IF NOT EXISTS is_missing boolean DEFAULT FALSE NOT NULL;
     `)
   }
+
+  console.log(' - Remove uniqueness constraint from data_view table')
+  await DB.changeSchema(`
+    ALTER TABLE data_view DROP CONSTRAINT IF EXISTS outcome_display_table_name_code_key; 
+  `)
 
   // Other version migrations continue here...
 

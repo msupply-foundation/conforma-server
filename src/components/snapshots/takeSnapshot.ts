@@ -26,7 +26,7 @@ import {
   PG_DFF_JS_LOCATION,
   DATABASE_FOLDER,
 } from '../../constants'
-import { getBaseFiles, getDirectoryFromPath } from './useSnapshot'
+import { getDirectoryFromPath } from './useSnapshot'
 import config from '../../config'
 import { DateTime } from 'luxon'
 const asyncRimRaf = promisify(rimraf)
@@ -173,7 +173,6 @@ const copyFiles = async (
   // copy only files that associated with exported file records and base filed in files directory (thumbnails)
   const filePaths = fileRecords.map((fileRecord) => fileRecord.filePath)
   filePaths.push(...fileRecords.map((fileRecord) => fileRecord.thumbnailPath))
-  const baseFilePaths = options.resetFiles ? await getBaseFiles(FILES_FOLDER) : []
 
   for (const filePath of [...filePaths]) {
     try {

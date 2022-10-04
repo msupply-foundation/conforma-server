@@ -1,6 +1,7 @@
 const databaseMethods = (DBConnect: any) => ({
   revokePermissionFromUser: async (
     userId: number,
+    orgId: null | undefined,
     permissionIds: number[],
     isRemovingPermissions: boolean = true
   ) => {
@@ -12,7 +13,7 @@ const databaseMethods = (DBConnect: any) => ({
       } 
       WHERE user_id = $1
         AND permission_name_id = ANY($2)
-        AND organisation_id IS NULL
+        ${orgId === null ? 'AND organisation_id IS NULL' : ''}
       RETURNING
         id as "permissionJoinId",
         permission_name_id as "permissionNameId",
@@ -55,6 +56,7 @@ const databaseMethods = (DBConnect: any) => ({
   },
   revokePermissionFromOrg: async (
     orgId: number,
+    userId: null | undefined,
     permissionIds: number[],
     isRemovingPermissions: boolean = true
   ) => {
@@ -66,7 +68,7 @@ const databaseMethods = (DBConnect: any) => ({
       } 
       WHERE organisation_id = $1
         AND permission_name_id = ANY($2)
-        AND user_id IS NULL
+        ${userId === null ? 'AND user_id IS NULL' : ''}
       RETURNING
         id as "permissionJoinId",
         permission_name_id as "permissionNameId",

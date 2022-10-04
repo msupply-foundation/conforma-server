@@ -4,10 +4,10 @@ SET check_function_bodies = FALSE;
 -- Name: jwt_get_text(text); Type: FUNCTION; Schema: public; Owner: -
 --
 CREATE FUNCTION jwt_get_text (jwt_key text)
-    RETURNS text
-    AS $$
-    SELECT
-        COALESCE(current_setting('jwt.claims.' || $1, TRUE)::text, '')
+  RETURNS text
+  AS $$
+  SELECT
+    COALESCE(current_setting('jwt.claims.' || $1, TRUE)::text, '')
 $$
 LANGUAGE sql
 STABLE;
@@ -16,14 +16,14 @@ STABLE;
 -- Name: jwt_get_boolean(text); Type: FUNCTION; Schema: public; Owner: -
 --
 CREATE FUNCTION jwt_get_boolean (jwt_key text)
-    RETURNS boolean
-    AS $$
+  RETURNS boolean
+  AS $$
 BEGIN
-    IF jwt_get_text ($1) = 'true' THEN
-        RETURN TRUE;
-    ELSE
-        RETURN FALSE;
-    END IF;
+  IF jwt_get_text ($1) = 'true' THEN
+    RETURN TRUE;
+  ELSE
+    RETURN FALSE;
+  END IF;
 END;
 $$
 LANGUAGE plpgsql
@@ -33,14 +33,14 @@ STABLE;
 -- Name: jwt_get_bigint(text); Type: FUNCTION; Schema: public; Owner: -
 --
 CREATE FUNCTION jwt_get_bigint (jwt_key text)
-    RETURNS bigint
-    AS $$
+  RETURNS bigint
+  AS $$
 BEGIN
-    IF jwt_get_text ($1) = '' THEN
-        RETURN 0;
-    ELSE
-        RETURN jwt_get_text ($1)::bigint;
-    END IF;
+  IF jwt_get_text ($1) = '' THEN
+    RETURN 0;
+  ELSE
+    RETURN jwt_get_text ($1)::bigint;
+  END IF;
 END;
 $$
 LANGUAGE plpgsql
@@ -218,6 +218,7 @@ CREATE TABLE public.template (
     template_category_id integer REFERENCES public.template_category (id),
     version_timestamp timestamptz DEFAULT CURRENT_TIMESTAMP,
     version integer DEFAULT 1
+
 );
 
 -- FUNCTION to generate a new version of template (should run as a trigger)
@@ -339,7 +340,8 @@ CREATE TABLE public.template_stage_review_level (
 CREATE TYPE public.permission_policy_type AS ENUM (
     'REVIEW',
     'APPLY',
-    'ASSIGN'
+    'ASSIGN',
+    'VIEW'
 );
 
 CREATE TABLE public.permission_policy (
@@ -699,62 +701,62 @@ CREATE TRIGGER application_stage_history_trigger
 
 -- application status history
 CREATE TYPE public.application_status AS ENUM (
-    'DRAFT',
-    'SUBMITTED',
-    'CHANGES_REQUIRED',
-    'RE_SUBMITTED',
-    'COMPLETED'
+  'DRAFT',
+  'SUBMITTED',
+  'CHANGES_REQUIRED',
+  'RE_SUBMITTED',
+  'COMPLETED'
 );
 
 CREATE TABLE public.application_status_history (
-    id serial PRIMARY KEY,
-    application_stage_history_id integer REFERENCES public.application_stage_history (id) ON DELETE CASCADE NOT NULL,
-    status public.application_status,
-    time_created timestamptz DEFAULT CURRENT_TIMESTAMP,
-    is_current bool DEFAULT TRUE
+  id serial PRIMARY KEY,
+  application_stage_history_id integer REFERENCES public.application_stage_history (id) ON DELETE CASCADE NOT NULL,
+  status public.application_status,
+  time_created timestamptz DEFAULT CURRENT_TIMESTAMP,
+  is_current bool DEFAULT TRUE
 );
 
 -- FUNCTION to auto-add application_id to application_status_history table
 CREATE OR REPLACE FUNCTION public.application_status_history_application_id (application_stage_history_id int)
-    RETURNS int
-    AS $$
-    SELECT
-        application_id
-    FROM
-        application_stage_history
-    WHERE
-        id = $1;
+  RETURNS int
+  AS $$
+  SELECT
+    application_id
+  FROM
+    application_stage_history
+  WHERE
+    id = $1;
 
 $$
 LANGUAGE SQL
 IMMUTABLE;
 
 ALTER TABLE application_status_history
-    ADD application_id INT GENERATED ALWAYS AS (application_status_history_application_id (application_stage_history_id)) STORED;
+  ADD application_id INT GENERATED ALWAYS AS (application_status_history_application_id (application_stage_history_id)) STORED;
 
 -- FUNCTION to set `is_current` to false on all other status_histories of current application
 CREATE OR REPLACE FUNCTION public.status_is_current_update ()
-    RETURNS TRIGGER
-    AS $application_status_history_event$
+  RETURNS TRIGGER
+  AS $application_status_history_event$
 BEGIN
-    UPDATE
-        public.application_status_history
-    SET
-        is_current = FALSE
-    WHERE
-        application_id = NEW.application_id
-        AND id <> NEW.id;
-    RETURN NULL;
+  UPDATE
+    public.application_status_history
+  SET
+    is_current = FALSE
+  WHERE
+    application_id = NEW.application_id
+    AND id <> NEW.id;
+  RETURN NULL;
 END;
 $application_status_history_event$
 LANGUAGE plpgsql;
 
 --TRIGGER to run above function when is_current is updated
 CREATE TRIGGER application_status_history_trigger
-    AFTER INSERT OR UPDATE OF is_current ON public.application_status_history
-    FOR EACH ROW
-    WHEN (NEW.is_current = TRUE)
-    EXECUTE FUNCTION public.status_is_current_update ();
+  AFTER INSERT OR UPDATE OF is_current ON public.application_status_history
+  FOR EACH ROW
+  WHEN (NEW.is_current = TRUE)
+  EXECUTE FUNCTION public.status_is_current_update ();
 
 -- Create VIEW which collects ALL application, stage, stage_history, and status_history together
 CREATE OR REPLACE VIEW public.application_stage_status_all AS
@@ -1362,10 +1364,43 @@ CREATE TABLE public.review_response (
     time_updated timestamptz DEFAULT CURRENT_TIMESTAMP,
     time_submitted timestamptz,
     is_visible_to_applicant boolean DEFAULT FALSE,
+    is_latest_review boolean DEFAULT FALSE,
     template_element_id integer REFERENCES public.template_element ON DELETE CASCADE,
     recommended_applicant_visibility public.review_response_recommended_applicant_visibility DEFAULT 'ORIGINAL_RESPONSE_NOT_VISIBLE_TO_APPLICANT',
     status public.review_response_status DEFAULT 'DRAFT'
 );
+
+-- Function to automatically set previous review_responses
+-- (for same review & templateElement) as is_latest_review = false
+CREATE OR REPLACE FUNCTION public.set_latest_review_response ()
+    RETURNS TRIGGER
+    AS $review_response_event$
+BEGIN
+    UPDATE
+        public.review_response
+    SET
+        is_latest_review = TRUE
+    WHERE
+        id = NEW.id;
+    UPDATE
+        public.review_response
+    SET
+        is_latest_review = FALSE
+    WHERE
+        template_element_id = NEW.template_element_id
+        AND review_id = NEW.review_id
+        AND id <> NEW.id;
+    RETURN NULL;
+END;
+$review_response_event$
+LANGUAGE plpgsql;
+
+-- TRIGGER (Listener) on review_response table: Run set_previous_review_response
+CREATE TRIGGER review_response_latest
+    AFTER UPDATE OF time_updated ON public.review_response
+    FOR EACH ROW
+    WHEN (NEW.time_updated > OLD.time_created)
+    EXECUTE FUNCTION public.set_latest_review_response ();
 
 -- Function to automatically update "time_updated"
 CREATE OR REPLACE FUNCTION public.update_review_response_timestamp ()
@@ -1771,6 +1806,13 @@ CREATE FUNCTION assigner_list (stage_id int, assigner_id int)
 WHERE
     review_assignment.stage_id = $1
     AND review_assignment_assigner_join.assigner_id = $2
+    AND (
+        SELECT
+            outcome
+        FROM
+            application
+        WHERE
+            id = review_assignment.application_id) = 'PENDING'
 GROUP BY
     review_assignment.application_id,
     review_assignment.level_number;
@@ -2026,8 +2068,7 @@ CREATE TABLE data_view (
     detail_view_exclude_columns varchar[],
     detail_view_header_column varchar NOT NULL,
     show_linked_applications boolean NOT NULL DEFAULT TRUE,
-    priority integer DEFAULT 1,
-    UNIQUE (table_name, code)
+    priority integer DEFAULT 1
 );
 
 -- For columns that require more detail format or evaluation definitions

@@ -73,10 +73,14 @@ const useSnapshot: SnapshotOperation = async ({
       execSync(`rm -rf ${FILES_FOLDER}/*`)
     }
 
-    // Prevent triggers from running while we insert data
-    triggerTables.forEach((table) => {
-      execSync(`psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} DISABLE TRIGGER ALL"`)
-    })
+    // Prevent triggers from running while we insert data, but only for full re-init
+    if (options.shouldReInitialise) {
+      triggerTables.forEach((table) => {
+        execSync(
+          `psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} DISABLE TRIGGER ALL"`
+        )
+      })
+    }
 
     // Pause to allow postgraphile "watch" to detect changed schema
     delay(2500)
@@ -137,13 +141,15 @@ const useSnapshot: SnapshotOperation = async ({
     // To ensure generic thumbnails are not wiped out, even if server doesn't restart
     createDefaultDataFolders()
 
-    // Store snapshot name in database
-    const text = `INSERT INTO system_info (name, value)
-    VALUES('snapshot', $1)`
-    await DBConnect.query({
-      text,
-      values: [JSON.stringify(snapshotName)],
-    })
+    // Store snapshot name in database (for full imports only)
+    if (options.shouldReInitialise) {
+      const text = `INSERT INTO system_info (name, value)
+      VALUES('snapshot', $1)`
+      await DBConnect.query({
+        text,
+        values: [JSON.stringify(snapshotName)],
+      })
+    }
 
     return { success: true, message: `snapshot loaded ${snapshotName}` }
   } catch (e) {
@@ -220,27 +226,12 @@ export const getDirectoryFromPath = (filePath: string) => {
   const [_, ...directory] = filePath.split('/').reverse()
   return directory.join('/')
 }
-// Get base files (thumbnails)
-export const getBaseFiles = async (filesFolder: string) => {
-  try {
-    let dirents = await fs.readdir(filesFolder, {
-      encoding: 'utf-8',
-      withFileTypes: true,
-    })
-    return dirents
-      .filter((dirent) => !dirent.isDirectory() && !dirent.name.startsWith('.'))
-      .map((dirent) => dirent.name)
-  } catch {
-    return []
-  }
-}
 
 const copyFiles = async (snapshotFolder: string, fileRecords: ObjectRecord[] = []) => {
   // copy only files that associated with import file records and base filed in snapshot folder (thumbnails)
   const filePaths = fileRecords.map((oldAndNewFileRecord) => oldAndNewFileRecord.new.filePath)
   filePaths.push(...fileRecords.map((oldAndNewFileRecord) => oldAndNewFileRecord.new.thumbnailPath))
   const snapshotFilesFolder = `${snapshotFolder}/files`
-  const baseFilePaths = await getBaseFiles(snapshotFilesFolder)
 
   for (const filePath of [...filePaths]) {
     try {
