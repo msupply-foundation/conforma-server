@@ -1344,7 +1344,7 @@ const migrateData = async () => {
           STABLE;`
     )
 
-    console.log(' - Remove not used 4 fields from application_list')
+    console.log(' - Remove 4 unused fields from application_list')
     await DB.changeSchema(
       `ALTER TABLE application_list_shape
         DROP COLUMN IF EXISTS total_questions;
