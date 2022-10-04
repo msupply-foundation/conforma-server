@@ -7283,6 +7283,17 @@ export type DeleteDataViewByNodeIdInput = {
   nodeId: Scalars['ID'];
 };
 
+/** All input for the `deleteDataViewByTableNameAndCode` mutation. */
+export type DeleteDataViewByTableNameAndCodeInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  tableName: Scalars['String'];
+  code: Scalars['String'];
+};
+
 /** All input for the `deleteDataViewColumnDefinitionByNodeId` mutation. */
 export type DeleteDataViewColumnDefinitionByNodeIdInput = {
   /**
@@ -10342,6 +10353,8 @@ export type Mutation = {
   updateDataViewByNodeId?: Maybe<UpdateDataViewPayload>;
   /** Updates a single `DataView` using a unique key and a patch. */
   updateDataView?: Maybe<UpdateDataViewPayload>;
+  /** Updates a single `DataView` using a unique key and a patch. */
+  updateDataViewByTableNameAndCode?: Maybe<UpdateDataViewPayload>;
   /** Updates a single `DataViewColumnDefinition` using its globally unique id and a patch. */
   updateDataViewColumnDefinitionByNodeId?: Maybe<UpdateDataViewColumnDefinitionPayload>;
   /** Updates a single `DataViewColumnDefinition` using a unique key and a patch. */
@@ -10538,6 +10551,8 @@ export type Mutation = {
   deleteDataViewByNodeId?: Maybe<DeleteDataViewPayload>;
   /** Deletes a single `DataView` using a unique key. */
   deleteDataView?: Maybe<DeleteDataViewPayload>;
+  /** Deletes a single `DataView` using a unique key. */
+  deleteDataViewByTableNameAndCode?: Maybe<DeleteDataViewPayload>;
   /** Deletes a single `DataViewColumnDefinition` using its globally unique id. */
   deleteDataViewColumnDefinitionByNodeId?: Maybe<DeleteDataViewColumnDefinitionPayload>;
   /** Deletes a single `DataViewColumnDefinition` using a unique key. */
@@ -11091,6 +11106,12 @@ export type MutationUpdateDataViewByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateDataViewArgs = {
   input: UpdateDataViewInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataViewByTableNameAndCodeArgs = {
+  input: UpdateDataViewByTableNameAndCodeInput;
 };
 
 
@@ -11679,6 +11700,12 @@ export type MutationDeleteDataViewByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteDataViewArgs = {
   input: DeleteDataViewInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataViewByTableNameAndCodeArgs = {
+  input: DeleteDataViewByTableNameAndCodeInput;
 };
 
 
@@ -14588,6 +14615,7 @@ export type Query = Node & {
   dataTable?: Maybe<DataTable>;
   dataTableByTableName?: Maybe<DataTable>;
   dataView?: Maybe<DataView>;
+  dataViewByTableNameAndCode?: Maybe<DataView>;
   dataViewColumnDefinition?: Maybe<DataViewColumnDefinition>;
   dataViewColumnDefinitionByTableNameAndColumnName?: Maybe<DataViewColumnDefinition>;
   elementTypePlugin?: Maybe<ElementTypePlugin>;
@@ -15473,6 +15501,13 @@ export type QueryDataTableByTableNameArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryDataViewArgs = {
   id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataViewByTableNameAndCodeArgs = {
+  tableName: Scalars['String'];
+  code: Scalars['String'];
 };
 
 
@@ -25653,6 +25688,19 @@ export type UpdateDataViewByNodeIdInput = {
   patch: DataViewPatch;
 };
 
+/** All input for the `updateDataViewByTableNameAndCode` mutation. */
+export type UpdateDataViewByTableNameAndCodeInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `DataView` being updated. */
+  patch: DataViewPatch;
+  tableName: Scalars['String'];
+  code: Scalars['String'];
+};
+
 /** All input for the `updateDataViewColumnDefinitionByNodeId` mutation. */
 export type UpdateDataViewColumnDefinitionByNodeIdInput = {
   /**
@@ -32333,6 +32381,7 @@ export type ResolversTypes = {
   DataViewPatch: DataViewPatch;
   UpdateDataViewPayload: ResolverTypeWrapper<UpdateDataViewPayload>;
   UpdateDataViewInput: UpdateDataViewInput;
+  UpdateDataViewByTableNameAndCodeInput: UpdateDataViewByTableNameAndCodeInput;
   UpdateDataViewColumnDefinitionByNodeIdInput: UpdateDataViewColumnDefinitionByNodeIdInput;
   DataViewColumnDefinitionPatch: DataViewColumnDefinitionPatch;
   UpdateDataViewColumnDefinitionPayload: ResolverTypeWrapper<UpdateDataViewColumnDefinitionPayload>;
@@ -32475,6 +32524,7 @@ export type ResolversTypes = {
   DeleteDataViewByNodeIdInput: DeleteDataViewByNodeIdInput;
   DeleteDataViewPayload: ResolverTypeWrapper<DeleteDataViewPayload>;
   DeleteDataViewInput: DeleteDataViewInput;
+  DeleteDataViewByTableNameAndCodeInput: DeleteDataViewByTableNameAndCodeInput;
   DeleteDataViewColumnDefinitionByNodeIdInput: DeleteDataViewColumnDefinitionByNodeIdInput;
   DeleteDataViewColumnDefinitionPayload: ResolverTypeWrapper<DeleteDataViewColumnDefinitionPayload>;
   DeleteDataViewColumnDefinitionInput: DeleteDataViewColumnDefinitionInput;
@@ -33981,6 +34031,7 @@ export type ResolversParentTypes = {
   DataViewPatch: DataViewPatch;
   UpdateDataViewPayload: UpdateDataViewPayload;
   UpdateDataViewInput: UpdateDataViewInput;
+  UpdateDataViewByTableNameAndCodeInput: UpdateDataViewByTableNameAndCodeInput;
   UpdateDataViewColumnDefinitionByNodeIdInput: UpdateDataViewColumnDefinitionByNodeIdInput;
   DataViewColumnDefinitionPatch: DataViewColumnDefinitionPatch;
   UpdateDataViewColumnDefinitionPayload: UpdateDataViewColumnDefinitionPayload;
@@ -34123,6 +34174,7 @@ export type ResolversParentTypes = {
   DeleteDataViewByNodeIdInput: DeleteDataViewByNodeIdInput;
   DeleteDataViewPayload: DeleteDataViewPayload;
   DeleteDataViewInput: DeleteDataViewInput;
+  DeleteDataViewByTableNameAndCodeInput: DeleteDataViewByTableNameAndCodeInput;
   DeleteDataViewColumnDefinitionByNodeIdInput: DeleteDataViewColumnDefinitionByNodeIdInput;
   DeleteDataViewColumnDefinitionPayload: DeleteDataViewColumnDefinitionPayload;
   DeleteDataViewColumnDefinitionInput: DeleteDataViewColumnDefinitionInput;
@@ -35854,6 +35906,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateDataTableByTableName?: Resolver<Maybe<ResolversTypes['UpdateDataTablePayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableByTableNameArgs, 'input'>>;
   updateDataViewByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataViewPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataViewByNodeIdArgs, 'input'>>;
   updateDataView?: Resolver<Maybe<ResolversTypes['UpdateDataViewPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataViewArgs, 'input'>>;
+  updateDataViewByTableNameAndCode?: Resolver<Maybe<ResolversTypes['UpdateDataViewPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataViewByTableNameAndCodeArgs, 'input'>>;
   updateDataViewColumnDefinitionByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataViewColumnDefinitionByNodeIdArgs, 'input'>>;
   updateDataViewColumnDefinition?: Resolver<Maybe<ResolversTypes['UpdateDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataViewColumnDefinitionArgs, 'input'>>;
   updateDataViewColumnDefinitionByTableNameAndColumnName?: Resolver<Maybe<ResolversTypes['UpdateDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataViewColumnDefinitionByTableNameAndColumnNameArgs, 'input'>>;
@@ -35952,6 +36005,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteDataTableByTableName?: Resolver<Maybe<ResolversTypes['DeleteDataTablePayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableByTableNameArgs, 'input'>>;
   deleteDataViewByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataViewPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataViewByNodeIdArgs, 'input'>>;
   deleteDataView?: Resolver<Maybe<ResolversTypes['DeleteDataViewPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataViewArgs, 'input'>>;
+  deleteDataViewByTableNameAndCode?: Resolver<Maybe<ResolversTypes['DeleteDataViewPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataViewByTableNameAndCodeArgs, 'input'>>;
   deleteDataViewColumnDefinitionByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataViewColumnDefinitionByNodeIdArgs, 'input'>>;
   deleteDataViewColumnDefinition?: Resolver<Maybe<ResolversTypes['DeleteDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataViewColumnDefinitionArgs, 'input'>>;
   deleteDataViewColumnDefinitionByTableNameAndColumnName?: Resolver<Maybe<ResolversTypes['DeleteDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataViewColumnDefinitionByTableNameAndColumnNameArgs, 'input'>>;
@@ -36321,6 +36375,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   dataTable?: Resolver<Maybe<ResolversTypes['DataTable']>, ParentType, ContextType, RequireFields<QueryDataTableArgs, 'id'>>;
   dataTableByTableName?: Resolver<Maybe<ResolversTypes['DataTable']>, ParentType, ContextType, RequireFields<QueryDataTableByTableNameArgs, 'tableName'>>;
   dataView?: Resolver<Maybe<ResolversTypes['DataView']>, ParentType, ContextType, RequireFields<QueryDataViewArgs, 'id'>>;
+  dataViewByTableNameAndCode?: Resolver<Maybe<ResolversTypes['DataView']>, ParentType, ContextType, RequireFields<QueryDataViewByTableNameAndCodeArgs, 'tableName' | 'code'>>;
   dataViewColumnDefinition?: Resolver<Maybe<ResolversTypes['DataViewColumnDefinition']>, ParentType, ContextType, RequireFields<QueryDataViewColumnDefinitionArgs, 'id'>>;
   dataViewColumnDefinitionByTableNameAndColumnName?: Resolver<Maybe<ResolversTypes['DataViewColumnDefinition']>, ParentType, ContextType, RequireFields<QueryDataViewColumnDefinitionByTableNameAndColumnNameArgs, 'tableName' | 'columnName'>>;
   elementTypePlugin?: Resolver<Maybe<ResolversTypes['ElementTypePlugin']>, ParentType, ContextType, RequireFields<QueryElementTypePluginArgs, 'code'>>;
