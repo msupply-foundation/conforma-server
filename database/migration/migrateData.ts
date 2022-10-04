@@ -1060,64 +1060,6 @@ const migrateData = async () => {
     LANGUAGE plpgsql;
       `)
 
-    // Fix assigner_actions to only return active applications
-    console.log(' - Fix assigner_actions to only return active applications')
-
-    await DB.changeSchema(`
-    CREATE OR REPLACE FUNCTION assigner_list (stage_id int, assigner_id int)
-    RETURNS TABLE (
-        application_id int,
-        assigner_action public.assigner_action,
-        -- is_fully_assigned_level_1 boolean,
-        -- assigned_questions_level_1 bigint,
-        total_questions bigint,
-        total_assigned bigint,
-        total_assign_locked bigint
-    )
-    AS $$
-    SELECT
-        review_assignment.application_id AS application_id,
-        CASE WHEN COUNT(DISTINCT (review_assignment.id)) != 0
-            AND assigned_questions_count (application_id, $1, level_number) >= assignable_questions_count (application_id)
-            AND submitted_assigned_questions_count (application_id, $1, level_number) < assigned_questions_count (application_id, $1, level_number) THEN
-            'RE_ASSIGN'
-        WHEN COUNT(DISTINCT (review_assignment.id)) != 0
-            AND assigned_questions_count (application_id, $1, level_number) >= assignable_questions_count (application_id)
-            AND submitted_assigned_questions_count (application_id, $1, level_number) >= assigned_questions_count (application_id, $1, level_number) THEN
-            'ASSIGN_LOCKED'
-        WHEN COUNT(DISTINCT (review_assignment.id)) != 0
-            AND assigned_questions_count (application_id, $1, level_number) < assignable_questions_count (application_id) THEN
-            'ASSIGN'
-        ELSE
-            NULL
-        END::assigner_action,
-        -- assigned_questions_count(application_id, $1, 1) = assignable_questions_count(application_id) AS is_fully_assigned_level_1,
-        -- assigned_questions_count(application_id, $1, 1) AS assigned_questions_level_1,
-        assignable_questions_count (application_id) AS total_questions,
-        assigned_questions_count (application_id, $1, level_number) AS total_assigned,
-        submitted_assigned_questions_count (application_id, $1, level_number) AS total_assign_locked
-    FROM
-        review_assignment
-    LEFT JOIN review_assignment_assigner_join ON review_assignment.id = review_assignment_assigner_join.review_assignment_id
-WHERE
-    review_assignment.stage_id = $1
-    AND review_assignment_assigner_join.assigner_id = $2
-    AND (
-        SELECT
-            outcome
-        FROM
-            application
-        WHERE
-            id = review_assignment.application_id) = 'PENDING'
-GROUP BY
-    review_assignment.application_id,
-    review_assignment.level_number;
-
-$$
-LANGUAGE sql
-STABLE;
-    `)
-
     console.log('- Add VIEW permission policy type')
 
     await DB.changeSchema(
@@ -1132,6 +1074,69 @@ STABLE;
 
   // 0.4.6
   if (databaseVersionLessThan('0.4.6')) {
+    await DB.changeSchema(`
+      CREATE OR REPLACE FUNCTION review_list (stageid int, reviewerid int, appstatus public.application_status)
+      RETURNS TABLE (
+          application_id int,
+          reviewer_action public.reviewer_action
+      )
+      AS $$
+          SELECT
+              review_assignment.application_id AS application_id,
+              CASE WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'CHANGES_REQUESTED') != 0 THEN
+                  'UPDATE_REVIEW'
+              WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'PENDING') != 0 THEN
+                  'RESTART_REVIEW'
+              WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'DRAFT'
+                  AND is_locked = FALSE) != 0 THEN
+                  'CONTINUE_REVIEW'
+              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+                  AND review_assignment.is_final_decision = TRUE
+                  AND review_assignment.is_last_stage = TRUE
+                  AND review = NULL) != 0 THEN
+                  'MAKE_DECISION'
+              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+                  AND review.id IS NULL) != 0 THEN
+                  'START_REVIEW'
+              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'AVAILABLE'
+                  AND is_self_assignable = TRUE
+                  AND (review = NULL
+                  OR is_locked = FALSE)) != 0 THEN
+                  'SELF_ASSIGN'
+              WHEN COUNT(*) FILTER (WHERE (appstatus = 'CHANGES_REQUIRED'
+                  OR appstatus = 'DRAFT') 
+                  AND review_assignment.status = 'ASSIGNED'
+                  AND review_status_history.status = 'SUBMITTED') != 0 THEN
+                  'AWAITING_RESPONSE'
+              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+                  OR review_status_history.status = 'SUBMITTED') != 0 THEN
+                  'VIEW_REVIEW'
+              ELSE
+                  NULL
+              END::public.reviewer_action
+          FROM
+              review_assignment
+          LEFT JOIN review ON review.review_assignment_id = review_assignment.id
+          LEFT JOIN review_status_history ON (review_status_history.review_id = review.id
+                  AND is_current = TRUE)
+      WHERE
+          review_assignment.stage_id = $1
+          AND review_assignment.reviewer_id = $2
+          AND (
+              SELECT
+                  outcome
+              FROM
+                  application
+              WHERE
+                  id = review_assignment.application_id) = 'PENDING'
+      GROUP BY
+          review_assignment.application_id;
+  
+    $$
+    LANGUAGE sql
+    STABLE;
+      `)
+
     console.log(' - Updating functions to retrieve reviewable vs assigned questions')
     await DB.changeSchema(
       `-- Function to return elements reviewable questions (per application)
@@ -1284,6 +1289,8 @@ STABLE;
       LANGUAGE sql
       STABLE;`
     )
+
+    console.log(' - Fix assigner_actions to only return active applications and use new funtions')
 
     await DB.changeSchema(
       `DROP FUNCTION assigner_list;
