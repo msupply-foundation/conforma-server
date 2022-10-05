@@ -1081,88 +1081,40 @@ const migrateData = async () => {
 
   // 0.4.6
   if (databaseVersionLessThan('0.4.6')) {
+    console.log(
+      ' - Rename TYPE is_reviewable to reviewability and update field in TABLE template_element'
+    )
+
     await DB.changeSchema(`
-      CREATE OR REPLACE FUNCTION review_list (stageid int, reviewerid int, appstatus public.application_status)
-      RETURNS TABLE (
-          application_id int,
-          reviewer_action public.reviewer_action
-      )
-      AS $$
-          SELECT
-              review_assignment.application_id AS application_id,
-              CASE WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'CHANGES_REQUESTED') != 0 THEN
-                  'UPDATE_REVIEW'
-              WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'PENDING') != 0 THEN
-                  'RESTART_REVIEW'
-              WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'DRAFT'
-                  AND is_locked = FALSE) != 0 THEN
-                  'CONTINUE_REVIEW'
-              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
-                  AND review_assignment.is_final_decision = TRUE
-                  AND review_assignment.is_last_stage = TRUE
-                  AND review = NULL) != 0 THEN
-                  'MAKE_DECISION'
-              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
-                  AND review.id IS NULL) != 0 THEN
-                  'START_REVIEW'
-              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'AVAILABLE'
-                  AND is_self_assignable = TRUE
-                  AND (review = NULL
-                  OR is_locked = FALSE)) != 0 THEN
-                  'SELF_ASSIGN'
-              WHEN COUNT(*) FILTER (WHERE (appstatus = 'CHANGES_REQUIRED'
-                  OR appstatus = 'DRAFT') 
-                  AND review_assignment.status = 'ASSIGNED'
-                  AND review_status_history.status = 'SUBMITTED') != 0 THEN
-                  'AWAITING_RESPONSE'
-              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
-                  OR review_status_history.status = 'SUBMITTED') != 0 THEN
-                  'VIEW_REVIEW'
-              ELSE
-                  NULL
-              END::public.reviewer_action
-          FROM
-              review_assignment
-          LEFT JOIN review ON review.review_assignment_id = review_assignment.id
-          LEFT JOIN review_status_history ON (review_status_history.review_id = review.id
-                  AND is_current = TRUE)
-      WHERE
-          review_assignment.stage_id = $1
-          AND review_assignment.reviewer_id = $2
-          AND (
-              SELECT
-                  outcome
-              FROM
-                  application
-              WHERE
-                  id = review_assignment.application_id) = 'PENDING'
-      GROUP BY
-          review_assignment.application_id;
-  
-    $$
-    LANGUAGE sql
-    STABLE;
-      `)
+    ALTER TYPE public.is_reviewable_status RENAME TO reviewability;`)
+
+    await DB.changeSchema(`
+    ALTER TYPE public.reviewability
+      ADD VALUE IF NOT EXISTS 'ONLY_IF_APPLICANT_ANSWER' AFTER 'NEVER';`)
+
+    await DB.changeSchema(`
+    ALTER TABLE public.template_element RENAME COLUMN is_reviewable TO reviewability;`)
 
     console.log(' - Updating functions to retrieve reviewable vs assigned questions')
+
     await DB.changeSchema(
       `-- Function to return elements reviewable questions (per application)
       CREATE OR REPLACE FUNCTION public.reviewable_questions (app_id int)
         RETURNS TABLE (
             code varchar,
+            reviewability public.reviewability,
             response_id int,
-            is_reviewable public.is_reviewable_status,
             response_value jsonb,
             is_optional boolean
         )
         AS $$
         SELECT DISTINCT ON (code)
-            te.code AS code,
+            te.code,
+            te.reviewability,
             ar.id AS response_id,
-            te.is_reviewable AS is_reviewable,
             ar.value AS response_value,
             CASE WHEN ar.value IS NULL
-                AND te.is_reviewable = 'OPTIONAL_IF_NO_RESPONSE' THEN
+                AND te.reviewability = 'OPTIONAL_IF_NO_RESPONSE' THEN
                 TRUE
             ELSE
                 FALSE
@@ -1175,15 +1127,15 @@ const migrateData = async () => {
             ar.application_id = $1
             AND te.category = 'QUESTION'
             AND ((ar.value IS NULL
-                  AND te.is_reviewable = 'OPTIONAL_IF_NO_RESPONSE')
+                  AND te.reviewability = 'OPTIONAL_IF_NO_RESPONSE')
               OR (ar.value IS NOT NULL
-                  AND te.is_reviewable != 'NEVER'))
+                  AND te.reviewability != 'NEVER'))
         GROUP BY
             te.code,
             ar.time_submitted,
             ar.id,
             te,
-            is_reviewable,
+            reviewability,
             ar.value
         ORDER BY
             code,
@@ -1297,7 +1249,70 @@ const migrateData = async () => {
       STABLE;`
     )
 
-    console.log(' - Fix assigner_actions to only return active applications and use new funtions')
+    console.log('Restore the review_list and assigner_list using latest changes to other functions')
+
+    await DB.changeSchema(`
+      CREATE OR REPLACE FUNCTION review_list (stageid int, reviewerid int, appstatus public.application_status)
+      RETURNS TABLE (
+          application_id int,
+          reviewer_action public.reviewer_action
+      )
+      AS $$
+          SELECT
+              review_assignment.application_id AS application_id,
+              CASE WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'CHANGES_REQUESTED') != 0 THEN
+                  'UPDATE_REVIEW'
+              WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'PENDING') != 0 THEN
+                  'RESTART_REVIEW'
+              WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'DRAFT'
+                  AND is_locked = FALSE) != 0 THEN
+                  'CONTINUE_REVIEW'
+              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+                  AND review_assignment.is_final_decision = TRUE
+                  AND review_assignment.is_last_stage = TRUE
+                  AND review = NULL) != 0 THEN
+                  'MAKE_DECISION'
+              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+                  AND review.id IS NULL) != 0 THEN
+                  'START_REVIEW'
+              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'AVAILABLE'
+                  AND is_self_assignable = TRUE
+                  AND (review = NULL
+                  OR is_locked = FALSE)) != 0 THEN
+                  'SELF_ASSIGN'
+              WHEN COUNT(*) FILTER (WHERE (appstatus = 'CHANGES_REQUIRED'
+                  OR appstatus = 'DRAFT') 
+                  AND review_assignment.status = 'ASSIGNED'
+                  AND review_status_history.status = 'SUBMITTED') != 0 THEN
+                  'AWAITING_RESPONSE'
+              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+                  OR review_status_history.status = 'SUBMITTED') != 0 THEN
+                  'VIEW_REVIEW'
+              ELSE
+                  NULL
+              END::public.reviewer_action
+          FROM
+              review_assignment
+          LEFT JOIN review ON review.review_assignment_id = review_assignment.id
+          LEFT JOIN review_status_history ON (review_status_history.review_id = review.id
+                  AND is_current = TRUE)
+      WHERE
+          review_assignment.stage_id = $1
+          AND review_assignment.reviewer_id = $2
+          AND (
+              SELECT
+                  outcome
+              FROM
+                  application
+              WHERE
+                  id = review_assignment.application_id) = 'PENDING'
+      GROUP BY
+          review_assignment.application_id;
+  
+    $$
+    LANGUAGE sql
+    STABLE;
+      `)
 
     await DB.changeSchema(
       `DROP FUNCTION assigner_list;
@@ -1344,7 +1359,7 @@ const migrateData = async () => {
           STABLE;`
     )
 
-    console.log(' - Remove 4 unused fields from application_list')
+    console.log(' - Remove not used 4 fields from application_list')
     await DB.changeSchema(
       `ALTER TABLE application_list_shape
         DROP COLUMN IF EXISTS total_questions;
@@ -1397,21 +1412,18 @@ const migrateData = async () => {
     STABLE;`
     )
 
-    console.log(' - Convert default for template_element.is_reviewable to ONLY_IF_APPLICANT_ANSWER')
+    console.log(` - Updte existing template_element where reviewable is set to NULL to use DEFAULT`)
 
     await DB.changeSchema(`
-    ALTER TYPE public.is_reviewable_status ADD VALUE IF NOT EXISTS
-    'ONLY_IF_APPLICANT_ANSWER' AFTER 'NEVER';`)
+    UPDATE template_element te
+      SET reviewability = 'ONLY_IF_APPLICANT_ANSWER'
+      WHERE te.reviewability IS NULL;`)
 
     await DB.changeSchema(`
-    UPDATE template_element te SET is_reviewable = 'ONLY_IF_APPLICANT_ANSWER'
-      WHERE te.is_reviewable IS NULL`)
-
-    await DB.changeSchema(`
-      ALTER TABLE public.template_element 
-        ALTER COLUMN is_reviewable 
+      ALTER TABLE public.template_element
+        ALTER COLUMN reviewability
           SET NOT NULL,
-        ALTER COLUMN is_reviewable 
+        ALTER COLUMN reviewability
           SET DEFAULT 'ONLY_IF_APPLICANT_ANSWER';`)
   }
   // Other version migrations continue here...

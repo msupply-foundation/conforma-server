@@ -4,7 +4,7 @@ CREATE TYPE public.template_element_category AS ENUM (
     'INFORMATION'
 );
 
-CREATE TYPE public.is_reviewable_status AS ENUM (
+CREATE TYPE public.reviewability AS ENUM (
     'ALWAYS',
     'NEVER',
     'ONLY_IF_APPLICANT_ANSWER',
@@ -62,7 +62,7 @@ CREATE TABLE public.template_element (
     validation_message varchar,
     help_text varchar,
     parameters jsonb,
-    is_reviewable public.is_reviewable_status DEFAULT 'ONLY_IF_APPLICANT_ANSWER' NOT NULL,
+    reviewability public.reviewability DEFAULT 'ONLY_IF_APPLICANT_ANSWER' NOT NULL,
     -- review_required boolean NOT NULL DEFAULT TRUE,
     template_code varchar GENERATED ALWAYS AS (public.get_template_code (section_id)) STORED,
     template_version integer GENERATED ALWAYS AS (public.get_template_version (section_id)) STORED,

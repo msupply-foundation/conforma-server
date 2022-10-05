@@ -2,19 +2,19 @@
 CREATE OR REPLACE FUNCTION public.reviewable_questions (app_id int)
     RETURNS TABLE (
         code varchar,
+        reviewability public.reviewability,
         response_id int,
-        is_reviewable public.is_reviewable_status,
         response_value jsonb,
         is_optional boolean
     )
     AS $$
     SELECT DISTINCT ON (code)
         te.code AS code,
+        te.reviewability,
         ar.id AS response_id,
-        te.is_reviewable AS is_reviewable,
         ar.value AS response_value,
         CASE WHEN ar.value IS NULL
-            AND te.is_reviewable = 'OPTIONAL_IF_NO_RESPONSE' THEN
+            AND te.reviewability = 'OPTIONAL_IF_NO_RESPONSE' THEN
             TRUE
         ELSE
             FALSE
@@ -27,15 +27,15 @@ CREATE OR REPLACE FUNCTION public.reviewable_questions (app_id int)
         ar.application_id = $1
         AND te.category = 'QUESTION'
         AND ((ar.value IS NULL
-                AND te.is_reviewable = 'OPTIONAL_IF_NO_RESPONSE')
+                AND te.reviewability = 'OPTIONAL_IF_NO_RESPONSE')
             OR (ar.value IS NOT NULL
-                AND te.is_reviewable != 'NEVER'))
+                AND te.reviewability != 'NEVER'))
     GROUP BY
         te.code,
         ar.time_submitted,
         ar.id,
         te,
-        is_reviewable,
+        reviewability,
         ar.value
     ORDER BY
         code,
