@@ -62,7 +62,7 @@ export const cleanUpFiles = async () => {
     'Cleaning up files and file records...'
   )
   await crawlFileSystem(basePath, checkFile)
-  processMissingFileLinks()
+  await processMissingFileLinks()
   const deleteCount = await DBConnect.cleanUpFiles()
   if (deleteCount > 0) console.log(`${deleteCount} files removed.`)
 }
@@ -77,12 +77,14 @@ if (isManualCleanup) {
 
 const processMissingFileLinks = async () => {
   const filePaths: any = await DBConnect.filePaths()
-  filePaths.rows.forEach((filePathObject: { file_path: string }) => {
-    if (!fs.existsSync(filePathObject.file_path)) {
-      console.log(filePathObject.file_path)
-      //DBConnect.setIsMissing(filePathObject.file_path)
-    }
-  })
+  await Promise.all(
+    filePaths.map(async (filePathObject: { file_path: string }) => {
+      if (!fs.existsSync(filePathObject.file_path)) {
+        //console.log(filePathObject.file_path)
+        DBConnect.setIsMissing(filePathObject.file_path)
+      }
+    })
+  )
 }
 
 export default cleanUpFiles

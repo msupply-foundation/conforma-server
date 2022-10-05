@@ -14,7 +14,6 @@ import {
   TriggerQueueUpdatePayload,
 } from '../types'
 import { ApplicationOutcome, ApplicationStatus, ReviewStatus, Trigger } from '../generated/graphql'
-import { FSWatcher } from 'fs'
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -290,10 +289,7 @@ class PostgresDB {
   }
 
   public setScheduledActionDone = async (table: string, record_id: number): Promise<boolean> => {
-    const text = `
-    UPDATE ${table} 
-    SET is_active = false 
-    WHERE id = $1`
+    const text = `UPDATE ${table} SET is_active = false WHERE id = $1`
     try {
       const result = await this.query({
         text,
@@ -353,7 +349,7 @@ class PostgresDB {
       DELETE FROM file
       WHERE to_be_deleted = true
       AND timestamp < now() - interval '${config?.previewDocsMinKeepTime ?? '2 hours'}'
-      RETURNING id
+      RETURNING id;
     `
     try {
       const result = await this.query({ text })
@@ -383,7 +379,7 @@ class PostgresDB {
     `
     try {
       const result = await this.query({ text })
-      return result
+      return result.rows
     } catch (err) {
       throw err
     }
@@ -393,11 +389,11 @@ class PostgresDB {
     const text = `
     UPDATE file
     SET is_missing = true
-    WHERE file_path = ${filePath};
+    WHERE file_path = $1
     `
     try {
-      const result = await this.query({ text })
-      return true
+      const result = await this.query({ text, values: [filePath] })
+      return result
     } catch (err) {
       throw err
     }
