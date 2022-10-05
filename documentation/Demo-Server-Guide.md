@@ -92,6 +92,8 @@ _To see the actual Docker commands that are constructued, please inspect the fil
   `sudo docker pull <full-image-name>`
   Example: `sudo docker pull msupplyfoundation/conforma:build-v0.2.0-7_2022-04-07_ee35c8`
 
+If the server is already configured, you can skip to [docker-compose](#docker-compose)
+
 ## Move files/folder to/from instance
 
 Follow this process whenever the docker-compose or nginx configs are updated (`./docker/demo_server/docker-compose.yml`)
@@ -102,14 +104,14 @@ Follow this process whenever the docker-compose or nginx configs are updated (`.
 
 ```bash
 cd conforma-server/docker
-scp -r -i $KEY_LOC ./demo_server ubuntu@irims-demo.msupply.org:/home/ubuntu/
+scp -r -i $KEY_LOC ./demo_server ubuntu@conforma-demo.msupply.org:/home/ubuntu/
 ```
 
 ## Save backup of nginx config from demo server to local
 
 ```bash
 cd conforma-server/docker
-scp -i $KEY_LOC ubuntu@irims-demo.msupply.org:/etc/nginx/sites-enabled/default ./demo_server/nginx_config
+scp -i $KEY_LOC ubuntu@conforma-demo.msupply.org:/etc/nginx/sites-enabled/default ./demo_server/nginx_config
 ```
 
 ## Upload nginx config back to demo server
