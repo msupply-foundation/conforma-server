@@ -1,0 +1,24 @@
+{
+  "type": "action_plugin",
+  "code": "removeUserOrg",
+  "name": "Remove User from Organisation",
+  "description": "Removes a user from an organistion",
+  "required_parameters": ["user_id", "org_id"],
+  "optional_parameters": [],
+  "output_properties": ["userOrgId"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "insert"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2021-01-28"
+  }
+}
