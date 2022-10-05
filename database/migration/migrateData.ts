@@ -1123,6 +1123,29 @@ STABLE;
     await DB.changeSchema(
       `ALTER TYPE permission_policy_type ADD VALUE IF NOT EXISTS 'VIEW' after 'ASSIGN'`
     )
+
+    console.log('- Add uniqueness constraint to user_org table')
+    await DB.changeSchema(`
+    ALTER TABLE user_organisation DROP CONSTRAINT IF EXISTS                     user_organisation_user_id_organisation_id_key;
+    
+    ALTER TABLE user_organisation ADD CONSTRAINT user_organisation_user_id_organisation_id_key UNIQUE (user_id, organisation_id);
+    `)
+
+    console.log(' - Remove uniqueness constraint from data_view table')
+    await DB.changeSchema(`
+      ALTER TABLE data_view DROP CONSTRAINT IF EXISTS outcome_display_table_name_code_key; 
+    `)
+
+    console.log(
+      ' - Remove uniqueness constraint from and add search/sort fields to data_view tables'
+    )
+    await DB.changeSchema(`
+      ALTER TABLE data_view DROP CONSTRAINT IF EXISTS outcome_display_table_name_code_key; 
+      ALTER TABLE data_view 
+      ADD COLUMN IF NOT EXISTS table_search_columns varchar[];
+      ALTER TABLE data_view_column_definition 
+      ADD COLUMN IF NOT EXISTS sort_column varchar;
+    `)
   }
 
   // Other version migrations continue here...
