@@ -1135,6 +1135,17 @@ STABLE;
     await DB.changeSchema(`
       ALTER TABLE data_view DROP CONSTRAINT IF EXISTS outcome_display_table_name_code_key; 
     `)
+
+    console.log(
+      ' - Remove uniqueness constraint from and add search/sort fields to data_view tables'
+    )
+    await DB.changeSchema(`
+      ALTER TABLE data_view DROP CONSTRAINT IF EXISTS outcome_display_table_name_code_key; 
+      ALTER TABLE data_view 
+      ADD COLUMN IF NOT EXISTS table_search_columns varchar[];
+      ALTER TABLE data_view_column_definition 
+      ADD COLUMN IF NOT EXISTS sort_column varchar;
+    `)
   }
 
   // Other version migrations continue here...

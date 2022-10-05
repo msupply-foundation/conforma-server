@@ -94,3 +94,26 @@ export const queryLinkedApplications = async (id: number, tableName: string) => 
   )
   return linkedApplications
 }
+
+export const queryFilterList = async (
+  tableName: string,
+  column: string,
+  gqlFilters: object,
+  authHeaders: string
+) => {
+  const tableNamePlural = plural(tableName)
+  const filterType = upperFirst(camelCase(tableName)) + 'Filter'
+  const variables = { filter: gqlFilters }
+  const graphQLquery = `query getFilterList($filter: ${filterType}) { ${tableNamePlural}( filter: $filter) { nodes { ${column} }, totalCount}}`
+
+  let queryResult
+  try {
+    queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
+  } catch (err) {
+    return {
+      error: { error: true, message: 'Problem with Filter List query', detail: err.message },
+    }
+  }
+
+  return queryResult?.[tableNamePlural]?.nodes
+}

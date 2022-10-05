@@ -15,6 +15,7 @@ module.exports = {
     // disableQueryLog: true,
     graphileBuildOptions: {
       connectionFilterRelations: true,
+      connectionFilterAllowEmptyObjectInput: true,
     },
     bodySizeLimit: '500kb',
   },

@@ -6384,6 +6384,7 @@ export type DataView = Node & {
   detailViewHeaderColumn: Scalars['String'];
   showLinkedApplications: Scalars['Boolean'];
   priority?: Maybe<Scalars['Int']>;
+  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type DataViewColumnDefinition = Node & {
@@ -6398,6 +6399,7 @@ export type DataViewColumnDefinition = Node & {
   elementParameters?: Maybe<Scalars['JSON']>;
   additionalFormatting?: Maybe<Scalars['JSON']>;
   valueExpression?: Maybe<Scalars['JSON']>;
+  sortColumn?: Maybe<Scalars['String']>;
 };
 
 /**
@@ -6421,6 +6423,8 @@ export type DataViewColumnDefinitionCondition = {
   additionalFormatting?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `valueExpression` field. */
   valueExpression?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `sortColumn` field. */
+  sortColumn?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `DataViewColumnDefinition` object types. All fields are combined with a logical ‘and.’ */
@@ -6441,6 +6445,8 @@ export type DataViewColumnDefinitionFilter = {
   additionalFormatting?: Maybe<JsonFilter>;
   /** Filter by the object’s `valueExpression` field. */
   valueExpression?: Maybe<JsonFilter>;
+  /** Filter by the object’s `sortColumn` field. */
+  sortColumn?: Maybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<DataViewColumnDefinitionFilter>>;
   /** Checks for any expressions in this list. */
@@ -6459,6 +6465,7 @@ export type DataViewColumnDefinitionInput = {
   elementParameters?: Maybe<Scalars['JSON']>;
   additionalFormatting?: Maybe<Scalars['JSON']>;
   valueExpression?: Maybe<Scalars['JSON']>;
+  sortColumn?: Maybe<Scalars['String']>;
 };
 
 /** Represents an update to a `DataViewColumnDefinition`. Fields that are set will be updated. */
@@ -6471,6 +6478,7 @@ export type DataViewColumnDefinitionPatch = {
   elementParameters?: Maybe<Scalars['JSON']>;
   additionalFormatting?: Maybe<Scalars['JSON']>;
   valueExpression?: Maybe<Scalars['JSON']>;
+  sortColumn?: Maybe<Scalars['String']>;
 };
 
 /** A connection to a list of `DataViewColumnDefinition` values. */
@@ -6514,6 +6522,8 @@ export enum DataViewColumnDefinitionsOrderBy {
   AdditionalFormattingDesc = 'ADDITIONAL_FORMATTING_DESC',
   ValueExpressionAsc = 'VALUE_EXPRESSION_ASC',
   ValueExpressionDesc = 'VALUE_EXPRESSION_DESC',
+  SortColumnAsc = 'SORT_COLUMN_ASC',
+  SortColumnDesc = 'SORT_COLUMN_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -6549,6 +6559,8 @@ export type DataViewCondition = {
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `priority` field. */
   priority?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `tableSearchColumns` field. */
+  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** A filter to be used against `DataView` object types. All fields are combined with a logical ‘and.’ */
@@ -6579,6 +6591,8 @@ export type DataViewFilter = {
   showLinkedApplications?: Maybe<BooleanFilter>;
   /** Filter by the object’s `priority` field. */
   priority?: Maybe<IntFilter>;
+  /** Filter by the object’s `tableSearchColumns` field. */
+  tableSearchColumns?: Maybe<StringListFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<DataViewFilter>>;
   /** Checks for any expressions in this list. */
@@ -6602,6 +6616,7 @@ export type DataViewInput = {
   detailViewHeaderColumn: Scalars['String'];
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
   priority?: Maybe<Scalars['Int']>;
+  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** Represents an update to a `DataView`. Fields that are set will be updated. */
@@ -6619,6 +6634,7 @@ export type DataViewPatch = {
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
   priority?: Maybe<Scalars['Int']>;
+  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** A connection to a list of `DataView` values. */
@@ -6672,6 +6688,8 @@ export enum DataViewsOrderBy {
   ShowLinkedApplicationsDesc = 'SHOW_LINKED_APPLICATIONS_DESC',
   PriorityAsc = 'PRIORITY_ASC',
   PriorityDesc = 'PRIORITY_DESC',
+  TableSearchColumnsAsc = 'TABLE_SEARCH_COLUMNS_ASC',
+  TableSearchColumnsDesc = 'TABLE_SEARCH_COLUMNS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -35249,6 +35267,7 @@ export type DataViewResolvers<ContextType = any, ParentType extends ResolversPar
   detailViewHeaderColumn?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   showLinkedApplications?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   priority?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  tableSearchColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -35262,6 +35281,7 @@ export type DataViewColumnDefinitionResolvers<ContextType = any, ParentType exte
   elementParameters?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   additionalFormatting?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   valueExpression?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  sortColumn?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

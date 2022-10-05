@@ -38,6 +38,7 @@ export interface DataViewsTableResponse {
   code: string
   headerRow: HeaderRow[]
   tableRows: TableRow[]
+  searchFields: string[]
   totalCount: number
   message?: string
 }
@@ -49,7 +50,8 @@ export type ColumnDisplayDefinitions = {
 export interface ColumnDefinition {
   columnName: string
   isBasicField: boolean
-  dataType: string | undefined
+  dataType?: string
+  sortColumn?: string
   columnDefinition: DataViewColumnDefinition | undefined
 }
 export type ColumnDefinitionMasterList = ColumnDefinition[]
@@ -61,6 +63,7 @@ export interface ColumnDetailOutput {
   columnDefinitionMasterList: ColumnDefinitionMasterList
   gqlFilters: object
   fieldNames: string[]
+  searchFields: string[]
   headerDefinition: ColumnDefinition | undefined
   showLinkedApplications: boolean
 }

@@ -42,12 +42,14 @@ export const buildAllColumnDefinitions = async ({
   permissionNames,
   dataViewCode,
   type,
+  filter,
   userId,
   orgId,
 }: {
   permissionNames: string[]
   dataViewCode: string
   type: 'TABLE' | 'DETAIL'
+  filter?: object
   userId: number
   orgId: number | undefined
 }): Promise<ColumnDetailOutput> => {
@@ -60,12 +62,12 @@ export const buildAllColumnDefinitions = async ({
 
   const dataView = dataViews[0]
 
-  const { tableName, title, code } = dataView
+  const { tableName, title, code, tableSearchColumns } = dataView
 
   const tableNameProper = camelCase(getValidTableName(tableName))
 
   // Generate graphQL filter object
-  const gqlFilters = getFilters(dataView, userId, orgId)
+  const gqlFilters = { ...filter, ...getFilters(dataView, userId, orgId) }
 
   // Only for details view
   const headerColumnName = dataView.detailViewHeaderColumn ?? ''
@@ -99,6 +101,7 @@ export const buildAllColumnDefinitions = async ({
     columnName: column,
     isBasicField: fieldNameSet.has(column),
     dataType: fieldDataTypes[column],
+    sortColumn: getSortColumn(column, fieldNameSet, customDisplayDefinitions),
     columnDefinition: customDisplayDefinitions[column],
   }))
 
@@ -121,11 +124,16 @@ export const buildAllColumnDefinitions = async ({
     gqlFilters,
     fieldNames,
     headerDefinition,
+    searchFields: (tableSearchColumns as string[]) || [],
     showLinkedApplications,
   }
 }
 
-const getFilters = (dataView: DataView, userId: number, orgId: number | undefined): object => {
+export const getFilters = (
+  dataView: DataView,
+  userId: number,
+  orgId: number | undefined
+): object => {
   const restrictions =
     dataView.rowRestrictions == null || Object.keys(dataView.rowRestrictions).length === 0
       ? { id: { isNull: false } }
@@ -142,6 +150,19 @@ const getFilters = (dataView: DataView, userId: number, orgId: number | undefine
         return node
     }
   })
+}
+
+const getSortColumn = (
+  column: string,
+  fieldNameSet: Set<string>,
+  customDisplayDefinitions: ColumnDisplayDefinitions
+) => {
+  const definedSortColumn = customDisplayDefinitions[column]?.sortColumn
+  if (definedSortColumn && !fieldNameSet.has(definedSortColumn))
+    throw new Error('Invalid sort column name')
+  if (definedSortColumn) return definedSortColumn
+  if (fieldNameSet.has(column)) return column
+  return undefined
 }
 
 const buildColumnList = (
@@ -188,12 +209,14 @@ export const constructTableResponse = async (
   code: string,
   columnDefinitionMasterList: ColumnDefinitionMasterList,
   fetchedRecords: { id: number; [key: string]: any }[],
-  totalCount: number
+  totalCount: number,
+  searchFields: string[]
 ): Promise<DataViewsTableResponse> => {
   // Build table headers, which also carry any additional display/format
   // definitions for each column
+
   const headerRow = columnDefinitionMasterList.map(
-    ({ columnName, isBasicField, dataType, columnDefinition = {} }) => {
+    ({ columnName, isBasicField, dataType, columnDefinition = {}, sortColumn }) => {
       const { title, elementTypePluginCode, elementParameters, additionalFormatting } =
         columnDefinition
       return {
@@ -201,6 +224,7 @@ export const constructTableResponse = async (
         title: title ?? startCase(columnName),
         isBasicField,
         dataType,
+        sortColumn,
         formatting: {
           elementTypePluginCode: elementTypePluginCode || undefined,
           elementParameters: elementParameters || undefined,
@@ -257,7 +281,7 @@ export const constructTableResponse = async (
     row.item = item
   })
 
-  return { tableName, title, code, headerRow, tableRows, totalCount }
+  return { tableName, title, code, headerRow, tableRows, searchFields, totalCount }
 }
 
 export const constructDetailsResponse = async (
