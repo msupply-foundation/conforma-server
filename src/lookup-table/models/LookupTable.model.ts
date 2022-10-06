@@ -86,7 +86,7 @@ const LookupTableModel = () => {
     fieldMap: fieldMaps,
   }: LookupTableBase): Promise<boolean> => {
     try {
-      const text = `CREATE TABLE ${dataTablePrefix}_${tableName}
+      const text = `CREATE TABLE ${dataTablePrefix}${tableName}
       (
         ${fieldMaps.map((fieldMap) => `${fieldMap.fieldname} ${fieldMap.dataType}`).join(', ')}
       )`
@@ -106,7 +106,7 @@ const LookupTableModel = () => {
     row: any
   }): Promise<{ id: string }[]> => {
     try {
-      const text = `INSERT INTO ${dataTablePrefix}_${tableName}(${Object.keys(row)}) VALUES (
+      const text = `INSERT INTO ${dataTablePrefix}${tableName}(${Object.keys(row)}) VALUES (
           ${Object.keys(row)
             .map((key, index) => {
               return '$' + String(index + 1)
@@ -146,7 +146,7 @@ const LookupTableModel = () => {
         .filter(Boolean)
         .join(', ')
 
-      const text = `UPDATE ${dataTablePrefix}_${tableName} SET ${setText} WHERE id = $${primaryKeyIndex}`
+      const text = `UPDATE ${dataTablePrefix}${tableName} SET ${setText} WHERE id = $${primaryKeyIndex}`
       await DBConnect.query({ text, values: [...Object.values(row)] })
       return true
     } catch (error) {
@@ -169,7 +169,7 @@ const LookupTableModel = () => {
 
   const addTableColumns = async (tableName: string, fieldMap: FieldMapType): Promise<boolean> => {
     try {
-      const text = `ALTER TABLE ${dataTablePrefix}_${tableName} ADD COLUMN ${fieldMap.fieldname} ${fieldMap.dataType}`
+      const text = `ALTER TABLE ${dataTablePrefix}${tableName} ADD COLUMN ${fieldMap.fieldname} ${fieldMap.dataType}`
       await DBConnect.query({ text })
       return true
     } catch (err) {
