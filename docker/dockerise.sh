@@ -29,7 +29,7 @@ docker build \
    --build-arg POSTGRES_VERSION="$POSTGRES_VERSION" \
    --build-arg INITIAL_DATA_LOCALE="$INITIAL_DATA_LOCALE" \
    --secret id=githubtoken,src=../githubtoken.txt \
-   --platform "linux/amd64" \
+   --platform "linux/amd64,linux/arm64/v8" \
    .
 
 echo -e "\nFinished building. To run locally, use command:\nyarn docker_run ${ACCOUNT}/${IMAGE_NAME}:${IMAGE_TAG}\n"
