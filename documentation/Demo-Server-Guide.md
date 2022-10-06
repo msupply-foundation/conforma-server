@@ -118,7 +118,7 @@ scp -i $KEY_LOC ubuntu@conforma-demo.msupply.org:/etc/nginx/sites-enabled/defaul
 
 ### Option 1: Multi-instances server
 
-**Note** The configuration of nginx uses the certificate of irims-demo.msupply.org domain (following other steps of this setup) if needed for a new server, replace with new domain.
+**Note** The configuration of nginx uses the certificate of conforma-demo.msupply.org domain (following other steps of this setup) if needed for a new server, replace with new domain.
 
 ```bash
 # cannot directly replace default config, need to do it as sudo, so from within docker instance
@@ -174,7 +174,7 @@ For example:
 ```bash
 export TAG='build-v0.2.0-7_2022-04-07_ee35c8'
 export SMTP_SECRET='<Your SMTP password>'
-export WEB_URL='https://irims-demo.msupply.org:<replace port>'
+export WEB_URL='https://conforma-demo.msupply.org:<replace port>'
 export JWT_SECRET='<random private key>'
 ```
 
@@ -193,6 +193,8 @@ PORT_APP=8008 PORT_DASH=8009 sudo -E docker-compose --project-name 'conforma-on-
 ```
 
 `-d` is for detached, if you want to see all output then start without `-d`
+
+This will either launch or relaunch the server at the port specified in the WEB_URL
 
 ## Stop instances and reset volumes
 
