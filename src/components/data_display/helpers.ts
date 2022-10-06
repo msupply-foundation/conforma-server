@@ -15,6 +15,7 @@ import {
   LinkedApplication,
   DataViewsDetailResponse,
   DataViewsTableResponse,
+  FilterDefinition,
 } from './types'
 import { DataView, DataViewColumnDefinition } from '../../generated/graphql'
 import dataTypeMap, { PostgresDataType } from './postGresToJSDataTypes'
@@ -89,9 +90,13 @@ export const buildAllColumnDefinitions = async ({
   // Get all returning column names (include/exclude + custom columns)
   const columnsToReturn: string[] = buildColumnList(dataView, fieldNames, type)
 
+  const filterColumns: string[] =
+    type === 'TABLE' ? buildColumnList(dataView, fieldNames, 'FILTER') : []
+
   // Get all associated display column_definition records
-  const customDisplayDefinitions = await buildColumnDisplayDefinitions(tableName, [
+  const customDisplayDefinitions = await getColumnDisplayDefinitions(tableName, [
     ...columnsToReturn,
+    ...filterColumns,
     headerColumnName,
   ])
 
@@ -116,6 +121,12 @@ export const buildAllColumnDefinitions = async ({
         }
       : undefined
 
+  // Build filter definitions (for Table view only)
+  const filterDefinitions =
+    type === 'TABLE'
+      ? buildFilterDefinitions(filterColumns, customDisplayDefinitions, fieldDataTypes)
+      : []
+
   return {
     tableName: tableNameProper,
     title: title ?? plural(startCase(tableName)),
@@ -125,6 +136,7 @@ export const buildAllColumnDefinitions = async ({
     fieldNames,
     headerDefinition,
     searchFields: (tableSearchColumns as string[]) || [],
+    filterDefinitions,
     showLinkedApplications,
   }
 }
@@ -136,7 +148,7 @@ export const getFilters = (
 ): object => {
   const restrictions =
     dataView.rowRestrictions == null || Object.keys(dataView.rowRestrictions).length === 0
-      ? { id: { isNull: false } }
+      ? {}
       : dataView.rowRestrictions
   // Substitute userId/orgId placeholder with actual values
   return mapValuesDeep(restrictions, (node: any) => {
@@ -168,19 +180,27 @@ const getSortColumn = (
 const buildColumnList = (
   dataView: DataView,
   allColumns: string[],
-  type: 'TABLE' | 'DETAIL'
+  type: 'TABLE' | 'DETAIL' | 'FILTER'
 ): string[] => {
-  const includeField = type === 'TABLE' ? 'tableViewIncludeColumns' : 'detailViewIncludeColumns'
-  const excludeField = type === 'TABLE' ? 'tableViewExcludeColumns' : 'detailViewExcludeColumns'
+  const includeField =
+    type === 'TABLE'
+      ? 'tableViewIncludeColumns'
+      : type === 'DETAIL'
+      ? 'detailViewIncludeColumns'
+      : dataView.filterIncludeColumns === null
+      ? // If there are no specific filter columns defined, take the
+        // full set of table columns
+        'tableViewIncludeColumns'
+      : 'filterIncludeColumns'
 
-  const includeColumns =
-    dataView[includeField] === null
-      ? allColumns
-      : (dataView[includeField] as string[])
-          // Expand "..." to all fields (so we don't have to enter the full
-          // field list in "includeColumns" when also adding a "custom" field)
-          .map((col) => (col === REST_OF_DATAVIEW_FIELDS ? allColumns : col))
-          .flat()
+  const excludeField =
+    type === 'TABLE'
+      ? 'tableViewExcludeColumns'
+      : type === 'DETAIL'
+      ? 'detailViewExcludeColumns'
+      : 'filterExcludeColumns'
+
+  const includeColumns = getIncludeColumns(includeField, dataView, allColumns)
 
   const excludeColumns = dataView[excludeField] !== null ? (dataView[excludeField] as string[]) : []
 
@@ -189,7 +209,27 @@ const buildColumnList = (
   return [...includeSet].filter((x) => !excludeColumns.includes(x))
 }
 
-const buildColumnDisplayDefinitions = async (
+const getIncludeColumns = (
+  includeField: 'tableViewIncludeColumns' | 'detailViewIncludeColumns' | 'filterIncludeColumns',
+  dataView: DataView,
+  allColumns: string[]
+): string[] =>
+  dataView[includeField] === null
+    ? allColumns
+    : (dataView[includeField] as string[])
+        // Expand "..." to all fields (so we don't have to enter the full
+        // field list in "includeColumns" when also adding a "custom" field)
+        .map((col) =>
+          col === REST_OF_DATAVIEW_FIELDS
+            ? includeField === 'filterIncludeColumns'
+              ? // For filters, only expand "..." to the list of table columns
+                getIncludeColumns('tableViewIncludeColumns', dataView, allColumns)
+              : allColumns
+            : col
+        )
+        .flat()
+
+const getColumnDisplayDefinitions = async (
   tableName: string,
   columns: string[]
 ): Promise<ColumnDisplayDefinitions> => {
@@ -203,6 +243,69 @@ const buildColumnDisplayDefinitions = async (
   return columnDisplayDefinitions
 }
 
+const dataTypeFilterListMap = {
+  string: true,
+  number: false,
+  boolean: true,
+  Date: false,
+}
+
+const buildFilterDefinitions = (
+  filterColumns: string[],
+  columnDefinitions: ColumnDisplayDefinitions,
+  fieldDataTypes: { [key: string]: string }
+): FilterDefinition[] =>
+  filterColumns.map((column) => {
+    const customDefinition = columnDefinitions[column]
+    const dataType = fieldDataTypes[column] as keyof typeof dataTypeFilterListMap
+
+    const defaultShowFilterList = dataTypeFilterListMap?.[dataType] ?? false
+
+    if (!customDefinition)
+      // "Standard" column with no special filter specifications
+      return {
+        column,
+        title: startCase(column),
+        dataType,
+        showFilterList: defaultShowFilterList,
+        searchFields: [column],
+      }
+
+    if (!customDefinition.filterParameters)
+      return {
+        column,
+        title: customDefinition.title ?? startCase(column),
+        dataType,
+        showFilterList: defaultShowFilterList,
+        searchFields: [column],
+      }
+
+    const {
+      title,
+      filterParameters: {
+        searchFields,
+        showFilterList,
+        delimiter,
+        valueMap,
+        booleanMapping,
+        ...other
+      },
+    } = columnDefinitions[column]
+
+    return {
+      column,
+      title: title ?? startCase(column),
+      dataType,
+      showFilterList: showFilterList ?? defaultShowFilterList,
+      searchFields: searchFields ?? [column],
+      delimiter,
+      booleanMapping: valueMap ?? booleanMapping,
+      ...other, // For any other custom parameters that might be added
+    }
+  })
+// TO-DO, maybe: Filter out filters are basic fields that aren't primitive types
+// .filter((filter) => filter.type !== null)
+
 export const constructTableResponse = async (
   tableName: string,
   title: string,
@@ -210,7 +313,8 @@ export const constructTableResponse = async (
   columnDefinitionMasterList: ColumnDefinitionMasterList,
   fetchedRecords: { id: number; [key: string]: any }[],
   totalCount: number,
-  searchFields: string[]
+  searchFields: string[],
+  filterDefinitions: FilterDefinition[]
 ): Promise<DataViewsTableResponse> => {
   // Build table headers, which also carry any additional display/format
   // definitions for each column
@@ -281,7 +385,16 @@ export const constructTableResponse = async (
     row.item = item
   })
 
-  return { tableName, title, code, headerRow, tableRows, searchFields, totalCount }
+  return {
+    tableName,
+    title,
+    code,
+    headerRow,
+    tableRows,
+    searchFields,
+    filterDefinitions,
+    totalCount,
+  }
 }
 
 export const constructDetailsResponse = async (

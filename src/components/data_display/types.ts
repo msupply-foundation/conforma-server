@@ -39,6 +39,7 @@ export interface DataViewsTableResponse {
   headerRow: HeaderRow[]
   tableRows: TableRow[]
   searchFields: string[]
+  filterDefinitions: FilterDefinition[]
   totalCount: number
   message?: string
 }
@@ -64,8 +65,19 @@ export interface ColumnDetailOutput {
   gqlFilters: object
   fieldNames: string[]
   searchFields: string[]
+  filterDefinitions: FilterDefinition[]
   headerDefinition: ColumnDefinition | undefined
   showLinkedApplications: boolean
+}
+
+export interface FilterDefinition {
+  column: string
+  title: string
+  dataType: string
+  showFilterList: boolean
+  searchFields: string[]
+  delimiter?: string
+  valueMap?: { [key: string]: string }
 }
 
 export interface LinkedApplication {

@@ -145,7 +145,7 @@ const startServer = async () => {
     server.get('/data-views', routeDataViews)
     server.post('/data-views/:dataViewCode', routeDataViewTable)
     server.get('/data-views/:dataViewCode/:id', routeDataViewDetail)
-    server.get('/data-views/:dataViewCode/filterList/:column', routeDataViewFilterList)
+    server.post('/data-views/:dataViewCode/filterList/:column', routeDataViewFilterList)
     server.get('/check-triggers', routeTriggers)
     server.post('/preview-actions', routePreviewActions)
     server.post('/extend-application', routeExtendApplication)
