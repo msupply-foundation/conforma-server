@@ -15,7 +15,7 @@ const LookupTableModel = () => {
   const getAllRowsForTable = async ({ tableName, fieldMap }: LookupTableStructureFull) => {
     const mappedField = ({ label, fieldname }: FieldMapType) => `"${fieldname}" as "${label}"`
     const fields = fieldMap.map(mappedField).join(',')
-    const text = `SELECT ${fields} FROM ${dataTablePrefix}_${tableName}`
+    const text = `SELECT ${fields} FROM ${dataTablePrefix}${tableName}`
     const result = await DBConnect.query({ text })
     return result.rows
   }
