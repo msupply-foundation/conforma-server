@@ -172,16 +172,18 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
 
   const filterList = new Set()
 
+  const { filterListMaxLength = 10 } = config
+
   let fetchedCount = 0
   let offset = 0
   let moreResultsAvailable = true
 
-  while (filterList.size < config.filterListMaxLength) {
+  while (filterList.size < filterListMaxLength) {
     const { fetchedRecords, totalCount, error } = await queryFilterList(
       camelCase(getValidTableName(dataView.tableName)),
       searchFields,
       gqlFilters,
-      config.filterListMaxLength,
+      filterListMaxLength,
       offset,
       authHeaders
     )
@@ -227,9 +229,9 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
         value === null
     )
 
-  if (results.length > config.filterListMaxLength) moreResultsAvailable = true
+  if (results.length > filterListMaxLength) moreResultsAvailable = true
 
-  return reply.send({ list: results.slice(0, config.filterListMaxLength), moreResultsAvailable })
+  return reply.send({ list: results.slice(0, filterListMaxLength), moreResultsAvailable })
 }
 
 export { routeDataViews, routeDataViewTable, routeDataViewDetail, routeDataViewFilterList }
