@@ -199,6 +199,8 @@ const buildColumnList = (
       ? 'tableViewExcludeColumns'
       : type === 'DETAIL'
       ? 'detailViewExcludeColumns'
+      : dataView.filterIncludeColumns === null && dataView.filterExcludeColumns === null
+      ? 'tableViewExcludeColumns'
       : 'filterExcludeColumns'
 
   const includeColumns = getIncludeColumns(includeField, dataView, allColumns)
