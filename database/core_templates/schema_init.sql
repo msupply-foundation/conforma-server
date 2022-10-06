@@ -73,7 +73,8 @@ CREATE TABLE public.user_organisation (
     id serial PRIMARY KEY,
     user_id integer REFERENCES public.user (id) ON DELETE CASCADE NOT NULL,
     organisation_id integer REFERENCES public.organisation (id) ON DELETE CASCADE NOT NULL,
-    user_role varchar
+    user_role varchar,
+    UNIQUE (user_id, organisation_id)
 );
 
 -- VIEW table to show users with their organisations
@@ -464,9 +465,10 @@ CREATE TYPE public.template_element_category AS ENUM (
     'INFORMATION'
 );
 
-CREATE TYPE public.is_reviewable_status AS ENUM (
+CREATE TYPE public.reviewability AS ENUM (
     'ALWAYS',
     'NEVER',
+    'ONLY_IF_APPLICANT_ANSWER',
     'OPTIONAL_IF_NO_RESPONSE'
     -- TO-DO:
     -- 'OPTIONAL_IF_RESPONSE',
@@ -521,7 +523,7 @@ CREATE TABLE public.template_element (
     validation_message varchar,
     help_text varchar,
     parameters jsonb,
-    is_reviewable public.is_reviewable_status DEFAULT NULL,
+    reviewability public.reviewability DEFAULT 'ONLY_IF_APPLICANT_ANSWER' NOT NULL,
     -- review_required boolean NOT NULL DEFAULT TRUE,
     template_code varchar GENERATED ALWAYS AS (public.get_template_code (section_id)) STORED,
     template_version integer GENERATED ALWAYS AS (public.get_template_version (section_id)) STORED,
@@ -1147,48 +1149,6 @@ CREATE UNIQUE INDEX unique_review_assignment_assigner_no_org ON review_assignmen
 WHERE
     organisation_id IS NULL;
 
--- Function to return count of assigned questions for current stage/level
-CREATE FUNCTION public.assigned_questions_count (app_id int, stage_id int, level int)
-    RETURNS bigint
-    AS $$
-    SELECT
-        COUNT(DISTINCT (te.id))
-    FROM (
-        SELECT
-            id,
-            application_id,
-            stage_id,
-            level_number,
-            status,
-            UNNEST(assigned_sections) AS section_code
-        FROM
-            review_assignment) ra
-    JOIN template_section ts ON ra.section_code = ts.code
-    JOIN template_element te ON ts.id = te.section_id
-WHERE
-    ra.application_id = $1
-    AND ra.stage_id = $2
-    AND ra.level_number = $3
-    AND ra.status = 'ASSIGNED'
-    AND te.category = 'QUESTION'
-    AND te.template_code = (
-        SELECT
-            code
-        FROM
-            TEMPLATE
-        WHERE
-            id = (
-                SELECT
-                    template_id
-                FROM
-                    application
-                WHERE
-                    id = $1));
-
-$$
-LANGUAGE sql
-STABLE;
-
 -- FUNCTION to auto-add application_id to review
 CREATE OR REPLACE FUNCTION public.review_application_id (review_assignment_id int)
     RETURNS int
@@ -1574,12 +1534,27 @@ $$
 LANGUAGE sql
 STABLE;
 
--- Function to return count of application assignable questions for given application
-CREATE FUNCTION public.assignable_questions_count (app_id int)
-    RETURNS bigint
+-- Function to return elements reviewable questions (per application)
+CREATE OR REPLACE FUNCTION public.reviewable_questions (app_id int)
+    RETURNS TABLE (
+        code varchar,
+        reviewability public.reviewability,
+        response_id int,
+        response_value jsonb,
+        is_optional boolean
+    )
     AS $$
-    SELECT
-        COUNT(*)
+    SELECT DISTINCT ON (code)
+        te.code AS code,
+        te.reviewability,
+        ar.id AS response_id,
+        ar.value AS response_value,
+        CASE WHEN ar.value IS NULL
+            AND te.reviewability = 'OPTIONAL_IF_NO_RESPONSE' THEN
+            TRUE
+        ELSE
+            FALSE
+        END::boolean
     FROM
         application_response ar
         JOIN application app ON ar.application_id = app.id
@@ -1587,16 +1562,46 @@ CREATE FUNCTION public.assignable_questions_count (app_id int)
     WHERE
         ar.application_id = $1
         AND te.category = 'QUESTION'
+        AND ((ar.value IS NULL
+                AND te.reviewability = 'OPTIONAL_IF_NO_RESPONSE')
+            OR (ar.value IS NOT NULL
+                AND te.reviewability != 'NEVER'))
+    GROUP BY
+        te.code,
+        ar.time_submitted,
+        ar.id,
+        te,
+        reviewability,
+        ar.value
+    ORDER BY
+        code,
+        ar.time_submitted DESC
 $$
 LANGUAGE sql
 STABLE;
 
--- Function to return count of assigned questions that can't be re-assigned (review has been submitted)
-CREATE FUNCTION public.submitted_assigned_questions_count (app_id int, stage_id int, level_number int)
-    RETURNS bigint
+-- Function to return elements of assigned questions for current stage/level
+CREATE OR REPLACE FUNCTION public.assigned_questions (app_id int, stage_id int, level_number int)
+    RETURNS TABLE (
+        review_id int,
+        response_id int,
+        review_assignment_id int,
+        review_response_code varchar,
+        review_response_status public.review_response_status,
+        decision public.review_response_decision,
+        is_optional boolean,
+        is_lastest_review boolean
+    )
     AS $$
-    SELECT
-        COUNT(DISTINCT (te.id))
+    SELECT DISTINCT ON (review_response_code)
+        rr.review_id,
+        rq.response_id,
+        ra.id AS review_assignment_id,
+        rq.code AS review_response_code,
+        rr.status AS review_response_status,
+        rr.decision,
+        rq.is_optional,
+        rr.is_latest_review
     FROM (
         SELECT
             id,
@@ -1609,28 +1614,65 @@ CREATE FUNCTION public.submitted_assigned_questions_count (app_id int, stage_id 
             review_assignment) ra
     JOIN template_section ts ON ra.section_code = ts.code
     JOIN template_element te ON ts.id = te.section_id
+    JOIN reviewable_questions (app_id) rq ON rq.code = te.code
     LEFT JOIN review ON review.review_assignment_id = ra.id
-    LEFT JOIN review_status_history rsh ON rsh.review_id = review.id
+    LEFT JOIN review_response rr ON (rr.application_response_id = rq.response_id
+            AND rr.review_id = review.id)
 WHERE
     ra.application_id = $1
     AND ra.stage_id = $2
     AND ra.level_number = $3
     AND ra.status = 'ASSIGNED'
-    AND te.category = 'QUESTION'
-    AND rsh.status = 'SUBMITTED'
-    AND te.template_code = (
-        SELECT
-            code
-        FROM
-            TEMPLATE
-        WHERE
-            id = (
-                SELECT
-                    template_id
-                FROM
-                    application
-                WHERE
-                    id = $1))
+GROUP BY
+    ra.id,
+    rr.review_id,
+    rr.is_latest_review,
+    rq.is_optional,
+    rr.status,
+    rr.decision,
+    rq.code,
+    rq.response_id
+ORDER BY
+    review_response_code,
+    is_latest_review DESC
+$$
+LANGUAGE sql
+STABLE;
+
+-- Function to return TOTAL of reviewable questions (per application)
+CREATE FUNCTION public.reviewable_questions_count (app_id int)
+    RETURNS bigint
+    AS $$
+    SELECT
+        COUNT(*)
+    FROM
+        reviewable_questions (app_id)
+$$
+LANGUAGE sql
+STABLE;
+
+-- Function to return TOTAL assigned questions for current stage/level
+CREATE FUNCTION public.assigned_questions_count (app_id int, stage_id int, level_number int)
+    RETURNS bigint
+    AS $$
+    SELECT
+        COUNT(*)
+    FROM
+        assigned_questions (app_id, stage_id, level_number)
+$$
+LANGUAGE sql
+STABLE;
+
+-- Function to return TOTAL of assigned and submitted (element that can't be re-assigned)
+CREATE FUNCTION public.submitted_assigned_questions_count (app_id int, stage_id int, level_number int)
+    RETURNS bigint
+    AS $$
+    SELECT
+        COUNT(*)
+    FROM
+        assigned_questions (app_id, stage_id, level_number) aq
+WHERE
+    aq.review_response_status = 'SUBMITTED'
 $$
 LANGUAGE sql
 STABLE;
@@ -1767,38 +1809,28 @@ CREATE TYPE public.assigner_action AS ENUM (
     'RE_ASSIGN'
 );
 
-CREATE FUNCTION assigner_list (stage_id int, assigner_id int)
+CREATE OR REPLACE FUNCTION assigner_list (stage_id int, assigner_id int)
     RETURNS TABLE (
         application_id int,
-        assigner_action public.assigner_action,
-        -- is_fully_assigned_level_1 boolean,
-        -- assigned_questions_level_1 bigint,
-        total_questions bigint,
-        total_assigned bigint,
-        total_assign_locked bigint
+        assigner_action public.assigner_action
     )
     AS $$
     SELECT
         review_assignment.application_id AS application_id,
         CASE WHEN COUNT(DISTINCT (review_assignment.id)) != 0
-            AND assigned_questions_count (application_id, $1, level_number) >= assignable_questions_count (application_id)
+            AND assigned_questions_count (application_id, $1, level_number) >= reviewable_questions_count (application_id)
             AND submitted_assigned_questions_count (application_id, $1, level_number) < assigned_questions_count (application_id, $1, level_number) THEN
             'RE_ASSIGN'
         WHEN COUNT(DISTINCT (review_assignment.id)) != 0
-            AND assigned_questions_count (application_id, $1, level_number) >= assignable_questions_count (application_id)
+            AND assigned_questions_count (application_id, $1, level_number) >= reviewable_questions_count (application_id)
             AND submitted_assigned_questions_count (application_id, $1, level_number) >= assigned_questions_count (application_id, $1, level_number) THEN
             'ASSIGN_LOCKED'
         WHEN COUNT(DISTINCT (review_assignment.id)) != 0
-            AND assigned_questions_count (application_id, $1, level_number) < assignable_questions_count (application_id) THEN
+            AND assigned_questions_count (application_id, $1, level_number) < reviewable_questions_count (application_id) THEN
             'ASSIGN'
         ELSE
             NULL
-        END::assigner_action,
-        -- assigned_questions_count(application_id, $1, 1) = assignable_questions_count(application_id) AS is_fully_assigned_level_1,
-        -- assigned_questions_count(application_id, $1, 1) AS assigned_questions_level_1,
-        assignable_questions_count (application_id) AS total_questions,
-        assigned_questions_count (application_id, $1, level_number) AS total_assigned,
-        submitted_assigned_questions_count (application_id, $1, level_number) AS total_assign_locked
+        END::assigner_action
     FROM
         review_assignment
     LEFT JOIN review_assignment_assigner_join ON review_assignment.id = review_assignment_assigner_join.review_assignment_id
@@ -1913,12 +1945,7 @@ CREATE TABLE application_list_shape (
     assigners varchar[],
     reviewers varchar[],
     reviewer_action public.reviewer_action,
-    assigner_action public.assigner_action,
-    -- is_fully_assigned_level_1 boolean,
-    -- assigned_questions_level_1 bigint,
-    total_questions bigint,
-    total_assigned bigint,
-    total_assign_locked bigint
+    assigner_action public.assigner_action
 );
 
 CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
@@ -1941,16 +1968,7 @@ CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
         assigners,
         reviewers,
         reviewer_action,
-        assigner_action,
-        -- CASE WHEN is_fully_assigned_level_1 IS NULL THEN
-        --     FALSE
-        -- ELSE
-        --     is_fully_assigned_level_1
-        -- END,
-        -- assigned_questions_level_1,
-        total_questions,
-        total_assigned,
-        total_assign_locked
+        assigner_action
     FROM
         application app
     LEFT JOIN TEMPLATE ON app.template_id = template.id
