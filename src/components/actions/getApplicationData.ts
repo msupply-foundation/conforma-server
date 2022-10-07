@@ -56,10 +56,20 @@ export const getApplicationData = async (input: {
       }
     : {}
 
+  const Emailconfig = {
+    host: 'server.msupply.foundation',
+    port: 465,
+    secure: true,
+    user: 'irims-dev@sussol.net',
+    defaultFromName: 'Conforma',
+    defaultFromEmail: 'no-reply@msupply.foundation',
+  }
+
   const environmentData = {
     appRootFolder: getAppEntryPointDir(),
     filesFolder: config.filesFolder,
     webHostUrl: process.env.WEB_HOST,
+    config: Emailconfig,
   }
 
   const sectionCodes = (await DBConnect.getApplicationSections(applicationId)).map(

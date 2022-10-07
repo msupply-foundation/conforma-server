@@ -4,7 +4,6 @@ import databaseMethods from './databaseMethods'
 import path from 'path'
 import nodemailer from 'nodemailer'
 import marked from 'marked'
-import config from '../config.json'
 import { Attachment } from 'nodemailer/lib/mailer'
 import { getFilePath } from '../../../src/components/files/fileHandler'
 import { ActionApplicationData } from '../../../src/types'
@@ -14,6 +13,9 @@ const isValidEmail = (email: string) => /^[\w\-_+.]+@([\w\-]+\.)+[A-Za-z]{2,}$/g
 
 const sendNotification: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
+  const {
+    environmentData: { appRootFolder, filesFolder, config },
+  } = applicationData as ActionApplicationData
   const { host, port, secure, user, defaultFromName, defaultFromEmail } = config
   const {
     userId = applicationData?.userId,
@@ -28,10 +30,6 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     attachments = [],
     sendEmail = true,
   } = parameters
-
-  const {
-    environmentData: { appRootFolder, filesFolder },
-  } = applicationData as ActionApplicationData
 
   const transporter = nodemailer.createTransport({
     host,
