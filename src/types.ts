@@ -1,4 +1,5 @@
 import { BasicObject, EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
+import { ExecOptionsWithStringEncoding } from 'child_process'
 import {
   ActionQueueStatus,
   ApplicationOutcome,
@@ -126,6 +127,14 @@ export interface ActionApplicationData {
   environmentData: {
     appRootFolder: string
     filesFolder: string
+    config: {
+      host: string
+      port: number
+      secure: boolean
+      user: string
+      defaultFromName: string
+      defaultFromEmail: string
+    }
   }
 }
 
