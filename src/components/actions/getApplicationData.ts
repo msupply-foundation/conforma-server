@@ -62,16 +62,8 @@ export const getApplicationData = async (input: {
     secure: true,
     user: 'irims-dev@sussol.net',
     defaultFromName: 'Conforma',
+    defaultFromEmail: 'test-new-noreply@email.com',
   }
-
-  // const Emailconfig = {
-  //   host: 'server.msupply.foundation',
-  //   port: 465,
-  //   secure: true,
-  //   user: 'irims-dev@sussol.net',
-  //   defaultFromName: 'Conforma',
-  //   defaultFromEmail: 'test-new-noreply@email.com',
-  // }
 
   const environmentData = {
     appRootFolder: getAppEntryPointDir(),
