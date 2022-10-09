@@ -26,7 +26,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
   } = config
   if (!config.defaultFromEmail) {
     console.log(
-      'default sender email not called from prefs. Sending email under default: no-reply@msupply.foundation'
+      'Warning: default sender email not called from prefs. Sending email under default: no-reply@msupply.foundation'
     )
   }
   const {
