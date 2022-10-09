@@ -20,7 +20,19 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
   const {
     environmentData: { appRootFolder, filesFolder, config },
   } = applicationData as ActionApplicationData
-  const { host, port, secure, user, defaultFromName, defaultFromEmail } = config
+  const {
+    host,
+    port,
+    secure,
+    user,
+    defaultFromName,
+    defaultFromEmail = 'no-reply@msupply.foundation',
+  } = config
+  if (!config.defaultFromEmail) {
+    console.log(
+      'default sender email not called from prefs. Sending email under default: no-reply@msupply.foundation'
+    )
+  }
   const {
     userId = applicationData?.userId,
     email = applicationData?.email,
