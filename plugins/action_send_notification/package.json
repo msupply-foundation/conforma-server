@@ -9,7 +9,7 @@
     "test": "node ../../utils/pluginScripts/testPluginFromPluginFolder.js"
   },
   "devDependencies": {
-    "@types/nodemailer": "^6.4.2"
+    "@types/nodemailer": "^6.4.6"
   },
   "dependencies": {
     "marked": "^2.1.1",

@@ -1435,6 +1435,16 @@ const migrateData = async () => {
         ADD COLUMN IF NOT EXISTS filter_parameters jsonb,
         ADD COLUMN IF NOT EXISTS filter_expression jsonb,
         ADD COLUMN IF NOT EXISTS filter_data_type varchar;
+      ADD COLUMN IF NOT EXISTS sort_column varchar;
+      ALTER TABLE data_view_column_definition 
+      ADD COLUMN IF NOT EXISTS filter_parameters jsonb;`)
+
+    console.log(' - Add timestamp and email_server_log to notification table')
+    await DB.changeSchema(`
+      ALTER TABLE notification 
+        ADD COLUMN IF NOT EXISTS timestamp timestamptz
+          DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        ADD COLUMN IF NOT EXISTS email_server_log varchar; 
     `)
   }
   // Other version migrations continue here...
