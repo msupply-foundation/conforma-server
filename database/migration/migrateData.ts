@@ -1426,13 +1426,18 @@ const migrateData = async () => {
         ALTER COLUMN reviewability
           SET DEFAULT 'ONLY_IF_APPLICANT_ANSWER';`)
 
-
     console.log(' - Add timestamp and email_server_log to notification table')
     await DB.changeSchema(`
       ALTER TABLE notification 
         ADD COLUMN IF NOT EXISTS timestamp timestamptz
           DEFAULT CURRENT_TIMESTAMP NOT NULL,
         ADD COLUMN IF NOT EXISTS email_server_log varchar; 
+    `)
+
+    console.log('add unique constraint to usernames in database')
+    await DB.changeSchema(`
+    CREATE EXTENSION IF NOT EXISTS citext;
+    ALTER TABLE users ALTER COLUMN username TYPE citext;
     `)
   }
   // Other version migrations continue here...
