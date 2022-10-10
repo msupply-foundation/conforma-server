@@ -43,15 +43,27 @@ const databaseMethods = (DBConnect: any) => ({
       throw err
     }
   },
-  notificationEmailSent: async (notificationId: number) => {
+  notificationEmailSent: async (notificationId: number, serverLog: string) => {
     const text = `
-      UPDATE notification SET email_sent = true
-      WHERE id = $1
-      RETURNING *
+      UPDATE notification SET
+        email_sent = true,
+        email_server_log = $2
+      WHERE id = $1;
     `
     try {
-      const result = await DBConnect.query({ text, values: [notificationId] })
-      return result?.rows[0]
+      await DBConnect.query({ text, values: [notificationId, serverLog] })
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
+  notificationEmailError: async (notificationId: number, errorLog: string) => {
+    const text = `
+      UPDATE notification SET email_server_log = $2
+      WHERE id = $1;
+    `
+    try {
+      await DBConnect.query({ text, values: [notificationId, errorLog] })
     } catch (err) {
       console.log(err.message)
       throw err
