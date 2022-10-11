@@ -130,15 +130,18 @@ export const generateFilterDataFields = async (table: string, fullUpdate: boolea
       for (const record of fetchedRecords) {
         const patch: any = {}
         for (const { column, expression } of filterTextColumnDefinitions) {
-          const evaluatedResult = await evaluateExpression(expression, {
-            objects: { ...record, functions },
-            // pgConnection: DBConnect, probably don't want to allow SQL
-            APIfetch: fetch,
-            // TO-DO: Need to pass Auth headers to evaluator API calls
-            graphQLConnection: { fetch, endpoint: graphQLEndpoint },
-          })
-          // console.log('evaluatedResult', evaluatedResult)
-          patch[camelCase(column)] = evaluatedResult
+          try {
+            const evaluatedResult = await evaluateExpression(expression, {
+              objects: { ...record, functions },
+              // pgConnection: DBConnect, probably don't want to allow SQL
+              APIfetch: fetch,
+              // TO-DO: Need to pass Auth headers to evaluator API calls
+              graphQLConnection: { fetch, endpoint: graphQLEndpoint },
+            })
+            patch[camelCase(column)] = evaluatedResult
+          } catch {
+            // If evaluation fails, just continue with next record
+          }
         }
         const result = await updateRecord(camelCase(tableNameFull), record.id, patch, '')
 
