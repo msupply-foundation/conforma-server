@@ -56,7 +56,7 @@ export const getApplicationData = async (input: {
       }
     : {}
 
-  const Emailconfig = {
+  const emailConfig = {
     host: 'server.msupply.foundation',
     port: 465,
     secure: true,
@@ -69,8 +69,7 @@ export const getApplicationData = async (input: {
     appRootFolder: getAppEntryPointDir(),
     filesFolder: config.filesFolder,
     webHostUrl: process.env.WEB_HOST,
-    config: Emailconfig,
-    config: Emailconfig,
+    emailConfig: emailConfig,
   }
 
   const sectionCodes = (await DBConnect.getApplicationSections(applicationId)).map(

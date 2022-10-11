@@ -127,7 +127,7 @@ export interface ActionApplicationData {
   environmentData: {
     appRootFolder: string
     filesFolder: string
-    config: {
+    emailConfig: {
       host: string
       port: number
       secure: boolean

@@ -18,9 +18,8 @@ const isValidEmail = (email: string) => /^[\w\-_+.]+@([\w\-]+\.)+[A-Za-z]{2,}$/g
 const sendNotification: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
   const {
-    environmentData: { appRootFolder, filesFolder },
+    environmentData: { appRootFolder, filesFolder, emailConfig },
   } = applicationData as ActionApplicationData
-  const { Emailconfig } = config
   const {
     host,
     port,
@@ -28,8 +27,8 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     user,
     defaultFromName,
     defaultFromEmail = 'no-reply@msupply.foundation',
-  } = Emailconfig
-  if (!Emailconfig.defaultFromEmail) {
+  } = emailConfig
+  if (!emailConfig.defaultFromEmail) {
     console.log(
       'Warning: default sender email not called from prefs. Sending email under default: no-reply@msupply.foundation'
     )
