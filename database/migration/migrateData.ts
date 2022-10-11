@@ -1437,7 +1437,7 @@ const migrateData = async () => {
     console.log('add unique constraint to usernames in database')
     await DB.changeSchema(`
     CREATE EXTENSION IF NOT EXISTS citext;
-    ALTER TABLE users ALTER COLUMN username TYPE citext;
+    ALTER TABLE public."user" ALTER COLUMN username TYPE citext;
     `)
   }
   // Other version migrations continue here...

@@ -10,3 +10,7 @@ CREATE TABLE public.user (
     password_hash varchar
 );
 
+-- adds citext constraint to username for case insensitivity
+CREATE EXTENSION IF NOT EXISTS citext;
+ALTER TABLE public.user ALTER COLUMN username TYPE citext;
+
