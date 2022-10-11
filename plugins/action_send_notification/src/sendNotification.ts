@@ -6,7 +6,6 @@ import databaseMethods from './databaseMethods'
 import path from 'path'
 import nodemailer, { SentMessageInfo } from 'nodemailer'
 import marked from 'marked'
-import config from '../config.json'
 import configTest from '../configTest.json'
 import { Attachment } from 'nodemailer/lib/mailer'
 import { getFilePath } from '../../../src/components/files/fileHandler'
@@ -17,24 +16,24 @@ const isValidEmail = (email: string) => /^[\w\-_+.]+@([\w\-]+\.)+[A-Za-z]{2,}$/g
 
 const sendNotification: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
-  const { host, port, secure, user, defaultFromName, defaultFromEmail } = config
+
+  const {
+    environmentData: { appRootFolder, filesFolder, SMTPConfig },
+  } = applicationData as ActionApplicationData
+
   const {
     userId = applicationData?.userId,
     email = applicationData?.email,
     to = email,
     cc,
     bcc,
-    fromName = defaultFromName,
-    fromEmail = defaultFromEmail,
+    fromName = SMTPConfig.defaultFromName,
+    fromEmail = SMTPConfig.defaultFromEmail,
     subject,
     message,
     attachments = [],
     sendEmail = true,
   } = parameters
-
-  const {
-    environmentData: { appRootFolder, filesFolder },
-  } = applicationData as ActionApplicationData
 
   const transporter = nodemailer.createTransport(
     TEST_MODE
@@ -78,7 +77,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     })
 
     // Send email
-    if (sendEmail && hasValidEmails) {
+    if (sendEmail && hasValidEmails && environmentData.SMTPConfig) {
       console.log('Sending email...')
       transporter
         .sendMail({
