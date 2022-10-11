@@ -606,42 +606,23 @@ class PostgresDB {
     }
   }
 
-  // Remove a user from an org in user_organisation table
+  // Remove specific user (or all user - if no userId specified)
+  // from an org in user_organisation table
   public removeUserOrg = async ({
     userId,
     orgId,
   }: {
-    userId: number
+    userId?: number
     orgId: number
   }): Promise<object> => {
     const text = `
       DELETE FROM user_organisation WHERE
-      user_id = $1 AND organisation_id = $2
+      organisation_id = $1 ${userId ? 'AND user_id = $2' : ''}
       RETURNING id, user_id, organisation_id;
       `
     try {
-      const result = await this.query({ text, values: [userId, orgId] })
-      return { ...result.rows[0], success: true }
-    } catch (err) {
-      throw err
-    }
-  }
-
-  // Remove all permissions for user-org
-  public deleteUserOrgPermissions = async ({
-    userId,
-    orgId,
-  }: {
-    userId: number
-    orgId: number
-  }) => {
-    const text = `
-      DELETE FROM permission_join WHERE
-      user_id = $1 AND organisation_id = $2;
-      `
-    try {
-      await this.query({ text, values: [userId, orgId] })
-      return { success: true }
+      const result = await this.query({ text, values: userId ? [orgId, userId] : [orgId] })
+      return { ...result.rows, success: true }
     } catch (err) {
       throw err
     }
