@@ -10,7 +10,7 @@ export interface ActionPluginInput {
 export interface ActionPluginOutput {
   status: ActionQueueStatus
   error_log: string
-  output?: { [key: string]: any }
+  output?: { [key: string]: any } | Object[]
 }
 
 export type ActionPluginType = (props: ActionPluginInput) => Promise<ActionPluginOutput>

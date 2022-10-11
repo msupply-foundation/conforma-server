@@ -12,6 +12,7 @@ import {
   ActionQueuePayload,
   FilePayload,
   TriggerQueueUpdatePayload,
+  UserOrg,
 } from '../types'
 import { ApplicationOutcome, ApplicationStatus, ReviewStatus, Trigger } from '../generated/graphql'
 
@@ -609,24 +610,46 @@ class PostgresDB {
   // Remove specific user (or all user - if no userId specified)
   // from an org in user_organisation table
   public removeUserOrg = async ({
-    userId,
     orgId,
+    userId,
   }: {
-    userId?: number
     orgId: number
-  }): Promise<object> => {
+    userId?: number
+  }): Promise<{ pairs: UserOrg[]; success: boolean }> => {
     const text = `
       DELETE FROM user_organisation WHERE
       organisation_id = $1 ${userId ? 'AND user_id = $2' : ''}
-      RETURNING id, user_id, organisation_id;
+      RETURNING id, user_id as "userId", organisation_id as "orgId";
       `
     try {
       const result = await this.query({ text, values: userId ? [orgId, userId] : [orgId] })
-      return { ...result.rows, success: true }
+      return { pairs: result.rows, success: true }
     } catch (err) {
       throw err
     }
   }
+
+  // Remove all permissions for user-org
+  public deleteUserOrgPermissions = async ({
+    orgId,
+    userId,
+  }: {
+    orgId: number
+    userId?: number
+  }) => {
+    const text = `
+      DELETE FROM permission_join WHERE
+      organisation_id = $1 ${userId ? 'AND user_id = $2' : ''};
+      `
+    try {
+      await this.query({ text, values: userId ? [orgId, userId] : [orgId] })
+      return { success: true }
+    } catch (err) {
+      throw err
+    }
+  }
+
+  // Remove all user
 
   // Used by triggers/actions -- please don't modify
   public getUserData = async (userId: number, orgId: number) => {
