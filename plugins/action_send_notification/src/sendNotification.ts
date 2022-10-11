@@ -77,7 +77,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     })
 
     // Send email
-    if (sendEmail && hasValidEmails && environmentData.SMTPConfig) {
+    if (sendEmail && hasValidEmails && SMTPConfig) {
       console.log('Sending email...')
       transporter
         .sendMail({
