@@ -21,6 +21,8 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     environmentData: { appRootFolder, filesFolder, SMTPConfig },
   } = applicationData as ActionApplicationData
 
+  const { host, port, secure, user, defaultFromName, defaultFromEmail } = SMTPConfig
+
   const {
     userId = applicationData?.userId,
     email = applicationData?.email,
