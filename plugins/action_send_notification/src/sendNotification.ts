@@ -6,7 +6,7 @@ import databaseMethods from './databaseMethods'
 import path from 'path'
 import nodemailer from 'nodemailer'
 import marked from 'marked'
-import config from '../config.json'
+import config from '../../../src/config'
 import configTest from '../configTest.json'
 import { Attachment } from 'nodemailer/lib/mailer'
 import { getFilePath } from '../../../src/components/files/fileHandler'
@@ -18,8 +18,9 @@ const isValidEmail = (email: string) => /^[\w\-_+.]+@([\w\-]+\.)+[A-Za-z]{2,}$/g
 const sendNotification: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
   const {
-    environmentData: { appRootFolder, filesFolder, config },
+    environmentData: { appRootFolder, filesFolder },
   } = applicationData as ActionApplicationData
+  const { Emailconfig } = config
   const {
     host,
     port,
@@ -27,8 +28,8 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     user,
     defaultFromName,
     defaultFromEmail = 'no-reply@msupply.foundation',
-  } = config
-  if (!config.defaultFromEmail) {
+  } = Emailconfig
+  if (!Emailconfig.defaultFromEmail) {
     console.log(
       'Warning: default sender email not called from prefs. Sending email under default: no-reply@msupply.foundation'
     )

@@ -62,7 +62,7 @@ export const getApplicationData = async (input: {
     secure: true,
     user: 'irims-dev@sussol.net',
     defaultFromName: 'Conforma',
-    defaultFromEmail: 'test-new-noreply@email.com',
+    defaultFromEmail: 'noreply@msupply.foundation',
   }
 
   const environmentData = {

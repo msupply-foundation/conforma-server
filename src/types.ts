@@ -1,5 +1,4 @@
 import { BasicObject, EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
-import { ExecOptionsWithStringEncoding } from 'child_process'
 import {
   ActionQueueStatus,
   ApplicationOutcome,
