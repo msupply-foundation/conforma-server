@@ -21,7 +21,14 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     environmentData: { appRootFolder, filesFolder, SMTPConfig },
   } = applicationData as ActionApplicationData
 
-  const { host, port, secure, user, defaultFromName, defaultFromEmail } = SMTPConfig
+  const {
+    host = 'server.msupply.foundation',
+    port = 465,
+    secure = true,
+    user = 'irims-dev@sussol.net',
+    defaultFromName = 'Conforma',
+    defaultFromEmail = 'no-reply@msupply.foundation',
+  } = SMTPConfig
 
   const {
     userId = applicationData?.userId,
@@ -29,8 +36,8 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     to = email,
     cc,
     bcc,
-    fromName = SMTPConfig.defaultFromName,
-    fromEmail = SMTPConfig.defaultFromEmail,
+    fromName = defaultFromName,
+    fromEmail = defaultFromEmail,
     subject,
     message,
     attachments = [],
