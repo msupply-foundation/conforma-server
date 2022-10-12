@@ -21,15 +21,6 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     environmentData: { appRootFolder, filesFolder, SMTPConfig },
   } = applicationData as ActionApplicationData
 
-  // const {
-  //   host = 'server.msupply.foundation',
-  //   port = 465,
-  //   secure = true,
-  //   user = 'irims-dev@sussol.net',
-  //   defaultFromName = 'Conforma',
-  //   defaultFromEmail = 'no-reply@msupply.foundation',
-  // } = SMTPConfig
-
   const {
     userId = applicationData?.userId,
     email = applicationData?.email,
@@ -49,11 +40,11 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
         TEST_MODE
           ? configTest
           : {
-              SMTPConfig.host,
-              port,
-              secure,
+              host: SMTPConfig.host,
+              port: SMTPConfig.port,
+              secure: SMTPConfig.secure,
               auth: {
-                user,
+                user: SMTPConfig.user,
                 pass: process.env.SMTP_PASSWORD,
               },
             }
@@ -88,7 +79,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     })
 
     // Send email
-    if (sendEmail && hasValidEmails && SMTPConfig) {
+    if (sendEmail && hasValidEmails && transporter) {
       console.log('Sending email...')
       transporter
         .sendMail({
@@ -133,6 +124,9 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
           )
           db.notificationEmailError(notificationResult.id, `ERROR: ${err.message}`)
         })
+    } else {
+      console.log('Email not sent - missing email configuration')
+      db.notificationEmailError(notificationResult.id, `WARNING: email configuration not provided`)
     }
 
     // NOTE: Because sending email happens asynchronously, the output object

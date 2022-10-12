@@ -134,14 +134,6 @@ export interface ActionApplicationData {
       defaultFromName: string
       defaultFromEmail: string
     }
-    emailConfig: {
-      host: string
-      port: number
-      secure: boolean
-      user: string
-      defaultFromName: string
-      defaultFromEmail: string
-    }
   }
 }
 
