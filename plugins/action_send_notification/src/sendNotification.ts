@@ -21,14 +21,14 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     environmentData: { appRootFolder, filesFolder, SMTPConfig },
   } = applicationData as ActionApplicationData
 
-  const {
-    host = 'server.msupply.foundation',
-    port = 465,
-    secure = true,
-    user = 'irims-dev@sussol.net',
-    defaultFromName = 'Conforma',
-    defaultFromEmail = 'no-reply@msupply.foundation',
-  } = SMTPConfig
+  // const {
+  //   host = 'server.msupply.foundation',
+  //   port = 465,
+  //   secure = true,
+  //   user = 'irims-dev@sussol.net',
+  //   defaultFromName = 'Conforma',
+  //   defaultFromEmail = 'no-reply@msupply.foundation',
+  // } = SMTPConfig
 
   const {
     userId = applicationData?.userId,
@@ -36,27 +36,29 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     to = email,
     cc,
     bcc,
-    fromName = defaultFromName,
-    fromEmail = defaultFromEmail,
+    fromName = SMTPConfig?.defaultFromName,
+    fromEmail = SMTPConfig?.defaultFromEmail,
     subject,
     message,
     attachments = [],
     sendEmail = true,
   } = parameters
 
-  const transporter = nodemailer.createTransport(
-    TEST_MODE
-      ? configTest
-      : {
-          host,
-          port,
-          secure,
-          auth: {
-            user,
-            pass: process.env.SMTP_PASSWORD,
-          },
-        }
-  )
+  const transporter = SMTPConfig
+    ? nodemailer.createTransport(
+        TEST_MODE
+          ? configTest
+          : {
+              SMTPConfig.host,
+              port,
+              secure,
+              auth: {
+                user,
+                pass: process.env.SMTP_PASSWORD,
+              },
+            }
+      )
+    : null
 
   try {
     const toAddressString = stringifyEmailRecipientsList(to)
