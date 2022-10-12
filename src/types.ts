@@ -134,7 +134,7 @@ export interface ActionApplicationData {
       defaultFromName: string
       defaultFromEmail: string
     }
-    SMTPConfig: {
+    emailConfig: {
       host: string
       port: number
       secure: boolean
