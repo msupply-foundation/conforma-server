@@ -97,6 +97,7 @@ Changes the application Stage to the next in the sequence
 |                                          | `applicationStatusHistoryTimestamp` or |
 |                                          | `reviewStatusHistoryTimestamp`         |
 
+
 If we are wanting to change the status of a **review**, the parameter `isReview` should be set to `true`. If `applicationId` or `reviewId` are not provided, plugin will try to retrieve from `applicationData`.
 
 **Note:**: If `isReview` is not provided, it default to `true` if the Action was triggered by a review. However, this means that if we want to set the status of an Application when a review is triggered, then we will need to explicitly set `isReview: false`.
@@ -168,13 +169,11 @@ This will look for a user record with `username = "js"` and update it with the _
 #### How the record is built
 
 The full record to be inserted/updated is built from a combination of the `data` parameter and any other non-specific parameters included in the input. Seperated field parameters can be of any degree of complexity (i.e. [evaluator](Query-Syntax.md) expressions), so may be necessary in some cases. However, the vast majority of data fields inserted will be straight mappings from application responses (and there can be an awful lot of them in some workflows!), so we can use the `data` parameter object as a shorthand to map several fields using a more straightforward syntax all at once -- the `data` object is structured with key-value pairs like so:
-
 ```
 { <field-name> : <property-from-applicationData>, ... }
 ```
 
 For example:
-
 ```
 {
   first_name: "responses.Q1.text",
@@ -185,7 +184,6 @@ For example:
 ```
 
 If we had the above `data` parameter, along with the following additional parameters in the input:
-
 ```
 {
   ...
@@ -193,9 +191,7 @@ If we had the above `data` parameter, along with the following additional parame
   current_time: <fetch-current-timestamp-using-"objectFunctions">
 }
 ```
-
 The resultant record that would be inserted might look something like this:
-
 ```
 {
   first_name: "Fred",
@@ -213,13 +209,13 @@ It is recommended to use the `data` parameter object when possible. The standalo
 
 - fields with a value of `null` will be omitted from the database update, so any current values will remain unchanged.
 - you can create/update an record without creating/updating the JOIN table by explicitly setting `shouldCreateJoinTable: false`
-- the data type of each field is set the first time a record is added with that field in it, so subsequent insertions/updates _must_ match the data type for that field.
+- the data type of each field is set the first time a record is added with that field in it, so subsequent insertions/updates *must* match the data type for that field.
 
 ---
 
 ### Modify Multiple Records
 
-- Allows creating or updating _multiple_ database records. It basically just calls the above `modifyRecord` action multiple times.
+- Allows creating or updating *multiple* database records. It basically just calls the above `modifyRecord` action multiple times.
 
 - _Action Code:_ **`modifyMultipleRecords`**
 
@@ -237,7 +233,7 @@ Most of these parameters are the same as for `modifyRecord`. The `records` param
 
 The output `records` property is an array of results, each structured as per a single `modifyRecord` output.
 
-The `keyMap` property is used if the `records` have field names different from what you need the database field to be named. You provide an object which maps record field names to database field names -- the `keys` are the names of the fields in the database, and the `values` are the record fields that get mapped to them.
+The `keyMap` property is used if the `records` have field names different from what you need the database field to be named. You provide an object which maps record field names to database field names -- the `keys` are the names of the fields in the database, and the `values` are the record fields that get mapped to them. 
 
 For example:
 
@@ -247,10 +243,10 @@ For example:
   age: "entered_age"
 }
 ```
-
 This will look for fields `entered_name` and `entered_age` on the incoming records and insert the associated values in to database fields `name` and `age`, respectively.
 
-Note that when a `keyMap` is present, _only_ the fields explicitly named in the map will be inserted into the database; all other fields in the records will be ignored. By default, _all_ record fields are inserted into the database, so if you want to only include a subset, you can just provide a `keyMap` of the fields you want to keep mapped to themselves. For example if you have a record `{name: "John", age: 28, isStaff: true}` but you only want to write the `name` field to the database, just provide `keyMap: {name: "name"}`.
+Note that when a `keyMap` is present, *only* the fields explicitly named in the map will be inserted into the database; all other fields in the records will be ignored. By default, *all* record fields are inserted into the database, so if you want to only include a subset, you can just provide a `keyMap` of the fields you want to keep mapped to themselves. For example if you have a record `{name: "John", age: 28, isStaff: true}` but you only want to write the `name` field to the database, just provide `keyMap: {name: "name"}`.
+
 
 ---
 
@@ -413,13 +409,11 @@ The opposite of `joinUserOrg`. Removes user from company by deleting the `user_o
 
 - _Action Code:_ **`removeUserOrg`**
 
-| Input parameters<br />(\*required) <br/>   | Output properties                       |
-| ------------------------------------------ | --------------------------------------- |
-| `username` or `userId`                     | `array` of `{userOrgId, userId, orgId}` |
-| `orgName` or `orgId` o `organisation_id`\* |                                         |
-| `deletePermissions` (default `true`)       |                                         |
-
-In `removeUserOrg` the field to define from which organisation to remove user(s) `orgId` or `orgName` is compulsory, but you _can_ omit the user. In that case, it is treated as "remove ALL USERS". Also a flag defining if it should also remove any permission for removed user(s) on that organisation can be passed. After each user is removed there is no way to revert that action unless rejoinng the user to the organisation on one of provided workflows.
+| Input parameters<br />(\*required) <br/> | Output properties |
+| ---------------------------------------- | ----------------- |
+| `userId`\*                               | `userOrgId`       |
+| `orgId` \*                               | `userId`          |
+|                                          | `orgId`           |
 
 ---
 
@@ -431,11 +425,11 @@ Grants permission to user/org -- i.e. creates `permission_join` from user/org to
 
 | Input parameters<br />(\*required) <br/> | Output properties                                                                    |
 | ---------------------------------------- | ------------------------------------------------------------------------------------ |
-| `username` or `userId`                   | `grantedPermissions: { permissionJoinId, permissionNameId, permissionName } [Array]` |
-| `orgName` or `orgId`                     |                                                                                      |
+| `username`  or `userId`                  | `grantedPermissions: { permissionJoinId, permissionNameId, permissionName } [Array]` |
+| `orgName`  or `orgId`                    |                                                                                      |
 | `permissionNames`\* [Array of names]     |                                                                                      |
 
-It is possible to grant a permission to just a user (i.e. user acting without an organisation) or just an organisation (i.e. all members of org). In these cases the "username"/"userId" or "orgName"/"orgId" must be _explicitly_ set to `null` -- if either is simply `undefined` the action will return a "Fail" result.
+It is possible to grant a permission to just a user (i.e. user acting without an organisation) or just an organisation (i.e. all members of org). In these cases the "username"/"userId" or "orgName"/"orgId" must be *explicitly* set to `null` -- if either is simply `undefined` the action will return a "Fail" result.
 
 ---
 
@@ -452,7 +446,7 @@ Revokes permissions from to user/org -- i.e. sets the `is_active` field to `fals
 | `permissionNames`\* [Array of names]     |                                                                                      |
 | `isRemovingPermission` (default: `true`) |                                                                                      |
 
-`revokePermissions` works differently to `grantPermissions`, in that you _can_ omit the user or the org. In that case, it is treated as "apply to ALL". So if you only provide an `orgId`, it'll remove any permission for that organisation, regardless of which user (or `null`) is linked with it. However, if you explicitly set `null` for one of the values, it'll only match `null`.
+`revokePermissions` works differently to `grantPermissions`, in that you *can* omit the user or the org. In that case, it is treated as "apply to ALL". So if you only provide an `orgId`, it'll remove any permission for that organisation, regardless of which user (or `null`) is linked with it. However, if you explicitly set `null` for one of the values, it'll only match `null`.
 
 The `isRemovingPermission` parameter specifies whether or not the `permission_join` record should be _deleted_ (the default behaviour) or just set to inactive (which would mean the user can still _view_ their applications but not create new ones, or submit existing). _**NOTE**: This functionality not actually implemented yet in policies/front-end, so only full removal should be used currently -- TO-DO_
 
@@ -482,7 +476,7 @@ Should be run whenever an application or review is submitted or re-submitted, an
 
 **Notes**:
 
-- If `applicationId` only is passed the action will generate reviewAssignments for **all** review levels on the current stage up to and including the current level. As well as generating first level review assignments for the first application submissiong, this also accounts for the case when an applicant _re-submits_ after making changes and we need to generate fresh review_assignments for the first level even though higher level review assignments already exist (it will also regenerate the higher levels, but this won't cause any problems).
+- If `applicationId` only is passed the action will generate reviewAssignments for **all** review levels on the current stage up to and including the current level. As well as generating first level review assignments for the first application submissiong, this also accounts for the case when an applicant *re-submits* after making changes and we need to generate fresh review_assignments for the first level even though higher level review assignments already exist (it will also regenerate the higher levels, but this won't cause any problems).
 - If `reviewId` is also received the action will generate reviewAssignments for the **next** level of reviews in the current stage or - if it was the last level on current stage, generate for 1st level of the **next** stage. Nothing is created if it reached the last level & stage.
 - In all of the cases, when a `reviewAssignment` record already exist (i.e. if it's a re-assignment), they will just be updated (with a new timestamp).
 
@@ -514,6 +508,7 @@ Should be run whenever the permissions for any user are changed.
 | Input parameters<br />(\*required) <br/> | Output properties     |
 | ---------------------------------------- | --------------------- |
 | `userId`                                 | `updatedApplications` |
+
 
 **Notes**:
 
@@ -591,6 +586,7 @@ Generates a PDF file based on a [Carbone](https://carbone.io/api-reference.html)
 | `isOutputDoc`                            |                                            |
 | `description`                            |                                            |
 
+
 The Action utilises the internal `generatePDF` function, which is also accessible via the [`/generate-pdf` endpoint](API.md)
 
 `docTemplateId` specifies the uniqueId of the carbone template file (from the "file" table) and `options` optional can define a localisatiion to be used for dates and currency formatting.
@@ -600,12 +596,12 @@ The data used by the action primarily comes from `applicationData` and `outputCu
 - `data`: this parameter is an object in which you can define a simple mapping between field names required by Carbone and fields on `applicationData`. This is the same as the mapping available in `modifyRecord`, so please [see modifyRecord plugin](#modify-record) info for more detail and examples.
 - `additionalData`: another object, but does no mapping, so each value must either be a literal value or an evaluator expression. In the latter case, you'll need to create the object using the [`buildObject` operator](Query-Syntax.md#buildobject).
 
+
 The full data object is constructed and sent to the Carbone processor like so:
 
 ```
 data: { ...applicationData, ...outputCumulative, ...data(mapped), additionalData }
 ```
-
 (Note that the first three are flattened to the root `data` object, whereas `additionalData` is contained all within the `additionalData` field)
 
 `userId` and `applicationSerial` are not required for functioning, but will be stored as fields in the resulting "file" record. If `applicationSerial` is supplied, the output PDF file will be stored in a subfolder named for the application serial.
@@ -682,13 +678,14 @@ A "special" action that allows other actions to be triggered at some time in the
 
 This Action stores an "event" in the database `trigger_schedule` table, scheduled for a time in the future specified by `duration`. When this time is reached, a special trigger is fired (`ON_SCHEDULE`) which can be used as the trigger for subsequent actions.
 
-Each scheduled event can be saved with an `eventCode` -- this is used by Actions that are triggered by this event to determine _which_ action should be fired for any given `ON_SCHEDULE` trigger on each template type. Every Action defined for each template has an optional `scheduledActionCode` field, which can be used to match specific events. If no event code is provided, then _every_ action for that template type with an `ON_SCHEDULE` trigger will be executed.
+Each scheduled event can be saved with an `eventCode` -- this is used by Actions that are triggered by this event to determine *which* action should be fired for any given `ON_SCHEDULE` trigger on each template type. Every Action defined for each template has an optional `scheduledActionCode` field, which can be used to match specific events. If no event code is provided, then *every* action for that template type with an `ON_SCHEDULE` trigger will be executed.
 
 By default, when an event is saved, the `outputCumulative` object from the `scheduleAction` action (including outputs of previous actions in the sequence) is stored in the `data` field, but additional data can be added to this as well. Then when the scheduled action runs, it gets this data passed in as `outputCumulative` -- this means it effectively can continue as though it were part of the same sequence of actions, but with a "pause" due to the schedule.
 
-The `cancel` parameter is a way to prevent a previously scheduled event from occurring. Passing in `cancel: true` will, instead of creating a new event, find any _existing_ event that has matching `applicationId` and `eventCode` and set to to inactive without it ever firing. In practice, though, targeting an event by `applicationId` is often not feasible, so the preferred way to cancel a scheduled event is to just apply an appropriate Condition to the subsequent action -- so the event is still triggered, but the matching action won't occur if the condition is not met (e.g. don't expire a product if registration has been renewed)
+The `cancel` parameter is a way to prevent a previously scheduled event from occurring. Passing in `cancel: true` will, instead of creating a new event, find any *existing* event that has matching `applicationId` and `eventCode` and set to to inactive without it ever firing. In practice, though, targeting an event by `applicationId` is often not feasible, so the preferred way to cancel a scheduled event is to just apply an appropriate Condition to the subsequent action -- so the event is still triggered, but the matching action won't occur if the condition is not met (e.g. don't expire a product if registration has been renewed)
 
-Note: the `duration` value can be _either_ a number (representing time in weeks) or a [Luxon duration object](https://moment.github.io/luxon/api-docs/index.html#duration).
+Note: the `duration` value can be *either* a number (representing time in weeks) or a [Luxon duration object](https://moment.github.io/luxon/api-docs/index.html#duration).
+
 
 ---
 
@@ -703,7 +700,7 @@ Action to remove files no longer connected to application responses -- for examp
 | `applicationId`                          | `deletedFiles`    |
 | `applicationSerial`                      | `submittedFiles`  |
 
-Can supply _either_ `applicationId` or `applicationSerial`, although this can be inferred from `applicationData` if neither is supplied.
+Can supply *either* `applicationId` or `applicationSerial`, although this can be inferred from `applicationData` if neither is supplied.
 
 Note: There is a database trigger/postgres listener to automatically delete files when their database record is deleted, so we only need to delete the records, not the files themselves.
 
@@ -727,7 +724,7 @@ Then this alias action just passes in the code of the action it's referencing an
 
 By default the (original/aliased) action runs with the condition and parameters it has defined, but these can be overridden by the alias. For example, if you have a `sendNotification` action which normally runs with `sendEmail: true` (the default), but you don't want emails going out when previewing, you'd just supply the parameter `sendEmail: false` to the alias and that would override the `sendNotification` parameter on this occasion.
 
-The "condition" field (common to all template*actions) can also override the original action's condition. However, every action has `condition: true` by default, so we ignore the alias action's condition if it's set to `true`. In the event that you actually \_want* this to override the original action's condition (i.e. run the original action no matter what), then you'll need to set the `shouldOverrideConditon` to `true` (that's the only condition this parameter would need to be specified).
+The "condition" field (common to all template_actions) can also override the original action's condition. However, every action has `condition: true` by default, so we ignore the alias action's condition if it's set to `true`. In the event that you actually *want* this to override the original action's condition (i.e. run the original action no matter what), then you'll need to set the `shouldOverrideConditon` to `true` (that's the only condition this parameter would need to be specified).
 
 ---
 
