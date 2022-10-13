@@ -3,6 +3,7 @@ import DB from './databaseMethods'
 import { ReviewAssignmentsWithSections } from './types'
 import semverCompare from 'semver/functions/compare'
 import { execSync } from 'child_process'
+import { createIndexes } from './indexes'
 
 const { version } = config
 const isManualMigration: Boolean = process.argv[2] === '--migrate'
@@ -1512,6 +1513,10 @@ const migrateData = async () => {
     `)
   }
   // Other version migrations continue here...
+
+  // Set indexes last:
+  console.log('Updating indexes...')
+  await DB.changeSchema(createIndexes)
 
   // Finally, set the database version to the current version
   if (databaseVersionLessThan(version)) await DB.setDatabaseVersion(version)

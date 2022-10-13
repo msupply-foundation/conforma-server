@@ -11,6 +11,6 @@ CREATE TABLE public.notification (
     timestamp timestamptz DEFAULT CURRENT_TIMESTAMP NOT NULL,
     is_read boolean DEFAULT FALSE,
     email_sent boolean DEFAULT FALSE,
-    email_server_log varchar,
+    email_server_log varchar
 );
 
