@@ -2,14 +2,19 @@ import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginInput } from '../../types'
 
 const removeUserOrg = async function ({ parameters, DBConnect }: ActionPluginInput) {
-  const { userId, orgId, user_id, organisation_id, org_id } = parameters
+  const { userId, orgId, user_id, organisation_id, org_id, deletePermissions = true } = parameters
+  const userOrg = {
+    userId: userId ?? user_id,
+    orgId: orgId ?? org_id ?? organisation_id,
+  }
   try {
     console.log(`\Removing user from organisation...`)
-    const result = await DBConnect.removeUserOrg({
-      userId: userId ?? user_id,
-      orgId: orgId ?? org_id ?? organisation_id,
-    })
-    if (result.success)
+    const result = await DBConnect.removeUserOrg(userOrg)
+
+    if (deletePermissions) await DBConnect.deleteUserOrgPermissions(userOrg)
+
+    if (result.success) {
+      console.log(`User ${userOrg.userId} removed from organisation ${userOrg.orgId}`)
       return {
         status: ActionQueueStatus.Success,
         error_log: '',
@@ -19,7 +24,7 @@ const removeUserOrg = async function ({ parameters, DBConnect }: ActionPluginInp
           orgId: result.organisation_id,
         },
       }
-    else
+    } else
       return {
         status: ActionQueueStatus.Fail,
         error_log: 'There was a problem removing user from organisation.',

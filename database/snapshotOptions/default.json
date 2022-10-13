@@ -1,7 +1,7 @@
 {
   "filters": {},
   "includeTables": [],
-  "excludeTables": ["applicationListShape", "elementTypePlugin", "notification"],
+  "excludeTables": ["applicationListShape", "elementTypePlugin"],
   "shouldReInitialise": true,
   "insertScriptsLocale": "dev",
   "includeInsertScripts": ["none"],

@@ -594,7 +594,11 @@ class PostgresDB {
   }
 
   // Join a user to an org in user_organisation table
-  public addUserOrg = async (userOrg: any): Promise<object> => {
+  public addUserOrg = async (userOrg: {
+    user_id: number
+    organisation_id: number
+    user_role?: string
+  }): Promise<object> => {
     const text = `INSERT INTO user_organisation (${Object.keys(userOrg)}) 
       VALUES (${this.getValuesPlaceholders(userOrg)})
       RETURNING id`
@@ -621,7 +625,27 @@ class PostgresDB {
       `
     try {
       const result = await this.query({ text, values: [userId, orgId] })
-      return { userOrgId: result.rows[0].id, success: true }
+      return { ...result.rows[0], success: true }
+    } catch (err) {
+      throw err
+    }
+  }
+
+  // Remove all permissions for user-org
+  public deleteUserOrgPermissions = async ({
+    userId,
+    orgId,
+  }: {
+    userId: number
+    orgId: number
+  }) => {
+    const text = `
+      DELETE FROM permission_join WHERE
+      user_id = $1 AND organisation_id = $2;
+      `
+    try {
+      await this.query({ text, values: [userId, orgId] })
+      return { success: true }
     } catch (err) {
       throw err
     }
@@ -1011,7 +1035,7 @@ class PostgresDB {
 
   public getAllApplicationResponses = async (applicationId: number) => {
     const text = `
-    SELECT ar.id, template_element_id, code, value, time_updated, te.is_reviewable
+    SELECT ar.id, template_element_id, code, value, time_updated, te.reviewability
     FROM application_response ar JOIN template_element te
     ON ar.template_element_id = te.id
     WHERE application_id = $1
