@@ -45,7 +45,9 @@ const removeUserOrg = async function ({ parameters, DBConnect }: ActionPluginInp
       return {
         status: ActionQueueStatus.Success,
         error_log: '',
-        output: removed.pairs,
+        output: {
+          removedUsers: removed.pairs
+        },
       }
     } else {
       return {
