@@ -1,7 +1,7 @@
 // Test suite for the testResponses Action.
 
 import DBConnect from '../../../src/components/databaseConnect'
-import { ActionQueueStatus, IsReviewableStatus } from '../../../src/generated/graphql'
+import { ActionQueueStatus, IsReviewable } from '../../../src/generated/graphql'
 import { action as trimResponses } from './index'
 import * as DatabaseMethods from './databaseMethods'
 
@@ -24,12 +24,12 @@ test('trimResponses: trim application responses', async () => {
         id: 2,
         template_element_id: 1,
         value: 'not null',
-        is_reviewable: IsReviewableStatus.Always,
+        is_reviewable: Reviewability.Always,
       },
       { id: 3, template_element_id: 2, value: null },
-      { id: 4, template_element_id: 2, value: null, is_reviewable: IsReviewableStatus.Always },
+      { id: 4, template_element_id: 2, value: null, is_reviewable: Reviewability.Always },
       { id: 5, template_element_id: 3, value: null },
-      { id: 6, template_element_id: 4, value: null, is_reviewable: IsReviewableStatus.Always },
+      { id: 6, template_element_id: 4, value: null, is_reviewable: Reviewability.Always },
     ]
   })
 

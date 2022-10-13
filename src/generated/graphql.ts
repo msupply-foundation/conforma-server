@@ -17,11 +17,11 @@ export type Scalars = {
   Datetime: any;
   /** The day, does not include a time. */
   Date: any;
+  /** A signed eight-byte integer. The upper big integer values are greater than the max value for a JavaScript number. Therefore all big integers will be output as strings and not numbers. */
+  BigInt: any;
   CharacterData: any;
   SqlIdentifier: any;
   YesOrNo: any;
-  /** A signed eight-byte integer. The upper big integer values are greater than the max value for a JavaScript number. Therefore all big integers will be output as strings and not numbers. */
-  BigInt: any;
 };
 
 export type ActionPlugin = Node & {
@@ -1311,6 +1311,9 @@ export type ApplicationListShape = {
   reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
   assignerAction?: Maybe<AssignerAction>;
+  totalQuestions?: Maybe<Scalars['BigInt']>;
+  totalAssigned?: Maybe<Scalars['BigInt']>;
+  totalAssignLocked?: Maybe<Scalars['BigInt']>;
 };
 
 /**
@@ -1352,6 +1355,12 @@ export type ApplicationListShapeCondition = {
   reviewerAction?: Maybe<ReviewerAction>;
   /** Checks for equality with the object’s `assignerAction` field. */
   assignerAction?: Maybe<AssignerAction>;
+  /** Checks for equality with the object’s `totalQuestions` field. */
+  totalQuestions?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `totalAssigned` field. */
+  totalAssigned?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `totalAssignLocked` field. */
+  totalAssignLocked?: Maybe<Scalars['BigInt']>;
 };
 
 /** A filter to be used against `ApplicationListShape` object types. All fields are combined with a logical ‘and.’ */
@@ -1390,6 +1399,12 @@ export type ApplicationListShapeFilter = {
   reviewerAction?: Maybe<ReviewerActionFilter>;
   /** Filter by the object’s `assignerAction` field. */
   assignerAction?: Maybe<AssignerActionFilter>;
+  /** Filter by the object’s `totalQuestions` field. */
+  totalQuestions?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `totalAssigned` field. */
+  totalAssigned?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `totalAssignLocked` field. */
+  totalAssignLocked?: Maybe<BigIntFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationListShapeFilter>>;
   /** Checks for any expressions in this list. */
@@ -1417,6 +1432,9 @@ export type ApplicationListShapeInput = {
   reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
   assignerAction?: Maybe<AssignerAction>;
+  totalQuestions?: Maybe<Scalars['BigInt']>;
+  totalAssigned?: Maybe<Scalars['BigInt']>;
+  totalAssignLocked?: Maybe<Scalars['BigInt']>;
 };
 
 /** A connection to a list of `ApplicationListShape` values. */
@@ -1477,7 +1495,13 @@ export enum ApplicationListShapesOrderBy {
   ReviewerActionAsc = 'REVIEWER_ACTION_ASC',
   ReviewerActionDesc = 'REVIEWER_ACTION_DESC',
   AssignerActionAsc = 'ASSIGNER_ACTION_ASC',
-  AssignerActionDesc = 'ASSIGNER_ACTION_DESC'
+  AssignerActionDesc = 'ASSIGNER_ACTION_DESC',
+  TotalQuestionsAsc = 'TOTAL_QUESTIONS_ASC',
+  TotalQuestionsDesc = 'TOTAL_QUESTIONS_DESC',
+  TotalAssignedAsc = 'TOTAL_ASSIGNED_ASC',
+  TotalAssignedDesc = 'TOTAL_ASSIGNED_DESC',
+  TotalAssignLockedAsc = 'TOTAL_ASSIGN_LOCKED_ASC',
+  TotalAssignLockedDesc = 'TOTAL_ASSIGN_LOCKED_DESC'
 }
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -2912,6 +2936,7 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -4464,6 +4489,32 @@ export type AssignmentListRecordFilter = {
   not?: Maybe<AssignmentListRecordFilter>;
 };
 
+
+/** A filter to be used against BigInt fields. All fields are combined with a logical ‘and.’ */
+export type BigIntFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<Scalars['BigInt']>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<Scalars['BigInt']>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<Scalars['BigInt']>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<Scalars['BigInt']>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<Scalars['BigInt']>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<Scalars['BigInt']>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<Scalars['BigInt']>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<Scalars['BigInt']>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<Scalars['BigInt']>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<Scalars['BigInt']>;
+};
 
 /** A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’ */
 export type BooleanFilter = {
@@ -10145,6 +10196,37 @@ export type IntFilter = {
   greaterThanOrEqualTo?: Maybe<Scalars['Int']>;
 };
 
+export enum IsReviewableStatus {
+  Always = 'ALWAYS',
+  Never = 'NEVER'
+}
+
+/** A filter to be used against IsReviewableStatus fields. All fields are combined with a logical ‘and.’ */
+export type IsReviewableStatusFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<IsReviewableStatus>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<IsReviewableStatus>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<IsReviewableStatus>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<IsReviewableStatus>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<IsReviewableStatus>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<IsReviewableStatus>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<IsReviewableStatus>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<IsReviewableStatus>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<IsReviewableStatus>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<IsReviewableStatus>;
+};
+
 
 /** A filter to be used against JSON fields. All fields are combined with a logical ‘and.’ */
 export type JsonFilter = {
@@ -12132,9 +12214,9 @@ export type Notification = Node & {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
-  isRead?: Maybe<Scalars['Boolean']>;
   timestamp: Scalars['Datetime'];
+  isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
   emailServerLog?: Maybe<Scalars['String']>;
   /** Reads a single `User` that is related to this `Notification`. */
   user?: Maybe<User>;
@@ -12225,9 +12307,9 @@ export type NotificationApplicationIdFkeyNotificationCreateInput = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
-  isRead?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
   emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
@@ -12255,12 +12337,12 @@ export type NotificationCondition = {
   message?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `attachments` field. */
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** Checks for equality with the object’s `emailSent` field. */
-  emailSent?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `isRead` field. */
-  isRead?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `timestamp` field. */
   timestamp?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `isRead` field. */
+  isRead?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `emailSent` field. */
+  emailSent?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `emailServerLog` field. */
   emailServerLog?: Maybe<Scalars['String']>;
 };
@@ -12283,12 +12365,12 @@ export type NotificationFilter = {
   message?: Maybe<StringFilter>;
   /** Filter by the object’s `attachments` field. */
   attachments?: Maybe<StringListFilter>;
-  /** Filter by the object’s `emailSent` field. */
-  emailSent?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `isRead` field. */
-  isRead?: Maybe<BooleanFilter>;
   /** Filter by the object’s `timestamp` field. */
   timestamp?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `isRead` field. */
+  isRead?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `emailSent` field. */
+  emailSent?: Maybe<BooleanFilter>;
   /** Filter by the object’s `emailServerLog` field. */
   emailServerLog?: Maybe<StringFilter>;
   /** Filter by the object’s `user` relation. */
@@ -12321,9 +12403,9 @@ export type NotificationInput = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
-  isRead?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
   emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
@@ -12407,9 +12489,9 @@ export type NotificationPatch = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
-  isRead?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
   emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
@@ -12463,9 +12545,9 @@ export type NotificationReviewIdFkeyNotificationCreateInput = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
-  isRead?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
   emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
@@ -12535,12 +12617,12 @@ export enum NotificationsOrderBy {
   MessageDesc = 'MESSAGE_DESC',
   AttachmentsAsc = 'ATTACHMENTS_ASC',
   AttachmentsDesc = 'ATTACHMENTS_DESC',
-  EmailSentAsc = 'EMAIL_SENT_ASC',
-  EmailSentDesc = 'EMAIL_SENT_DESC',
-  IsReadAsc = 'IS_READ_ASC',
-  IsReadDesc = 'IS_READ_DESC',
   TimestampAsc = 'TIMESTAMP_ASC',
   TimestampDesc = 'TIMESTAMP_DESC',
+  IsReadAsc = 'IS_READ_ASC',
+  IsReadDesc = 'IS_READ_DESC',
+  EmailSentAsc = 'EMAIL_SENT_ASC',
+  EmailSentDesc = 'EMAIL_SENT_DESC',
   EmailServerLogAsc = 'EMAIL_SERVER_LOG_ASC',
   EmailServerLogDesc = 'EMAIL_SERVER_LOG_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -12600,9 +12682,9 @@ export type NotificationUserIdFkeyNotificationCreateInput = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
-  isRead?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
   emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
@@ -14650,8 +14732,6 @@ export type Query = Node & {
   userOrganisationByUserIdAndOrganisationId?: Maybe<UserOrganisation>;
   verification?: Maybe<Verification>;
   verificationByUniqueId?: Maybe<Verification>;
-  /** Reads and enables pagination through a set of `ApplicationListShape`. */
-  applicationList?: Maybe<ApplicationListShapesConnection>;
   applicationListFilterApplicant?: Maybe<ApplicationListFilterApplicantConnection>;
   applicationListFilterAssigner?: Maybe<ApplicationListFilterAssignerConnection>;
   applicationListFilterOrganisation?: Maybe<ApplicationListFilterOrganisationConnection>;
@@ -14673,7 +14753,6 @@ export type Query = Node & {
   reviewIsLastLevel?: Maybe<Scalars['Boolean']>;
   reviewIsLastStage?: Maybe<Scalars['Boolean']>;
   reviewLevel?: Maybe<Scalars['Int']>;
-  reviewList?: Maybe<ReviewListConnection>;
   reviewReviewerId?: Maybe<Scalars['Int']>;
   reviewStage?: Maybe<Scalars['Int']>;
   reviewTimeStageCreated?: Maybe<Scalars['Datetime']>;
@@ -15762,19 +15841,6 @@ export type QueryVerificationByUniqueIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryApplicationListArgs = {
-  userid?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ApplicationListShapesOrderBy>>;
-  filter?: Maybe<ApplicationListShapeFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryApplicationListFilterApplicantArgs = {
   applicant?: Maybe<Scalars['String']>;
   templateCode?: Maybe<Scalars['String']>;
@@ -15954,20 +16020,6 @@ export type QueryReviewIsLastStageArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryReviewLevelArgs = {
   reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewListArgs = {
-  stageid?: Maybe<Scalars['Int']>;
-  reviewerid?: Maybe<Scalars['Int']>;
-  appstatus?: Maybe<ApplicationStatus>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  filter?: Maybe<ReviewListRecordFilter>;
 };
 
 
@@ -18521,47 +18573,6 @@ export type ReviewInput = {
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
-/** A connection to a list of `ReviewListRecord` values. */
-export type ReviewListConnection = {
-  __typename?: 'ReviewListConnection';
-  /** A list of `ReviewListRecord` objects. */
-  nodes: Array<Maybe<ReviewListRecord>>;
-  /** A list of edges which contains the `ReviewListRecord` and cursor to aid in pagination. */
-  edges: Array<ReviewListEdge>;
-  /** The count of *all* `ReviewListRecord` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `ReviewListRecord` edge in the connection. */
-export type ReviewListEdge = {
-  __typename?: 'ReviewListEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ReviewListRecord` at the end of the edge. */
-  node?: Maybe<ReviewListRecord>;
-};
-
-/** The return type of our `reviewList` query. */
-export type ReviewListRecord = {
-  __typename?: 'ReviewListRecord';
-  applicationId?: Maybe<Scalars['Int']>;
-  reviewerAction?: Maybe<ReviewerAction>;
-};
-
-/** A filter to be used against `ReviewListRecord` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewListRecordFilter = {
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewerAction` field. */
-  reviewerAction?: Maybe<ReviewerActionFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewListRecordFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewListRecordFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ReviewListRecordFilter>;
-};
-
 /** The globally unique `ID` look up for the row to connect. */
 export type ReviewNodeIdConnect = {
   /** The globally unique `ID` which identifies a single `review` to be connected. */
@@ -19512,6 +19523,7 @@ export type ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput = {
   reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -21181,6 +21193,7 @@ export type TemplateElement = Node & {
   reviewability: Reviewability;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
   /** Reads a single `TemplateSection` that is related to this `TemplateElement`. */
   section?: Maybe<TemplateSection>;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
@@ -21286,6 +21299,8 @@ export type TemplateElementCondition = {
   templateCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `templateVersion` field. */
   templateVersion?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `isReviewable` field. */
+  isReviewable?: Maybe<IsReviewableStatus>;
 };
 
 /** A filter to be used against `TemplateElement` object types. All fields are combined with a logical ‘and.’ */
@@ -21326,6 +21341,8 @@ export type TemplateElementFilter = {
   templateCode?: Maybe<StringFilter>;
   /** Filter by the object’s `templateVersion` field. */
   templateVersion?: Maybe<IntFilter>;
+  /** Filter by the object’s `isReviewable` field. */
+  isReviewable?: Maybe<IsReviewableStatusFilter>;
   /** Filter by the object’s `parametersString` field. */
   parametersString?: Maybe<StringFilter>;
   /** Filter by the object’s `applicationResponses` relation. */
@@ -21366,6 +21383,7 @@ export type TemplateElementInput = {
   reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -21475,6 +21493,7 @@ export type TemplateElementPatch = {
   reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -21562,6 +21581,7 @@ export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -21626,6 +21646,8 @@ export enum TemplateElementsOrderBy {
   TemplateCodeDesc = 'TEMPLATE_CODE_DESC',
   TemplateVersionAsc = 'TEMPLATE_VERSION_ASC',
   TemplateVersionDesc = 'TEMPLATE_VERSION_DESC',
+  IsReviewableAsc = 'IS_REVIEWABLE_ASC',
+  IsReviewableDesc = 'IS_REVIEWABLE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -26234,9 +26256,9 @@ export type UpdateNotificationOnNotificationForNotificationApplicationIdFkeyPatc
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
-  isRead?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
   emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
@@ -26252,9 +26274,9 @@ export type UpdateNotificationOnNotificationForNotificationReviewIdFkeyPatch = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
-  isRead?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
   emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
@@ -26270,9 +26292,9 @@ export type UpdateNotificationOnNotificationForNotificationUserIdFkeyPatch = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
-  isRead?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
   emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
@@ -27918,6 +27940,7 @@ export type UpdateTemplateElementOnApplicationResponseForApplicationResponseTemp
   reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -27943,6 +27966,7 @@ export type UpdateTemplateElementOnReviewResponseForReviewResponseTemplateElemen
   reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -27967,6 +27991,7 @@ export type UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFke
   reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -31107,6 +31132,8 @@ export type ResolversTypes = {
   TemplateElementCategory: TemplateElementCategory;
   ReviewabilityFilter: ReviewabilityFilter;
   Reviewability: Reviewability;
+  IsReviewableStatusFilter: IsReviewableStatusFilter;
+  IsReviewableStatus: IsReviewableStatus;
   TemplateElementToManyApplicationResponseFilter: TemplateElementToManyApplicationResponseFilter;
   ApplicationResponseFilter: ApplicationResponseFilter;
   ApplicationResponseStatusFilter: ApplicationResponseStatusFilter;
@@ -31367,9 +31394,11 @@ export type ResolversTypes = {
   ApplicationListShapeCondition: ApplicationListShapeCondition;
   ReviewerAction: ReviewerAction;
   AssignerAction: AssignerAction;
+  BigInt: ResolverTypeWrapper<Scalars['BigInt']>;
   ApplicationListShapeFilter: ApplicationListShapeFilter;
   ReviewerActionFilter: ReviewerActionFilter;
   AssignerActionFilter: AssignerActionFilter;
+  BigIntFilter: BigIntFilter;
   ApplicationListShapesConnection: ResolverTypeWrapper<ApplicationListShapesConnection>;
   ApplicationListShape: ResolverTypeWrapper<ApplicationListShape>;
   ApplicationListShapesEdge: ResolverTypeWrapper<ApplicationListShapesEdge>;
@@ -31495,7 +31524,6 @@ export type ResolversTypes = {
   AssignedQuestionsConnection: ResolverTypeWrapper<AssignedQuestionsConnection>;
   AssignedQuestionsRecord: ResolverTypeWrapper<AssignedQuestionsRecord>;
   AssignedQuestionEdge: ResolverTypeWrapper<AssignedQuestionEdge>;
-  BigInt: ResolverTypeWrapper<Scalars['BigInt']>;
   AssignerListRecordFilter: AssignerListRecordFilter;
   AssignerListConnection: ResolverTypeWrapper<AssignerListConnection>;
   AssignerListRecord: ResolverTypeWrapper<AssignerListRecord>;
@@ -31504,10 +31532,6 @@ export type ResolversTypes = {
   AssignmentListConnection: ResolverTypeWrapper<AssignmentListConnection>;
   AssignmentListRecord: ResolverTypeWrapper<AssignmentListRecord>;
   AssignmentListEdge: ResolverTypeWrapper<AssignmentListEdge>;
-  ReviewListRecordFilter: ReviewListRecordFilter;
-  ReviewListConnection: ResolverTypeWrapper<ReviewListConnection>;
-  ReviewListRecord: ResolverTypeWrapper<ReviewListRecord>;
-  ReviewListEdge: ResolverTypeWrapper<ReviewListEdge>;
   ReviewableQuestionsRecordFilter: ReviewableQuestionsRecordFilter;
   ReviewableQuestionsConnection: ResolverTypeWrapper<ReviewableQuestionsConnection>;
   ReviewableQuestionsRecord: ResolverTypeWrapper<ReviewableQuestionsRecord>;
@@ -32829,6 +32853,7 @@ export type ResolversParentTypes = {
   TemplateElementFilter: TemplateElementFilter;
   TemplateElementCategoryFilter: TemplateElementCategoryFilter;
   ReviewabilityFilter: ReviewabilityFilter;
+  IsReviewableStatusFilter: IsReviewableStatusFilter;
   TemplateElementToManyApplicationResponseFilter: TemplateElementToManyApplicationResponseFilter;
   ApplicationResponseFilter: ApplicationResponseFilter;
   ApplicationResponseStatusFilter: ApplicationResponseStatusFilter;
@@ -33047,9 +33072,11 @@ export type ResolversParentTypes = {
   TemplateActionsEdge: TemplateActionsEdge;
   ActionQueuesEdge: ActionQueuesEdge;
   ApplicationListShapeCondition: ApplicationListShapeCondition;
+  BigInt: Scalars['BigInt'];
   ApplicationListShapeFilter: ApplicationListShapeFilter;
   ReviewerActionFilter: ReviewerActionFilter;
   AssignerActionFilter: AssignerActionFilter;
+  BigIntFilter: BigIntFilter;
   ApplicationListShapesConnection: ApplicationListShapesConnection;
   ApplicationListShape: ApplicationListShape;
   ApplicationListShapesEdge: ApplicationListShapesEdge;
@@ -33156,7 +33183,6 @@ export type ResolversParentTypes = {
   AssignedQuestionsConnection: AssignedQuestionsConnection;
   AssignedQuestionsRecord: AssignedQuestionsRecord;
   AssignedQuestionEdge: AssignedQuestionEdge;
-  BigInt: Scalars['BigInt'];
   AssignerListRecordFilter: AssignerListRecordFilter;
   AssignerListConnection: AssignerListConnection;
   AssignerListRecord: AssignerListRecord;
@@ -33165,10 +33191,6 @@ export type ResolversParentTypes = {
   AssignmentListConnection: AssignmentListConnection;
   AssignmentListRecord: AssignmentListRecord;
   AssignmentListEdge: AssignmentListEdge;
-  ReviewListRecordFilter: ReviewListRecordFilter;
-  ReviewListConnection: ReviewListConnection;
-  ReviewListRecord: ReviewListRecord;
-  ReviewListEdge: ReviewListEdge;
   ReviewableQuestionsRecordFilter: ReviewableQuestionsRecordFilter;
   ReviewableQuestionsConnection: ReviewableQuestionsConnection;
   ReviewableQuestionsRecord: ReviewableQuestionsRecord;
@@ -34657,6 +34679,9 @@ export type ApplicationListShapeResolvers<ContextType = any, ParentType extends 
   reviewers?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   reviewerAction?: Resolver<Maybe<ResolversTypes['ReviewerAction']>, ParentType, ContextType>;
   assignerAction?: Resolver<Maybe<ResolversTypes['AssignerAction']>, ParentType, ContextType>;
+  totalQuestions?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
+  totalAssigned?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
+  totalAssignLocked?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -36286,9 +36311,9 @@ export type NotificationResolvers<ContextType = any, ParentType extends Resolver
   subject?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   attachments?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
-  emailSent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  isRead?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   timestamp?: Resolver<ResolversTypes['Datetime'], ParentType, ContextType>;
+  isRead?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  emailSent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   emailServerLog?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
@@ -36610,7 +36635,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   userOrganisationByUserIdAndOrganisationId?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType, RequireFields<QueryUserOrganisationByUserIdAndOrganisationIdArgs, 'userId' | 'organisationId'>>;
   verification?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType, RequireFields<QueryVerificationArgs, 'id'>>;
   verificationByUniqueId?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType, RequireFields<QueryVerificationByUniqueIdArgs, 'uniqueId'>>;
-  applicationList?: Resolver<Maybe<ResolversTypes['ApplicationListShapesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListArgs, never>>;
   applicationListFilterApplicant?: Resolver<Maybe<ResolversTypes['ApplicationListFilterApplicantConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListFilterApplicantArgs, never>>;
   applicationListFilterAssigner?: Resolver<Maybe<ResolversTypes['ApplicationListFilterAssignerConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListFilterAssignerArgs, never>>;
   applicationListFilterOrganisation?: Resolver<Maybe<ResolversTypes['ApplicationListFilterOrganisationConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListFilterOrganisationArgs, never>>;
@@ -36632,7 +36656,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   reviewIsLastLevel?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryReviewIsLastLevelArgs, never>>;
   reviewIsLastStage?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryReviewIsLastStageArgs, never>>;
   reviewLevel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewLevelArgs, never>>;
-  reviewList?: Resolver<Maybe<ResolversTypes['ReviewListConnection']>, ParentType, ContextType, RequireFields<QueryReviewListArgs, never>>;
   reviewReviewerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewReviewerIdArgs, never>>;
   reviewStage?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewStageArgs, never>>;
   reviewTimeStageCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType, RequireFields<QueryReviewTimeStageCreatedArgs, never>>;
@@ -36827,25 +36850,6 @@ export type ReviewDecisionsConnectionResolvers<ContextType = any, ParentType ext
 export type ReviewDecisionsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewDecisionsEdge'] = ResolversParentTypes['ReviewDecisionsEdge']> = {
   cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
   node?: Resolver<Maybe<ResolversTypes['ReviewDecision']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReviewListConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewListConnection'] = ResolversParentTypes['ReviewListConnection']> = {
-  nodes?: Resolver<Array<Maybe<ResolversTypes['ReviewListRecord']>>, ParentType, ContextType>;
-  edges?: Resolver<Array<ResolversTypes['ReviewListEdge']>, ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReviewListEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewListEdge'] = ResolversParentTypes['ReviewListEdge']> = {
-  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['ReviewListRecord']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReviewListRecordResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewListRecord'] = ResolversParentTypes['ReviewListRecord']> = {
-  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  reviewerAction?: Resolver<Maybe<ResolversTypes['ReviewerAction']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -37090,6 +37094,7 @@ export type TemplateElementResolvers<ContextType = any, ParentType extends Resol
   reviewability?: Resolver<ResolversTypes['Reviewability'], ParentType, ContextType>;
   templateCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   templateVersion?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  isReviewable?: Resolver<Maybe<ResolversTypes['IsReviewableStatus']>, ParentType, ContextType>;
   section?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType>;
   applicationResponses?: Resolver<ResolversTypes['ApplicationResponsesConnection'], ParentType, ContextType, RequireFields<TemplateElementApplicationResponsesArgs, 'orderBy'>>;
   reviewResponses?: Resolver<ResolversTypes['ReviewResponsesConnection'], ParentType, ContextType, RequireFields<TemplateElementReviewResponsesArgs, 'orderBy'>>;
@@ -38044,9 +38049,6 @@ export type Resolvers<ContextType = any> = {
   ReviewDecision?: ReviewDecisionResolvers<ContextType>;
   ReviewDecisionsConnection?: ReviewDecisionsConnectionResolvers<ContextType>;
   ReviewDecisionsEdge?: ReviewDecisionsEdgeResolvers<ContextType>;
-  ReviewListConnection?: ReviewListConnectionResolvers<ContextType>;
-  ReviewListEdge?: ReviewListEdgeResolvers<ContextType>;
-  ReviewListRecord?: ReviewListRecordResolvers<ContextType>;
   ReviewResponse?: ReviewResponseResolvers<ContextType>;
   ReviewResponsesConnection?: ReviewResponsesConnectionResolvers<ContextType>;
   ReviewResponsesEdge?: ReviewResponsesEdgeResolvers<ContextType>;
