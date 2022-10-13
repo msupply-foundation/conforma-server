@@ -1434,7 +1434,7 @@ const migrateData = async () => {
         ADD COLUMN IF NOT EXISTS email_server_log varchar; 
     `)
 
-    console.log('add unique constraint to usernames in database')
+    console.log(' - Add unique constraint to usernames in database')
 
     //drop and save views relating to user
     await DB.changeSchema(`
