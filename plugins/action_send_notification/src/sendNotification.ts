@@ -124,9 +124,14 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
           )
           db.notificationEmailError(notificationResult.id, `ERROR: ${err.message}`)
         })
-    } else {
+    }
+    if (!transporter) {
       console.log('Email not sent - missing email configuration')
-      db.notificationEmailError(notificationResult.id, `WARNING: email configuration not provided`)
+      db.notificationEmailError(notificationResult.id, `WARNING: Email configuration not provided`)
+    }
+    if (hasValidEmails) {
+      crossOriginIsolated.log('Email not sent - no valid email addresses')
+      db.notificationEmailError(notificationResult.id, `WARNING: Email configuration not provided`)
     }
 
     // NOTE: Because sending email happens asynchronously, the output object
