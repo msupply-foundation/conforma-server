@@ -1423,19 +1423,23 @@ const migrateData = async () => {
           SET DEFAULT 'ONLY_IF_APPLICANT_ANSWER';`)
 
     // Data view filtering
-    console.log(' - Update data-view tables for filtering')
+    console.log(' - Update data-view tables for filtering and sorting')
     await DB.changeSchema(`
-      ALTER TABLE data_view DROP CONSTRAINT IF EXISTS outcome_display_table_name_code_key; 
-      ALTER TABLE data_view 
-      ADD COLUMN IF NOT EXISTS table_search_columns varchar[];
-      ALTER TABLE data_view 
-      ADD COLUMN IF NOT EXISTS filter_include_columns varchar[];
-      ALTER TABLE data_view 
-      ADD COLUMN IF NOT EXISTS filter_exclude_columns varchar[];
+      ALTER TABLE data_view
+        DROP CONSTRAINT IF EXISTS outcome_display_table_name_code_key, 
+        ADD COLUMN IF NOT EXISTS table_search_columns varchar[],
+        ADD COLUMN IF NOT EXISTS filter_include_columns varchar[],
+        ADD COLUMN IF NOT EXISTS filter_exclude_columns varchar[];
+          
       ALTER TABLE data_view_column_definition 
-      ADD COLUMN IF NOT EXISTS sort_column varchar;
+        ADD COLUMN IF NOT EXISTS sort_column varchar,
+        ADD COLUMN IF NOT EXISTS filter_parameters jsonb,
+        ADD COLUMN IF NOT EXISTS filter_expression jsonb,
+        ADD COLUMN IF NOT EXISTS filter_data_type varchar,
+        ADD COLUMN IF NOT EXISTS sort_column varchar;
+        
       ALTER TABLE data_view_column_definition 
-      ADD COLUMN IF NOT EXISTS filter_parameters jsonb;`)
+        ADD COLUMN IF NOT EXISTS filter_parameters jsonb;`)
 
     console.log(' - Add timestamp and email_server_log to notification table')
     await DB.changeSchema(`

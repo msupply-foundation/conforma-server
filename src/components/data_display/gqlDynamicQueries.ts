@@ -2,6 +2,7 @@ import DBConnect from '../databaseConnect'
 import { plural } from 'pluralize'
 import { camelCase, snakeCase, upperFirst } from 'lodash'
 import { LinkedApplication } from './types'
+import { capitaliseFirstLetter } from '../utilityFunctions'
 
 export const queryDataTable = async (
   tableName: string,
@@ -123,4 +124,24 @@ export const queryFilterList = async (
   const totalCount = queryResult?.[tableNamePlural]?.totalCount
 
   return { fetchedRecords, totalCount }
+}
+
+export const updateRecord = async (
+  tableName: string,
+  id: number,
+  patch: unknown,
+  authHeaders: string
+) => {
+  const tableTypeName = capitaliseFirstLetter(tableName)
+  const graphQLquery = `mutation UpdateRecord($id: Int!, $patch: ${tableTypeName}Patch!) {update${tableTypeName}(input: { patch: $patch, id: $id }) {${tableName} {id}}}`
+  const variables = { id, patch }
+
+  let queryResult
+  try {
+    queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
+  } catch (err) {
+    return {
+      error: { error: true, message: 'Problem with Filter List query', detail: err.message },
+    }
+  }
 }

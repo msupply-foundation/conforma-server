@@ -30,6 +30,8 @@ CREATE TABLE data_view_column_definition (
     value_expression jsonb,
     sort_column varchar,
     filter_parameters jsonb,
+    filter_expression jsonb,
+    filter_data_type varchar,
     UNIQUE (table_name, column_name)
 );
 

@@ -1,6 +1,7 @@
 import DBConnect from '../databaseConnect'
 import { objectKeysToCamelCase, getValidTableName } from '../utilityFunctions'
 import evaluateExpression from '@openmsupply/expression-evaluator'
+import functions from '../actions/evaluatorFunctions'
 import fetch from 'node-fetch'
 import { camelCase, snakeCase, startCase } from 'lodash'
 // @ts-ignore
@@ -198,6 +199,8 @@ const buildColumnList = (
       ? 'tableViewExcludeColumns'
       : type === 'DETAIL'
       ? 'detailViewExcludeColumns'
+      : dataView.filterIncludeColumns === null && dataView.filterExcludeColumns === null
+      ? 'tableViewExcludeColumns'
       : 'filterExcludeColumns'
 
   const includeColumns = getIncludeColumns(includeField, dataView, allColumns)
@@ -354,7 +357,7 @@ export const constructTableResponse = async (
       else {
         evaluationPromiseArray.push(
           evaluateExpression(columnDefinition?.valueExpression ?? {}, {
-            objects: { ...record, thisField: record[columnName] },
+            objects: { ...record, thisField: record[columnName], functions },
             // pgConnection: DBConnect, probably don't want to allow SQL
             APIfetch: fetch,
             // TO-DO: Need to pass Auth headers to evaluator API calls
