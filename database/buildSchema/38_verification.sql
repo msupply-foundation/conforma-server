@@ -12,10 +12,3 @@ CREATE TABLE public.verification (
     TRIGGER public.trigger
 );
 
--- TRIGGER (Listener) on verification table
-CREATE TRIGGER verification_trigger
-    AFTER INSERT OR UPDATE OF trigger ON public.verification
-    FOR EACH ROW
-    WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
-    EXECUTE FUNCTION public.add_event_to_trigger_queue ();
-
