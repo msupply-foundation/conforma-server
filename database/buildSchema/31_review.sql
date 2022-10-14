@@ -5,7 +5,7 @@ CREATE OR REPLACE FUNCTION public.review_application_id (review_assignment_id in
     SELECT
         application_id
     FROM
-        review_assignment
+        public.review_assignment
     WHERE
         id = $1;
 
@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION public.review_reviewer_id (review_assignment_id int)
     SELECT
         reviewer_id
     FROM
-        review_assignment
+        public.review_assignment
     WHERE
         id = $1;
 
@@ -35,7 +35,7 @@ CREATE OR REPLACE FUNCTION public.review_level (review_assignment_id int)
     SELECT
         level_number
     FROM
-        review_assignment
+        public.review_assignment
     WHERE
         id = $1;
 
@@ -50,7 +50,7 @@ CREATE OR REPLACE FUNCTION public.review_stage (review_assignment_id int)
     SELECT
         stage_number
     FROM
-        review_assignment
+        public.review_assignment
     WHERE
         id = $1;
 
@@ -65,7 +65,7 @@ CREATE OR REPLACE FUNCTION public.review_time_stage_created (review_assignment_i
     SELECT
         time_stage_created
     FROM
-        review_assignment
+        public.review_assignment
     WHERE
         id = $1;
 
@@ -80,7 +80,7 @@ CREATE OR REPLACE FUNCTION public.review_is_last_level (review_assignment_id int
     SELECT
         is_last_level
     FROM
-        review_assignment
+        public.review_assignment
     WHERE
         id = $1;
 
@@ -95,7 +95,7 @@ CREATE OR REPLACE FUNCTION public.review_is_last_stage (review_assignment_id int
     SELECT
         is_last_stage
     FROM
-        review_assignment
+        public.review_assignment
     WHERE
         id = $1;
 
@@ -110,7 +110,7 @@ CREATE OR REPLACE FUNCTION public.review_is_final_decision (review_assignment_id
     SELECT
         is_final_decision
     FROM
-        review_assignment
+        public.review_assignment
     WHERE
         id = $1;
 
@@ -134,11 +134,4 @@ CREATE TABLE public.review (
     is_last_stage boolean GENERATED ALWAYS AS (public.review_is_last_stage (review_assignment_id)) STORED,
     is_final_decision boolean GENERATED ALWAYS AS (public.review_is_final_decision (review_assignment_id)) STORED
 );
-
--- TRIGGER (Listener) on review table
-CREATE TRIGGER review_trigger
-    AFTER INSERT OR UPDATE OF trigger ON public.review
-    FOR EACH ROW
-    WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
-    EXECUTE FUNCTION public.add_event_to_trigger_queue ();
 
