@@ -3,6 +3,7 @@ import DB from './databaseMethods'
 import { ReviewAssignmentsWithSections } from './types'
 import semverCompare from 'semver/functions/compare'
 import { execSync } from 'child_process'
+import { createIndexes } from './indexes'
 
 const { version } = config
 const isManualMigration: Boolean = process.argv[2] === '--migrate'
@@ -1060,77 +1061,385 @@ const migrateData = async () => {
     LANGUAGE plpgsql;
       `)
 
-    // Fix assigner_actions to only return active applications
-    console.log(' - Fix assigner_actions to only return active applications')
-
-    await DB.changeSchema(`
-    CREATE OR REPLACE FUNCTION assigner_list (stage_id int, assigner_id int)
-    RETURNS TABLE (
-        application_id int,
-        assigner_action public.assigner_action,
-        -- is_fully_assigned_level_1 boolean,
-        -- assigned_questions_level_1 bigint,
-        total_questions bigint,
-        total_assigned bigint,
-        total_assign_locked bigint
-    )
-    AS $$
-    SELECT
-        review_assignment.application_id AS application_id,
-        CASE WHEN COUNT(DISTINCT (review_assignment.id)) != 0
-            AND assigned_questions_count (application_id, $1, level_number) >= assignable_questions_count (application_id)
-            AND submitted_assigned_questions_count (application_id, $1, level_number) < assigned_questions_count (application_id, $1, level_number) THEN
-            'RE_ASSIGN'
-        WHEN COUNT(DISTINCT (review_assignment.id)) != 0
-            AND assigned_questions_count (application_id, $1, level_number) >= assignable_questions_count (application_id)
-            AND submitted_assigned_questions_count (application_id, $1, level_number) >= assigned_questions_count (application_id, $1, level_number) THEN
-            'ASSIGN_LOCKED'
-        WHEN COUNT(DISTINCT (review_assignment.id)) != 0
-            AND assigned_questions_count (application_id, $1, level_number) < assignable_questions_count (application_id) THEN
-            'ASSIGN'
-        ELSE
-            NULL
-        END::assigner_action,
-        -- assigned_questions_count(application_id, $1, 1) = assignable_questions_count(application_id) AS is_fully_assigned_level_1,
-        -- assigned_questions_count(application_id, $1, 1) AS assigned_questions_level_1,
-        assignable_questions_count (application_id) AS total_questions,
-        assigned_questions_count (application_id, $1, level_number) AS total_assigned,
-        submitted_assigned_questions_count (application_id, $1, level_number) AS total_assign_locked
-    FROM
-        review_assignment
-    LEFT JOIN review_assignment_assigner_join ON review_assignment.id = review_assignment_assigner_join.review_assignment_id
-WHERE
-    review_assignment.stage_id = $1
-    AND review_assignment_assigner_join.assigner_id = $2
-    AND (
-        SELECT
-            outcome
-        FROM
-            application
-        WHERE
-            id = review_assignment.application_id) = 'PENDING'
-GROUP BY
-    review_assignment.application_id,
-    review_assignment.level_number;
-
-$$
-LANGUAGE sql
-STABLE;
-    `)
-
     console.log('- Add VIEW permission policy type')
 
     await DB.changeSchema(
       `ALTER TYPE permission_policy_type ADD VALUE IF NOT EXISTS 'VIEW' after 'ASSIGN'`
     )
+
+    console.log('- Add uniqueness constraint to user_org table')
+    await DB.changeSchema(`
+    ALTER TABLE user_organisation DROP CONSTRAINT IF EXISTS                     user_organisation_user_id_organisation_id_key;
+    
+    ALTER TABLE user_organisation ADD CONSTRAINT user_organisation_user_id_organisation_id_key UNIQUE (user_id, organisation_id);
+    `)
+
+    console.log(' - Remove uniqueness constraint from data_view table')
+    await DB.changeSchema(`
+      ALTER TABLE data_view DROP CONSTRAINT IF EXISTS outcome_display_table_name_code_key; 
+    `)
   }
 
-  console.log(' - Remove uniqueness constraint from data_view table')
-  await DB.changeSchema(`
-    ALTER TABLE data_view DROP CONSTRAINT IF EXISTS outcome_display_table_name_code_key; 
-  `)
+  // 0.4.6
+  if (databaseVersionLessThan('0.4.6')) {
+    console.log(
+      ' - Rename TYPE is_reviewable to reviewability and update field in TABLE template_element'
+    )
 
+    await DB.changeSchema(`
+    ALTER TYPE public.is_reviewable_status RENAME TO reviewability;`)
+
+    await DB.changeSchema(`
+    ALTER TYPE public.reviewability
+      ADD VALUE IF NOT EXISTS 'ONLY_IF_APPLICANT_ANSWER' AFTER 'NEVER';`)
+
+    await DB.changeSchema(`
+    ALTER TABLE public.template_element RENAME COLUMN is_reviewable TO reviewability;`)
+
+    console.log(' - Updating functions to retrieve reviewable vs assigned questions')
+
+    await DB.changeSchema(
+      `-- Function to return elements reviewable questions (per application)
+      CREATE OR REPLACE FUNCTION public.reviewable_questions (app_id int)
+        RETURNS TABLE (
+            code varchar,
+            reviewability public.reviewability,
+            response_id int,
+            response_value jsonb,
+            is_optional boolean
+        )
+        AS $$
+        SELECT DISTINCT ON (code)
+            te.code,
+            te.reviewability,
+            ar.id AS response_id,
+            ar.value AS response_value,
+            CASE WHEN ar.value IS NULL
+                AND te.reviewability = 'OPTIONAL_IF_NO_RESPONSE' THEN
+                TRUE
+            ELSE
+                FALSE
+            END::boolean
+        FROM
+            application_response ar
+            JOIN application app ON ar.application_id = app.id
+            JOIN template_element te ON ar.template_element_id = te.id
+        WHERE
+            ar.application_id = $1
+            AND te.category = 'QUESTION'
+            AND ((ar.value IS NULL
+                  AND te.reviewability = 'OPTIONAL_IF_NO_RESPONSE')
+              OR (ar.value IS NOT NULL
+                  AND te.reviewability != 'NEVER'))
+        GROUP BY
+            te.code,
+            ar.time_submitted,
+            ar.id,
+            te,
+            reviewability,
+            ar.value
+        ORDER BY
+            code,
+            ar.time_submitted DESC
+    $$
+    LANGUAGE sql
+    STABLE;`
+    )
+
+    await DB.changeSchema(
+      `-- Function to return elements of assigned questions for current stage/level
+      CREATE OR REPLACE FUNCTION public.assigned_questions (app_id int, stage_id int, level_number int)
+        RETURNS TABLE (
+            review_id int,
+            response_id int,
+            review_assignment_id int,
+            review_response_code varchar,
+            review_response_status public.review_response_status,
+            decision public.review_response_decision,
+            is_optional boolean,
+            is_lastest_review boolean
+        )
+        AS $$
+        SELECT DISTINCT ON (review_response_code)
+            rr.review_id,
+            rq.response_id,
+            ra.id AS review_assignment_id,
+            rq.code AS review_response_code,
+            rr.status AS review_response_status,
+            rr.decision,
+            rq.is_optional,
+            rr.is_latest_review
+        FROM (
+            SELECT
+                id,
+                application_id,
+                stage_id,
+                level_number,
+                status,
+                UNNEST(assigned_sections) AS section_code
+            FROM
+                review_assignment) ra
+        JOIN template_section ts ON ra.section_code = ts.code
+        JOIN template_element te ON ts.id = te.section_id
+        JOIN reviewable_questions (app_id) rq ON rq.code = te.code
+        LEFT JOIN review ON review.review_assignment_id = ra.id
+        LEFT JOIN review_response rr ON (rr.application_response_id = rq.response_id
+                AND rr.review_id = review.id)
+    WHERE
+        ra.application_id = $1
+        AND ra.stage_id = $2
+        AND ra.level_number = $3
+        AND ra.status = 'ASSIGNED'
+    GROUP BY
+        ra.id,
+        rr.review_id,
+        rr.is_latest_review,
+        rq.is_optional,
+        rr.status,
+        rr.decision,
+        rq.code,
+        rq.response_id
+      ORDER BY
+          review_response_code,
+          is_latest_review DESC
+    $$
+    LANGUAGE sql
+    STABLE;`
+    )
+
+    await DB.changeSchema(
+      `-- Function to return TOTAL of reviewable questions (per application)
+      CREATE OR REPLACE FUNCTION public.reviewable_questions_count (app_id int)
+          RETURNS bigint
+          AS $$
+          SELECT
+              COUNT(*)
+          FROM
+              reviewable_questions (app_id)
+      $$
+      LANGUAGE sql
+      STABLE;`
+    )
+
+    await DB.changeSchema(
+      `-- Function to return TOTAL assigned questions for current stage/level
+      CREATE OR REPLACE FUNCTION public.assigned_questions_count (app_id int, stage_id int, level int)
+          RETURNS bigint
+          AS $$
+          SELECT
+              COUNT(*)
+          FROM
+              assigned_questions (app_id, stage_id, level)
+      $$
+      LANGUAGE sql
+      STABLE;`
+    )
+
+    await DB.changeSchema(
+      `-- Function to return TOTAL of assigned and submitted (element that can't be re-assigned)
+      CREATE OR REPLACE FUNCTION public.submitted_assigned_questions_count (app_id int, stage_id int, level_number int)
+          RETURNS bigint
+          AS $$
+          SELECT
+              COUNT(*)
+          FROM
+              assigned_questions (app_id, stage_id, level_number) aq 
+              where aq.review_response_status = 'SUBMITTED'
+      $$
+      LANGUAGE sql
+      STABLE;`
+    )
+
+    console.log('Restore the review_list and assigner_list using latest changes to other functions')
+
+    await DB.changeSchema(`
+      CREATE OR REPLACE FUNCTION review_list (stageid int, reviewerid int, appstatus public.application_status)
+      RETURNS TABLE (
+          application_id int,
+          reviewer_action public.reviewer_action
+      )
+      AS $$
+          SELECT
+              review_assignment.application_id AS application_id,
+              CASE WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'CHANGES_REQUESTED') != 0 THEN
+                  'UPDATE_REVIEW'
+              WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'PENDING') != 0 THEN
+                  'RESTART_REVIEW'
+              WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'DRAFT'
+                  AND is_locked = FALSE) != 0 THEN
+                  'CONTINUE_REVIEW'
+              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+                  AND review_assignment.is_final_decision = TRUE
+                  AND review_assignment.is_last_stage = TRUE
+                  AND review = NULL) != 0 THEN
+                  'MAKE_DECISION'
+              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+                  AND review.id IS NULL) != 0 THEN
+                  'START_REVIEW'
+              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'AVAILABLE'
+                  AND is_self_assignable = TRUE
+                  AND (review = NULL
+                  OR is_locked = FALSE)) != 0 THEN
+                  'SELF_ASSIGN'
+              WHEN COUNT(*) FILTER (WHERE (appstatus = 'CHANGES_REQUIRED'
+                  OR appstatus = 'DRAFT') 
+                  AND review_assignment.status = 'ASSIGNED'
+                  AND review_status_history.status = 'SUBMITTED') != 0 THEN
+                  'AWAITING_RESPONSE'
+              WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+                  OR review_status_history.status = 'SUBMITTED') != 0 THEN
+                  'VIEW_REVIEW'
+              ELSE
+                  NULL
+              END::public.reviewer_action
+          FROM
+              review_assignment
+          LEFT JOIN review ON review.review_assignment_id = review_assignment.id
+          LEFT JOIN review_status_history ON (review_status_history.review_id = review.id
+                  AND is_current = TRUE)
+      WHERE
+          review_assignment.stage_id = $1
+          AND review_assignment.reviewer_id = $2
+          AND (
+              SELECT
+                  outcome
+              FROM
+                  application
+              WHERE
+                  id = review_assignment.application_id) = 'PENDING'
+      GROUP BY
+          review_assignment.application_id;
+  
+    $$
+    LANGUAGE sql
+    STABLE;
+      `)
+
+    await DB.changeSchema(
+      `DROP FUNCTION assigner_list;
+      CREATE OR REPLACE FUNCTION assigner_list (stage_id int, assigner_id int)
+        RETURNS TABLE (
+            application_id int,
+            assigner_action public.assigner_action
+        )
+        AS $$
+        SELECT
+          review_assignment.application_id AS application_id,
+              CASE WHEN COUNT(DISTINCT (review_assignment.id)) != 0
+                  AND assigned_questions_count (application_id, $1, level_number) >= reviewable_questions_count (application_id)
+                  AND submitted_assigned_questions_count (application_id, $1, level_number) < assigned_questions_count (application_id, $1, level_number) THEN
+                  'RE_ASSIGN'
+              WHEN COUNT(DISTINCT (review_assignment.id)) != 0
+                  AND assigned_questions_count (application_id, $1, level_number) >= reviewable_questions_count (application_id)
+                  AND submitted_assigned_questions_count (application_id, $1, level_number) >= assigned_questions_count (application_id, $1, level_number) THEN
+                  'ASSIGN_LOCKED'
+              WHEN COUNT(DISTINCT (review_assignment.id)) != 0
+                  AND assigned_questions_count (application_id, $1, level_number) < reviewable_questions_count (application_id) THEN
+                  'ASSIGN'
+              ELSE
+                  NULL
+              END::assigner_action
+          FROM
+          review_assignment
+          LEFT JOIN review_assignment_assigner_join ON review_assignment.id = review_assignment_assigner_join.review_assignment_id
+      WHERE
+          review_assignment.stage_id = $1
+          AND review_assignment_assigner_join.assigner_id = $2
+          AND (
+              SELECT
+                  outcome
+              FROM
+                  application
+              WHERE
+                  id = review_assignment.application_id) = 'PENDING'
+      GROUP BY
+          review_assignment.application_id,
+          review_assignment.level_number;
+          $$
+          LANGUAGE sql
+          STABLE;`
+    )
+
+    console.log(' - Remove not used 4 fields from application_list')
+    await DB.changeSchema(
+      `ALTER TABLE application_list_shape
+        DROP COLUMN IF EXISTS total_questions;
+      ALTER TABLE application_list_shape
+        DROP COLUMN IF EXISTS total_assigned_submitted;
+      ALTER TABLE application_list_shape
+        DROP COLUMN IF EXISTS total_assigned;
+      ALTER TABLE application_list_shape
+        DROP COLUMN IF EXISTS total_assign_locked;`
+    )
+
+    await DB.changeSchema(
+      `CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
+        RETURNS SETOF application_list_shape
+        AS $$
+        SELECT
+            app.id,
+            app.serial,
+            app.name,
+            template.code AS template_code,
+            template.name AS template_name,
+            CONCAT(first_name, ' ', last_name) AS applicant,
+            org.name AS org_name,
+            stage_status.stage,
+            stage_status.stage_colour,
+            stage_status.status,
+            app.outcome,
+            status_history_time_created AS last_active_date,
+            ts.time_scheduled AS applicant_deadline,
+            assigners,
+            reviewers,
+            reviewer_action,
+            assigner_action
+        FROM
+            application app
+        LEFT JOIN TEMPLATE ON app.template_id = template.id
+        LEFT JOIN "user" ON user_id = "user".id
+        LEFT JOIN application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
+        LEFT JOIN organisation org ON app.org_id = org.id
+        LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
+        LEFT JOIN review_list (stage_status.stage_id, $1, stage_status.status) ON app.id = review_list.application_id
+        LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
+        LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
+            AND ts.is_active = TRUE
+            AND ts.event_code = 'applicantDeadline'
+    WHERE
+        app.is_config = FALSE
+    $$
+    LANGUAGE sql
+    STABLE;`
+    )
+
+    console.log(` - Updte existing template_element where reviewable is set to NULL to use DEFAULT`)
+
+    await DB.changeSchema(`
+    UPDATE template_element te
+      SET reviewability = 'ONLY_IF_APPLICANT_ANSWER'
+      WHERE te.reviewability IS NULL;`)
+
+    await DB.changeSchema(`
+      ALTER TABLE public.template_element
+        ALTER COLUMN reviewability
+          SET NOT NULL,
+        ALTER COLUMN reviewability
+          SET DEFAULT 'ONLY_IF_APPLICANT_ANSWER';`)
+
+    console.log(' - Add timestamp and email_server_log to notification table')
+    await DB.changeSchema(`
+      ALTER TABLE notification 
+        ADD COLUMN IF NOT EXISTS timestamp timestamptz
+          DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        ADD COLUMN IF NOT EXISTS email_server_log varchar; 
+    `)
+  }
   // Other version migrations continue here...
+
+  // Set indexes last:
+  console.log('Updating indexes...')
+  await DB.changeSchema(createIndexes)
 
   // Finally, set the database version to the current version
   if (databaseVersionLessThan(version)) await DB.setDatabaseVersion(version)

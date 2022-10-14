@@ -1,18 +1,13 @@
 {
-  "name": "send_notification_action",
+  "name": "remove_user_from_org_action",
   "version": "0.1",
-  "description": "Creates a notification and send an email",
+  "description": "Removes a user from an organistion",
   "author": "The mSupplyFoundation",
   "license": "MIT",
   "scripts": {
     "build": "node ../../utils/pluginScripts/buildPluginFromPluginFolder.js",
     "test": "node ../../utils/pluginScripts/testPluginFromPluginFolder.js"
   },
-  "devDependencies": {
-    "@types/nodemailer": "^6.4.6"
-  },
-  "dependencies": {
-    "marked": "^2.1.1",
-    "nodemailer": "^6.6.2"
-  }
+  "devDependencies": {},
+  "dependencies": {}
 }
