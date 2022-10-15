@@ -954,13 +954,13 @@ LANGUAGE sql
 STABLE;
 
 -- Function to return TOTAL assigned questions for current stage/level
-CREATE OR REPLACE FUNCTION public.assigned_questions_count (app_id int, stage_id int, level_number int)
+CREATE OR REPLACE FUNCTION public.assigned_questions_count (app_id int, stage_id int, level int)
     RETURNS bigint
     AS $$
     SELECT
         COUNT(*)
     FROM
-        assigned_questions (app_id, stage_id, level_number)
+        assigned_questions (app_id, stage_id, level)
 $$
 LANGUAGE sql
 STABLE;
@@ -1065,6 +1065,8 @@ STABLE;
 
 -- ASSIGNER_ACTION_LIST
 -- Aggregated VIEW method of all related assigner data to each application on application list page
+DROP FUNCTION assigner_list (integer, integer);
+
 CREATE OR REPLACE FUNCTION assigner_list (stage_id int, assigner_id int)
     RETURNS TABLE (
         application_id int,
@@ -1199,10 +1201,10 @@ CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
     LEFT JOIN public."user" ON user_id = "user".id
     LEFT JOIN public.application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
     LEFT JOIN public.organisation org ON app.org_id = org.id
-    LEFT JOIN public.assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
-    LEFT JOIN public.review_list (stage_status.stage_id, $1, stage_status.status) ON app.id = review_list.application_id
-    LEFT JOIN public.assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
-    LEFT JOIN public.trigger_schedule ts ON app.id = ts.application_id
+    LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
+    LEFT JOIN review_list (stage_status.stage_id, $1, stage_status.status) ON app.id = review_list.application_id
+    LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
+    LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
         AND ts.is_active = TRUE
         AND ts.event_code = 'applicantDeadline'
 WHERE

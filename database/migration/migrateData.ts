@@ -556,49 +556,49 @@ const migrateData = async () => {
     );
     `)
 
-    // await DB.changeSchema(`
-    //   CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
-    //   RETURNS SETOF application_list_shape
-    //   AS $$
-    //   SELECT
-    //       app.id,
-    //       app.serial,
-    //       app.name,
-    //       template.code AS template_code,
-    //       template.name AS template_name,
-    //       CONCAT(first_name, ' ', last_name) AS applicant,
-    //       org.name AS org_name,
-    //       stage_status.stage,
-    //       stage_status.stage_colour,
-    //       stage_status.status,
-    //       app.outcome,
-    //       status_history_time_created AS last_active_date,
-    //       ts.time_scheduled AS applicant_deadline,
-    //       assigners,
-    //       reviewers,
-    //       reviewer_action,
-    //       assigner_action,
-    //       total_questions,
-    //       total_assigned,
-    //       total_assign_locked
-    //   FROM
-    //       application app
-    //   LEFT JOIN TEMPLATE ON app.template_id = template.id
-    //   LEFT JOIN "user" ON user_id = "user".id
-    //   LEFT JOIN application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
-    //   LEFT JOIN organisation org ON app.org_id = org.id
-    //   LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
-    //   LEFT JOIN review_list (stage_status.stage_id, $1) ON app.id = review_list.application_id
-    //   LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
-    //   LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
-    //     AND ts.is_active = TRUE
-    //     AND ts.event_code = 'applicantDeadline'
-    //   WHERE
-    //       app.is_config = FALSE
-    //     $$
-    //     LANGUAGE sql
-    //     STABLE;
-    // `)
+    await DB.changeSchema(`
+      CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
+      RETURNS SETOF application_list_shape
+      AS $$
+      SELECT
+          app.id,
+          app.serial,
+          app.name,
+          template.code AS template_code,
+          template.name AS template_name,
+          CONCAT(first_name, ' ', last_name) AS applicant,
+          org.name AS org_name,
+          stage_status.stage,
+          stage_status.stage_colour,
+          stage_status.status,
+          app.outcome,
+          status_history_time_created AS last_active_date,
+          ts.time_scheduled AS applicant_deadline,
+          assigners,
+          reviewers,
+          reviewer_action,
+          assigner_action,
+          total_questions,
+          total_assigned,
+          total_assign_locked
+      FROM
+          application app
+      LEFT JOIN TEMPLATE ON app.template_id = template.id
+      LEFT JOIN "user" ON user_id = "user".id
+      LEFT JOIN application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
+      LEFT JOIN organisation org ON app.org_id = org.id
+      LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
+      LEFT JOIN review_list (stage_status.stage_id, $1) ON app.id = review_list.application_id
+      LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
+      LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
+        AND ts.is_active = TRUE
+        AND ts.event_code = 'applicantDeadline'
+      WHERE
+          app.is_config = FALSE
+        $$
+        LANGUAGE sql
+        STABLE;
+    `)
     // Required to make 'orderBy' work in application_list
     // Need to use psql as node-pg doesn't handle the comment command
     execSync(
@@ -638,6 +638,7 @@ const migrateData = async () => {
 
   // v0.4.2
   if (databaseVersionLessThan('0.4.2')) {
+    console.log('Migrating to v0.4.2...')
     console.log(' - Adding MANAGEMENT to UI Locations')
 
     await DB.changeSchema(`
@@ -648,6 +649,7 @@ const migrateData = async () => {
 
   // v0.4.4
   if (databaseVersionLessThan('0.4.4')) {
+    console.log('Migrating to v0.4.4...')
     console.log(' - Add "Optional if no response" option to "is_reviewable"')
     await DB.changeSchema(`
       ALTER TYPE public.is_reviewable_status ADD VALUE IF NOT EXISTS
@@ -878,6 +880,7 @@ const migrateData = async () => {
 
   // 0.4.5
   if (databaseVersionLessThan('0.4.5')) {
+    console.log('Migrating to v0.4.5...')
     // Add "is_latest_review" column to table review_response in schema
     console.log(' - Add is_latest_review to review_response with automatic trigger/update function')
 
@@ -908,16 +911,16 @@ const migrateData = async () => {
     // LANGUAGE plpgsql;
     // `)
 
-    await DB.changeSchema(`
-      DROP TRIGGER IF EXISTS review_response_latest ON review_response;
-    `)
+    // await DB.changeSchema(`
+    //   DROP TRIGGER IF EXISTS review_response_latest ON review_response;
+    // `)
 
-    await DB.changeSchema(`CREATE TRIGGER review_response_latest
-      AFTER UPDATE OF time_updated ON public.review_response
-      FOR EACH ROW
-      WHEN (NEW.time_updated > OLD.time_created)
-      EXECUTE FUNCTION public.set_latest_review_response ();
-      `)
+    // await DB.changeSchema(`CREATE TRIGGER review_response_latest
+    //   AFTER UPDATE OF time_updated ON public.review_response
+    //   FOR EACH ROW
+    //   WHEN (NEW.time_updated > OLD.time_created)
+    //   EXECUTE FUNCTION public.set_latest_review_response ();
+    //   `)
 
     console.log(
       '- Update to Functions of Activity_log to fix problem with aggregation of assigned_section'
@@ -1063,13 +1066,13 @@ const migrateData = async () => {
     // LANGUAGE plpgsql;
     //   `)
 
-    console.log('- Add VIEW permission policy type')
+    console.log(' - Add VIEW permission policy type')
 
     await DB.changeSchema(
       `ALTER TYPE permission_policy_type ADD VALUE IF NOT EXISTS 'VIEW' after 'ASSIGN'`
     )
 
-    console.log('- Add uniqueness constraint to user_org table')
+    console.log(' - Add uniqueness constraint to user_org table')
     await DB.changeSchema(`
     ALTER TABLE user_organisation DROP CONSTRAINT IF EXISTS                     user_organisation_user_id_organisation_id_key;
     
@@ -1079,6 +1082,7 @@ const migrateData = async () => {
 
   // 0.4.6
   if (databaseVersionLessThan('0.4.6')) {
+    console.log('Migrating to v0.4.6...')
     console.log(
       ' - Rename TYPE is_reviewable to reviewability and update field in TABLE template_element'
     )
@@ -1357,7 +1361,7 @@ const migrateData = async () => {
     //       STABLE;`
     // )
 
-    console.log(' - Remove not used 4 fields from application_list')
+    console.log(' - Remove 4 unused fields from application_list')
     await DB.changeSchema(
       `ALTER TABLE application_list_shape
         DROP COLUMN IF EXISTS total_questions;
@@ -1369,48 +1373,50 @@ const migrateData = async () => {
         DROP COLUMN IF EXISTS total_assign_locked;`
     )
 
-    await DB.changeSchema(
-      `CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
-        RETURNS SETOF application_list_shape
-        AS $$
-        SELECT
-            app.id,
-            app.serial,
-            app.name,
-            template.code AS template_code,
-            template.name AS template_name,
-            CONCAT(first_name, ' ', last_name) AS applicant,
-            org.name AS org_name,
-            stage_status.stage,
-            stage_status.stage_colour,
-            stage_status.status,
-            app.outcome,
-            status_history_time_created AS last_active_date,
-            ts.time_scheduled AS applicant_deadline,
-            assigners,
-            reviewers,
-            reviewer_action,
-            assigner_action
-        FROM
-            public.application app
-        LEFT JOIN public.template ON app.template_id = template.id
-        LEFT JOIN public."user" ON user_id = "user".id
-        LEFT JOIN public.application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
-        LEFT JOIN public.organisation org ON app.org_id = org.id
-        LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
-        LEFT JOIN review_list (stage_status.stage_id, $1, stage_status.status) ON app.id = review_list.application_id
-        LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
-        LEFT JOIN public.trigger_schedule ts ON app.id = ts.application_id
-            AND ts.is_active = TRUE
-            AND ts.event_code = 'applicantDeadline'
-    WHERE
-        app.is_config = FALSE
-    $$
-    LANGUAGE sql
-    STABLE;`
-    )
+    // await DB.changeSchema(
+    //   `CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
+    //     RETURNS SETOF application_list_shape
+    //     AS $$
+    //     SELECT
+    //         app.id,
+    //         app.serial,
+    //         app.name,
+    //         template.code AS template_code,
+    //         template.name AS template_name,
+    //         CONCAT(first_name, ' ', last_name) AS applicant,
+    //         org.name AS org_name,
+    //         stage_status.stage,
+    //         stage_status.stage_colour,
+    //         stage_status.status,
+    //         app.outcome,
+    //         status_history_time_created AS last_active_date,
+    //         ts.time_scheduled AS applicant_deadline,
+    //         assigners,
+    //         reviewers,
+    //         reviewer_action,
+    //         assigner_action
+    //     FROM
+    //         public.application app
+    //     LEFT JOIN public.template ON app.template_id = template.id
+    //     LEFT JOIN public."user" ON user_id = "user".id
+    //     LEFT JOIN public.application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
+    //     LEFT JOIN public.organisation org ON app.org_id = org.id
+    //     LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
+    //     LEFT JOIN review_list (stage_status.stage_id, $1, stage_status.status) ON app.id = review_list.application_id
+    //     LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
+    //     LEFT JOIN public.trigger_schedule ts ON app.id = ts.application_id
+    //         AND ts.is_active = TRUE
+    //         AND ts.event_code = 'applicantDeadline'
+    // WHERE
+    //     app.is_config = FALSE
+    // $$
+    // LANGUAGE sql
+    // STABLE;`
+    // )
 
-    console.log(` - Updte existing template_element where reviewable is set to NULL to use DEFAULT`)
+    console.log(
+      ` - Update existing template_element where reviewability is set to NULL to use DEFAULT`
+    )
 
     await DB.changeSchema(`
     UPDATE template_element te
@@ -1470,7 +1476,7 @@ const migrateData = async () => {
   }
   // Other version migrations continue here...
 
-  // Update Indexes, Views, Functions, Triggers regardless, since they can be dropped and recreated, or updated with no consequence:
+  // Update (almost all) Indexes, Views, Functions, Triggers regardless, since they can be dropped and recreated, or updated with no consequence:
   const createIndexesScript = readFileSync(
     path.join(getAppEntryPointDir(), '../database/buildSchema/49_index.sql'),
     'utf-8'
