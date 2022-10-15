@@ -1476,7 +1476,8 @@ const migrateData = async () => {
   }
   // Other version migrations continue here...
 
-  // Update (almost all) Indexes, Views, Functions, Triggers regardless, since they can be dropped and recreated, or updated with no consequence:
+  // Update (almost all) Indexes, Views, Functions, Triggers regardless, since
+  // they can be dropped and recreated, or updated with no consequence:
   const createIndexesScript = readFileSync(
     path.join(getAppEntryPointDir(), '../database/buildSchema/49_index.sql'),
     'utf-8'

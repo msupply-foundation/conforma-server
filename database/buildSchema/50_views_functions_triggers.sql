@@ -13,7 +13,7 @@ SELECT
     name AS org_name,
     user_role,
     registration,
-    address,
+    organisation.address,
     logo_url,
     is_system_org
 FROM
@@ -392,7 +392,7 @@ CREATE OR REPLACE FUNCTION public.application_status_history_application_id (app
     SELECT
         application_id
     FROM
-        application_stage_history
+        public.application_stage_history
     WHERE
         id = $1;
 
@@ -1065,7 +1065,7 @@ STABLE;
 
 -- ASSIGNER_ACTION_LIST
 -- Aggregated VIEW method of all related assigner data to each application on application list page
-DROP FUNCTION assigner_list (integer, integer);
+DROP FUNCTION IF EXISTS assigner_list (integer, integer);
 
 CREATE OR REPLACE FUNCTION assigner_list (stage_id int, assigner_id int)
     RETURNS TABLE (
@@ -1352,7 +1352,7 @@ BEGIN
         SELECT
             status
         FROM
-            application_status_history
+            public.application_status_history
         WHERE
             application_id = app_id
             AND is_current = TRUE);
@@ -1408,7 +1408,7 @@ BEGIN
         VALUES ('EXTENSION', NEW.event_code, NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('newDeadline', NEW.time_scheduled, 'extendedBy', json_build_object('userId', NEW.editor_user_id, 'name', (
                         SELECT
                             full_name
-                        FROM "user"
+                        FROM public."user"
                         WHERE
                             id = NEW.editor_user_id))));
     RETURN NULL;
@@ -1472,7 +1472,7 @@ BEGIN
                                         code = ANY (ARRAY (
                                                 SELECT
                                                     assigned_sections
-                                                FROM review_assignment
+                                                FROM public.review_assignment
                                             WHERE
                                                 id = NEW.id))
                                         AND template_id = NEW.template_id
@@ -1573,7 +1573,7 @@ BEGIN
                                 code = ANY (ARRAY (
                                         SELECT
                                             assigned_sections
-                                        FROM review_assignment
+                                        FROM public.review_assignment
                                     WHERE
                                         id = assignment_id
                                         AND template_id = templ_id
