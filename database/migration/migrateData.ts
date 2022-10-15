@@ -6,7 +6,6 @@ import { execSync } from 'child_process'
 import path from 'path'
 import { readFileSync } from 'fs'
 import { getAppEntryPointDir } from '../../src/components/utilityFunctions'
-import { createIndexes } from './indexes'
 
 const { version } = config
 const isManualMigration: Boolean = process.argv[2] === '--migrate'
