@@ -45,27 +45,46 @@ const takeSnapshot: SnapshotOperation = async ({
     console.log(`taking snapshot, name: ${snapshotName}`)
 
     const options = await getOptions(optionsName, inOptions, extraOptions)
-    const snapshotObject = await getRecordsAsObject(options)
 
     const newSnapshotFolder = path.join(SNAPSHOT_FOLDER, snapshotName)
     // Remove and create snapshot folder
     await asyncRimRaf(newSnapshotFolder)
     execSync(`mkdir ${newSnapshotFolder}`)
 
-    // Write snapshot and config to folder
-    await fs.writeFile(
-      path.join(newSnapshotFolder, `${SNAPSHOT_FILE_NAME}.json`),
-      JSON.stringify(snapshotObject, null, 2)
-    )
+    // Write snapshot/database to folder
+    if (options.usePgDump) {
+      // The quick way, using pg_dump -- whole database only
+      console.log('Dumping database...')
+      execSync(`pg_dump tmf_app_manager --format=custom -f ${newSnapshotFolder}/database.dump`)
+      console.log('Dumping database...done')
 
+      // Copy ALL files
+      console.log('Exporting files...')
+      execSync(`cp -a '${FILES_FOLDER}'/. '${newSnapshotFolder}/files'`)
+      console.log('Exporting files...done')
+    } else {
+      // Do it the old way, using JSON database object export
+      const snapshotObject = await getRecordsAsObject(options)
+      await fs.writeFile(
+        path.join(newSnapshotFolder, `${SNAPSHOT_FILE_NAME}.json`),
+        JSON.stringify(snapshotObject, null, 2)
+      )
+      await copyFiles(newSnapshotFolder, snapshotObject.file ?? [], options)
+    }
+
+    // Export config
     await fs.writeFile(
       path.join(newSnapshotFolder, `${OPTIONS_FILE_NAME}.json`),
       JSON.stringify(options, null, ' ')
     )
 
-    if (options.shouldReInitialise) await getSchemaDiff(newSnapshotFolder)
-
-    await copyFiles(newSnapshotFolder, snapshotObject.file ?? [], options)
+    if (options.shouldReInitialise && !options.usePgDump) {
+      await getSchemaDiff(newSnapshotFolder)
+      // Copy schema build script
+      execSync(
+        `cat ${DATABASE_FOLDER}/buildSchema/*.sql >> ${newSnapshotFolder}/${SCHEMA_FILE_NAME}.sql`
+      )
+    }
 
     // Copy localisation
     if (options?.includeLocalisation)
@@ -73,12 +92,6 @@ const takeSnapshot: SnapshotOperation = async ({
 
     // Copy prefs
     if (options?.includePrefs) execSync(`cp '${PREFERENCES_FILE}' '${newSnapshotFolder}'`)
-
-    // Copy schema build script
-    if (options?.shouldReInitialise)
-      execSync(
-        `cat ${DATABASE_FOLDER}/buildSchema/*.sql >> ${newSnapshotFolder}/${SCHEMA_FILE_NAME}.sql`
-      )
 
     // Save snapshot info (version, timestamp, etc)
     await fs.writeFile(
