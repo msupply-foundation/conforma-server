@@ -93,6 +93,15 @@ const useSnapshot: SnapshotOperation = async ({
         await initialiseDatabase(options, snapshotFolder)
       }
 
+      // Prevent triggers from running while we insert data, but only for full re-init
+      if (options.shouldReInitialise) {
+        triggerTables.forEach((table) => {
+          execSync(
+            `psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} DISABLE TRIGGER ALL"`
+          )
+        })
+      }
+
       console.log('inserting from snapshot ... ')
       const insertedRecords = await importFromJson(
         snapshotObject,
@@ -100,27 +109,17 @@ const useSnapshot: SnapshotOperation = async ({
         options.shouldReInitialise
       )
       console.log('inserting from snapshot ... done')
-      await copyFiles(snapshotFolder, insertedRecords.file)
-    }
 
-    // Prevent triggers from running while we insert data, but only for full re-init
-    if (options.shouldReInitialise) {
+      // Re-enable triggers
       triggerTables.forEach((table) => {
-        execSync(
-          `psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} DISABLE TRIGGER ALL"`
-        )
+        execSync(`psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} ENABLE TRIGGER ALL"`)
       })
+
+      await copyFiles(snapshotFolder, insertedRecords.file)
     }
 
     // Pause to allow postgraphile "watch" to detect changed schema
     delay(2500)
-
-    // Re-enable triggers
-    triggerTables.forEach((table) => {
-      execSync(`psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} ENABLE TRIGGER ALL"`)
-    })
-
-    // await copyFiles(snapshotFolder, insertedRecords.file)
 
     // Import localisations
     if (options?.includeLocalisation) {
