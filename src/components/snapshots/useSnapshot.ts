@@ -110,6 +110,11 @@ const useSnapshot: SnapshotOperation = async ({
       )
       console.log('inserting from snapshot ... done')
 
+      // Update serials
+      console.log('running serial update ... ')
+      execSync('./database/update_serials.sh', { cwd: ROOT_FOLDER, stdio: 'inherit' })
+      console.log('running serial update ... done')
+
       // Re-enable triggers
       triggerTables.forEach((table) => {
         execSync(`psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} ENABLE TRIGGER ALL"`)
@@ -140,11 +145,6 @@ const useSnapshot: SnapshotOperation = async ({
         console.log("Couldn't import preferences")
       }
     }
-
-    // Update serials
-    console.log('running serial update ... ')
-    execSync('./database/update_serials.sh', { cwd: ROOT_FOLDER, stdio: 'inherit' })
-    console.log('running serial update ... done')
 
     // Migrate database to latest version
     console.log('Migrating database (if required)...)')
