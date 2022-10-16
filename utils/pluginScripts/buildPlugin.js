@@ -35,7 +35,7 @@ const buildPlugin = async (pluginName) => {
   }
 
   const build = () => {
-    execSync('yarn tsc --project ' + tempConfigPath, { cwd: rootDirectory })
+    execSync('yarn tsc --project ' + tempConfigPath, { cwd: rootDirectory, stdio: 'inherit' })
   }
 
   const buildFolder = pluginFolder + '/build/'

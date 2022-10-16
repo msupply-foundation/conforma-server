@@ -50,4 +50,5 @@ CREATE VIEW postgres_row_level AS
 SELECT
     *
 FROM
-    pg_policies
+    pg_policies;
+

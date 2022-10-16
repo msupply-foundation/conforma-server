@@ -5,8 +5,7 @@
  "includeTables": [],
  "excludeTables": [
   "applicationListShape",
-  "elementTypePlugin",
-  "notification"
+  "elementTypePlugin"
  ],
  "shouldReInitialise": true,
  "insertScriptsLocale": "dev",

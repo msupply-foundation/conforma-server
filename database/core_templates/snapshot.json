@@ -1221,6 +1221,18 @@
       "name": "snapshot",
       "timestamp": "2022-10-06T10:30:53.571952+13:00",
       "value": "core_templates"
+    },
+    {
+      "id": 24,
+      "name": "version",
+      "timestamp": "2022-10-11T10:32:54.304393+13:00",
+      "value": "0.4.6-3"
+    },
+    {
+      "id": 25,
+      "name": "snapshot",
+      "timestamp": "2022-10-11T10:32:54.384871+13:00",
+      "value": "core_templates"
     }
   ],
   "templateCategory": [
@@ -13190,6 +13202,7 @@
   ],
   "review": [],
   "reviewAssignmentAssignerJoin": [],
+  "notification": [],
   "reviewDecision": [],
   "reviewResponse": [],
   "reviewStatusHistory": []
