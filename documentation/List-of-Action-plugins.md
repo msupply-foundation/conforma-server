@@ -411,7 +411,7 @@ The opposite of `joinUserOrg`. Removes user from company by deleting the `user_o
 
 | Input parameters<br />(\*required) <br/>   | Output properties                                        |
 | ------------------------------------------ | -------------------------------------------------------- |
-| `username` or `userId`                     | `grantedPermissions: {userOrgId, userId, orgId} [Array]` |
+| `username` or `userId`                     | `removedUsers: {userOrgId, userId, orgId} [Array]` |
 | `orgName` or `orgId` o `organisation_id`\* |                                                          |
 | `deletePermissions` (default `true`)       |                                                          |
 
