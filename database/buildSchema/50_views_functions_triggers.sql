@@ -646,6 +646,129 @@ CREATE TRIGGER review_assignment_trigger2
     EXECUTE FUNCTION public.empty_assigned_sections ();
 
 -- REVIEW
+-- These first few functions are duplicated in 31_review.sql as they are
+-- needed before the review table is created.
+--
+-- FUNCTION to auto-add application_id to review
+CREATE OR REPLACE FUNCTION public.review_application_id (review_assignment_id int)
+    RETURNS int
+    AS $$
+    SELECT
+        application_id
+    FROM
+        public.review_assignment
+    WHERE
+        id = $1;
+
+$$
+LANGUAGE SQL
+IMMUTABLE;
+
+-- FUNCTION to auto-add reviewer_id to review
+CREATE OR REPLACE FUNCTION public.review_reviewer_id (review_assignment_id int)
+    RETURNS int
+    AS $$
+    SELECT
+        reviewer_id
+    FROM
+        public.review_assignment
+    WHERE
+        id = $1;
+
+$$
+LANGUAGE SQL
+IMMUTABLE;
+
+-- FUNCTION to auto-add level to review
+CREATE OR REPLACE FUNCTION public.review_level (review_assignment_id int)
+    RETURNS int
+    AS $$
+    SELECT
+        level_number
+    FROM
+        public.review_assignment
+    WHERE
+        id = $1;
+
+$$
+LANGUAGE SQL
+IMMUTABLE;
+
+-- FUNCTION to auto-add stage_number to review
+CREATE OR REPLACE FUNCTION public.review_stage (review_assignment_id int)
+    RETURNS int
+    AS $$
+    SELECT
+        stage_number
+    FROM
+        public.review_assignment
+    WHERE
+        id = $1;
+
+$$
+LANGUAGE SQL
+IMMUTABLE;
+
+-- FUNCTION to auto-add time_stage_created to review
+CREATE OR REPLACE FUNCTION public.review_time_stage_created (review_assignment_id int)
+    RETURNS timestamptz
+    AS $$
+    SELECT
+        time_stage_created
+    FROM
+        public.review_assignment
+    WHERE
+        id = $1;
+
+$$
+LANGUAGE SQL
+IMMUTABLE;
+
+-- FUNCTION to auto-add is_last_level to review
+CREATE OR REPLACE FUNCTION public.review_is_last_level (review_assignment_id int)
+    RETURNS boolean
+    AS $$
+    SELECT
+        is_last_level
+    FROM
+        public.review_assignment
+    WHERE
+        id = $1;
+
+$$
+LANGUAGE SQL
+IMMUTABLE;
+
+-- FUNCTION to auto-add is_last_stage to review
+CREATE OR REPLACE FUNCTION public.review_is_last_stage (review_assignment_id int)
+    RETURNS boolean
+    AS $$
+    SELECT
+        is_last_stage
+    FROM
+        public.review_assignment
+    WHERE
+        id = $1;
+
+$$
+LANGUAGE SQL
+IMMUTABLE;
+
+-- FUNCTION to auto-add is_final_decision to review
+CREATE OR REPLACE FUNCTION public.review_is_final_decision (review_assignment_id int)
+    RETURNS boolean
+    AS $$
+    SELECT
+        is_final_decision
+    FROM
+        public.review_assignment
+    WHERE
+        id = $1;
+
+$$
+LANGUAGE SQL
+IMMUTABLE;
+
 -- TRIGGER (Listener) on review table
 DROP TRIGGER IF EXISTS review_trigger ON public.review;
 

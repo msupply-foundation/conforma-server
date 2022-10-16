@@ -1,3 +1,7 @@
+-- Most functions have been moved to 50_views_functions so they can be recreated
+-- as part of every migration, but these ones need to be created before the
+-- review table, as they generate values that are used in the review table.
+--
 -- FUNCTION to auto-add application_id to review
 CREATE OR REPLACE FUNCTION public.review_application_id (review_assignment_id int)
     RETURNS int
