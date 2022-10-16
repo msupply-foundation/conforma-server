@@ -1,7 +1,7 @@
 require('dotenv').config()
 module.exports = {
   options: {
-    watchPg: true,
+    watch: true,
     appendPlugins: [
       '@graphile-contrib/pg-simplify-inflector',
       'postgraphile-plugin-nested-mutations',
