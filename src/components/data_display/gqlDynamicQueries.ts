@@ -2,6 +2,7 @@ import DBConnect from '../databaseConnect'
 import { plural } from 'pluralize'
 import { camelCase, snakeCase, upperFirst } from 'lodash'
 import { LinkedApplication } from './types'
+import { capitaliseFirstLetter } from '../utilityFunctions'
 
 export const queryDataTable = async (
   tableName: string,
@@ -93,4 +94,54 @@ export const queryLinkedApplications = async (id: number, tableName: string) => 
     })
   )
   return linkedApplications
+}
+
+export const queryFilterList = async (
+  tableName: string,
+  columns: string[],
+  gqlFilters: object,
+  first: number,
+  offset: number,
+  authHeaders: string
+) => {
+  const tableNamePlural = plural(tableName)
+  const filterType = upperFirst(camelCase(tableName)) + 'Filter'
+  const variables = { filter: gqlFilters, first, offset }
+  const graphQLquery = `query getFilterList($first: Int!, $offset: Int!, $filter: ${filterType}) { ${tableNamePlural}(first: $first, offset: $offset, filter: $filter) { nodes { ${columns.join(
+    ','
+  )} }, totalCount}}`
+
+  let queryResult
+  try {
+    queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
+  } catch (err) {
+    return {
+      error: { error: true, message: 'Problem with Filter List query', detail: err.message },
+    }
+  }
+
+  const fetchedRecords = queryResult?.[tableNamePlural]?.nodes
+  const totalCount = queryResult?.[tableNamePlural]?.totalCount
+
+  return { fetchedRecords, totalCount }
+}
+
+export const updateRecord = async (
+  tableName: string,
+  id: number,
+  patch: unknown,
+  authHeaders: string
+) => {
+  const tableTypeName = capitaliseFirstLetter(tableName)
+  const graphQLquery = `mutation UpdateRecord($id: Int!, $patch: ${tableTypeName}Patch!) {update${tableTypeName}(input: { patch: $patch, id: $id }) {${tableName} {id}}}`
+  const variables = { id, patch }
+
+  let queryResult
+  try {
+    queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
+  } catch (err) {
+    return {
+      error: { error: true, message: 'Problem with Filter List query', detail: err.message },
+    }
+  }
 }

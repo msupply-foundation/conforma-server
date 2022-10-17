@@ -1,7 +1,7 @@
 require('dotenv').config()
 module.exports = {
   options: {
-    watchPg: true,
+    watch: true,
     appendPlugins: [
       '@graphile-contrib/pg-simplify-inflector',
       'postgraphile-plugin-nested-mutations',
@@ -15,6 +15,7 @@ module.exports = {
     // disableQueryLog: true,
     graphileBuildOptions: {
       connectionFilterRelations: true,
+      connectionFilterAllowEmptyObjectInput: true,
     },
     bodySizeLimit: '500kb',
   },
