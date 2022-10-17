@@ -45,4 +45,11 @@ const getJSDate = (date?: string) => (date ? DateTime.fromISO(date).toJSDate() :
 const getISODate = (date?: Date) =>
   date ? DateTime.fromJSDate(date).toISO() : DateTime.now().toISO()
 
-export default { generateExpiry, getYear, getFormattedDate, getJSDate, getISODate }
+// Extracts any numeric content from a string
+export const extractNumber = (input: string) => {
+  const numberMatch = input.match(/(-?(\d+\.\d+))|(-?((?<!\.)\.\d+))|(-?\d+)/gm)
+  if (!numberMatch) return 0
+  return Number(numberMatch[0])
+}
+
+export default { generateExpiry, getYear, getFormattedDate, getJSDate, getISODate, extractNumber }
