@@ -1,12 +1,12 @@
-import fs from 'fs/promises'
-import fsSync from 'fs'
+import fs from 'fs'
+// import fsSync from 'fs'
+import archiver from 'archiver'
 import { ExportAndImportOptions, ObjectRecord, SnapshotOperation } from '../exportAndImport/types'
 import path from 'path'
 import { execSync } from 'child_process'
 import rimraf from 'rimraf'
 import getRecordsAsObject from '../exportAndImport/exportToJson'
 import { promisify } from 'util'
-import zipper from 'adm-zip'
 import pgDiffConfig from './pgDiffConfig.json'
 import {
   DEFAULT_SNAPSHOT_NAME,
@@ -65,7 +65,7 @@ const takeSnapshot: SnapshotOperation = async ({
     } else {
       // Do it the old way, using JSON database object export
       const snapshotObject = await getRecordsAsObject(options)
-      await fs.writeFile(
+      await fs.promises.writeFile(
         path.join(newSnapshotFolder, `${SNAPSHOT_FILE_NAME}.json`),
         JSON.stringify(snapshotObject, null, 2)
       )
@@ -73,7 +73,7 @@ const takeSnapshot: SnapshotOperation = async ({
     }
 
     // Export config
-    await fs.writeFile(
+    await fs.promises.writeFile(
       path.join(newSnapshotFolder, `${OPTIONS_FILE_NAME}.json`),
       JSON.stringify(options, null, ' ')
     )
@@ -94,12 +94,12 @@ const takeSnapshot: SnapshotOperation = async ({
     if (options?.includePrefs) execSync(`cp '${PREFERENCES_FILE}' '${newSnapshotFolder}'`)
 
     // Save snapshot info (version, timestamp, etc)
-    await fs.writeFile(
+    await fs.promises.writeFile(
       path.join(newSnapshotFolder, `${INFO_FILE_NAME}.json`),
       JSON.stringify(getSnapshotInfo(), null, ' ')
     )
 
-    await zipSnapshot(newSnapshotFolder, snapshotName)
+    if (!options.skipZip) await zipSnapshot(newSnapshotFolder, snapshotName)
 
     return { success: true, message: `created snapshot ${snapshotName}` }
   } catch (e) {
@@ -120,7 +120,7 @@ const getOptions = async (
   const optionsFile = path.join(SNAPSHOT_OPTIONS_FOLDER, `${optionsName}.json`)
 
   console.log(`using options from: ${optionsFile}`)
-  const optionsRaw = await fs.readFile(optionsFile, {
+  const optionsRaw = await fs.promises.readFile(optionsFile, {
     encoding: 'utf-8',
   })
 
@@ -130,15 +130,12 @@ const getOptions = async (
 }
 
 const zipSnapshot = async (snapshotFolder: string, snapshotName: string) => {
-  const zip = new zipper()
-  zip.addLocalFolder(snapshotFolder)
+  const output = fs.createWriteStream(path.join(SNAPSHOT_FOLDER, `${snapshotName}.zip`))
+  const archive = archiver('zip')
 
-  await new Promise((resolve, reject) =>
-    zip.writeZip(path.join(SNAPSHOT_FOLDER, `${snapshotName}.zip`), (error) => {
-      if (error) return reject(error)
-      resolve('done')
-    })
-  )
+  archive.pipe(output)
+  archive.directory(snapshotFolder, false)
+  archive.finalize()
 }
 
 const getSnapshotInfo = () => {
@@ -156,7 +153,7 @@ const getSchemaDiff = async (newSnapshotFolder: string) => {
   // Changing pgDiff configuration output to new snapshot directory
   pgDiffConfig.development.compareOptions.outputDirectory = newSnapshotFolder
 
-  await fs.writeFile(
+  await fs.promises.writeFile(
     path.join(ROOT_FOLDER, `${PG_DIFF_CONFIG_FILE_NAME}.json`),
     JSON.stringify(pgDiffConfig, null, ' ')
   )
@@ -167,10 +164,10 @@ const getSchemaDiff = async (newSnapshotFolder: string) => {
   })
   // Rename diff file
 
-  const diffFile = fsSync.readdirSync(newSnapshotFolder).find((file) => file.endsWith('.sql'))
+  const diffFile = fs.readdirSync(newSnapshotFolder).find((file) => file.endsWith('.sql'))
   if (!diffFile) return
 
-  fsSync.renameSync(
+  fs.renameSync(
     path.join(newSnapshotFolder, diffFile),
     path.join(newSnapshotFolder, `${PG_SCHEMA_DIFF_FILE_NAME}.sql`)
   )

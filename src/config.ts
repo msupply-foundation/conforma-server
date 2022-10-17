@@ -28,6 +28,7 @@ const config: { [key: string]: any } = {
   localisationsFolder: '../localisation',
   preferencesFolder: '../preferences',
   preferencesFileName: 'preferences.json',
+  backupsFolder: '../backups',
   genericThumbnailsFolderName: '_generic_thumbnails',
   // In production postgraphile is started with -q and -i /postgraphile/...
   nodeModulesFolder:
