@@ -2,6 +2,7 @@ import config from '../../src/config'
 import DB from './databaseMethods'
 import { ReviewAssignmentsWithSections } from './types'
 import semverCompare from 'semver/functions/compare'
+import semverInc from 'semver/functions/inc'
 import { execSync } from 'child_process'
 import path from 'path'
 import { readFileSync } from 'fs'
@@ -14,11 +15,18 @@ const simulatedVersion: string | undefined = process.argv[3]
 const migrateData = async () => {
   let databaseVersion: string
 
+  const appVersion =
+    process.env.NODE_ENV === 'development'
+      ? // In development, pretend the version is one higher than it is,
+        // so we can keep getting changing migrations when testing
+        semverInc(version, 'minor')
+      : version
+
   try {
     databaseVersion = (await DB.getDatabaseVersion()).value
     // No migration if database version matches current version, but we still
     // proceed if this is a manual migration
-    if (semverCompare(databaseVersion, version) >= 0 && !isManualMigration) return
+    if (semverCompare(databaseVersion, appVersion) >= 0 && !isManualMigration) return
   } catch (err) {
     // No version in database yet, so run all migration
     databaseVersion = '0.0.0'

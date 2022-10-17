@@ -123,9 +123,6 @@ const useSnapshot: SnapshotOperation = async ({
       await copyFiles(snapshotFolder, insertedRecords.file)
     }
 
-    // Pause to allow postgraphile "watch" to detect changed schema
-    delay(2500)
-
     // Import localisations
     if (options?.includeLocalisation) {
       try {
@@ -145,6 +142,9 @@ const useSnapshot: SnapshotOperation = async ({
         console.log("Couldn't import preferences")
       }
     }
+
+    // Pause to allow postgraphile "watch" to detect changed schema
+    delay(1500)
 
     // Migrate database to latest version
     console.log('Migrating database (if required)...)')
