@@ -141,3 +141,19 @@ $$
 LANGUAGE sql
 STABLE;
 
+-- Checks if TOTAL of assigned questions are approved - used for completeness of assignable questions
+CREATE FUNCTION public.approved_assigned_questions_count (app_id int, stage_id int, level_number int)
+    RETURNS bigint
+    AS $$
+    SELECT
+        COUNT(*)
+    FROM
+        assigned_questions (app_id, stage_id, level_number) aq
+WHERE
+    aq.review_response_status = 'SUBMITTED'
+    AND (aq.decision = 'APPROVE'
+        OR aq.decision = 'AGREE')
+$$
+LANGUAGE sql
+STABLE;
+
