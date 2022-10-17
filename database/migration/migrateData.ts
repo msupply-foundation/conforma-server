@@ -1458,10 +1458,9 @@ const migrateData = async () => {
             COUNT(*)
         FROM
             assigned_questions (app_id, stage_id, level_number) aq
-    WHERE
-        aq.review_response_status = 'SUBMITTED'
-        AND (aq.decision = 'APPROVE'
-            OR aq.decision = 'AGREE')
+      WHERE
+          aq.decision = 'APPROVE'
+          OR aq.decision = 'AGREE'
     $$
     LANGUAGE sql
     STABLE;
