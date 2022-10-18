@@ -1358,6 +1358,7 @@ LANGUAGE sql
 STABLE;
 
 -- (https://github.com/graphile/graphile-engine/pull/378)
+-- Required to make 'orderBy' work in application_list
 COMMENT ON FUNCTION application_list (userid int) IS E'@sortable';
 
 -- APPLICATION_LIST_FILTERS

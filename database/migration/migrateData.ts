@@ -310,11 +310,6 @@ const migrateData = async () => {
         LANGUAGE sql
         STABLE;
     `)
-    // Required to make 'orderBy' work in application_list
-    // Need to use psql as node-pg doesn't handle the comment command
-    execSync(
-      `psql -U postgres -d tmf_app_manager -c "COMMENT ON FUNCTION application_list (userid int) IS E'@sortable';"`
-    )
 
     console.log(' - Updating activity_log functions')
 
@@ -343,6 +338,10 @@ const migrateData = async () => {
       ALTER TYPE public.is_reviewable_status ADD VALUE IF NOT EXISTS
       'OPTIONAL_IF_NO_RESPONSE' AFTER 'NEVER';
     `)
+
+    // This change is really long, but there's no built-in way to drop values
+    // from an ENUM. So we have to rename it, drop it and recreate it, as well
+    // as drop and rebuild all the other objects that reference it 🙄
 
     console.log(' - Removes Trigger values: ON_REVIEW_REASSIGN and ON_REVIEW_SELF_ASSIGN')
 
