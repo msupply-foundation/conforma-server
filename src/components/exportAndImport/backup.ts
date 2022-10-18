@@ -29,8 +29,12 @@ const createBackup = async (password?: string) => {
   // Zip it using password (or unencrypted if no password)
   const output = fs.createWriteStream(path.join(BACKUPS_FOLDER, `${snapshotName}.zip`))
   const archive = password
-    ? archiver.create('zip-encrypted', { encryptionMethod: 'aes256', password } as any)
-    : archiver('zip')
+    ? archiver.create('zip-encrypted', {
+        zlib: { level: 9 },
+        encryptionMethod: 'aes256',
+        password,
+      } as any)
+    : archiver('zip', { zlib: { level: 9 } })
 
   output.on('close', () => {
     console.log(`Backup done`)
