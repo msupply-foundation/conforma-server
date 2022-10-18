@@ -16,6 +16,7 @@ import {
   getRandomReviewId,
   getApplicationBasics,
   mapTriggerShortcut,
+  triggerMap,
 } from './helpers'
 import { ActionApplicationData, ActionResult, TriggerPayload } from '../../../types'
 
@@ -35,7 +36,7 @@ export const routeRunAction = async (request: any, reply: any) => {
 
 interface RequestProps {
   templateCode: string
-  trigger: Trigger | 'RESET'
+  trigger: Trigger | 'RESET' | keyof typeof triggerMap
   assignmentId?: number
   sections?: string[]
   reviewId?: number
@@ -47,7 +48,7 @@ interface RequestProps {
   stageNumber?: number
   status?: ApplicationStatus
   outcome?: ApplicationOutcome
-  applicationDataOverride: Partial<ActionApplicationData>
+  applicationDataOverride?: Partial<ActionApplicationData>
 }
 
 // Wrapper for "testTrigger". Use routeTestTrigger provides the REST endpoint,
@@ -76,7 +77,7 @@ export const testTrigger = async (params: RequestProps) => {
     applicationDataOverride = {},
   } = params
 
-  const triggerFull = mapTriggerShortcut(trigger)
+  const triggerFull = mapTriggerShortcut(trigger as string)
 
   const { configId, configSerial, templateId, sectionCodes } = await db.getConfigApplicationInfo(
     templateCode
@@ -268,13 +269,4 @@ export const testTrigger = async (params: RequestProps) => {
     actionResult: actionsOutput,
     finalApplicationData,
   }
-
-  // reply.send({
-  //   applicationId,
-  //   serial,
-  //   trigger: triggerFull,
-  //   failedActions: failedActions.length > 0 ? failedActions : undefined,
-  //   actionResult: actionsOutput,
-  //   finalApplicationData,
-  // })
 }
