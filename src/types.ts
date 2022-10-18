@@ -220,4 +220,6 @@ export interface Organisation {
   isSystemOrg?: boolean
 }
 
-export interface UserOrg extends User, Organisation {}
+export interface UserOrg extends User, Organisation {
+  id: number
+}
