@@ -62,10 +62,6 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
       bccAddressString === ''
     )
 
-    if (!hasValidEmails) {
-      console.log('Warning: no valid email addresses provided')
-    }
-
     // Create notification database record
     console.log('Creating notification...')
     const notificationResult = await db.createNotification({
@@ -129,8 +125,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     if (!transporter) {
       console.log('Email not sent - missing email configuration')
       db.notificationEmailError(notificationResult.id, `WARNING: Email configuration not provided`)
-    }
-    if (!hasValidEmails) {
+    } else if (!hasValidEmails) {
       console.log('Email not sent - no valid email address')
       db.notificationEmailError(notificationResult.id, `WARNING: No valid email addresses`)
     }
