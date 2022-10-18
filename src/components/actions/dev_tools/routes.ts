@@ -138,7 +138,6 @@ export const routeTestTrigger = async (request: any, reply: any) => {
     case 'ON_SCHEDULE':
       if (!eventCode) return reply.send('eventCode required')
       const { id, data } = await db.getScheduledEvent(applicationId, eventCode)
-      console.log(id)
       triggerPayload.trigger = Trigger.OnSchedule
       triggerPayload.table = 'trigger_schedule'
       triggerPayload.record_id = id
