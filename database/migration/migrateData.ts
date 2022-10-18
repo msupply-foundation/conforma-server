@@ -553,6 +553,12 @@ const migrateData = async () => {
           DEFAULT CURRENT_TIMESTAMP NOT NULL,
         ADD COLUMN IF NOT EXISTS email_server_log varchar; 
     `)
+
+    console.log(' - Add evaluated parameters field to application_responses')
+    await DB.changeSchema(`
+      ALTER TABLE application_response 
+        ADD COLUMN IF NOT EXISTS evaluated_parameters jsonb; 
+    `)
   }
   // Other version migrations continue here...
 

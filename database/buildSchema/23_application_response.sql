@@ -12,6 +12,7 @@ CREATE TABLE public.application_response (
     status public.application_response_status DEFAULT 'DRAFT',
     value jsonb,
     is_valid boolean,
+    evaluated_parameters json,
     time_created timestamptz DEFAULT CURRENT_TIMESTAMP,
     time_updated timestamptz DEFAULT CURRENT_TIMESTAMP,
     time_submitted timestamptz

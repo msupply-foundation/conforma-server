@@ -2441,6 +2441,7 @@ export type ApplicationResponse = Node & {
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   /** Reads a single `TemplateElement` that is related to this `ApplicationResponse`. */
   templateElement?: Maybe<TemplateElement>;
   /** Reads a single `Application` that is related to this `ApplicationResponse`. */
@@ -2514,6 +2515,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput =
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -2599,6 +2601,8 @@ export type ApplicationResponseCondition = {
   timeUpdated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `timeSubmitted` field. */
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `evaluatedParameters` field. */
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
 };
 
 /** A filter to be used against `ApplicationResponse` object types. All fields are combined with a logical ‘and.’ */
@@ -2623,6 +2627,8 @@ export type ApplicationResponseFilter = {
   timeUpdated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `timeSubmitted` field. */
   timeSubmitted?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `evaluatedParameters` field. */
+  evaluatedParameters?: Maybe<JsonFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
   reviewResponses?: Maybe<ApplicationResponseToManyReviewResponseFilter>;
   /** Some related `reviewResponses` exist. */
@@ -2655,6 +2661,7 @@ export type ApplicationResponseInput = {
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -2745,6 +2752,7 @@ export type ApplicationResponsePatch = {
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -2796,6 +2804,8 @@ export enum ApplicationResponsesOrderBy {
   TimeUpdatedDesc = 'TIME_UPDATED_DESC',
   TimeSubmittedAsc = 'TIME_SUBMITTED_ASC',
   TimeSubmittedDesc = 'TIME_SUBMITTED_DESC',
+  EvaluatedParametersAsc = 'EVALUATED_PARAMETERS_ASC',
+  EvaluatedParametersDesc = 'EVALUATED_PARAMETERS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -2842,6 +2852,7 @@ export type ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInp
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -2853,13 +2864,19 @@ export type ApplicationResponseTemplateElementIdFkeyInput = {
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
   connectById?: Maybe<TemplateElementTemplateElementPkeyConnect>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
+  connectByTemplateCodeAndCodeAndTemplateVersion?: Maybe<TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyConnect>;
+  /** The primary key(s) for `templateElement` for the far side of the relationship. */
   connectByNodeId?: Maybe<TemplateElementNodeIdConnect>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
   deleteById?: Maybe<TemplateElementTemplateElementPkeyDelete>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
+  deleteByTemplateCodeAndCodeAndTemplateVersion?: Maybe<TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyDelete>;
+  /** The primary key(s) for `templateElement` for the far side of the relationship. */
   deleteByNodeId?: Maybe<TemplateElementNodeIdDelete>;
   /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
   updateById?: Maybe<TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyUsingTemplateElementPkeyUpdate>;
+  /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
+  updateByTemplateCodeAndCodeAndTemplateVersion?: Maybe<TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate>;
   /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
   updateByNodeId?: Maybe<ApplicationResponseOnApplicationResponseForApplicationResponseTemplateElementIdFkeyNodeIdUpdate>;
   /** A `TemplateElementInput` object that will be created and connected to this object. */
@@ -6373,14 +6390,14 @@ export type DataView = Node & {
   rowRestrictions?: Maybe<Scalars['JSON']>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewHeaderColumn: Scalars['String'];
-  filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   showLinkedApplications: Scalars['Boolean'];
   priority?: Maybe<Scalars['Int']>;
+  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type DataViewColumnDefinition = Node & {
@@ -6572,22 +6589,22 @@ export type DataViewCondition = {
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `tableViewExcludeColumns` field. */
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** Checks for equality with the object’s `tableSearchColumns` field. */
-  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `detailViewIncludeColumns` field. */
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `detailViewExcludeColumns` field. */
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `detailViewHeaderColumn` field. */
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `filterIncludeColumns` field. */
-  filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** Checks for equality with the object’s `filterExcludeColumns` field. */
-  filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `showLinkedApplications` field. */
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `priority` field. */
   priority?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `tableSearchColumns` field. */
+  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `filterIncludeColumns` field. */
+  filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `filterExcludeColumns` field. */
+  filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** A filter to be used against `DataView` object types. All fields are combined with a logical ‘and.’ */
@@ -6608,22 +6625,22 @@ export type DataViewFilter = {
   tableViewIncludeColumns?: Maybe<StringListFilter>;
   /** Filter by the object’s `tableViewExcludeColumns` field. */
   tableViewExcludeColumns?: Maybe<StringListFilter>;
-  /** Filter by the object’s `tableSearchColumns` field. */
-  tableSearchColumns?: Maybe<StringListFilter>;
   /** Filter by the object’s `detailViewIncludeColumns` field. */
   detailViewIncludeColumns?: Maybe<StringListFilter>;
   /** Filter by the object’s `detailViewExcludeColumns` field. */
   detailViewExcludeColumns?: Maybe<StringListFilter>;
   /** Filter by the object’s `detailViewHeaderColumn` field. */
   detailViewHeaderColumn?: Maybe<StringFilter>;
-  /** Filter by the object’s `filterIncludeColumns` field. */
-  filterIncludeColumns?: Maybe<StringListFilter>;
-  /** Filter by the object’s `filterExcludeColumns` field. */
-  filterExcludeColumns?: Maybe<StringListFilter>;
   /** Filter by the object’s `showLinkedApplications` field. */
   showLinkedApplications?: Maybe<BooleanFilter>;
   /** Filter by the object’s `priority` field. */
   priority?: Maybe<IntFilter>;
+  /** Filter by the object’s `tableSearchColumns` field. */
+  tableSearchColumns?: Maybe<StringListFilter>;
+  /** Filter by the object’s `filterIncludeColumns` field. */
+  filterIncludeColumns?: Maybe<StringListFilter>;
+  /** Filter by the object’s `filterExcludeColumns` field. */
+  filterExcludeColumns?: Maybe<StringListFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<DataViewFilter>>;
   /** Checks for any expressions in this list. */
@@ -6642,14 +6659,14 @@ export type DataViewInput = {
   rowRestrictions?: Maybe<Scalars['JSON']>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewHeaderColumn: Scalars['String'];
-  filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
   priority?: Maybe<Scalars['Int']>;
+  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** Represents an update to a `DataView`. Fields that are set will be updated. */
@@ -6662,14 +6679,14 @@ export type DataViewPatch = {
   rowRestrictions?: Maybe<Scalars['JSON']>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
-  filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
   priority?: Maybe<Scalars['Int']>;
+  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** A connection to a list of `DataView` values. */
@@ -6713,22 +6730,22 @@ export enum DataViewsOrderBy {
   TableViewIncludeColumnsDesc = 'TABLE_VIEW_INCLUDE_COLUMNS_DESC',
   TableViewExcludeColumnsAsc = 'TABLE_VIEW_EXCLUDE_COLUMNS_ASC',
   TableViewExcludeColumnsDesc = 'TABLE_VIEW_EXCLUDE_COLUMNS_DESC',
-  TableSearchColumnsAsc = 'TABLE_SEARCH_COLUMNS_ASC',
-  TableSearchColumnsDesc = 'TABLE_SEARCH_COLUMNS_DESC',
   DetailViewIncludeColumnsAsc = 'DETAIL_VIEW_INCLUDE_COLUMNS_ASC',
   DetailViewIncludeColumnsDesc = 'DETAIL_VIEW_INCLUDE_COLUMNS_DESC',
   DetailViewExcludeColumnsAsc = 'DETAIL_VIEW_EXCLUDE_COLUMNS_ASC',
   DetailViewExcludeColumnsDesc = 'DETAIL_VIEW_EXCLUDE_COLUMNS_DESC',
   DetailViewHeaderColumnAsc = 'DETAIL_VIEW_HEADER_COLUMN_ASC',
   DetailViewHeaderColumnDesc = 'DETAIL_VIEW_HEADER_COLUMN_DESC',
-  FilterIncludeColumnsAsc = 'FILTER_INCLUDE_COLUMNS_ASC',
-  FilterIncludeColumnsDesc = 'FILTER_INCLUDE_COLUMNS_DESC',
-  FilterExcludeColumnsAsc = 'FILTER_EXCLUDE_COLUMNS_ASC',
-  FilterExcludeColumnsDesc = 'FILTER_EXCLUDE_COLUMNS_DESC',
   ShowLinkedApplicationsAsc = 'SHOW_LINKED_APPLICATIONS_ASC',
   ShowLinkedApplicationsDesc = 'SHOW_LINKED_APPLICATIONS_DESC',
   PriorityAsc = 'PRIORITY_ASC',
   PriorityDesc = 'PRIORITY_DESC',
+  TableSearchColumnsAsc = 'TABLE_SEARCH_COLUMNS_ASC',
+  TableSearchColumnsDesc = 'TABLE_SEARCH_COLUMNS_DESC',
+  FilterIncludeColumnsAsc = 'FILTER_INCLUDE_COLUMNS_ASC',
+  FilterIncludeColumnsDesc = 'FILTER_INCLUDE_COLUMNS_DESC',
+  FilterExcludeColumnsAsc = 'FILTER_EXCLUDE_COLUMNS_ASC',
+  FilterExcludeColumnsDesc = 'FILTER_EXCLUDE_COLUMNS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -8334,6 +8351,18 @@ export type DeleteTemplateElementByNodeIdInput = {
   nodeId: Scalars['ID'];
 };
 
+/** All input for the `deleteTemplateElementByTemplateCodeAndCodeAndTemplateVersion` mutation. */
+export type DeleteTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  templateCode: Scalars['String'];
+  code: Scalars['String'];
+  templateVersion: Scalars['Int'];
+};
+
 /** All input for the `deleteTemplateElement` mutation. */
 export type DeleteTemplateElementInput = {
   /**
@@ -9234,6 +9263,7 @@ export type FileApplicationResponseIdFkeyApplicationResponseCreateInput = {
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -10462,6 +10492,8 @@ export type Mutation = {
   updateTemplateElementByNodeId?: Maybe<UpdateTemplateElementPayload>;
   /** Updates a single `TemplateElement` using a unique key and a patch. */
   updateTemplateElement?: Maybe<UpdateTemplateElementPayload>;
+  /** Updates a single `TemplateElement` using a unique key and a patch. */
+  updateTemplateElementByTemplateCodeAndCodeAndTemplateVersion?: Maybe<UpdateTemplateElementPayload>;
   /** Updates a single `TemplateFilterJoin` using its globally unique id and a patch. */
   updateTemplateFilterJoinByNodeId?: Maybe<UpdateTemplateFilterJoinPayload>;
   /** Updates a single `TemplateFilterJoin` using a unique key and a patch. */
@@ -10658,6 +10690,8 @@ export type Mutation = {
   deleteTemplateElementByNodeId?: Maybe<DeleteTemplateElementPayload>;
   /** Deletes a single `TemplateElement` using a unique key. */
   deleteTemplateElement?: Maybe<DeleteTemplateElementPayload>;
+  /** Deletes a single `TemplateElement` using a unique key. */
+  deleteTemplateElementByTemplateCodeAndCodeAndTemplateVersion?: Maybe<DeleteTemplateElementPayload>;
   /** Deletes a single `TemplateFilterJoin` using its globally unique id. */
   deleteTemplateFilterJoinByNodeId?: Maybe<DeleteTemplateFilterJoinPayload>;
   /** Deletes a single `TemplateFilterJoin` using a unique key. */
@@ -11407,6 +11441,12 @@ export type MutationUpdateTemplateElementArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTemplateElementByTemplateCodeAndCodeAndTemplateVersionArgs = {
+  input: UpdateTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateTemplateFilterJoinByNodeIdArgs = {
   input: UpdateTemplateFilterJoinByNodeIdInput;
 };
@@ -11991,6 +12031,12 @@ export type MutationDeleteTemplateElementByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteTemplateElementArgs = {
   input: DeleteTemplateElementInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTemplateElementByTemplateCodeAndCodeAndTemplateVersionArgs = {
+  input: DeleteTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput;
 };
 
 
@@ -14664,6 +14710,7 @@ export type Query = Node & {
   templateCategory?: Maybe<TemplateCategory>;
   templateCategoryByCode?: Maybe<TemplateCategory>;
   templateElement?: Maybe<TemplateElement>;
+  templateElementByTemplateCodeAndCodeAndTemplateVersion?: Maybe<TemplateElement>;
   templateFilterJoin?: Maybe<TemplateFilterJoin>;
   templatePermission?: Maybe<TemplatePermission>;
   templateSection?: Maybe<TemplateSection>;
@@ -15696,6 +15743,14 @@ export type QueryTemplateElementArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryTemplateElementByTemplateCodeAndCodeAndTemplateVersionArgs = {
+  templateCode: Scalars['String'];
+  code: Scalars['String'];
+  templateVersion: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryTemplateFilterJoinArgs = {
   id: Scalars['Int'];
 };
@@ -15882,7 +15937,7 @@ export type QueryAssignedQuestionsArgs = {
 export type QueryAssignedQuestionsCountArgs = {
   appId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['Int']>;
+  levelNumber?: Maybe<Scalars['Int']>;
 };
 
 
@@ -18793,6 +18848,7 @@ export type ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInpu
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -19449,13 +19505,19 @@ export type ReviewResponseTemplateElementIdFkeyInput = {
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
   connectById?: Maybe<TemplateElementTemplateElementPkeyConnect>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
+  connectByTemplateCodeAndCodeAndTemplateVersion?: Maybe<TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyConnect>;
+  /** The primary key(s) for `templateElement` for the far side of the relationship. */
   connectByNodeId?: Maybe<TemplateElementNodeIdConnect>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
   deleteById?: Maybe<TemplateElementTemplateElementPkeyDelete>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
+  deleteByTemplateCodeAndCodeAndTemplateVersion?: Maybe<TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyDelete>;
+  /** The primary key(s) for `templateElement` for the far side of the relationship. */
   deleteByNodeId?: Maybe<TemplateElementNodeIdDelete>;
   /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
   updateById?: Maybe<TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementPkeyUpdate>;
+  /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
+  updateByTemplateCodeAndCodeAndTemplateVersion?: Maybe<TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate>;
   /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
   updateByNodeId?: Maybe<ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate>;
   /** A `TemplateElementInput` object that will be created and connected to this object. */
@@ -21201,6 +21263,7 @@ export type TemplateElement = Node & {
   applicationResponses: ApplicationResponsesConnection;
   /** Reads and enables pagination through a set of `ReviewResponse`. */
   reviewResponses: ReviewResponsesConnection;
+  parametersString?: Maybe<Scalars['String']>;
 };
 
 
@@ -21339,6 +21402,8 @@ export type TemplateElementFilter = {
   templateCode?: Maybe<StringFilter>;
   /** Filter by the object’s `templateVersion` field. */
   templateVersion?: Maybe<IntFilter>;
+  /** Filter by the object’s `parametersString` field. */
+  parametersString?: Maybe<StringFilter>;
   /** Filter by the object’s `applicationResponses` relation. */
   applicationResponses?: Maybe<TemplateElementToManyApplicationResponseFilter>;
   /** Some related `applicationResponses` exist. */
@@ -21409,6 +21474,15 @@ export type TemplateElementOnApplicationResponseForApplicationResponseTemplateEl
   id: Scalars['Int'];
 };
 
+/** The fields on `templateElement` to look up the row to update. */
+export type TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate = {
+  /** An object where the defined keys will be set on the `templateElement` being updated. */
+  patch: UpdateTemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyPatch;
+  templateCode: Scalars['String'];
+  code: Scalars['String'];
+  templateVersion: Scalars['Int'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `reviewResponse` to be connected. */
@@ -21424,6 +21498,15 @@ export type TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFke
   id: Scalars['Int'];
 };
 
+/** The fields on `templateElement` to look up the row to update. */
+export type TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate = {
+  /** An object where the defined keys will be set on the `templateElement` being updated. */
+  patch: UpdateTemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch;
+  templateCode: Scalars['String'];
+  code: Scalars['String'];
+  templateVersion: Scalars['Int'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `templateSection` to be connected. */
@@ -21437,6 +21520,15 @@ export type TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyUsing
   /** An object where the defined keys will be set on the `templateElement` being updated. */
   patch: UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFkeyPatch;
   id: Scalars['Int'];
+};
+
+/** The fields on `templateElement` to look up the row to update. */
+export type TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate = {
+  /** An object where the defined keys will be set on the `templateElement` being updated. */
+  patch: UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFkeyPatch;
+  templateCode: Scalars['String'];
+  code: Scalars['String'];
+  templateVersion: Scalars['Int'];
 };
 
 /** Represents an update to a `TemplateElement`. Fields that are set will be updated. */
@@ -21508,13 +21600,19 @@ export type TemplateElementSectionIdFkeyInverseInput = {
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
   connectById?: Maybe<Array<TemplateElementTemplateElementPkeyConnect>>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
+  connectByTemplateCodeAndCodeAndTemplateVersion?: Maybe<Array<TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyConnect>>;
+  /** The primary key(s) for `templateElement` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<TemplateElementNodeIdConnect>>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
   deleteById?: Maybe<Array<TemplateElementTemplateElementPkeyDelete>>;
   /** The primary key(s) for `templateElement` for the far side of the relationship. */
+  deleteByTemplateCodeAndCodeAndTemplateVersion?: Maybe<Array<TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyDelete>>;
+  /** The primary key(s) for `templateElement` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<TemplateElementNodeIdDelete>>;
   /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
   updateById?: Maybe<Array<TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateElementPkeyUpdate>>;
+  /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
+  updateByTemplateCodeAndCodeAndTemplateVersion?: Maybe<Array<TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate>>;
   /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
   updateByNodeId?: Maybe<Array<TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate>>;
   /** A `TemplateElementInput` object that will be created and connected to this object. */
@@ -21616,6 +21714,20 @@ export type TemplateElementTemplateElementPkeyConnect = {
 /** The fields on `templateElement` to look up the row to delete. */
 export type TemplateElementTemplateElementPkeyDelete = {
   id: Scalars['Int'];
+};
+
+/** The fields on `templateElement` to look up the row to connect. */
+export type TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyConnect = {
+  templateCode: Scalars['String'];
+  code: Scalars['String'];
+  templateVersion: Scalars['Int'];
+};
+
+/** The fields on `templateElement` to look up the row to delete. */
+export type TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyDelete = {
+  templateCode: Scalars['String'];
+  code: Scalars['String'];
+  templateVersion: Scalars['Int'];
 };
 
 /** A filter to be used against many `ApplicationResponse` object types. All fields are combined with a logical ‘and.’ */
@@ -25395,6 +25507,7 @@ export type UpdateApplicationResponseOnApplicationResponseForApplicationResponse
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -25412,6 +25525,7 @@ export type UpdateApplicationResponseOnApplicationResponseForApplicationResponse
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -25430,6 +25544,7 @@ export type UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -25448,6 +25563,7 @@ export type UpdateApplicationResponseOnReviewResponseForReviewResponseApplicatio
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -27834,6 +27950,20 @@ export type UpdateTemplateElementByNodeIdInput = {
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `TemplateElement` being updated. */
   patch: TemplateElementPatch;
+};
+
+/** All input for the `updateTemplateElementByTemplateCodeAndCodeAndTemplateVersion` mutation. */
+export type UpdateTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `TemplateElement` being updated. */
+  patch: TemplateElementPatch;
+  templateCode: Scalars['String'];
+  code: Scalars['String'];
+  templateVersion: Scalars['Int'];
 };
 
 /** All input for the `updateTemplateElement` mutation. */
@@ -31700,8 +31830,10 @@ export type ResolversTypes = {
   updateApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch: UpdateApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch;
   ApplicationResponseTemplateElementIdFkeyInput: ApplicationResponseTemplateElementIdFkeyInput;
   TemplateElementTemplateElementPkeyConnect: TemplateElementTemplateElementPkeyConnect;
+  TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyConnect: TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyConnect;
   TemplateElementNodeIdConnect: TemplateElementNodeIdConnect;
   TemplateElementTemplateElementPkeyDelete: TemplateElementTemplateElementPkeyDelete;
+  TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyDelete: TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyDelete;
   TemplateElementNodeIdDelete: TemplateElementNodeIdDelete;
   TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyUsingTemplateElementPkeyUpdate: TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyUsingTemplateElementPkeyUpdate;
   updateTemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyPatch: UpdateTemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyPatch;
@@ -31930,6 +32062,7 @@ export type ResolversTypes = {
   TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate: TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate;
   ReviewResponsePatch: ReviewResponsePatch;
   ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput: ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput;
+  TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate: TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate;
   ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate;
   TemplateElementPatch: TemplateElementPatch;
   ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput: ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput;
@@ -32182,12 +32315,14 @@ export type ResolversTypes = {
   ApplicationResponseApplicationIdFkeyApplicationCreateInput: ApplicationResponseApplicationIdFkeyApplicationCreateInput;
   TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyNodeIdUpdate: TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyNodeIdUpdate;
   ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInput: ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInput;
+  TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate: TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate;
   TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate: TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate;
   TemplateElementSectionIdFkeyTemplateElementCreateInput: TemplateElementSectionIdFkeyTemplateElementCreateInput;
   TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateSectionTemplateIdCodeKeyUpdate: TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateSectionTemplateIdCodeKeyUpdate;
   TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate: TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate;
   TemplateSectionPatch: TemplateSectionPatch;
   TemplateElementSectionIdFkeyTemplateSectionCreateInput: TemplateElementSectionIdFkeyTemplateSectionCreateInput;
+  TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate: TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate;
   ApplicationResponseOnApplicationResponseForApplicationResponseTemplateElementIdFkeyNodeIdUpdate: ApplicationResponseOnApplicationResponseForApplicationResponseTemplateElementIdFkeyNodeIdUpdate;
   ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput: ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate;
@@ -32557,6 +32692,7 @@ export type ResolversTypes = {
   UpdateTemplateElementByNodeIdInput: UpdateTemplateElementByNodeIdInput;
   UpdateTemplateElementPayload: ResolverTypeWrapper<UpdateTemplateElementPayload>;
   UpdateTemplateElementInput: UpdateTemplateElementInput;
+  UpdateTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput: UpdateTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput;
   UpdateTemplateFilterJoinByNodeIdInput: UpdateTemplateFilterJoinByNodeIdInput;
   UpdateTemplateFilterJoinPayload: ResolverTypeWrapper<UpdateTemplateFilterJoinPayload>;
   UpdateTemplateFilterJoinInput: UpdateTemplateFilterJoinInput;
@@ -32696,6 +32832,7 @@ export type ResolversTypes = {
   DeleteTemplateElementByNodeIdInput: DeleteTemplateElementByNodeIdInput;
   DeleteTemplateElementPayload: ResolverTypeWrapper<DeleteTemplateElementPayload>;
   DeleteTemplateElementInput: DeleteTemplateElementInput;
+  DeleteTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput: DeleteTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput;
   DeleteTemplateFilterJoinByNodeIdInput: DeleteTemplateFilterJoinByNodeIdInput;
   DeleteTemplateFilterJoinPayload: ResolverTypeWrapper<DeleteTemplateFilterJoinPayload>;
   DeleteTemplateFilterJoinInput: DeleteTemplateFilterJoinInput;
@@ -33354,8 +33491,10 @@ export type ResolversParentTypes = {
   updateApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch: UpdateApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch;
   ApplicationResponseTemplateElementIdFkeyInput: ApplicationResponseTemplateElementIdFkeyInput;
   TemplateElementTemplateElementPkeyConnect: TemplateElementTemplateElementPkeyConnect;
+  TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyConnect: TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyConnect;
   TemplateElementNodeIdConnect: TemplateElementNodeIdConnect;
   TemplateElementTemplateElementPkeyDelete: TemplateElementTemplateElementPkeyDelete;
+  TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyDelete: TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyDelete;
   TemplateElementNodeIdDelete: TemplateElementNodeIdDelete;
   TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyUsingTemplateElementPkeyUpdate: TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyUsingTemplateElementPkeyUpdate;
   updateTemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyPatch: UpdateTemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyPatch;
@@ -33584,6 +33723,7 @@ export type ResolversParentTypes = {
   TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate: TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate;
   ReviewResponsePatch: ReviewResponsePatch;
   ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput: ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput;
+  TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate: TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate;
   ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate;
   TemplateElementPatch: TemplateElementPatch;
   ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput: ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput;
@@ -33836,12 +33976,14 @@ export type ResolversParentTypes = {
   ApplicationResponseApplicationIdFkeyApplicationCreateInput: ApplicationResponseApplicationIdFkeyApplicationCreateInput;
   TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyNodeIdUpdate: TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyNodeIdUpdate;
   ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInput: ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInput;
+  TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate: TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate;
   TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate: TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate;
   TemplateElementSectionIdFkeyTemplateElementCreateInput: TemplateElementSectionIdFkeyTemplateElementCreateInput;
   TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateSectionTemplateIdCodeKeyUpdate: TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateSectionTemplateIdCodeKeyUpdate;
   TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate: TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate;
   TemplateSectionPatch: TemplateSectionPatch;
   TemplateElementSectionIdFkeyTemplateSectionCreateInput: TemplateElementSectionIdFkeyTemplateSectionCreateInput;
+  TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate: TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate;
   ApplicationResponseOnApplicationResponseForApplicationResponseTemplateElementIdFkeyNodeIdUpdate: ApplicationResponseOnApplicationResponseForApplicationResponseTemplateElementIdFkeyNodeIdUpdate;
   ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput: ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate;
@@ -34211,6 +34353,7 @@ export type ResolversParentTypes = {
   UpdateTemplateElementByNodeIdInput: UpdateTemplateElementByNodeIdInput;
   UpdateTemplateElementPayload: UpdateTemplateElementPayload;
   UpdateTemplateElementInput: UpdateTemplateElementInput;
+  UpdateTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput: UpdateTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput;
   UpdateTemplateFilterJoinByNodeIdInput: UpdateTemplateFilterJoinByNodeIdInput;
   UpdateTemplateFilterJoinPayload: UpdateTemplateFilterJoinPayload;
   UpdateTemplateFilterJoinInput: UpdateTemplateFilterJoinInput;
@@ -34350,6 +34493,7 @@ export type ResolversParentTypes = {
   DeleteTemplateElementByNodeIdInput: DeleteTemplateElementByNodeIdInput;
   DeleteTemplateElementPayload: DeleteTemplateElementPayload;
   DeleteTemplateElementInput: DeleteTemplateElementInput;
+  DeleteTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput: DeleteTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput;
   DeleteTemplateFilterJoinByNodeIdInput: DeleteTemplateFilterJoinByNodeIdInput;
   DeleteTemplateFilterJoinPayload: DeleteTemplateFilterJoinPayload;
   DeleteTemplateFilterJoinInput: DeleteTemplateFilterJoinInput;
@@ -34651,6 +34795,7 @@ export type ApplicationResponseResolvers<ContextType = any, ParentType extends R
   timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   timeUpdated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   timeSubmitted?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  evaluatedParameters?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   templateElement?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   reviewResponses?: Resolver<ResolversTypes['ReviewResponsesConnection'], ParentType, ContextType, RequireFields<ApplicationResponseReviewResponsesArgs, 'orderBy'>>;
@@ -35370,14 +35515,14 @@ export type DataViewResolvers<ContextType = any, ParentType extends ResolversPar
   rowRestrictions?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   tableViewIncludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   tableViewExcludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
-  tableSearchColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   detailViewIncludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   detailViewExcludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   detailViewHeaderColumn?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  filterIncludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
-  filterExcludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   showLinkedApplications?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   priority?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  tableSearchColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  filterIncludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  filterExcludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -36087,6 +36232,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateTemplateCategoryByCode?: Resolver<Maybe<ResolversTypes['UpdateTemplateCategoryPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateCategoryByCodeArgs, 'input'>>;
   updateTemplateElementByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateElementByNodeIdArgs, 'input'>>;
   updateTemplateElement?: Resolver<Maybe<ResolversTypes['UpdateTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateElementArgs, 'input'>>;
+  updateTemplateElementByTemplateCodeAndCodeAndTemplateVersion?: Resolver<Maybe<ResolversTypes['UpdateTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateElementByTemplateCodeAndCodeAndTemplateVersionArgs, 'input'>>;
   updateTemplateFilterJoinByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTemplateFilterJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateFilterJoinByNodeIdArgs, 'input'>>;
   updateTemplateFilterJoin?: Resolver<Maybe<ResolversTypes['UpdateTemplateFilterJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateFilterJoinArgs, 'input'>>;
   updateTemplatePermissionByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTemplatePermissionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplatePermissionByNodeIdArgs, 'input'>>;
@@ -36185,6 +36331,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteTemplateCategoryByCode?: Resolver<Maybe<ResolversTypes['DeleteTemplateCategoryPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateCategoryByCodeArgs, 'input'>>;
   deleteTemplateElementByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateElementByNodeIdArgs, 'input'>>;
   deleteTemplateElement?: Resolver<Maybe<ResolversTypes['DeleteTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateElementArgs, 'input'>>;
+  deleteTemplateElementByTemplateCodeAndCodeAndTemplateVersion?: Resolver<Maybe<ResolversTypes['DeleteTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateElementByTemplateCodeAndCodeAndTemplateVersionArgs, 'input'>>;
   deleteTemplateFilterJoinByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTemplateFilterJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateFilterJoinByNodeIdArgs, 'input'>>;
   deleteTemplateFilterJoin?: Resolver<Maybe<ResolversTypes['DeleteTemplateFilterJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateFilterJoinArgs, 'input'>>;
   deleteTemplatePermissionByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTemplatePermissionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplatePermissionByNodeIdArgs, 'input'>>;
@@ -36536,6 +36683,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   templateCategory?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType, RequireFields<QueryTemplateCategoryArgs, 'id'>>;
   templateCategoryByCode?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType, RequireFields<QueryTemplateCategoryByCodeArgs, 'code'>>;
   templateElement?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType, RequireFields<QueryTemplateElementArgs, 'id'>>;
+  templateElementByTemplateCodeAndCodeAndTemplateVersion?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType, RequireFields<QueryTemplateElementByTemplateCodeAndCodeAndTemplateVersionArgs, 'templateCode' | 'code' | 'templateVersion'>>;
   templateFilterJoin?: Resolver<Maybe<ResolversTypes['TemplateFilterJoin']>, ParentType, ContextType, RequireFields<QueryTemplateFilterJoinArgs, 'id'>>;
   templatePermission?: Resolver<Maybe<ResolversTypes['TemplatePermission']>, ParentType, ContextType, RequireFields<QueryTemplatePermissionArgs, 'id'>>;
   templateSection?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType, RequireFields<QueryTemplateSectionArgs, 'id'>>;
@@ -37033,6 +37181,7 @@ export type TemplateElementResolvers<ContextType = any, ParentType extends Resol
   section?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType>;
   applicationResponses?: Resolver<ResolversTypes['ApplicationResponsesConnection'], ParentType, ContextType, RequireFields<TemplateElementApplicationResponsesArgs, 'orderBy'>>;
   reviewResponses?: Resolver<ResolversTypes['ReviewResponsesConnection'], ParentType, ContextType, RequireFields<TemplateElementReviewResponsesArgs, 'orderBy'>>;
+  parametersString?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
