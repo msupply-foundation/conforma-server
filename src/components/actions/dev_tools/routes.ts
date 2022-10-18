@@ -50,8 +50,16 @@ interface RequestProps {
   applicationDataOverride: Partial<ActionApplicationData>
 }
 
+// Wrapper for "testTrigger". Use routeTestTrigger provides the REST endpoint,
+// "testTrigger" is the actual function. Use "testTrigger" internally in test
+// suites
 export const routeTestTrigger = async (request: any, reply: any) => {
   const params: RequestProps = combineRequestParams(request, 'camel')
+
+  reply.send(await testTrigger(params))
+}
+
+export const testTrigger = async (params: RequestProps) => {
   let { applicationId, serial } = params
   const {
     templateCode,
@@ -66,7 +74,7 @@ export const routeTestTrigger = async (request: any, reply: any) => {
     status,
     outcome,
     applicationDataOverride = {},
-  }: RequestProps = params
+  } = params
 
   const triggerFull = mapTriggerShortcut(trigger)
 
@@ -74,7 +82,7 @@ export const routeTestTrigger = async (request: any, reply: any) => {
     templateCode
   )
 
-  if (!configId) reply.send('Invalid template code, or no config application available')
+  if (!configId) return 'Invalid template code, or no config application available'
 
   const { appId, appSerial } = await getApplicationBasics(
     applicationId,
@@ -136,7 +144,7 @@ export const routeTestTrigger = async (request: any, reply: any) => {
       break
 
     case 'ON_SCHEDULE':
-      if (!eventCode) return reply.send('eventCode required')
+      if (!eventCode) return 'eventCode required'
       const { id, data } = await db.getScheduledEvent(applicationId, eventCode)
       triggerPayload.trigger = Trigger.OnSchedule
       triggerPayload.table = 'trigger_schedule'
@@ -245,19 +253,28 @@ export const routeTestTrigger = async (request: any, reply: any) => {
       break
 
     default:
-      return reply.send('Trigger not recognised')
+      return 'Trigger not recognised'
   }
 
   const failedActions = actionsOutput.filter(
     (action) => action.status !== ActionQueueStatus.Success
   )
 
-  reply.send({
+  return {
     applicationId,
     serial,
     trigger: triggerFull,
     failedActions: failedActions.length > 0 ? failedActions : undefined,
     actionResult: actionsOutput,
     finalApplicationData,
-  })
+  }
+
+  // reply.send({
+  //   applicationId,
+  //   serial,
+  //   trigger: triggerFull,
+  //   failedActions: failedActions.length > 0 ? failedActions : undefined,
+  //   actionResult: actionsOutput,
+  //   finalApplicationData,
+  // })
 }
