@@ -8,8 +8,8 @@ import { readFileSync } from 'fs'
 import { getAppEntryPointDir } from '../../src/components/utilityFunctions'
 
 // CONSTANTS
-const INDEX_FILENAME = '51_index.sql'
-const FUNCTIONS_FILENAME = '50_views_functions_triggers.sql'
+const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
+const INDEX_FILENAME = '44_index.sql'
 
 const { version } = config
 const isManualMigration: Boolean = process.argv[2] === '--migrate'
