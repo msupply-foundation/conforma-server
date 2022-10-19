@@ -44,36 +44,6 @@ CREATE TABLE public.review_assignment (
     is_self_assignable boolean DEFAULT FALSE
 );
 
--- FUNCTION
-CREATE OR REPLACE FUNCTION public.empty_assigned_sections ()
-    RETURNS TRIGGER
-    AS $review_assignment_event$
-BEGIN
-    UPDATE
-        public.review_assignment
-    SET
-        assigned_sections = '{}'
-    WHERE
-        id = NEW.id;
-    RETURN NULL;
-END;
-$review_assignment_event$
-LANGUAGE plpgsql;
-
--- TRIGGER (Listener) on review_assignment table: To update trigger
-CREATE TRIGGER review_assignment_trigger
-    AFTER INSERT OR UPDATE OF trigger ON public.review_assignment
-    FOR EACH ROW
-    WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
-    EXECUTE FUNCTION public.add_event_to_trigger_queue ();
-
--- TRIGGER (Listener) on review_assignment table: Set assignedSections to [] when changing status to AVAILABLE
-CREATE TRIGGER review_assignment_trigger2
-    AFTER UPDATE OF status ON public.review_assignment
-    FOR EACH ROW
-    WHEN (NEW.status = 'AVAILABLE')
-    EXECUTE FUNCTION public.empty_assigned_sections ();
-
 CREATE UNIQUE INDEX unique_review_assignment_with_org ON review_assignment (reviewer_id, organisation_id, stage_number, application_id, level_number)
 WHERE
     organisation_id IS NOT NULL;

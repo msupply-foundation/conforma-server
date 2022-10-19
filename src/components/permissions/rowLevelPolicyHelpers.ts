@@ -71,7 +71,7 @@ const updateRowPolicies = async () => {
       .map(({ policyname, tablename }: any) => `DROP POLICY "${policyname}" ON "${tablename}"`)
       .join(';'),
   })
-  console.log(newPolicies.join(';'))
+  // console.log(newPolicies.join(';'))
   // Reinstate policies
   await databaseConnect.query({
     text: newPolicies.join(';'),

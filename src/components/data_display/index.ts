@@ -1,3 +1,16 @@
-import { routeDataViews, routeDataViewTable, routeDataViewDetail } from './routes'
+import {
+  routeDataViews,
+  routeDataViewTable,
+  routeDataViewDetail,
+  routeDataViewFilterList,
+} from './routes'
 
-export { routeDataViews, routeDataViewTable, routeDataViewDetail }
+import { routeGenerateFilterDataFields } from './generateFilterDataFields/generateFilterDataFields'
+
+export {
+  routeDataViews,
+  routeDataViewTable,
+  routeDataViewDetail,
+  routeDataViewFilterList,
+  routeGenerateFilterDataFields,
+}

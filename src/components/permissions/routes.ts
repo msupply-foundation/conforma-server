@@ -171,7 +171,7 @@ const routeUserPermissions = async (request: any, reply: any) => {
 }
 
 const routeUpdateRowPolicies = async (request: any, reply: any) => {
-  // TODO, add parameters to only drop specific policies, for now drop and reinstante them all
+  // TODO, add parameters to only drop specific policies, for now drop and reinstate them all
 
   return reply.send(await updateRowPolicies())
 }

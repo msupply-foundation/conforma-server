@@ -9,7 +9,12 @@ export const getSnaphotList = async () => {
 
   for (const dirent of dirents) {
     if (!dirent.isDirectory()) continue
-    if (!fsSync.existsSync(path.join(SNAPSHOT_FOLDER, dirent.name, `${SNAPSHOT_FILE_NAME}.json`)))
+    if (
+      !(
+        fsSync.existsSync(path.join(SNAPSHOT_FOLDER, dirent.name, `${SNAPSHOT_FILE_NAME}.json`)) ||
+        fsSync.existsSync(path.join(SNAPSHOT_FOLDER, dirent.name, `database.dump`))
+      )
+    )
       continue
 
     snapshotsNames.push(dirent.name)
