@@ -1126,7 +1126,8 @@ $$
 LANGUAGE sql
 STABLE;
 
--- Checks if TOTAL of assigned questions are approved/agreed - checking for completeness of assignable questions
+-- Checks if TOTAL of assigned questions are approved/agreed
+-- ONLY USED IN CONFIG QUERY: checking for completeness of assignable questions
 CREATE FUNCTION public.approved_assigned_questions_count (app_id int, stage_id int, level_number int)
     RETURNS bigint
     AS $$
