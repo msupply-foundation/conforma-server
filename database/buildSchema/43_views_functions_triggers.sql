@@ -1,82 +1,4 @@
-SET check_function_bodies = FALSE;
-
---
--- Name: jwt_get_text(text); Type: FUNCTION; Schema: public; Owner: -
---
-CREATE FUNCTION jwt_get_text (jwt_key text)
-  RETURNS text
-  AS $$
-  SELECT
-    COALESCE(current_setting('jwt.claims.' || $1, TRUE)::text, '')
-$$
-LANGUAGE sql
-STABLE;
-
---
--- Name: jwt_get_boolean(text); Type: FUNCTION; Schema: public; Owner: -
---
-CREATE FUNCTION jwt_get_boolean (jwt_key text)
-  RETURNS boolean
-  AS $$
-BEGIN
-  IF jwt_get_text ($1) = 'true' THEN
-    RETURN TRUE;
-  ELSE
-    RETURN FALSE;
-  END IF;
-END;
-$$
-LANGUAGE plpgsql
-STABLE;
-
---
--- Name: jwt_get_bigint(text); Type: FUNCTION; Schema: public; Owner: -
---
-CREATE FUNCTION jwt_get_bigint (jwt_key text)
-  RETURNS bigint
-  AS $$
-BEGIN
-  IF jwt_get_text ($1) = '' THEN
-    RETURN 0;
-  ELSE
-    RETURN jwt_get_text ($1)::bigint;
-  END IF;
-END;
-$$
-LANGUAGE plpgsql
-STABLE;
-
--- user table
-CREATE TABLE public.user (
-    id serial PRIMARY KEY,
-    first_name varchar,
-    last_name varchar,
-    full_name varchar GENERATED ALWAYS AS (first_name || ' ' || last_name) STORED,
-    username varchar UNIQUE,
-    email varchar,
-    date_of_birth date,
-    password_hash varchar
-);
-
--- organisation table
-CREATE TABLE public.organisation (
-    id serial PRIMARY KEY,
-    name varchar UNIQUE,
-    registration varchar UNIQUE,
-    address varchar,
-    logo_url varchar,
-    is_system_org boolean DEFAULT FALSE
-);
-
--- user_organisation table
-CREATE TABLE public.user_organisation (
-    id serial PRIMARY KEY,
-    user_id integer REFERENCES public.user (id) ON DELETE CASCADE NOT NULL,
-    organisation_id integer REFERENCES public.organisation (id) ON DELETE CASCADE NOT NULL,
-    user_role varchar,
-    UNIQUE (user_id, organisation_id)
-);
-
+-- VIEWS
 -- VIEW table to show users with their organisations
 CREATE OR REPLACE VIEW user_org_join AS
 SELECT
@@ -91,7 +13,7 @@ SELECT
     name AS org_name,
     user_role,
     registration,
-    address,
+    organisation.address,
     logo_url,
     is_system_org
 FROM
@@ -99,326 +21,8 @@ FROM
     LEFT JOIN user_organisation ON "user".id = user_id
     LEFT JOIN organisation ON organisation.id = organisation_id;
 
--- trigger queue
-CREATE TYPE public.trigger AS ENUM (
-    'ON_APPLICATION_CREATE',
-    'ON_APPLICATION_RESTART',
-    'ON_APPLICATION_SUBMIT',
-    'ON_APPLICATION_SAVE',
-    'ON_APPLICATION_WITHDRAW',
-    'ON_REVIEW_CREATE',
-    'ON_REVIEW_SUBMIT',
-    'ON_REVIEW_RESTART',
-    'ON_REVIEW_ASSIGN',
-    'ON_REVIEW_UNASSIGN',
-    'ON_APPROVAL_SUBMIT',
-    'ON_VERIFICATION',
-    'ON_SCHEDULE',
-    'ON_PREVIEW',
-    'ON_EXTEND',
-    'DEV_TEST',
-    'PROCESSING',
-    'ERROR'
-);
-
-CREATE TYPE public.trigger_queue_status AS ENUM (
-    'TRIGGERED',
-    'ACTIONS_DISPATCHED',
-    'ERROR',
-    'COMPLETED'
-);
-
-CREATE TABLE public.trigger_queue (
-    id serial PRIMARY KEY,
-    trigger_type public.trigger,
-    "table" varchar,
-    record_id int,
-    event_code varchar,
-    data jsonb,
-    timestamp timestamptz DEFAULT CURRENT_TIMESTAMP,
-    status public.trigger_queue_status,
-    log jsonb
-);
-
--- Function to add triggers to queue
-CREATE OR REPLACE FUNCTION public.add_event_to_trigger_queue ()
-    RETURNS TRIGGER
-    AS $trigger_queue$
-BEGIN
-    --
-    IF TG_TABLE_NAME = 'trigger_schedule' OR TG_TABLE_NAME = 'verification' THEN
-        INSERT INTO trigger_queue (trigger_type, "table", record_id, event_code, data, timestamp, status)
-            VALUES (NEW.trigger::public.trigger, TG_TABLE_NAME, NEW.id, NEW.event_code, NEW.data, CURRENT_TIMESTAMP, 'TRIGGERED');
-        EXECUTE format('UPDATE %s SET trigger = %L WHERE id = %s', TG_TABLE_NAME, 'PROCESSING', NEW.id);
-        RETURN NULL;
-    ELSE
-        INSERT INTO trigger_queue (trigger_type, "table", record_id, timestamp, status)
-            VALUES (NEW.trigger::public.trigger, TG_TABLE_NAME, NEW.id, CURRENT_TIMESTAMP, 'TRIGGERED');
-        EXECUTE format('UPDATE %s SET trigger = %L WHERE id = %s', TG_TABLE_NAME, 'PROCESSING', NEW.id);
-        RETURN NULL;
-    END IF;
-END;
-$trigger_queue$
-LANGUAGE plpgsql;
-
--- Function to Notify Trigger service of TriggerQueue insert
-CREATE OR REPLACE FUNCTION public.notify_trigger_queue ()
-    RETURNS TRIGGER
-    AS $trigger_event$
-BEGIN
-    PERFORM
-        pg_notify('trigger_notifications', json_build_object('trigger_id', NEW.id, 'trigger', NEW.trigger_type, 'table', NEW.table, 'record_id', NEW.record_id, 'event_code', NEW.event_code)::text);
-    RETURN NULL;
-END;
-$trigger_event$
-LANGUAGE plpgsql;
-
--- TRIGGERS for trigger_queue
-CREATE TRIGGER trigger_queue
-    AFTER INSERT ON public.trigger_queue
-    FOR EACH ROW
-    EXECUTE FUNCTION public.notify_trigger_queue ();
-
--- template category table
---
--- places in ui where template_categories can show up
-CREATE TYPE public.ui_location AS ENUM (
-    'DASHBOARD',
-    'LIST',
-    'USER',
-    'ADMIN',
-    'MANAGEMENT'
-);
-
-CREATE TABLE public.template_category (
-    id serial PRIMARY KEY,
-    code varchar NOT NULL UNIQUE,
-    title varchar,
-    icon varchar,
-    ui_location public.ui_location[] DEFAULT '{DASHBOARD, LIST}'
-);
-
--- (application) template table
-CREATE TYPE public.template_status AS ENUM (
-    'DRAFT',
-    'AVAILABLE',
-    'DISABLED'
-);
-
-CREATE TABLE public.template (
-    id serial PRIMARY KEY,
-    name varchar,
-    name_plural varchar,
-    code varchar NOT NULL,
-    is_linear boolean DEFAULT TRUE,
-    can_applicant_make_changes boolean DEFAULT TRUE,
-    start_message jsonb,
-    status public.template_status,
-    submission_message jsonb DEFAULT '"Thank you! Your application has been submitted."' ::jsonb,
-    icon varchar,
-    template_category_id integer REFERENCES public.template_category (id),
-    version_timestamp timestamptz DEFAULT CURRENT_TIMESTAMP,
-    version integer DEFAULT 1
-
-);
-
--- FUNCTION to generate a new version of template (should run as a trigger)
-CREATE OR REPLACE FUNCTION public.set_template_verision ()
-    RETURNS TRIGGER
-    AS $template_event$
-BEGIN
-    IF (
-        SELECT
-            count(*)
-        FROM
-            TEMPLATE
-        WHERE
-            id != NEW.id AND code = NEW.code AND version = NEW.version) > 0 THEN
-        NEW.version = (
-            SELECT
-                max(version) + 1
-            FROM
-                TEMPLATE
-            WHERE
-                code = NEW.code);
-        NEW.version_timestamp = CURRENT_TIMESTAMP;
-    END IF;
-    RETURN NEW;
-END
-$template_event$
-LANGUAGE plpgsql;
-
--- FUNCTION to make sure duplicated templates have 'DRAFT' status
---   but only if there is another version with 'AVAILABLE' status
-CREATE OR REPLACE FUNCTION public.set_template_to_draft ()
-    RETURNS TRIGGER
-    AS $template_event$
-BEGIN
-    IF (
-        SELECT
-            count(*)
-        FROM
-            TEMPLATE
-        WHERE
-            id != NEW.id AND code = NEW.code AND status = 'AVAILABLE') > 0 THEN
-        NEW.status = 'DRAFT';
-    END IF;
-    RETURN NEW;
-END
-$template_event$
-LANGUAGE plpgsql;
-
--- FUNCTION to set 'AVAILABLE' version of template to 'DISABLED'
--- when another is set to 'AVAILABLE'
-CREATE OR REPLACE FUNCTION public.template_status_update ()
-    RETURNS TRIGGER
-    AS $template_event$
-BEGIN
-    IF (NEW.status = 'AVAILABLE') THEN
-        UPDATE
-            public.template
-        SET
-            status = 'DISABLED'
-        WHERE
-            code = NEW.code
-            AND status = 'AVAILABLE'
-            AND id != NEW.id;
-    END IF;
-    RETURN NULL;
-END;
-$template_event$
-LANGUAGE plpgsql;
-
---TRIGGER to generate new version of template on insertion or update
-CREATE TRIGGER set_template_version_trigger
-    BEFORE INSERT OR UPDATE ON public.template
-    FOR EACH ROW
-    EXECUTE FUNCTION public.set_template_verision ();
-
---TRIGGER to make sure duplicates templates have 'DRAFT' status
-CREATE TRIGGER set_template_to_draft_trigger
-    BEFORE INSERT ON public.template
-    FOR EACH ROW
-    EXECUTE FUNCTION public.set_template_to_draft ();
-
--- TRIGGER to ensure only one template version can be 'AVAILABLE'
-CREATE TRIGGER template_status_update_trigger
-    AFTER UPDATE OF status ON public.template
-    FOR EACH ROW
-    WHEN (NEW.status = 'AVAILABLE')
-    EXECUTE FUNCTION public.template_status_update ();
-
--- template_section table
-CREATE TABLE public.template_section (
-    id serial PRIMARY KEY,
-    template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL,
-    title varchar,
-    code varchar,
-    index integer,
-    UNIQUE (template_id, code)
-);
-
--- template_stage table
-CREATE TABLE public.template_stage (
-    id serial PRIMARY KEY,
-    number integer,
-    title varchar,
-    description varchar,
-    colour varchar DEFAULT '#24B5DF',
-    template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL
-);
-
--- template_stage_review_level table
-CREATE TABLE public.template_stage_review_level (
-    id serial PRIMARY KEY,
-    stage_id integer REFERENCES public.template_stage (id) ON DELETE CASCADE NOT NULL,
-    number integer NOT NULL,
-    name varchar NOT NULL,
-    description varchar
-);
-
--- permission_policy table
-CREATE TYPE public.permission_policy_type AS ENUM (
-    'REVIEW',
-    'APPLY',
-    'ASSIGN',
-    'VIEW'
-);
-
-CREATE TABLE public.permission_policy (
-    id serial PRIMARY KEY,
-    name varchar UNIQUE,
-    description varchar,
-    rules jsonb,
-    type public.permission_policy_type,
-    is_admin boolean DEFAULT FALSE,
-    default_restrictions jsonb
-);
-
--- template filter tables
-CREATE TABLE public.filter (
-    id serial PRIMARY KEY,
-    code varchar NOT NULL UNIQUE,
-    title varchar,
-    query jsonb,
-    user_role public.permission_policy_type
-);
-
-CREATE TABLE public.template_filter_join (
-    id serial PRIMARY KEY,
-    template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL,
-    filter_id integer REFERENCES public.filter (id) NOT NULL
-);
-
--- permission_name table
-CREATE TABLE public.permission_name (
-    id serial PRIMARY KEY,
-    name varchar UNIQUE,
-    description varchar,
-    permission_policy_id integer REFERENCES public.permission_policy (id),
-    is_system_org_permission boolean DEFAULT FALSE
-);
-
--- permission_join table
-CREATE TABLE public.permission_join (
-    id serial PRIMARY KEY,
-    user_id integer REFERENCES public.user (id) ON DELETE CASCADE,
-    organisation_id integer REFERENCES public.organisation (id) ON DELETE CASCADE,
-    permission_name_id integer REFERENCES public.permission_name (id) ON DELETE CASCADE NOT NULL,
-    is_active boolean DEFAULT TRUE
-);
-
--- This enforces a UNIQUE requirement for user_id, org_id, and permission_name_id,
--- including only allowing one NULL for org_id for each instance
--- 	For more info:
--- https://matjaz.it/tutorial-unique-constraint-on-null-values-in-postgresql
--- https://stackoverflow.com/questions/42187157/postgresql-partial-indexes-and-upsert
-CREATE UNIQUE INDEX unique_user_org_permission ON permission_join (user_id, organisation_id, permission_name_id)
-WHERE
-    organisation_id IS NOT NULL;
-
-CREATE UNIQUE INDEX unique_user_permission ON permission_join (user_id, permission_name_id)
-WHERE
-    organisation_id IS NULL;
-
-CREATE UNIQUE INDEX unique_org_permission ON permission_join (organisation_id, permission_name_id)
-WHERE
-    user_id IS NULL;
-
--- template_permission table
-CREATE TABLE public.template_permission (
-    id serial PRIMARY KEY,
-    permission_name_id integer REFERENCES public.permission_name (id),
-    template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL,
-    allowed_sections varchar[] DEFAULT NULL,
-    can_self_assign boolean NOT NULL DEFAULT FALSE,
-    can_make_final_decision boolean NOT NULL DEFAULT FALSE,
-    stage_number integer,
-    level_number integer,
-    restrictions jsonb
-);
-
-CREATE VIEW permissions_all AS (
+-- ALL PERMISSIONS View
+CREATE OR REPLACE VIEW permissions_all AS (
     SELECT
         "user".username AS "username",
         organisation.name AS "orgName",
@@ -456,309 +60,8 @@ CREATE VIEW permissions_all AS (
     LEFT JOIN "user" ON permission_join.user_id = "user".id
     LEFT JOIN organisation ON permission_join.organisation_id = organisation.id
     LEFT JOIN template_permission ON template_permission.permission_name_id = permission_name.id
-    LEFT JOIN "template" ON "template".id = template_permission.template_id
-    LEFT JOIN template_category ON "template".template_category_id = template_category.id);
-
--- template element (questions or information elements)
-CREATE TYPE public.template_element_category AS ENUM (
-    'QUESTION',
-    'INFORMATION'
-);
-
-CREATE TYPE public.reviewability AS ENUM (
-    'ALWAYS',
-    'NEVER',
-    'ONLY_IF_APPLICANT_ANSWER',
-    'OPTIONAL_IF_NO_RESPONSE'
-    -- TO-DO:
-    -- 'OPTIONAL_IF_RESPONSE',
-    -- 'OPTIONAL' (the above two combined)
-);
-
--- FUNCTION to return template_code for current element/section
-CREATE OR REPLACE FUNCTION public.get_template_code (section_id int)
-    RETURNS varchar
-    AS $$
-    SELECT
-        template.code
-    FROM
-        TEMPLATE
-        JOIN template_section ON template_id = template.id
-    WHERE
-        template_section.id = $1;
-
-$$
-LANGUAGE SQL
-IMMUTABLE;
-
--- FUNCTION to return template_version for current element/section
-CREATE OR REPLACE FUNCTION public.get_template_version (section_id int)
-    RETURNS integer
-    AS $$
-    SELECT
-        template.version
-    FROM
-        TEMPLATE
-        JOIN template_section ON template_id = template.id
-    WHERE
-        template_section.id = $1;
-
-$$
-LANGUAGE SQL
-IMMUTABLE;
-
-CREATE TABLE public.template_element (
-    id serial PRIMARY KEY,
-    section_id integer REFERENCES public.template_section (id) ON DELETE CASCADE NOT NULL,
-    code varchar NOT NULL,
-    index integer,
-    title varchar,
-    category public.template_element_category,
-    element_type_plugin_code varchar,
-    visibility_condition jsonb DEFAULT 'true' ::jsonb,
-    is_required jsonb DEFAULT 'true' ::jsonb,
-    is_editable jsonb DEFAULT 'true' ::jsonb,
-    validation jsonb DEFAULT 'true' ::jsonb,
-    default_value jsonb,
-    validation_message varchar,
-    help_text varchar,
-    parameters jsonb,
-    reviewability public.reviewability DEFAULT 'ONLY_IF_APPLICANT_ANSWER' NOT NULL,
-    -- review_required boolean NOT NULL DEFAULT TRUE,
-    template_code varchar GENERATED ALWAYS AS (public.get_template_code (section_id)) STORED,
-    template_version integer GENERATED ALWAYS AS (public.get_template_version (section_id)) STORED,
-    UNIQUE (template_code, code, template_version)
-);
-
-CREATE FUNCTION public.template_element_parameters_string (template_element public.template_element)
-    RETURNS text
-    AS $$
-    SELECT
-        parameters::text
-    FROM
-        public.template_element
-    WHERE
-        id = $1.id
-$$
-LANGUAGE sql
-STABLE;
-
--- Plugins for QuestionType and InfoType elements
-CREATE TABLE public.element_type_plugin (
-    code varchar PRIMARY KEY,
-    name varchar,
-    description varchar,
-    category public.template_element_category,
-    path varchar,
-    display_component_name varchar,
-    config_component_name varchar,
-    required_parameters varchar[]
-);
-
--- application
-CREATE TYPE public.application_outcome AS ENUM (
-    'PENDING',
-    'APPROVED',
-    'REJECTED',
-    'EXPIRED',
-    'WITHDRAWN'
-);
-
-CREATE TABLE public.application (
-    id serial PRIMARY KEY,
-    template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL,
-    user_id integer REFERENCES public.user (id) ON DELETE CASCADE,
-    org_id integer REFERENCES public.organisation (id) ON DELETE CASCADE,
-    session_id varchar,
-    serial varchar UNIQUE,
-    name varchar,
-    outcome public.application_outcome DEFAULT 'PENDING',
-    is_active bool,
-    is_config bool DEFAULT FALSE,
-    TRIGGER public.trigger
-);
-
---FUNCTION to update `is_active` to false
--- and application status to "COMPLETED"
-CREATE OR REPLACE FUNCTION public.outcome_changed ()
-    RETURNS TRIGGER
-    AS $application_event$
-BEGIN
-    UPDATE
-        public.application
-    SET
-        is_active = FALSE
-    WHERE
-        id = NEW.id;
-    INSERT INTO public.application_status_history (application_stage_history_id, status)
-        VALUES ((
-                SELECT
-                    id
-                FROM
-                    application_stage_history
-                WHERE
-                    application_id = NEW.id
-                    AND is_current = TRUE),
-                'COMPLETED');
-    RETURN NULL;
-END;
-$application_event$
-LANGUAGE plpgsql;
-
---TRIGGER to run above function when outcome is updated
-CREATE TRIGGER outcome_trigger
-    AFTER UPDATE OF outcome ON public.application
-    FOR EACH ROW
-    WHEN (OLD.outcome = 'PENDING' AND NEW.outcome <> 'PENDING')
-    EXECUTE FUNCTION public.outcome_changed ();
-
---FUNCTION to revert application status/active when OUTCOME is changed back to PENDING
-CREATE OR REPLACE FUNCTION public.outcome_reverted ()
-    RETURNS TRIGGER
-    AS $application_event$
-BEGIN
-    UPDATE
-        public.application
-    SET
-        is_active = TRUE
-    WHERE
-        id = NEW.id;
-    INSERT INTO public.application_status_history (application_stage_history_id, status)
-        VALUES ((
-                SELECT
-                    id
-                FROM
-                    application_stage_history
-                WHERE
-                    application_id = NEW.id
-                    AND is_current = TRUE),
-                (
-                    SELECT
-                        status
-                    FROM
-                        application_status_history
-                    WHERE
-                        time_created = (
-                            SELECT
-                                MAX(time_created)
-                            FROM
-                                application_status_history
-                            WHERE
-                                is_current = FALSE
-                                AND application_id = NEW.id)));
-    RETURN NULL;
-END;
-$application_event$
-LANGUAGE plpgsql;
-
---TRIGGER to run above function when outcome is updated
-CREATE TRIGGER outcome_revert_trigger
-    AFTER UPDATE OF outcome ON public.application
-    FOR EACH ROW
-    WHEN (NEW.outcome = 'PENDING' AND OLD.outcome <> 'PENDING')
-    EXECUTE FUNCTION public.outcome_reverted ();
-
--- application_note (for internal comments)
-CREATE TABLE public.application_note (
-    id serial PRIMARY KEY,
-    application_id integer REFERENCES public.application (id) ON DELETE CASCADE NOT NULL,
-    user_id integer REFERENCES public.user (id) ON DELETE CASCADE NOT NULL,
-    org_id integer REFERENCES public.organisation (id) ON DELETE CASCADE NOT NULL,
-    timestamp timestamptz DEFAULT CURRENT_TIMESTAMP,
-    comment varchar NOT NULL
-);
-
--- application stage history
-CREATE TABLE public.application_stage_history (
-    id serial PRIMARY KEY,
-    application_id integer REFERENCES public.application (id) ON DELETE CASCADE NOT NULL,
-    stage_id integer REFERENCES public.template_stage (id) ON DELETE CASCADE NOT NULL,
-    time_created timestamptz DEFAULT CURRENT_TIMESTAMP,
-    is_current bool DEFAULT TRUE
-);
-
--- FUNCTION to set `is_current` to false on all other stage_histories of current application
-CREATE OR REPLACE FUNCTION public.stage_is_current_update ()
-    RETURNS TRIGGER
-    AS $application_stage_history_event$
-BEGIN
-    UPDATE
-        public.application_stage_history
-    SET
-        is_current = FALSE
-    WHERE
-        application_id = NEW.application_id
-        AND id <> NEW.id;
-    RETURN NULL;
-END;
-$application_stage_history_event$
-LANGUAGE plpgsql;
-
---TRIGGER to run above function when is_current is updated
-CREATE TRIGGER application_stage_history_trigger
-    AFTER INSERT OR UPDATE OF is_current ON public.application_stage_history
-    FOR EACH ROW
-    WHEN (NEW.is_current = TRUE)
-    EXECUTE FUNCTION public.stage_is_current_update ();
-
--- application status history
-CREATE TYPE public.application_status AS ENUM (
-  'DRAFT',
-  'SUBMITTED',
-  'CHANGES_REQUIRED',
-  'RE_SUBMITTED',
-  'COMPLETED'
-);
-
-CREATE TABLE public.application_status_history (
-  id serial PRIMARY KEY,
-  application_stage_history_id integer REFERENCES public.application_stage_history (id) ON DELETE CASCADE NOT NULL,
-  status public.application_status,
-  time_created timestamptz DEFAULT CURRENT_TIMESTAMP,
-  is_current bool DEFAULT TRUE
-);
-
--- FUNCTION to auto-add application_id to application_status_history table
-CREATE OR REPLACE FUNCTION public.application_status_history_application_id (application_stage_history_id int)
-  RETURNS int
-  AS $$
-  SELECT
-    application_id
-  FROM
-    application_stage_history
-  WHERE
-    id = $1;
-
-$$
-LANGUAGE SQL
-IMMUTABLE;
-
-ALTER TABLE application_status_history
-  ADD application_id INT GENERATED ALWAYS AS (application_status_history_application_id (application_stage_history_id)) STORED;
-
--- FUNCTION to set `is_current` to false on all other status_histories of current application
-CREATE OR REPLACE FUNCTION public.status_is_current_update ()
-  RETURNS TRIGGER
-  AS $application_status_history_event$
-BEGIN
-  UPDATE
-    public.application_status_history
-  SET
-    is_current = FALSE
-  WHERE
-    application_id = NEW.application_id
-    AND id <> NEW.id;
-  RETURN NULL;
-END;
-$application_status_history_event$
-LANGUAGE plpgsql;
-
---TRIGGER to run above function when is_current is updated
-CREATE TRIGGER application_status_history_trigger
-  AFTER INSERT OR UPDATE OF is_current ON public.application_status_history
-  FOR EACH ROW
-  WHEN (NEW.is_current = TRUE)
-  EXECUTE FUNCTION public.status_is_current_update ();
+    LEFT JOIN TEMPLATE ON template.id = template_permission.template_id
+    LEFT JOIN template_category ON template.template_category_id = template_category.id);
 
 -- Create VIEW which collects ALL application, stage, stage_history, and status_history together
 CREATE OR REPLACE VIEW public.application_stage_status_all AS
@@ -802,8 +105,342 @@ WHERE (stage_is_current = TRUE
 AND (status_is_current = TRUE
     OR stage_is_current IS NULL);
 
+-- Add triggers to trigger queue
+CREATE OR REPLACE FUNCTION public.add_event_to_trigger_queue ()
+    RETURNS TRIGGER
+    AS $trigger_queue$
+BEGIN
+    --
+    IF TG_TABLE_NAME = 'trigger_schedule' OR TG_TABLE_NAME = 'verification' THEN
+        INSERT INTO trigger_queue (trigger_type, "table", record_id, event_code, data, timestamp, status)
+            VALUES (NEW.trigger::public.trigger, TG_TABLE_NAME, NEW.id, NEW.event_code, NEW.data, CURRENT_TIMESTAMP, 'TRIGGERED');
+        EXECUTE format('UPDATE %s SET trigger = %L WHERE id = %s', TG_TABLE_NAME, 'PROCESSING', NEW.id);
+        RETURN NULL;
+    ELSE
+        INSERT INTO trigger_queue (trigger_type, "table", record_id, timestamp, status)
+            VALUES (NEW.trigger::public.trigger, TG_TABLE_NAME, NEW.id, CURRENT_TIMESTAMP, 'TRIGGERED');
+        EXECUTE format('UPDATE %s SET trigger = %L WHERE id = %s', TG_TABLE_NAME, 'PROCESSING', NEW.id);
+        RETURN NULL;
+    END IF;
+END;
+$trigger_queue$
+LANGUAGE plpgsql;
+
+-- Function to Notify Trigger service of TriggerQueue insert
+CREATE OR REPLACE FUNCTION public.notify_trigger_queue ()
+    RETURNS TRIGGER
+    AS $trigger_event$
+BEGIN
+    PERFORM
+        pg_notify('trigger_notifications', json_build_object('trigger_id', NEW.id, 'trigger', NEW.trigger_type, 'table', NEW.table, 'record_id', NEW.record_id, 'event_code', NEW.event_code)::text);
+    RETURN NULL;
+END;
+$trigger_event$
+LANGUAGE plpgsql;
+
+-- TRIGGERS for trigger_queue
+DROP TRIGGER IF EXISTS trigger_queue ON public.trigger_queue;
+
+CREATE TRIGGER trigger_queue
+    AFTER INSERT ON public.trigger_queue
+    FOR EACH ROW
+    EXECUTE FUNCTION public.notify_trigger_queue ();
+
+-- TEMPLATES
+-- FUNCTION to generate a new version of template (should run as a trigger)
+CREATE OR REPLACE FUNCTION public.set_template_verision ()
+    RETURNS TRIGGER
+    AS $template_event$
+BEGIN
+    IF (
+        SELECT
+            count(*)
+        FROM
+            public.template
+        WHERE
+            id != NEW.id AND code = NEW.code AND version = NEW.version) > 0 THEN
+        NEW.version = (
+            SELECT
+                max(version) + 1
+            FROM
+                public.template
+            WHERE
+                code = NEW.code);
+        NEW.version_timestamp = CURRENT_TIMESTAMP;
+    END IF;
+    RETURN NEW;
+END
+$template_event$
+LANGUAGE plpgsql;
+
+-- FUNCTION to make sure duplicated templates have 'DRAFT' status
+--   but only if there is another version with 'AVAILABLE' status
+CREATE OR REPLACE FUNCTION public.set_template_to_draft ()
+    RETURNS TRIGGER
+    AS $template_event$
+BEGIN
+    IF (
+        SELECT
+            count(*)
+        FROM
+            public.template
+        WHERE
+            id != NEW.id AND code = NEW.code AND status = 'AVAILABLE') > 0 THEN
+        NEW.status = 'DRAFT';
+    END IF;
+    RETURN NEW;
+END
+$template_event$
+LANGUAGE plpgsql;
+
+-- FUNCTION to set 'AVAILABLE' version of template to 'DISABLED'
+-- when another is set to 'AVAILABLE'
+CREATE OR REPLACE FUNCTION public.template_status_update ()
+    RETURNS TRIGGER
+    AS $template_event$
+BEGIN
+    IF (NEW.status = 'AVAILABLE') THEN
+        UPDATE
+            public.template
+        SET
+            status = 'DISABLED'
+        WHERE
+            code = NEW.code
+            AND status = 'AVAILABLE'
+            AND id != NEW.id;
+    END IF;
+    RETURN NULL;
+END;
+$template_event$
+LANGUAGE plpgsql;
+
+--TRIGGER to generate new version of template on insertion or update
+DROP TRIGGER IF EXISTS set_template_version_trigger ON public.template;
+
+CREATE TRIGGER set_template_version_trigger
+    BEFORE INSERT OR UPDATE ON public.template
+    FOR EACH ROW
+    EXECUTE FUNCTION public.set_template_verision ();
+
+--TRIGGER to make sure duplicates templates have 'DRAFT' status
+DROP TRIGGER IF EXISTS set_template_to_draft_trigger ON public.template;
+
+CREATE TRIGGER set_template_to_draft_trigger
+    BEFORE INSERT ON public.template
+    FOR EACH ROW
+    EXECUTE FUNCTION public.set_template_to_draft ();
+
+-- TRIGGER to ensure only one template version can be 'AVAILABLE'
+DROP TRIGGER IF EXISTS template_status_update_trigger ON public.template;
+
+CREATE TRIGGER template_status_update_trigger
+    AFTER UPDATE OF status ON public.template
+    FOR EACH ROW
+    WHEN (NEW.status = 'AVAILABLE')
+    EXECUTE FUNCTION public.template_status_update ();
+
+-- TEMPLATE ELEMENT
+-- FUNCTION to return template_code for current element/section
+CREATE OR REPLACE FUNCTION public.get_template_code (section_id int)
+    RETURNS varchar
+    AS $$
+    SELECT
+        template.code
+    FROM
+        public.template
+        JOIN public.template_section ON template_id = template.id
+    WHERE
+        template_section.id = $1;
+
+$$
+LANGUAGE SQL
+IMMUTABLE;
+
+-- FUNCTION to return template_version for current element/section
+CREATE OR REPLACE FUNCTION public.get_template_version (section_id int)
+    RETURNS integer
+    AS $$
+    SELECT
+        template.version
+    FROM
+        public.template
+        JOIN public.template_section ON template_id = template.id
+    WHERE
+        template_section.id = $1;
+
+$$
+LANGUAGE SQL
+IMMUTABLE;
+
+-- Add columns (and index) to template_element table that use the above 2
+-- functions
+ALTER TABLE public.template_element
+    ADD COLUMN IF NOT EXISTS template_code varchar GENERATED ALWAYS AS (public.get_template_code (section_id)) STORED;
+
+ALTER TABLE public.template_element
+    ADD COLUMN IF NOT EXISTS template_version integer GENERATED ALWAYS AS (public.get_template_version (section_id)) STORED;
+
+CREATE UNIQUE INDEX IF NOT EXISTS template_element_template_code_code_template_version_idx ON public.template_element (template_code, code, template_version);
+
+-- APPLICATION
+--FUNCTION to update `is_active` to false
+-- and application status to "COMPLETED"
+CREATE OR REPLACE FUNCTION public.outcome_changed ()
+    RETURNS TRIGGER
+    AS $application_event$
+BEGIN
+    UPDATE
+        public.application
+    SET
+        is_active = FALSE
+    WHERE
+        id = NEW.id;
+    INSERT INTO public.application_status_history (application_stage_history_id, status)
+        VALUES ((
+                SELECT
+                    id
+                FROM
+                    public.application_stage_history
+                WHERE
+                    application_id = NEW.id
+                    AND is_current = TRUE),
+                'COMPLETED');
+    RETURN NULL;
+END;
+$application_event$
+LANGUAGE plpgsql;
+
+--TRIGGER to run above function when outcome is updated
+DROP TRIGGER IF EXISTS outcome_trigger ON public.application;
+
+CREATE TRIGGER outcome_trigger
+    AFTER UPDATE OF outcome ON public.application
+    FOR EACH ROW
+    WHEN (OLD.outcome = 'PENDING' AND NEW.outcome <> 'PENDING')
+    EXECUTE FUNCTION public.outcome_changed ();
+
+--FUNCTION to revert application status/active when OUTCOME is changed back to PENDING
+CREATE OR REPLACE FUNCTION public.outcome_reverted ()
+    RETURNS TRIGGER
+    AS $application_event$
+BEGIN
+    UPDATE
+        public.application
+    SET
+        is_active = TRUE
+    WHERE
+        id = NEW.id;
+    INSERT INTO public.application_status_history (application_stage_history_id, status)
+        VALUES ((
+                SELECT
+                    id
+                FROM
+                    public.application_stage_history
+                WHERE
+                    application_id = NEW.id
+                    AND is_current = TRUE),
+                (
+                    SELECT
+                        status
+                    FROM
+                        public.application_status_history
+                    WHERE
+                        time_created = (
+                            SELECT
+                                MAX(time_created)
+                            FROM
+                                public.application_status_history
+                            WHERE
+                                is_current = FALSE
+                                AND application_id = NEW.id)));
+    RETURN NULL;
+END;
+$application_event$
+LANGUAGE plpgsql;
+
+--TRIGGER to run above function when outcome is updated
+DROP TRIGGER IF EXISTS outcome_revert_trigger ON public.application;
+
+CREATE TRIGGER outcome_revert_trigger
+    AFTER UPDATE OF outcome ON public.application
+    FOR EACH ROW
+    WHEN (NEW.outcome = 'PENDING' AND OLD.outcome <> 'PENDING')
+    EXECUTE FUNCTION public.outcome_reverted ();
+
+-- APPLICATION_STAGE_HISTORY
+-- FUNCTION to set `is_current` to false on all other stage_histories of current application
+CREATE OR REPLACE FUNCTION public.stage_is_current_update ()
+    RETURNS TRIGGER
+    AS $application_stage_history_event$
+BEGIN
+    UPDATE
+        public.application_stage_history
+    SET
+        is_current = FALSE
+    WHERE
+        application_id = NEW.application_id
+        AND id <> NEW.id;
+    RETURN NULL;
+END;
+$application_stage_history_event$
+LANGUAGE plpgsql;
+
+--TRIGGER to run above function when is_current is updated
+DROP TRIGGER IF EXISTS application_stage_history_trigger ON public.application_stage_history;
+
+CREATE TRIGGER application_stage_history_trigger
+    AFTER INSERT OR UPDATE OF is_current ON public.application_stage_history
+    FOR EACH ROW
+    WHEN (NEW.is_current = TRUE)
+    EXECUTE FUNCTION public.stage_is_current_update ();
+
+-- APPLICATION_STATUS_HISTORY
+-- FUNCTION to auto-add application_id to application_status_history table
+CREATE OR REPLACE FUNCTION public.application_status_history_application_id (application_stage_history_id int)
+    RETURNS int
+    AS $$
+    SELECT
+        application_id
+    FROM
+        public.application_stage_history
+    WHERE
+        id = $1;
+
+$$
+LANGUAGE SQL
+IMMUTABLE;
+
+ALTER TABLE application_status_history
+    ADD COLUMN IF NOT EXISTS application_id INT GENERATED ALWAYS AS (application_status_history_application_id (application_stage_history_id)) STORED;
+
+-- FUNCTION to set `is_current` to false on all other status_histories of current application
+CREATE OR REPLACE FUNCTION public.status_is_current_update ()
+    RETURNS TRIGGER
+    AS $application_status_history_event$
+BEGIN
+    UPDATE
+        public.application_status_history
+    SET
+        is_current = FALSE
+    WHERE
+        application_id = NEW.application_id
+        AND id <> NEW.id;
+    RETURN NULL;
+END;
+$application_status_history_event$
+LANGUAGE plpgsql;
+
+--TRIGGER to run above function when is_current is updated
+DROP TRIGGER IF EXISTS application_status_history_trigger ON public.application_status_history;
+
+CREATE TRIGGER application_status_history_trigger
+    AFTER INSERT OR UPDATE OF is_current ON public.application_status_history
+    FOR EACH ROW
+    WHEN (NEW.is_current = TRUE)
+    EXECUTE FUNCTION public.status_is_current_update ();
+
 -- Function to expose stage_number field on application table in GraphQL
-CREATE FUNCTION public.application_stage_number (app public.application)
+CREATE OR REPLACE FUNCTION public.application_stage_number (app public.application)
     RETURNS int
     AS $$
     SELECT
@@ -822,7 +459,7 @@ LANGUAGE sql
 STABLE;
 
 -- Function to expose stage name field on application table in GraphQL
-CREATE FUNCTION public.application_stage (app public.application)
+CREATE OR REPLACE FUNCTION public.application_stage (app public.application)
     RETURNS varchar
     AS $$
     SELECT
@@ -841,7 +478,7 @@ LANGUAGE sql
 STABLE;
 
 -- Function to expose status field on application table in GraphQL
-CREATE FUNCTION public.application_status (a public.application)
+CREATE OR REPLACE FUNCTION public.application_status (a public.application)
     RETURNS application_status
     AS $$
     SELECT
@@ -859,25 +496,7 @@ $$
 LANGUAGE sql
 STABLE;
 
--- application response
-CREATE TYPE public.application_response_status AS ENUM (
-    'DRAFT',
-    'SUBMITTED'
-);
-
-CREATE TABLE public.application_response (
-    id serial PRIMARY KEY,
-    template_element_id integer REFERENCES public.template_element (id) ON DELETE CASCADE NOT NULL,
-    application_id integer REFERENCES public.application (id) ON DELETE CASCADE NOT NULL,
-    stage_number integer DEFAULT NULL,
-    status public.application_response_status DEFAULT 'DRAFT',
-    value jsonb,
-    is_valid boolean,
-    time_created timestamptz DEFAULT CURRENT_TIMESTAMP,
-    time_updated timestamptz DEFAULT CURRENT_TIMESTAMP,
-    time_submitted timestamptz
-);
-
+-- APPLICATION_RESPONSE
 -- Function to automatically update "time_updated"
 CREATE OR REPLACE FUNCTION public.update_response_timestamp ()
     RETURNS TRIGGER
@@ -895,6 +514,8 @@ $application_event$
 LANGUAGE plpgsql;
 
 --TRIGGER to run above function when response is updated
+DROP TRIGGER IF EXISTS application_response_timestamp_trigger ON public.application_response;
+
 CREATE TRIGGER application_response_timestamp_trigger
     AFTER UPDATE OF status,
     value,
@@ -906,67 +527,29 @@ CREATE OR REPLACE FUNCTION delete_whole_application (application_id int)
     RETURNS boolean
     AS $$
 BEGIN
-    DELETE FROM application_status_history
+    DELETE FROM public.application_status_history
     WHERE application_stage_history_id IN (
             SELECT
                 id
             FROM
-                application_stage_history
+                public.application_stage_history
             WHERE
                 application_stage_history.application_id = $1);
-    DELETE FROM application_stage_history
+    DELETE FROM public.application_stage_history
     WHERE application_stage_history.application_id = $1;
-    DELETE FROM application_response
+    DELETE FROM public.application_response
     WHERE application_response.application_id = $1;
-    DELETE FROM application_section
+    DELETE FROM public.application_section
     WHERE application_section.application_id = $1;
-    DELETE FROM "application"
-    WHERE "application".id = $1;
+    DELETE FROM public.application
+    WHERE application.id = $1;
     RETURN TRUE;
 END;
 $$
 LANGUAGE plpgsql
 VOLATILE;
 
--- action plugins
-CREATE TABLE public.action_plugin (
-    id serial PRIMARY KEY,
-    code varchar UNIQUE,
-    name varchar,
-    description varchar,
-    path varchar,
-    required_parameters varchar[],
-    optional_parameters varchar[],
-    output_properties varchar[]
-);
-
--- action queue
-CREATE TYPE public.action_queue_status AS ENUM (
-    'QUEUED',
-    'PROCESSING',
-    'SUCCESS',
-    'FAIL',
-    'CONDITION_NOT_MET'
-);
-
-CREATE TABLE public.action_queue (
-    id serial PRIMARY KEY,
-    trigger_event integer REFERENCES public.trigger_queue (id),
-    trigger_payload jsonb,
-    template_id integer REFERENCES public.template (id) ON DELETE CASCADE,
-    sequence integer
-,
-        action_code varchar,
-        condition_expression jsonb,
-        parameter_queries jsonb,
-        parameters_evaluated jsonb,
-        status public.action_queue_status,
-        output jsonb,
-        time_queued timestamptz,
-        time_completed timestamptz,
-        error_log varchar
-);
-
+-- ACTION_QUEUE
 -- Function to Notify Action service of ActionQueue insert
 CREATE OR REPLACE FUNCTION public.notify_action_queue ()
     RETURNS TRIGGER
@@ -982,6 +565,8 @@ $action_event$
 LANGUAGE plpgsql;
 
 -- TRIGGERS for action_queue
+DROP TRIGGER IF EXISTS action_queue ON public.action_queue;
+
 CREATE TRIGGER action_queue
     AFTER INSERT ON public.action_queue
     FOR EACH ROW
@@ -989,31 +574,16 @@ CREATE TRIGGER action_queue
     EXECUTE FUNCTION public.notify_action_queue ();
 
 -- TRIGGER (Listener) on application table
--- Note: couldn't put this in application file as it requires the trigger_queue table and function to be defined first
+DROP TRIGGER IF EXISTS application_trigger ON public.application;
+
 CREATE TRIGGER application_trigger
     AFTER INSERT OR UPDATE OF trigger ON public.application
     FOR EACH ROW
     WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
     EXECUTE FUNCTION public.add_event_to_trigger_queue ();
 
--- template action
-CREATE TABLE public.template_action (
-    id serial PRIMARY KEY,
-    template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL,
-    code varchar,
-    action_code varchar,
-    event_code varchar,
-    TRIGGER public.trigger,
-    condition jsonb DEFAULT 'true' ::jsonb,
-    parameter_queries jsonb,
-    description varchar,
-    sequence integer
-);
-
--- Constraint ensuring that the "code" value must be unique per template
-CREATE UNIQUE INDEX unique_template_action_code ON template_action (code, template_id);
-
-CREATE FUNCTION public.template_action_parameters_queries_string (template_action public.template_action)
+-- TEMPLATE_ACTION
+CREATE OR REPLACE FUNCTION public.template_action_parameters_queries_string (template_action public.template_action)
     RETURNS text
     AS $$
     SELECT
@@ -1026,30 +596,17 @@ $$
 LANGUAGE sql
 STABLE;
 
--- scheduled actions/events
-CREATE TABLE public.trigger_schedule (
-    id serial PRIMARY KEY,
-    event_code varchar,
-    time_scheduled timestamptz NOT NULL,
-    application_id integer REFERENCES public.application (id) ON DELETE CASCADE NOT NULL,
-    template_id integer REFERENCES public.template (id) ON DELETE CASCADE,
-    data jsonb,
-    is_active boolean DEFAULT TRUE,
-    editor_user_id integer REFERENCES public.user (id) ON DELETE CASCADE,
-    TRIGGER public.trigger
-);
-
--- event codes must be unique per application
-CREATE UNIQUE INDEX unique_application_event ON trigger_schedule (application_id, event_code);
-
+-- TRIGGER_SCHEDULE
 -- TRIGGER (Listener) on trigger_schedule table
+DROP TRIGGER IF EXISTS trigger_schedule_trigger ON public.trigger_schedule;
+
 CREATE TRIGGER trigger_schedule_trigger
     AFTER INSERT OR UPDATE OF trigger ON public.trigger_schedule
     FOR EACH ROW
     WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
     EXECUTE FUNCTION public.add_event_to_trigger_queue ();
 
--- review assignment
+-- REVIEW_ASSIGNMENT
 -- FUNCTION to auto-add template_id to review_assignment
 CREATE OR REPLACE FUNCTION public.review_assignment_template_id (application_id int)
     RETURNS int
@@ -1057,7 +614,7 @@ CREATE OR REPLACE FUNCTION public.review_assignment_template_id (application_id 
     SELECT
         template_id
     FROM
-        application
+        public.application
     WHERE
         id = $1;
 
@@ -1065,37 +622,6 @@ $$
 LANGUAGE SQL
 IMMUTABLE;
 
--- ENUM
-CREATE TYPE public.review_assignment_status AS ENUM (
-    'AVAILABLE',
-    'ASSIGNED'
-);
-
-CREATE TABLE public.review_assignment (
-    id serial PRIMARY KEY,
-    assigner_id integer REFERENCES public.user (id) ON DELETE CASCADE,
-    reviewer_id integer REFERENCES public.user (id) ON DELETE CASCADE NOT NULL,
-    organisation_id integer REFERENCES public.organisation (id) ON DELETE CASCADE,
-    stage_id integer REFERENCES public.template_stage (id) ON DELETE CASCADE NOT NULL,
-    stage_number integer,
-    time_stage_created timestamptz,
-    status public.review_assignment_status NOT NULL,
-    application_id integer REFERENCES public.application (id) ON DELETE CASCADE NOT NULL,
-    template_id integer GENERATED ALWAYS AS (public.review_assignment_template_id (application_id)) STORED REFERENCES public.template (id) ON DELETE CASCADE,
-    allowed_sections varchar[] DEFAULT NULL,
-    assigned_sections varchar[] DEFAULT ARRAY[] ::varchar[] NOT NULL,
-    TRIGGER public.trigger,
-    time_updated timestamptz DEFAULT CURRENT_TIMESTAMP,
-    level_number integer,
-    level_id integer REFERENCES public.template_stage_review_level (id) ON DELETE CASCADE,
-    is_last_level boolean,
-    is_last_stage boolean,
-    is_locked boolean DEFAULT FALSE,
-    is_final_decision boolean DEFAULT FALSE,
-    is_self_assignable boolean DEFAULT FALSE
-);
-
--- FUNCTION
 CREATE OR REPLACE FUNCTION public.empty_assigned_sections ()
     RETURNS TRIGGER
     AS $review_assignment_event$
@@ -1112,6 +638,8 @@ $review_assignment_event$
 LANGUAGE plpgsql;
 
 -- TRIGGER (Listener) on review_assignment table: To update trigger
+DROP TRIGGER IF EXISTS review_assignment_trigger ON public.review_assignment;
+
 CREATE TRIGGER review_assignment_trigger
     AFTER INSERT OR UPDATE OF trigger ON public.review_assignment
     FOR EACH ROW
@@ -1119,36 +647,18 @@ CREATE TRIGGER review_assignment_trigger
     EXECUTE FUNCTION public.add_event_to_trigger_queue ();
 
 -- TRIGGER (Listener) on review_assignment table: Set assignedSections to [] when changing status to AVAILABLE
+DROP TRIGGER IF EXISTS review_assignment_trigger2 ON public.review_assignment;
+
 CREATE TRIGGER review_assignment_trigger2
     AFTER UPDATE OF status ON public.review_assignment
     FOR EACH ROW
     WHEN (NEW.status = 'AVAILABLE')
     EXECUTE FUNCTION public.empty_assigned_sections ();
 
-CREATE UNIQUE INDEX unique_review_assignment_with_org ON review_assignment (reviewer_id, organisation_id, stage_number, application_id, level_number)
-WHERE
-    organisation_id IS NOT NULL;
-
-CREATE UNIQUE INDEX unique_review_assignment_no_org ON review_assignment (reviewer_id, stage_number, application_id, level_number)
-WHERE
-    organisation_id IS NULL;
-
--- review assignment assigner join
-CREATE TABLE public.review_assignment_assigner_join (
-    id serial PRIMARY KEY,
-    assigner_id integer REFERENCES public.user (id) ON DELETE CASCADE,
-    organisation_id integer REFERENCES public.organisation (id) ON DELETE CASCADE,
-    review_assignment_id integer REFERENCES public.review_assignment (id) ON DELETE CASCADE NOT NULL
-);
-
-CREATE UNIQUE INDEX unique_review_assignment_assigner_with_org ON review_assignment_assigner_join (assigner_id, organisation_id, review_assignment_id)
-WHERE
-    organisation_id IS NOT NULL;
-
-CREATE UNIQUE INDEX unique_review_assignment_assigner_no_org ON review_assignment_assigner_join (assigner_id, review_assignment_id)
-WHERE
-    organisation_id IS NULL;
-
+-- REVIEW
+-- These first few functions are duplicated in 31_review.sql as they are
+-- needed before the review table is created.
+--
 -- FUNCTION to auto-add application_id to review
 CREATE OR REPLACE FUNCTION public.review_application_id (review_assignment_id int)
     RETURNS int
@@ -1156,7 +666,7 @@ CREATE OR REPLACE FUNCTION public.review_application_id (review_assignment_id in
     SELECT
         application_id
     FROM
-        review_assignment
+        public.review_assignment
     WHERE
         id = $1;
 
@@ -1171,7 +681,7 @@ CREATE OR REPLACE FUNCTION public.review_reviewer_id (review_assignment_id int)
     SELECT
         reviewer_id
     FROM
-        review_assignment
+        public.review_assignment
     WHERE
         id = $1;
 
@@ -1186,7 +696,7 @@ CREATE OR REPLACE FUNCTION public.review_level (review_assignment_id int)
     SELECT
         level_number
     FROM
-        review_assignment
+        public.review_assignment
     WHERE
         id = $1;
 
@@ -1201,7 +711,7 @@ CREATE OR REPLACE FUNCTION public.review_stage (review_assignment_id int)
     SELECT
         stage_number
     FROM
-        review_assignment
+        public.review_assignment
     WHERE
         id = $1;
 
@@ -1216,7 +726,7 @@ CREATE OR REPLACE FUNCTION public.review_time_stage_created (review_assignment_i
     SELECT
         time_stage_created
     FROM
-        review_assignment
+        public.review_assignment
     WHERE
         id = $1;
 
@@ -1231,7 +741,7 @@ CREATE OR REPLACE FUNCTION public.review_is_last_level (review_assignment_id int
     SELECT
         is_last_level
     FROM
-        review_assignment
+        public.review_assignment
     WHERE
         id = $1;
 
@@ -1246,7 +756,7 @@ CREATE OR REPLACE FUNCTION public.review_is_last_stage (review_assignment_id int
     SELECT
         is_last_stage
     FROM
-        review_assignment
+        public.review_assignment
     WHERE
         id = $1;
 
@@ -1261,7 +771,7 @@ CREATE OR REPLACE FUNCTION public.review_is_final_decision (review_assignment_id
     SELECT
         is_final_decision
     FROM
-        review_assignment
+        public.review_assignment
     WHERE
         id = $1;
 
@@ -1269,67 +779,27 @@ $$
 LANGUAGE SQL
 IMMUTABLE;
 
--- review
-CREATE TABLE public.review (
-    id serial PRIMARY KEY,
-    review_assignment_id integer REFERENCES public.review_assignment (id) ON DELETE CASCADE,
-    -- status via review_status_history
-    -- time_status_created via review_status_history
-    TRIGGER public.trigger,
-    application_id integer GENERATED ALWAYS AS (public.review_application_id (review_assignment_id)) STORED REFERENCES public.application (id) ON DELETE CASCADE,
-    reviewer_id integer GENERATED ALWAYS AS (public.review_reviewer_id (review_assignment_id)) STORED REFERENCES public.user (id) ON DELETE CASCADE,
-    level_number integer GENERATED ALWAYS AS (public.review_level (review_assignment_id)) STORED,
-    stage_number integer GENERATED ALWAYS AS (public.review_stage (review_assignment_id)) STORED,
-    time_stage_created timestamptz GENERATED ALWAYS AS (public.review_time_stage_created (review_assignment_id)) STORED,
-    is_last_level boolean GENERATED ALWAYS AS (public.review_is_last_level (review_assignment_id)) STORED,
-    is_last_stage boolean GENERATED ALWAYS AS (public.review_is_last_stage (review_assignment_id)) STORED,
-    is_final_decision boolean GENERATED ALWAYS AS (public.review_is_final_decision (review_assignment_id)) STORED
-);
+-- Add columns to "review" now that these functions are defined:
+ALTER TABLE public.review
+    ADD COLUMN IF NOT EXISTS application_id integer GENERATED ALWAYS AS (public.review_application_id (review_assignment_id)) STORED REFERENCES public.application (id) ON DELETE CASCADE,
+    ADD COLUMN IF NOT EXISTS reviewer_id integer GENERATED ALWAYS AS (public.review_reviewer_id (review_assignment_id)) STORED REFERENCES public.user (id) ON DELETE CASCADE,
+    ADD COLUMN IF NOT EXISTS level_number integer GENERATED ALWAYS AS (public.review_level (review_assignment_id)) STORED,
+    ADD COLUMN IF NOT EXISTS stage_number integer GENERATED ALWAYS AS (public.review_stage (review_assignment_id)) STORED,
+    ADD COLUMN IF NOT EXISTS time_stage_created timestamptz GENERATED ALWAYS AS (public.review_time_stage_created (review_assignment_id)) STORED,
+    ADD COLUMN IF NOT EXISTS is_last_level boolean GENERATED ALWAYS AS (public.review_is_last_level (review_assignment_id)) STORED,
+    ADD COLUMN IF NOT EXISTS is_last_stage boolean GENERATED ALWAYS AS (public.review_is_last_stage (review_assignment_id)) STORED,
+    ADD COLUMN IF NOT EXISTS is_final_decision boolean GENERATED ALWAYS AS (public.review_is_final_decision (review_assignment_id)) STORED;
 
 -- TRIGGER (Listener) on review table
+DROP TRIGGER IF EXISTS review_trigger ON public.review;
+
 CREATE TRIGGER review_trigger
     AFTER INSERT OR UPDATE OF trigger ON public.review
     FOR EACH ROW
     WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
     EXECUTE FUNCTION public.add_event_to_trigger_queue ();
 
--- review response
-CREATE TYPE public.review_response_decision AS ENUM (
-    'APPROVE',
-    'DECLINE',
-    'AGREE',
-    'DISAGREE'
-);
-
-CREATE TYPE public.review_response_status AS ENUM (
-    'DRAFT',
-    'SUBMITTED'
-);
-
-CREATE TYPE public.review_response_recommended_applicant_visibility AS ENUM (
-    'ORIGINAL_RESPONSE_VISIBLE_TO_APPLICANT',
-    'ORIGINAL_RESPONSE_NOT_VISIBLE_TO_APPLICANT'
-);
-
-CREATE TABLE public.review_response (
-    id serial PRIMARY KEY,
-    comment varchar,
-    decision public.review_response_decision,
-    application_response_id integer REFERENCES public.application_response (id) ON DELETE CASCADE,
-    review_response_link_id integer REFERENCES public.review_response (id) ON DELETE CASCADE,
-    original_review_response_id integer REFERENCES public.review_response (id) ON DELETE CASCADE,
-    review_id integer REFERENCES public.review (id) ON DELETE CASCADE,
-    stage_number integer DEFAULT NULL,
-    time_created timestamptz DEFAULT CURRENT_TIMESTAMP,
-    time_updated timestamptz DEFAULT CURRENT_TIMESTAMP,
-    time_submitted timestamptz,
-    is_visible_to_applicant boolean DEFAULT FALSE,
-    is_latest_review boolean DEFAULT FALSE,
-    template_element_id integer REFERENCES public.template_element ON DELETE CASCADE,
-    recommended_applicant_visibility public.review_response_recommended_applicant_visibility DEFAULT 'ORIGINAL_RESPONSE_NOT_VISIBLE_TO_APPLICANT',
-    status public.review_response_status DEFAULT 'DRAFT'
-);
-
+-- REVIEW_RESPONSE
 -- Function to automatically set previous review_responses
 -- (for same review & templateElement) as is_latest_review = false
 CREATE OR REPLACE FUNCTION public.set_latest_review_response ()
@@ -1356,6 +826,8 @@ $review_response_event$
 LANGUAGE plpgsql;
 
 -- TRIGGER (Listener) on review_response table: Run set_previous_review_response
+DROP TRIGGER IF EXISTS review_response_latest ON public.review_response;
+
 CREATE TRIGGER review_response_latest
     AFTER UPDATE OF time_updated ON public.review_response
     FOR EACH ROW
@@ -1379,6 +851,8 @@ $application_event$
 LANGUAGE plpgsql;
 
 --TRIGGER to run above function when response is updated
+DROP TRIGGER IF EXISTS review_response_timestamp_trigger ON public.review_response;
+
 CREATE TRIGGER review_response_timestamp_trigger
     AFTER UPDATE OF comment,
     decision ON public.review_response
@@ -1396,14 +870,14 @@ BEGIN
             SELECT
                 original_review_response_id
             FROM
-                review_response
+                public.review_response
             WHERE
                 id = NEW.review_response_link_id);
         NEW.application_response_id = (
             SELECT
                 application_response_id
             FROM
-                review_response
+                public.review_response
             WHERE
                 id = NEW.review_response_link_id);
     ELSE
@@ -1415,7 +889,7 @@ BEGIN
         SELECT
             template_element_id
         FROM
-            application_response
+            public.application_response
         WHERE
             id = NEW.application_response_id);
     RETURN NEW;
@@ -1423,30 +897,16 @@ END;
 $$
 LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS set_original_response_trigger ON public.review_response;
+
 CREATE TRIGGER set_original_response_trigger
     BEFORE INSERT ON public.review_response
     FOR EACH ROW
     EXECUTE FUNCTION set_original_response ();
 
--- review decision
-CREATE TYPE public.decision AS ENUM (
-    'LIST_OF_QUESTIONS',
-    'CONFORM',
-    'NON_CONFORM',
-    'CHANGES_REQUESTED',
-    'NO_DECISION'
-);
-
-CREATE TABLE public.review_decision (
-    id serial PRIMARY KEY,
-    review_id integer REFERENCES public.review (id) ON DELETE CASCADE NOT NULL,
-    decision public.decision DEFAULT 'NO_DECISION',
-    comment varchar,
-    time_updated timestamptz DEFAULT CURRENT_TIMESTAMP
-);
-
+-- REVIEW_DECISION
 -- exposes latest overall deicison for review
-CREATE FUNCTION public.review_latest_decision (review public.review)
+CREATE OR REPLACE FUNCTION public.review_latest_decision (review public.review)
     RETURNS public.review_decision
     AS $$
     SELECT
@@ -1462,24 +922,7 @@ $$
 LANGUAGE sql
 STABLE;
 
--- review status history
-CREATE TYPE public.review_status AS ENUM (
-    'DRAFT',
-    'SUBMITTED',
-    'CHANGES_REQUESTED',
-    'PENDING',
-    'LOCKED',
-    'DISCONTINUED'
-);
-
-CREATE TABLE public.review_status_history (
-    id serial PRIMARY KEY,
-    review_id integer REFERENCES public.review (id) ON DELETE CASCADE NOT NULL,
-    status public.review_status,
-    time_created timestamptz DEFAULT CURRENT_TIMESTAMP,
-    is_current boolean DEFAULT TRUE
-);
-
+-- REVIEW_STATUS_HISTORY
 -- FUNCTION to set `is_current` to false on all other review_status_histories of current review
 CREATE OR REPLACE FUNCTION public.review_status_history_is_current_update ()
     RETURNS TRIGGER
@@ -1498,6 +941,8 @@ $review_status_history_event$
 LANGUAGE plpgsql;
 
 --TRIGGER to run above function when is_current is updated
+DROP TRIGGER IF EXISTS review_status_history_trigger ON public.review_status_history;
+
 CREATE TRIGGER review_status_history_trigger
     AFTER INSERT OR UPDATE OF is_current ON public.review_status_history
     FOR EACH ROW
@@ -1505,13 +950,13 @@ CREATE TRIGGER review_status_history_trigger
     EXECUTE FUNCTION public.review_status_history_is_current_update ();
 
 -- Function to expose status name field on review table in GraphQL
-CREATE FUNCTION public.review_status (app public.review)
+CREATE OR REPLACE FUNCTION public.review_status (app public.review)
     RETURNS public.review_status
     AS $$
     SELECT
         "status"
     FROM
-        review_status_history
+        public.review_status_history
     WHERE
         review_id = app.id
         AND is_current = TRUE
@@ -1520,13 +965,13 @@ LANGUAGE sql
 STABLE;
 
 -- Function to expose time_status_created field on review table in GraphQL
-CREATE FUNCTION public.review_time_status_created (app public.review)
+CREATE OR REPLACE FUNCTION public.review_time_status_created (app public.review)
     RETURNS timestamptz
     AS $$
     SELECT
         time_created
     FROM
-        review_status_history
+        public.review_status_history
     WHERE
         review_id = app.id
         AND is_current = TRUE
@@ -1534,6 +979,7 @@ $$
 LANGUAGE sql
 STABLE;
 
+-- REVIEW ASSIGNABLE FUNCTIONS:
 -- Function to return elements reviewable questions (per application)
 CREATE OR REPLACE FUNCTION public.reviewable_questions (app_id int)
     RETURNS TABLE (
@@ -1556,9 +1002,9 @@ CREATE OR REPLACE FUNCTION public.reviewable_questions (app_id int)
             FALSE
         END::boolean
     FROM
-        application_response ar
-        JOIN application app ON ar.application_id = app.id
-        JOIN template_element te ON ar.template_element_id = te.id
+        public.application_response ar
+        JOIN public.application app ON ar.application_id = app.id
+        JOIN public.template_element te ON ar.template_element_id = te.id
     WHERE
         ar.application_id = $1
         AND te.category = 'QUESTION'
@@ -1611,12 +1057,12 @@ CREATE OR REPLACE FUNCTION public.assigned_questions (app_id int, stage_id int, 
             status,
             UNNEST(assigned_sections) AS section_code
         FROM
-            review_assignment) ra
-    JOIN template_section ts ON ra.section_code = ts.code
-    JOIN template_element te ON ts.id = te.section_id
-    JOIN reviewable_questions (app_id) rq ON rq.code = te.code
-    LEFT JOIN review ON review.review_assignment_id = ra.id
-    LEFT JOIN review_response rr ON (rr.application_response_id = rq.response_id
+            public.review_assignment) ra
+    JOIN public.template_section ts ON ra.section_code = ts.code
+    JOIN public.template_element te ON ts.id = te.section_id
+    JOIN public.reviewable_questions (app_id) rq ON rq.code = te.code
+    LEFT JOIN public.review ON review.review_assignment_id = ra.id
+    LEFT JOIN public.review_response rr ON (rr.application_response_id = rq.response_id
             AND rr.review_id = review.id)
 WHERE
     ra.application_id = $1
@@ -1640,7 +1086,7 @@ LANGUAGE sql
 STABLE;
 
 -- Function to return TOTAL of reviewable questions (per application)
-CREATE FUNCTION public.reviewable_questions_count (app_id int)
+CREATE OR REPLACE FUNCTION public.reviewable_questions_count (app_id int)
     RETURNS bigint
     AS $$
     SELECT
@@ -1652,6 +1098,9 @@ LANGUAGE sql
 STABLE;
 
 -- Function to return TOTAL assigned questions for current stage/level
+-- Need to DROP first, due to error with parameter name
+DROP FUNCTION IF EXISTS public.assigned_questions_count;
+
 CREATE FUNCTION public.assigned_questions_count (app_id int, stage_id int, level_number int)
     RETURNS bigint
     AS $$
@@ -1664,7 +1113,7 @@ LANGUAGE sql
 STABLE;
 
 -- Function to return TOTAL of assigned and submitted (element that can't be re-assigned)
-CREATE FUNCTION public.submitted_assigned_questions_count (app_id int, stage_id int, level_number int)
+CREATE OR REPLACE FUNCTION public.submitted_assigned_questions_count (app_id int, stage_id int, level_number int)
     RETURNS bigint
     AS $$
     SELECT
@@ -1677,28 +1126,7 @@ $$
 LANGUAGE sql
 STABLE;
 
--- file
-CREATE TABLE public.file (
-    id serial PRIMARY KEY,
-    unique_id varchar UNIQUE NOT NULL,
-    original_filename varchar NOT NULL,
-    user_id integer REFERENCES public.user (id) ON DELETE CASCADE,
-    template_id integer REFERENCES public.template (id) ON DELETE CASCADE,
-    application_serial varchar REFERENCES public.application (serial) ON DELETE CASCADE,
-    application_response_id integer REFERENCES public.application_response (id) ON DELETE CASCADE,
-    description varchar,
-    application_note_id integer REFERENCES public.application_note (id) ON DELETE CASCADE,
-    is_output_doc boolean DEFAULT FALSE NOT NULL,
-    is_internal_reference_doc boolean DEFAULT FALSE NOT NULL,
-    is_external_reference_doc boolean DEFAULT FALSE NOT NULL,
-    to_be_deleted boolean DEFAULT FALSE NOT NULL,
-    file_path varchar NOT NULL,
-    thumbnail_path varchar,
-    mimetype varchar,
-    submitted boolean DEFAULT FALSE,
-    timestamp timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
+-- FILE
 -- Function to Notify server of File record deletion
 CREATE OR REPLACE FUNCTION public.notify_file_server ()
     RETURNS TRIGGER
@@ -1712,6 +1140,8 @@ $trigger_event$
 LANGUAGE plpgsql;
 
 -- TRIGGER for file table
+DROP TRIGGER IF EXISTS file_deletion ON public.file;
+
 CREATE TRIGGER file_deletion
     AFTER DELETE ON public.file
     FOR EACH ROW
@@ -1734,51 +1164,27 @@ $file_event$
 LANGUAGE plpgsql;
 
 -- TRIGGER to execute above function when files no longer reference
+DROP TRIGGER IF EXISTS file_no_longer_reference ON public.file;
+
 CREATE TRIGGER file_no_longer_reference
     AFTER UPDATE ON public.file
     FOR EACH ROW
     WHEN (NEW.is_external_reference_doc = FALSE AND NEW.is_internal_reference_doc = FALSE AND (OLD.is_external_reference_doc = TRUE OR OLD.is_internal_reference_doc = TRUE))
     EXECUTE FUNCTION public.mark_file_for_deletion ();
 
--- notification
-CREATE TABLE public.notification (
-    id serial PRIMARY KEY,
-    user_id integer REFERENCES public.user (id) ON DELETE CASCADE,
-    application_id integer REFERENCES public.application (id) ON DELETE CASCADE,
-    review_id integer REFERENCES public.review (id) ON DELETE CASCADE,
-    email_recipients varchar,
-    subject varchar,
-    message varchar,
-    attachments varchar[],
-    timestamp timestamptz DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    is_read boolean DEFAULT FALSE,
-    email_sent boolean DEFAULT FALSE,
-    email_server_log varchar
-);
-
--- verification
-CREATE TABLE public.verification (
-    id serial PRIMARY KEY,
-    unique_id varchar UNIQUE NOT NULL,
-    application_id integer REFERENCES public.application (id) ON DELETE CASCADE NOT NULL,
-    event_code varchar,
-    message varchar,
-    data jsonb,
-    time_created timestamptz DEFAULT NOW(),
-    time_expired timestamptz,
-    is_verified boolean DEFAULT FALSE,
-    TRIGGER public.trigger
-);
-
+-- VERIFICATION
 -- TRIGGER (Listener) on verification table
+DROP TRIGGER IF EXISTS verification_trigger ON public.verification;
+
 CREATE TRIGGER verification_trigger
     AFTER INSERT OR UPDATE OF trigger ON public.verification
     FOR EACH ROW
     WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
     EXECUTE FUNCTION public.add_event_to_trigger_queue ();
 
+-- ASSIGNMENT_LIST
 -- Aggregated VIEW method to get list of assigners and reviewers usernames to allow filtering by those on the application list page
-CREATE FUNCTION assignment_list (stageid int)
+CREATE OR REPLACE FUNCTION assignment_list (stageid int)
     RETURNS TABLE (
         application_id int,
         reviewers varchar[],
@@ -1790,9 +1196,9 @@ CREATE FUNCTION assignment_list (stageid int)
         ARRAY_AGG(DISTINCT (CONCAT(reviewer_user.first_name, ' ', reviewer_user.last_name)::varchar)) AS reviewers,
         ARRAY_AGG(DISTINCT (CONCAT(assigner_user.first_name, ' ', assigner_user.last_name)::varchar)) AS assigners
     FROM
-        review_assignment
-    LEFT JOIN "user" AS assigner_user ON review_assignment.assigner_id = assigner_user.id
-    LEFT JOIN "user" AS reviewer_user ON review_assignment.reviewer_id = reviewer_user.id
+        public.review_assignment
+    LEFT JOIN public."user" AS assigner_user ON review_assignment.assigner_id = assigner_user.id
+    LEFT JOIN public."user" AS reviewer_user ON review_assignment.reviewer_id = reviewer_user.id
 WHERE
     review_assignment.stage_id = $1
     AND review_assignment.status = 'ASSIGNED'
@@ -1804,12 +1210,9 @@ $$
 LANGUAGE sql
 STABLE;
 
+-- ASSIGNER_ACTION_LIST
 -- Aggregated VIEW method of all related assigner data to each application on application list page
-CREATE TYPE public.assigner_action AS ENUM (
-    'ASSIGN',
-    'ASSIGN_LOCKED',
-    'RE_ASSIGN'
-);
+DROP FUNCTION IF EXISTS assigner_list (integer, integer);
 
 CREATE OR REPLACE FUNCTION assigner_list (stage_id int, assigner_id int)
     RETURNS TABLE (
@@ -1834,8 +1237,8 @@ CREATE OR REPLACE FUNCTION assigner_list (stage_id int, assigner_id int)
             NULL
         END::assigner_action
     FROM
-        review_assignment
-    LEFT JOIN review_assignment_assigner_join ON review_assignment.id = review_assignment_assigner_join.review_assignment_id
+        public.review_assignment
+    LEFT JOIN public.review_assignment_assigner_join ON review_assignment.id = review_assignment_assigner_join.review_assignment_id
 WHERE
     review_assignment.stage_id = $1
     AND review_assignment_assigner_join.assigner_id = $2
@@ -1843,7 +1246,7 @@ WHERE
         SELECT
             outcome
         FROM
-            application
+            public.application
         WHERE
             id = review_assignment.application_id) = 'PENDING'
 GROUP BY
@@ -1854,19 +1257,9 @@ $$
 LANGUAGE sql
 STABLE;
 
+-- REVIEWER_ACTION_LIST
 -- Aggregated VIEW method of reviewer action to each application on application list page
-CREATE TYPE public.reviewer_action AS ENUM (
-    'SELF_ASSIGN',
-    'START_REVIEW',
-    'VIEW_REVIEW',
-    'CONTINUE_REVIEW',
-    'MAKE_DECISION',
-    'RESTART_REVIEW',
-    'UPDATE_REVIEW',
-    'AWAITING_RESPONSE'
-);
-
-CREATE FUNCTION review_list (stageid int, reviewerid int, appstatus public.application_status)
+CREATE OR REPLACE FUNCTION review_list (stageid int, reviewerid int, appstatus public.application_status)
     RETURNS TABLE (
         application_id int,
         reviewer_action public.reviewer_action
@@ -1906,9 +1299,9 @@ CREATE FUNCTION review_list (stageid int, reviewerid int, appstatus public.appli
             NULL
         END::public.reviewer_action
     FROM
-        review_assignment
-    LEFT JOIN review ON review.review_assignment_id = review_assignment.id
-    LEFT JOIN review_status_history ON (review_status_history.review_id = review.id
+        public.review_assignment
+    LEFT JOIN public.review ON review.review_assignment_id = review_assignment.id
+    LEFT JOIN public.review_status_history ON (review_status_history.review_id = review.id
             AND is_current = TRUE)
 WHERE
     review_assignment.stage_id = $1
@@ -1917,7 +1310,7 @@ WHERE
         SELECT
             outcome
         FROM
-            application
+            public.application
         WHERE
             id = review_assignment.application_id) = 'PENDING'
 GROUP BY
@@ -1927,29 +1320,7 @@ $$
 LANGUAGE sql
 STABLE;
 
--- Aggregated VIEW method of all data required for application list page
--- Requires an empty table as setof return and smart comment to make orderBy work (https://github.com/graphile/graphile-engine/pull/378)
-CREATE TABLE application_list_shape (
-    id int,
-    "serial" varchar,
-    "name" varchar,
-    template_code varchar,
-    template_name varchar,
-    applicant varchar,
-    org_name varchar,
-    stage varchar,
-    stage_colour varchar,
-    "status" public.application_status,
-    outcome public.application_outcome,
-    last_active_date timestamptz,
-    applicant_deadline timestamptz,
-    -- TO-DO: reviewer_deadline
-    assigners varchar[],
-    reviewers varchar[],
-    reviewer_action public.reviewer_action,
-    assigner_action public.assigner_action
-);
-
+-- APPLICATION_LIST_VIEW
 CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
     RETURNS SETOF application_list_shape
     AS $$
@@ -1972,11 +1343,11 @@ CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
         reviewer_action,
         assigner_action
     FROM
-        application app
-    LEFT JOIN TEMPLATE ON app.template_id = template.id
-    LEFT JOIN "user" ON user_id = "user".id
-    LEFT JOIN application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
-    LEFT JOIN organisation org ON app.org_id = org.id
+        public.application app
+    LEFT JOIN public.template ON app.template_id = template.id
+    LEFT JOIN public."user" ON user_id = "user".id
+    LEFT JOIN public.application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
+    LEFT JOIN public.organisation org ON app.org_id = org.id
     LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
     LEFT JOIN review_list (stage_status.stage_id, $1, stage_status.status) ON app.id = review_list.application_id
     LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
@@ -1990,9 +1361,11 @@ LANGUAGE sql
 STABLE;
 
 -- (https://github.com/graphile/graphile-engine/pull/378)
+-- Required to make 'orderBy' work in application_list
 COMMENT ON FUNCTION application_list (userid int) IS E'@sortable';
 
-CREATE FUNCTION application_list_filter_applicant (applicant varchar, template_code varchar)
+-- APPLICATION_LIST_FILTERS
+CREATE OR REPLACE FUNCTION application_list_filter_applicant (applicant varchar, template_code varchar)
     RETURNS TABLE (
         applicant varchar
     )
@@ -2008,7 +1381,7 @@ $$
 LANGUAGE sql
 STABLE;
 
-CREATE FUNCTION application_list_filter_organisation (organisation varchar, template_code varchar)
+CREATE OR REPLACE FUNCTION application_list_filter_organisation (organisation varchar, template_code varchar)
     RETURNS TABLE (
         organisation varchar
     )
@@ -2024,7 +1397,7 @@ $$
 LANGUAGE sql
 STABLE;
 
-CREATE FUNCTION application_list_filter_reviewer (reviewer varchar, template_code varchar)
+CREATE OR REPLACE FUNCTION application_list_filter_reviewer (reviewer varchar, template_code varchar)
     RETURNS TABLE (
         reviewer varchar
     )
@@ -2041,7 +1414,7 @@ $$
 LANGUAGE sql
 STABLE;
 
-CREATE FUNCTION application_list_filter_assigner (assigner varchar, template_code varchar)
+CREATE OR REPLACE FUNCTION application_list_filter_assigner (assigner varchar, template_code varchar)
     RETURNS TABLE (
         assigner varchar
     )
@@ -2058,7 +1431,7 @@ $$
 LANGUAGE sql
 STABLE;
 
-CREATE FUNCTION application_list_filter_stage (template_code varchar)
+CREATE OR REPLACE FUNCTION application_list_filter_stage (template_code varchar)
     RETURNS TABLE (
         stage varchar
     )
@@ -2073,73 +1446,7 @@ $$
 LANGUAGE sql
 STABLE;
 
--- Data table display configs
-CREATE TABLE data_view (
-    id serial PRIMARY KEY,
-    table_name varchar NOT NULL,
-    title varchar,
-    code varchar NOT NULL,
-    permission_names varchar[],
-    row_restrictions jsonb DEFAULT '{}',
-    table_view_include_columns varchar[],
-    table_view_exclude_columns varchar[],
-    detail_view_include_columns varchar[],
-    detail_view_exclude_columns varchar[],
-    detail_view_header_column varchar NOT NULL,
-    show_linked_applications boolean NOT NULL DEFAULT TRUE,
-    priority integer DEFAULT 1
-);
-
--- For columns that require more detail format or evaluation definitions
-CREATE TABLE data_view_column_definition (
-    id serial PRIMARY KEY,
-    table_name varchar,
-    column_name varchar,
-    title varchar,
-    element_type_plugin_code varchar,
-    element_parameters jsonb,
-    additional_formatting jsonb,
-    value_expression jsonb,
-    UNIQUE (table_name, column_name)
-);
-
--- Table for cataloguing all "data" tables, including lookup tables
-CREATE TABLE data_table (
-    id serial PRIMARY KEY,
-    table_name varchar NOT NULL UNIQUE,
-    display_name varchar,
-    field_map jsonb,
-    is_lookup_table boolean DEFAULT FALSE
-);
-
--- ACTIVITY LOG
--- This script contains "DROP" and "IF EXISTS" statements as it is called as a whole from the migration script
-CREATE TYPE public.event_type AS ENUM (
-    'STAGE',
-    'STATUS',
-    'OUTCOME',
-    'EXTENSION',
-    'ASSIGNMENT',
-    'REVIEW',
-    'REVIEW_DECISION',
-    'PERMISSION' -- This type not (necessarily) tied to an application
-);
-
-CREATE TABLE IF NOT EXISTS public.activity_log (
-    id serial PRIMARY KEY,
-    type public.event_type NOT NULL,
-    value varchar NOT NULL,
-    timestamp timestamptz DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    application_id integer REFERENCES public.application (id) ON DELETE CASCADE,
-    "table" varchar NOT NULL,
-    record_id integer,
-    details jsonb NOT NULL DEFAULT '{}'
-);
-
--- Make an index on the application_id field, since this is the one it will be
--- searched by most often
-CREATE INDEX IF NOT EXISTS activity_log_application_index ON activity_log (application_id);
-
+-- ACTIVITY_LOG
 -- TRIGGERS and FUNCTIONS for updating activity log
 -- STAGE changes
 CREATE OR REPLACE FUNCTION public.stage_activity_log ()
@@ -2157,7 +1464,7 @@ BEGIN
         stage_name,
         stage_col
     FROM
-        template_stage
+        public.template_stage
     WHERE
         id = NEW.stage_id;
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
@@ -2186,14 +1493,14 @@ BEGIN
         SELECT
             application_id
         FROM
-            application_stage_history
+            public.application_stage_history
         WHERE
             id = NEW.application_stage_history_id);
     prev_status = (
         SELECT
             status
         FROM
-            application_status_history
+            public.application_status_history
         WHERE
             application_id = app_id
             AND is_current = TRUE);
@@ -2249,7 +1556,7 @@ BEGIN
         VALUES ('EXTENSION', NEW.event_code, NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('newDeadline', NEW.time_scheduled, 'extendedBy', json_build_object('userId', NEW.editor_user_id, 'name', (
                         SELECT
                             full_name
-                        FROM "user"
+                        FROM public."user"
                         WHERE
                             id = NEW.editor_user_id))));
     RETURN NULL;
@@ -2257,7 +1564,7 @@ END;
 $application_event$
 LANGUAGE plpgsql;
 
-DROP TRIGGER IF EXISTS deadline_extension_activity_trigger ON public.application;
+DROP TRIGGER IF EXISTS deadline_extension_activity_trigger ON public.trigger_schedule;
 
 CREATE TRIGGER deadline_extension_activity_trigger
     AFTER UPDATE ON public.trigger_schedule
@@ -2285,22 +1592,22 @@ BEGIN
                 END), NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('status', NEW.status, 'reviewer', json_build_object('id', NEW.reviewer_id, 'name', (
                         SELECT
                             full_name
-                        FROM "user"
+                        FROM public."user"
                         WHERE
                             id = NEW.reviewer_id), 'orgId', NEW.organisation_id, 'orgName', (
                             SELECT
                                 name
-                            FROM organisation
+                            FROM public.organisation
                             WHERE
                                 id = NEW.organisation_id)), 'assigner', json_build_object('id', NEW.assigner_id, 'name', (
                                 SELECT
                                     full_name
-                                FROM "user"
+                                FROM public."user"
                                 WHERE
                                     id = NEW.assigner_id)), 'stage', json_build_object('number', NEW.stage_number, 'name', (
                                     SELECT
                                         title
-                                    FROM template_stage
+                                    FROM public.template_stage
                                     WHERE
                                         id = NEW.stage_id)), 'sections', COALESCE((
                                     SELECT
@@ -2308,12 +1615,12 @@ BEGIN
                                     FROM (
                                         SELECT
                                             title, code, "index"
-                                        FROM template_section
+                                        FROM public.template_section
                                     WHERE
                                         code = ANY (ARRAY (
                                                 SELECT
                                                     assigned_sections
-                                                FROM review_assignment
+                                                FROM public.review_assignment
                                             WHERE
                                                 id = NEW.id))
                                         AND template_id = NEW.template_id
@@ -2323,7 +1630,7 @@ BEGIN
                                     FROM (
                                         SELECT
                                             title, code, "index"
-                                        FROM template_section
+                                        FROM public.template_section
                                     WHERE
                                         code = ANY (OLD.assigned_sections)
                                         AND template_id = NEW.template_id ORDER BY "index") t)), 'reviewLevel', NEW.level_number));
@@ -2373,21 +1680,21 @@ BEGIN
         is_last_level,
         is_final_decision
     FROM
-        review r
+        public.review r
     WHERE
         id = NEW.review_id;
     templ_id = (
         SELECT
             template_id
         FROM
-            application
+            public.application
         WHERE
             id = app_id);
     prev_status = (
         SELECT
             status
         FROM
-            review_status_history
+            public.review_status_history
         WHERE
             review_id = NEW.review_id
             AND is_current = TRUE);
@@ -2395,7 +1702,7 @@ BEGIN
         VALUES ('REVIEW', NEW.status, app_id, TG_TABLE_NAME, NEW.id, json_build_object('prevStatus', prev_status, 'status', NEW.status, 'reviewId', NEW.review_id, 'reviewer', json_build_object('id', reviewer_id, 'name', (
                         SELECT
                             full_name
-                        FROM "user"
+                        FROM public."user"
                         WHERE
                             id = reviewer_id), 'stage', json_build_object('number', stage_number, 'name', (
                                 SELECT
@@ -2409,12 +1716,12 @@ BEGIN
                             FROM (
                                 SELECT
                                     title, code, "index"
-                                FROM template_section
+                                FROM public.template_section
                             WHERE
                                 code = ANY (ARRAY (
                                         SELECT
                                             assigned_sections
-                                        FROM review_assignment
+                                        FROM public.review_assignment
                                     WHERE
                                         id = assignment_id
                                         AND template_id = templ_id
@@ -2451,21 +1758,21 @@ BEGIN
         reviewer_id,
         rev_assignment_id
     FROM
-        review r
+        public.review r
     WHERE
         id = NEW.review_id;
     templ_id = (
         SELECT
             template_id
         FROM
-            application
+            public.application
         WHERE
             id = app_id);
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
         VALUES ('REVIEW_DECISION', NEW.decision, app_id, TG_TABLE_NAME, NEW.id, json_build_object('reviewId', NEW.review_id, 'decision', NEW.decision, 'comment', NEW.comment, 'reviewer', json_build_object('id', reviewer_id, 'name', (
                         SELECT
                             full_name
-                        FROM "user"
+                        FROM public."user"
                         WHERE
                             id = reviewer_id)), 'sections', (
                         SELECT
@@ -2473,12 +1780,12 @@ BEGIN
                         FROM (
                             SELECT
                                 title, code, "index"
-                            FROM template_section
+                            FROM public.template_section
                             WHERE
                                 code = ANY (ARRAY (
                                         SELECT
                                             assigned_sections
-                                        FROM review_assignment
+                                        FROM public.review_assignment
                                     WHERE
                                         id = rev_assignment_id
                                         AND assigned_sections <> '{}'))
@@ -2543,7 +1850,7 @@ BEGIN
         VALUES ('PERMISSION', status, TG_TABLE_NAME, data.id, json_build_object('permission', json_build_object('id', permission_id, 'name', permission_name), 'user', json_build_object('id', user_id, 'username', username, 'name', (
                         SELECT
                             full_name
-                        FROM "user"
+                        FROM public."user"
                         WHERE
                             id = user_id)), 'organisation', json_build_object('id', org_id, 'name', org_name), 'isActive', active));
     RETURN data;
@@ -2564,248 +1871,4 @@ CREATE TRIGGER permission_delete_activity_trigger
     BEFORE DELETE ON public.permission_join
     FOR EACH ROW
     EXECUTE FUNCTION permission_activity_log ();
-
-DO $$
-BEGIN
-    CREATE ROLE graphile_user WITH NOLOGIN;
-EXCEPTION
-    WHEN DUPLICATE_OBJECT THEN
-        RAISE NOTICE 'not creating role graphile_user -- it already exists';
-END
-$$;
-
-ALTER ROLE graphile_user WITH LOGIN;
-
-GRANT ALL PRIVILEGES ON DATABASE tmf_app_manager TO graphile_user;
-
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO graphile_user;
-
-GRANT ALL PRIVILEGES ON SCHEMA public TO graphile_user;
-
-GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO graphile_user;
-
-ALTER DEFAULT PRIVILEGES FOR USER postgres IN SCHEMA public GRANT
-SELECT
-, INSERT, UPDATE, DELETE ON TABLES TO graphile_user;
-
--- counters (for serial generation)
-CREATE TABLE public.counter (
-    id serial PRIMARY KEY,
-    name varchar NOT NULL UNIQUE,
-    value integer DEFAULT 0
-);
-
--- For storing system info
-CREATE TABLE public.system_info (
-    id serial PRIMARY KEY,
-    name varchar NOT NULL,
-    value jsonb DEFAULT '{}',
-    timestamp timestamptz DEFAULT CURRENT_TIMESTAMP
-);
-
--- For primary and foreign key
-CREATE OR REPLACE VIEW constraints_info AS
-SELECT
-    constraints_info.constraint_type,
-    constraints_info.table_name AS from_table_name,
-    from_column_info.column_name AS from_column_name,
-    to_column_info.table_name AS to_table_name,
-    to_column_info.column_name AS to_column_name
-FROM
-    information_schema.table_constraints AS constraints_info
-    JOIN information_schema.key_column_usage AS from_column_info ON constraints_info.constraint_name = from_column_info.constraint_name
-    JOIN information_schema.constraint_column_usage AS to_column_info ON constraints_info.constraint_name = to_column_info.constraint_name;
-
--- For full schema info
-CREATE OR REPLACE VIEW schema_columns AS
-SELECT
-    tables_info.table_name,
-    tables_info.table_type AS table_type,
-    columns_info.column_name,
-    columns_info.is_nullable,
-    columns_info.is_generated,
-    columns_info.data_type,
-    element_types.data_type AS sub_data_type,
-    constraints_info.constraint_type,
-    constraints_info.to_table_name AS fk_to_table_name,
-    constraints_info.to_column_name AS fk_to_column_name
-FROM
-    information_schema.tables AS tables_info
-    JOIN information_schema.columns AS columns_info ON tables_info.table_name = columns_info.table_name
-    LEFT JOIN information_schema.element_types AS element_types ON columns_info.dtd_identifier = element_types.collection_type_identifier
-        AND columns_info.table_name = element_types.object_name
-    LEFT JOIN constraints_info ON columns_info.table_name = constraints_info.from_table_name
-        AND columns_info.column_name = constraints_info.from_column_name
-WHERE
-    tables_info.table_schema != 'pg_catalog'
-    AND tables_info.table_schema != 'information_schema'
-ORDER BY
-    columns_info.table_name,
-    columns_info.column_name;
-
-CREATE VIEW postgres_row_level AS
-SELECT
-    *
-FROM
-    pg_policies;
-
--- INDEXES
--- Foreign key indexes:
-CREATE INDEX IF NOT EXISTS "i_action_queue_template_id_fkey" ON action_queue (template_id);
-
-CREATE INDEX IF NOT EXISTS "i_action_queue_trigger_event_fkey" ON action_queue (trigger_event);
-
-CREATE INDEX IF NOT EXISTS "i_application_org_id_fkey" ON application (org_id);
-
-CREATE INDEX IF NOT EXISTS "i_application_template_id_fkey" ON application (template_id);
-
-CREATE INDEX IF NOT EXISTS "i_application_user_id_fkey" ON application (user_id);
-
-CREATE INDEX IF NOT EXISTS "i_application_note_application_id_fkey" ON application_note (application_id);
-
-CREATE INDEX IF NOT EXISTS "i_application_note_org_id_fkey" ON application_note (org_id);
-
-CREATE INDEX IF NOT EXISTS "i_application_note_user_id_fkey" ON application_note (user_id);
-
-CREATE INDEX IF NOT EXISTS "i_application_response_application_id_fkey" ON application_response (application_id);
-
-CREATE INDEX IF NOT EXISTS "i_application_response_template_element_id_fkey" ON application_response (template_element_id);
-
-CREATE INDEX IF NOT EXISTS "i_application_stage_history_application_id_fkey" ON application_stage_history (application_id);
-
-CREATE INDEX IF NOT EXISTS "i_application_stage_history_stage_id_fkey" ON application_stage_history (stage_id);
-
-CREATE INDEX IF NOT EXISTS "i_application_status_history_application_stage_history_id_fkey" ON application_status_history (application_stage_history_id);
-
-CREATE INDEX IF NOT EXISTS "i_file_application_note_id_fkey" ON file (application_note_id);
-
-CREATE INDEX IF NOT EXISTS "i_file_application_response_id_fkey" ON file (application_response_id);
-
-CREATE INDEX IF NOT EXISTS "i_file_application_serial_fkey" ON file (application_serial);
-
-CREATE INDEX IF NOT EXISTS "i_file_template_id_fkey" ON file (template_id);
-
-CREATE INDEX IF NOT EXISTS "i_file_user_id_fkey" ON file (user_id);
-
-CREATE INDEX IF NOT EXISTS "i_notification_application_id_fkey" ON notification (application_id);
-
-CREATE INDEX IF NOT EXISTS "i_notification_review_id_fkey" ON notification (review_id);
-
-CREATE INDEX IF NOT EXISTS "i_notification_user_id_fkey" ON notification (user_id);
-
-CREATE INDEX IF NOT EXISTS "i_permission_join_permission_name_id_fkey" ON permission_join (permission_name_id);
-
-CREATE INDEX IF NOT EXISTS "i_permission_name_permission_policy_id_fkey" ON permission_name (permission_policy_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_application_id_fkey" ON review (application_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_review_assignment_id_fkey" ON review (review_assignment_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_reviewer_id_fkey" ON review (reviewer_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_assignment_application_id_fkey" ON review_assignment (application_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_assignment_assigner_id_fkey" ON review_assignment (assigner_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_assignment_level_id_fkey" ON review_assignment (level_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_assignment_organisation_id_fkey" ON review_assignment (organisation_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_assignment_stage_id_fkey" ON review_assignment (stage_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_assignment_template_id_fkey" ON review_assignment (template_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_assignment_assigner_join_organisation_id_fkey" ON review_assignment_assigner_join (organisation_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_assignment_assigner_join_review_assignment_id_fkey" ON review_assignment_assigner_join (review_assignment_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_decision_review_id_fkey" ON review_decision (review_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_response_application_response_id_fkey" ON review_response (application_response_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_response_original_review_response_id_fkey" ON review_response (original_review_response_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_response_review_id_fkey" ON "review_response" (review_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_response_review_response_link_id_fkey" ON review_response (review_response_link_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_response_template_element_id_fkey" ON review_response (template_element_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_status_history_review_id_fkey" ON review_status_history (review_id);
-
-CREATE INDEX IF NOT EXISTS "i_template_template_category_id_fkey" ON TEMPLATE (template_category_id);
-
-CREATE INDEX IF NOT EXISTS "i_template_action_template_id_fkey" ON template_action (template_id);
-
-CREATE INDEX IF NOT EXISTS "i_template_element_section_id_fkey" ON template_element (section_id);
-
-CREATE INDEX IF NOT EXISTS "i_template_filter_join_filter_id_fkey" ON template_filter_join (filter_id);
-
-CREATE INDEX IF NOT EXISTS "i_template_filter_join_template_id_fkey" ON template_filter_join (template_id);
-
-CREATE INDEX IF NOT EXISTS "i_template_permission_permission_name_id_fkey" ON template_permission (permission_name_id);
-
-CREATE INDEX IF NOT EXISTS "i_template_permission_template_id_fkey" ON template_permission (template_id);
-
-CREATE INDEX IF NOT EXISTS "i_template_stage_template_id_fkey" ON template_stage (template_id);
-
-CREATE INDEX IF NOT EXISTS "i_template_stage_review_level_stage_id_fkey" ON template_stage_review_level (stage_id);
-
-CREATE INDEX IF NOT EXISTS "i_trigger_schedule_editor_user_id_fkey" ON trigger_schedule (editor_user_id);
-
-CREATE INDEX IF NOT EXISTS "i_trigger_schedule_template_id_fkey" ON trigger_schedule (template_id);
-
-CREATE INDEX IF NOT EXISTS "i_user_organisation_organisation_id_fkey" ON user_organisation (organisation_id);
-
-CREATE INDEX IF NOT EXISTS "i_verification_application_id_fkey" ON verification (application_id);
-
-CREATE INDEX IF NOT EXISTS "i_permission_join_organisation_id_fkey" ON permission_join (organisation_id);
-
-CREATE INDEX IF NOT EXISTS "i_permission_join_user_id_fkey" ON permission_join (user_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_assignment_reviewer_id_fkey" ON review_assignment (reviewer_id);
-
-CREATE INDEX IF NOT EXISTS "i_review_assignment_assigner_join_assigner_id_fkey" ON review_assignment_assigner_join (assigner_id);
-
--- Additional indexes to help Application List performace:
-CREATE INDEX IF NOT EXISTS "i_application_outcome" ON application (outcome);
-
-CREATE INDEX IF NOT EXISTS "i_application_is_active" ON application (is_active);
-
-CREATE INDEX IF NOT EXISTS "i_application_is_config" ON application (is_config);
-
-CREATE INDEX IF NOT EXISTS "i_template_status" ON TEMPLATE (status);
-
-CREATE INDEX IF NOT EXISTS "i_template_code" ON TEMPLATE (code);
-
-CREATE INDEX IF NOT EXISTS "i_application_status_history_status" ON application_status_history (status);
-
-CREATE INDEX IF NOT EXISTS "i_application_status_history_is_current" ON application_status_history (is_current);
-
-CREATE INDEX IF NOT EXISTS "i_application_response_status" ON application_response (status);
-
-CREATE INDEX IF NOT EXISTS "i_application_stage_history_is_current" ON application_stage_history (is_current);
-
-CREATE INDEX IF NOT EXISTS "i_template_section_code" ON template_section (code);
-
-CREATE INDEX IF NOT EXISTS "i_template_element_code" ON template_element (code);
-
-CREATE INDEX IF NOT EXISTS "i_template_element_category" ON template_element (category);
-
-CREATE INDEX IF NOT EXISTS "i_template_element_reviewability" ON template_element (reviewability);
-
-CREATE INDEX IF NOT EXISTS "i_template_element_template_code" ON template_element (template_code);
-
-CREATE INDEX IF NOT EXISTS "i_review_assignment_status" ON review_assignment (status);
-
-CREATE INDEX IF NOT EXISTS "i_review_assignment_assigned_sections" ON review_assignment (assigned_sections);
-
-CREATE INDEX IF NOT EXISTS "i_review_assignment_level_number" ON review_assignment (level_number);
-
-CREATE INDEX IF NOT EXISTS "i_review_response_status" ON review_response (status);
-
--- Null value for application response:
-CREATE INDEX IF NOT EXISTS "i_application_response_value_is_null" ON application_response ((value IS NULL));
-
-CREATE INDEX IF NOT EXISTS "i_application_response_value_is_not_null" ON application_response ((value IS NOT NULL));
 
