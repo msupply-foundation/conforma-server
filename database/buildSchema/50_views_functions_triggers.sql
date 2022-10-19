@@ -1098,7 +1098,10 @@ LANGUAGE sql
 STABLE;
 
 -- Function to return TOTAL assigned questions for current stage/level
-CREATE OR REPLACE FUNCTION public.assigned_questions_count (app_id int, stage_id int, level_number int)
+-- Need to DROP first, due to error with parameter name
+DROP FUNCTION IF EXISTS public.assigned_questions_count;
+
+CREATE FUNCTION public.assigned_questions_count (app_id int, stage_id int, level_number int)
     RETURNS bigint
     AS $$
     SELECT
