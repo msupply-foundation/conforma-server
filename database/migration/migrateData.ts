@@ -121,7 +121,7 @@ const migrateData = async () => {
 
     // Run whole activity log build script from scratch
     await execSync(
-      `psql -U postgres -q -b -d tmf_app_manager -f "./database/buildSchema/45_activity_log.sql"`
+      `psql -U postgres -q -b -d tmf_app_manager -f "./database/buildSchema/39_activity_log.sql"`
     )
 
     // Renaming outcome tables to "data"
