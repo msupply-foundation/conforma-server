@@ -272,13 +272,4 @@ export const testTrigger = async (params: RequestProps) => {
     actionResult: actionsOutput,
     finalApplicationData,
   }
-
-  // reply.send({
-  //   applicationId,
-  //   serial,
-  //   trigger: triggerFull,
-  //   failedActions: failedActions.length > 0 ? failedActions : undefined,
-  //   actionResult: actionsOutput,
-  //   finalApplicationData,
-  // })
 }
