@@ -30,6 +30,7 @@ export type ExportAndImportOptions = {
   includeTables: string[]
   excludeTables: string[]
   shouldReInitialise: boolean
+  usePgDump?: boolean
   insertScriptsLocale: string
   includeInsertScripts: string[]
   excludeInsertScripts: string[]
