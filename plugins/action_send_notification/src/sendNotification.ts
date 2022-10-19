@@ -6,7 +6,6 @@ import databaseMethods from './databaseMethods'
 import path from 'path'
 import nodemailer, { SentMessageInfo } from 'nodemailer'
 import marked from 'marked'
-import config from '../config.json'
 import configTest from '../configTest.json'
 import { Attachment } from 'nodemailer/lib/mailer'
 import { getFilePath } from '../../../src/components/files/fileHandler'
@@ -17,38 +16,45 @@ const isValidEmail = (email: string) => /^[\w\-_+.]+@([\w\-]+\.)+[A-Za-z]{2,}$/g
 
 const sendNotification: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
-  const { host, port, secure, user, defaultFromName, defaultFromEmail } = config
+
+  const {
+    environmentData: { appRootFolder, filesFolder, SMTPConfig },
+    other,
+  } = applicationData as ActionApplicationData
+
+  // Used to disable email sending when testing -- turned on by trigger testing
+  // tool by default
+  const suppressEmail = other?.suppressEmail ?? false
+
   const {
     userId = applicationData?.userId,
     email = applicationData?.email,
     to = email,
     cc,
     bcc,
-    fromName = defaultFromName,
-    fromEmail = defaultFromEmail,
+    fromName = SMTPConfig?.defaultFromName,
+    fromEmail = SMTPConfig?.defaultFromEmail,
     subject,
     message,
     attachments = [],
     sendEmail = true,
   } = parameters
 
-  const {
-    environmentData: { appRootFolder, filesFolder },
-  } = applicationData as ActionApplicationData
-
-  const transporter = nodemailer.createTransport(
-    TEST_MODE
-      ? configTest
-      : {
-          host,
-          port,
-          secure,
-          auth: {
-            user,
-            pass: process.env.SMTP_PASSWORD,
-          },
-        }
-  )
+  const transporter = SMTPConfig
+    ? nodemailer.createTransport(
+        TEST_MODE
+          ? configTest
+          : {
+              host: SMTPConfig.host,
+              port: SMTPConfig.port,
+              secure: SMTPConfig.secure,
+              auth: {
+                user: SMTPConfig.user,
+                pass: process.env.SMTP_PASSWORD,
+              },
+            }
+      )
+    : null
 
   try {
     const toAddressString = stringifyEmailRecipientsList(to)
@@ -60,10 +66,6 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
       ccAddressString === '' &&
       bccAddressString === ''
     )
-
-    if (!hasValidEmails) {
-      console.log('Warning: no valid email addresses provided')
-    }
 
     // Create notification database record
     console.log('Creating notification...')
@@ -78,7 +80,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     })
 
     // Send email
-    if (sendEmail && hasValidEmails) {
+    if (sendEmail && hasValidEmails && transporter && !suppressEmail) {
       console.log('Sending email...')
       transporter
         .sendMail({
@@ -124,6 +126,16 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
           db.notificationEmailError(notificationResult.id, `ERROR: ${err.message}`)
         })
     }
+    //warnings and errors if send email isn't working
+    if (!transporter) {
+      console.log('Email not sent - missing email configuration')
+      db.notificationEmailError(notificationResult.id, `WARNING: Email configuration not provided`)
+    } else if (!hasValidEmails) {
+      console.log('Email not sent - no valid email address')
+      db.notificationEmailError(notificationResult.id, `WARNING: No valid email addresses`)
+    }
+
+    if (suppressEmail) console.log('Email not sent during testing')
 
     // NOTE: Because sending email happens asynchronously, the output object
     // for this Action does not reflect whether email has sent successfully.
