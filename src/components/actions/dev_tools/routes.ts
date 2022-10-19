@@ -47,7 +47,7 @@ interface RequestProps {
   stageNumber?: number
   status?: ApplicationStatus
   outcome?: ApplicationOutcome
-  applicationDataOverride: Partial<ActionApplicationData>
+  applicationDataOverride?: Partial<ActionApplicationData>
   suppressEmail?: boolean
 }
 
