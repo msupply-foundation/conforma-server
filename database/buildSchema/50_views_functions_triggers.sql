@@ -272,6 +272,16 @@ $$
 LANGUAGE SQL
 IMMUTABLE;
 
+-- Add columns (and index) to template_element table that use the above 2
+-- functions
+ALTER TABLE public.template_element
+    ADD COLUMN IF NOT EXISTS template_code varchar GENERATED ALWAYS AS (public.get_template_code (section_id)) STORED;
+
+ALTER TABLE public.template_element
+    ADD COLUMN IF NOT EXISTS template_version integer GENERATED ALWAYS AS (public.get_template_version (section_id)) STORED;
+
+CREATE UNIQUE INDEX IF NOT EXISTS template_element_template_code_code_template_version_idx ON public.template_element (template_code, code, template_version);
+
 -- APPLICATION
 --FUNCTION to update `is_active` to false
 -- and application status to "COMPLETED"
@@ -769,6 +779,17 @@ $$
 LANGUAGE SQL
 IMMUTABLE;
 
+-- Add columns to "review" now that these functions are defined:
+ALTER TABLE public.review
+    ADD COLUMN IF NOT EXISTS application_id integer GENERATED ALWAYS AS (public.review_application_id (review_assignment_id)) STORED REFERENCES public.application (id) ON DELETE CASCADE,
+    ADD COLUMN IF NOT EXISTS reviewer_id integer GENERATED ALWAYS AS (public.review_reviewer_id (review_assignment_id)) STORED REFERENCES public.user (id) ON DELETE CASCADE,
+    ADD COLUMN IF NOT EXISTS level_number integer GENERATED ALWAYS AS (public.review_level (review_assignment_id)) STORED,
+    ADD COLUMN IF NOT EXISTS stage_number integer GENERATED ALWAYS AS (public.review_stage (review_assignment_id)) STORED,
+    ADD COLUMN IF NOT EXISTS time_stage_created timestamptz GENERATED ALWAYS AS (public.review_time_stage_created (review_assignment_id)) STORED,
+    ADD COLUMN IF NOT EXISTS is_last_level boolean GENERATED ALWAYS AS (public.review_is_last_level (review_assignment_id)) STORED,
+    ADD COLUMN IF NOT EXISTS is_last_stage boolean GENERATED ALWAYS AS (public.review_is_last_stage (review_assignment_id)) STORED,
+    ADD COLUMN IF NOT EXISTS is_final_decision boolean GENERATED ALWAYS AS (public.review_is_final_decision (review_assignment_id)) STORED;
+
 -- TRIGGER (Listener) on review table
 DROP TRIGGER IF EXISTS review_trigger ON public.review;
 
@@ -1077,13 +1098,16 @@ LANGUAGE sql
 STABLE;
 
 -- Function to return TOTAL assigned questions for current stage/level
-CREATE OR REPLACE FUNCTION public.assigned_questions_count (app_id int, stage_id int, level int)
+-- Need to DROP first, due to error with parameter name
+DROP FUNCTION IF EXISTS public.assigned_questions_count;
+
+CREATE FUNCTION public.assigned_questions_count (app_id int, stage_id int, level_number int)
     RETURNS bigint
     AS $$
     SELECT
         COUNT(*)
     FROM
-        assigned_questions (app_id, stage_id, level)
+        assigned_questions (app_id, stage_id, level_number)
 $$
 LANGUAGE sql
 STABLE;
@@ -1352,6 +1376,7 @@ LANGUAGE sql
 STABLE;
 
 -- (https://github.com/graphile/graphile-engine/pull/378)
+-- Required to make 'orderBy' work in application_list
 COMMENT ON FUNCTION application_list (userid int) IS E'@sortable';
 
 -- APPLICATION_LIST_FILTERS

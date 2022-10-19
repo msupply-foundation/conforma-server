@@ -7,6 +7,10 @@ import path from 'path'
 import { readFileSync } from 'fs'
 import { getAppEntryPointDir } from '../../src/components/utilityFunctions'
 
+// CONSTANTS
+const INDEX_FILENAME = '51_index.sql'
+const FUNCTIONS_FILENAME = '50_views_functions_triggers.sql'
+
 const { version } = config
 const isManualMigration: Boolean = process.argv[2] === '--migrate'
 const simulatedVersion: string | undefined = process.argv[3]
@@ -306,11 +310,6 @@ const migrateData = async () => {
         LANGUAGE sql
         STABLE;
     `)
-    // Required to make 'orderBy' work in application_list
-    // Need to use psql as node-pg doesn't handle the comment command
-    execSync(
-      `psql -U postgres -d tmf_app_manager -c "COMMENT ON FUNCTION application_list (userid int) IS E'@sortable';"`
-    )
 
     console.log(' - Updating activity_log functions')
 
@@ -339,6 +338,10 @@ const migrateData = async () => {
       ALTER TYPE public.is_reviewable_status ADD VALUE IF NOT EXISTS
       'OPTIONAL_IF_NO_RESPONSE' AFTER 'NEVER';
     `)
+
+    // This change is really long, but there's no built-in way to drop values
+    // from an ENUM. So we have to rename it, drop it and recreate it, as well
+    // as drop and rebuild all the other objects that reference it 🙄
 
     console.log(' - Removes Trigger values: ON_REVIEW_REASSIGN and ON_REVIEW_SELF_ASSIGN')
 
@@ -555,19 +558,19 @@ const migrateData = async () => {
 
   // Update (almost all) Indexes, Views, Functions, Triggers regardless, since
   // they can be dropped and recreated, or updated with no consequence:
-  const createIndexesScript = readFileSync(
-    path.join(getAppEntryPointDir(), '../database/buildSchema/49_index.sql'),
-    'utf-8'
-  )
-  console.log(' - Updating indexes...')
-  await DB.changeSchema(createIndexesScript)
-
   const functionsScript = readFileSync(
-    path.join(getAppEntryPointDir(), '../database/buildSchema/50_views_functions_triggers.sql'),
+    path.join(getAppEntryPointDir(), '../database/buildSchema/', FUNCTIONS_FILENAME),
     'utf-8'
   )
   console.log(' - Updating views/functions/triggers')
   await DB.changeSchema(functionsScript)
+
+  const createIndexesScript = readFileSync(
+    path.join(getAppEntryPointDir(), '../database/buildSchema/', INDEX_FILENAME),
+    'utf-8'
+  )
+  console.log(' - Updating indexes...')
+  await DB.changeSchema(createIndexesScript)
 
   // Finally, set the database version to the current version
   if (databaseVersionLessThan(version)) await DB.setDatabaseVersion(version)
