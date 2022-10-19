@@ -65,7 +65,8 @@ const useSnapshot: SnapshotOperation = async ({
     }
 
     if (options.usePgDump) {
-      // The quick way, using pg_restore -- whole database only
+      // The quick way, using pg_restore (whole database only, no partial
+      // exports)
       console.log('Restoring database...')
       execSync(
         `pg_restore  -U postgres --clean --if-exists --dbname tmf_app_manager ${snapshotFolder}/database.dump`

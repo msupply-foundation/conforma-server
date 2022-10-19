@@ -22,7 +22,9 @@ FROM
     LEFT JOIN organisation ON organisation.id = organisation_id;
 
 -- ALL PERMISSIONS View
-CREATE OR REPLACE VIEW permissions_all AS (
+DROP VIEW IF EXISTS permissions_all;
+
+CREATE VIEW permissions_all AS (
     SELECT
         "user".username AS "username",
         organisation.name AS "orgName",
