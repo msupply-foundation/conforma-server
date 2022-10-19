@@ -19,7 +19,12 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
 
   const {
     environmentData: { appRootFolder, filesFolder, SMTPConfig },
+    other,
   } = applicationData as ActionApplicationData
+
+  // Used to disable email sending when testing -- turned on by trigger testing
+  // tool by default
+  const suppressEmail = other?.suppressEmail ?? false
 
   const {
     userId = applicationData?.userId,
@@ -75,7 +80,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     })
 
     // Send email
-    if (sendEmail && hasValidEmails && transporter) {
+    if (sendEmail && hasValidEmails && transporter && !suppressEmail) {
       console.log('Sending email...')
       transporter
         .sendMail({
@@ -129,6 +134,8 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
       console.log('Email not sent - no valid email address')
       db.notificationEmailError(notificationResult.id, `WARNING: No valid email addresses`)
     }
+
+    if (suppressEmail) console.log('Email not sent during testing')
 
     // NOTE: Because sending email happens asynchronously, the output object
     // for this Action does not reflect whether email has sent successfully.

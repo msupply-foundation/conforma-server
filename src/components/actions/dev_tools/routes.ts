@@ -48,6 +48,7 @@ interface RequestProps {
   status?: ApplicationStatus
   outcome?: ApplicationOutcome
   applicationDataOverride: Partial<ActionApplicationData>
+  suppressEmail?: boolean
 }
 
 // Wrapper for "testTrigger". Use routeTestTrigger provides the REST endpoint,
@@ -73,6 +74,8 @@ export const testTrigger = async (params: RequestProps) => {
     stageNumber,
     status,
     outcome,
+    // Prevents actual email from being sent, safer when testing
+    suppressEmail = true,
     applicationDataOverride = {},
   } = params
 
@@ -100,6 +103,7 @@ export const testTrigger = async (params: RequestProps) => {
   if (stageNumber) applicationDataOverride.stageNumber = stageNumber
   if (status) applicationDataOverride.status = status
   if (outcome) applicationDataOverride.outcome = outcome
+  applicationDataOverride.other = { suppressEmail }
 
   // A dummy triggerPayload object, as though it was retrieved from the
   // trigger_queue table
