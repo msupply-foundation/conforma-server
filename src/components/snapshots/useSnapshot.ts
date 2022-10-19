@@ -68,7 +68,7 @@ const useSnapshot: SnapshotOperation = async ({
       // The quick way, using pg_restore -- whole database only
       console.log('Restoring database...')
       execSync(
-        `pg_restore --clean --if-exists --dbname tmf_app_manager ${snapshotFolder}/database.dump`
+        `pg_restore  -U postgres --clean --if-exists --dbname tmf_app_manager ${snapshotFolder}/database.dump`
       )
       console.log('Restoring database...done')
 

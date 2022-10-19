@@ -55,7 +55,9 @@ const takeSnapshot: SnapshotOperation = async ({
     if (options.usePgDump) {
       // The quick way, using pg_dump -- whole database only
       console.log('Dumping database...')
-      execSync(`pg_dump tmf_app_manager --format=custom -f ${newSnapshotFolder}/database.dump`)
+      execSync(
+        `pg_dump -U postgres tmf_app_manager --format=custom -f ${newSnapshotFolder}/database.dump`
+      )
       console.log('Dumping database...done')
 
       // Copy ALL files
