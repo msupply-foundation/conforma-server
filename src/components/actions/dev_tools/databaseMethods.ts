@@ -2,10 +2,10 @@ import { Decision } from '../../../generated/graphql'
 import DBConnect from '../../databaseConnect'
 
 const databaseMethods = {
-  // Gets the application/template info of the "config" application associated with the template
-  // specified by "templateCode". If multiple versions of the template exist, it
-  // will use the one marked "AVAILABLE" or, if none are available, the highest
-  // version number.
+  // Gets the application/template info of the "config" application associated
+  // with the template specified by "templateCode". If multiple versions of the
+  // template exist, it will use the one marked "AVAILABLE" or, if none are
+  // available, the highest version number.
   getConfigApplicationInfo: async (templateCode: string) => {
     const text = `
     WITH available_count AS (
