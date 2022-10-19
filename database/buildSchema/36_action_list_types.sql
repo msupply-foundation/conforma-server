@@ -1,3 +1,11 @@
+DROP TYPE IF EXISTS public.assigner_action;
+
+CREATE TYPE public.assigner_action AS ENUM (
+    'ASSIGN',
+    'ASSIGN_LOCKED',
+    'RE_ASSIGN'
+);
+
 DROP TYPE IF EXISTS public.reviewer_action;
 
 CREATE TYPE public.reviewer_action AS ENUM (
