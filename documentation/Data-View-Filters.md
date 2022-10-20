@@ -5,9 +5,14 @@ Data View Tables can be filtered, sorted and searched comprehensively in the fro
 <!-- toc -->
 ## Contents <!-- omit in toc -->
 - [Search](#search)
+  - [API](#api)
 - [Sorting](#sorting)
+  - [API](#api-1)
 - [Filters](#filters)
-- [Handling complex data structures](#handling-complex-data-structures)
+  - [Handling complex data structures](#handling-complex-data-structures)
+  - [Creating filter data with multiple values](#creating-filter-data-with-multiple-values)
+  - [How is Filter data generated?](#how-is-filter-data-generated)
+  - [Filter columns](#filter-columns)
 
 *Please ensure you are familiar with how [Data View and Data View Column Definitions](Data-View.md) work in general before diving into filter definitions here*
 
@@ -28,19 +33,166 @@ These searches *only* use text matching though, so the specified search columns 
 
 If no `table_search_columns` (i.e. `null`) are provided, the "Search" input will not appear in the front end.
 
+### API
+
+Search text is passed to the server as part of the query parameters of the `data-views/<table>` endpoint, e.g.
+
+```
+/data-views/product?search=arl
+```
+
 ## Sorting
 
 In the front-end, clicking on a column header will sort the table by that column (and clicking again reverses the order). If the column is a "basic" column (i.e. maps to an actual database column), then the default sort should be adequate, and no specific definition is required. However, if you have a column whose data is defined by a [value_expression](Data-View.md#data_view_column_definition-table) then you will need to define how it should be sorted. (If not, then the user will receive a "Column not sortable" notification when they try to sort by it.)
 
-We do this by specifying *another* column in the field `sort_column` for `data_view_column_definition`s, which is what the database will sort by when clicking on this column.
+We do this by specifying *another* column in the field `sort_column` for `data_view_column_definition`, which is what the database will sort by when clicking on this column.
 
 For example, if you have an "Address" column, that is build by combining a number of different fields (e.g. `address`, `province`, `country`), then you could specify any one of these as the value to sort by when clicking your custom "Address" column.
 
 It's also possible to convert complex data types to simplified "text" (or other simple data) versions of the values (see [Handling complex data structures](#handling-complex-data-structures) for more info), in which case you can specify this simplified column as the sort column for the more complex display value.
 
+### API
+
+Sorting requests are passed to the server as part of the query parameters of the `data-views/<table>` endpoint, e.g.
+
+```
+/data-views/product?orderBy=name&ascending=false
+```
+
 ## Filters
 
-In the front end, there are several diffent UI elements for filtering table data. Which one is shown for a given data value is determined by a combination of the data type and explicit filter definitions provdided by the back end.
+In the front end, there are several diffent UI elements for filtering table data. Which one is shown for a given data value is determined by a combination of the data type and explicit filter definitions specified in `data_view_column_definition`.
+
+### Handling complex data structures
+
+One of the main challenges with trying to create filters is that much of the data stored in tables is not easily filterable. Many fields store the entire "response" object that came from an application question, which could be any complex shape. For example, a `genericNames` field that has captured responses from a "Search" element might have data stored like so:
+
+```
+{
+  "text": "Ascorbic acid, Agni casti fructus, Alfuzosin and finasteride",
+  "selection": [
+    {
+      "name": "Ascorbic acid",
+      "atcCode": "G01AD03",
+      "category": "Gynecological antiinfectives and antiseptics"
+    },
+    {
+      "name": "Agni casti fructus",
+      "atcCode": "G02CX03",
+      "category": "Other gynecologicals"
+    },
+    {
+      "name": "Alfuzosin and finasteride",
+      "atcCode": "G04CA51",
+      "category": "Urologicals"
+    }
+  ]
+}
+```
+
+Clearly this is not filterable in any meaningful way with simple database queries. So we've provided a mechanism by with complex data values can be converted into more easily parse-able objects, such as plain text or numbers.
+
+We can define "filter data" columns, which are defined like so:
+
+- an extra column definition in `data_view_column_definitions`. It's just the same as other definitions, but the `column_name` field should have the suffix `FilterData` to be recognised by the system as a filter data column.
+- there are two fields in `data_view_column_definitions` that are of relevance:
+  - `filter_expression`: an [evaluator](Query-Syntax.md) expression defining the value for the filter data column. It's essentially the same as the [`value_expression` column](Data-View.md#data_view_column_definition-table) in that it takes the current record as the evaluator "objects" parameter.
+  - `filter_data_type`: this tells the script that creates the filter data columns what data type to use. Normally it will be text ("varchar") as that's by far the easiest to work with, which is the default, so you won't need to enter anything in this column most of the time. In theory, this could be any Postgres type, but the only other data types that have been proven to work reliably are "integer" and "boolean".
+- an additional column is added to the data table in question, with this "FilterData" (or "filter_data" in postgres) suffix, with these computed values entered into it.
+
+#### Filter data example
+
+Say we have a "product" table with a "manufacturers_list" that stores a listBuilder response in it:
+
+```
+{
+  "list": [
+    {
+      "LBname": {
+        "value": {
+          "text": "MedPack"
+        },
+        "isValid": true,
+        "stageNumber": 1
+      },
+      "LBtasks": {
+            ...
+            },
+            "textUnselected": "Fabricação de material Activo, Fabricação de diluente, Empacotamento e rotulagem, Segundo empacotamento, Testes química e física, Testes de esterilidade, Testes microbianos, Armazenamento, Esterilização, Liberação para fornecimento",
+            "textMarkdownList": "- Fabricação de dosagem\n",
+            "selectedValuesArray": [
+                ...
+            ],
+            "textMarkdownPropertyList": "- Fabricação de material Activo: \n- Fabricação de dosagem: Fabricação de dosagem\n- Fabricação de diluente: \n- Empacotamento e rotulagem: \n- Segundo empacotamento: \n- Testes química e física: \n- Testes de esterilidade: \n- Testes microbianos: \n- Armazenamento: \n- Esterilização: \n- Liberação para fornecimento: \n",
+            "textUnselectedMarkdownList": "- Fabricação de material Activo\n- Fabricação de diluente\n- Empacotamento e rotulagem\n- Segundo empacotamento\n- Testes química e física\n- Testes de esterilidade\n- Testes microbianos\n- Armazenamento\n- Esterilização\n- Liberação para fornecimento\n"
+            },
+            ...
+        },
+        "LBaddress": {...},
+        "LBcountry": {...},
+        }
+      },
+      {
+      "LBname": {
+        "value": {
+          "text": "General Manufacturers"
+        },
+        ...
+        }
+      }
+    ],
+    "text": ...
+    },
+```
+
+We could could create a column definition called `manufacturerListFilterData` and define its `filter_expression` like this:
+
+```
+{
+  "operator": "+",
+  "children": [
+    "",
+    {
+      "operator": "objectProperties",
+      "children": [
+        "manufacturersList.list.LBname.value.text"
+      ],
+      "output": "string"
+    }
+  ]
+}
+```
+
+Which would return this output based on the original response data: `MedPack, General Manufacturers`
+
+That value is (automatically) stored in a field called "manufacturer_list_filter_data" on the "product" table, with that value in it for this record, which is much more suitable for filtering.
+
+Note that it is entirely possible to create *multiple* filter data columns for a single original data column if there's several data elements in it that you wish to filter by. For example, for an ingredients list, you might want a "names" and a "types" filter data column from a single response object.
+
+Tip: every response type has a "text" field, and often this value will be sufficient to create a filterable data source.
+
+### Creating filter data with multiple values
+
+You will have noticed the above example created a comma-delimited string of values. This is the preferred way to represent multi-value data in filter definitions, as it's much easier to create database queries to partially match seperate substrings than it is to search inside arrays. As to how the filters parse these strings, please see the ["delimiter" property below](#link???).
+
+### How is Filter data generated?
+
+There is a script, `generateFilterDataFields.ts` that can create and update all filter data columns. Currently, the only time the app automatically runs it is as an option on the [modifyRecord](List-of-Action-plugins.md#modify-record) action, which ensures that new records automatically have filter data generated for them.
+
+However, there is an endpoint that can be called as required to regerate all filter data throughout the system. You would normally want to run this after updating or adding filter data column definitions
 
 
-## Handling complex data structures
+
+
+
+
+Arrays, strings,
+
+### Filter columns
+
+The columns that will appear as available filters for a given data view are defined in `filter_include_columns` and `filter_exclude_columns`. These work the same way as the table view and detail view [include/exclude lists](Data-View.md#data_view-table), but with the following differences:
+
+- if nothing is specified (i.e. `null` value), the defaults will be the same as the table view columns that are being returned. This is because, by default, we expect the available filters to be for the same data as the table columns.
+- Similarly, the special value `...` matches all *table* columns, not the full set of columns. So it becomes fairly straightfoward to specify a filter set that closely matches the table columns but with, for example, one extra column and one exclusion. It's a good idea to explicitly exclude columns for which the data can't be processed by one of the standard filters -- however, using mapped "filter data" columns (see [below](#handling-complex-data-structures)) it's possible to get meaningful, filter-able content from almost any type of data.
+- If a "filter data" column is defined, the "filter data" version of the column will be returned as a filter definition instead of the original data source. For example, if there exists a `genericNames` column with a complex listBuilder response as its value, and also a `genericNamesFilterData` (they only differ by suffix), the `genericNamesFilterData` column will be returned in filter definitions.
+
