@@ -12,19 +12,18 @@ import { getAppEntryPointDir } from '../../src/components/utilityFunctions'
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
 const INDEX_FILENAME = '44_index.sql'
 
-const { version } = config
+const { version, isProductionBuild } = config
 const isManualMigration: Boolean = process.argv[2] === '--migrate'
 const simulatedVersion: string | undefined = process.argv[3]
 
 const migrateData = async () => {
   let databaseVersion: string
 
-  const appVersion =
-    process.env.NODE_ENV === 'development'
-      ? // In development, pretend the version is one higher than it is,
-        // so we can keep getting changing migrations when testing
-        semverInc(version, 'minor')
-      : version
+  const appVersion = !isProductionBuild
+    ? // In development, pretend the version is one higher than it is,
+      // so we can keep getting changing migrations when testing
+      semverInc(version, 'patch')
+    : version
 
   try {
     databaseVersion = (await DB.getDatabaseVersion()).value
