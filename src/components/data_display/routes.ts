@@ -205,7 +205,11 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
       values.forEach((value) => {
         if (delimiter && typeof value === 'string') {
           const splitString = value.split(delimiter).map((e) => e.trim())
-          splitString.forEach((string) => filterList.add(string))
+          splitString.forEach((substring) => {
+            // Once split, we need to exclude substrings that don't match the
+            // search text
+            if (new RegExp(searchText, 'i').test(substring)) filterList.add(substring)
+          })
         } else filterList.add(value)
       })
     })
