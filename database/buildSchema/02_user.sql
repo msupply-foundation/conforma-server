@@ -13,5 +13,3 @@ CREATE TABLE public.user (
     password_hash varchar
 );
 
-ALTER TABLE public.user ALTER COLUMN username TYPE citext;
-

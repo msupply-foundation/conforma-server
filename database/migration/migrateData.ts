@@ -563,7 +563,7 @@ const migrateData = async () => {
 
     console.log(' - Add case-insensitive unique constraint to usernames')
 
-    //drop and save views relating to user
+    //drop views relating to username temporarily so column can be changed
     await DB.changeSchema(`
     DROP VIEW IF EXISTS permissions_all;
     DROP VIEW IF EXISTS user_org_join`)
