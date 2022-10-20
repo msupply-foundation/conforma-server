@@ -541,7 +541,8 @@ const migrateData = async () => {
         DROP CONSTRAINT IF EXISTS outcome_display_table_name_code_key, 
         ADD COLUMN IF NOT EXISTS table_search_columns varchar[],
         ADD COLUMN IF NOT EXISTS filter_include_columns varchar[],
-        ADD COLUMN IF NOT EXISTS filter_exclude_columns varchar[];
+        ADD COLUMN IF NOT EXISTS filter_exclude_columns varchar[],
+        ADD COLUMN IF NOT EXISTS default_sort_column varchar;
           
       ALTER TABLE data_view_column_definition 
         ADD COLUMN IF NOT EXISTS sort_column varchar,

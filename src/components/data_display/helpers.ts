@@ -64,7 +64,7 @@ export const buildAllColumnDefinitions = async ({
 
   const dataView = dataViews[0]
 
-  const { tableName, title, code, tableSearchColumns } = dataView
+  const { tableName, title, code, tableSearchColumns, defaultSortColumn } = dataView
 
   const tableNameProper = camelCase(getValidTableName(tableName))
 
@@ -138,6 +138,7 @@ export const buildAllColumnDefinitions = async ({
     headerDefinition,
     searchFields: (tableSearchColumns as string[]) || [],
     filterDefinitions,
+    defaultSortColumn: defaultSortColumn ?? null,
     showLinkedApplications,
   }
 }

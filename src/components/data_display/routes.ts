@@ -43,7 +43,7 @@ const routeDataViewTable = async (request: any, reply: any) => {
   // GraphQL pagination parameters
   const first = query?.first ? Number(query.first) : 20
   const offset = query?.offset ? Number(query.offset) : 0
-  const orderBy = query?.orderBy ?? 'id'
+  const orderBy = query?.orderBy
   const ascending = query?.ascending ? query?.ascending === 'true' : true
 
   const {
@@ -52,6 +52,7 @@ const routeDataViewTable = async (request: any, reply: any) => {
     fieldNames,
     searchFields,
     filterDefinitions,
+    defaultSortColumn,
     gqlFilters,
     title,
     code,
@@ -71,7 +72,7 @@ const routeDataViewTable = async (request: any, reply: any) => {
     gqlFilters,
     first,
     offset,
-    orderBy,
+    orderBy ?? defaultSortColumn ?? 'id',
     ascending,
     authHeaders
   )
