@@ -1,5 +1,9 @@
 import DBConnect from '../databaseConnect'
-import { objectKeysToCamelCase, getValidTableName } from '../utilityFunctions'
+import {
+  objectKeysToCamelCase,
+  getValidTableName,
+  capitaliseFirstLetter,
+} from '../utilityFunctions'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import functions from '../actions/evaluatorFunctions'
 import fetch from 'node-fetch'
@@ -26,6 +30,7 @@ import { plural } from 'pluralize'
 // CONSTANTS
 const REST_OF_DATAVIEW_FIELDS = '...'
 const graphQLEndpoint = config.graphQLendpoint
+const FILTER_COLUMN_SUFFIX = capitaliseFirstLetter(camelCase(config.filterColumnSuffix))
 
 type JWTData = {
   userId: number
@@ -92,7 +97,13 @@ export const buildAllColumnDefinitions = async ({
   const columnsToReturn: string[] = buildColumnList(dataView, fieldNames, type)
 
   const filterColumns: string[] =
-    type === 'TABLE' ? buildColumnList(dataView, fieldNames, 'FILTER') : []
+    type === 'TABLE'
+      ? buildColumnList(dataView, fieldNames, 'FILTER').map((column: string) =>
+          fieldNames.includes(`${column}${FILTER_COLUMN_SUFFIX}`)
+            ? `${column}${FILTER_COLUMN_SUFFIX}`
+            : column
+        )
+      : []
 
   // Get all associated display column_definition records
   const customDisplayDefinitions = await getColumnDisplayDefinitions(tableName, [
