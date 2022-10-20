@@ -561,7 +561,7 @@ const migrateData = async () => {
         ADD COLUMN IF NOT EXISTS email_server_log varchar; 
     `)
 
-    console.log(' - Add unique constraint to usernames in database')
+    console.log(' - Add case-insensitive unique constraint to usernames')
 
     //drop and save views relating to user
     await DB.changeSchema(`
