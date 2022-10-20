@@ -146,7 +146,12 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
   const authHeaders = request?.headers?.authorization
   const dataViewCode = camelCase(request.params.dataViewCode)
   const columnName = request.params.column
-  const { searchFields = [columnName], searchText = '', delimiter } = request.body ?? {}
+  const {
+    searchFields = [columnName],
+    searchText = '',
+    delimiter,
+    includeNull,
+  } = request.body ?? {}
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
 
   const dataViews = (await DBConnect.getAllowedDataViews(permissionNames, dataViewCode))
@@ -236,7 +241,11 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
 
   if (results.length > filterListMaxLength) moreResultsAvailable = true
 
-  return reply.send({ list: results.slice(0, filterListMaxLength), moreResultsAvailable })
+  const list = results.slice(0, filterListMaxLength)
+
+  if (includeNull) list.push(null)
+
+  return reply.send({ list, moreResultsAvailable })
 }
 
 export { routeDataViews, routeDataViewTable, routeDataViewDetail, routeDataViewFilterList }
