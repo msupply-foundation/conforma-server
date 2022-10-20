@@ -126,6 +126,14 @@ export interface ActionApplicationData {
   environmentData: {
     appRootFolder: string
     filesFolder: string
+    SMTPConfig: {
+      host: string
+      port: number
+      secure: boolean
+      user: string
+      defaultFromName: string
+      defaultFromEmail: string
+    }
   }
 }
 
