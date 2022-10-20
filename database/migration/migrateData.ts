@@ -560,6 +560,18 @@ const migrateData = async () => {
           DEFAULT CURRENT_TIMESTAMP NOT NULL,
         ADD COLUMN IF NOT EXISTS email_server_log varchar; 
     `)
+
+    console.log(' - Add case-insensitive unique constraint to usernames')
+
+    //drop views relating to username temporarily so column can be changed
+    await DB.changeSchema(`
+    DROP VIEW IF EXISTS permissions_all;
+    DROP VIEW IF EXISTS user_org_join`)
+
+    await DB.changeSchema(`
+    CREATE EXTENSION IF NOT EXISTS citext;
+    ALTER TABLE public.user ALTER COLUMN username TYPE citext;
+    `)
   }
   // Other version migrations continue here...
 
