@@ -17,6 +17,7 @@ Display of (custom) **Data** tables (e.g. Products, Users, Orgs) (or any table, 
 - what columns to show different types of user
 - "special" columns, which show the result of an [evaluator](Query-Syntax.md) expression, so can show some fields combined, or queries to another table, for example
 - how columns should be formatted in the UI
+- how filters and sorting should work for each table field (explained separately in [Data View Filtering](Data-View-Filters.md))
 
 The data is served to the front-end via the `/data-views` API end-points, and serves data based on the request's JWT header, so we can ensure that no user can receive data that they haven't been configured to be allowed to see.
 
