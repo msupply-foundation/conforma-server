@@ -409,11 +409,11 @@ The opposite of `joinUserOrg`. Removes user from company by deleting the `user_o
 
 - _Action Code:_ **`removeUserOrg`**
 
-| Input parameters<br />(\*required) <br/>   | Output properties                                        |
-| ------------------------------------------ | -------------------------------------------------------- |
+| Input parameters<br />(\*required) <br/>   | Output properties                                  |
+| ------------------------------------------ | -------------------------------------------------- |
 | `username` or `userId`                     | `removedUsers: {userOrgId, userId, orgId} [Array]` |
-| `orgName` or `orgId` o `organisation_id`\* |                                                          |
-| `deletePermissions` (default `true`)       |                                                          |
+| `orgName` or `orgId` o `organisation_id`\* |                                                    |
+| `deletePermissions` (default `true`)       |                                                    |
 
 In `removeUserOrg` the field to define from which organisation to remove user(s) `orgId` or `orgName` is compulsory, but you _can_ omit the user. In that case, it is treated as "remove ALL USERS". Also a flag defining if it should also remove any permission for removed user(s) on that organisation can be passed. After each user is removed there is no way to revert that action unless rejoinng the user to the organisation on one of provided workflows.
 
