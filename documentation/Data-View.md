@@ -49,7 +49,7 @@ This endpoint is called in order to populate the Database menu in the UI.
 
 For querying a specific table. Data is returned in the following structure:
 
-```
+```js
 {
     "tableName": "user",
     "title": "Users (Restricted View)",
@@ -89,6 +89,8 @@ For querying a specific table. Data is returned in the following structure:
         },
         ...etc.
     ],
+    "searchFields": ["firstName", "lastName"],
+    "filterDefinitions": ... // See Data View Filters page
     "totalCount": 13
 }
 ```

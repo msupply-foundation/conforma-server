@@ -14,6 +14,7 @@ Data View Tables can be filtered, sorted and searched comprehensively in the fro
   - [How is Filter data generated?](#how-is-filter-data-generated)
   - [Filter columns](#filter-columns)
   - [Filter types (and available options)](#filter-types-and-available-options)
+- [Filter definitions](#filter-definitions)
 
 *Please ensure you are familiar with how [Data View and Data View Column Definitions](Data-View.md) work in general before diving into filter definitions here*
 
@@ -219,14 +220,164 @@ The Filters available for Data Views are derived from (and in some cases the sam
 
 #### Options list
 
+![Options list](images/data-view-filters-options-list.png)
+
+This is the filter that shows by default when the incoming data type is a `string`. When you instantiate the filter, the filter component makes a request to the server for a list of possible options. The list is itself "filtered" by typing in the input field. There is a maximum of 10 items returned in this filter list, so the user will need to narrow the list by using the search box.
+
+The list of options can be configured with the following `filter_parameters` (they are all optional):
+
+- `searchFields`: an array of column names specifying what to filter by. By default each filter just searches the column for which it's been generated (i.e. itself), so you'll rarely need to specify this. But, like the "Address" example [above](#sorting), you might wish to specify a few different database fields to search by (i.e. `address`, `province`, `country`) (You could have also generated a "filter_data" column that combines all three values into a single text field but, since all these values are text, this wouldn't be needed -- just specify the `searchFields` instead.) *The `searchFields` parameter is the only parameter which is common to *all* filters described here.*
+- `delimiter`: this one is important for handling multiple values in a single field, as alluded to [earlier](#creating-filter-data-with-multiple-values). In the example shown in the image here, the filter options are actually derived from text fields structured like this:
+   ```
+   "Ascorbic acid, Agni casti fructus, Alfuzosin and finasteride",
+   "Arsenic, Paracetamol",
+   "Ascorbic acid, Miracle Whip",
+   ...
+   ```
+  In order to seperate them into a more useful list of individual options, we can specify a `delimiter`, which in this case is a comma: `","`. Just a reminder that it preferable to configure multiple options like this as delimited strings rather than arrays (as partial matching array elements in GraphQL is not really feasible in our current setup).
+- `includeNull`: (boolean, default `false`). Sometimes data view columns may contain `null` values. These *will* show up in the filter list (they appear as (Blank)), but only if `null` happens to appear in the top 10 options results (due to 10-item maximum). And typing anything in the Search field will obviously immediately exclude `null`, so it's possible to never see the `null` option in the options list. But if the `includeNull` parameter is set to `true`, then the options list returned from the server will *always* include the `null` "(Blank)" value.
+- `showFilterList`: (boolean, default `true`) as mentioned above, this Options list filter is the default filter for any `string` data. However, if you wish to provide a free-text search instead (often more useful when every item has a different value), set `showFilterList` to `false` and a ["Text search" filter](#text-search) will be displayed instead.
+
+##### API
+
+The options list filter makes its own request to the server to get the list of available options:
+```
+/data-views/<dataViewCode>/filterList/<column>
+
+```
+
+The search text (and other options) are provided in the body JSON of the request. (See Postman collection in front-end repo for examples)
 
 #### Text search
+
+![Text search](images/data-view-filters-text-search.png)
+
+A free text search, used for `string` data if `showFilterList` is set to `false` (above). Works the same as the general [Search](#search) field, but configured for a particular data source.
+
+There are no other parameters available, other than the (optional) common `searchFields` parameter.
 
 
 #### Number range
 
+![Number range](images/data-view-filters-number.png)
+
+Displayed when the incoming data is a `number` type, and allows the user to specify a range to filter by.
+
+In the example shown here, the "Shelf life" filter is filtering a column that actually has "text" values ("9 Meses", etc). In this case, we have used a "filter data" column to generate a numeric variant of the shelf life column in order to allow filtering.
+
 
 #### Boolean option
 
+![Boolean](images/data-view-filters-boolean.png)
+
+Displayed when the incoming data is a `boolean` value. The relevant parameter here is:
+
+- `valueMap` (or `booleanMapping`): a JSON object that specifies what values to display in the filter for the `true` and `false` values. In this example, the `valueMap` parameter would be:
+
+    ```
+    {
+        "true": "Ativo",
+        "false": "Inativo"
+    }
+    ```
+
 
 #### Date
+
+![Date](images/data-view-filters-date.png)
+
+Displayed when the incoming data is any of the `Date` types, and allows the user to specify a date range to filter by.
+
+## Filter definitions
+
+Filter definitions are returned by the server as part of the [Data View Table request](Data-View.md#data-viewsdataviewcodequeries), and contain all the information needed by the front end to present a set of filters as described above. Here is an example of a returned `filterDefinitions` (and `searchFields`) field (part of the full [Data View Table response](Data-View.md#data-viewsdataviewcodequeries)):
+
+```js
+...,
+"searchFields": ["name", "registration" ] // as described in "Search" section above
+"filterDefinitions": [
+    {
+        "column": "registration",
+        "title": "Número de registo",
+        "dataType": "string",
+        "showFilterList": false,
+        "searchFields": [
+            "registration"
+        ]
+    },
+    {
+        "column": "name",
+        "title": "Medicamento",
+        "dataType": "string",
+        "showFilterList": true,
+        "searchFields": [
+            "name"
+        ]
+    },
+    {
+        "column": "companyName",
+        "title": "Entidade",
+        "dataType": "string",
+        "showFilterList": true,
+        "searchFields": [
+            "companyName"
+        ]
+    },
+    {
+        "column": "origin",
+        "title": "Origem OR Medicamento",
+        "dataType": "string",
+        "showFilterList": true,
+        "searchFields": [
+            "origin",
+            "name"
+        ]
+    },
+    {
+        "column": "registrationDate",
+        "title": "Data do registo",
+        "dataType": "Date",
+        "showFilterList": false,
+        "searchFields": [
+            "registrationDate"
+        ]
+    },
+    {
+        "column": "genericNamesTextFilterData",
+        "title": "Nome genérico",
+        "dataType": "string",
+        "showFilterList": true,
+        "searchFields": [
+            "genericNamesTextFilterData"
+        ],
+        "delimiter": ","
+    },
+    {
+        "column": "medicineType",
+        "title": "Medicine Type",
+        "dataType": "string",
+        "showFilterList": true,
+        "searchFields": [
+            "medicineType"
+        ]
+    },
+    {
+        "column": "dosageForm",
+        "title": "Dosagem",
+        "dataType": "string",
+        "showFilterList": true,
+        "searchFields": [
+            "dosageForm"
+        ]
+    },
+    {
+        "column": "administrationRoute",
+        "title": "Via de admninistração",
+        "dataType": "string",
+        "showFilterList": true,
+        "searchFields": [
+            "administrationRoute"
+        ]
+    }
+...
+```
