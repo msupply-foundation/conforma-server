@@ -13,6 +13,7 @@ Data View Tables can be filtered, sorted and searched comprehensively in the fro
   - [Creating filter data with multiple values](#creating-filter-data-with-multiple-values)
   - [How is Filter data generated?](#how-is-filter-data-generated)
   - [Filter columns](#filter-columns)
+  - [Filter types (and available options)](#filter-types-and-available-options)
 
 *Please ensure you are familiar with how [Data View and Data View Column Definitions](Data-View.md) work in general before diving into filter definitions here*
 
@@ -171,28 +172,61 @@ Note that it is entirely possible to create *multiple* filter data columns for a
 
 Tip: every response type has a "text" field, and often this value will be sufficient to create a filterable data source.
 
+Remember that, like `value_expression`, evaluator expressions can perform database lookups, so you can do thing like making certain columns filterable based on data elsewhere in the database (e.g. a table of users might display the organisations they belong to -- this can be filtered using a suitable `filter_expression`).
+
 ### Creating filter data with multiple values
 
 You will have noticed the above example created a comma-delimited string of values. This is the preferred way to represent multi-value data in filter definitions, as it's much easier to create database queries to partially match seperate substrings than it is to search inside arrays. As to how the filters parse these strings, please see the ["delimiter" property below](#link???).
 
 ### How is Filter data generated?
 
-There is a script, `generateFilterDataFields.ts` that can create and update all filter data columns. Currently, the only time the app automatically runs it is as an option on the [modifyRecord](List-of-Action-plugins.md#modify-record) action, which ensures that new records automatically have filter data generated for them.
+There is a script, `generateFilterDataFields.ts` that can create and update all filter data columns. The script scans the system for existing filter data columns and updates them or creates new ones based on what's in the `data_view_column_definitions` table. It can also (optionally) regenerate ALL values for existing filter_data fields.
 
-However, there is an endpoint that can be called as required to regerate all filter data throughout the system. You would normally want to run this after updating or adding filter data column definitions
+Currently, the only time the app automatically runs it is as an option on the [modifyRecord](List-of-Action-plugins.md#modify-record) action, which ensures that new records automatically have filter data generated for them.
 
+However, there is an endpoint that can be called as required to regenerate all filter data throughout the system. You would normally want to run this after updating or adding filter data column definitions to ensure all data is up-to-date.
 
+The API is:
 
+```
+/admin/generate-filter-data-fields?<query>
 
+```
 
+Query parameters:
 
-Arrays, strings,
+- `table`: the name of the database table to update filter_data for. If not provided, it will update *all* filter data in the system
+- `fullUpdate` (`true`/`false`): if `true`, the script will re-compute (i.e. will re-evaluate every record) the filter_data for all existing filter data as well as generating values for missing data. If `false`, it will only update records where all filter data columns are `null` (i.e. these should be *new* records). By default, `fullUpdate` is `false` when a `table` is specified (this is what `modifyRecord` uses), but `true` when no table is specified (i.e. all tables).
+
 
 ### Filter columns
 
 The columns that will appear as available filters for a given data view are defined in `filter_include_columns` and `filter_exclude_columns`. These work the same way as the table view and detail view [include/exclude lists](Data-View.md#data_view-table), but with the following differences:
 
 - if nothing is specified (i.e. `null` value), the defaults will be the same as the table view columns that are being returned. This is because, by default, we expect the available filters to be for the same data as the table columns.
-- Similarly, the special value `...` matches all *table* columns, not the full set of columns. So it becomes fairly straightfoward to specify a filter set that closely matches the table columns but with, for example, one extra column and one exclusion. It's a good idea to explicitly exclude columns for which the data can't be processed by one of the standard filters -- however, using mapped "filter data" columns (see [below](#handling-complex-data-structures)) it's possible to get meaningful, filter-able content from almost any type of data.
+- Similarly, the special value `...` matches all *table* columns, not the full set of columns. So it becomes fairly straightfoward to specify a filter set that closely matches the table columns but with, for example, one extra column and one exclusion. It's a good idea to explicitly exclude columns for which the data can't be processed by one of the standard filters -- however, using mapped "filter data" columns (see [above](#handling-complex-data-structures)) it's possible to get meaningful, filter-able content from almost any type of data.
 - If a "filter data" column is defined, the "filter data" version of the column will be returned as a filter definition instead of the original data source. For example, if there exists a `genericNames` column with a complex listBuilder response as its value, and also a `genericNamesFilterData` (they only differ by suffix), the `genericNamesFilterData` column will be returned in filter definitions.
 
+Note, then, that is possible to create filters for columns that don't necessarily appear in the table itself (useful when your table is getting cluttered but you still need lots of filtering options).
+
+### Filter types (and available options)
+
+All remaining filter configurations are done via the `filter_parameters` column, which takes a JSON object of optional parameters, similar to the [`additional_formatting` column](Data-View.md#data_view_column_definition-table).
+
+Not all filter types require all parameters, so we'll go through each type of filter and describe the relevant parameters for each.
+
+The Filters available for Data Views are derived from (and in some cases the same as) the Application List filters, but have been made more generic as the incoming data is not known by the front-end.
+
+#### Options list
+
+
+#### Text search
+
+
+#### Number range
+
+
+#### Boolean option
+
+
+#### Date
