@@ -215,7 +215,12 @@ const buildColumnList = (
       ? 'tableViewExcludeColumns'
       : 'filterExcludeColumns'
 
-  const includeColumns = getIncludeColumns(includeField, dataView, allColumns)
+  const includeColumns = getIncludeColumns(
+    includeField,
+    dataView,
+    // Don't include "FilterData" columns in full list
+    allColumns.filter((col) => !new RegExp(FILTER_COLUMN_SUFFIX).test(col))
+  )
 
   const excludeColumns = dataView[excludeField] !== null ? (dataView[excludeField] as string[]) : []
 
