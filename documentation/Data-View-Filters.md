@@ -10,8 +10,6 @@ Data View Tables can be filtered, sorted and searched comprehensively in the fro
   - [API](#api-1)
 - [Filters](#filters)
   - [Handling complex data structures](#handling-complex-data-structures)
-  - [Creating filter data with multiple values](#creating-filter-data-with-multiple-values)
-  - [How is Filter data generated?](#how-is-filter-data-generated)
   - [Filter columns](#filter-columns)
   - [Filter types (and available options)](#filter-types-and-available-options)
 - [Filter definitions](#filter-definitions)
@@ -20,7 +18,9 @@ Data View Tables can be filtered, sorted and searched comprehensively in the fro
 
 ## Search
 
-The front-end can display a standard "Search" input field at the top of the table for quick search-based filtering of the table results. However, you need to configure exactly what is being searched.
+![Search input](images/data-view-filters-search-field.png)
+
+The front end can display a standard "Search" input field at the top of the table for quick search-based filtering of the table results. However, you need to configure exactly what is being searched.
 
 This is done by specifying an array of searchable fields in the `table_search_columns` field of the `data_view` table.
 
@@ -45,7 +45,7 @@ Search text is passed to the server as part of the query parameters of the `data
 
 ## Sorting
 
-In the front-end, clicking on a column header will sort the table by that column (and clicking again reverses the order). If the column is a "basic" column (i.e. maps to an actual database column), then the default sort should be adequate, and no specific definition is required. However, if you have a column whose data is defined by a [value_expression](Data-View.md#data_view_column_definition-table) then you will need to define how it should be sorted. (If not, then the user will receive a "Column not sortable" notification when they try to sort by it.)
+In the front end, clicking on a column header will sort the table by that column (and clicking again reverses the order). If the column is a "basic" column (i.e. maps to an actual database column), then the default sort should be adequate, and no specific definition is required. However, if you have a column whose data is defined by a [value_expression](Data-View.md#data_view_column_definition-table) then you will need to define how it should be sorted. (If not, then the user will receive a "Column not sortable" notification when they try to sort by it.)
 
 We do this by specifying *another* column in the field `sort_column` for `data_view_column_definition`, which is what the database will sort by when clicking on this column.
 
@@ -92,19 +92,19 @@ One of the main challenges with trying to create filters is that much of the dat
 }
 ```
 
-Clearly this is not filterable in any meaningful way with simple database queries. So we've provided a mechanism by with complex data values can be converted into more easily parse-able objects, such as plain text or numbers.
+Clearly this is not filterable in any meaningful way with simple database queries. So we've provided a mechanism by which complex data values can be converted into more easily parse-able objects, such as plain text or numbers.
 
 We can define "filter data" columns, which are defined like so:
 
 - an extra column definition in `data_view_column_definitions`. It's just the same as other definitions, but the `column_name` field should have the suffix `FilterData` to be recognised by the system as a filter data column.
 - there are two fields in `data_view_column_definitions` that are of relevance:
   - `filter_expression`: an [evaluator](Query-Syntax.md) expression defining the value for the filter data column. It's essentially the same as the [`value_expression` column](Data-View.md#data_view_column_definition-table) in that it takes the current record as the evaluator "objects" parameter.
-  - `filter_data_type`: this tells the script that creates the filter data columns what data type to use. Normally it will be text ("varchar") as that's by far the easiest to work with, which is the default, so you won't need to enter anything in this column most of the time. In theory, this could be any Postgres type, but the only other data types that have been proven to work reliably are "integer" and "boolean".
+  - `filter_data_type`: this tells the script that creates the filter data columns what data type to use. Normally it will be text ("varchar") as that's by far the easiest to work with, which is the default, so you won't need to enter anything in this column most of the time. In theory, this could be any Postgres type, but the only other data types that have been proven to work reliably so far are "integer" and "boolean".
 - an additional column is added to the data table in question, with this "FilterData" (or "filter_data" in postgres) suffix, with these computed values entered into it.
 
 #### Filter data example
 
-Say we have a "product" table with a "manufacturers_list" that stores a listBuilder response in it:
+Say we have a "product" table with a "manufacturers_list" field that stores a listBuilder response in it:
 
 ```
 {
@@ -147,7 +147,7 @@ Say we have a "product" table with a "manufacturers_list" that stores a listBuil
     },
 ```
 
-We could could create a column definition called `manufacturerListFilterData` and define its `filter_expression` like this:
+We can create a column definition called `manufacturerListFilterData` and define its `filter_expression` like this:
 
 ```
 {
@@ -167,21 +167,21 @@ We could could create a column definition called `manufacturerListFilterData` an
 
 Which would return this output based on the original response data: `MedPack, General Manufacturers`
 
-That value is (automatically) stored in a field called "manufacturer_list_filter_data" on the "product" table, with that value in it for this record, which is much more suitable for filtering.
+That value is (automatically) stored in a field called "manufacturer_list_filter_data" on the "product" table, which is much more suitable for filtering.
 
 Note that it is entirely possible to create *multiple* filter data columns for a single original data column if there's several data elements in it that you wish to filter by. For example, for an ingredients list, you might want a "names" and a "types" filter data column from a single response object.
 
 Tip: every response type has a "text" field, and often this value will be sufficient to create a filterable data source.
 
-Remember that, like `value_expression`, evaluator expressions can perform database lookups, so you can do thing like making certain columns filterable based on data elsewhere in the database (e.g. a table of users might display the organisations they belong to -- this can be filtered using a suitable `filter_expression`).
+Remember that, like `value_expression`, evaluator expressions can perform database lookups, so you can do things like making certain columns filterable based on data elsewhere in the database (e.g. a table of users might display the organisations they belong to -- this can be filtered using a suitable `filter_expression`).
 
-### Creating filter data with multiple values
+#### Creating filter data with multiple values
 
-You will have noticed the above example created a comma-delimited string of values. This is the preferred way to represent multi-value data in filter definitions, as it's much easier to create database queries to partially match seperate substrings than it is to search inside arrays. As to how the filters parse these strings, please see the ["delimiter" property below](#link???).
+You will have noticed the above example created a comma-delimited string of values. This is the preferred way to represent multi-value data in filter definitions, as it's much easier to create database queries to partially match seperate substrings than it is to search inside arrays. As to how the filters parse these strings, please see the ["delimiter" property below](#options-list).
 
-### How is Filter data generated?
+#### How is Filter data generated?
 
-There is a script, `generateFilterDataFields.ts` that can create and update all filter data columns. The script scans the system for existing filter data columns and updates them or creates new ones based on what's in the `data_view_column_definitions` table. It can also (optionally) regenerate ALL values for existing filter_data fields.
+There is a script, `generateFilterDataFields.ts` that can create and update all filter data columns. The script scans the system for existing filter data columns and updates them or creates new ones based on what's in the `data_view_column_definitions` table. It can also (optionally) regenerate ALL values for existing filter_data fields. (Note that if the column definitions have been removed, the generated "filterData" fields will be removed from the database.)
 
 Currently, the only time the app automatically runs it is as an option on the [modifyRecord](List-of-Action-plugins.md#modify-record) action, which ensures that new records automatically have filter data generated for them.
 
@@ -191,7 +191,6 @@ The API is:
 
 ```
 /admin/generate-filter-data-fields?<query>
-
 ```
 
 Query parameters:
@@ -220,7 +219,8 @@ The Filters available for Data Views are derived from (and in some cases the sam
 
 #### Options list
 
-![Options list](images/data-view-filters-options-list.png)
+<img alt="Options list" src="images/data-view-filters-options-list.png" height="350"/>
+<!-- ![Options list](images/data-view-filters-options-list.png) -->
 
 This is the filter that shows by default when the incoming data type is a `string`. When you instantiate the filter, the filter component makes a request to the server for a list of possible options. The list is itself "filtered" by typing in the input field. There is a maximum of 10 items returned in this filter list, so the user will need to narrow the list by using the search box.
 
@@ -243,14 +243,14 @@ The list of options can be configured with the following `filter_parameters` (th
 The options list filter makes its own request to the server to get the list of available options:
 ```
 /data-views/<dataViewCode>/filterList/<column>
-
 ```
 
 The search text (and other options) are provided in the body JSON of the request. (See Postman collection in front-end repo for examples)
 
 #### Text search
 
-![Text search](images/data-view-filters-text-search.png)
+<img alt="Text search" src="images/data-view-filters-text-search.png" height="350"/>
+<!-- ![Text search](images/data-view-filters-text-search.png) -->
 
 A free text search, used for `string` data if `showFilterList` is set to `false` (above). Works the same as the general [Search](#search) field, but configured for a particular data source.
 
@@ -268,7 +268,8 @@ In the example shown here, the "Shelf life" filter is filtering a column that ac
 
 #### Boolean option
 
-![Boolean](images/data-view-filters-boolean.png)
+<img alt="Boolean" src="images/data-view-filters-boolean.png" height="350"/>
+<!-- ![Boolean](images/data-view-filters-boolean.png) -->
 
 Displayed when the incoming data is a `boolean` value. The relevant parameter here is:
 
@@ -284,7 +285,8 @@ Displayed when the incoming data is a `boolean` value. The relevant parameter he
 
 #### Date
 
-![Date](images/data-view-filters-date.png)
+<img alt="Date" src="images/data-view-filters-date.png" height="350"/>
+<!-- ![Date](images/data-view-filters-date.png) -->
 
 Displayed when the incoming data is any of the `Date` types, and allows the user to specify a date range to filter by.
 
