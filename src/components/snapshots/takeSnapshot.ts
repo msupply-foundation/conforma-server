@@ -1,5 +1,4 @@
 import fs from 'fs'
-// import fsSync from 'fs'
 import archiver from 'archiver'
 import { ExportAndImportOptions, ObjectRecord, SnapshotOperation } from '../exportAndImport/types'
 import path from 'path'
@@ -57,6 +56,11 @@ const takeSnapshot: SnapshotOperation = async ({
       console.log('Dumping database...')
       execSync(
         `pg_dump -U postgres tmf_app_manager --format=custom -f ${newSnapshotFolder}/database.dump`
+      )
+      // This plain-text .sql script is NOT used for re-import, but could be
+      // useful for debugging when dealing with troublesome snapshots
+      execSync(
+        `pg_dump -U postgres tmf_app_manager --format=plain --inserts -f ${newSnapshotFolder}/database.sql`
       )
       console.log('Dumping database...done')
 
