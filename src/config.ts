@@ -40,7 +40,8 @@ const config: { [key: string]: any } = {
   // have "data_table_" prepended.
   allowedTableNames: ['user', 'organisation', 'application', 'file'],
   filterListMaxLength: 10,
-  filterColumnSuffix: '_filter_data', // snake_case
+  filterColumnSuffix: '_filter_data', // snake_case,
+  isProductionBuild,
   ...serverPrefs,
 }
 

@@ -12,19 +12,18 @@ import { getAppEntryPointDir } from '../../src/components/utilityFunctions'
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
 const INDEX_FILENAME = '44_index.sql'
 
-const { version } = config
+const { version, isProductionBuild } = config
 const isManualMigration: Boolean = process.argv[2] === '--migrate'
 const simulatedVersion: string | undefined = process.argv[3]
 
 const migrateData = async () => {
   let databaseVersion: string
 
-  const appVersion =
-    process.env.NODE_ENV === 'development'
-      ? // In development, pretend the version is one higher than it is,
-        // so we can keep getting changing migrations when testing
-        semverInc(version, 'minor')
-      : version
+  const appVersion = !isProductionBuild
+    ? // In development, pretend the version is one higher than it is,
+      // so we can keep getting changing migrations when testing
+      semverInc(version, 'patch')
+    : version
 
   try {
     databaseVersion = (await DB.getDatabaseVersion()).value
@@ -566,6 +565,17 @@ const migrateData = async () => {
     await DB.changeSchema(`
       ALTER TABLE application_response 
         ADD COLUMN IF NOT EXISTS evaluated_parameters jsonb; 
+    console.log(' - Add case-insensitive unique constraint to usernames')
+    `)
+
+    //drop views relating to username temporarily so column can be changed
+    await DB.changeSchema(`
+    DROP VIEW IF EXISTS permissions_all;
+    DROP VIEW IF EXISTS user_org_join`)
+
+    await DB.changeSchema(`
+    CREATE EXTENSION IF NOT EXISTS citext;
+    ALTER TABLE public.user ALTER COLUMN username TYPE citext;
     `)
   }
   // Other version migrations continue here...
