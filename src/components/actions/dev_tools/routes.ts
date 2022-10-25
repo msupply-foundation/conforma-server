@@ -34,7 +34,7 @@ export const routeRunAction = async (request: any, reply: any) => {
   return reply.send(actionResult)
 }
 
-interface RequestProps {
+export interface RequestProps {
   templateCode: string
   trigger: Trigger | 'RESET' | keyof typeof triggerMap
   assignmentId?: number
@@ -53,8 +53,7 @@ interface RequestProps {
 }
 
 // Wrapper for "testTrigger". Use routeTestTrigger provides the REST endpoint,
-// "testTrigger" is the actual function. Use "testTrigger" internally in test
-// suites
+// "testTrigger" is the actual function.
 export const routeTestTrigger = async (request: any, reply: any) => {
   const params: RequestProps = combineRequestParams(request, 'camel')
 

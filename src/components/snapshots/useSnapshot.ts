@@ -60,6 +60,8 @@ const useSnapshot: SnapshotOperation = async ({
       throw `Snapshot was created with version: ${snapshotVersion}\n You can't install a snapshot created with a version newer than the current application version: ${config.version}`
     }
 
+    console.log('ARE WE DOING THIS?')
+
     if (options.resetFiles || options.usePgDump) {
       execSync(`rm -rf ${FILES_FOLDER}/*`)
     }

@@ -1,102 +1,46 @@
 // Configure a snapshot to be used with this test suite.
+import { rmdirSync, readFileSync, writeFile } from 'fs'
+import { getAppEntryPointDir } from '../../utilityFunctions'
 
+import { loadActionPlugins } from '../../pluginsConnect'
 import { testTrigger } from './routes'
+import useSnapshot from '../../../components/snapshots/useSnapshot'
+
+const testFile = process.argv.pop()
+
+console.log('TESTFILE', testFile)
+
+beforeAll(async () => {
+  // Read json file
+  const testData = JSON.parse(
+    readFileSync(`src/components/actions/dev_tools/testData/${testFile}.json`, 'utf-8')
+  )
+  console.log('testData', testData.snapshot)
+  // Load snapshot
+  await useSnapshot({ snapshotName: testData.snapshot })
+  console.log('SNAPSHOT LOADED?')
+
+  loadActionPlugins()
+})
 
 // Template type 1
 
-test('Application create', async () => {
-  const result = await testTrigger({ templateCode: 'OrgRegistration', trigger: 'create' })
-  expect(result).toMatchObject({
-    applicationId: 13,
-    serial: 'S-KUO-0015',
-    trigger: 'ON_APPLICATION_CREATE',
-    actionResult: [
-      {
-        action: 'generateTextString',
-        status: 'SUCCESS',
-        output: {
-          generatedText: 'S-BLC-0015',
-        },
-        errorLog: null,
-      },
-      {
-        action: 'generateTextString',
-        status: 'SUCCESS',
-        output: {
-          generatedText: 'Company Registration - S-BLC-0015',
-        },
-        errorLog: null,
-      },
-      {
-        action: 'incrementStage',
-        status: 'SUCCESS',
-        output: {
-          applicationId: 13,
-          stageNumber: 1,
-          stageName: 'Approval',
-          stageHistoryId: 23,
-          statusId: 23,
-          status: 'DRAFT',
-        },
-        errorLog: null,
-      },
-    ],
-    finalApplicationData: {
-      applicationId: 13,
-      applicationSerial: 'S-BLC-0014',
-      applicationName: 'Company Registration - S-BLC-0014',
-      sessionId: 'WXsvhggdwhlsHadx',
-      templateId: 7,
-      templateName: 'Company Registration',
-      templateCode: 'OrgRegistration',
-      stageId: 9,
-      stageNumber: 1,
-      stage: 'Approval',
-      stageHistoryId: 23,
-      stageHistoryTimeCreated: '2022-10-18T22:37:11.219Z',
-      statusHistoryId: 23,
-      status: 'DRAFT',
-      statusHistoryTimeCreated: '2022-10-18T22:37:11.225Z',
-      userId: 2,
-      orgId: null,
-      outcome: 'PENDING',
-      firstName: 'Admin',
-      lastName: 'Admin',
-      username: 'admin',
-      dateOfBirth: null,
-      email: null,
-      orgName: null,
-      responses: {
-        S1T1: null,
-        activity: null,
-        addressCheckbox: {
-          text: '*<Nothing Selected>*',
-          values: {
-            '1': {
-              text: 'Yes',
-              selected: false,
-              textNegative: '',
-            },
-          },
-          selectedValuesArray: [],
-        },
-        logo: null,
-        logoShow: null,
-        name: null,
-        orgInfo: null,
-        otherDoc: null,
-        physAdd: null,
-        postAdd: null,
-        rego: null,
-        regoDoc: null,
-      },
-      reviewData: {},
-      environmentData: {
-        appRootFolder: '/Users/carl/GitHub/conforma/conforma-server/src',
-        filesFolder: '../files',
-        webHostUrl: 'http://localhost:3000',
-      },
-      sectionCodes: ['S1', 'S2'],
-    },
+const tests = [
+  {
+    name: 'Application create',
+    input: { templateCode: 'OrgRegistration', trigger: 'create' },
+    output: { applicationId: 13 },
+  },
+  {
+    name: 'Application create',
+    input: { templateCode: 'OrgRegistration', trigger: 'create' },
+    output: { applicationId: 14 },
+  },
+]
+
+tests.forEach(({ name, input, output }) => {
+  test(name, async () => {
+    const result = await testTrigger(input)
+    expect(result).toEqual(expect.objectContaining(output))
   })
 })
