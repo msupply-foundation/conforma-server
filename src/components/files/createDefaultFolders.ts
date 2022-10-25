@@ -13,6 +13,7 @@ import {
   GENERIC_THUMBNAILS_SOURCE_FOLDER,
   DATABASE_FOLDER,
   BASE_SNAPSHOT_NAME,
+  TEST_SCRIPT_FOLDER,
 } from '../../constants'
 import fs from 'fs'
 import path from 'path'
@@ -26,6 +27,12 @@ export function createDefaultDataFolders() {
     execSync(`cp -r '${DATABASE_FOLDER}/${BASE_SNAPSHOT_NAME}' '${SNAPSHOT_FOLDER}'`)
   } catch {
     console.log('\nProblem creating SNAPSHOTS folder\n')
+  }
+
+  try {
+    makeFolder(TEST_SCRIPT_FOLDER, 'Creating Test Script folder')
+  } catch {
+    console.log('\nProblem creating Test Scripts folder\n')
   }
 
   try {

@@ -31,6 +31,7 @@ export const GENERIC_THUMBNAILS_SOURCE_FOLDER = path.join(
 )
 export const GENERIC_THUMBNAILS_FOLDER = path.join(FILES_FOLDER, config.genericThumbnailsFolderName)
 export const BASE_SNAPSHOT_FOLDER = path.join(DATABASE_FOLDER, BASE_SNAPSHOT_NAME)
+export const TEST_SCRIPT_FOLDER = path.join(getAppEntryPointDir(), config.testScriptFolder)
 export const PG_DFF_JS_LOCATION = path.join(
   getAppEntryPointDir(),
   config.nodeModulesFolder,

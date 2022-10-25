@@ -25,6 +25,7 @@ import {
   PREFERENCES_FILE,
   PG_DFF_JS_LOCATION,
   DATABASE_FOLDER,
+  TEST_SCRIPT_FOLDER,
 } from '../../constants'
 import { getBaseFiles, getDirectoryFromPath } from './useSnapshot'
 import config from '../../config'
@@ -100,6 +101,13 @@ const takeSnapshot: SnapshotOperation = async ({
       path.join(newSnapshotFolder, `${INFO_FILE_NAME}.json`),
       JSON.stringify(getSnapshotInfo(), null, ' ')
     )
+
+    // Add a testing script file if one exists for this snapshotName
+    try {
+      execSync(`cp '${TEST_SCRIPT_FOLDER}/${snapshotName}.json' '${newSnapshotFolder}/tests.json'`)
+    } catch {
+      console.log('No test script...')
+    }
 
     await zipSnapshot(newSnapshotFolder, snapshotName)
 
