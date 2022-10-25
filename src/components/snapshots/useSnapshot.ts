@@ -48,7 +48,6 @@ const useSnapshot: SnapshotOperation = async ({
 
     // Don't proceed if snapshot version higher than current installation
     const infoFile = path.join(snapshotFolder, `${INFO_FILE_NAME}.json`)
-    console.log(`Checking snapshot version...`)
     const snapshotVersion = fsSync.existsSync(infoFile)
       ? JSON.parse(
           await fs.readFile(infoFile, {
@@ -60,8 +59,6 @@ const useSnapshot: SnapshotOperation = async ({
       throw `Snapshot was created with version: ${snapshotVersion}\n You can't install a snapshot created with a version newer than the current application version: ${config.version}`
     }
 
-    console.log('ARE WE DOING THIS?')
-
     if (options.resetFiles || options.usePgDump) {
       execSync(`rm -rf ${FILES_FOLDER}/*`)
     }
@@ -70,9 +67,10 @@ const useSnapshot: SnapshotOperation = async ({
       // The quick way, using pg_restore (whole database only, no partial
       // exports)
       console.log('Restoring database...')
-      execSync(
+      const res = execSync(
         `pg_restore -U postgres --clean --if-exists --dbname tmf_app_manager ${snapshotFolder}/database.dump`
       )
+      console.log('RESULT', res)
       console.log('Restoring database...done')
 
       // Copy files
