@@ -8,6 +8,7 @@ import {
   LOCALISATION_FOLDER,
   FILES_FOLDER,
   SNAPSHOT_FOLDER,
+  BACKUPS_FOLDER,
   BASE_SNAPSHOT_FOLDER,
   GENERIC_THUMBNAILS_FOLDER,
   GENERIC_THUMBNAILS_SOURCE_FOLDER,
@@ -23,6 +24,7 @@ import { makeFolder } from '../utilityFunctions'
 export function createDefaultDataFolders() {
   try {
     makeFolder(SNAPSHOT_FOLDER, 'Creating SNAPSHOTS folder')
+    makeFolder(BACKUPS_FOLDER, 'Creating BACKUPS folder')
     // Copy core_templates to snapshots folder
     execSync(`cp -r '${DATABASE_FOLDER}/${BASE_SNAPSHOT_NAME}' '${SNAPSHOT_FOLDER}'`)
   } catch {
