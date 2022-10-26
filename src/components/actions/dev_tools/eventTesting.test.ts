@@ -33,6 +33,6 @@ beforeAll((done) => {
 testData.forEach(({ name, input, output }: any) => {
   test(name, async () => {
     const result = await testTrigger(input)
-    expect(result).toEqual(expect.objectContaining(output))
+    expect(result).toMatchObject(output)
   })
 })
