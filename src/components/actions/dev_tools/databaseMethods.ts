@@ -34,6 +34,10 @@ const databaseMethods = {
     )`
     try {
       const result = await DBConnect.query({ text, values: [templateCode] })
+      if (result.rows.length > 1)
+        throw new Error(
+          'There is more than one config application for this template type/version. Please remedy this situation.'
+        )
       return result.rows[0] ?? {}
     } catch (err) {
       console.log(err.message)
