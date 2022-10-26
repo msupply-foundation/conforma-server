@@ -49,6 +49,7 @@
     "start": "yarn build && cd build && node server.js",
     "build": "./utils/build_all.sh",
     "test": "jest --runInBand",
+    "test_snapshot": "yarn test eventTesting --forceExit",
     "pg": "exec ./utils/postgraphile_launch.sh",
     "pg_permissions": "exec ./utils/postgraphile_launch_permissions.sh",
     "dev_pg": "concurrently --kill-others-on-fail \"yarn dev\"  \"yarn pg\"",
