@@ -566,7 +566,7 @@ const migrateData = async () => {
     )
     await DB.changeSchema(`
       ALTER TABLE file DROP CONSTRAINT IF EXISTS file_application_serial_fkey; 
-      ALTER TABLE file ADD CONSTRAINT file_application_serial_fkey FOREIGN KEY (application_serial) REFERENCES application (serial) ON UPDATE CASCADE;
+      ALTER TABLE file ADD CONSTRAINT file_application_serial_fkey FOREIGN KEY (application_serial) REFERENCES application (serial) ON DELETE CASCADE ON UPDATE CASCADE;
       `)
 
     console.log(' - Add case-insensitive unique constraint to usernames')
