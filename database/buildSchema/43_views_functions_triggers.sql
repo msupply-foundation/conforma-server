@@ -277,12 +277,15 @@ IMMUTABLE;
 -- Add columns (and index) to template_element table that use the above 2
 -- functions
 ALTER TABLE public.template_element
+    DROP COLUMN IF EXISTS template_code,
     ADD COLUMN IF NOT EXISTS template_code varchar GENERATED ALWAYS AS (public.get_template_code (section_id)) STORED;
 
 ALTER TABLE public.template_element
+    DROP COLUMN IF EXISTS template_version,
     ADD COLUMN IF NOT EXISTS template_version integer GENERATED ALWAYS AS (public.get_template_version (section_id)) STORED;
 
-CREATE UNIQUE INDEX IF NOT EXISTS template_element_template_code_code_template_version_idx ON public.template_element (template_code, code, template_version);
+ALTER TABLE public.template_element
+    ADD UNIQUE (template_code, code, template_version);
 
 -- APPLICATION
 --FUNCTION to update `is_active` to false
