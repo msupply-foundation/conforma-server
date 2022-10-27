@@ -624,6 +624,9 @@ $$
 LANGUAGE SQL
 IMMUTABLE;
 
+ALTER TABLE review_assignment
+    ADD COLUMN IF NOT EXISTS template_id INT GENERATED ALWAYS AS (review_assignment_template_id (application_id)) STORED;
+
 CREATE OR REPLACE FUNCTION public.empty_assigned_sections ()
     RETURNS TRIGGER
     AS $review_assignment_event$
