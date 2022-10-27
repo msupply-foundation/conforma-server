@@ -68,9 +68,16 @@ const useSnapshot: SnapshotOperation = async ({
       // The quick way, using pg_restore (whole database only, no partial
       // exports)
       console.log('Restoring database...')
+
+      // Safer to drop and recreate whole schema, as there can be errors when
+      // trying to drop individual objects using --clean, especially if the
+      // incoming database differs from the current database, schema-wise
+      execSync(`psql -U postgres -d tmf_app_manager -c 'DROP schema public CASCADE;'`)
+      execSync(`psql -U postgres -d tmf_app_manager -c 'CREATE schema public;'`)
       execSync(
         `pg_restore -U postgres --clean --if-exists --dbname tmf_app_manager ${snapshotFolder}/database.dump`
       )
+
       console.log('Restoring database...done')
 
       // Copy files
