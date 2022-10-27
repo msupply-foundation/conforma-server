@@ -564,10 +564,10 @@ const migrateData = async () => {
     console.log(' - Add evaluated parameters field to application_responses')
     await DB.changeSchema(`
       ALTER TABLE application_response 
-        ADD COLUMN IF NOT EXISTS evaluated_parameters jsonb; 
-    console.log(' - Add case-insensitive unique constraint to usernames')
+      ADD COLUMN IF NOT EXISTS evaluated_parameters jsonb; 
     `)
 
+    console.log(' - Add case-insensitive unique constraint to usernames')
     //drop views relating to username temporarily so column can be changed
     await DB.changeSchema(`
     DROP VIEW IF EXISTS permissions_all;
