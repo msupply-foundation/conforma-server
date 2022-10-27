@@ -1,5 +1,4 @@
 import fs from 'fs'
-// import fsSync from 'fs'
 import archiver from 'archiver'
 import { ExportAndImportOptions, ObjectRecord, SnapshotOperation } from '../exportAndImport/types'
 import path from 'path'
