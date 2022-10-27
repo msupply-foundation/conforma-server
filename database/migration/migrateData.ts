@@ -569,6 +569,12 @@ const migrateData = async () => {
       ALTER TABLE file ADD CONSTRAINT file_application_serial_fkey FOREIGN KEY (application_serial) REFERENCES application (serial) ON DELETE CASCADE ON UPDATE CASCADE;
       `)
 
+    console.log(' - Add evaluated parameters field to application_responses')
+    await DB.changeSchema(`
+      ALTER TABLE application_response 
+      ADD COLUMN IF NOT EXISTS evaluated_parameters jsonb; 
+    `)
+
     console.log(' - Add case-insensitive unique constraint to usernames')
     //drop views relating to username temporarily so column can be changed
     await DB.changeSchema(`
