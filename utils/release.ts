@@ -2,10 +2,11 @@ require('dotenv').config()
 import readlineSync from 'readline-sync'
 import { writeFileSync } from 'fs'
 import { promisify } from 'util'
-import { exec as execCallback } from 'child_process'
+import { exec as execCallback, execSync } from 'child_process'
 
 const exec = promisify(execCallback)
 const FRONT_END_PATH = process.env.FRONT_END_PATH
+const TEST_SUITE = process.env.BUILD_TEST_SNAPSHOT
 
 const releaseTypes = [
   '--prerelease',
@@ -20,6 +21,22 @@ type ReleaseType = typeof releaseTypes[number]
 
 const release = async () => {
   if (!FRONT_END_PATH) exitWithError('No front-end repo path in .env file')
+
+  if (!TEST_SUITE) {
+    console.log(
+      '\nWarning: no testing suite specified in .env file. Are you Are you sure you wish to proceed without testing?'
+    )
+    if (!(await userRespondsYes())) process.exit(0)
+  }
+
+  console.log('Starting build tests...')
+
+  try {
+    execSync(`yarn test_snapshot ${TEST_SUITE}`, { stdio: 'inherit' })
+  } catch {
+    console.log('Build test FAIL!\n')
+    process.exit(1)
+  }
 
   const releaseType: ReleaseType = (process.argv[2] || '--prerelease') as ReleaseType
 
