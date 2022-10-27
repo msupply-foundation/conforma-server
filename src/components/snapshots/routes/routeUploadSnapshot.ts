@@ -32,14 +32,20 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
     for await (const file of data) {
       await pump(file.file, fs.createWriteStream(snapshotZipLocation))
 
-      // Below syncrhonous opperations are probably ok for snapshot routes
+      // Below synchronous opperations are probably ok for snapshot routes
       const zip = new zipper(snapshotZipLocation)
       const snapshotMainFileName = `${SNAPSHOT_FILE_NAME}.json`
 
-      if (!zip.getEntries().find(({ entryName }) => entryName === snapshotMainFileName)) {
+      if (
+        !zip
+          .getEntries()
+          .find(
+            ({ entryName }) => entryName === snapshotMainFileName || entryName === 'database.dump'
+          )
+      ) {
         return reply.send({
           ...erroMessageBase,
-          error: `zip does not container ${snapshotMainFileName}`,
+          error: `zip does not contain ${snapshotMainFileName}`,
         })
       }
 
