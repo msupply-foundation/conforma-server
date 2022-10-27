@@ -168,6 +168,8 @@ For each instance, you'll need to create the following environment variables bef
 - `SMTP_SECRET` -- password for the email server specified in the "[sendNotification](List-of-Action-plugins.md#send-notification)" action
 - `WEB_URL` -- host name as will be shown in the applicaton URL (including port)
 - `JWT_SECRET` -- private key for generating and verifying JWT tokens
+- `BACKUPS_FOLDER` -- path on the host system where the internal "backups" folder should be mapped to (optional -- default is the default volumes location). An appropriate location would be a folder that is synced to a cloud backup service.
+- `BACKUPS_PASSWORD` -- password for encrypting the backup archives (AES-encrypted .zip files) (optional -- if no password provided, the backups will be unencrypted .zip files)
 
 For example:
 
@@ -176,6 +178,8 @@ export TAG='build-v0.2.0-7_2022-04-07_ee35c8'
 export SMTP_SECRET='<Your SMTP password>'
 export WEB_URL='https://conforma-demo.msupply.org:<replace port>'
 export JWT_SECRET='<random private key>'
+export BACKUPS_FOLDER='~/Dropbox/conforma_backups'
+export BACKUPS_PASSWORD='<super-secret-encryption-key>'
 ```
 
 Then for each instance, run the following launch commands, with the appropriate `PORT_APP` and `PORT_DASH` values:
