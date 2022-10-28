@@ -578,6 +578,13 @@ const migrateData = async () => {
     CREATE EXTENSION IF NOT EXISTS citext;
     ALTER TABLE public.user ALTER COLUMN username TYPE citext;
     `)
+
+    console.log(' - Add column to data_table to link data views to lookup tables')
+
+    await DB.changeSchema(`
+    ALTER TABLE data_table
+    ADD COLUMN data_view_code varchar;
+    `)
   }
   // Other version migrations continue here...
 
