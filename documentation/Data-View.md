@@ -17,6 +17,7 @@ Display of (custom) **Data** tables (e.g. Products, Users, Orgs) (or any table, 
 - what columns to show different types of user
 - "special" columns, which show the result of an [evaluator](Query-Syntax.md) expression, so can show some fields combined, or queries to another table, for example
 - how columns should be formatted in the UI
+- how filters and sorting should work for each table field (explained separately in [Data View Filtering](Data-View-Filters.md))
 
 The data is served to the front-end via the `/data-views` API end-points, and serves data based on the request's JWT header, so we can ensure that no user can receive data that they haven't been configured to be allowed to see.
 
@@ -48,7 +49,7 @@ This endpoint is called in order to populate the Database menu in the UI.
 
 For querying a specific table. Data is returned in the following structure:
 
-```
+```js
 {
     "tableName": "user",
     "title": "Users (Restricted View)",
@@ -88,6 +89,8 @@ For querying a specific table. Data is returned in the following structure:
         },
         ...etc.
     ],
+    "searchFields": ["firstName", "lastName"],
+    "filterDefinitions": ... // See Data View Filters page
     "totalCount": 13
 }
 ```
@@ -219,8 +222,11 @@ Some things to be aware of:
 - `table_view_exclude_columns`: an array of columns to exclude. Basically, it takes all the columns collected from the "include" list, and removes any named here.
 - `detail_view_include_columns` / `detail_view_exclude_columns`: exactly the same as the "table_view" fields, except applies to the fields that show up in the Details view
 - `detail_view_header_column`: name of the field/column whose value should be used as the Header display in Details view. If not specified, the table name will just be used.
+- `default_sort_column`: the column that the table data will be ordered by when no column-sort is selected in the front-end. You should rarely need to set this -- the default is `id`, which usually corresponds to the order in which items were added, so is fine for most purposes. However, if you need to override it with a different column, this allows it.
 - `show_linked_applications`: if `true`, the `/item` endpoint will also return an array of linked applications connected to this particular item. These are taken from the outcome "join" tables, whose records are created on successful application approvals.
 - `priority`: when multiple views match the `code` (i.e. user has permissions for more than one), the view with the highest priority will be returned the to the user. A typical use case for this would be if you have a particular view that is open to all users (i.e `permissionNames` is `null`), but you want users with certain permissions to see a different view for the same request (e.g Staff might be able to see *all* users, whereas external users can only see those in their own organisation). Default value: `1`.
+
+(We also have fields `filter_include_columns`, `filter_exclude_columns`, `table_search_columns` but they are explained in [Data View Filters](Data-View-Filters.md)))
 
 Okay, so if you're just wanting to display fields directly taken from the outcome table in question, and the formatting requirements are all "simple" types (text, number, boolean, Date) the `data_view` table is all you need. However, if you want to return columns with more complex data (such as a list of ingredients, or a query to another table) or require non-default formatting, you'll need to define these in the `data_view_column_definition` table.
 
@@ -255,6 +261,8 @@ The input fields are as follows:
 }
 ```  
 `firstName` and `lastName` are native fields on the "user" table, and are at the root level of the passed-in object here. Note that this object contains *all* fields, not just the ones being returned, so you can extract values from fields not being returned, such as in this case (where you wouldn't want to return `firstName` and `lastName` fields as well as a `fullName` column.)
+
+(Again, columns relating to sorting or filtering (`sort_column`, `filter_parameters`, `filter_expression`, `filter_data_type`) are explained in [Data View Filters](Data-View-Filters.md))
 
 ### Additional formatting
 
