@@ -7402,6 +7402,7 @@ export type DataTable = Node & {
   displayName?: Maybe<Scalars['String']>;
   fieldMap?: Maybe<Scalars['JSON']>;
   isLookupTable?: Maybe<Scalars['Boolean']>;
+  dataViewCode?: Maybe<Scalars['String']>;
 };
 
 export type DataTableActiveIngredient = Node & {
@@ -7977,6 +7978,8 @@ export type DataTableCondition = {
   fieldMap?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `isLookupTable` field. */
   isLookupTable?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `dataViewCode` field. */
+  dataViewCode?: Maybe<Scalars['String']>;
 };
 
 export type DataTableContainer = Node & {
@@ -8279,6 +8282,8 @@ export type DataTableFilter = {
   fieldMap?: Maybe<JsonFilter>;
   /** Filter by the object’s `isLookupTable` field. */
   isLookupTable?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `dataViewCode` field. */
+  dataViewCode?: Maybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<DataTableFilter>>;
   /** Checks for any expressions in this list. */
@@ -8522,6 +8527,7 @@ export type DataTableInput = {
   displayName?: Maybe<Scalars['String']>;
   fieldMap?: Maybe<Scalars['JSON']>;
   isLookupTable?: Maybe<Scalars['Boolean']>;
+  dataViewCode?: Maybe<Scalars['String']>;
 };
 
 export type DataTableListOfSra = Node & {
@@ -8705,6 +8711,7 @@ export type DataTablePatch = {
   displayName?: Maybe<Scalars['String']>;
   fieldMap?: Maybe<Scalars['JSON']>;
   isLookupTable?: Maybe<Scalars['Boolean']>;
+  dataViewCode?: Maybe<Scalars['String']>;
 };
 
 export type DataTableProcessingStep = Node & {
@@ -9704,6 +9711,8 @@ export enum DataTablesOrderBy {
   FieldMapDesc = 'FIELD_MAP_DESC',
   IsLookupTableAsc = 'IS_LOOKUP_TABLE_ASC',
   IsLookupTableDesc = 'IS_LOOKUP_TABLE_DESC',
+  DataViewCodeAsc = 'DATA_VIEW_CODE_ASC',
+  DataViewCodeDesc = 'DATA_VIEW_CODE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -46079,6 +46088,7 @@ export type DataTableResolvers<ContextType = any, ParentType extends ResolversPa
   displayName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   fieldMap?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   isLookupTable?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  dataViewCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
