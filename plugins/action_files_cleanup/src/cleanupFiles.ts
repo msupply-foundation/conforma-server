@@ -1,4 +1,3 @@
-import fs from 'fs'
 import databaseMethods from './databaseMethods'
 
 import { ActionPluginInput } from '../../types'
@@ -36,7 +35,7 @@ async function cleanupFiles({ parameters, applicationData, DBConnect }: ActionPl
 
   try {
     // Get all unsubmitted files for current application
-    const files = await db.getApplicationFiles(applicationSerial)
+    const files = await db.getApplicationResponseFiles(applicationSerial)
 
     // Get responses that have uploaded file data
     const fileResponses = (await db.getFileResponses(applicationid, fileUploadPluginCode))
