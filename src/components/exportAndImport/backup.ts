@@ -52,9 +52,12 @@ const createBackup = async (password?: string) => {
     })
   })
 
-  archive.pipe(output)
-  archive.directory(path.join(SNAPSHOT_FOLDER, snapshotName), false)
-  archive.finalize()
+  await archive.pipe(output)
+  await archive.directory(path.join(SNAPSHOT_FOLDER, snapshotName), false)
+  await archive.finalize()
+
+  // Make it writeable by everyone so Dropbox can sync it
+  execSync(`chmod 666 ${BACKUPS_FOLDER}/${snapshotName}.zip`)
 }
 
 // For running backup manually using `yarn backup`
