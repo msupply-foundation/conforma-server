@@ -2,7 +2,8 @@ require('dotenv').config()
 import readlineSync from 'readline-sync'
 import { writeFileSync } from 'fs'
 import { promisify } from 'util'
-import { exec as execCallback, execSync } from 'child_process'
+import { exec as execCallback } from 'child_process'
+import { runTests } from '../src/components/actions/dev_tools/testing/testSnapshot'
 
 const exec = promisify(execCallback)
 const FRONT_END_PATH = process.env.FRONT_END_PATH
@@ -31,11 +32,13 @@ const release = async () => {
 
   console.log('Starting build tests...')
 
-  try {
-    execSync(`yarn test_snapshot ${TEST_SUITE}`, { stdio: 'inherit' })
-  } catch {
-    console.log('Build test FAIL!\n')
-    process.exit(1)
+  const result = await runTests()
+
+  if (!result) {
+    console.log(
+      `CAUTION: The test suite in ${TEST_SUITE} did not pass. Are you sure you wish to proceed with this build?`
+    )
+    if (!(await userRespondsYes())) process.exit(0)
   }
 
   const releaseType: ReleaseType = (process.argv[2] || '--prerelease') as ReleaseType
