@@ -59,10 +59,10 @@ A [python script is available](https://www.dropbox.com/download?dl=packages/drop
 
 Save this file somewhere handy on the server (e.g. in the Home folder), then alias it in your Bash path:
 
-- Open the bash config file for editing:
+- Open the bash config file for editing:  
   `nano ~/.bashrc`
-- Append the script alias:
-  `# Control Dropbox using python script`
+- Append the script alias:  
+  `# Control Dropbox using python script`  
   `alias dropbox='python3 ~/dropbox.py'  # dropbox.py in home folder`
 - Save and close the file
 - Activate aliases:
