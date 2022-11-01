@@ -21,21 +21,22 @@ If `BACKUPS_PASSWORD` it not provided, backup .zip files will be unencrypted.
 
 ### Preferences
 
-The `preferences.json` file (saved with each snapshot) contains two (optional) prefs that affect backup behaviour:
+The `preferences.json` file (saved with each snapshot) contains three (optional) prefs that affect backup behaviour:
 
 ```
 {
   "server": {
     ...,
+    "backupFilePrefix": "conforma_backup",
     "backupSchedule": [1],
     "maxBackupDurationDays: 10
   },
   ...
 }
 ```
-
-- `backupSchedule` specifies the backup schedule in [node-schedule](https://www.npmjs.com/package/node-schedule) format. By default (and as shown here), this will be at 1 A.M daily.
-- `maxBackupDurationDays` specifies how long to keep backup files for. When a backup runs, any backups older than this are deleted. (Default: 10)
+- `backupFilePrefix` -- backup files will be created with the filename: `<backupFilePrefix>_<timestamp>.zip`. E.g. `conforma_backup_2022-10-29_01-00-00.zip`. The default (if not provided) is `conforma_backup`
+- `backupSchedule` -- specifies the backup schedule in [node-schedule](https://www.npmjs.com/package/node-schedule) format. By default (and as shown here), this will be at 1 A.M daily.
+- `maxBackupDurationDays` -- specifies how long to keep backup files for. When a backup runs, any backups older than this are deleted. (Default: 10)
 
 ## Backing up with Dropbox
 
