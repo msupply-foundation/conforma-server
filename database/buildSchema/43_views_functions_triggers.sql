@@ -789,6 +789,14 @@ IMMUTABLE;
 
 -- Add columns to "review" now that these functions are defined:
 ALTER TABLE public.review
+    DROP COLUMN IF EXISTS application_id CASCADE,
+    DROP COLUMN IF EXISTS reviewer_id CASCADE,
+    DROP COLUMN IF EXISTS level_number CASCADE,
+    DROP COLUMN IF EXISTS stage_number CASCADE,
+    DROP COLUMN IF EXISTS time_stage_created CASCADE,
+    DROP COLUMN IF EXISTS is_last_level CASCADE,
+    DROP COLUMN IF EXISTS is_last_stage CASCADE,
+    DROP COLUMN IF EXISTS is_final_decision CASCADE,
     ADD COLUMN IF NOT EXISTS application_id integer GENERATED ALWAYS AS (public.review_application_id (review_assignment_id)) STORED REFERENCES public.application (id) ON DELETE CASCADE,
     ADD COLUMN IF NOT EXISTS reviewer_id integer GENERATED ALWAYS AS (public.review_reviewer_id (review_assignment_id)) STORED REFERENCES public.user (id) ON DELETE CASCADE,
     ADD COLUMN IF NOT EXISTS level_number integer GENERATED ALWAYS AS (public.review_level (review_assignment_id)) STORED,
