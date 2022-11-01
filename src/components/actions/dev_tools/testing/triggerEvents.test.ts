@@ -3,7 +3,6 @@ import { readFileSync } from 'fs'
 import { loadActionPlugins } from '../../../pluginsConnect'
 import { RequestProps, testTrigger } from '../'
 import useSnapshot from '../../../../components/snapshots/useSnapshot'
-import { TEST_SCRIPT_FOLDER, SNAPSHOT_FOLDER } from '../../../../constants'
 
 interface TestData {
   name: string

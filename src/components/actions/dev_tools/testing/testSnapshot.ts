@@ -55,10 +55,14 @@ export const runTests = async () => {
     execSync(`yarn test --forceExit triggerEvents ${testScriptFile} ${snapshotName}`, {
       stdio: 'inherit',
     })
+    // Save "PASS" file to snapshot folder
+    // Re-zip
     return true
   } catch {
     console.error('FAILED TEST :(')
     return false
+    // Delete "PASS" file from snapshot
+    // Re-zip
   }
 }
 
