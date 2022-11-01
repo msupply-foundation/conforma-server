@@ -43,6 +43,7 @@ typings/
 # Localisation & Preferences folder -- gets restored from core_templates
 /localisation
 /preferences
+/snapshot_test_scripts
 /backups
 
 #GraphQL schema auto-generated
