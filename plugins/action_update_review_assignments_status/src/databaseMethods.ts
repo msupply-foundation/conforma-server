@@ -1,3 +1,5 @@
+import { ReviewAssignment } from '../../../src/generated/graphql'
+
 const databaseMethods = (DBConnect: any) => ({
   getReviewAssignmentById: async (reviewAssignmentId: number) => {
     const text = `
@@ -21,9 +23,12 @@ const databaseMethods = (DBConnect: any) => ({
     stageNumber: number,
     reviewLevel: number,
     isSelfAssignable: boolean
-  ) => {
+  ): Promise<ReviewAssignment[]> => {
     const text = `
-    SELECT * FROM review_assignment
+    SELECT 
+      id,
+      assigned_sections as "assignedSections"
+    FROM review_assignment
     WHERE application_id = $2
     AND stage_number = $3
     AND level_number = $4
@@ -41,7 +46,7 @@ const databaseMethods = (DBConnect: any) => ({
       throw err
     }
   },
-  updateReviewAssignments: async (reviewAssignments: any) => {
+  updateReviewAssignments: async (reviewAssignments: { id: number; isLocked: boolean }[]) => {
     const reviewAssignmentUpdateResults = []
     for (const reviewAssignment of reviewAssignments) {
       const { id, isLocked } = reviewAssignment
