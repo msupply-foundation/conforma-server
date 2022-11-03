@@ -374,14 +374,21 @@ The internal function called by this endpoint is the same one run by the ["gener
 
 #### Data Views
 
-GET:
-`/data-views`
-`/data-views/<dataViewCode>`
-`/data-views/<dataViewCode>/<itemId>`
+GET: `/data-views`
+POST: `/data-views/<dataViewCode>`
+GET: `/data-views/<dataViewCode>/<itemId>`
 
 For displaying custom data (e.g. Users, Products, Orgs). User's JWT determines what they are allowed to see, and data is returned accordingly.
 
 Please see [Data View](Data-View.md) for more info.
+
+There are also related filter-specific endpoints:
+
+POST: `/data-views/<dataViewCode>/filterList/<column>`
+POST: `/admin/generate-filter-data-fields/<table>`
+
+See [Data View Filters](Data-View-Filters.md) for more info.
+
 
 #### Preview Actions
 
