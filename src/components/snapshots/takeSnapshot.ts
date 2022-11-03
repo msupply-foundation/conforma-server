@@ -146,7 +146,7 @@ const zipSnapshot = async (snapshotFolder: string, snapshotName: string) => {
 
 const getSnapshotInfo = () => {
   return {
-    timestamp: DateTime.now().toISOTime(),
+    timestamp: DateTime.now().toISO(),
     version: config.version,
   }
 }
