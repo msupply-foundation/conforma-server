@@ -1,5 +1,5 @@
 const databaseMethods = (DBConnect: any) => ({
-  getApplicationFiles: async (applicationSerial: string) => {
+  getApplicationResponseFiles: async (applicationSerial: string) => {
     const text = `
     SELECT
       unique_id AS "uniqueId",
@@ -9,6 +9,10 @@ const databaseMethods = (DBConnect: any) => ({
     FROM file
     WHERE application_serial = $1
     AND submitted = false
+    AND application_response_id IS NOT NULL
+    AND is_output_doc = false
+    AND is_internal_reference_doc = false
+    AND is_external_reference_doc = false
     `
     try {
       const result = await DBConnect.query({ text, values: [applicationSerial] })

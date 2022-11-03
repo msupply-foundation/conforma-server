@@ -1,6 +1,6 @@
 {
   "name": "conforma-server",
-  "version": "0.4.5-16",
+  "version": "0.4.6-10",
   "main": "server.js",
   "license": "MIT",
   "repository": {
@@ -16,6 +16,7 @@
     "@graphql-codegen/typescript-operations": "^1.17.8",
     "@graphql-codegen/typescript-resolvers": "^1.17.10",
     "@types/adm-zip": "^0.4.34",
+    "@types/archiver": "^5.3.1",
     "@types/bcrypt": "^3.0.0",
     "@types/carbone": "^1.2.0",
     "@types/jest": "^26.0.10",
@@ -64,13 +65,15 @@
     "docker_run": "cd docker && ./run.sh",
     "release": "./utils/release.sh",
     "migrate": "ts-node ./database/migration/migrateData.ts --migrate",
-    "cleanup": "ts-node ./src/components/actions/scheduler.ts --cleanup"
+    "cleanup": "ts-node ./src/components/actions/scheduler.ts --cleanup",
+    "backup": "ts-node ./src/components/exportAndImport/backup.ts --backup"
   },
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^6.0.0",
-    "@openmsupply/deep-comparison": "^1.0.1",
     "@openmsupply/expression-evaluator": "^1.11.2",
     "adm-zip": "^0.5.5",
+    "archiver": "^5.3.1",
+    "archiver-zip-encrypted": "^1.0.11",
     "bcrypt": "^5.0.0",
     "carbone": "^3.2.3",
     "comment-json": "^4.1.0",

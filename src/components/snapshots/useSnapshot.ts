@@ -40,14 +40,11 @@ const useSnapshot: SnapshotOperation = async ({
   createDefaultDataFolders()
 
   try {
-    console.log(`using snapshot, name: ${snapshotName}`)
+    console.log(`Using snapshot: ${snapshotName}`)
 
     const snapshotFolder = path.join(SNAPSHOT_FOLDER, snapshotName)
 
     const options = await getOptions(snapshotFolder, optionsName, inOptions)
-    const snapshotRaw = await fs.readFile(path.join(snapshotFolder, `${SNAPSHOT_FILE_NAME}.json`), {
-      encoding: 'utf-8',
-    })
 
     // Don't proceed if snapshot version higher than current installation
     const infoFile = path.join(snapshotFolder, `${INFO_FILE_NAME}.json`)
@@ -63,42 +60,76 @@ const useSnapshot: SnapshotOperation = async ({
       throw `Snapshot was created with version: ${snapshotVersion}\n You can't install a snapshot created with a version newer than the current application version: ${config.version}`
     }
 
-    const snapshotObject = JSON.parse(snapshotRaw)
-
-    if (options.shouldReInitialise) {
-      await initialiseDatabase(options, snapshotFolder)
-    }
-
-    if (options.resetFiles) {
+    if (options.resetFiles || options.usePgDump) {
       execSync(`rm -rf ${FILES_FOLDER}/*`)
     }
 
-    // Prevent triggers from running while we insert data, but only for full re-init
-    if (options.shouldReInitialise) {
+    if (options.usePgDump) {
+      // The quick way, using pg_restore (whole database only, no partial
+      // exports)
+      console.log('Restoring database...')
+
+      // Safer to drop and recreate whole schema, as there can be errors when
+      // trying to drop individual objects using --clean, especially if the
+      // incoming database differs from the current database, schema-wise
+      execSync(`psql -U postgres -d tmf_app_manager -c 'DROP schema public CASCADE;'`)
+      execSync(`psql -U postgres -d tmf_app_manager -c 'CREATE schema public;'`)
+      execSync(
+        `pg_restore -U postgres --clean --if-exists --dbname tmf_app_manager ${snapshotFolder}/database.dump`
+      )
+
+      console.log('Restoring database...done')
+
+      // Copy files
+      console.log('Importing files...')
+      execSync(`cp -a '${snapshotFolder}/files'/. '${FILES_FOLDER}'`)
+      console.log('Importing files...done')
+    } else {
+      // The old way, using JSON database object export. Deprecated for full
+      // database export, but kept here for backwards compatibility, and for
+      // "custom" (i.e. not full database) snapshots (eg. template
+      // import/export)
+      const snapshotRaw = await fs.readFile(
+        path.join(snapshotFolder, `${SNAPSHOT_FILE_NAME}.json`),
+        {
+          encoding: 'utf-8',
+        }
+      )
+      const snapshotObject = JSON.parse(snapshotRaw)
+
+      if (options.shouldReInitialise) {
+        await initialiseDatabase(options, snapshotFolder)
+      }
+
+      // Prevent triggers from running while we insert data, but only for full re-init
+      if (options.shouldReInitialise) {
+        triggerTables.forEach((table) => {
+          execSync(
+            `psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} DISABLE TRIGGER ALL"`
+          )
+        })
+      }
+
+      console.log('inserting from snapshot ... ')
+      const insertedRecords = await importFromJson(
+        snapshotObject,
+        options,
+        options.shouldReInitialise
+      )
+      console.log('inserting from snapshot ... done')
+
+      // Update serials
+      console.log('running serial update ... ')
+      execSync('./database/update_serials.sh', { cwd: ROOT_FOLDER, stdio: 'inherit' })
+      console.log('running serial update ... done')
+
+      // Re-enable triggers
       triggerTables.forEach((table) => {
-        execSync(
-          `psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} DISABLE TRIGGER ALL"`
-        )
+        execSync(`psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} ENABLE TRIGGER ALL"`)
       })
+
+      await copyFiles(snapshotFolder, insertedRecords.file)
     }
-
-    // Pause to allow postgraphile "watch" to detect changed schema
-    delay(2500)
-
-    console.log('inserting from snapshot ... ')
-    const insertedRecords = await importFromJson(
-      snapshotObject,
-      options,
-      options.shouldReInitialise
-    )
-    console.log('inserting from snapshot ... done')
-
-    // Re-enable triggers
-    triggerTables.forEach((table) => {
-      execSync(`psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} ENABLE TRIGGER ALL"`)
-    })
-
-    await copyFiles(snapshotFolder, insertedRecords.file)
 
     // Import localisations
     if (options?.includeLocalisation) {
@@ -120,10 +151,8 @@ const useSnapshot: SnapshotOperation = async ({
       }
     }
 
-    // Update serials
-    console.log('running serial update ... ')
-    execSync('./database/update_serials.sh', { cwd: ROOT_FOLDER, stdio: 'inherit' })
-    console.log('running serial update ... done')
+    // Pause to allow postgraphile "watch" to detect changed schema
+    delay(1500)
 
     // Migrate database to latest version
     console.log('Migrating database (if required)...)')

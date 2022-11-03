@@ -17,11 +17,11 @@ export type Scalars = {
   Datetime: any;
   /** The day, does not include a time. */
   Date: any;
-  /** A signed eight-byte integer. The upper big integer values are greater than the max value for a JavaScript number. Therefore all big integers will be output as strings and not numbers. */
-  BigInt: any;
   CharacterData: any;
   SqlIdentifier: any;
   YesOrNo: any;
+  /** A signed eight-byte integer. The upper big integer values are greater than the max value for a JavaScript number. Therefore all big integers will be output as strings and not numbers. */
+  BigInt: any;
 };
 
 export type ActionPlugin = Node & {
@@ -1311,9 +1311,6 @@ export type ApplicationListShape = {
   reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
   assignerAction?: Maybe<AssignerAction>;
-  totalQuestions?: Maybe<Scalars['BigInt']>;
-  totalAssigned?: Maybe<Scalars['BigInt']>;
-  totalAssignLocked?: Maybe<Scalars['BigInt']>;
 };
 
 /**
@@ -1355,12 +1352,6 @@ export type ApplicationListShapeCondition = {
   reviewerAction?: Maybe<ReviewerAction>;
   /** Checks for equality with the object’s `assignerAction` field. */
   assignerAction?: Maybe<AssignerAction>;
-  /** Checks for equality with the object’s `totalQuestions` field. */
-  totalQuestions?: Maybe<Scalars['BigInt']>;
-  /** Checks for equality with the object’s `totalAssigned` field. */
-  totalAssigned?: Maybe<Scalars['BigInt']>;
-  /** Checks for equality with the object’s `totalAssignLocked` field. */
-  totalAssignLocked?: Maybe<Scalars['BigInt']>;
 };
 
 /** A filter to be used against `ApplicationListShape` object types. All fields are combined with a logical ‘and.’ */
@@ -1399,12 +1390,6 @@ export type ApplicationListShapeFilter = {
   reviewerAction?: Maybe<ReviewerActionFilter>;
   /** Filter by the object’s `assignerAction` field. */
   assignerAction?: Maybe<AssignerActionFilter>;
-  /** Filter by the object’s `totalQuestions` field. */
-  totalQuestions?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `totalAssigned` field. */
-  totalAssigned?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `totalAssignLocked` field. */
-  totalAssignLocked?: Maybe<BigIntFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationListShapeFilter>>;
   /** Checks for any expressions in this list. */
@@ -1432,9 +1417,6 @@ export type ApplicationListShapeInput = {
   reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
   assignerAction?: Maybe<AssignerAction>;
-  totalQuestions?: Maybe<Scalars['BigInt']>;
-  totalAssigned?: Maybe<Scalars['BigInt']>;
-  totalAssignLocked?: Maybe<Scalars['BigInt']>;
 };
 
 /** A connection to a list of `ApplicationListShape` values. */
@@ -1495,13 +1477,7 @@ export enum ApplicationListShapesOrderBy {
   ReviewerActionAsc = 'REVIEWER_ACTION_ASC',
   ReviewerActionDesc = 'REVIEWER_ACTION_DESC',
   AssignerActionAsc = 'ASSIGNER_ACTION_ASC',
-  AssignerActionDesc = 'ASSIGNER_ACTION_DESC',
-  TotalQuestionsAsc = 'TOTAL_QUESTIONS_ASC',
-  TotalQuestionsDesc = 'TOTAL_QUESTIONS_DESC',
-  TotalAssignedAsc = 'TOTAL_ASSIGNED_ASC',
-  TotalAssignedDesc = 'TOTAL_ASSIGNED_DESC',
-  TotalAssignLockedAsc = 'TOTAL_ASSIGN_LOCKED_ASC',
-  TotalAssignLockedDesc = 'TOTAL_ASSIGN_LOCKED_DESC'
+  AssignerActionDesc = 'ASSIGNER_ACTION_DESC'
 }
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -2465,6 +2441,7 @@ export type ApplicationResponse = Node & {
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   /** Reads a single `TemplateElement` that is related to this `ApplicationResponse`. */
   templateElement?: Maybe<TemplateElement>;
   /** Reads a single `Application` that is related to this `ApplicationResponse`. */
@@ -2538,6 +2515,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput =
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -2623,6 +2601,8 @@ export type ApplicationResponseCondition = {
   timeUpdated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `timeSubmitted` field. */
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `evaluatedParameters` field. */
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
 };
 
 /** A filter to be used against `ApplicationResponse` object types. All fields are combined with a logical ‘and.’ */
@@ -2647,6 +2627,8 @@ export type ApplicationResponseFilter = {
   timeUpdated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `timeSubmitted` field. */
   timeSubmitted?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `evaluatedParameters` field. */
+  evaluatedParameters?: Maybe<JsonFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
   reviewResponses?: Maybe<ApplicationResponseToManyReviewResponseFilter>;
   /** Some related `reviewResponses` exist. */
@@ -2679,6 +2661,7 @@ export type ApplicationResponseInput = {
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -2769,6 +2752,7 @@ export type ApplicationResponsePatch = {
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -2820,6 +2804,8 @@ export enum ApplicationResponsesOrderBy {
   TimeUpdatedDesc = 'TIME_UPDATED_DESC',
   TimeSubmittedAsc = 'TIME_SUBMITTED_ASC',
   TimeSubmittedDesc = 'TIME_SUBMITTED_DESC',
+  EvaluatedParametersAsc = 'EVALUATED_PARAMETERS_ASC',
+  EvaluatedParametersDesc = 'EVALUATED_PARAMETERS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -2866,6 +2852,7 @@ export type ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInp
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -2933,7 +2920,7 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
@@ -4312,6 +4299,65 @@ export type ApplicationUserIdFkeyUserCreateInput = {
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
 
+/** A `AssignedQuestionsRecord` edge in the connection. */
+export type AssignedQuestionEdge = {
+  __typename?: 'AssignedQuestionEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `AssignedQuestionsRecord` at the end of the edge. */
+  node?: Maybe<AssignedQuestionsRecord>;
+};
+
+/** A connection to a list of `AssignedQuestionsRecord` values. */
+export type AssignedQuestionsConnection = {
+  __typename?: 'AssignedQuestionsConnection';
+  /** A list of `AssignedQuestionsRecord` objects. */
+  nodes: Array<Maybe<AssignedQuestionsRecord>>;
+  /** A list of edges which contains the `AssignedQuestionsRecord` and cursor to aid in pagination. */
+  edges: Array<AssignedQuestionEdge>;
+  /** The count of *all* `AssignedQuestionsRecord` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** The return type of our `assignedQuestions` query. */
+export type AssignedQuestionsRecord = {
+  __typename?: 'AssignedQuestionsRecord';
+  reviewId?: Maybe<Scalars['Int']>;
+  responseId?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewResponseCode?: Maybe<Scalars['String']>;
+  reviewResponseStatus?: Maybe<ReviewResponseStatus>;
+  decision?: Maybe<ReviewResponseDecision>;
+  isOptional?: Maybe<Scalars['Boolean']>;
+  isLastestReview?: Maybe<Scalars['Boolean']>;
+};
+
+/** A filter to be used against `AssignedQuestionsRecord` object types. All fields are combined with a logical ‘and.’ */
+export type AssignedQuestionsRecordFilter = {
+  /** Filter by the object’s `reviewId` field. */
+  reviewId?: Maybe<IntFilter>;
+  /** Filter by the object’s `responseId` field. */
+  responseId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewResponseCode` field. */
+  reviewResponseCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `reviewResponseStatus` field. */
+  reviewResponseStatus?: Maybe<ReviewResponseStatusFilter>;
+  /** Filter by the object’s `decision` field. */
+  decision?: Maybe<ReviewResponseDecisionFilter>;
+  /** Filter by the object’s `isOptional` field. */
+  isOptional?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isLastestReview` field. */
+  isLastestReview?: Maybe<BooleanFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<AssignedQuestionsRecordFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<AssignedQuestionsRecordFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<AssignedQuestionsRecordFilter>;
+};
+
 export enum AssignerAction {
   Assign = 'ASSIGN',
   AssignLocked = 'ASSIGN_LOCKED',
@@ -4369,9 +4415,6 @@ export type AssignerListRecord = {
   __typename?: 'AssignerListRecord';
   applicationId?: Maybe<Scalars['Int']>;
   assignerAction?: Maybe<AssignerAction>;
-  totalQuestions?: Maybe<Scalars['BigInt']>;
-  totalAssigned?: Maybe<Scalars['BigInt']>;
-  totalAssignLocked?: Maybe<Scalars['BigInt']>;
 };
 
 /** A filter to be used against `AssignerListRecord` object types. All fields are combined with a logical ‘and.’ */
@@ -4380,12 +4423,6 @@ export type AssignerListRecordFilter = {
   applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `assignerAction` field. */
   assignerAction?: Maybe<AssignerActionFilter>;
-  /** Filter by the object’s `totalQuestions` field. */
-  totalQuestions?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `totalAssigned` field. */
-  totalAssigned?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `totalAssignLocked` field. */
-  totalAssignLocked?: Maybe<BigIntFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<AssignerListRecordFilter>>;
   /** Checks for any expressions in this list. */
@@ -4438,32 +4475,6 @@ export type AssignmentListRecordFilter = {
   not?: Maybe<AssignmentListRecordFilter>;
 };
 
-
-/** A filter to be used against BigInt fields. All fields are combined with a logical ‘and.’ */
-export type BigIntFilter = {
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value. */
-  equalTo?: Maybe<Scalars['BigInt']>;
-  /** Not equal to the specified value. */
-  notEqualTo?: Maybe<Scalars['BigInt']>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<Scalars['BigInt']>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<Scalars['BigInt']>;
-  /** Included in the specified list. */
-  in?: Maybe<Array<Scalars['BigInt']>>;
-  /** Not included in the specified list. */
-  notIn?: Maybe<Array<Scalars['BigInt']>>;
-  /** Less than the specified value. */
-  lessThan?: Maybe<Scalars['BigInt']>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<Scalars['BigInt']>;
-  /** Greater than the specified value. */
-  greaterThan?: Maybe<Scalars['BigInt']>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<Scalars['BigInt']>;
-};
 
 /** A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’ */
 export type BooleanFilter = {
@@ -6384,6 +6395,9 @@ export type DataView = Node & {
   detailViewHeaderColumn: Scalars['String'];
   showLinkedApplications: Scalars['Boolean'];
   priority?: Maybe<Scalars['Int']>;
+  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type DataViewColumnDefinition = Node & {
@@ -6398,6 +6412,10 @@ export type DataViewColumnDefinition = Node & {
   elementParameters?: Maybe<Scalars['JSON']>;
   additionalFormatting?: Maybe<Scalars['JSON']>;
   valueExpression?: Maybe<Scalars['JSON']>;
+  sortColumn?: Maybe<Scalars['String']>;
+  filterParameters?: Maybe<Scalars['JSON']>;
+  filterExpression?: Maybe<Scalars['JSON']>;
+  filterDataType?: Maybe<Scalars['String']>;
 };
 
 /**
@@ -6421,6 +6439,14 @@ export type DataViewColumnDefinitionCondition = {
   additionalFormatting?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `valueExpression` field. */
   valueExpression?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `sortColumn` field. */
+  sortColumn?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `filterParameters` field. */
+  filterParameters?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `filterExpression` field. */
+  filterExpression?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `filterDataType` field. */
+  filterDataType?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `DataViewColumnDefinition` object types. All fields are combined with a logical ‘and.’ */
@@ -6441,6 +6467,14 @@ export type DataViewColumnDefinitionFilter = {
   additionalFormatting?: Maybe<JsonFilter>;
   /** Filter by the object’s `valueExpression` field. */
   valueExpression?: Maybe<JsonFilter>;
+  /** Filter by the object’s `sortColumn` field. */
+  sortColumn?: Maybe<StringFilter>;
+  /** Filter by the object’s `filterParameters` field. */
+  filterParameters?: Maybe<JsonFilter>;
+  /** Filter by the object’s `filterExpression` field. */
+  filterExpression?: Maybe<JsonFilter>;
+  /** Filter by the object’s `filterDataType` field. */
+  filterDataType?: Maybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<DataViewColumnDefinitionFilter>>;
   /** Checks for any expressions in this list. */
@@ -6459,6 +6493,10 @@ export type DataViewColumnDefinitionInput = {
   elementParameters?: Maybe<Scalars['JSON']>;
   additionalFormatting?: Maybe<Scalars['JSON']>;
   valueExpression?: Maybe<Scalars['JSON']>;
+  sortColumn?: Maybe<Scalars['String']>;
+  filterParameters?: Maybe<Scalars['JSON']>;
+  filterExpression?: Maybe<Scalars['JSON']>;
+  filterDataType?: Maybe<Scalars['String']>;
 };
 
 /** Represents an update to a `DataViewColumnDefinition`. Fields that are set will be updated. */
@@ -6471,6 +6509,10 @@ export type DataViewColumnDefinitionPatch = {
   elementParameters?: Maybe<Scalars['JSON']>;
   additionalFormatting?: Maybe<Scalars['JSON']>;
   valueExpression?: Maybe<Scalars['JSON']>;
+  sortColumn?: Maybe<Scalars['String']>;
+  filterParameters?: Maybe<Scalars['JSON']>;
+  filterExpression?: Maybe<Scalars['JSON']>;
+  filterDataType?: Maybe<Scalars['String']>;
 };
 
 /** A connection to a list of `DataViewColumnDefinition` values. */
@@ -6514,6 +6556,14 @@ export enum DataViewColumnDefinitionsOrderBy {
   AdditionalFormattingDesc = 'ADDITIONAL_FORMATTING_DESC',
   ValueExpressionAsc = 'VALUE_EXPRESSION_ASC',
   ValueExpressionDesc = 'VALUE_EXPRESSION_DESC',
+  SortColumnAsc = 'SORT_COLUMN_ASC',
+  SortColumnDesc = 'SORT_COLUMN_DESC',
+  FilterParametersAsc = 'FILTER_PARAMETERS_ASC',
+  FilterParametersDesc = 'FILTER_PARAMETERS_DESC',
+  FilterExpressionAsc = 'FILTER_EXPRESSION_ASC',
+  FilterExpressionDesc = 'FILTER_EXPRESSION_DESC',
+  FilterDataTypeAsc = 'FILTER_DATA_TYPE_ASC',
+  FilterDataTypeDesc = 'FILTER_DATA_TYPE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -6549,6 +6599,12 @@ export type DataViewCondition = {
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `priority` field. */
   priority?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `tableSearchColumns` field. */
+  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `filterIncludeColumns` field. */
+  filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `filterExcludeColumns` field. */
+  filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** A filter to be used against `DataView` object types. All fields are combined with a logical ‘and.’ */
@@ -6579,6 +6635,12 @@ export type DataViewFilter = {
   showLinkedApplications?: Maybe<BooleanFilter>;
   /** Filter by the object’s `priority` field. */
   priority?: Maybe<IntFilter>;
+  /** Filter by the object’s `tableSearchColumns` field. */
+  tableSearchColumns?: Maybe<StringListFilter>;
+  /** Filter by the object’s `filterIncludeColumns` field. */
+  filterIncludeColumns?: Maybe<StringListFilter>;
+  /** Filter by the object’s `filterExcludeColumns` field. */
+  filterExcludeColumns?: Maybe<StringListFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<DataViewFilter>>;
   /** Checks for any expressions in this list. */
@@ -6602,6 +6664,9 @@ export type DataViewInput = {
   detailViewHeaderColumn: Scalars['String'];
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
   priority?: Maybe<Scalars['Int']>;
+  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** Represents an update to a `DataView`. Fields that are set will be updated. */
@@ -6619,6 +6684,9 @@ export type DataViewPatch = {
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
   priority?: Maybe<Scalars['Int']>;
+  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** A connection to a list of `DataView` values. */
@@ -6672,6 +6740,12 @@ export enum DataViewsOrderBy {
   ShowLinkedApplicationsDesc = 'SHOW_LINKED_APPLICATIONS_DESC',
   PriorityAsc = 'PRIORITY_ASC',
   PriorityDesc = 'PRIORITY_DESC',
+  TableSearchColumnsAsc = 'TABLE_SEARCH_COLUMNS_ASC',
+  TableSearchColumnsDesc = 'TABLE_SEARCH_COLUMNS_DESC',
+  FilterIncludeColumnsAsc = 'FILTER_INCLUDE_COLUMNS_ASC',
+  FilterIncludeColumnsDesc = 'FILTER_INCLUDE_COLUMNS_DESC',
+  FilterExcludeColumnsAsc = 'FILTER_EXCLUDE_COLUMNS_ASC',
+  FilterExcludeColumnsDesc = 'FILTER_EXCLUDE_COLUMNS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -7281,17 +7355,6 @@ export type DeleteDataViewByNodeIdInput = {
   clientMutationId?: Maybe<Scalars['String']>;
   /** The globally unique `ID` which will identify a single `DataView` to be deleted. */
   nodeId: Scalars['ID'];
-};
-
-/** All input for the `deleteDataViewByTableNameAndCode` mutation. */
-export type DeleteDataViewByTableNameAndCodeInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  tableName: Scalars['String'];
-  code: Scalars['String'];
 };
 
 /** All input for the `deleteDataViewColumnDefinitionByNodeId` mutation. */
@@ -8751,6 +8814,17 @@ export type DeleteUserOrganisationByNodeIdInput = {
   nodeId: Scalars['ID'];
 };
 
+/** All input for the `deleteUserOrganisationByUserIdAndOrganisationId` mutation. */
+export type DeleteUserOrganisationByUserIdAndOrganisationIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  userId: Scalars['Int'];
+  organisationId: Scalars['Int'];
+};
+
 /** All input for the `deleteUserOrganisation` mutation. */
 export type DeleteUserOrganisationInput = {
   /**
@@ -9191,6 +9265,7 @@ export type FileApplicationResponseIdFkeyApplicationResponseCreateInput = {
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -10159,38 +10234,6 @@ export type IntFilter = {
   greaterThanOrEqualTo?: Maybe<Scalars['Int']>;
 };
 
-export enum IsReviewableStatus {
-  Always = 'ALWAYS',
-  Never = 'NEVER',
-  OptionalIfNoResponse = 'OPTIONAL_IF_NO_RESPONSE'
-}
-
-/** A filter to be used against IsReviewableStatus fields. All fields are combined with a logical ‘and.’ */
-export type IsReviewableStatusFilter = {
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value. */
-  equalTo?: Maybe<IsReviewableStatus>;
-  /** Not equal to the specified value. */
-  notEqualTo?: Maybe<IsReviewableStatus>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<IsReviewableStatus>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<IsReviewableStatus>;
-  /** Included in the specified list. */
-  in?: Maybe<Array<IsReviewableStatus>>;
-  /** Not included in the specified list. */
-  notIn?: Maybe<Array<IsReviewableStatus>>;
-  /** Less than the specified value. */
-  lessThan?: Maybe<IsReviewableStatus>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<IsReviewableStatus>;
-  /** Greater than the specified value. */
-  greaterThan?: Maybe<IsReviewableStatus>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<IsReviewableStatus>;
-};
-
 
 /** A filter to be used against JSON fields. All fields are combined with a logical ‘and.’ */
 export type JsonFilter = {
@@ -10367,8 +10410,6 @@ export type Mutation = {
   updateDataViewByNodeId?: Maybe<UpdateDataViewPayload>;
   /** Updates a single `DataView` using a unique key and a patch. */
   updateDataView?: Maybe<UpdateDataViewPayload>;
-  /** Updates a single `DataView` using a unique key and a patch. */
-  updateDataViewByTableNameAndCode?: Maybe<UpdateDataViewPayload>;
   /** Updates a single `DataViewColumnDefinition` using its globally unique id and a patch. */
   updateDataViewColumnDefinitionByNodeId?: Maybe<UpdateDataViewColumnDefinitionPayload>;
   /** Updates a single `DataViewColumnDefinition` using a unique key and a patch. */
@@ -10507,6 +10548,8 @@ export type Mutation = {
   updateUserOrganisationByNodeId?: Maybe<UpdateUserOrganisationPayload>;
   /** Updates a single `UserOrganisation` using a unique key and a patch. */
   updateUserOrganisation?: Maybe<UpdateUserOrganisationPayload>;
+  /** Updates a single `UserOrganisation` using a unique key and a patch. */
+  updateUserOrganisationByUserIdAndOrganisationId?: Maybe<UpdateUserOrganisationPayload>;
   /** Updates a single `Verification` using its globally unique id and a patch. */
   updateVerificationByNodeId?: Maybe<UpdateVerificationPayload>;
   /** Updates a single `Verification` using a unique key and a patch. */
@@ -10565,8 +10608,6 @@ export type Mutation = {
   deleteDataViewByNodeId?: Maybe<DeleteDataViewPayload>;
   /** Deletes a single `DataView` using a unique key. */
   deleteDataView?: Maybe<DeleteDataViewPayload>;
-  /** Deletes a single `DataView` using a unique key. */
-  deleteDataViewByTableNameAndCode?: Maybe<DeleteDataViewPayload>;
   /** Deletes a single `DataViewColumnDefinition` using its globally unique id. */
   deleteDataViewColumnDefinitionByNodeId?: Maybe<DeleteDataViewColumnDefinitionPayload>;
   /** Deletes a single `DataViewColumnDefinition` using a unique key. */
@@ -10705,6 +10746,8 @@ export type Mutation = {
   deleteUserOrganisationByNodeId?: Maybe<DeleteUserOrganisationPayload>;
   /** Deletes a single `UserOrganisation` using a unique key. */
   deleteUserOrganisation?: Maybe<DeleteUserOrganisationPayload>;
+  /** Deletes a single `UserOrganisation` using a unique key. */
+  deleteUserOrganisationByUserIdAndOrganisationId?: Maybe<DeleteUserOrganisationPayload>;
   /** Deletes a single `Verification` using its globally unique id. */
   deleteVerificationByNodeId?: Maybe<DeleteVerificationPayload>;
   /** Deletes a single `Verification` using a unique key. */
@@ -11124,12 +11167,6 @@ export type MutationUpdateDataViewArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDataViewByTableNameAndCodeArgs = {
-  input: UpdateDataViewByTableNameAndCodeInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateDataViewColumnDefinitionByNodeIdArgs = {
   input: UpdateDataViewColumnDefinitionByNodeIdInput;
 };
@@ -11544,6 +11581,12 @@ export type MutationUpdateUserOrganisationArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUserOrganisationByUserIdAndOrganisationIdArgs = {
+  input: UpdateUserOrganisationByUserIdAndOrganisationIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateVerificationByNodeIdArgs = {
   input: UpdateVerificationByNodeIdInput;
 };
@@ -11714,12 +11757,6 @@ export type MutationDeleteDataViewByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteDataViewArgs = {
   input: DeleteDataViewInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDataViewByTableNameAndCodeArgs = {
-  input: DeleteDataViewByTableNameAndCodeInput;
 };
 
 
@@ -12138,6 +12175,12 @@ export type MutationDeleteUserOrganisationArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteUserOrganisationByUserIdAndOrganisationIdArgs = {
+  input: DeleteUserOrganisationByUserIdAndOrganisationIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteVerificationByNodeIdArgs = {
   input: DeleteVerificationByNodeIdInput;
 };
@@ -12178,8 +12221,10 @@ export type Notification = Node & {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
+  timestamp: Scalars['Datetime'];
   isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  emailServerLog?: Maybe<Scalars['String']>;
   /** Reads a single `User` that is related to this `Notification`. */
   user?: Maybe<User>;
   /** Reads a single `Application` that is related to this `Notification`. */
@@ -12269,8 +12314,10 @@ export type NotificationApplicationIdFkeyNotificationCreateInput = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
   reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
@@ -12297,10 +12344,14 @@ export type NotificationCondition = {
   message?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `attachments` field. */
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** Checks for equality with the object’s `emailSent` field. */
-  emailSent?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `timestamp` field. */
+  timestamp?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `isRead` field. */
   isRead?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `emailSent` field. */
+  emailSent?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `emailServerLog` field. */
+  emailServerLog?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `Notification` object types. All fields are combined with a logical ‘and.’ */
@@ -12321,10 +12372,14 @@ export type NotificationFilter = {
   message?: Maybe<StringFilter>;
   /** Filter by the object’s `attachments` field. */
   attachments?: Maybe<StringListFilter>;
-  /** Filter by the object’s `emailSent` field. */
-  emailSent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `timestamp` field. */
+  timestamp?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `isRead` field. */
   isRead?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `emailSent` field. */
+  emailSent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `emailServerLog` field. */
+  emailServerLog?: Maybe<StringFilter>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
@@ -12355,8 +12410,10 @@ export type NotificationInput = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
   reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
@@ -12439,8 +12496,10 @@ export type NotificationPatch = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
   reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
@@ -12493,8 +12552,10 @@ export type NotificationReviewIdFkeyNotificationCreateInput = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
   reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
@@ -12563,10 +12624,14 @@ export enum NotificationsOrderBy {
   MessageDesc = 'MESSAGE_DESC',
   AttachmentsAsc = 'ATTACHMENTS_ASC',
   AttachmentsDesc = 'ATTACHMENTS_DESC',
-  EmailSentAsc = 'EMAIL_SENT_ASC',
-  EmailSentDesc = 'EMAIL_SENT_DESC',
+  TimestampAsc = 'TIMESTAMP_ASC',
+  TimestampDesc = 'TIMESTAMP_DESC',
   IsReadAsc = 'IS_READ_ASC',
   IsReadDesc = 'IS_READ_DESC',
+  EmailSentAsc = 'EMAIL_SENT_ASC',
+  EmailSentDesc = 'EMAIL_SENT_DESC',
+  EmailServerLogAsc = 'EMAIL_SERVER_LOG_ASC',
+  EmailServerLogDesc = 'EMAIL_SERVER_LOG_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -12624,8 +12689,10 @@ export type NotificationUserIdFkeyNotificationCreateInput = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
   reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
@@ -14629,7 +14696,6 @@ export type Query = Node & {
   dataTable?: Maybe<DataTable>;
   dataTableByTableName?: Maybe<DataTable>;
   dataView?: Maybe<DataView>;
-  dataViewByTableNameAndCode?: Maybe<DataView>;
   dataViewColumnDefinition?: Maybe<DataViewColumnDefinition>;
   dataViewColumnDefinitionByTableNameAndColumnName?: Maybe<DataViewColumnDefinition>;
   elementTypePlugin?: Maybe<ElementTypePlugin>;
@@ -14670,6 +14736,7 @@ export type Query = Node & {
   user?: Maybe<User>;
   userByUsername?: Maybe<User>;
   userOrganisation?: Maybe<UserOrganisation>;
+  userOrganisationByUserIdAndOrganisationId?: Maybe<UserOrganisation>;
   verification?: Maybe<Verification>;
   verificationByUniqueId?: Maybe<Verification>;
   /** Reads and enables pagination through a set of `ApplicationListShape`. */
@@ -14680,7 +14747,7 @@ export type Query = Node & {
   applicationListFilterReviewer?: Maybe<ApplicationListFilterReviewerConnection>;
   applicationListFilterStage?: Maybe<ApplicationListFilterStageConnection>;
   applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
-  assignableQuestionsCount?: Maybe<Scalars['BigInt']>;
+  assignedQuestions?: Maybe<AssignedQuestionsConnection>;
   assignedQuestionsCount?: Maybe<Scalars['BigInt']>;
   assignerList?: Maybe<AssignerListConnection>;
   assignmentList?: Maybe<AssignmentListConnection>;
@@ -14699,6 +14766,8 @@ export type Query = Node & {
   reviewReviewerId?: Maybe<Scalars['Int']>;
   reviewStage?: Maybe<Scalars['Int']>;
   reviewTimeStageCreated?: Maybe<Scalars['Datetime']>;
+  reviewableQuestions?: Maybe<ReviewableQuestionsConnection>;
+  reviewableQuestionsCount?: Maybe<Scalars['BigInt']>;
   submittedAssignedQuestionsCount?: Maybe<Scalars['BigInt']>;
   /** Reads a single `ActionPlugin` using its globally unique `ID`. */
   actionPluginByNodeId?: Maybe<ActionPlugin>;
@@ -15519,13 +15588,6 @@ export type QueryDataViewArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDataViewByTableNameAndCodeArgs = {
-  tableName: Scalars['String'];
-  code: Scalars['String'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryDataViewColumnDefinitionArgs = {
   id: Scalars['Int'];
 };
@@ -15770,6 +15832,13 @@ export type QueryUserOrganisationArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryUserOrganisationByUserIdAndOrganisationIdArgs = {
+  userId: Scalars['Int'];
+  organisationId: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryVerificationArgs = {
   id: Scalars['Int'];
 };
@@ -15865,8 +15934,16 @@ export type QueryApplicationStatusHistoryApplicationIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryAssignableQuestionsCountArgs = {
+export type QueryAssignedQuestionsArgs = {
   appId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  levelNumber?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<AssignedQuestionsRecordFilter>;
 };
 
 
@@ -15874,7 +15951,7 @@ export type QueryAssignableQuestionsCountArgs = {
 export type QueryAssignedQuestionsCountArgs = {
   appId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['Int']>;
+  levelNumber?: Maybe<Scalars['Int']>;
 };
 
 
@@ -15998,6 +16075,24 @@ export type QueryReviewStageArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryReviewTimeStageCreatedArgs = {
   reviewAssignmentId?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryReviewableQuestionsArgs = {
+  appId?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<ReviewableQuestionsRecordFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryReviewableQuestionsCountArgs = {
+  appId?: Maybe<Scalars['Int']>;
 };
 
 
@@ -16334,6 +16429,89 @@ export type ReviewNotificationsArgs = {
   orderBy?: Maybe<Array<NotificationsOrderBy>>;
   condition?: Maybe<NotificationCondition>;
   filter?: Maybe<NotificationFilter>;
+};
+
+export enum Reviewability {
+  Always = 'ALWAYS',
+  Never = 'NEVER',
+  OnlyIfApplicantAnswer = 'ONLY_IF_APPLICANT_ANSWER',
+  OptionalIfNoResponse = 'OPTIONAL_IF_NO_RESPONSE'
+}
+
+/** A filter to be used against Reviewability fields. All fields are combined with a logical ‘and.’ */
+export type ReviewabilityFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<Reviewability>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<Reviewability>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<Reviewability>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<Reviewability>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<Reviewability>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<Reviewability>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<Reviewability>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<Reviewability>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<Reviewability>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<Reviewability>;
+};
+
+/** A `ReviewableQuestionsRecord` edge in the connection. */
+export type ReviewableQuestionEdge = {
+  __typename?: 'ReviewableQuestionEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ReviewableQuestionsRecord` at the end of the edge. */
+  node?: Maybe<ReviewableQuestionsRecord>;
+};
+
+/** A connection to a list of `ReviewableQuestionsRecord` values. */
+export type ReviewableQuestionsConnection = {
+  __typename?: 'ReviewableQuestionsConnection';
+  /** A list of `ReviewableQuestionsRecord` objects. */
+  nodes: Array<Maybe<ReviewableQuestionsRecord>>;
+  /** A list of edges which contains the `ReviewableQuestionsRecord` and cursor to aid in pagination. */
+  edges: Array<ReviewableQuestionEdge>;
+  /** The count of *all* `ReviewableQuestionsRecord` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** The return type of our `reviewableQuestions` query. */
+export type ReviewableQuestionsRecord = {
+  __typename?: 'ReviewableQuestionsRecord';
+  code?: Maybe<Scalars['String']>;
+  reviewability?: Maybe<Reviewability>;
+  responseId?: Maybe<Scalars['Int']>;
+  responseValue?: Maybe<Scalars['JSON']>;
+  isOptional?: Maybe<Scalars['Boolean']>;
+};
+
+/** A filter to be used against `ReviewableQuestionsRecord` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewableQuestionsRecordFilter = {
+  /** Filter by the object’s `code` field. */
+  code?: Maybe<StringFilter>;
+  /** Filter by the object’s `reviewability` field. */
+  reviewability?: Maybe<ReviewabilityFilter>;
+  /** Filter by the object’s `responseId` field. */
+  responseId?: Maybe<IntFilter>;
+  /** Filter by the object’s `responseValue` field. */
+  responseValue?: Maybe<JsonFilter>;
+  /** Filter by the object’s `isOptional` field. */
+  isOptional?: Maybe<BooleanFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ReviewableQuestionsRecordFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ReviewableQuestionsRecordFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ReviewableQuestionsRecordFilter>;
 };
 
 /** The `application` to be created by this mutation. */
@@ -18684,6 +18862,7 @@ export type ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInpu
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -19420,7 +19599,7 @@ export type ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput = {
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
@@ -21089,7 +21268,7 @@ export type TemplateElement = Node & {
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewability: Reviewability;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   /** Reads a single `TemplateSection` that is related to this `TemplateElement`. */
@@ -21191,8 +21370,8 @@ export type TemplateElementCondition = {
   helpText?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `parameters` field. */
   parameters?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `isReviewable` field. */
-  isReviewable?: Maybe<IsReviewableStatus>;
+  /** Checks for equality with the object’s `reviewability` field. */
+  reviewability?: Maybe<Reviewability>;
   /** Checks for equality with the object’s `templateCode` field. */
   templateCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `templateVersion` field. */
@@ -21231,8 +21410,8 @@ export type TemplateElementFilter = {
   helpText?: Maybe<StringFilter>;
   /** Filter by the object’s `parameters` field. */
   parameters?: Maybe<JsonFilter>;
-  /** Filter by the object’s `isReviewable` field. */
-  isReviewable?: Maybe<IsReviewableStatusFilter>;
+  /** Filter by the object’s `reviewability` field. */
+  reviewability?: Maybe<ReviewabilityFilter>;
   /** Filter by the object’s `templateCode` field. */
   templateCode?: Maybe<StringFilter>;
   /** Filter by the object’s `templateVersion` field. */
@@ -21274,7 +21453,7 @@ export type TemplateElementInput = {
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
@@ -21383,7 +21562,7 @@ export type TemplateElementPatch = {
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
@@ -21470,7 +21649,7 @@ export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
@@ -21531,8 +21710,8 @@ export enum TemplateElementsOrderBy {
   HelpTextDesc = 'HELP_TEXT_DESC',
   ParametersAsc = 'PARAMETERS_ASC',
   ParametersDesc = 'PARAMETERS_DESC',
-  IsReviewableAsc = 'IS_REVIEWABLE_ASC',
-  IsReviewableDesc = 'IS_REVIEWABLE_DESC',
+  ReviewabilityAsc = 'REVIEWABILITY_ASC',
+  ReviewabilityDesc = 'REVIEWABILITY_DESC',
   TemplateCodeAsc = 'TEMPLATE_CODE_ASC',
   TemplateCodeDesc = 'TEMPLATE_CODE_DESC',
   TemplateVersionAsc = 'TEMPLATE_VERSION_ASC',
@@ -25342,6 +25521,7 @@ export type UpdateApplicationResponseOnApplicationResponseForApplicationResponse
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -25359,6 +25539,7 @@ export type UpdateApplicationResponseOnApplicationResponseForApplicationResponse
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -25377,6 +25558,7 @@ export type UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -25395,6 +25577,7 @@ export type UpdateApplicationResponseOnReviewResponseForReviewResponseApplicatio
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -25700,19 +25883,6 @@ export type UpdateDataViewByNodeIdInput = {
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `DataView` being updated. */
   patch: DataViewPatch;
-};
-
-/** All input for the `updateDataViewByTableNameAndCode` mutation. */
-export type UpdateDataViewByTableNameAndCodeInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `DataView` being updated. */
-  patch: DataViewPatch;
-  tableName: Scalars['String'];
-  code: Scalars['String'];
 };
 
 /** All input for the `updateDataViewColumnDefinitionByNodeId` mutation. */
@@ -26163,8 +26333,10 @@ export type UpdateNotificationOnNotificationForNotificationApplicationIdFkeyPatc
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
   reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
@@ -26179,8 +26351,10 @@ export type UpdateNotificationOnNotificationForNotificationReviewIdFkeyPatch = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
   reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
@@ -26195,8 +26369,10 @@ export type UpdateNotificationOnNotificationForNotificationUserIdFkeyPatch = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
   reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
@@ -27838,7 +28014,7 @@ export type UpdateTemplateElementOnApplicationResponseForApplicationResponseTemp
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
@@ -27863,7 +28039,7 @@ export type UpdateTemplateElementOnReviewResponseForReviewResponseTemplateElemen
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
@@ -27887,7 +28063,7 @@ export type UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFke
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
@@ -29127,6 +29303,19 @@ export type UpdateUserOrganisationByNodeIdInput = {
   patch: UserOrganisationPatch;
 };
 
+/** All input for the `updateUserOrganisationByUserIdAndOrganisationId` mutation. */
+export type UpdateUserOrganisationByUserIdAndOrganisationIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `UserOrganisation` being updated. */
+  patch: UserOrganisationPatch;
+  userId: Scalars['Int'];
+  organisationId: Scalars['Int'];
+};
+
 /** All input for the `updateUserOrganisation` mutation. */
 export type UpdateUserOrganisationInput = {
   /**
@@ -29903,6 +30092,14 @@ export type UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdF
   id: Scalars['Int'];
 };
 
+/** The fields on `userOrganisation` to look up the row to update. */
+export type UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `userOrganisation` being updated. */
+  patch: UpdateUserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch;
+  userId: Scalars['Int'];
+  organisationId: Scalars['Int'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `user` to be connected. */
@@ -29916,6 +30113,14 @@ export type UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsing
   /** An object where the defined keys will be set on the `userOrganisation` being updated. */
   patch: UpdateUserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyPatch;
   id: Scalars['Int'];
+};
+
+/** The fields on `userOrganisation` to look up the row to update. */
+export type UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `userOrganisation` being updated. */
+  patch: UpdateUserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyPatch;
+  userId: Scalars['Int'];
+  organisationId: Scalars['Int'];
 };
 
 /** Input for the nested mutation of `organisation` in the `UserOrganisationInput` mutation. */
@@ -29955,13 +30160,19 @@ export type UserOrganisationOrganisationIdFkeyInverseInput = {
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
   connectById?: Maybe<Array<UserOrganisationUserOrganisationPkeyConnect>>;
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
+  connectByUserIdAndOrganisationId?: Maybe<Array<UserOrganisationUserOrganisationUserIdOrganisationIdKeyConnect>>;
+  /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<UserOrganisationNodeIdConnect>>;
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
   deleteById?: Maybe<Array<UserOrganisationUserOrganisationPkeyDelete>>;
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
+  deleteByUserIdAndOrganisationId?: Maybe<Array<UserOrganisationUserOrganisationUserIdOrganisationIdKeyDelete>>;
+  /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<UserOrganisationNodeIdDelete>>;
   /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
   updateById?: Maybe<Array<UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationPkeyUpdate>>;
+  /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
+  updateByUserIdAndOrganisationId?: Maybe<Array<UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate>>;
   /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
   updateByNodeId?: Maybe<Array<OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate>>;
   /** A `UserOrganisationInput` object that will be created and connected to this object. */
@@ -30071,13 +30282,19 @@ export type UserOrganisationUserIdFkeyInverseInput = {
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
   connectById?: Maybe<Array<UserOrganisationUserOrganisationPkeyConnect>>;
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
+  connectByUserIdAndOrganisationId?: Maybe<Array<UserOrganisationUserOrganisationUserIdOrganisationIdKeyConnect>>;
+  /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<UserOrganisationNodeIdConnect>>;
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
   deleteById?: Maybe<Array<UserOrganisationUserOrganisationPkeyDelete>>;
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
+  deleteByUserIdAndOrganisationId?: Maybe<Array<UserOrganisationUserOrganisationUserIdOrganisationIdKeyDelete>>;
+  /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<UserOrganisationNodeIdDelete>>;
   /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
   updateById?: Maybe<Array<UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserOrganisationPkeyUpdate>>;
+  /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
+  updateByUserIdAndOrganisationId?: Maybe<Array<UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate>>;
   /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
   updateByNodeId?: Maybe<Array<UserOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate>>;
   /** A `UserOrganisationInput` object that will be created and connected to this object. */
@@ -30124,6 +30341,18 @@ export type UserOrganisationUserOrganisationPkeyConnect = {
 /** The fields on `userOrganisation` to look up the row to delete. */
 export type UserOrganisationUserOrganisationPkeyDelete = {
   id: Scalars['Int'];
+};
+
+/** The fields on `userOrganisation` to look up the row to connect. */
+export type UserOrganisationUserOrganisationUserIdOrganisationIdKeyConnect = {
+  userId: Scalars['Int'];
+  organisationId: Scalars['Int'];
+};
+
+/** The fields on `userOrganisation` to look up the row to delete. */
+export type UserOrganisationUserOrganisationUserIdOrganisationIdKeyDelete = {
+  userId: Scalars['Int'];
+  organisationId: Scalars['Int'];
 };
 
 export type UserOrgJoin = {
@@ -30975,8 +31204,8 @@ export type ResolversTypes = {
   TemplateElementFilter: TemplateElementFilter;
   TemplateElementCategoryFilter: TemplateElementCategoryFilter;
   TemplateElementCategory: TemplateElementCategory;
-  IsReviewableStatusFilter: IsReviewableStatusFilter;
-  IsReviewableStatus: IsReviewableStatus;
+  ReviewabilityFilter: ReviewabilityFilter;
+  Reviewability: Reviewability;
   TemplateElementToManyApplicationResponseFilter: TemplateElementToManyApplicationResponseFilter;
   ApplicationResponseFilter: ApplicationResponseFilter;
   ApplicationResponseStatusFilter: ApplicationResponseStatusFilter;
@@ -31237,11 +31466,9 @@ export type ResolversTypes = {
   ApplicationListShapeCondition: ApplicationListShapeCondition;
   ReviewerAction: ReviewerAction;
   AssignerAction: AssignerAction;
-  BigInt: ResolverTypeWrapper<Scalars['BigInt']>;
   ApplicationListShapeFilter: ApplicationListShapeFilter;
   ReviewerActionFilter: ReviewerActionFilter;
   AssignerActionFilter: AssignerActionFilter;
-  BigIntFilter: BigIntFilter;
   ApplicationListShapesConnection: ResolverTypeWrapper<ApplicationListShapesConnection>;
   ApplicationListShape: ResolverTypeWrapper<ApplicationListShape>;
   ApplicationListShapesEdge: ResolverTypeWrapper<ApplicationListShapesEdge>;
@@ -31363,6 +31590,11 @@ export type ResolversTypes = {
   ApplicationListFilterReviewerEdge: ResolverTypeWrapper<ApplicationListFilterReviewerEdge>;
   ApplicationListFilterStageConnection: ResolverTypeWrapper<ApplicationListFilterStageConnection>;
   ApplicationListFilterStageEdge: ResolverTypeWrapper<ApplicationListFilterStageEdge>;
+  AssignedQuestionsRecordFilter: AssignedQuestionsRecordFilter;
+  AssignedQuestionsConnection: ResolverTypeWrapper<AssignedQuestionsConnection>;
+  AssignedQuestionsRecord: ResolverTypeWrapper<AssignedQuestionsRecord>;
+  AssignedQuestionEdge: ResolverTypeWrapper<AssignedQuestionEdge>;
+  BigInt: ResolverTypeWrapper<Scalars['BigInt']>;
   AssignerListRecordFilter: AssignerListRecordFilter;
   AssignerListConnection: ResolverTypeWrapper<AssignerListConnection>;
   AssignerListRecord: ResolverTypeWrapper<AssignerListRecord>;
@@ -31375,6 +31607,10 @@ export type ResolversTypes = {
   ReviewListConnection: ResolverTypeWrapper<ReviewListConnection>;
   ReviewListRecord: ResolverTypeWrapper<ReviewListRecord>;
   ReviewListEdge: ResolverTypeWrapper<ReviewListEdge>;
+  ReviewableQuestionsRecordFilter: ReviewableQuestionsRecordFilter;
+  ReviewableQuestionsConnection: ResolverTypeWrapper<ReviewableQuestionsConnection>;
+  ReviewableQuestionsRecord: ResolverTypeWrapper<ReviewableQuestionsRecord>;
+  ReviewableQuestionEdge: ResolverTypeWrapper<ReviewableQuestionEdge>;
   Mutation: ResolverTypeWrapper<{}>;
   CreateActionPluginInput: CreateActionPluginInput;
   ActionPluginInput: ActionPluginInput;
@@ -31492,8 +31728,10 @@ export type ResolversTypes = {
   updateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch: UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch;
   UserOrganisationUserIdFkeyInverseInput: UserOrganisationUserIdFkeyInverseInput;
   UserOrganisationUserOrganisationPkeyConnect: UserOrganisationUserOrganisationPkeyConnect;
+  UserOrganisationUserOrganisationUserIdOrganisationIdKeyConnect: UserOrganisationUserOrganisationUserIdOrganisationIdKeyConnect;
   UserOrganisationNodeIdConnect: UserOrganisationNodeIdConnect;
   UserOrganisationUserOrganisationPkeyDelete: UserOrganisationUserOrganisationPkeyDelete;
+  UserOrganisationUserOrganisationUserIdOrganisationIdKeyDelete: UserOrganisationUserOrganisationUserIdOrganisationIdKeyDelete;
   UserOrganisationNodeIdDelete: UserOrganisationNodeIdDelete;
   UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserOrganisationPkeyUpdate: UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserOrganisationPkeyUpdate;
   updateUserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyPatch: UpdateUserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyPatch;
@@ -32162,6 +32400,7 @@ export type ResolversTypes = {
   OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate;
   UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate;
   UserOrganisationOrganisationIdFkeyOrganisationCreateInput: UserOrganisationOrganisationIdFkeyOrganisationCreateInput;
+  UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate;
   OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate;
   UserOrganisationPatch: UserOrganisationPatch;
   UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput: UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput;
@@ -32174,6 +32413,7 @@ export type ResolversTypes = {
   UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate;
   UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate: UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate;
   UserOrganisationUserIdFkeyUserCreateInput: UserOrganisationUserIdFkeyUserCreateInput;
+  UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate: UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate;
   UserOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate: UserOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate;
   UserOrganisationUserIdFkeyUserOrganisationCreateInput: UserOrganisationUserIdFkeyUserOrganisationCreateInput;
   UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserUsernameKeyUpdate: UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserUsernameKeyUpdate;
@@ -32400,7 +32640,6 @@ export type ResolversTypes = {
   DataViewPatch: DataViewPatch;
   UpdateDataViewPayload: ResolverTypeWrapper<UpdateDataViewPayload>;
   UpdateDataViewInput: UpdateDataViewInput;
-  UpdateDataViewByTableNameAndCodeInput: UpdateDataViewByTableNameAndCodeInput;
   UpdateDataViewColumnDefinitionByNodeIdInput: UpdateDataViewColumnDefinitionByNodeIdInput;
   DataViewColumnDefinitionPatch: DataViewColumnDefinitionPatch;
   UpdateDataViewColumnDefinitionPayload: ResolverTypeWrapper<UpdateDataViewColumnDefinitionPayload>;
@@ -32502,6 +32741,7 @@ export type ResolversTypes = {
   UpdateUserOrganisationByNodeIdInput: UpdateUserOrganisationByNodeIdInput;
   UpdateUserOrganisationPayload: ResolverTypeWrapper<UpdateUserOrganisationPayload>;
   UpdateUserOrganisationInput: UpdateUserOrganisationInput;
+  UpdateUserOrganisationByUserIdAndOrganisationIdInput: UpdateUserOrganisationByUserIdAndOrganisationIdInput;
   UpdateVerificationByNodeIdInput: UpdateVerificationByNodeIdInput;
   UpdateVerificationPayload: ResolverTypeWrapper<UpdateVerificationPayload>;
   UpdateVerificationInput: UpdateVerificationInput;
@@ -32543,7 +32783,6 @@ export type ResolversTypes = {
   DeleteDataViewByNodeIdInput: DeleteDataViewByNodeIdInput;
   DeleteDataViewPayload: ResolverTypeWrapper<DeleteDataViewPayload>;
   DeleteDataViewInput: DeleteDataViewInput;
-  DeleteDataViewByTableNameAndCodeInput: DeleteDataViewByTableNameAndCodeInput;
   DeleteDataViewColumnDefinitionByNodeIdInput: DeleteDataViewColumnDefinitionByNodeIdInput;
   DeleteDataViewColumnDefinitionPayload: ResolverTypeWrapper<DeleteDataViewColumnDefinitionPayload>;
   DeleteDataViewColumnDefinitionInput: DeleteDataViewColumnDefinitionInput;
@@ -32642,6 +32881,7 @@ export type ResolversTypes = {
   DeleteUserOrganisationByNodeIdInput: DeleteUserOrganisationByNodeIdInput;
   DeleteUserOrganisationPayload: ResolverTypeWrapper<DeleteUserOrganisationPayload>;
   DeleteUserOrganisationInput: DeleteUserOrganisationInput;
+  DeleteUserOrganisationByUserIdAndOrganisationIdInput: DeleteUserOrganisationByUserIdAndOrganisationIdInput;
   DeleteVerificationByNodeIdInput: DeleteVerificationByNodeIdInput;
   DeleteVerificationPayload: ResolverTypeWrapper<DeleteVerificationPayload>;
   DeleteVerificationInput: DeleteVerificationInput;
@@ -32687,7 +32927,7 @@ export type ResolversParentTypes = {
   TemplateSectionToManyTemplateElementFilter: TemplateSectionToManyTemplateElementFilter;
   TemplateElementFilter: TemplateElementFilter;
   TemplateElementCategoryFilter: TemplateElementCategoryFilter;
-  IsReviewableStatusFilter: IsReviewableStatusFilter;
+  ReviewabilityFilter: ReviewabilityFilter;
   TemplateElementToManyApplicationResponseFilter: TemplateElementToManyApplicationResponseFilter;
   ApplicationResponseFilter: ApplicationResponseFilter;
   ApplicationResponseStatusFilter: ApplicationResponseStatusFilter;
@@ -32906,11 +33146,9 @@ export type ResolversParentTypes = {
   TemplateActionsEdge: TemplateActionsEdge;
   ActionQueuesEdge: ActionQueuesEdge;
   ApplicationListShapeCondition: ApplicationListShapeCondition;
-  BigInt: Scalars['BigInt'];
   ApplicationListShapeFilter: ApplicationListShapeFilter;
   ReviewerActionFilter: ReviewerActionFilter;
   AssignerActionFilter: AssignerActionFilter;
-  BigIntFilter: BigIntFilter;
   ApplicationListShapesConnection: ApplicationListShapesConnection;
   ApplicationListShape: ApplicationListShape;
   ApplicationListShapesEdge: ApplicationListShapesEdge;
@@ -33013,6 +33251,11 @@ export type ResolversParentTypes = {
   ApplicationListFilterReviewerEdge: ApplicationListFilterReviewerEdge;
   ApplicationListFilterStageConnection: ApplicationListFilterStageConnection;
   ApplicationListFilterStageEdge: ApplicationListFilterStageEdge;
+  AssignedQuestionsRecordFilter: AssignedQuestionsRecordFilter;
+  AssignedQuestionsConnection: AssignedQuestionsConnection;
+  AssignedQuestionsRecord: AssignedQuestionsRecord;
+  AssignedQuestionEdge: AssignedQuestionEdge;
+  BigInt: Scalars['BigInt'];
   AssignerListRecordFilter: AssignerListRecordFilter;
   AssignerListConnection: AssignerListConnection;
   AssignerListRecord: AssignerListRecord;
@@ -33025,6 +33268,10 @@ export type ResolversParentTypes = {
   ReviewListConnection: ReviewListConnection;
   ReviewListRecord: ReviewListRecord;
   ReviewListEdge: ReviewListEdge;
+  ReviewableQuestionsRecordFilter: ReviewableQuestionsRecordFilter;
+  ReviewableQuestionsConnection: ReviewableQuestionsConnection;
+  ReviewableQuestionsRecord: ReviewableQuestionsRecord;
+  ReviewableQuestionEdge: ReviewableQuestionEdge;
   Mutation: {};
   CreateActionPluginInput: CreateActionPluginInput;
   ActionPluginInput: ActionPluginInput;
@@ -33142,8 +33389,10 @@ export type ResolversParentTypes = {
   updateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch: UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch;
   UserOrganisationUserIdFkeyInverseInput: UserOrganisationUserIdFkeyInverseInput;
   UserOrganisationUserOrganisationPkeyConnect: UserOrganisationUserOrganisationPkeyConnect;
+  UserOrganisationUserOrganisationUserIdOrganisationIdKeyConnect: UserOrganisationUserOrganisationUserIdOrganisationIdKeyConnect;
   UserOrganisationNodeIdConnect: UserOrganisationNodeIdConnect;
   UserOrganisationUserOrganisationPkeyDelete: UserOrganisationUserOrganisationPkeyDelete;
+  UserOrganisationUserOrganisationUserIdOrganisationIdKeyDelete: UserOrganisationUserOrganisationUserIdOrganisationIdKeyDelete;
   UserOrganisationNodeIdDelete: UserOrganisationNodeIdDelete;
   UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserOrganisationPkeyUpdate: UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserOrganisationPkeyUpdate;
   updateUserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyPatch: UpdateUserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyPatch;
@@ -33812,6 +34061,7 @@ export type ResolversParentTypes = {
   OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate;
   UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate;
   UserOrganisationOrganisationIdFkeyOrganisationCreateInput: UserOrganisationOrganisationIdFkeyOrganisationCreateInput;
+  UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate;
   OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate;
   UserOrganisationPatch: UserOrganisationPatch;
   UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput: UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput;
@@ -33824,6 +34074,7 @@ export type ResolversParentTypes = {
   UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate;
   UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate: UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate;
   UserOrganisationUserIdFkeyUserCreateInput: UserOrganisationUserIdFkeyUserCreateInput;
+  UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate: UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate;
   UserOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate: UserOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate;
   UserOrganisationUserIdFkeyUserOrganisationCreateInput: UserOrganisationUserIdFkeyUserOrganisationCreateInput;
   UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserUsernameKeyUpdate: UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserUsernameKeyUpdate;
@@ -34050,7 +34301,6 @@ export type ResolversParentTypes = {
   DataViewPatch: DataViewPatch;
   UpdateDataViewPayload: UpdateDataViewPayload;
   UpdateDataViewInput: UpdateDataViewInput;
-  UpdateDataViewByTableNameAndCodeInput: UpdateDataViewByTableNameAndCodeInput;
   UpdateDataViewColumnDefinitionByNodeIdInput: UpdateDataViewColumnDefinitionByNodeIdInput;
   DataViewColumnDefinitionPatch: DataViewColumnDefinitionPatch;
   UpdateDataViewColumnDefinitionPayload: UpdateDataViewColumnDefinitionPayload;
@@ -34152,6 +34402,7 @@ export type ResolversParentTypes = {
   UpdateUserOrganisationByNodeIdInput: UpdateUserOrganisationByNodeIdInput;
   UpdateUserOrganisationPayload: UpdateUserOrganisationPayload;
   UpdateUserOrganisationInput: UpdateUserOrganisationInput;
+  UpdateUserOrganisationByUserIdAndOrganisationIdInput: UpdateUserOrganisationByUserIdAndOrganisationIdInput;
   UpdateVerificationByNodeIdInput: UpdateVerificationByNodeIdInput;
   UpdateVerificationPayload: UpdateVerificationPayload;
   UpdateVerificationInput: UpdateVerificationInput;
@@ -34193,7 +34444,6 @@ export type ResolversParentTypes = {
   DeleteDataViewByNodeIdInput: DeleteDataViewByNodeIdInput;
   DeleteDataViewPayload: DeleteDataViewPayload;
   DeleteDataViewInput: DeleteDataViewInput;
-  DeleteDataViewByTableNameAndCodeInput: DeleteDataViewByTableNameAndCodeInput;
   DeleteDataViewColumnDefinitionByNodeIdInput: DeleteDataViewColumnDefinitionByNodeIdInput;
   DeleteDataViewColumnDefinitionPayload: DeleteDataViewColumnDefinitionPayload;
   DeleteDataViewColumnDefinitionInput: DeleteDataViewColumnDefinitionInput;
@@ -34292,6 +34542,7 @@ export type ResolversParentTypes = {
   DeleteUserOrganisationByNodeIdInput: DeleteUserOrganisationByNodeIdInput;
   DeleteUserOrganisationPayload: DeleteUserOrganisationPayload;
   DeleteUserOrganisationInput: DeleteUserOrganisationInput;
+  DeleteUserOrganisationByUserIdAndOrganisationIdInput: DeleteUserOrganisationByUserIdAndOrganisationIdInput;
   DeleteVerificationByNodeIdInput: DeleteVerificationByNodeIdInput;
   DeleteVerificationPayload: DeleteVerificationPayload;
   DeleteVerificationInput: DeleteVerificationInput;
@@ -34505,9 +34756,6 @@ export type ApplicationListShapeResolvers<ContextType = any, ParentType extends 
   reviewers?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   reviewerAction?: Resolver<Maybe<ResolversTypes['ReviewerAction']>, ParentType, ContextType>;
   assignerAction?: Resolver<Maybe<ResolversTypes['AssignerAction']>, ParentType, ContextType>;
-  totalQuestions?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  totalAssigned?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  totalAssignLocked?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -34566,6 +34814,7 @@ export type ApplicationResponseResolvers<ContextType = any, ParentType extends R
   timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   timeUpdated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   timeSubmitted?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  evaluatedParameters?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   templateElement?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   reviewResponses?: Resolver<ResolversTypes['ReviewResponsesConnection'], ParentType, ContextType, RequireFields<ApplicationResponseReviewResponsesArgs, 'orderBy'>>;
@@ -34732,6 +34981,31 @@ export type ApplicationStatusHistoryResolvers<ContextType = any, ParentType exte
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type AssignedQuestionEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssignedQuestionEdge'] = ResolversParentTypes['AssignedQuestionEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['AssignedQuestionsRecord']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AssignedQuestionsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssignedQuestionsConnection'] = ResolversParentTypes['AssignedQuestionsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['AssignedQuestionsRecord']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['AssignedQuestionEdge']>, ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AssignedQuestionsRecordResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssignedQuestionsRecord'] = ResolversParentTypes['AssignedQuestionsRecord']> = {
+  reviewId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  responseId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  reviewAssignmentId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  reviewResponseCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  reviewResponseStatus?: Resolver<Maybe<ResolversTypes['ReviewResponseStatus']>, ParentType, ContextType>;
+  decision?: Resolver<Maybe<ResolversTypes['ReviewResponseDecision']>, ParentType, ContextType>;
+  isOptional?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isLastestReview?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type AssignerListConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssignerListConnection'] = ResolversParentTypes['AssignerListConnection']> = {
   nodes?: Resolver<Array<Maybe<ResolversTypes['AssignerListRecord']>>, ParentType, ContextType>;
   edges?: Resolver<Array<ResolversTypes['AssignerListEdge']>, ParentType, ContextType>;
@@ -34748,9 +35022,6 @@ export type AssignerListEdgeResolvers<ContextType = any, ParentType extends Reso
 export type AssignerListRecordResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssignerListRecord'] = ResolversParentTypes['AssignerListRecord']> = {
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   assignerAction?: Resolver<Maybe<ResolversTypes['AssignerAction']>, ParentType, ContextType>;
-  totalQuestions?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  totalAssigned?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  totalAssignLocked?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -35268,6 +35539,9 @@ export type DataViewResolvers<ContextType = any, ParentType extends ResolversPar
   detailViewHeaderColumn?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   showLinkedApplications?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   priority?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  tableSearchColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  filterIncludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  filterExcludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -35281,6 +35555,10 @@ export type DataViewColumnDefinitionResolvers<ContextType = any, ParentType exte
   elementParameters?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   additionalFormatting?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   valueExpression?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  sortColumn?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  filterParameters?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  filterExpression?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  filterDataType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -35926,7 +36204,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateDataTableByTableName?: Resolver<Maybe<ResolversTypes['UpdateDataTablePayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableByTableNameArgs, 'input'>>;
   updateDataViewByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataViewPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataViewByNodeIdArgs, 'input'>>;
   updateDataView?: Resolver<Maybe<ResolversTypes['UpdateDataViewPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataViewArgs, 'input'>>;
-  updateDataViewByTableNameAndCode?: Resolver<Maybe<ResolversTypes['UpdateDataViewPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataViewByTableNameAndCodeArgs, 'input'>>;
   updateDataViewColumnDefinitionByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataViewColumnDefinitionByNodeIdArgs, 'input'>>;
   updateDataViewColumnDefinition?: Resolver<Maybe<ResolversTypes['UpdateDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataViewColumnDefinitionArgs, 'input'>>;
   updateDataViewColumnDefinitionByTableNameAndColumnName?: Resolver<Maybe<ResolversTypes['UpdateDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataViewColumnDefinitionByTableNameAndColumnNameArgs, 'input'>>;
@@ -35996,6 +36273,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateUserByUsername?: Resolver<Maybe<ResolversTypes['UpdateUserPayload']>, ParentType, ContextType, RequireFields<MutationUpdateUserByUsernameArgs, 'input'>>;
   updateUserOrganisationByNodeId?: Resolver<Maybe<ResolversTypes['UpdateUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateUserOrganisationByNodeIdArgs, 'input'>>;
   updateUserOrganisation?: Resolver<Maybe<ResolversTypes['UpdateUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateUserOrganisationArgs, 'input'>>;
+  updateUserOrganisationByUserIdAndOrganisationId?: Resolver<Maybe<ResolversTypes['UpdateUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateUserOrganisationByUserIdAndOrganisationIdArgs, 'input'>>;
   updateVerificationByNodeId?: Resolver<Maybe<ResolversTypes['UpdateVerificationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateVerificationByNodeIdArgs, 'input'>>;
   updateVerification?: Resolver<Maybe<ResolversTypes['UpdateVerificationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateVerificationArgs, 'input'>>;
   updateVerificationByUniqueId?: Resolver<Maybe<ResolversTypes['UpdateVerificationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateVerificationByUniqueIdArgs, 'input'>>;
@@ -36025,7 +36303,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteDataTableByTableName?: Resolver<Maybe<ResolversTypes['DeleteDataTablePayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableByTableNameArgs, 'input'>>;
   deleteDataViewByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataViewPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataViewByNodeIdArgs, 'input'>>;
   deleteDataView?: Resolver<Maybe<ResolversTypes['DeleteDataViewPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataViewArgs, 'input'>>;
-  deleteDataViewByTableNameAndCode?: Resolver<Maybe<ResolversTypes['DeleteDataViewPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataViewByTableNameAndCodeArgs, 'input'>>;
   deleteDataViewColumnDefinitionByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataViewColumnDefinitionByNodeIdArgs, 'input'>>;
   deleteDataViewColumnDefinition?: Resolver<Maybe<ResolversTypes['DeleteDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataViewColumnDefinitionArgs, 'input'>>;
   deleteDataViewColumnDefinitionByTableNameAndColumnName?: Resolver<Maybe<ResolversTypes['DeleteDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataViewColumnDefinitionByTableNameAndColumnNameArgs, 'input'>>;
@@ -36095,6 +36372,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteUserByUsername?: Resolver<Maybe<ResolversTypes['DeleteUserPayload']>, ParentType, ContextType, RequireFields<MutationDeleteUserByUsernameArgs, 'input'>>;
   deleteUserOrganisationByNodeId?: Resolver<Maybe<ResolversTypes['DeleteUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteUserOrganisationByNodeIdArgs, 'input'>>;
   deleteUserOrganisation?: Resolver<Maybe<ResolversTypes['DeleteUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteUserOrganisationArgs, 'input'>>;
+  deleteUserOrganisationByUserIdAndOrganisationId?: Resolver<Maybe<ResolversTypes['DeleteUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteUserOrganisationByUserIdAndOrganisationIdArgs, 'input'>>;
   deleteVerificationByNodeId?: Resolver<Maybe<ResolversTypes['DeleteVerificationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteVerificationByNodeIdArgs, 'input'>>;
   deleteVerification?: Resolver<Maybe<ResolversTypes['DeleteVerificationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteVerificationArgs, 'input'>>;
   deleteVerificationByUniqueId?: Resolver<Maybe<ResolversTypes['DeleteVerificationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteVerificationByUniqueIdArgs, 'input'>>;
@@ -36116,8 +36394,10 @@ export type NotificationResolvers<ContextType = any, ParentType extends Resolver
   subject?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   attachments?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
-  emailSent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  timestamp?: Resolver<ResolversTypes['Datetime'], ParentType, ContextType>;
   isRead?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  emailSent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  emailServerLog?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
@@ -36395,7 +36675,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   dataTable?: Resolver<Maybe<ResolversTypes['DataTable']>, ParentType, ContextType, RequireFields<QueryDataTableArgs, 'id'>>;
   dataTableByTableName?: Resolver<Maybe<ResolversTypes['DataTable']>, ParentType, ContextType, RequireFields<QueryDataTableByTableNameArgs, 'tableName'>>;
   dataView?: Resolver<Maybe<ResolversTypes['DataView']>, ParentType, ContextType, RequireFields<QueryDataViewArgs, 'id'>>;
-  dataViewByTableNameAndCode?: Resolver<Maybe<ResolversTypes['DataView']>, ParentType, ContextType, RequireFields<QueryDataViewByTableNameAndCodeArgs, 'tableName' | 'code'>>;
   dataViewColumnDefinition?: Resolver<Maybe<ResolversTypes['DataViewColumnDefinition']>, ParentType, ContextType, RequireFields<QueryDataViewColumnDefinitionArgs, 'id'>>;
   dataViewColumnDefinitionByTableNameAndColumnName?: Resolver<Maybe<ResolversTypes['DataViewColumnDefinition']>, ParentType, ContextType, RequireFields<QueryDataViewColumnDefinitionByTableNameAndColumnNameArgs, 'tableName' | 'columnName'>>;
   elementTypePlugin?: Resolver<Maybe<ResolversTypes['ElementTypePlugin']>, ParentType, ContextType, RequireFields<QueryElementTypePluginArgs, 'code'>>;
@@ -36436,6 +36715,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   userByUsername?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByUsernameArgs, 'username'>>;
   userOrganisation?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType, RequireFields<QueryUserOrganisationArgs, 'id'>>;
+  userOrganisationByUserIdAndOrganisationId?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType, RequireFields<QueryUserOrganisationByUserIdAndOrganisationIdArgs, 'userId' | 'organisationId'>>;
   verification?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType, RequireFields<QueryVerificationArgs, 'id'>>;
   verificationByUniqueId?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType, RequireFields<QueryVerificationByUniqueIdArgs, 'uniqueId'>>;
   applicationList?: Resolver<Maybe<ResolversTypes['ApplicationListShapesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListArgs, never>>;
@@ -36445,7 +36725,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationListFilterReviewer?: Resolver<Maybe<ResolversTypes['ApplicationListFilterReviewerConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListFilterReviewerArgs, never>>;
   applicationListFilterStage?: Resolver<Maybe<ResolversTypes['ApplicationListFilterStageConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListFilterStageArgs, never>>;
   applicationStatusHistoryApplicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryApplicationIdArgs, never>>;
-  assignableQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryAssignableQuestionsCountArgs, never>>;
+  assignedQuestions?: Resolver<Maybe<ResolversTypes['AssignedQuestionsConnection']>, ParentType, ContextType, RequireFields<QueryAssignedQuestionsArgs, never>>;
   assignedQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryAssignedQuestionsCountArgs, never>>;
   assignerList?: Resolver<Maybe<ResolversTypes['AssignerListConnection']>, ParentType, ContextType, RequireFields<QueryAssignerListArgs, never>>;
   assignmentList?: Resolver<Maybe<ResolversTypes['AssignmentListConnection']>, ParentType, ContextType, RequireFields<QueryAssignmentListArgs, never>>;
@@ -36464,6 +36744,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   reviewReviewerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewReviewerIdArgs, never>>;
   reviewStage?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewStageArgs, never>>;
   reviewTimeStageCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType, RequireFields<QueryReviewTimeStageCreatedArgs, never>>;
+  reviewableQuestions?: Resolver<Maybe<ResolversTypes['ReviewableQuestionsConnection']>, ParentType, ContextType, RequireFields<QueryReviewableQuestionsArgs, never>>;
+  reviewableQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryReviewableQuestionsCountArgs, never>>;
   submittedAssignedQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QuerySubmittedAssignedQuestionsCountArgs, never>>;
   actionPluginByNodeId?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginByNodeIdArgs, 'nodeId'>>;
   actionQueueByNodeId?: Resolver<Maybe<ResolversTypes['ActionQueue']>, ParentType, ContextType, RequireFields<QueryActionQueueByNodeIdArgs, 'nodeId'>>;
@@ -36531,6 +36813,28 @@ export type ReviewResolvers<ContextType = any, ParentType extends ResolversParen
   latestDecision?: Resolver<Maybe<ResolversTypes['ReviewDecision']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ReviewStatus']>, ParentType, ContextType>;
   timeStatusCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReviewableQuestionEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewableQuestionEdge'] = ResolversParentTypes['ReviewableQuestionEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['ReviewableQuestionsRecord']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReviewableQuestionsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewableQuestionsConnection'] = ResolversParentTypes['ReviewableQuestionsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['ReviewableQuestionsRecord']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['ReviewableQuestionEdge']>, ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReviewableQuestionsRecordResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewableQuestionsRecord'] = ResolversParentTypes['ReviewableQuestionsRecord']> = {
+  code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  reviewability?: Resolver<Maybe<ResolversTypes['Reviewability']>, ParentType, ContextType>;
+  responseId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  responseValue?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  isOptional?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -36891,7 +37195,7 @@ export type TemplateElementResolvers<ContextType = any, ParentType extends Resol
   validationMessage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   helpText?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   parameters?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
-  isReviewable?: Resolver<Maybe<ResolversTypes['IsReviewableStatus']>, ParentType, ContextType>;
+  reviewability?: Resolver<ResolversTypes['Reviewability'], ParentType, ContextType>;
   templateCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   templateVersion?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   section?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType>;
@@ -37687,6 +37991,9 @@ export type Resolvers<ContextType = any> = {
   ApplicationStatusHistoriesConnection?: ApplicationStatusHistoriesConnectionResolvers<ContextType>;
   ApplicationStatusHistoriesEdge?: ApplicationStatusHistoriesEdgeResolvers<ContextType>;
   ApplicationStatusHistory?: ApplicationStatusHistoryResolvers<ContextType>;
+  AssignedQuestionEdge?: AssignedQuestionEdgeResolvers<ContextType>;
+  AssignedQuestionsConnection?: AssignedQuestionsConnectionResolvers<ContextType>;
+  AssignedQuestionsRecord?: AssignedQuestionsRecordResolvers<ContextType>;
   AssignerListConnection?: AssignerListConnectionResolvers<ContextType>;
   AssignerListEdge?: AssignerListEdgeResolvers<ContextType>;
   AssignerListRecord?: AssignerListRecordResolvers<ContextType>;
@@ -37833,6 +38140,9 @@ export type Resolvers<ContextType = any> = {
   PostgresRowLevelsEdge?: PostgresRowLevelsEdgeResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Review?: ReviewResolvers<ContextType>;
+  ReviewableQuestionEdge?: ReviewableQuestionEdgeResolvers<ContextType>;
+  ReviewableQuestionsConnection?: ReviewableQuestionsConnectionResolvers<ContextType>;
+  ReviewableQuestionsRecord?: ReviewableQuestionsRecordResolvers<ContextType>;
   ReviewAssignment?: ReviewAssignmentResolvers<ContextType>;
   ReviewAssignmentAssignerJoin?: ReviewAssignmentAssignerJoinResolvers<ContextType>;
   ReviewAssignmentAssignerJoinsConnection?: ReviewAssignmentAssignerJoinsConnectionResolvers<ContextType>;

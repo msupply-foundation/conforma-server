@@ -12,6 +12,7 @@ import {
   ActionQueuePayload,
   FilePayload,
   TriggerQueueUpdatePayload,
+  UserOrg,
 } from '../types'
 import { ApplicationOutcome, ApplicationStatus, ReviewStatus, Trigger } from '../generated/graphql'
 
@@ -630,7 +631,11 @@ class PostgresDB {
   }
 
   // Join a user to an org in user_organisation table
-  public addUserOrg = async (userOrg: any): Promise<object> => {
+  public addUserOrg = async (userOrg: {
+    user_id: number
+    organisation_id: number
+    user_role?: string
+  }): Promise<object> => {
     const text = `INSERT INTO user_organisation (${Object.keys(userOrg)}) 
       VALUES (${this.getValuesPlaceholders(userOrg)})
       RETURNING id`
@@ -641,6 +646,50 @@ class PostgresDB {
       throw err
     }
   }
+
+  // Remove specific user (or all user - if no userId specified)
+  // from an org in user_organisation table
+  public removeUserOrg = async ({
+    orgId,
+    userId,
+  }: {
+    orgId: number
+    userId?: number
+  }): Promise<{ pairs: UserOrg[]; success: boolean }> => {
+    const text = `
+      DELETE FROM user_organisation WHERE
+      organisation_id = $1 ${userId ? 'AND user_id = $2' : ''}
+      RETURNING id, user_id as "userId", organisation_id as "orgId";
+      `
+    try {
+      const result = await this.query({ text, values: userId ? [orgId, userId] : [orgId] })
+      return { pairs: result.rows, success: true }
+    } catch (err) {
+      throw err
+    }
+  }
+
+  // Remove all permissions for user-org
+  public deleteUserOrgPermissions = async ({
+    orgId,
+    userId,
+  }: {
+    orgId: number
+    userId?: number
+  }) => {
+    const text = `
+      DELETE FROM permission_join WHERE
+      organisation_id = $1 ${userId ? 'AND user_id = $2' : ''};
+      `
+    try {
+      await this.query({ text, values: userId ? [orgId, userId] : [orgId] })
+      return { success: true }
+    } catch (err) {
+      throw err
+    }
+  }
+
+  // Remove all user
 
   // Used by triggers/actions -- please don't modify
   public getUserData = async (userId: number, orgId: number) => {
@@ -1026,7 +1075,7 @@ class PostgresDB {
 
   public getAllApplicationResponses = async (applicationId: number) => {
     const text = `
-    SELECT ar.id, template_element_id, code, value, time_updated, te.is_reviewable
+    SELECT ar.id, template_element_id, code, value, time_updated, te.reviewability
     FROM application_response ar JOIN template_element te
     ON ar.template_element_id = te.id
     WHERE application_id = $1

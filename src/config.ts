@@ -28,17 +28,21 @@ const config: { [key: string]: any } = {
   localisationsFolder: '../localisation',
   preferencesFolder: '../preferences',
   preferencesFileName: 'preferences.json',
+  backupsFolder: '../backups',
   genericThumbnailsFolderName: '_generic_thumbnails',
   // In production postgraphile is started with -q and -i /postgraphile/...
   nodeModulesFolder:
     process.env.NODE_ENV === 'production' ? '../../node_modules' : '../node_modules',
   jwtSecret: process.env.JWT_SECRET || 'devsecret',
   RESTport: 8080,
-  dataTablePrefix: 'data_table_',
+  dataTablePrefix: 'data_table_', // snake_case
   // These are the only default tables in the system that we allow to be mutated
   // directly by modifyRecord or display as data views. All other names must
   // have "data_table_" prepended.
   allowedTableNames: ['user', 'organisation', 'application', 'file'],
+  filterListMaxLength: 10,
+  filterColumnSuffix: '_filter_data', // snake_case,
+  isProductionBuild,
   ...serverPrefs,
 }
 

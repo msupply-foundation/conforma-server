@@ -1,8 +1,9 @@
 {
   "filters": {},
   "includeTables": [],
-  "excludeTables": ["applicationListShape", "elementTypePlugin", "notification"],
+  "excludeTables": ["applicationListShape", "elementTypePlugin"],
   "shouldReInitialise": true,
+  "usePgDump": true,
   "insertScriptsLocale": "dev",
   "includeInsertScripts": ["none"],
   "excludeInsertScripts": [],

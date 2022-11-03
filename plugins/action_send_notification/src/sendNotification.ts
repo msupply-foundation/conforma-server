@@ -1,10 +1,12 @@
+const TEST_MODE = false // Change to true to test with local Mailhog
+
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import databaseMethods from './databaseMethods'
 import path from 'path'
-import nodemailer from 'nodemailer'
+import nodemailer, { SentMessageInfo } from 'nodemailer'
 import marked from 'marked'
-import config from '../config.json'
+import configTest from '../configTest.json'
 import { Attachment } from 'nodemailer/lib/mailer'
 import { getFilePath } from '../../../src/components/files/fileHandler'
 import { ActionApplicationData } from '../../../src/types'
@@ -14,34 +16,40 @@ const isValidEmail = (email: string) => /^[\w\-_+.]+@([\w\-]+\.)+[A-Za-z]{2,}$/g
 
 const sendNotification: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
-  const { host, port, secure, user, defaultFromName, defaultFromEmail } = config
+
+  const {
+    environmentData: { appRootFolder, filesFolder, SMTPConfig },
+  } = applicationData as ActionApplicationData
+
   const {
     userId = applicationData?.userId,
     email = applicationData?.email,
     to = email,
     cc,
     bcc,
-    fromName = defaultFromName,
-    fromEmail = defaultFromEmail,
+    fromName = SMTPConfig?.defaultFromName,
+    fromEmail = SMTPConfig?.defaultFromEmail,
     subject,
     message,
     attachments = [],
     sendEmail = true,
   } = parameters
 
-  const {
-    environmentData: { appRootFolder, filesFolder },
-  } = applicationData as ActionApplicationData
-
-  const transporter = nodemailer.createTransport({
-    host,
-    port,
-    secure,
-    auth: {
-      user,
-      pass: process.env.SMTP_PASSWORD,
-    },
-  })
+  const transporter = SMTPConfig
+    ? nodemailer.createTransport(
+        TEST_MODE
+          ? configTest
+          : {
+              host: SMTPConfig.host,
+              port: SMTPConfig.port,
+              secure: SMTPConfig.secure,
+              auth: {
+                user: SMTPConfig.user,
+                pass: process.env.SMTP_PASSWORD,
+              },
+            }
+      )
+    : null
 
   try {
     const toAddressString = stringifyEmailRecipientsList(to)
@@ -53,10 +61,6 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
       ccAddressString === '' &&
       bccAddressString === ''
     )
-
-    if (!hasValidEmails) {
-      console.log('Warning: no valid email addresses provided')
-    }
 
     // Create notification database record
     console.log('Creating notification...')
@@ -71,9 +75,8 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     })
 
     // Send email
-    if (sendEmail && hasValidEmails) {
+    if (sendEmail && hasValidEmails && transporter) {
       console.log('Sending email...')
-      // Note: Using "any" type as imported @types defintions is incorrect, doesn't recognise some fields on "SentMessageInfo" type
       transporter
         .sendMail({
           from: `${fromName} <${fromEmail}>`,
@@ -85,28 +88,55 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
           html: marked(message),
           attachments: await prepareAttachments(attachments, appRootFolder, filesFolder),
         })
-        .then((emailResult: any) => {
-          if (emailResult?.response.match(/250 OK.*/)) {
+        .then(({ response, envelope, accepted, rejected, pending }: SentMessageInfo) => {
+          const serverLogText = `Response: ${response}\nAccepted: ${accepted}\nRejected: ${
+            rejected || ''
+          }\nPending: ${pending || ''}`
+          if (
+            response.match(/250 OK*/) &&
+            (!rejected || rejected.length === 0) &&
+            (!pending || pending.length === 0)
+          ) {
             console.log(
-              `Email successfully sent to: ${emailResult.envelope.to}\ncc:${
-                emailResult.envelope.cc || ''
-              }\nbcc: ${emailResult.envelope.bcc || ''}\nSubject: ${subject || ''}\n`
+              `Email successfully sent to: ${envelope.to}\ncc:${envelope.cc || ''}\nbcc: ${
+                envelope.bcc || ''
+              }\nSubject: ${subject || ''}\n`
             )
-
             // Update notification table with email sent confirmation
-            db.notificationEmailSent(notificationResult.id)
+            db.notificationEmailSent(notificationResult.id, serverLogText)
+          } else {
+            console.log(
+              `Email sending had a problem: ${envelope.to}\ncc:${
+                envelope.cc || ''
+              }\nServer response: ${response}
+              \nCheck "email_server_log" in "notification" table`
+            )
+            db.notificationEmailError(notificationResult.id, serverLogText)
           }
         })
-        .catch((err) =>
+        .catch((err) => {
           console.log(
-            `Email sending FAILED: ${err.message}\nCheck "email_sent" field in "notification" table`
+            `Email sending FAILED: ${err.message}\nCheck "email_server_log" field in "notification" table`
           )
-        )
+          db.notificationEmailError(notificationResult.id, `ERROR: ${err.message}`)
+        })
+    }
+    //warnings and errors if send email isn't working
+    if (!transporter) {
+      console.log('Email not sent - missing email configuration')
+      db.notificationEmailError(notificationResult.id, `WARNING: Email configuration not provided`)
+    } else if (!hasValidEmails) {
+      console.log('Email not sent - no valid email address')
+      db.notificationEmailError(notificationResult.id, `WARNING: No valid email addresses`)
     }
 
     // NOTE: Because sending email happens asynchronously, the output object
     // for this Action does not reflect whether email has sent successfully.
     // The "email_sent" field in the notification table is the only record of this.
+
+    // Accordingly, we should delete the "email_sent" property from the output,
+    // as it is misleading (it's always "false")
+    delete notificationResult.email_sent
 
     return {
       status: ActionQueueStatus.Success,

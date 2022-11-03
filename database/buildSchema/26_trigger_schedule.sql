@@ -14,10 +14,3 @@ CREATE TABLE public.trigger_schedule (
 -- event codes must be unique per application
 CREATE UNIQUE INDEX unique_application_event ON trigger_schedule (application_id, event_code);
 
--- TRIGGER (Listener) on trigger_schedule table
-CREATE TRIGGER trigger_schedule_trigger
-    AFTER INSERT OR UPDATE OF trigger ON public.trigger_schedule
-    FOR EACH ROW
-    WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
-    EXECUTE FUNCTION public.add_event_to_trigger_queue ();
-
