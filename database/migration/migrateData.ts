@@ -577,6 +577,13 @@ const migrateData = async () => {
     CREATE EXTENSION IF NOT EXISTS citext;
     ALTER TABLE public.user ALTER COLUMN username TYPE citext;
     `)
+
+    console.log('- Add is_missing column to table VIEW')
+
+    await DB.changeSchema(`
+    ALTER TABLE file
+    ADD COLUMN IF NOT EXISTS is_missing boolean DEFAULT FALSE NOT NULL;
+    `)
   }
   // Other version migrations continue here...
 
