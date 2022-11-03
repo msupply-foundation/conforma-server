@@ -14,7 +14,7 @@ async function updateReviewAssignmentsStatus({
     const trigger = parameters?.trigger ?? applicationData?.action_payload?.trigger_payload?.trigger
     const { reviewAssignmentId } = parameters
 
-    let assignments: ReviewAssignment[] = []
+    let assignments: { id: number; isLocked: boolean }[] = []
     // NB: reviewAssignmentId comes from record_id on TriggerPayload when
     // triggered from review_assignment table
     const {
@@ -33,7 +33,7 @@ async function updateReviewAssignmentsStatus({
         isSelfAssignable
       )
 
-      return otherSelfAssignments.map(({ id, assignedSections }: ReviewAssignment) => ({
+      return otherSelfAssignments.map(({ id, assignedSections }) => ({
         id,
         isLocked: isLocked || assignedSections.length > 0,
       }))
