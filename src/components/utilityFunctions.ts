@@ -87,15 +87,16 @@ export const filterObject = (
   return Object.fromEntries(filtered)
 }
 
+// Generic function for recursively crawling the file system. Will run method "fileOperation" on all files within "directory"
 export const crawlFileSystem = async (
-  newPath: string,
-  fileOperation: (newPath: string) => void
+  directory: string,
+  fileOperation: (filePath: string) => void
 ) => {
-  const files = fs.readdirSync(newPath)
+  const files = fs.readdirSync(directory)
   for (const file of files) {
-    const subPath = path.join(newPath, file)
+    const subPath = path.join(directory, file)
     if (fs.statSync(subPath).isDirectory()) crawlFileSystem(subPath, fileOperation)
-    else fileOperation(subPath)
+    else await fileOperation(subPath)
   }
 }
 

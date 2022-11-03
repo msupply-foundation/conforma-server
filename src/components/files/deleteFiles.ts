@@ -9,11 +9,9 @@ const { filesFolder, genericThumbnailsFolderName } = config
 export const filesPath = path.join(getAppEntryPointDir(), filesFolder)
 
 export interface FileDetail {
-  id: number
-  uniqueId: string
-  originalFilename: string
+  originalFilename?: string
   filePath: string
-  thumbnailPath: string
+  thumbnailPath?: string
 }
 
 export const deleteFile = async (file: FileDetail) => {
@@ -21,9 +19,10 @@ export const deleteFile = async (file: FileDetail) => {
   try {
     await fsPromises.unlink(path.join(filesPath, filePath))
     // Don't delete generic (shared) thumbnail files
-    if (!thumbnailPath.match(genericThumbnailsFolderName))
+    if (thumbnailPath && !thumbnailPath.match(genericThumbnailsFolderName)) {
       await fsPromises.unlink(path.join(filesPath, thumbnailPath))
-    console.log(`File deleted: ${originalFilename}`)
+    }
+    console.log(`File deleted: ${originalFilename || path.basename(filePath)}`)
 
     // Also delete folder if it's now empty
     const dir = path.dirname(filePath)
