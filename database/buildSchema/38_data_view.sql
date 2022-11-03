@@ -14,6 +14,7 @@ CREATE TABLE data_view (
     detail_view_header_column varchar NOT NULL,
     filter_include_columns varchar[],
     filter_exclude_columns varchar[],
+    default_sort_column varchar,
     show_linked_applications boolean NOT NULL DEFAULT TRUE,
     priority integer DEFAULT 1
 );
