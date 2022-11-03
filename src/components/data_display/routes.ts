@@ -18,6 +18,9 @@ import { ColumnDefinition, LinkedApplication, DataViewsResponse } from './types'
 import { DataView } from '../../generated/graphql'
 import config from '../../config'
 
+// CONSTANTS
+const LOOKUP_TABLE_PERMISSION_NAME = 'lookupTables'
+
 const routeDataViews = async (request: any, reply: any) => {
   const { permissionNames } = await getPermissionNamesFromJWT(request)
   const dataViews = await DBConnect.getAllowedDataViews(permissionNames)
@@ -37,6 +40,7 @@ const routeDataViewTable = async (request: any, reply: any) => {
   const authHeaders = request?.headers?.authorization
   const dataViewCode = camelCase(request.params.dataViewCode)
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
+  if (request.auth.isAdmin) permissionNames.push(LOOKUP_TABLE_PERMISSION_NAME)
   const query = objectKeysToCamelCase(request.query)
   const filter = request.body ?? {}
 
@@ -97,6 +101,7 @@ const routeDataViewDetail = async (request: any, reply: any) => {
   const dataViewCode = camelCase(request.params.dataViewCode)
   const recordId = Number(request.params.id)
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
+  if (request.auth.isAdmin) permissionNames.push(LOOKUP_TABLE_PERMISSION_NAME)
 
   const {
     tableName,
@@ -153,6 +158,7 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
     includeNull,
   } = request.body ?? {}
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
+  if (request.auth.isAdmin) permissionNames.push(LOOKUP_TABLE_PERMISSION_NAME)
 
   const dataViews = (await DBConnect.getAllowedDataViews(permissionNames, dataViewCode))
     .map((dataView) => objectKeysToCamelCase(dataView))

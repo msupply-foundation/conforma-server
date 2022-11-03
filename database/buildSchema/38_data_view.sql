@@ -42,6 +42,7 @@ CREATE TABLE data_table (
     table_name varchar NOT NULL UNIQUE,
     display_name varchar,
     field_map jsonb,
-    is_lookup_table boolean DEFAULT FALSE
+    is_lookup_table boolean DEFAULT FALSE,
+    data_view_code varchar
 );
 
