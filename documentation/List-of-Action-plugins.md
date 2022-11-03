@@ -116,6 +116,7 @@ Creates or updates a database record on any table, and creates/updates a related
 | `matchField`                                   |                      |
 | `matchValue`                                   |                      |
 | `shouldCreateJoinTable` (default `true`)       |                      |
+| `regenerateDataTableFilters` (default `false`) |                      |
 | `data` (shorthand for multiple fields at once) |                      |
 | `...fields for database record`                |                      |
 
@@ -204,6 +205,8 @@ The resultant record that would be inserted might look something like this:
 ```
 
 It is recommended to use the `data` parameter object when possible. The standalone field parameters should be reserved for when the required value is not available directly from `applicationData`.
+
+`regenerateDataTableFilters`: if you have ["filter data" columns](Data-View-Filters.md#handling-complex-data-structures) defined for filtering this data table, the `regenerateDataTableFilters` flag will ensure that the "generateFilterDataFields" script will run and compute the relevant filter data values for the new record. By default this is `false`, but you should enable it for all instances of `modifyRecord` where you are inserting data that can be viewed in [Data Views](Data-View.md). Even if you have no filter data filters defined currently, having this set to `true` ensures that any definitions you configure in the future will automatically create the appropriate filter data values for new records.
 
 **Notes:**
 
@@ -409,11 +412,11 @@ The opposite of `joinUserOrg`. Removes user from company by deleting the `user_o
 
 - _Action Code:_ **`removeUserOrg`**
 
-| Input parameters<br />(\*required) <br/>   | Output properties                                        |
-| ------------------------------------------ | -------------------------------------------------------- |
+| Input parameters<br />(\*required) <br/>   | Output properties                                  |
+| ------------------------------------------ | -------------------------------------------------- |
 | `username` or `userId`                     | `removedUsers: {userOrgId, userId, orgId} [Array]` |
-| `orgName` or `orgId` o `organisation_id`\* |                                                          |
-| `deletePermissions` (default `true`)       |                                                          |
+| `orgName` or `orgId` o `organisation_id`\* |                                                    |
+| `deletePermissions` (default `true`)       |                                                    |
 
 In `removeUserOrg` the field to define from which organisation to remove user(s) `orgId` or `orgName` is compulsory, but you _can_ omit the user. In that case, it is treated as "remove ALL USERS". Also a flag defining if it should also remove any permission for removed user(s) on that organisation can be passed. After each user is removed there is no way to revert that action unless rejoinng the user to the organisation on one of provided workflows.
 

@@ -1,5 +1,9 @@
 import DBConnect from '../databaseConnect'
-import { objectKeysToCamelCase, getValidTableName } from '../utilityFunctions'
+import {
+  objectKeysToCamelCase,
+  getValidTableName,
+  capitaliseFirstLetter,
+} from '../utilityFunctions'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import functions from '../actions/evaluatorFunctions'
 import fetch from 'node-fetch'
@@ -26,6 +30,7 @@ import { plural } from 'pluralize'
 // CONSTANTS
 const REST_OF_DATAVIEW_FIELDS = '...'
 const graphQLEndpoint = config.graphQLendpoint
+const FILTER_COLUMN_SUFFIX = capitaliseFirstLetter(camelCase(config.filterColumnSuffix))
 
 type JWTData = {
   userId: number
@@ -64,7 +69,7 @@ export const buildAllColumnDefinitions = async ({
 
   const dataView = dataViews[0]
 
-  const { tableName, title, code, tableSearchColumns } = dataView
+  const { tableName, title, code, tableSearchColumns, defaultSortColumn } = dataView
 
   const tableNameProper = camelCase(getValidTableName(tableName))
 
@@ -92,7 +97,13 @@ export const buildAllColumnDefinitions = async ({
   const columnsToReturn: string[] = buildColumnList(dataView, fieldNames, type)
 
   const filterColumns: string[] =
-    type === 'TABLE' ? buildColumnList(dataView, fieldNames, 'FILTER') : []
+    type === 'TABLE'
+      ? buildColumnList(dataView, fieldNames, 'FILTER').map((column: string) =>
+          fieldNames.includes(`${column}${FILTER_COLUMN_SUFFIX}`)
+            ? `${column}${FILTER_COLUMN_SUFFIX}`
+            : column
+        )
+      : []
 
   // Get all associated display column_definition records
   const customDisplayDefinitions = await getColumnDisplayDefinitions(tableName, [
@@ -138,6 +149,7 @@ export const buildAllColumnDefinitions = async ({
     headerDefinition,
     searchFields: (tableSearchColumns as string[]) || [],
     filterDefinitions,
+    defaultSortColumn: defaultSortColumn ?? null,
     showLinkedApplications,
   }
 }
@@ -203,7 +215,12 @@ const buildColumnList = (
       ? 'tableViewExcludeColumns'
       : 'filterExcludeColumns'
 
-  const includeColumns = getIncludeColumns(includeField, dataView, allColumns)
+  const includeColumns = getIncludeColumns(
+    includeField,
+    dataView,
+    // Don't include "FilterData" columns in full list
+    allColumns.filter((col) => !new RegExp(FILTER_COLUMN_SUFFIX).test(col))
+  )
 
   const excludeColumns = dataView[excludeField] !== null ? (dataView[excludeField] as string[]) : []
 

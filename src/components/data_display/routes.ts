@@ -18,6 +18,9 @@ import { ColumnDefinition, LinkedApplication, DataViewsResponse } from './types'
 import { DataView } from '../../generated/graphql'
 import config from '../../config'
 
+// CONSTANTS
+const LOOKUP_TABLE_PERMISSION_NAME = 'lookupTables'
+
 const routeDataViews = async (request: any, reply: any) => {
   const { permissionNames } = await getPermissionNamesFromJWT(request)
   const dataViews = await DBConnect.getAllowedDataViews(permissionNames)
@@ -37,13 +40,14 @@ const routeDataViewTable = async (request: any, reply: any) => {
   const authHeaders = request?.headers?.authorization
   const dataViewCode = camelCase(request.params.dataViewCode)
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
+  if (request.auth.isAdmin) permissionNames.push(LOOKUP_TABLE_PERMISSION_NAME)
   const query = objectKeysToCamelCase(request.query)
   const filter = request.body ?? {}
 
   // GraphQL pagination parameters
   const first = query?.first ? Number(query.first) : 20
   const offset = query?.offset ? Number(query.offset) : 0
-  const orderBy = query?.orderBy ?? 'id'
+  const orderBy = query?.orderBy
   const ascending = query?.ascending ? query?.ascending === 'true' : true
 
   const {
@@ -52,6 +56,7 @@ const routeDataViewTable = async (request: any, reply: any) => {
     fieldNames,
     searchFields,
     filterDefinitions,
+    defaultSortColumn,
     gqlFilters,
     title,
     code,
@@ -71,7 +76,7 @@ const routeDataViewTable = async (request: any, reply: any) => {
     gqlFilters,
     first,
     offset,
-    orderBy,
+    orderBy ?? defaultSortColumn ?? 'id',
     ascending,
     authHeaders
   )
@@ -96,6 +101,7 @@ const routeDataViewDetail = async (request: any, reply: any) => {
   const dataViewCode = camelCase(request.params.dataViewCode)
   const recordId = Number(request.params.id)
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
+  if (request.auth.isAdmin) permissionNames.push(LOOKUP_TABLE_PERMISSION_NAME)
 
   const {
     tableName,
@@ -145,8 +151,14 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
   const authHeaders = request?.headers?.authorization
   const dataViewCode = camelCase(request.params.dataViewCode)
   const columnName = request.params.column
-  const { searchFields = [columnName], searchText = '', delimiter } = request.body ?? {}
+  const {
+    searchFields = [columnName],
+    searchText = '',
+    delimiter,
+    includeNull,
+  } = request.body ?? {}
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
+  if (request.auth.isAdmin) permissionNames.push(LOOKUP_TABLE_PERMISSION_NAME)
 
   const dataViews = (await DBConnect.getAllowedDataViews(permissionNames, dataViewCode))
     .map((dataView) => objectKeysToCamelCase(dataView))
@@ -204,7 +216,11 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
       values.forEach((value) => {
         if (delimiter && typeof value === 'string') {
           const splitString = value.split(delimiter).map((e) => e.trim())
-          splitString.forEach((string) => filterList.add(string))
+          splitString.forEach((substring) => {
+            // Once split, we need to exclude substrings that don't match the
+            // search text
+            if (new RegExp(searchText, 'i').test(substring)) filterList.add(substring)
+          })
         } else filterList.add(value)
       })
     })
@@ -231,7 +247,11 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
 
   if (results.length > filterListMaxLength) moreResultsAvailable = true
 
-  return reply.send({ list: results.slice(0, filterListMaxLength), moreResultsAvailable })
+  const list = results.slice(0, filterListMaxLength)
+
+  if (includeNull) list.push(null)
+
+  return reply.send({ list, moreResultsAvailable })
 }
 
 export { routeDataViews, routeDataViewTable, routeDataViewDetail, routeDataViewFilterList }
