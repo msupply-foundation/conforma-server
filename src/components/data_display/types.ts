@@ -67,6 +67,7 @@ export interface ColumnDetailOutput {
   searchFields: string[]
   filterDefinitions: FilterDefinition[]
   headerDefinition: ColumnDefinition | undefined
+  defaultSortColumn: string | null
   showLinkedApplications: boolean
 }
 
