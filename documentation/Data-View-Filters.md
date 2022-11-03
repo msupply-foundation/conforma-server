@@ -234,7 +234,7 @@ The list of options can be configured with the following `filter_parameters` (th
    "Ascorbic acid, Miracle Whip",
    ...
    ```
-  In order to seperate them into a more useful list of individual options, we can specify a `delimiter`, which in this case is a comma: `","`. Just a reminder that it preferable to configure multiple options like this as delimited strings rather than arrays (as partial matching array elements in GraphQL is not really feasible in our current setup).
+  In order to separate them into a more useful list of individual options, we can specify a `delimiter`, which in this case is a comma: `","`. Just a reminder that it preferable to configure multiple options like this as delimited strings rather than arrays (as partial matching array elements in GraphQL is not really feasible in our current setup).
 - `includeNull`: (boolean, default `false`). Sometimes data view columns may contain `null` values. These *will* show up in the filter list (they appear as (Blank)), but only if `null` happens to appear in the top 10 options results (due to 10-item maximum). And typing anything in the Search field will obviously immediately exclude `null`, so it's possible to never see the `null` option in the options list. But if the `includeNull` parameter is set to `true`, then the options list returned from the server will *always* include the `null` "(Blank)" value.
 - `showFilterList`: (boolean, default `true`) as mentioned above, this Options list filter is the default filter for any `string` data. However, if you wish to provide a free-text search instead (often more useful when every item has a different value), set `showFilterList` to `false` and a ["Text search" filter](#text-search) will be displayed instead.
 
