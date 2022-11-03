@@ -29,6 +29,7 @@ export const deleteFile = async (file: FileDetail) => {
     if ((await fsPromises.readdir(path.join(filesPath, dir))).length === 0)
       await fsPromises.rmdir(path.join(filesPath, dir))
   } catch (err) {
-    console.log(err)
+    // Don't log if it's just a missing file -- this is expected sometimes
+    if ((err as any)?.code !== 'ENOENT') console.log()
   }
 }

@@ -95,7 +95,7 @@ export const crawlFileSystem = async (
   const files = fs.readdirSync(directory)
   for (const file of files) {
     const subPath = path.join(directory, file)
-    if (fs.statSync(subPath).isDirectory()) crawlFileSystem(subPath, fileOperation)
+    if (fs.statSync(subPath).isDirectory()) await crawlFileSystem(subPath, fileOperation)
     else await fileOperation(subPath)
   }
 }
