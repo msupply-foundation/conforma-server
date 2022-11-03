@@ -61,7 +61,7 @@ export const generateFilterDataFields = async (table: string, fullUpdate: boolea
 
     // Get all filter-data-generating columns for table from
     // data_view_column_definitions (must have "filter_expression defined" and
-    // have "Filter" as the column name suffix)
+    // have "FilterData" as the column name suffix)
     const filterTextColumnDefinitions: FilterTextColumnDefinition[] = (
       await db.getTableFilterColumnDefintions(table)
     ).map(({ column, expression, dataType }: FilterTextColumnDefinition) => ({
@@ -138,7 +138,7 @@ export const generateFilterDataFields = async (table: string, fullUpdate: boolea
               // TO-DO: Need to pass Auth headers to evaluator API calls
               graphQLConnection: { fetch, endpoint: graphQLEndpoint },
             })
-            patch[camelCase(column)] = evaluatedResult
+            patch[camelCase(column)] = evaluatedResult === '' ? null : evaluatedResult
           } catch {
             // If evaluation fails, just continue with next record
           }

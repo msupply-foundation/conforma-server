@@ -541,7 +541,8 @@ const migrateData = async () => {
         DROP CONSTRAINT IF EXISTS outcome_display_table_name_code_key, 
         ADD COLUMN IF NOT EXISTS table_search_columns varchar[],
         ADD COLUMN IF NOT EXISTS filter_include_columns varchar[],
-        ADD COLUMN IF NOT EXISTS filter_exclude_columns varchar[];
+        ADD COLUMN IF NOT EXISTS filter_exclude_columns varchar[],
+        ADD COLUMN IF NOT EXISTS default_sort_column varchar;
           
       ALTER TABLE data_view_column_definition 
         ADD COLUMN IF NOT EXISTS sort_column varchar,
@@ -581,6 +582,12 @@ const migrateData = async () => {
     console.log(' - Removing unused "is_missing" field from file table')
     await DB.changeSchema(`
     ALTER TABLE public.file DROP COLUMN IF EXISTS is_missing;
+    `)
+    console.log(' - Add column to data_table to link data views to lookup tables')
+
+    await DB.changeSchema(`
+    ALTER TABLE data_table
+    ADD COLUMN data_view_code varchar;
     `)
   }
   // Other version migrations continue here...
