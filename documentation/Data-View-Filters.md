@@ -169,7 +169,20 @@ Which would return this output based on the original response data: `MedPack, Ge
 
 That value is (automatically) stored in a field called "manufacturer_list_filter_data" on the "product" table, which is much more suitable for filtering.
 
-Note that it is entirely possible to create *multiple* filter data columns for a single original data column if there's several data elements in it that you wish to filter by. For example, for an ingredients list, you might want a "names" and a "types" filter data column from a single response object.
+Note that it is entirely possible to create *multiple* filter data columns for a single original data column if there's several data elements in it that you wish to filter by. For example, for an ingredients list, you might have a response object like this:
+```
+[
+  {
+    name: "acarbose", type: "All other therapeutic products"
+  },
+  {
+    name: "crizotinib", type: "Ophthalmologicals"
+  }
+]
+```
+(Note that this is a simplified version from what is used in our actual Product Registration forms)
+
+You could make two different "filterData" columns based on this -- one for "names" and one for "types", and filter them both independently.
 
 Tip: every response type has a "text" field, and often this value will be sufficient to create a filterable data source.
 
