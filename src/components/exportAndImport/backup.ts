@@ -66,7 +66,7 @@ if (isManualBackup) {
 }
 
 const cleanUpBackups = async () => {
-  const maxDaysToKeep = config.maxBackupDurationDays
+  const maxDaysToKeep = maxBackupDurationDays
   if (!maxDaysToKeep) return
 
   console.log(`Removing backups older than ${maxDaysToKeep} days`)

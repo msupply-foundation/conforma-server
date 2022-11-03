@@ -5,8 +5,8 @@
 ## Contents
   - [API](#api)
   - [Configuration](#configuration)
-    - [`data_view` table](#data_display-table)
-    - [`data_view_column_definition` table](#data_display_column_definition-table)
+    - [`data_view` table](#data_view-table)
+    - [`data_view_column_definition` table](#data_view_column_definition-table)
     - [Additional formatting](#additional-formatting)
     - [A note about Array data](#a-note-about-array-data)
   - [Real use-case example](#real-use-case-example)

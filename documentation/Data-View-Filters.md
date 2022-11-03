@@ -169,7 +169,20 @@ Which would return this output based on the original response data: `MedPack, Ge
 
 That value is (automatically) stored in a field called "manufacturer_list_filter_data" on the "product" table, which is much more suitable for filtering.
 
-Note that it is entirely possible to create *multiple* filter data columns for a single original data column if there's several data elements in it that you wish to filter by. For example, for an ingredients list, you might want a "names" and a "types" filter data column from a single response object.
+Note that it is entirely possible to create *multiple* filter data columns for a single original data column if there's several data elements in it that you wish to filter by. For example, for an ingredients list, you might have a response object like this:
+```
+[
+  {
+    name: "acarbose", type: "All other therapeutic products"
+  },
+  {
+    name: "crizotinib", type: "Ophthalmologicals"
+  }
+]
+```
+(Note that this is a simplified version from what is used in our actual Product Registration forms)
+
+You could make two different "filterData" columns based on this -- one for "names" and one for "types", and filter them both independently.
 
 Tip: every response type has a "text" field, and often this value will be sufficient to create a filterable data source.
 
@@ -204,7 +217,7 @@ Query parameters:
 The columns that will appear as available filters for a given data view are defined in `filter_include_columns` and `filter_exclude_columns`. These work the same way as the table view and detail view [include/exclude lists](Data-View.md#data_view-table), but with the following differences:
 
 - if nothing is specified (i.e. `null` value), the defaults will be the same as the table view columns that are being returned. This is because, by default, we expect the available filters to be for the same data as the table columns.
-- Similarly, the special value `...` matches all *table* columns, not the full set of columns. So it becomes fairly straightfoward to specify a filter set that closely matches the table columns but with, for example, one extra column and one exclusion. It's a good idea to explicitly exclude columns for which the data can't be processed by one of the standard filters -- however, using mapped "filter data" columns (see [above](#handling-complex-data-structures)) it's possible to get meaningful, filter-able content from almost any type of data.
+- Similarly, the special value `...` matches all *table* columns, not the full set of columns. So it becomes fairly straightforward to specify a filter set that closely matches the table columns but with, for example, one extra column and one exclusion. It's a good idea to explicitly exclude columns for which the data can't be processed by one of the standard filters -- however, using mapped "filter data" columns (see [above](#handling-complex-data-structures)) it's possible to get meaningful, filter-able content from almost any type of data.
 - If a "filter data" column is defined, the "filter data" version of the column will be returned as a filter definition instead of the original data source. For example, if there exists a `genericNames` column with a complex listBuilder response as its value, and also a `genericNamesFilterData` (they only differ by suffix), the `genericNamesFilterData` column will be returned in filter definitions.
 
 Note, then, that is possible to create filters for columns that don't necessarily appear in the table itself (useful when your table is getting cluttered but you still need lots of filtering options).
@@ -234,7 +247,7 @@ The list of options can be configured with the following `filter_parameters` (th
    "Ascorbic acid, Miracle Whip",
    ...
    ```
-  In order to seperate them into a more useful list of individual options, we can specify a `delimiter`, which in this case is a comma: `","`. Just a reminder that it preferable to configure multiple options like this as delimited strings rather than arrays (as partial matching array elements in GraphQL is not really feasible in our current setup).
+  In order to separate them into a more useful list of individual options, we can specify a `delimiter`, which in this case is a comma: `","`. Just a reminder that it preferable to configure multiple options like this as delimited strings rather than arrays (as partial matching array elements in GraphQL is not really feasible in our current setup).
 - `includeNull`: (boolean, default `false`). Sometimes data view columns may contain `null` values. These *will* show up in the filter list (they appear as (Blank)), but only if `null` happens to appear in the top 10 options results (due to 10-item maximum). And typing anything in the Search field will obviously immediately exclude `null`, so it's possible to never see the `null` option in the options list. But if the `includeNull` parameter is set to `true`, then the options list returned from the server will *always* include the `null` "(Blank)" value.
 - `showFilterList`: (boolean, default `true`) as mentioned above, this Options list filter is the default filter for any `string` data. However, if you wish to provide a free-text search instead (often more useful when every item has a different value), set `showFilterList` to `false` and a ["Text search" filter](#text-search) will be displayed instead.
 

@@ -166,9 +166,9 @@ For each instance, you'll need to create the following environment variables bef
 
 - `TAG` -- the name of the tag you're about to launch
 - `SMTP_SECRET` -- password for the email server specified in the "[sendNotification](List-of-Action-plugins.md#send-notification)" action
-- `WEB_URL` -- host name as will be shown in the applicaton URL (including port)
+- `WEB_URL` -- host name as will be shown in the application URL (including port)
 - `JWT_SECRET` -- private key for generating and verifying JWT tokens
-- `BACKUPS_FOLDER` -- path on the host system where the internal "backups" folder should be mapped to (optional -- default is the default volumes location). An appropriate location would be a folder that is synced to a cloud backup service.
+- `BACKUPS_FOLDER` -- path on the host system where the internal "backups" folder should be mapped to (optional -- default is the default volumes location). An appropriate location would be a folder that is synced to a cloud backup service. (See [Backups](Backups.md) for more info.)
 - `BACKUPS_PASSWORD` -- password for encrypting the backup archives (AES-encrypted .zip files) (optional -- if no password provided, the backups will be unencrypted .zip files)
 
 For example:
