@@ -53,7 +53,7 @@ require('dotenv').config()
 const startServer = async () => {
   await migrateData()
   await loadActionPlugins() // Connects to Database and listens for Triggers
-  // await cleanUpFiles() // Runs on schedule as well as startup
+  await cleanUpFiles() // Runs on schedule as well as startup
 
   createDefaultDataFolders()
 

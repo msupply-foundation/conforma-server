@@ -578,11 +578,9 @@ const migrateData = async () => {
     ALTER TABLE public.user ALTER COLUMN username TYPE citext;
     `)
 
-    console.log('- Add is_missing column to table VIEW')
-
+    console.log(' - Removing unused "is_missing" field from file table')
     await DB.changeSchema(`
-    ALTER TABLE file
-    ADD COLUMN IF NOT EXISTS is_missing boolean DEFAULT FALSE NOT NULL;
+    ALTER TABLE public.file DROP COLUMN IF EXISTS is_missing;
     `)
   }
   // Other version migrations continue here...

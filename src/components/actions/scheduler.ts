@@ -39,9 +39,9 @@ const backupSchedule = schedulerTestMode
 scheduler.scheduleJob(checkActionSchedule, () => {
   triggerScheduledActions()
 })
-// scheduler.scheduleJob(cleanUpPreviewsSchedule, () => {
-//   cleanUpFiles()
-// })
+scheduler.scheduleJob(cleanUpPreviewsSchedule, () => {
+  cleanUpFiles()
+})
 scheduler.scheduleJob(backupSchedule, () => {
   startBackup()
 })
