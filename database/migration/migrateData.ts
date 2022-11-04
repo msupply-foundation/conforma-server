@@ -12,24 +12,15 @@ import { getAppEntryPointDir } from '../../src/components/utilityFunctions'
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
 const INDEX_FILENAME = '44_index.sql'
 
-const { version, isProductionBuild } = config
+const { version } = config
 const isManualMigration: Boolean = process.argv[2] === '--migrate'
 const simulatedVersion: string | undefined = process.argv[3]
 
 const migrateData = async () => {
   let databaseVersion: string
 
-  const appVersion = !isProductionBuild
-    ? // In development, pretend the version is one higher than it is,
-      // so we can keep getting changing migrations when testing
-      semverInc(version, 'patch')
-    : version
-
   try {
     databaseVersion = (await DB.getDatabaseVersion()).value
-    // No migration if database version matches current version, but we still
-    // proceed if this is a manual migration
-    if (semverCompare(databaseVersion, appVersion) >= 0 && !isManualMigration) return
   } catch (err) {
     // No version in database yet, so run all migration
     databaseVersion = '0.0.0'
