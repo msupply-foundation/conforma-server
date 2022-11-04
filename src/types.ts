@@ -135,6 +135,10 @@ export interface ActionApplicationData {
       defaultFromEmail: string
     }
   }
+  other?: {
+    // Use this for dev related stuff, shouldn't be used in actual configs
+    suppressEmail?: boolean
+  }
 }
 
 export interface ActionPayload {
