@@ -195,8 +195,8 @@ END
 $template_event$
 LANGUAGE plpgsql;
 
--- FUNCTION to set 'AVAILABLE' version of template to 'DISABLED'
--- when another is set to 'AVAILABLE'
+-- FUNCTION to set 'AVAILABLE' version of template to 'DISABLED' when another is
+-- set to 'AVAILABLE', and also link FILEs to new "AVAILABLE" template version
 CREATE OR REPLACE FUNCTION public.template_status_update ()
     RETURNS TRIGGER
     AS $template_event$
@@ -210,6 +210,18 @@ BEGIN
             code = NEW.code
             AND status = 'AVAILABLE'
             AND id != NEW.id;
+        UPDATE
+            public.file
+        SET
+            template_id = NEW.id
+        WHERE
+            template_id IN (
+                SELECT
+                    id
+                FROM
+                    TEMPLATE
+                WHERE
+                    code = NEW.code);
     END IF;
     RETURN NULL;
 END;

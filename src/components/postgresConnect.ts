@@ -124,10 +124,14 @@ class PostgresDB {
 
   public getCounter = async (counterName: string, increment = true) => {
     const textSelect = 'SELECT value FROM counter WHERE name = $1;'
+    const textNewCounter = 'INSERT INTO counter (name, value) VALUES($1, 1)'
     const textUpdate = 'UPDATE counter SET value = value + 1 WHERE name = $1;'
     try {
       await this.query({ text: 'BEGIN TRANSACTION;' })
       const result: any = await this.query({ text: textSelect, values: [counterName] })
+      if (result.rows.length === 0) {
+        await this.query({ text: textNewCounter, values: [counterName] })
+      }
       if (increment) await this.query({ text: textUpdate, values: [counterName] })
       await this.query({ text: 'COMMIT TRANSACTION;' })
       return result.rows[0]?.value
