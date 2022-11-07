@@ -53,8 +53,8 @@ async function generateReviewAssignments({
     if (highestReviewAssignmentLevel == null) highestReviewAssignmentLevel = 1
 
     const numReviewLevels = (await DBConnect.getNumReviewLevels(stageId)) || 0
-    
-    const sectionCodes = applicationData?.sectionCodes || [];
+
+    const sectionCodes = applicationData?.sectionCodes || []
 
     if (reviewId) {
       const { stageNumber: submittedReviewStage, levelNumber: submittedReviewLevel } =
@@ -105,7 +105,7 @@ const generateForFirstLevelReviews = async (
   stageHistoryTimeCreated: Date,
   templateId: number,
   numReviewLevels: number,
-  sectionCodes: string[],
+  sectionCodes: string[]
 ) => {
   console.log('Generating review assignment records for application submission...')
   console.log(`Application ${applicationId} stage ${stageNumber}`)
@@ -145,7 +145,7 @@ const generateForNextLevelReviews = async (
   submittedReviewStage: number,
   submittedReviewLevel: number,
   numReviewLevels: number,
-  sectionCodes: string[],
+  sectionCodes: string[]
 ) => {
   console.log('Generating review assignment records for review submission...')
   console.log(`Application ${applicationId} stage ${currentStageNumber}\n
@@ -257,7 +257,7 @@ const generateReviewAssignmentsInLevel = async (
   stageHistoryTimeCreated: Date,
   templateId: number,
   numReviewLevels: number,
-  sectionCodes: string[],
+  sectionCodes: string[]
 ): Promise<ResultObject> => {
   const lastStageNumber: number = await db.getLastStageNumber(applicationId)
   // Check if other reviewAssignment is already assigned to create new ones LOCKED
@@ -459,17 +459,22 @@ const getNewOrExistingAssignmentStatus = (
   canMakeFinalDecision: boolean,
   isSelfAssignable: boolean,
   sectionCodes: string[],
-  existingAssignment?: ExistingReviewAssignment,
+  existingAssignment?: ExistingReviewAssignment
 ): AssignmentState => {
   const isReviewAssigned = existingReviewsAssigned.length > 0
   const isAssigned = existingReviewsAssigned.some(
     ({ userId }) => userId === existingAssignment?.userId
   )
-  // temporarily final decision shouldn't be locked if there are other reviewAssignemt assigned
+  // temporarily final decision shouldn't be locked if there are other reviewAssignment assigned
   // Note: This logic will be updated during implementation of ISSUE #836 (front-end) to allow
   // locking other reviewAssignments for finalDecision once one has been submitted.
   if (canMakeFinalDecision)
-    return { status: ReviewAssignmentStatus.Assigned, isSelfAssignable: true, isLocked: false, assignedSections: sectionCodes }
+    return {
+      status: ReviewAssignmentStatus.Assigned,
+      isSelfAssignable: true,
+      isLocked: false,
+      assignedSections: sectionCodes,
+    }
 
   // Create new OR update ReviewAssignment:
   // 1. If existing
