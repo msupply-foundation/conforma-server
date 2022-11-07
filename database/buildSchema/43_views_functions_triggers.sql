@@ -643,9 +643,9 @@ ALTER TABLE review_assignment
     ADD COLUMN IF NOT EXISTS template_id INT GENERATED ALWAYS AS (review_assignment_template_id (application_id)) STORED;
 
 -- These no longer used as combined into (below) validation function
-DROP FUNCTION IF EXISTS public.empty_assigned_sections ();
-
 DROP TRIGGER IF EXISTS review_assignment_trigger2 ON public.review_assignment;
+
+DROP FUNCTION IF EXISTS public.empty_assigned_sections ();
 
 -- Enforce validity of assigned sections:
 -- If status is now AVAILABLE assigned sections should be empty
