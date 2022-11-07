@@ -581,7 +581,7 @@ const migrateData = async () => {
 
     await DB.changeSchema(`
     ALTER TABLE data_table
-    ADD COLUMN data_view_code varchar;
+    ADD COLUMN IF NOT EXISTS data_view_code varchar;
     `)
   }
   // Other version migrations continue here...
