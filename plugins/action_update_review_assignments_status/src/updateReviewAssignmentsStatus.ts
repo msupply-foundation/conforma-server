@@ -35,7 +35,7 @@ async function updateReviewAssignmentsStatus({
 
       return otherSelfAssignments.map(({ id, assignedSections }) => ({
         id,
-        isLocked: isLocked || assignedSections.length > 0,
+        isLocked: isLocked ? assignedSections.length === 0 : false,
       }))
     }
 
