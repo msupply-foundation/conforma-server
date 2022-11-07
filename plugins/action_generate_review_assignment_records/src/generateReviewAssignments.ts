@@ -389,9 +389,7 @@ const generateNextReviewAssignments: RegerenateReviewAssignments = (
     // Get assignmentState with: status, isLocked and isSelfAssigned (to create new or update)
     const assignment = getNewOrExistingAssignmentStatus(
       existingReviewsAssigned,
-      reviewer.canMakeFinalDecision,
       reviewer.canSelfAssign || nextReviewLevel > 1,
-      sectionCodes,
       existingAssignment
     )
 
@@ -456,26 +454,13 @@ const constructReviewAssignmentObject = (
 // Checks if existing assignment, should keep status and update if isLocked
 const getNewOrExistingAssignmentStatus = (
   existingReviewsAssigned: ExistingReviewAssignment[],
-  canMakeFinalDecision: boolean,
   isSelfAssignable: boolean,
-  sectionCodes: string[],
   existingAssignment?: ExistingReviewAssignment
 ): AssignmentState => {
   const isReviewAssigned = existingReviewsAssigned.length > 0
   const isAssigned = existingReviewsAssigned.some(
     ({ userId }) => userId === existingAssignment?.userId
   )
-  // temporarily final decision shouldn't be locked if there are other reviewAssignment assigned
-  // Note: This logic will be updated during implementation of ISSUE #836 (front-end) to allow
-  // locking other reviewAssignments for finalDecision once one has been submitted.
-  if (canMakeFinalDecision)
-    return {
-      status: ReviewAssignmentStatus.Assigned,
-      isSelfAssignable: true,
-      isLocked: false,
-      assignedSections: sectionCodes,
-    }
-
   // Create new OR update ReviewAssignment:
   // 1. If existing
   //   - keep same status, isSelfAssignable
