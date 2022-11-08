@@ -701,7 +701,7 @@ CREATE TRIGGER review_assignment_validate_section_trigger
     EXECUTE FUNCTION public.enforce_asssigned_section_validity ();
 
 -- FUNCTION to set `available_sections` on given review_assignments based on other assignments
-CREATE OR REPLACE FUNCTION public.review_assignment_available_section (assignment public.review_assignment)
+CREATE OR REPLACE FUNCTION public.review_assignment_available_sections (assignment public.review_assignment)
     RETURNS text[]
     AS $$
     SELECT
