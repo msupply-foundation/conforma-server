@@ -593,13 +593,19 @@ const migrateData = async () => {
 
     console.log(' - Remove type ASSIGN_LOCKED from assign_action ENUM')
     await DB.changeSchema(`
-      ALTER TYPE public.assigner_action RENAME to public.assigner_action_old;
+      ALTER TYPE public.assigner_action RENAME to assigner_action_old;
+
+      ALTER TABLE application_list_shape
+        DROP COLUMN IF EXISTS assigner_action;
 
       CREATE TYPE public.assigner_action AS ENUM
       (
         'ASSIGN',
         'RE_ASSIGN'
       );
+
+      ALTER TABLE application_list_shape
+        ADD COLUMN assigner_action public.assigner_action;
 
       DROP TYPE public.assigner_action_old;
     `)
