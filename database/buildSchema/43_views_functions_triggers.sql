@@ -1416,7 +1416,7 @@ STABLE;
 -- APPLICATION_LIST_VIEW
 -- Aggregated VIEW method of all data required for application list page
 -- Requires an empty table as setof return and smart comment to make orderBy work (https://github.com/graphile/graphile-engine/pull/378)
-CREATE TABLE application_list_shape (
+CREATE OR REPLACE TABLE application_list_shape (
     id int,
     "serial" varchar,
     "name" varchar,
