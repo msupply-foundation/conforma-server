@@ -700,6 +700,41 @@ CREATE TRIGGER review_assignment_validate_section_trigger
     WHEN (NEW.trigger IS NULL AND OLD.trigger IS NULL)
     EXECUTE FUNCTION public.enforce_asssigned_section_validity ();
 
+-- FUNCTION to set `available_sections` on given review_assignments based on other assignments
+CREATE OR REPLACE FUNCTION public.review_assignment_available_section (assignment public.review_assignment)
+    RETURNS text[]
+    AS $$
+    SELECT
+        ARRAY ( WITH my_array AS (
+                SELECT DISTINCT
+                    (ts.code) available_sections
+                FROM
+                    template_section ts
+                    JOIN TEMPLATE t ON t.id = ts.template_id
+                    JOIN application a ON a.template_id = t.id
+                WHERE
+                    a.id = $1.application_id
+)
+                SELECT
+                    available_sections
+                FROM
+                    my_array
+                WHERE
+                    available_sections NOT IN (
+                        SELECT
+                            unnest(assigned_sections)
+                        FROM
+                            review_assignment
+                        WHERE
+                            status = 'ASSIGNED'
+                            AND stage_id = $1.stage_id
+                            AND level_number = $1.level_number
+                            AND application_id = $1.application_id
+                            AND id <> $1.id))
+$$
+LANGUAGE sql
+STABLE;
+
 -- TRIGGER (Listener) on review_assignment table: To update trigger
 DROP TRIGGER IF EXISTS review_assignment_trigger ON public.review_assignment;
 
@@ -1289,10 +1324,6 @@ CREATE OR REPLACE FUNCTION assigner_list (stage_id int, assigner_id int)
             AND submitted_assigned_questions_count (application_id, $1, level_number) < assigned_questions_count (application_id, $1, level_number) THEN
             'RE_ASSIGN'
         WHEN COUNT(DISTINCT (review_assignment.id)) != 0
-            AND assigned_questions_count (application_id, $1, level_number) >= reviewable_questions_count (application_id)
-            AND submitted_assigned_questions_count (application_id, $1, level_number) >= assigned_questions_count (application_id, $1, level_number) THEN
-            'ASSIGN_LOCKED'
-        WHEN COUNT(DISTINCT (review_assignment.id)) != 0
             AND assigned_questions_count (application_id, $1, level_number) < reviewable_questions_count (application_id) THEN
             'ASSIGN'
         ELSE
@@ -1383,6 +1414,29 @@ LANGUAGE sql
 STABLE;
 
 -- APPLICATION_LIST_VIEW
+-- Aggregated VIEW method of all data required for application list page
+-- Requires an empty table as setof return and smart comment to make orderBy work (https://github.com/graphile/graphile-engine/pull/378)
+CREATE TABLE application_list_shape (
+    id int,
+    "serial" varchar,
+    "name" varchar,
+    template_code varchar,
+    template_name varchar,
+    applicant varchar,
+    org_name varchar,
+    stage varchar,
+    stage_colour varchar,
+    "status" public.application_status,
+    outcome public.application_outcome,
+    last_active_date timestamptz,
+    applicant_deadline timestamptz,
+    -- TO-DO: reviewer_deadline
+    assigners varchar[],
+    reviewers varchar[],
+    reviewer_action public.reviewer_action,
+    assigner_action public.assigner_action
+);
+
 CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
     RETURNS SETOF application_list_shape
     AS $$
@@ -1423,7 +1477,6 @@ LANGUAGE sql
 STABLE;
 
 -- (https://github.com/graphile/graphile-engine/pull/378)
--- Required to make 'orderBy' work in application_list
 COMMENT ON FUNCTION application_list (userid int) IS E'@sortable';
 
 -- APPLICATION_LIST_FILTERS

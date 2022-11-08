@@ -6,6 +6,7 @@ import { execSync } from 'child_process'
 import path from 'path'
 import { readFileSync } from 'fs'
 import { getAppEntryPointDir } from '../../src/components/utilityFunctions'
+import dbConnectInstance from '../../src/components/databaseConnect'
 
 // CONSTANTS
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
@@ -582,6 +583,25 @@ const migrateData = async () => {
     await DB.changeSchema(`
     ALTER TABLE data_table
     ADD COLUMN data_view_code varchar;
+    `)
+
+    console.log(' - Update existing review_assignment to set is_locked=false when isSelfAssigned')
+    // TODO - Not sure how to do this
+
+    // This logs is related to something which will be added by view_functions_triggers file
+    console.log(' - Add new generated column available_sections in review_assignment TABLE')
+
+    console.log(' - Remove type ASSIGN_LOCKED from assign_action ENUM')
+    await DB.changeSchema(`
+      ALTER TYPE public.assigner_action RENAME to public.assigner_action_old;
+
+      CREATE TYPE public.assigner_action AS ENUM
+      (
+        'ASSIGN',
+        'RE_ASSIGN'
+      );
+
+      DROP TYPE public.assigner_action_old;
     `)
   }
   // Other version migrations continue here...
