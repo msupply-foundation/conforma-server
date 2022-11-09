@@ -697,12 +697,13 @@ DROP TRIGGER IF EXISTS review_assignment_validate_section_trigger ON public.revi
 CREATE TRIGGER review_assignment_validate_section_trigger
     BEFORE UPDATE ON public.review_assignment
     FOR EACH ROW
-    WHEN (NEW.trigger IS NULL AND OLD.trigger IS NULL)
+    WHEN (NEW.trigger IS NOT NULL AND OLD.trigger IS NULL)
     EXECUTE FUNCTION public.enforce_asssigned_section_validity ();
 
--- FUNCTION to set `available_sections` on given review_assignments based on other assignments
+-- FUNCTION to return `available_sections` for a given review_assignment based
+-- on other assignments and allowed sections
 CREATE OR REPLACE FUNCTION public.review_assignment_available_sections (assignment public.review_assignment)
-    RETURNS text[]
+    RETURNS varchar[]
     AS $$
     SELECT
         ARRAY ( WITH my_array AS (
@@ -729,8 +730,9 @@ CREATE OR REPLACE FUNCTION public.review_assignment_available_sections (assignme
                             status = 'ASSIGNED'
                             AND stage_id = $1.stage_id
                             AND level_number = $1.level_number
-                            AND application_id = $1.application_id
-                            AND id <> $1.id))
+                            AND application_id = $1.application_id)
+                        AND (available_sections = ANY ($1.allowed_sections)
+                            OR $1.allowed_sections IS NULL))
 $$
 LANGUAGE sql
 STABLE;
@@ -1416,6 +1418,29 @@ STABLE;
 -- APPLICATION_LIST_VIEW
 -- Aggregated VIEW method of all data required for application list page
 -- Requires an empty table as setof return and smart comment to make orderBy work (https://github.com/graphile/graphile-engine/pull/378)
+DROP TABLE IF EXISTS application_list_shape CASCADE;
+
+CREATE TABLE IF NOT EXISTS application_list_shape (
+    id int,
+    "serial" varchar,
+    "name" varchar,
+    template_code varchar,
+    template_name varchar,
+    applicant varchar,
+    org_name varchar,
+    stage varchar,
+    stage_colour varchar,
+    "status" public.application_status,
+    outcome public.application_outcome,
+    last_active_date timestamptz,
+    applicant_deadline timestamptz,
+    -- TO-DO: reviewer_deadline
+    assigners varchar[],
+    reviewers varchar[],
+    reviewer_action public.reviewer_action,
+    assigner_action public.assigner_action
+);
+
 CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
     RETURNS SETOF application_list_shape
     AS $$
@@ -1456,6 +1481,7 @@ LANGUAGE sql
 STABLE;
 
 -- (https://github.com/graphile/graphile-engine/pull/378)
+-- Required to make 'orderBy' work in application_list
 COMMENT ON FUNCTION application_list (userid int) IS E'@sortable';
 
 -- APPLICATION_LIST_FILTERS
