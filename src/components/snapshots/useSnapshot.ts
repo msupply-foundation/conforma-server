@@ -154,8 +154,10 @@ const useSnapshot: SnapshotOperation = async ({
     delay(1500)
 
     // Migrate database to latest version
-    console.log('Migrating database (if required)...)')
-    await migrateData()
+    if (options.shouldReInitialise) {
+      console.log('Migrating database (if required)...)')
+      await migrateData()
+    }
 
     // Regenerate row level policies
     await updateRowPolicies()
