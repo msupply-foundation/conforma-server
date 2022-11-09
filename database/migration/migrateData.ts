@@ -584,9 +584,6 @@ const migrateData = async () => {
     ADD COLUMN data_view_code varchar;
     `)
 
-    console.log(' - Update existing review_assignment to set is_locked=false when isSelfAssigned')
-    // TODO - Not sure how to do this
-
     console.log(' - Remove type ASSIGN_LOCKED from assign_action ENUM')
     await DB.changeSchema(`
       DROP TYPE IF EXISTS public.assigner_action CASCADE;

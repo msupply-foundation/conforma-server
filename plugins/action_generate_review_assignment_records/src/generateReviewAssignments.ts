@@ -457,21 +457,19 @@ const getNewOrExistingAssignmentStatus = (
   isSelfAssignable: boolean,
   existingAssignment?: ExistingReviewAssignment
 ): AssignmentState => {
-  const isAssigned = existingReviewsAssigned.some(
-    ({ userId }) => userId === existingAssignment?.userId
-  )
+  const isAssignedAndLocked = existingReviewsAssigned.some(({ isLocked }) => isLocked)
   // Create NEW or update EXISTING ReviewAssignment:
   // 1. If existing
   //   - keep same status, isSelfAssignable
-  //   - keep same isLocked if assigned
+  //   - update isLocked = false (to release reviews after Application is re-submitted)
   // 2. If new reviewAssignment:
   //   - status = Available (always)
-  //   - isLocked = true if Assigned & locked (Default: false - Maybe needs checking if true - when LOQ sent)
+  //   - isLocked = true if Assigned & locked - when LOQ sent (Default: false)
   //   - isSelfAssignable = true if canSelfAssign (Default: false)
   return {
     status: existingAssignment?.status ?? ReviewAssignmentStatus.Available,
     isSelfAssignable: existingAssignment?.isSelfAssignable ?? isSelfAssignable,
-    isLocked: existingAssignment && isAssigned ? existingAssignment.isLocked : false,
+    isLocked: existingAssignment ? false : isAssignedAndLocked,
   }
 }
 
