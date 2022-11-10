@@ -1,5 +1,3 @@
-import { ReviewStatus } from '../../../src/generated/graphql'
-
 const databaseMethods = (DBConnect: any) => ({
   getAssociatedReviews: async (applicationId: number, stageId: number, level: number) => {
     const text = `

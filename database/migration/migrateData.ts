@@ -583,6 +583,17 @@ const migrateData = async () => {
     ALTER TABLE data_table
     ADD COLUMN IF NOT EXISTS data_view_code varchar;
     `)
+
+    console.log(' - Remove type ASSIGN_LOCKED from assign_action ENUM')
+    await DB.changeSchema(`
+      DROP TYPE IF EXISTS public.assigner_action CASCADE;
+
+      CREATE TYPE public.assigner_action AS ENUM
+      (
+        'ASSIGN',
+        'RE_ASSIGN'
+      );
+    `)
   }
   // Other version migrations continue here...
 
