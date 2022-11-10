@@ -140,7 +140,7 @@ const updateReviewsStatuses: ActionPluginType = async ({
           reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Pending })
       }
     }
-
+    console.log('Resulting reviews to update', reviewsToUpdate)
     // Update review statuses
     for (const review of reviewsToUpdate) {
       const { reviewId, reviewStatus } = review
