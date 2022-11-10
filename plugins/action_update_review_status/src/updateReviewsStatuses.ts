@@ -141,7 +141,6 @@ const updateReviewsStatuses: ActionPluginType = async ({
       }
     }
     console.log('Resulting reviews to update', reviewsToUpdate)
-
     // Update review statuses
     for (const review of reviewsToUpdate) {
       const { reviewId, reviewStatus } = review
