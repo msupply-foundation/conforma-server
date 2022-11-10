@@ -460,7 +460,11 @@ See [Grant Permissions](#grant-permissions) above regarding acting on user-only 
 
 ### Generate Review Assignments
 
-Generates records in the `review_assignment` table -- i.e. which users (reviewers) are allowed to do a review for the current stage/level (and for which Sections). The records are set with `status` "Available" or "Assigned". With the properties to specify the type of assignament: `isSelfAssignable` if it should show for self-assignment when not assigned by another user. The `isLocked` property helps defining that the review can start but not be submitted - after the application has been back to Applicant for ammendments.
+Generates records in the `review_assignment` table -- i.e. which users (reviewers) are allowed to do a review for the current stage/level (and for which Sections). 
+- Records are set with `status` "Available" or "Assigned". 
+- Each record has properties to specify the type of assignment: 
+  - `isSelfAssignable` if it should show for self-assignment when not assigned by another user
+  - `isLocked` defining that the review can start but not be submitted (Used for applications which has been sent back to Applicant for ammendments)
 
 It also creates records in the `review_assignment_assigner_join` table -- basically a list of users who have permission to make the _assignments_ in the review_assignment table.
 
