@@ -1,23 +1,4 @@
-import { ReviewStatus } from '../../../src/generated/graphql'
-
 const databaseMethods = (DBConnect: any) => ({
-  getReview: async (reviewId: number) => {
-    const text = `
-    SELECT
-      review_assignment_id AS "reviewAssignmentId"
-      FROM review
-      WHERE id = $1
-    `
-
-    try {
-      const result = await DBConnect.query({ text, values: [reviewId] })
-      return result.row[0]
-    } catch (err) {
-      console.log(err.message)
-      throw err
-    }
-  },
-
   getAssociatedReviews: async (applicationId: number, stageId: number, level: number) => {
     const text = `
     SELECT

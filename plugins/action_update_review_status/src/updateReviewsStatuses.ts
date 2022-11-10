@@ -92,23 +92,10 @@ const updateReviewsStatuses: ActionPluginType = async ({
           ReviewStatus.Draft,
         ])
 
-        // Lock ReviewAssignment of Review subimmet as changes required to applicant
-        // this is required to new ReviewAssignments created also get locked
-        const currentReview = await db.getReview(reviewId)
-        if (currentReview)
-          reviewAssignmentsToUpdate.push({
-            reviewAssignmentId: currentReview.reviewAssignmentId,
-            isLocked: true,
-          })
-
         // Lock reviews to avoid other reviews submitted while awaiting changes required to applicant
         reviewsLocked.forEach((review) => {
           reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Locked })
-          // Also lock the reviewAssignment
-          reviewAssignmentsToUpdate.push({
-            reviewAssignmentId: review.reviewAssignmentId,
-            isLocked: true,
-          })
+          // TODO: Check with team should also lock the reviewAssignment ?
         })
 
         // Get all reviewAssignments without review on previous level
@@ -145,7 +132,7 @@ const updateReviewsStatuses: ActionPluginType = async ({
       for (const review of reviews) {
         const { reviewAssignmentId, reviewStatus } = review
         if (reviewStatus === ReviewStatus.Locked) {
-          // The reviewAssignment previously locked is unlocked by generateReviewAssignment
+          // TODO: Check with team should also lock the reviewAssignment ?
         }
         if (await haveAssignedResponsesChanged(reviewAssignmentId))
           reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Pending })
@@ -153,7 +140,6 @@ const updateReviewsStatuses: ActionPluginType = async ({
           reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Pending })
       }
     }
-    console.log('Resulting reviews to update', reviewsToUpdate)
 
     // Update review statuses
     for (const review of reviewsToUpdate) {
