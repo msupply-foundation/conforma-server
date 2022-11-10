@@ -486,15 +486,21 @@ const migrateData = async () => {
       ' - Rename TYPE is_reviewable to reviewability and update field in TABLE template_element'
     )
 
-    await DB.changeSchema(`
-    ALTER TYPE public.is_reviewable_status RENAME TO reviewability;`)
+    await DB.changeSchema(
+      `
+    ALTER TYPE public.is_reviewable_status RENAME TO reviewability;`,
+      { silent: true }
+    )
 
     await DB.changeSchema(`
     ALTER TYPE public.reviewability
       ADD VALUE IF NOT EXISTS 'ONLY_IF_APPLICANT_ANSWER' AFTER 'NEVER';`)
 
-    await DB.changeSchema(`
-    ALTER TABLE public.template_element RENAME COLUMN is_reviewable TO reviewability;`)
+    await DB.changeSchema(
+      `
+    ALTER TABLE public.template_element RENAME COLUMN is_reviewable TO reviewability;`,
+      { silent: true }
+    )
 
     console.log(' - Remove 4 unused fields from application_list')
     await DB.changeSchema(
@@ -581,7 +587,7 @@ const migrateData = async () => {
 
     await DB.changeSchema(`
     ALTER TABLE data_table
-    ADD COLUMN data_view_code varchar;
+    ADD COLUMN IF NOT EXISTS data_view_code varchar;
     `)
 
     console.log(' - Remove type ASSIGN_LOCKED from assign_action ENUM')

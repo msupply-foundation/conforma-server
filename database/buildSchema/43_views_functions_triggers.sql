@@ -899,6 +899,25 @@ CREATE TRIGGER review_trigger
     EXECUTE FUNCTION public.add_event_to_trigger_queue ();
 
 -- REVIEW_RESPONSE
+-- FUNCTION to auto-add stage_number to review_response
+CREATE OR REPLACE FUNCTION public.review_response_stage_number (review_id int)
+    RETURNS int
+    AS $$
+    SELECT
+        stage_number
+    FROM
+        public.review
+    WHERE
+        id = $1;
+
+$$
+LANGUAGE SQL
+IMMUTABLE;
+
+ALTER TABLE public.review_response
+    DROP COLUMN IF EXISTS stage_number,
+    ADD COLUMN IF NOT EXISTS stage_number integer GENERATED ALWAYS AS (public.review_response_stage_number (review_id)) STORED;
+
 -- Function to automatically set previous review_responses
 -- (for same review & templateElement) as is_latest_review = false
 CREATE OR REPLACE FUNCTION public.set_latest_review_response ()
