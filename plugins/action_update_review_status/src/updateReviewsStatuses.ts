@@ -59,8 +59,8 @@ const updateReviewsStatuses: ActionPluginType = async ({
   ): Promise<Review[]> =>
     (await db.getAssociatedReviews(applicationId, stageId, level)).filter(
       (review: Review) =>
-        (review.reviewId !== reviewId && !statusToUpdate) ||
-        statusToUpdate.includes(review.reviewStatus)
+        review.reviewId !== reviewId &&
+        (!statusToUpdate || statusToUpdate.includes(review.reviewStatus))
     )
 
   const getReviewAssignmentsWithoutReviewByLevel = async (
