@@ -661,10 +661,6 @@ BEGIN
         NEW.assigned_sections = ARRAY ( WITH a AS (
                 SELECT
                     unnest(NEW.assigned_sections) new_assigned
-                FROM
-                    review_assignment
-                WHERE
-                    id = NEW.id
 )
                 SELECT
                     new_assigned
@@ -677,7 +673,8 @@ BEGIN
                         FROM
                             review_assignment
                         WHERE
-                            stage_id = NEW.stage_id
+                            application_id = NEW.application_id
+                            AND stage_id = NEW.stage_id
                             AND level_number = NEW.level_number
                             AND reviewer_id <> NEW.reviewer_id)
                         AND (new_assigned = ANY (NEW.allowed_sections)
