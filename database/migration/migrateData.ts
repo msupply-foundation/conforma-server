@@ -609,6 +609,24 @@ const migrateData = async () => {
       ALTER TABLE public.review_assignment DROP column IF EXISTS
       is_locked;
     `)
+    await DB.changeSchema(`
+      ALTER TYPE public.review_status RENAME to review_status_old;
+
+      CREATE TYPE public.review_status AS ENUM (
+        'DRAFT',
+        'SUBMITTED',
+        'CHANGES_REQUESTED',
+        'PENDING',
+        'DISCONTINUED'
+    );
+
+      ALTER TABLE review_status_history
+        ALTER COLUMN status TYPE public.review_status
+        USING status::text::public.review_status;
+        
+      DROP function review_status;
+      DROP TYPE public.review_status_old; 
+    `)
   }
   // Other version migrations continue here...
 

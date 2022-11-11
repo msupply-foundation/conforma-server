@@ -270,7 +270,6 @@ const generateReviewAssignmentsInLevel = async (
     reviewLevel,
     PermissionPolicyType.Review
   )
-  console.log('Existing reviewers for stage/level', nextLevelReviewers)
 
   const isLastLevel = reviewLevel === numReviewLevels
   const isLastStage = stageNumber === lastStageNumber
@@ -332,7 +331,7 @@ const generateReviewAssignmentsInLevel = async (
   } as ResultObject
 }
 
-type RegerenateReviewAssignments = (
+type RegenerateReviewAssignments = (
   previousReviewAssignments: ExistingReviewAssignment[],
   nextReviewLevel: number,
   nextLevelReviewers: Reviewer[],
@@ -349,7 +348,7 @@ type RegerenateReviewAssignments = (
   deleteReviewAssignments: DeleteReviewAssignment[]
 }
 
-const generateNextReviewAssignments: RegerenateReviewAssignments = (
+const generateNextReviewAssignments: RegenerateReviewAssignments = (
   previousReviewAssignments,
   nextReviewLevel,
   nextLevelReviewers,
@@ -382,13 +381,9 @@ const generateNextReviewAssignments: RegerenateReviewAssignments = (
       (reviewAssignment) => reviewAssignment.userId === reviewer.userId
     )
 
-    const existingReviewsAssigned = existingReviewAssignments.filter(
-      ({ status }) => status === ReviewAssignmentStatus.Assigned
-    )
-
     // Get assignmentState with: status, isLocked and isSelfAssigned (to create new or update)
     const assignment = getNewOrExistingAssignmentStatus(
-      existingReviewsAssigned,
+      // existingReviewsAssigned,
       reviewer.canSelfAssign || nextReviewLevel > 1,
       existingAssignment
     )
@@ -425,7 +420,7 @@ const constructReviewAssignmentObject = (
   stageNumber: number,
   timeStageCreated: Date
 ) => {
-  const { status, isSelfAssignable, isLocked, assignedSections } = assignment
+  const { status, isSelfAssignable, assignedSections } = assignment
   const { userId, orgId, allowedSections, canMakeFinalDecision } = reviewer
   const userOrgKey = `${userId}_${orgId ? orgId : 0}`
   if (reviewAssignments[userOrgKey])
@@ -440,7 +435,6 @@ const constructReviewAssignmentObject = (
       assignedSections: assignedSections || null,
       isSelfAssignable: isSelfAssignable || false,
       isFinalDecision: canMakeFinalDecision,
-      isLocked,
       applicationId,
       levelNumber,
       isLastLevel,
@@ -453,13 +447,10 @@ const constructReviewAssignmentObject = (
 
 // Checks if existing assignment, should keep status and update if isLocked
 const getNewOrExistingAssignmentStatus = (
-  existingReviewsAssigned: ExistingReviewAssignment[],
+  // existingReviewsAssigned: ExistingReviewAssignment[],
   isSelfAssignable: boolean,
   existingAssignment?: ExistingReviewAssignment
 ): AssignmentState => {
-  const isAssigned = existingReviewsAssigned.some(
-    ({ userId }) => userId === existingAssignment?.userId
-  )
   // Create NEW or update EXISTING ReviewAssignment:
   // 1. If existing
   //   - keep same status, isSelfAssignable
@@ -471,7 +462,6 @@ const getNewOrExistingAssignmentStatus = (
   return {
     status: existingAssignment?.status ?? ReviewAssignmentStatus.Available,
     isSelfAssignable: existingAssignment?.isSelfAssignable ?? isSelfAssignable,
-    isLocked: existingAssignment && isAssigned ? existingAssignment.isLocked : false,
   }
 }
 

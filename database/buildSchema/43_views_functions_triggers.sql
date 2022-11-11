@@ -742,14 +742,23 @@ STABLE;
 CREATE OR REPLACE FUNCTION public.review_assignment_is_locked (assignment public.review_assignment)
     RETURNS boolean
     AS $$
+DECLARE
+    app_status application_status;
+BEGIN
     SELECT
-        NOT is_review_submittable
+        status INTO app_status
     FROM
-        application
+        application_stage_status_latest
     WHERE
-        id = $1.application_id
+        application_id = $1.application_id;
+    IF app_status = "CHANGES_REQUIRED" OR app_status = "DRAFT" THEN
+        RETURN TRUE;
+    ELSE
+        RETURN FALSE;
+    END IF;
+END;
 $$
-LANGUAGE sql
+LANGUAGE plpgsql
 STABLE;
 
 -- TRIGGER (Listener) on review_assignment table: To update trigger
