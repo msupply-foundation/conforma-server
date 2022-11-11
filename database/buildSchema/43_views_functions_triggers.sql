@@ -737,6 +737,21 @@ $$
 LANGUAGE sql
 STABLE;
 
+-- FUNCTION to return "is_locked" field based on the "is_review_submittable"
+-- field from "application"
+CREATE OR REPLACE FUNCTION public.review_assignment_is_locked (assignment public.review_assignment)
+    RETURNS boolean
+    AS $$
+    SELECT
+        NOT is_review_submittable
+    FROM
+        application
+    WHERE
+        id = $1.application_id
+$$
+LANGUAGE sql
+STABLE;
+
 -- TRIGGER (Listener) on review_assignment table: To update trigger
 DROP TRIGGER IF EXISTS review_assignment_trigger ON public.review_assignment;
 
@@ -1386,7 +1401,7 @@ CREATE OR REPLACE FUNCTION review_list (stageid int, reviewerid int, appstatus p
         WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'PENDING') != 0 THEN
             'RESTART_REVIEW'
         WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'DRAFT'
-            AND is_locked = FALSE) != 0 THEN
+            AND review_assignment_is_locked (review_assignment) = FALSE) != 0 THEN
             'CONTINUE_REVIEW'
         WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
             AND review_assignment.is_final_decision = TRUE
@@ -1399,7 +1414,7 @@ CREATE OR REPLACE FUNCTION review_list (stageid int, reviewerid int, appstatus p
         WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'AVAILABLE'
             AND is_self_assignable = TRUE
             AND (review = NULL
-            OR is_locked = FALSE)) != 0 THEN
+            OR review_assignment_is_locked (review_assignment) = FALSE)) != 0 THEN
             'SELF_ASSIGN'
         WHEN COUNT(*) FILTER (WHERE (appstatus = 'CHANGES_REQUIRED'
             OR appstatus = 'DRAFT')
