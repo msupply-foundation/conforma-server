@@ -602,7 +602,6 @@ const migrateData = async () => {
     `)
 
     console.log(' - Simplify how we handle "locked" reviews')
-    // TO-DO migrate current "is_locked" values to new field
     await DB.changeSchema(`
       ALTER TABLE public.review_assignment DROP column IF EXISTS
       is_locked;
@@ -617,6 +616,10 @@ const migrateData = async () => {
         'PENDING',
         'DISCONTINUED'
     );
+
+      UPDATE public.review_status_history
+      SET status = 'PENDING'
+      WHERE status = 'LOCKED';
 
       ALTER TABLE review_status_history
         ALTER COLUMN status TYPE public.review_status

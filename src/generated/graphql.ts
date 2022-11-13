@@ -651,8 +651,6 @@ export type ActivityLogApplicationIdFkeyApplicationCreateInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -881,8 +879,6 @@ export type Application = Node & {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   /** Reads a single `Template` that is related to this `Application`. */
   template?: Maybe<Template>;
   /** Reads a single `User` that is related to this `Application`. */
@@ -1123,10 +1119,6 @@ export type ApplicationCondition = {
   isConfig?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
-  /** Checks for equality with the object’s `isReviewSubmittable` field. */
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `isReviewNotSubmittable` field. */
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against `Application` object types. All fields are combined with a logical ‘and.’ */
@@ -1153,10 +1145,6 @@ export type ApplicationFilter = {
   isConfig?: Maybe<BooleanFilter>;
   /** Filter by the object’s `trigger` field. */
   trigger?: Maybe<TriggerFilter>;
-  /** Filter by the object’s `isReviewSubmittable` field. */
-  isReviewSubmittable?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `isReviewNotSubmittable` field. */
-  isReviewNotSubmittable?: Maybe<BooleanFilter>;
   /** Filter by the object’s `stage` field. */
   stage?: Maybe<StringFilter>;
   /** Filter by the object’s `stageNumber` field. */
@@ -1246,8 +1234,6 @@ export type ApplicationInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -1611,8 +1597,6 @@ export type ApplicationNoteApplicationIdFkeyApplicationCreateInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -2434,8 +2418,6 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -2582,8 +2564,6 @@ export type ApplicationPatch = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -2664,8 +2644,6 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -3175,10 +3153,6 @@ export enum ApplicationsOrderBy {
   IsConfigDesc = 'IS_CONFIG_DESC',
   TriggerAsc = 'TRIGGER_ASC',
   TriggerDesc = 'TRIGGER_DESC',
-  IsReviewSubmittableAsc = 'IS_REVIEW_SUBMITTABLE_ASC',
-  IsReviewSubmittableDesc = 'IS_REVIEW_SUBMITTABLE_DESC',
-  IsReviewNotSubmittableAsc = 'IS_REVIEW_NOT_SUBMITTABLE_ASC',
-  IsReviewNotSubmittableDesc = 'IS_REVIEW_NOT_SUBMITTABLE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -3264,8 +3238,6 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -4201,8 +4173,6 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -4438,8 +4408,6 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -8256,8 +8224,6 @@ export type DataTableProductApplicationJoinApplicationIdFkeyApplicationCreateInp
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -12699,8 +12665,6 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -16249,8 +16213,6 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -16875,8 +16837,6 @@ export type OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput =
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -21350,6 +21310,7 @@ export type Review = Node & {
   reviewResponses: ReviewResponsesConnection;
   /** Reads and enables pagination through a set of `ReviewStatusHistory`. */
   reviewStatusHistories: ReviewStatusHistoriesConnection;
+  isLocked?: Maybe<Scalars['Boolean']>;
   latestDecision?: Maybe<ReviewDecision>;
   status?: Maybe<ReviewStatus>;
   timeStatusCreated?: Maybe<Scalars['Datetime']>;
@@ -21499,8 +21460,6 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -21627,7 +21586,6 @@ export type ReviewAssignment = Node & {
   /** Reads and enables pagination through a set of `ReviewAssignmentAssignerJoin`. */
   reviewAssignmentAssignerJoins: ReviewAssignmentAssignerJoinsConnection;
   availableSections?: Maybe<Array<Maybe<Scalars['String']>>>;
-  isLocked?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -21667,8 +21625,6 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -22385,8 +22341,6 @@ export type ReviewAssignmentFilter = {
   isSelfAssignable?: Maybe<BooleanFilter>;
   /** Filter by the object’s `availableSections` field. */
   availableSections?: Maybe<StringListFilter>;
-  /** Filter by the object’s `isLocked` field. */
-  isLocked?: Maybe<BooleanFilter>;
   /** Filter by the object’s `reviews` relation. */
   reviews?: Maybe<ReviewAssignmentToManyReviewFilter>;
   /** Some related `reviews` exist. */
@@ -23543,6 +23497,8 @@ export type ReviewFilter = {
   isLastStage?: Maybe<BooleanFilter>;
   /** Filter by the object’s `isFinalDecision` field. */
   isFinalDecision?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isLocked` field. */
+  isLocked?: Maybe<BooleanFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<ReviewStatusFilter>;
   /** Filter by the object’s `timeStatusCreated` field. */
@@ -24833,7 +24789,6 @@ export enum ReviewStatus {
   Submitted = 'SUBMITTED',
   ChangesRequested = 'CHANGES_REQUESTED',
   Pending = 'PENDING',
-  Locked = 'LOCKED',
   Discontinued = 'DISCONTINUED'
 }
 
@@ -29219,8 +29174,6 @@ export type TriggerScheduleApplicationIdFkeyApplicationCreateInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -30085,8 +30038,6 @@ export type UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch =
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -30117,8 +30068,6 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -30149,8 +30098,6 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -30181,8 +30128,6 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -30214,8 +30159,6 @@ export type UpdateApplicationOnApplicationNoteForApplicationNoteApplicationIdFke
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -30247,8 +30190,6 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -30280,8 +30221,6 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -30313,8 +30252,6 @@ export type UpdateApplicationOnDataTableProductApplicationJoinForDataTableProduc
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -30346,8 +30283,6 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -30379,8 +30314,6 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -30412,8 +30345,6 @@ export type UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplica
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -30445,8 +30376,6 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -30478,8 +30407,6 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -30511,8 +30438,6 @@ export type UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFke
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -30544,8 +30469,6 @@ export type UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicat
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -30577,8 +30500,6 @@ export type UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -35770,8 +35691,6 @@ export type UserApplicationJoinApplicationIdFkeyApplicationCreateInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -37157,8 +37076,6 @@ export type VerificationApplicationIdFkeyApplicationCreateInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
-  isReviewSubmittable?: Maybe<Scalars['Boolean']>;
-  isReviewNotSubmittable?: Maybe<Scalars['Boolean']>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
   organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
@@ -41749,8 +41666,6 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   isActive?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   isConfig?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
-  isReviewSubmittable?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  isReviewNotSubmittable?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   org?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
@@ -44746,6 +44661,7 @@ export type ReviewResolvers<ContextType = any, ParentType extends ResolversParen
   notifications?: Resolver<ResolversTypes['NotificationsConnection'], ParentType, ContextType, RequireFields<ReviewNotificationsArgs, 'orderBy'>>;
   reviewResponses?: Resolver<ResolversTypes['ReviewResponsesConnection'], ParentType, ContextType, RequireFields<ReviewReviewResponsesArgs, 'orderBy'>>;
   reviewStatusHistories?: Resolver<ResolversTypes['ReviewStatusHistoriesConnection'], ParentType, ContextType, RequireFields<ReviewReviewStatusHistoriesArgs, 'orderBy'>>;
+  isLocked?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   latestDecision?: Resolver<Maybe<ResolversTypes['ReviewDecision']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ReviewStatus']>, ParentType, ContextType>;
   timeStatusCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
@@ -44806,7 +44722,6 @@ export type ReviewAssignmentResolvers<ContextType = any, ParentType extends Reso
   reviews?: Resolver<ResolversTypes['ReviewsConnection'], ParentType, ContextType, RequireFields<ReviewAssignmentReviewsArgs, 'orderBy'>>;
   reviewAssignmentAssignerJoins?: Resolver<ResolversTypes['ReviewAssignmentAssignerJoinsConnection'], ParentType, ContextType, RequireFields<ReviewAssignmentReviewAssignmentAssignerJoinsArgs, 'orderBy'>>;
   availableSections?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
-  isLocked?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
