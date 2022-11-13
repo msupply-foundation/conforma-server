@@ -737,8 +737,8 @@ $$
 LANGUAGE sql
 STABLE;
 
--- FUNCTION to return "is_locked" field based on the "is_review_submittable"
--- field from "application"
+-- FUNCTION to return "is_locked" field in GraphQL based on the current
+-- application status
 CREATE OR REPLACE FUNCTION public.review_assignment_is_locked (assignment public.review_assignment)
     RETURNS boolean
     AS $$
@@ -751,7 +751,7 @@ BEGIN
         application_stage_status_latest
     WHERE
         application_id = $1.application_id;
-    IF app_status = "CHANGES_REQUIRED" OR app_status = "DRAFT" THEN
+    IF app_status = 'CHANGES_REQUIRED' OR app_status = 'DRAFT' THEN
         RETURN TRUE;
     ELSE
         RETURN FALSE;

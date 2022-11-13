@@ -604,8 +604,6 @@ const migrateData = async () => {
     console.log(' - Simplify how we handle "locked" reviews')
     // TO-DO migrate current "is_locked" values to new field
     await DB.changeSchema(`
-      ALTER TABLE public.application ADD column IF NOT EXISTS
-      is_review_submittable bool DEFAULT FALSE;
       ALTER TABLE public.review_assignment DROP column IF EXISTS
       is_locked;
     `)

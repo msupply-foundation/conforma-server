@@ -18,7 +18,6 @@ CREATE TABLE public.application (
     outcome public.application_outcome DEFAULT 'PENDING',
     is_active bool,
     is_config bool DEFAULT FALSE,
-    is_review_submittable bool DEFAULT TRUE,
     TRIGGER public.trigger
 );
 
