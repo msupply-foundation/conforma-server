@@ -25,7 +25,6 @@ CREATE TABLE public.review_assignment (
     level_id integer REFERENCES public.template_stage_review_level (id) ON DELETE CASCADE,
     is_last_level boolean,
     is_last_stage boolean,
-    is_locked boolean DEFAULT FALSE,
     is_final_decision boolean DEFAULT FALSE,
     is_self_assignable boolean DEFAULT FALSE
 );

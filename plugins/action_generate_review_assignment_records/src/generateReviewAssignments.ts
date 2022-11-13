@@ -260,7 +260,6 @@ const generateReviewAssignmentsInLevel = async (
   sectionCodes: string[]
 ): Promise<ResultObject> => {
   const lastStageNumber: number = await db.getLastStageNumber(applicationId)
-  // Check if other reviewAssignment is already assigned to create new ones LOCKED
   const previousReviewAssignments: ExistingReviewAssignment[] =
     await db.getExistingReviewAssignments(applicationId, stageNumber, reviewLevel)
 
