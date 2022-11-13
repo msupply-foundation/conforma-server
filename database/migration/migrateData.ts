@@ -616,18 +616,35 @@ const migrateData = async () => {
         'PENDING',
         'DISCONTINUED'
     );
+    `)
 
-      UPDATE public.review_status_history
-      SET status = 'PENDING'
-      WHERE status = 'LOCKED';
-
+    // The following commands all done in separate "changeSchema" functions, as
+    // individually they may fail based on current database state, but we still
+    // need to ensure subsequent commands are run
+    await DB.changeSchema(
+      `
       ALTER TABLE review_status_history
         ALTER COLUMN status TYPE public.review_status
         USING status::text::public.review_status;
-        
-      DROP function review_status;
+      `,
+      { silent: true }
+    )
+
+    await DB.changeSchema(
+      `
+      UPDATE public.review_status_history
+        SET status = 'PENDING'
+        WHERE status = 'LOCKED';
+      `,
+      { silent: true }
+    )
+
+    await DB.changeSchema(`
+        DROP function review_status;
+      `)
+    await DB.changeSchema(`
       DROP TYPE public.review_status_old; 
-    `)
+      `)
   }
   // Other version migrations continue here...
 
