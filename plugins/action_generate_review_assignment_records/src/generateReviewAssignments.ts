@@ -383,7 +383,6 @@ const generateNextReviewAssignments: RegenerateReviewAssignments = (
 
     // Get assignmentState with: status, isLocked and isSelfAssigned (to create new or update)
     const assignment = getNewOrExistingAssignmentStatus(
-      // existingReviewsAssigned,
       reviewer.canSelfAssign || nextReviewLevel > 1,
       existingAssignment
     )
@@ -447,17 +446,13 @@ const constructReviewAssignmentObject = (
 
 // Checks if existing assignment, should keep status and update if isLocked
 const getNewOrExistingAssignmentStatus = (
-  // existingReviewsAssigned: ExistingReviewAssignment[],
   isSelfAssignable: boolean,
   existingAssignment?: ExistingReviewAssignment
 ): AssignmentState => {
   // Create NEW or update EXISTING ReviewAssignment:
-  // 1. If existing
-  //   - keep same status, isSelfAssignable
-  //   - set isLocked = false
+  // 1. If existing - keep same status, isSelfAssignable
   // 2. If new reviewAssignment:
   //   - status = Available (always)
-  //   - isLocked = false (unless is existing, assigned and locked)
   //   - isSelfAssignable = true if canSelfAssign (Default: false)
   return {
     status: existingAssignment?.status ?? ReviewAssignmentStatus.Available,
