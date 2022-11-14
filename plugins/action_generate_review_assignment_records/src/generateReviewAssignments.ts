@@ -269,6 +269,7 @@ const generateReviewAssignmentsInLevel = async (
     reviewLevel,
     PermissionPolicyType.Review
   )
+  console.log('Existing reviewers for stage/level', nextLevelReviewers)
 
   const isLastLevel = reviewLevel === numReviewLevels
   const isLastStage = stageNumber === lastStageNumber
