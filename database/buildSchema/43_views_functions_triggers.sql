@@ -1397,6 +1397,8 @@ STABLE;
 
 -- REVIEWER_ACTION_LIST
 -- Aggregated VIEW method of reviewer action to each application on application list page
+DROP FUNCTION IF EXISTS review_list (integer, integer);
+
 DROP FUNCTION IF EXISTS review_list (integer, integer, public.application_status);
 
 CREATE OR REPLACE FUNCTION review_list (stageid int, reviewerid int, appstatus public.application_status)
