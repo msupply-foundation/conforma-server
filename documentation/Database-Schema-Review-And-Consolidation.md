@@ -49,8 +49,6 @@ For MVP, only level 1 reviewer can be assigned to sections (vs self assignment o
 
 `is_last_stage` -> check if reviewer is on the last stage to review this application
 
-`is_locked` -> if assignment has `Assigned` status, but review cannot be submitted - usually related to a consolidation with LOQ submitted based on another review done regardig the same application. When re-submitted by Applicant this assignment will be unlocked.
-
 `allowable_sections` -> an array of section IDs that reviewer has permission to review (would typically have all sections), assigner can only assign questions from sections that are in this list
 
 ## Review Response
@@ -122,8 +120,6 @@ Pretty self explanatory but one thing to note, during consolidation, it's best t
 `Changes Required` -> This status is used to indicate to reviewer that changes are requested from consolidator. It would go to `Draft` when review is started (to make the required changes)
 
 `Pending` -> Indicates that lower level changes have been made which require re-start of review. For level 1 it indicates that Applicant has replied to LOQ and it needs to be re-review. For level > 1 indicates that a review/consolidation from lower level has been submitted. (in case multiple 'parallel' reviews are being done, for every review submission, consolidation status will change to 'PENDING', thus allowing indication of additional reviews needing consolidation)
-
-`Locked` -> Used for level one reviewer. Can edit review but cannot submit. This is needed when LOQ or Non Conformity is submitted by consolidator but some of the reviews are still in draft or pending stage. They will become locked, indicating that review should be stopped for the time being
 
 ## General Description
 

@@ -30,7 +30,6 @@ export interface ReviewAssignment {
   isLastLevel: boolean
   isLastStage: boolean
   isFinalDecision: boolean
-  isLocked: boolean
   isSelfAssignable: boolean
 }
 
@@ -41,7 +40,6 @@ export interface ReviewAssignmentObject {
 export interface AssignmentState {
   status: ReviewAssignmentStatus
   isSelfAssignable: boolean
-  isLocked: boolean
   assignedSections?: string[]
 }
 

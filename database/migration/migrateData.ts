@@ -600,6 +600,59 @@ const migrateData = async () => {
         'RE_ASSIGN'
       );
     `)
+
+    console.log(' - Remove any illegal (i.e. overlapping sections) assignment state')
+    await DB.changeSchema(`
+      UPDATE public.review_assignment
+      SET status='ASSIGNED',
+      assigned_sections = assigned_sections, \
+      trigger = 'DEV_TEST';
+    `)
+
+    console.log(' - Simplify how we handle "locked" reviews')
+    await DB.changeSchema(`
+      ALTER TABLE public.review_assignment DROP column IF EXISTS
+      is_locked;
+    `)
+    await DB.changeSchema(`
+      ALTER TYPE public.review_status RENAME to review_status_old;
+
+      CREATE TYPE public.review_status AS ENUM (
+        'DRAFT',
+        'SUBMITTED',
+        'CHANGES_REQUESTED',
+        'PENDING',
+        'DISCONTINUED'
+    );
+    `)
+
+    // The following commands all done in separate "changeSchema" functions, as
+    // individually they may fail based on current database state, but we still
+    // need to ensure subsequent commands are run
+    await DB.changeSchema(
+      `
+      ALTER TABLE review_status_history
+        ALTER COLUMN status TYPE public.review_status
+        USING status::text::public.review_status;
+      `,
+      { silent: true }
+    )
+
+    await DB.changeSchema(
+      `
+      UPDATE public.review_status_history
+        SET status = 'PENDING'
+        WHERE status = 'LOCKED';
+      `,
+      { silent: true }
+    )
+
+    await DB.changeSchema(`
+        DROP function review_status;
+      `)
+    await DB.changeSchema(`
+      DROP TYPE public.review_status_old; 
+      `)
   }
   // Other version migrations continue here...
 

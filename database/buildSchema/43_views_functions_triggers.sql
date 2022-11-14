@@ -747,6 +747,30 @@ CREATE TRIGGER review_assignment_trigger
 -- These first few functions are duplicated in 31_review.sql as they are
 -- needed before the review table is created.
 --
+-- FUNCTION to return "is_locked" field in GraphQL based on the current
+-- application status
+CREATE OR REPLACE FUNCTION public.review_is_locked (review public.review)
+    RETURNS boolean
+    AS $$
+DECLARE
+    app_status application_status;
+BEGIN
+    SELECT
+        status INTO app_status
+    FROM
+        application_stage_status_latest
+    WHERE
+        application_id = $1.application_id;
+    IF app_status = 'CHANGES_REQUIRED' OR app_status = 'DRAFT' THEN
+        RETURN TRUE;
+    ELSE
+        RETURN FALSE;
+    END IF;
+END;
+$$
+LANGUAGE plpgsql
+STABLE;
+
 -- FUNCTION to auto-add application_id to review
 CREATE OR REPLACE FUNCTION public.review_application_id (review_assignment_id int)
     RETURNS int
@@ -1383,7 +1407,7 @@ CREATE OR REPLACE FUNCTION review_list (stageid int, reviewerid int, appstatus p
         WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'PENDING') != 0 THEN
             'RESTART_REVIEW'
         WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'DRAFT'
-            AND is_locked = FALSE) != 0 THEN
+            AND review_is_locked (review) = FALSE) != 0 THEN
             'CONTINUE_REVIEW'
         WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
             AND review_assignment.is_final_decision = TRUE
@@ -1396,7 +1420,7 @@ CREATE OR REPLACE FUNCTION review_list (stageid int, reviewerid int, appstatus p
         WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'AVAILABLE'
             AND is_self_assignable = TRUE
             AND (review = NULL
-            OR is_locked = FALSE)) != 0 THEN
+            OR review_is_locked (review) = FALSE)) != 0 THEN
             'SELF_ASSIGN'
         WHEN COUNT(*) FILTER (WHERE (appstatus = 'CHANGES_REQUIRED'
             OR appstatus = 'DRAFT')
