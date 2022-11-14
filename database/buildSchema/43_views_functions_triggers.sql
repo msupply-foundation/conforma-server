@@ -1394,6 +1394,10 @@ STABLE;
 
 -- REVIEWER_ACTION_LIST
 -- Aggregated VIEW method of reviewer action to each application on application list page
+DROP FUNCTION IF EXISTS review_list (integer, integer);
+
+DROP FUNCTION IF EXISTS review_list (integer, integer, public.application_status);
+
 CREATE OR REPLACE FUNCTION review_list (stageid int, reviewerid int, appstatus public.application_status)
     RETURNS TABLE (
         application_id int,
@@ -1419,8 +1423,8 @@ CREATE OR REPLACE FUNCTION review_list (stageid int, reviewerid int, appstatus p
             'START_REVIEW'
         WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'AVAILABLE'
             AND is_self_assignable = TRUE
-            AND (review = NULL
-            OR review_is_locked (review) = FALSE)) != 0 THEN
+            AND review_assignment_available_sections (review_assignment) != '{}'
+            AND review.id IS NULL) != 0 THEN
             'SELF_ASSIGN'
         WHEN COUNT(*) FILTER (WHERE (appstatus = 'CHANGES_REQUIRED'
             OR appstatus = 'DRAFT')
