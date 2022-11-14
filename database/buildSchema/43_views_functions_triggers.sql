@@ -694,7 +694,7 @@ DROP TRIGGER IF EXISTS review_assignment_validate_section_trigger ON public.revi
 CREATE TRIGGER review_assignment_validate_section_trigger
     BEFORE UPDATE ON public.review_assignment
     FOR EACH ROW
-    WHEN (NEW.trigger IS NOT NULL AND OLD.trigger IS NULL)
+    -- WHEN (NEW.trigger IS NOT NULL AND OLD.trigger IS NULL)
     EXECUTE FUNCTION public.enforce_asssigned_section_validity ();
 
 -- FUNCTION to return `available_sections` for a given review_assignment based
