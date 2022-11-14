@@ -601,6 +601,14 @@ const migrateData = async () => {
       );
     `)
 
+    console.log(' - Remove any illegal (i.e. overlapping sections) assignment state')
+    await DB.changeSchema(`
+      UPDATE public.review_assignment
+      SET status='ASSIGNED',
+      assigned_sections = assigned_sections, \
+      trigger = 'DEV_TEST';
+    `)
+
     console.log(' - Simplify how we handle "locked" reviews')
     await DB.changeSchema(`
       ALTER TABLE public.review_assignment DROP column IF EXISTS
