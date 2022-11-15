@@ -701,6 +701,7 @@ CREATE TRIGGER review_assignment_validate_section_trigger
 -- on other assignments and allowed sections
 CREATE OR REPLACE FUNCTION public.review_assignment_available_sections (assignment public.review_assignment)
     RETURNS varchar[]
+    SECURITY DEFINER
     AS $$
     SELECT
         ARRAY ( WITH my_array AS (
