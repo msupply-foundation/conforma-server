@@ -701,6 +701,8 @@ CREATE TRIGGER review_assignment_validate_section_trigger
 -- on other assignments and allowed sections
 CREATE OR REPLACE FUNCTION public.review_assignment_available_sections (assignment public.review_assignment)
     RETURNS varchar[]
+    -- This allows the function to be run as admin user, otherwise it'll only be
+    -- able to query rows the current user has access to.
     SECURITY DEFINER
     AS $$
     SELECT
