@@ -264,3 +264,14 @@ From there the following commands might be useful:
 
 - view environment variables: `printenv`
 - check the server log: `tail -n 100 /var/log/conforma/server.log`
+
+#### Copy the log file to your local environment:
+
+1. Log in to the server using terminal
+2. Copy the log to an accessible place (in the server) i.e. if getting log for instance 5000:
+`sudo cp /var/lib/docker/volumes/conforma-on-8000_logs/_data/server.log demo_server/2022-11-15.log`
+3. Now exit the server `exit` and on your local machine open the terminal 
+4. After navigate to a folder where you would like to save the log, run (some similat to this):
+- KEY_LOC is an environment variable for the server public key :)
+- And the `.` means it will create a file with the same file name on the current folder
+`scp -i $KEY_LOC ubuntu@conforma-demo.msupply.org:/home/ubuntu/demo_server/2022-11-15.log .`
