@@ -265,7 +265,7 @@ From there the following commands might be useful:
 - view environment variables: `printenv`
 - check the server log: `tail -n 100 /var/log/conforma/server.log`
 
-#### Copy the log file to your local environment:
+### Copy the log file to your local environment:
 
 1. Log in to the server using terminal
 2. Copy the log to an accessible place (in the server) i.e. if getting log for instance 5000:
