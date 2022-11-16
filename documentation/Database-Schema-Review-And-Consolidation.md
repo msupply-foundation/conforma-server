@@ -10,24 +10,29 @@ Each stage of application is broken down into review levels, base level (1) is t
 
 ## Review Decision
 
-Only available on level > 1 reviewer or when `is_last_level` in `review_assignment` is set. Consolidators can make/suggest decisions. If there is only one review level (say for screening), then the screener has the ability to create review decisions
+The decision options have different outcomes depending on the level of review... The options to move to another stage or send a response to Applicant **most time** when:
 
-`Conform (Approve)` -> All of the applicant's responses must be marked as approved by reviewer, and consolidator agreed with reviewers decision
+- Review is level > 1 (and `is_last_level` set in `review_assignment`) which is refered as a Consolidation. Or
+- Only one level in review (i.e. screening)
 
-`LOQ` -> At least one of applicant's responses marked as non conformity (Decline) and consolidator agreed with reviewers decisions. They have an option to select from LOQ or Non-Conformity
+All available options are:
+`Conform (Approve)` -> All of the applicant's responses must be marked as **Approved** by reviewer. Or on consolidation when consolidator has agreed with all reviewers' decisions. This is the only option available.
 
-`Non-conform (Decline)` -> At least one of applicant's responses marked as non conformity (Decline) and consolidator agreed with reviewers decisions. They have an option to select from LOQ or Non-Conformity
+`Send back to applicant` (aka LOQ) -> At least one of applicant's responses is marked as **Rejected** by reviewer, and the consolidator agreed with reviewers decisions. In this case in the consolidation a reviewer has the option to select between *Send back to applicant* or *Non-Conformity* only.
 
-`Changes Requested` -> Applies to consolidation, if at least one disagreement with reviewer below consolidator's level, this is the only option available
+`Non-conform (Decline)` -> At least one of applicant's responses is marked as **Rejected** by reviewer, and consolidator agreed with reviewers decisions. In this case in the consolidation a reviewer has the option to select between *Send back to applicant* or *Non-Conformity* only.
+
+`Changes Requested` -> Applies to consolidation only. When at least one response has been disagreed with lower level reviewer. This is the only option available.
+
+PS: When the stage has `is_final_decision` set in `review_assignment` both options are always available: `Conform (Approve)` or `Non-conform (Decline)`.
 
 ## Review Assignment
 
-These records are created by back end when review level is reached (either through application submission or review submission, see Review Life Cycle diagram below). `Template Permission` records, alongside `permission name`, `permission name join` and `permission policy` are used to created relevant `review assignments`
+These records are created by back end when review level is reached (either through application submission or review submission, see Review Life Cycle diagram below). `template_permission`, `permission_name`, `permission_name_join` and `permission_policy` are checked in order to created relevant `review_assignments`
 They can be queried to:
-
-- Determine who can be assigned to an application stage and level <- front end task
-- Determine if an application stage and level is fully assigned (using review_question_assignment link) <- through application list view
-- Determine if review can be started/assigned <- front end can check if review can be created See `Review and Consolidation URL flow` diagram below
+- Determine who can be assigned to an application stage and level
+- Determine if current user assignment has available_sections to be assigned (considering other assignments aren't visible to him)
+- Determine if review can be started <- front end can check if review can be created See `Review and Consolidation URL flow` diagram below
 
 #### Review Assignment
 
@@ -35,12 +40,12 @@ They can be queried to:
 
 `Available` -> can be assigned by assigner
 
-`Assigned` -> review is assigned to a user and can be started
+`Assigned` -> review is assigned to the user who can start their review
 
-`NOTE`
-
-For MVP, only level 1 reviewer can be assigned to sections (vs self assignment of review) level 1 can also be configured to self assigned, in this case they will need to be configured to review all sections. Level > 1 can only be self-assigned currently. If user is Final decision maker (can only be level 1) the self-assignment will apply for all sections.
-
+Some rules apply for Assignment:
+- `is_self_assignable` means that the user can assign himself (after checking `available_sections`)
+- `is_final_decision` is always Self-assignable
+- Consolidation and one level in review also consider all sections should be assigned to same reviewer
 ##### Other fields (that are not straight away self explanatory)
 
 `assigner_id` -> null until assigned, assigner id when assigned be assigner, otherwise reviewer_id when self assigned
@@ -49,7 +54,11 @@ For MVP, only level 1 reviewer can be assigned to sections (vs self assignment o
 
 `is_last_stage` -> check if reviewer is on the last stage to review this application
 
-`allowable_sections` -> an array of section IDs that reviewer has permission to review (would typically have all sections), assigner can only assign questions from sections that are in this list
+`allowed_sections` -> An array of section Codes that reviewer has permission to review (would typically be NULL which means - all sections allowed), assigner can only assign questions from sections that are in this list (or NULL).
+
+`assigned_sections` -> Used when status is `Assigned`. Will list which sections have been assigned
+
+`available_sections` -> Used when status is `Available`. Determine which sections aren't assigned to someone else and can be assigned (considering `allowed_sections`)
 
 ## Review Response
 

@@ -28,14 +28,6 @@ The `trigger` is updated everytime the application has changes done by users or 
 
 The `outcome` is either `'PENDING'`, `'APPROVED'`, `'REJECTED'`, `'EXPIRED'`, `'WITHDRAWN'`. The application is 'PENDING' during the review process, each stage will store also the outcome, so it will only be updated here once the review process is finished, resulting in either 'APPROVED' or 'REJECTED', or if the applicant doesn't finish in time, in which case it will be 'EXPIRED'. ('WITHDRAWN' not currently implemented)
 
-### application_section
-
-Sections of the application. It will point to the `template_section` that stores all the elements (questions) to be displayed. This table is required as it provides a way to associate reviews (which are per-section) to specific application sections.
-
-The `application_id` links to the application.
-
-The `template_section_id` links to the template.
-
 ### application_stage_history
 
 There is one or more stages per application template. Each one is defined by `template_stage`. The application stage history will keep records for when the application changed to each particular stage (previously defined for this application template).
