@@ -40,6 +40,9 @@ const config: { [key: string]: any } = {
   // directly by modifyRecord or display as data views. All other names must
   // have "data_table_" prepended.
   allowedTableNames: ['user', 'organisation', 'application', 'file'],
+  // From the above allowed tables, these ones can be written to, but can't have
+  // columns added (i.e. schema changes):
+  allowedTablesNoColumns: ['application', 'file'],
   filterListMaxLength: 10,
   filterColumnSuffix: '_filter_data', // snake_case,
   isProductionBuild,
