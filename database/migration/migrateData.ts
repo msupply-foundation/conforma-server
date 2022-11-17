@@ -587,6 +587,11 @@ const migrateData = async () => {
     await DB.changeSchema(`
       ALTER TABLE public.file DROP COLUMN IF EXISTS is_missing;
     `)
+  }
+
+  // v0.5.0
+  if (databaseVersionLessThan('0.5.0')) {
+    console.log('Migrating to v0.5.0...')
 
     console.log(' - Add column to data_table to link data views to lookup tables')
     await DB.changeSchema(`
@@ -652,12 +657,13 @@ const migrateData = async () => {
     )
 
     await DB.changeSchema(`
-        DROP function review_status;
+      DROP function review_status;
       `)
     await DB.changeSchema(`
       DROP TYPE public.review_status_old; 
       `)
   }
+
   // Other version migrations continue here...
 
   // Update (almost all) Indexes, Views, Functions, Triggers regardless, since
