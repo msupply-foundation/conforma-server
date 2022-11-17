@@ -44,11 +44,11 @@ class DBConnect {
 
   public getFileDownloadInfo = PostgresDB.getFileDownloadInfo
 
-  public filePaths = PostgresDB.filePaths
-
-  public setIsMissing = PostgresDB.setIsMissing
+  public getFilePaths = GraphQLdb.getFilePaths
 
   public cleanUpFiles = PostgresDB.cleanUpFiles
+
+  public deleteMissingFileRecords = PostgresDB.deleteMissingFileRecords
 
   public checkIfInFileTable = PostgresDB.checkIfInFileTable
 

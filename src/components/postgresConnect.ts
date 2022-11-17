@@ -360,41 +360,27 @@ class PostgresDB {
     }
   }
 
-  public checkIfInFileTable = async (subPath: string) => {
+  public deleteMissingFileRecords = async (fileIds: number[]) => {
+    const text = `
+      DELETE FROM file
+      WHERE id = ANY($1);
+    `
+    try {
+      await this.query({ text, values: [fileIds] })
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public checkIfInFileTable = async (filePath: string) => {
     const text = `
     SELECT id 
     FROM file
-    WHERE file_path = $1
-    `
-    try {
-      const result = await this.query({ text, values: [subPath] })
-      return result.rows.length === 0
-    } catch (err) {
-      throw err
-    }
-  }
-
-  public filePaths = async () => {
-    const text = `
-    SELECT file_path FROM file
-    `
-    try {
-      const result = await this.query({ text })
-      return result.rows
-    } catch (err) {
-      throw err
-    }
-  }
-
-  public setIsMissing = async (filePath: string) => {
-    const text = `
-    UPDATE file
-    SET is_missing = true
-    WHERE file_path = $1
+    WHERE file_path = $1 OR thumbnail_path = $1
     `
     try {
       const result = await this.query({ text, values: [filePath] })
-      return result
+      return result.rows.length !== 0
     } catch (err) {
       throw err
     }

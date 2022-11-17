@@ -571,25 +571,23 @@ const migrateData = async () => {
     console.log(' - Add case-insensitive unique constraint to usernames')
     //drop views relating to username temporarily so column can be changed
     await DB.changeSchema(`
-    DROP VIEW IF EXISTS permissions_all;
-    DROP VIEW IF EXISTS user_org_join`)
+      DROP VIEW IF EXISTS permissions_all;
+      DROP VIEW IF EXISTS user_org_join`)
 
     await DB.changeSchema(`
-    CREATE EXTENSION IF NOT EXISTS citext;
-    ALTER TABLE public.user ALTER COLUMN username TYPE citext;
+      CREATE EXTENSION IF NOT EXISTS citext;
+      ALTER TABLE public.user ALTER COLUMN username TYPE citext;
     `)
 
-    console.log('- Add is_missing column to table VIEW')
-
+    console.log(' - Removing unused "is_missing" field from file table')
     await DB.changeSchema(`
-    ALTER TABLE file
-    ADD COLUMN IF NOT EXISTS is_missing boolean DEFAULT FALSE NOT NULL;
+      ALTER TABLE public.file DROP COLUMN IF EXISTS is_missing;
     `)
+
     console.log(' - Add column to data_table to link data views to lookup tables')
-
     await DB.changeSchema(`
-    ALTER TABLE data_table
-    ADD COLUMN data_view_code varchar;
+      ALTER TABLE data_table
+      ADD COLUMN data_view_code varchar;
     `)
   }
   // Other version migrations continue here...

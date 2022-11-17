@@ -31,8 +31,8 @@ import {
   routeGetApplicationData,
   routePreviewActions,
   routeExtendApplication,
-  cleanUpFiles,
 } from './components/actions'
+import cleanUpFiles from './components/files/cleanup'
 import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
 import snapshotRoutes from './components/snapshots/routes'
