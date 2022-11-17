@@ -87,6 +87,19 @@ export const filterObject = (
   return Object.fromEntries(filtered)
 }
 
+// Generic function for recursively crawling the file system. Will run method "fileOperation" on all files within "directory"
+export const crawlFileSystem = async (
+  directory: string,
+  fileOperation: (filePath: string) => void
+) => {
+  const files = fs.readdirSync(directory)
+  for (const file of files) {
+    const subPath = path.join(directory, file)
+    if (fs.statSync(subPath).isDirectory()) await crawlFileSystem(subPath, fileOperation)
+    else await fileOperation(subPath)
+  }
+}
+
 export const capitaliseFirstLetter = (str: string) => str[0].toUpperCase() + str.slice(1)
 
 // The only tables in the system that we allow to be mutated directly by

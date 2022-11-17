@@ -65,6 +65,7 @@
     "docker_run": "cd docker && ./run.sh",
     "release": "./utils/release.sh",
     "migrate": "ts-node ./database/migration/migrateData.ts --migrate",
+    "cleanup": "ts-node ./src/components/files/cleanup.ts --cleanup",
     "backup": "ts-node ./src/components/exportAndImport/backup.ts --backup"
   },
   "dependencies": {

@@ -25,7 +25,7 @@ import {
   PG_DFF_JS_LOCATION,
   DATABASE_FOLDER,
 } from '../../constants'
-import { getBaseFiles, getDirectoryFromPath } from './useSnapshot'
+import { getDirectoryFromPath } from './useSnapshot'
 import config from '../../config'
 import { DateTime } from 'luxon'
 const asyncRimRaf = promisify(rimraf)
@@ -75,7 +75,7 @@ const takeSnapshot: SnapshotOperation = async ({
         path.join(newSnapshotFolder, `${SNAPSHOT_FILE_NAME}.json`),
         JSON.stringify(snapshotObject, null, 2)
       )
-      await copyFiles(newSnapshotFolder, snapshotObject.file ?? [], options)
+      await copyFiles(newSnapshotFolder, snapshotObject.file ?? [])
     }
 
     // Export config
@@ -181,24 +181,21 @@ const getSchemaDiff = async (newSnapshotFolder: string) => {
   console.log('creating schema diff ... done ')
 }
 
-const copyFiles = async (
-  newSnapshotFolder: string,
-  fileRecords: ObjectRecord[],
-  options: ExportAndImportOptions
-) => {
-  // copy only files that associated with exported file records and base filed in files directory (thumbnails)
+const copyFiles = async (newSnapshotFolder: string, fileRecords: ObjectRecord[]) => {
+  // copy only files that associated with exported file records
   const filePaths = fileRecords.map((fileRecord) => fileRecord.filePath)
   filePaths.push(...fileRecords.map((fileRecord) => fileRecord.thumbnailPath))
-  const baseFilePaths = options.resetFiles ? await getBaseFiles(FILES_FOLDER) : []
 
-  for (const filePath of [...filePaths, ...baseFilePaths]) {
+  for (const filePath of [...filePaths]) {
     try {
-      console.log('copying file', filePath)
-      const destinationDirectory = `${newSnapshotFolder}/files/${getDirectoryFromPath(filePath)}`
-      // -p = no error if exists, create parent
-      execSync(`mkdir -p '${destinationDirectory}'`)
+      if (path.dirname(filePath) !== config.genericThumbnailsFolderName) {
+        console.log('copying file', filePath)
+        const destinationDirectory = `${newSnapshotFolder}/files/${getDirectoryFromPath(filePath)}`
+        // -p = no error if exists, create parent
+        execSync(`mkdir -p '${destinationDirectory}'`)
 
-      execSync(`cp '${FILES_FOLDER}/${filePath}' '${destinationDirectory}'`)
+        execSync(`cp '${FILES_FOLDER}/${filePath}' '${destinationDirectory}'`)
+      }
     } catch (e) {
       console.log('failed to copy file', e)
     }
