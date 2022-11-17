@@ -5,6 +5,7 @@ import { DBConnectType } from '../../../src/components/databaseConnect'
 import { mapValues, get } from 'lodash'
 import { objectKeysToSnakeCase, getValidTableName } from '../../../src/components/utilityFunctions'
 import { generateFilterDataFields } from '../../../src/components/data_display/generateFilterDataFields/generateFilterDataFields'
+import config from '../../../src/config'
 
 const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
@@ -91,7 +92,11 @@ const createOrUpdateTable = async (
     .filter(([fieldName]) => !tableAndFields.find(({ column_name }) => column_name === fieldName))
     .map(([fieldName, value]) => ({ fieldName, fieldType: getPostgresType(value) }))
 
-  if (fieldsToCreate.length > 0) await db.createFields(tableName, fieldsToCreate)
+  if (fieldsToCreate.length > 0) {
+    if (config.allowedTablesNoColumns.includes(tableName))
+      throw new Error(`Cannot add columns to table: ${tableName}`)
+    await db.createFields(tableName, fieldsToCreate)
+  }
 }
 
 export default modifyRecord
