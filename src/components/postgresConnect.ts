@@ -349,7 +349,7 @@ class PostgresDB {
     }
   }
 
-  public cleanUpPreviewFiles = async () => {
+  public cleanUpFiles = async () => {
     const text = `
       DELETE FROM file
       WHERE to_be_deleted = true
@@ -359,6 +359,32 @@ class PostgresDB {
     try {
       const result = await this.query({ text })
       return result.rows.length
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public deleteMissingFileRecords = async (fileIds: number[]) => {
+    const text = `
+      DELETE FROM file
+      WHERE id = ANY($1);
+    `
+    try {
+      await this.query({ text, values: [fileIds] })
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public checkIfInFileTable = async (filePath: string) => {
+    const text = `
+    SELECT id 
+    FROM file
+    WHERE file_path = $1 OR thumbnail_path = $1
+    `
+    try {
+      const result = await this.query({ text, values: [filePath] })
+      return result.rows.length !== 0
     } catch (err) {
       throw err
     }

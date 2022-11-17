@@ -257,37 +257,24 @@ export const getDirectoryFromPath = (filePath: string) => {
   const [_, ...directory] = filePath.split('/').reverse()
   return directory.join('/')
 }
-// Get base files (thumbnails)
-export const getBaseFiles = async (filesFolder: string) => {
-  try {
-    let dirents = await fs.readdir(filesFolder, {
-      encoding: 'utf-8',
-      withFileTypes: true,
-    })
-    return dirents
-      .filter((dirent) => !dirent.isDirectory() && !dirent.name.startsWith('.'))
-      .map((dirent) => dirent.name)
-  } catch {
-    return []
-  }
-}
 
 const copyFiles = async (snapshotFolder: string, fileRecords: ObjectRecord[] = []) => {
-  // copy only files that associated with import file records and base filed in snapshot folder (thumbnails)
+  // copy only files that associated with import file records
   const filePaths = fileRecords.map((oldAndNewFileRecord) => oldAndNewFileRecord.new.filePath)
   filePaths.push(...fileRecords.map((oldAndNewFileRecord) => oldAndNewFileRecord.new.thumbnailPath))
   const snapshotFilesFolder = `${snapshotFolder}/files`
-  const baseFilePaths = await getBaseFiles(snapshotFilesFolder)
 
-  for (const filePath of [...filePaths, ...baseFilePaths]) {
+  for (const filePath of [...filePaths]) {
     try {
-      console.log('copying file', filePath)
+      if (path.dirname(filePath) !== config.genericThumbnailsFolderName) {
+        console.log('copying file', filePath)
 
-      const destinationDirectory = `${FILES_FOLDER}/${getDirectoryFromPath(filePath)}`
-      // -p = no error if exists, create parent
-      execSync(`mkdir -p '${destinationDirectory}'`)
+        const destinationDirectory = `${FILES_FOLDER}/${getDirectoryFromPath(filePath)}`
+        // -p = no error if exists, create parent
+        execSync(`mkdir -p '${destinationDirectory}'`)
 
-      execSync(`cp '${snapshotFilesFolder}/${filePath}' '${destinationDirectory}'`)
+        execSync(`cp '${snapshotFilesFolder}/${filePath}' '${destinationDirectory}'`)
+      }
     } catch (e) {
       console.log('failed to copy file', e)
     }
