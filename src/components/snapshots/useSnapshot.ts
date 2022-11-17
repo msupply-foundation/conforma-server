@@ -259,20 +259,22 @@ export const getDirectoryFromPath = (filePath: string) => {
 }
 
 const copyFiles = async (snapshotFolder: string, fileRecords: ObjectRecord[] = []) => {
-  // copy only files that associated with import file records and base filed in snapshot folder (thumbnails)
+  // copy only files that associated with import file records
   const filePaths = fileRecords.map((oldAndNewFileRecord) => oldAndNewFileRecord.new.filePath)
   filePaths.push(...fileRecords.map((oldAndNewFileRecord) => oldAndNewFileRecord.new.thumbnailPath))
   const snapshotFilesFolder = `${snapshotFolder}/files`
 
   for (const filePath of [...filePaths]) {
     try {
-      console.log('copying file', filePath)
+      if (path.dirname(filePath) !== config.genericThumbnailsFolderName) {
+        console.log('copying file', filePath)
 
-      const destinationDirectory = `${FILES_FOLDER}/${getDirectoryFromPath(filePath)}`
-      // -p = no error if exists, create parent
-      execSync(`mkdir -p '${destinationDirectory}'`)
+        const destinationDirectory = `${FILES_FOLDER}/${getDirectoryFromPath(filePath)}`
+        // -p = no error if exists, create parent
+        execSync(`mkdir -p '${destinationDirectory}'`)
 
-      execSync(`cp '${snapshotFilesFolder}/${filePath}' '${destinationDirectory}'`)
+        execSync(`cp '${snapshotFilesFolder}/${filePath}' '${destinationDirectory}'`)
+      }
     } catch (e) {
       console.log('failed to copy file', e)
     }
