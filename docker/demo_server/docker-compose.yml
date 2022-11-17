@@ -12,6 +12,7 @@ services:
       SMTP_PASSWORD: '${SMTP_SECRET}'
       WEB_HOST: '${WEB_URL}'
       JWT_SECRET: '${JWT_SECRET}'
+      BACKUPS_PASSWORD: '${BACKUPS_PASSWORD}'
     volumes:
       - postgres:/var/lib/postgresql/12/main/
       - snapshots:/usr/src/conforma-server/build/database/_snapshots

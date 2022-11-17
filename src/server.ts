@@ -31,6 +31,7 @@ import {
   routeGetApplicationData,
   routePreviewActions,
   routeExtendApplication,
+  routeTestTrigger,
 } from './components/actions'
 import cleanUpFiles from './components/files/cleanup'
 import config from './config'
@@ -125,12 +126,14 @@ const startServer = async () => {
         server.register(lookupTableRoutes, { prefix: '/lookup-table' })
         server.register(snapshotRoutes, { prefix: '/snapshot' })
         server.get('/updateRowPolicies', routeUpdateRowPolicies)
-        server.post('/run-action', routeRunAction)
         server.get('/get-application-data', routeGetApplicationData)
         server.post('/enable-language', routeEnableLanguage)
         server.post('/install-language', routeInstallLanguage)
         server.post('/remove-language', routeRemoveLanguage)
         server.get('/all-languages', routeGetAllLanguageFiles)
+        // Dev only actions -- never call from app
+        server.post('/run-action', routeRunAction)
+        server.post('/test-trigger', routeTestTrigger)
         server.post('/generate-filter-data-fields', routeGenerateFilterDataFields)
         done()
       },

@@ -432,3 +432,13 @@ All up, these definitions will be interpreted by the front-end and displayed in 
 And a Details view like this:
 
 ![Details View](images/data-view-detail-view.png)
+
+## Lookup tables
+
+By default, when viewing individual lookup tables in `/admin/lookup-tables` the user sees a basic plain-text table view of the data. This is fine for simple tables with only a few rows ("Dosage forms" for example), but if you have a table with thousands of entries (e.g. ingredients list), this will be quite cumbersome to view, with no pagination or filtering available.
+
+Therefore, we've made it possible to take advantage of the data view configurations to view lookup table data. In order to achieve that, you need to enter a value in the `data_view_code` field of the `data_table` table (where overall info about all lookup and data tables is stored). If `data_view_code` is specified, the data will be displayed with that data view. If not, the default plain table will be used.
+
+You'll probably want to *not* show lookup table views in the "Database" menu though, since they've been imported as lookup tables and would generally be viewed and configured in the `/lookup-tables` area. In order to achieve this, simply add the special "dummy" permission name "**lookupTables**" to the `permission_names` field of the `data_view` table. This will ensure the view is not returned in the list of available views in the Database table, but will be returned when viewing the table in `/lookup-tables` (assuming you have `isAdmin` permission, which is required to access the lookup table routes).
+
+Note that you *can* show lookup table views in the Database menu (and therefore make them available to more people) if you add regular permission names to the `permission_names` array, just as you normally would.
