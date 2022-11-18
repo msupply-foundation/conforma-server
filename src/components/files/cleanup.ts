@@ -42,30 +42,34 @@ const processMissingFileLinks = async () => {
 }
 
 export const cleanUpFiles = async () => {
-  let filesMissingRecords = 0
+  try {
+    let filesMissingRecords = 0
 
-  // Check if file in database and delete if not
-  const checkFile = async (filePath: string) => {
-    if (path.dirname(filePath) === GENERIC_THUMBNAILS_FOLDER) return
+    // Check if file in database and delete if not
+    const checkFile = async (filePath: string) => {
+      if (path.dirname(filePath) === GENERIC_THUMBNAILS_FOLDER) return
 
-    const relativeFilePath = filePath.replace(FILES_FOLDER + '/', '')
-    const isFileInDatabase = await DBConnect.checkIfInFileTable(relativeFilePath)
-    if (!isFileInDatabase) {
-      deleteFile({ filePath: relativeFilePath })
-      filesMissingRecords++
+      const relativeFilePath = filePath.replace(FILES_FOLDER + '/', '')
+      const isFileInDatabase = await DBConnect.checkIfInFileTable(relativeFilePath)
+      if (!isFileInDatabase) {
+        deleteFile({ filePath: relativeFilePath })
+        filesMissingRecords++
+      }
     }
-  }
-  console.log(
-    DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
-    'Cleaning up files and file records...'
-  )
-  await crawlFileSystem(FILES_FOLDER, checkFile)
-  const recordsMissingFiles = await processMissingFileLinks()
-  const filesCleanedUp = await DBConnect.cleanUpFiles()
+    console.log(
+      DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
+      'Cleaning up files and file records...'
+    )
+    await crawlFileSystem(FILES_FOLDER, checkFile)
+    const recordsMissingFiles = await processMissingFileLinks()
+    const filesCleanedUp = await DBConnect.cleanUpFiles()
 
-  console.log(`\nFiles deleted that weren't in database: ${filesMissingRecords}`)
-  console.log(`File records removed due to missing files: ${recordsMissingFiles}`)
-  console.log(`Additional files cleaned up (e.g. previews): ${filesCleanedUp}`)
+    console.log(`\nFiles deleted that weren't in database: ${filesMissingRecords}`)
+    console.log(`File records removed due to missing files: ${recordsMissingFiles}`)
+    console.log(`Additional files cleaned up (e.g. previews): ${filesCleanedUp}`)
+  } catch (err) {
+    console.log('ERROR', err.message)
+  }
 }
 
 // Manually launch cleanup with command `yarn cleanup`
