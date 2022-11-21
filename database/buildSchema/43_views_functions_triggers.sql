@@ -642,20 +642,100 @@ IMMUTABLE;
 ALTER TABLE review_assignment
     ADD COLUMN IF NOT EXISTS template_id INT GENERATED ALWAYS AS (review_assignment_template_id (application_id)) STORED;
 
-CREATE OR REPLACE FUNCTION public.empty_assigned_sections ()
+-- These no longer used as combined into (below) validation function
+DROP TRIGGER IF EXISTS review_assignment_trigger2 ON public.review_assignment;
+
+DROP FUNCTION IF EXISTS public.empty_assigned_sections ();
+
+-- Enforce validity of assigned sections:
+-- If status is now AVAILABLE assigned sections should be empty
+-- Also check that assigned sections aren't already assigned and remove if so
+-- This all happens *BEFORE* the record is inserted
+CREATE OR REPLACE FUNCTION public.enforce_asssigned_section_validity ()
     RETURNS TRIGGER
-    AS $review_assignment_event$
+    AS $trigger_queue$
 BEGIN
-    UPDATE
-        public.review_assignment
-    SET
-        assigned_sections = '{}'
-    WHERE
-        id = NEW.id;
-    RETURN NULL;
+    IF NEW.status = 'AVAILABLE' THEN
+        NEW.assigned_sections = '{}';
+    ELSE
+        NEW.assigned_sections = ARRAY ( WITH a AS (
+                SELECT
+                    unnest(NEW.assigned_sections) new_assigned
+)
+                SELECT
+                    new_assigned
+                FROM
+                    a
+                WHERE
+                    new_assigned NOT IN (
+                        SELECT
+                            unnest(assigned_sections)
+                        FROM
+                            review_assignment
+                        WHERE
+                            application_id = NEW.application_id
+                            AND stage_id = NEW.stage_id
+                            AND level_number = NEW.level_number
+                            AND reviewer_id <> NEW.reviewer_id)
+                        AND (new_assigned = ANY (NEW.allowed_sections)
+                            OR NEW.allowed_sections IS NULL));
+    END IF;
+    IF NEW.assigned_sections = '{}' THEN
+        NEW.status = 'AVAILABLE';
+    END IF;
+    NEW.time_updated = NOW();
+    RETURN NEW;
 END;
-$review_assignment_event$
+$trigger_queue$
 LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS review_assignment_validate_section_trigger ON public.review_assignment;
+
+CREATE TRIGGER review_assignment_validate_section_trigger
+    BEFORE UPDATE ON public.review_assignment
+    FOR EACH ROW
+    -- WHEN (NEW.trigger IS NOT NULL AND OLD.trigger IS NULL)
+    EXECUTE FUNCTION public.enforce_asssigned_section_validity ();
+
+-- FUNCTION to return `available_sections` for a given review_assignment based
+-- on other assignments and allowed sections
+CREATE OR REPLACE FUNCTION public.review_assignment_available_sections (assignment public.review_assignment)
+    RETURNS varchar[]
+    -- This allows the function to be run as admin user, otherwise it'll only be
+    -- able to query rows the current user has access to.
+    SECURITY DEFINER
+    AS $$
+    SELECT
+        ARRAY ( WITH my_array AS (
+                SELECT DISTINCT
+                    (ts.code) available_sections
+                FROM
+                    template_section ts
+                    JOIN TEMPLATE t ON t.id = ts.template_id
+                    JOIN application a ON a.template_id = t.id
+                WHERE
+                    a.id = $1.application_id
+)
+                SELECT
+                    available_sections
+                FROM
+                    my_array
+                WHERE
+                    available_sections NOT IN (
+                        SELECT
+                            unnest(assigned_sections)
+                        FROM
+                            review_assignment
+                        WHERE
+                            status = 'ASSIGNED'
+                            AND stage_id = $1.stage_id
+                            AND level_number = $1.level_number
+                            AND application_id = $1.application_id)
+                        AND (available_sections = ANY ($1.allowed_sections)
+                            OR $1.allowed_sections IS NULL))
+$$
+LANGUAGE sql
+STABLE;
 
 -- TRIGGER (Listener) on review_assignment table: To update trigger
 DROP TRIGGER IF EXISTS review_assignment_trigger ON public.review_assignment;
@@ -666,19 +746,34 @@ CREATE TRIGGER review_assignment_trigger
     WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
     EXECUTE FUNCTION public.add_event_to_trigger_queue ();
 
--- TRIGGER (Listener) on review_assignment table: Set assignedSections to [] when changing status to AVAILABLE
-DROP TRIGGER IF EXISTS review_assignment_trigger2 ON public.review_assignment;
-
-CREATE TRIGGER review_assignment_trigger2
-    AFTER UPDATE OF status ON public.review_assignment
-    FOR EACH ROW
-    WHEN (NEW.status = 'AVAILABLE')
-    EXECUTE FUNCTION public.empty_assigned_sections ();
-
 -- REVIEW
 -- These first few functions are duplicated in 31_review.sql as they are
 -- needed before the review table is created.
 --
+-- FUNCTION to return "is_locked" field in GraphQL based on the current
+-- application status
+CREATE OR REPLACE FUNCTION public.review_is_locked (review public.review)
+    RETURNS boolean
+    AS $$
+DECLARE
+    app_status application_status;
+BEGIN
+    SELECT
+        status INTO app_status
+    FROM
+        application_stage_status_latest
+    WHERE
+        application_id = $1.application_id;
+    IF app_status = 'CHANGES_REQUIRED' OR app_status = 'DRAFT' THEN
+        RETURN TRUE;
+    ELSE
+        RETURN FALSE;
+    END IF;
+END;
+$$
+LANGUAGE plpgsql
+STABLE;
+
 -- FUNCTION to auto-add application_id to review
 CREATE OR REPLACE FUNCTION public.review_application_id (review_assignment_id int)
     RETURNS int
@@ -828,6 +923,25 @@ CREATE TRIGGER review_trigger
     EXECUTE FUNCTION public.add_event_to_trigger_queue ();
 
 -- REVIEW_RESPONSE
+-- FUNCTION to auto-add stage_number to review_response
+CREATE OR REPLACE FUNCTION public.review_response_stage_number (review_id int)
+    RETURNS int
+    AS $$
+    SELECT
+        stage_number
+    FROM
+        public.review
+    WHERE
+        id = $1;
+
+$$
+LANGUAGE SQL
+IMMUTABLE;
+
+ALTER TABLE public.review_response
+    DROP COLUMN IF EXISTS stage_number,
+    ADD COLUMN IF NOT EXISTS stage_number integer GENERATED ALWAYS AS (public.review_response_stage_number (review_id)) STORED;
+
 -- Function to automatically set previous review_responses
 -- (for same review & templateElement) as is_latest_review = false
 CREATE OR REPLACE FUNCTION public.set_latest_review_response ()
@@ -1255,10 +1369,6 @@ CREATE OR REPLACE FUNCTION assigner_list (stage_id int, assigner_id int)
             AND submitted_assigned_questions_count (application_id, $1, level_number) < assigned_questions_count (application_id, $1, level_number) THEN
             'RE_ASSIGN'
         WHEN COUNT(DISTINCT (review_assignment.id)) != 0
-            AND assigned_questions_count (application_id, $1, level_number) >= reviewable_questions_count (application_id)
-            AND submitted_assigned_questions_count (application_id, $1, level_number) >= assigned_questions_count (application_id, $1, level_number) THEN
-            'ASSIGN_LOCKED'
-        WHEN COUNT(DISTINCT (review_assignment.id)) != 0
             AND assigned_questions_count (application_id, $1, level_number) < reviewable_questions_count (application_id) THEN
             'ASSIGN'
         ELSE
@@ -1287,6 +1397,10 @@ STABLE;
 
 -- REVIEWER_ACTION_LIST
 -- Aggregated VIEW method of reviewer action to each application on application list page
+DROP FUNCTION IF EXISTS review_list (integer, integer);
+
+DROP FUNCTION IF EXISTS review_list (integer, integer, public.application_status);
+
 CREATE OR REPLACE FUNCTION review_list (stageid int, reviewerid int, appstatus public.application_status)
     RETURNS TABLE (
         application_id int,
@@ -1300,7 +1414,7 @@ CREATE OR REPLACE FUNCTION review_list (stageid int, reviewerid int, appstatus p
         WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'PENDING') != 0 THEN
             'RESTART_REVIEW'
         WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'DRAFT'
-            AND is_locked = FALSE) != 0 THEN
+            AND review_is_locked (review) = FALSE) != 0 THEN
             'CONTINUE_REVIEW'
         WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
             AND review_assignment.is_final_decision = TRUE
@@ -1312,8 +1426,8 @@ CREATE OR REPLACE FUNCTION review_list (stageid int, reviewerid int, appstatus p
             'START_REVIEW'
         WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'AVAILABLE'
             AND is_self_assignable = TRUE
-            AND (review = NULL
-            OR is_locked = FALSE)) != 0 THEN
+            AND review_assignment_available_sections (review_assignment) != '{}'
+            AND review.id IS NULL) != 0 THEN
             'SELF_ASSIGN'
         WHEN COUNT(*) FILTER (WHERE (appstatus = 'CHANGES_REQUIRED'
             OR appstatus = 'DRAFT')
@@ -1349,6 +1463,31 @@ LANGUAGE sql
 STABLE;
 
 -- APPLICATION_LIST_VIEW
+-- Aggregated VIEW method of all data required for application list page
+-- Requires an empty table as setof return and smart comment to make orderBy work (https://github.com/graphile/graphile-engine/pull/378)
+DROP TABLE IF EXISTS application_list_shape CASCADE;
+
+CREATE TABLE IF NOT EXISTS application_list_shape (
+    id int,
+    "serial" varchar,
+    "name" varchar,
+    template_code varchar,
+    template_name varchar,
+    applicant varchar,
+    org_name varchar,
+    stage varchar,
+    stage_colour varchar,
+    "status" public.application_status,
+    outcome public.application_outcome,
+    last_active_date timestamptz,
+    applicant_deadline timestamptz,
+    -- TO-DO: reviewer_deadline
+    assigners varchar[],
+    reviewers varchar[],
+    reviewer_action public.reviewer_action,
+    assigner_action public.assigner_action
+);
+
 CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
     RETURNS SETOF application_list_shape
     AS $$

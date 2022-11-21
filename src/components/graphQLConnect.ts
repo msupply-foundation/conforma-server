@@ -49,6 +49,7 @@ class GraphQLdb {
           isLastLevel
           isLastStage
           status
+          isLocked
           reviewer {
             id
             username
@@ -59,9 +60,6 @@ class GraphQLdb {
           latestDecision {
               decision
               comment
-          }
-          reviewAssignment {
-            isLocked
           }
         }
       }
@@ -82,6 +80,7 @@ class GraphQLdb {
             isLastLevel
             isLastStage
             status
+            isLocked
             reviewer {
               id
               username
@@ -92,9 +91,6 @@ class GraphQLdb {
             latestDecision {
                 decision
                 comment
-            }
-            reviewAssignment {
-              isLocked
             }
           }
         }

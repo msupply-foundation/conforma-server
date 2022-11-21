@@ -15,11 +15,9 @@
   - [Grant Permissions](#grant-permissions)
   - [Revoke Permissions](#revoke-permissions)
   - [Generate Review Assignments](#generate-review-assignments)
-  - [Update Review Assignments](#update-review-assignments)
   - [Refresh Review Assignments](#refresh-review-assignments)
   - [Trim Responses](#trim-responses)
   - [Update Review Visibility](#update-review-visibility)
-  - [Update Review Statuses](#update-review-statuses)
   - [Generate Document](#generate-document)
   - [Send Notification](#send-notification)
   - [Schedule Action](#schedule-action)
@@ -461,7 +459,11 @@ See [Grant Permissions](#grant-permissions) above regarding acting on user-only 
 
 ### Generate Review Assignments
 
-Generates records in the `review_assignment` table -- i.e. which users (reviewers) are allowed to do a review for the current stage/level (and for which Sections). The records are set with `status` "Available" or "Assigned" and flags for `isSelfAssignable` and `isLocked` to help define when is allowed self-assignment.
+Generates records in the `review_assignment` table -- i.e. which users (reviewers) are allowed to do a review for the current stage/level (and for which Sections). 
+- Records are set with `status` "Available" or "Assigned". 
+- Each record has properties to specify the type of assignment: 
+  - `isSelfAssignable` if it should show for self-assignment when not assigned by another user
+  - `isLocked` defining that the review can start but not be submitted (Used for applications which has been sent back to Applicant for ammendments)
 
 It also creates records in the `review_assignment_assigner_join` table -- basically a list of users who have permission to make the _assignments_ in the review_assignment table.
 
@@ -484,21 +486,6 @@ Should be run whenever an application or review is submitted or re-submitted, an
 - If `applicationId` only is passed the action will generate reviewAssignments for **all** review levels on the current stage up to and including the current level. As well as generating first level review assignments for the first application submissiong, this also accounts for the case when an applicant *re-submits* after making changes and we need to generate fresh review_assignments for the first level even though higher level review assignments already exist (it will also regenerate the higher levels, but this won't cause any problems).
 - If `reviewId` is also received the action will generate reviewAssignments for the **next** level of reviews in the current stage or - if it was the last level on current stage, generate for 1st level of the **next** stage. Nothing is created if it reached the last level & stage.
 - In all of the cases, when a `reviewAssignment` record already exist (i.e. if it's a re-assignment), they will just be updated (with a new timestamp).
-
----
-
-### Update Review Assignments
-
-When a reviewer self-assigns themselves to a review_assignment (i.e. its status changes from "Available" to "Assigned") the other review assignment records pertaining to that review/stage/level are marked as "is_locked = true" so that no other reviewer can start a review for the same thing.
-
-- _Action Code:_ **`updateReviewAssignmentsStatus`**
-
-| Input parameters<br />(\*required) <br/>             | Output properties                                     |
-| ---------------------------------------------------- | ----------------------------------------------------- |
-| `reviewAssignmentId`\*                               | `reviewAssignmentUpdates` (`array` of `{id, status}`) |
-| `trigger` (only executes on `ON_REVIEW_SELF_ASSIGN`) |                                                       |
-
-**Note:** If `trigger` is not supplied, the plugin will try to infer it from `applicationData`
 
 ---
 
@@ -546,30 +533,6 @@ Updates the applicant visibility of level 1 review responses based on the recomm
 | `reviewId`                               | `reviewResponsesWithUpdatedVisibility` |
 
 **Note:** If `reviewId` is not provided, the plugin will attempt to fetch it from `applicationData`
-
----
-
-### Update Review Statuses
-
-When an applicant re-submits an application after making changes, this Action updates the status of associated reviews to determine whether they should be "Pending" or "Locked" (or left as is)
-
-- _Action Code:_ **`updateReviewsStatuses`**
-
-| Input parameters<br />(\*required) <br/>                                        | Output properties          |
-| ------------------------------------------------------------------------------- | -------------------------- |
-| `applicationId`                                                                 | `updatedReviews`           |
-| `reviewId`                                                                      | `updatedReviewAssignments` |
-| `triggeredBy` Enum: REVIEW or APPLICATION (Default)                             |                            |
-| `changedResponses`\* [Array of `applicationResponseIds` or `reviewReponsesIds`] |                            |
-| `level`                                                                         |                            |
-| `stageId`                                                                       |                            |
-
-**Note:** - If `applicationId` or `reviewId` is not provided, the plugin will attempt to fetch it from `applicationData`. In case the `reviewId` is received, this Action will be updating status of related reviews of same stage in the current and next level reviews. Otherwhise (for an application submit - without passing `reviewId` this Action will be updating only reviewes of current level/stage.
-The list of changed review/responses submitted is passed as `changedResponses` to the action and will define which reviews statuses to update by:
-
-- For application submission all related reviews assigned to the same `templateIds` will have status updated to **PENDING**.
-- For review submission to lower level reviewer (when review decision is **CHANGES_REQUEST**) all related reviews assigned to the same `templateIds` and that have a `reviewResponseDecision` as **DISAGREE** will have status updated to **PENDING**. Other reviews in same level will have status updated to **LOCKED**.
-- For review submission to upper level reviewer (not **CHANGES_REQUEST** and not last-level review) all reviews with **SUBMITTED** status will be updated to **PENDING**.
 
 ---
 

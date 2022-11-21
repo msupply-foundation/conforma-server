@@ -486,15 +486,21 @@ const migrateData = async () => {
       ' - Rename TYPE is_reviewable to reviewability and update field in TABLE template_element'
     )
 
-    await DB.changeSchema(`
-    ALTER TYPE public.is_reviewable_status RENAME TO reviewability;`)
+    await DB.changeSchema(
+      `
+    ALTER TYPE public.is_reviewable_status RENAME TO reviewability;`,
+      { silent: true }
+    )
 
     await DB.changeSchema(`
     ALTER TYPE public.reviewability
       ADD VALUE IF NOT EXISTS 'ONLY_IF_APPLICANT_ANSWER' AFTER 'NEVER';`)
 
-    await DB.changeSchema(`
-    ALTER TABLE public.template_element RENAME COLUMN is_reviewable TO reviewability;`)
+    await DB.changeSchema(
+      `
+    ALTER TABLE public.template_element RENAME COLUMN is_reviewable TO reviewability;`,
+      { silent: true }
+    )
 
     console.log(' - Remove 4 unused fields from application_list')
     await DB.changeSchema(
@@ -581,13 +587,83 @@ const migrateData = async () => {
     await DB.changeSchema(`
       ALTER TABLE public.file DROP COLUMN IF EXISTS is_missing;
     `)
+  }
+
+  // v0.5.0
+  if (databaseVersionLessThan('0.5.0')) {
+    console.log('Migrating to v0.5.0...')
 
     console.log(' - Add column to data_table to link data views to lookup tables')
     await DB.changeSchema(`
       ALTER TABLE data_table
-      ADD COLUMN data_view_code varchar;
+      ADD COLUMN IF NOT EXISTS data_view_code varchar;
     `)
+
+    console.log(' - Remove type ASSIGN_LOCKED from assign_action ENUM')
+    await DB.changeSchema(`
+      DROP TYPE IF EXISTS public.assigner_action CASCADE;
+
+      CREATE TYPE public.assigner_action AS ENUM
+      (
+        'ASSIGN',
+        'RE_ASSIGN'
+      );
+    `)
+
+    console.log(' - Remove any illegal (i.e. overlapping sections) assignment state')
+    await DB.changeSchema(`
+      UPDATE public.review_assignment
+      SET status='ASSIGNED',
+      assigned_sections = assigned_sections, \
+      trigger = 'DEV_TEST';
+    `)
+
+    console.log(' - Simplify how we handle "locked" reviews')
+    await DB.changeSchema(`
+      ALTER TABLE public.review_assignment DROP column IF EXISTS
+      is_locked;
+    `)
+    await DB.changeSchema(`
+      ALTER TYPE public.review_status RENAME to review_status_old;
+
+      CREATE TYPE public.review_status AS ENUM (
+        'DRAFT',
+        'SUBMITTED',
+        'CHANGES_REQUESTED',
+        'PENDING',
+        'DISCONTINUED'
+    );
+    `)
+
+    // The following commands all done in separate "changeSchema" functions, as
+    // individually they may fail based on current database state, but we still
+    // need to ensure subsequent commands are run
+    await DB.changeSchema(
+      `
+      ALTER TABLE review_status_history
+        ALTER COLUMN status TYPE public.review_status
+        USING status::text::public.review_status;
+      `,
+      { silent: true }
+    )
+
+    await DB.changeSchema(
+      `
+      UPDATE public.review_status_history
+        SET status = 'PENDING'
+        WHERE status = 'LOCKED';
+      `,
+      { silent: true }
+    )
+
+    await DB.changeSchema(`
+      DROP function review_status;
+      `)
+    await DB.changeSchema(`
+      DROP TYPE public.review_status_old; 
+      `)
   }
+
   // Other version migrations continue here...
 
   // Update (almost all) Indexes, Views, Functions, Triggers regardless, since

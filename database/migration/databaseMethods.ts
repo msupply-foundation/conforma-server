@@ -1,13 +1,17 @@
 import DBConnect from '../../src/components/databaseConnect'
 
+type SchemaQueryOptions = {
+  silent: boolean
+}
+
 const databaseMethods = {
   // Use this method for schema changes, doesn't throw error, just prints
   // message to console (for when schema is already changed)
-  changeSchema: async (query: string) => {
+  changeSchema: async (query: string, options?: SchemaQueryOptions) => {
     try {
       await DBConnect.query({ text: query })
     } catch (err) {
-      console.log('Problem altering schema:', err.message, '\n')
+      if (!options?.silent) console.log('Problem altering schema:', err.message, '\n')
     }
   },
   getDatabaseVersion: async () => {
