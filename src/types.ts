@@ -111,6 +111,13 @@ export interface ActionApplicationData {
     levelNumber?: number
     isLastLevel?: boolean
     status?: string
+    reviewer?: {
+      id: number
+      username: string
+      firstName: string
+      lastName: string
+      email: string
+    }
     latestDecision?: {
       decision: string
       comment: string | null
@@ -119,6 +126,18 @@ export interface ActionApplicationData {
   environmentData: {
     appRootFolder: string
     filesFolder: string
+    SMTPConfig: {
+      host: string
+      port: number
+      secure: boolean
+      user: string
+      defaultFromName: string
+      defaultFromEmail: string
+    }
+  }
+  other?: {
+    // Use this for dev related stuff, shouldn't be used in actual configs
+    suppressEmail?: boolean
   }
 }
 
@@ -213,4 +232,6 @@ export interface Organisation {
   isSystemOrg?: boolean
 }
 
-export interface UserOrg extends User, Organisation {}
+export interface UserOrg extends User, Organisation {
+  id: number
+}

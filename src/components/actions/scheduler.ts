@@ -2,6 +2,8 @@ import DBConnect from '../databaseConnect'
 import scheduler from 'node-schedule'
 import config from '../../config'
 import { DateTime } from 'luxon'
+import cleanUpFiles from '../files/cleanup'
+import createBackup from '../exportAndImport/backup'
 
 // Dev config option
 const schedulerTestMode = false // Runs scheduler every 30 seconds
@@ -24,12 +26,24 @@ const cleanUpPreviewsSchedule = schedulerTestMode
       minute: 0,
     }
 
+const backupSchedule = schedulerTestMode
+  ? { second: [0, 30] }
+  : {
+      hour: config?.backupSchedule ?? [1], // default once per day
+      minute: 0,
+    }
+
+// Node scheduler to export full system backups
+
 // Launch schedulers
 scheduler.scheduleJob(checkActionSchedule, () => {
   triggerScheduledActions()
 })
 scheduler.scheduleJob(cleanUpPreviewsSchedule, () => {
-  cleanUpPreviewFiles()
+  cleanUpFiles()
+})
+scheduler.scheduleJob(backupSchedule, () => {
+  startBackup()
 })
 
 export const triggerScheduledActions = async () => {
@@ -40,11 +54,10 @@ export const triggerScheduledActions = async () => {
   DBConnect.triggerScheduledActions()
 }
 
-export const cleanUpPreviewFiles = async () => {
+const startBackup = async () => {
   console.log(
     DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
-    'Cleaning up preview files...'
+    'Starting backup...'
   )
-  const deleteCount = await DBConnect.cleanUpPreviewFiles()
-  if (deleteCount > 0) console.log(`${deleteCount} files removed.`)
+  createBackup(process.env.BACKUPS_PASSWORD)
 }

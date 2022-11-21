@@ -12,6 +12,7 @@ import {
   ActionQueuePayload,
   FilePayload,
   TriggerQueueUpdatePayload,
+  UserOrg,
 } from '../types'
 import { ApplicationOutcome, ApplicationStatus, ReviewStatus, Trigger } from '../generated/graphql'
 
@@ -123,10 +124,14 @@ class PostgresDB {
 
   public getCounter = async (counterName: string, increment = true) => {
     const textSelect = 'SELECT value FROM counter WHERE name = $1;'
+    const textNewCounter = 'INSERT INTO counter (name, value) VALUES($1, 1)'
     const textUpdate = 'UPDATE counter SET value = value + 1 WHERE name = $1;'
     try {
       await this.query({ text: 'BEGIN TRANSACTION;' })
       const result: any = await this.query({ text: textSelect, values: [counterName] })
+      if (result.rows.length === 0) {
+        await this.query({ text: textNewCounter, values: [counterName] })
+      }
       if (increment) await this.query({ text: textUpdate, values: [counterName] })
       await this.query({ text: 'COMMIT TRANSACTION;' })
       return result.rows[0]?.value
@@ -344,7 +349,7 @@ class PostgresDB {
     }
   }
 
-  public cleanUpPreviewFiles = async () => {
+  public cleanUpFiles = async () => {
     const text = `
       DELETE FROM file
       WHERE to_be_deleted = true
@@ -354,6 +359,32 @@ class PostgresDB {
     try {
       const result = await this.query({ text })
       return result.rows.length
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public deleteMissingFileRecords = async (fileIds: number[]) => {
+    const text = `
+      DELETE FROM file
+      WHERE id = ANY($1);
+    `
+    try {
+      await this.query({ text, values: [fileIds] })
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public checkIfInFileTable = async (filePath: string) => {
+    const text = `
+    SELECT id 
+    FROM file
+    WHERE file_path = $1 OR thumbnail_path = $1
+    `
+    try {
+      const result = await this.query({ text, values: [filePath] })
+      return result.rows.length !== 0
     } catch (err) {
       throw err
     }
@@ -590,7 +621,11 @@ class PostgresDB {
   }
 
   // Join a user to an org in user_organisation table
-  public addUserOrg = async (userOrg: any): Promise<object> => {
+  public addUserOrg = async (userOrg: {
+    user_id: number
+    organisation_id: number
+    user_role?: string
+  }): Promise<object> => {
     const text = `INSERT INTO user_organisation (${Object.keys(userOrg)}) 
       VALUES (${this.getValuesPlaceholders(userOrg)})
       RETURNING id`
@@ -601,6 +636,50 @@ class PostgresDB {
       throw err
     }
   }
+
+  // Remove specific user (or all user - if no userId specified)
+  // from an org in user_organisation table
+  public removeUserOrg = async ({
+    orgId,
+    userId,
+  }: {
+    orgId: number
+    userId?: number
+  }): Promise<{ pairs: UserOrg[]; success: boolean }> => {
+    const text = `
+      DELETE FROM user_organisation WHERE
+      organisation_id = $1 ${userId ? 'AND user_id = $2' : ''}
+      RETURNING id, user_id as "userId", organisation_id as "orgId";
+      `
+    try {
+      const result = await this.query({ text, values: userId ? [orgId, userId] : [orgId] })
+      return { pairs: result.rows, success: true }
+    } catch (err) {
+      throw err
+    }
+  }
+
+  // Remove all permissions for user-org
+  public deleteUserOrgPermissions = async ({
+    orgId,
+    userId,
+  }: {
+    orgId: number
+    userId?: number
+  }) => {
+    const text = `
+      DELETE FROM permission_join WHERE
+      organisation_id = $1 ${userId ? 'AND user_id = $2' : ''};
+      `
+    try {
+      await this.query({ text, values: userId ? [orgId, userId] : [orgId] })
+      return { success: true }
+    } catch (err) {
+      throw err
+    }
+  }
+
+  // Remove all user
 
   // Used by triggers/actions -- please don't modify
   public getUserData = async (userId: number, orgId: number) => {
@@ -986,7 +1065,7 @@ class PostgresDB {
 
   public getAllApplicationResponses = async (applicationId: number) => {
     const text = `
-    SELECT ar.id, template_element_id, code, value, time_updated, te.is_reviewable
+    SELECT ar.id, template_element_id, code, value, time_updated, te.reviewability
     FROM application_response ar JOIN template_element te
     ON ar.template_element_id = te.id
     WHERE application_id = $1
@@ -1086,7 +1165,7 @@ class PostgresDB {
 
   // DATA TABLE / VIEWS QUERIES
 
-  public getAllowedDataViews = async (userPermissions: string[], tableName: string = '%') => {
+  public getAllowedDataViews = async (userPermissions: string[], dataViewCode?: string) => {
     // Returns any records that have ANY permissionNames in common with input
     // userPermissions, or are empty (i.e. public)
     const text = `
@@ -1096,9 +1175,9 @@ class PostgresDB {
               OR permission_names IS NULL
               OR cardinality(permission_names) = 0
             )
-      AND table_name LIKE $2
+      ${dataViewCode ? 'AND code = $2' : ''}
     `
-    const values = [userPermissions, tableName]
+    const values = dataViewCode ? [userPermissions, dataViewCode] : [userPermissions]
     try {
       const result = await this.query({ text, values })
       return result.rows

@@ -15,7 +15,13 @@ import {
   routeGetPrefs,
   routecheckUnique,
 } from './components/permissions'
-import { routeDataViews, routeDataViewTable, routeDataViewDetail } from './components/data_display'
+import {
+  routeDataViews,
+  routeDataViewTable,
+  routeDataViewDetail,
+  routeDataViewFilterList,
+  routeGenerateFilterDataFields,
+} from './components/data_display'
 import { routeGeneratePDF } from './components/files/documentGenerate'
 import { saveFiles, getFilePath, filesFolder } from './components/files/fileHandler'
 import { createDefaultDataFolders } from './components/files/createDefaultFolders'
@@ -25,8 +31,9 @@ import {
   routeGetApplicationData,
   routePreviewActions,
   routeExtendApplication,
-  cleanUpPreviewFiles,
+  routeTestTrigger,
 } from './components/actions'
+import cleanUpFiles from './components/files/cleanup'
 import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
 import snapshotRoutes from './components/snapshots/routes'
@@ -47,9 +54,8 @@ require('dotenv').config()
 const startServer = async () => {
   await migrateData()
   await loadActionPlugins() // Connects to Database and listens for Triggers
-  await cleanUpPreviewFiles() // Runs on schedule as well as startup
-
   createDefaultDataFolders()
+  await cleanUpFiles() // Runs on schedule as well as startup
 
   const server = fastify()
 
@@ -119,12 +125,15 @@ const startServer = async () => {
         server.register(lookupTableRoutes, { prefix: '/lookup-table' })
         server.register(snapshotRoutes, { prefix: '/snapshot' })
         server.get('/updateRowPolicies', routeUpdateRowPolicies)
-        server.post('/run-action', routeRunAction)
         server.get('/get-application-data', routeGetApplicationData)
         server.post('/enable-language', routeEnableLanguage)
         server.post('/install-language', routeInstallLanguage)
         server.post('/remove-language', routeRemoveLanguage)
         server.get('/all-languages', routeGetAllLanguageFiles)
+        // Dev only actions -- never call from app
+        server.post('/run-action', routeRunAction)
+        server.post('/test-trigger', routeTestTrigger)
+        server.post('/generate-filter-data-fields', routeGenerateFilterDataFields)
         done()
       },
       { prefix: '/admin' }
@@ -138,8 +147,9 @@ const startServer = async () => {
     server.post('/create-hash', routeCreateHash)
     server.post('/generate-pdf', routeGeneratePDF)
     server.get('/data-views', routeDataViews)
-    server.get('/data-views/table/:tableName', routeDataViewTable)
-    server.get('/data-views/table/:tableName/item/:id', routeDataViewDetail)
+    server.post('/data-views/:dataViewCode', routeDataViewTable)
+    server.get('/data-views/:dataViewCode/:id', routeDataViewDetail)
+    server.post('/data-views/:dataViewCode/filterList/:column', routeDataViewFilterList)
     server.get('/check-triggers', routeTriggers)
     server.post('/preview-actions', routePreviewActions)
     server.post('/extend-application', routeExtendApplication)

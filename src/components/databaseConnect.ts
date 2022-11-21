@@ -44,7 +44,13 @@ class DBConnect {
 
   public getFileDownloadInfo = PostgresDB.getFileDownloadInfo
 
-  public cleanUpPreviewFiles = PostgresDB.cleanUpPreviewFiles
+  public getFilePaths = GraphQLdb.getFilePaths
+
+  public cleanUpFiles = PostgresDB.cleanUpFiles
+
+  public deleteMissingFileRecords = PostgresDB.deleteMissingFileRecords
+
+  public checkIfInFileTable = PostgresDB.checkIfInFileTable
 
   public addActionPlugin = PostgresDB.addActionPlugin
 
@@ -65,6 +71,10 @@ class DBConnect {
   public setVerification = PostgresDB.setVerification
 
   public addUserOrg = PostgresDB.addUserOrg
+
+  public removeUserOrg = PostgresDB.removeUserOrg
+
+  public deleteUserOrgPermissions = PostgresDB.deleteUserOrgPermissions
 
   public isUnique = PostgresDB.isUnique
 

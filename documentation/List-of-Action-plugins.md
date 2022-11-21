@@ -8,11 +8,10 @@
   - [Increment Stage](#increment-stage)
   - [Change Status](#change-status)
   - [Modify Record](#modify-record)
-    - [How the record is built](#how-the-record-is-built)
   - [Modify Multiple Records](#modify-multiple-records)
   - [Generate Text String](#generate-text-string)
-    - [Parameters summary](#parameters-summary)
   - [Join User to Organsation](#join-user-to-organsation)
+  - [Remove User from Organsation](#remove-user-from-organsation)
   - [Grant Permissions](#grant-permissions)
   - [Revoke Permissions](#revoke-permissions)
   - [Generate Review Assignments](#generate-review-assignments)
@@ -27,14 +26,6 @@
   - [Clean Up Files](#clean-up-files)
   - [Aliasing existing template actions](#aliasing-existing-template-actions)
 - [Core Actions](#core-actions)
-    - [On Application Create:](#on-application-create)
-    - [On Application Submit](#on-application-submit)
-    - [On Application Restart (i.e. after "Changes Requested"):](#on-application-restart-ie-after-changes-requested)
-    - [On Review Self-Assign:](#on-review-self-assign)
-    - [On Review Assign (by other)](#on-review-assign-by-other)
-    - [On Review Create](#on-review-create)
-    - [On Review Submit:](#on-review-submit)
-    - [On Review Restart: (i.e. review making changes based on higher level requests)](#on-review-restart-ie-review-making-changes-based-on-higher-level-requests)
 
 * [Core Actions](#core-actions)
 
@@ -125,6 +116,7 @@ Creates or updates a database record on any table, and creates/updates a related
 | `matchField`                                   |                      |
 | `matchValue`                                   |                      |
 | `shouldCreateJoinTable` (default `true`)       |                      |
+| `regenerateDataTableFilters` (default `false`) |                      |
 | `data` (shorthand for multiple fields at once) |                      |
 | `...fields for database record`                |                      |
 
@@ -213,6 +205,8 @@ The resultant record that would be inserted might look something like this:
 ```
 
 It is recommended to use the `data` parameter object when possible. The standalone field parameters should be reserved for when the required value is not available directly from `applicationData`.
+
+`regenerateDataTableFilters`: if you have ["filter data" columns](Data-View-Filters.md#handling-complex-data-structures) defined for filtering this data table, the `regenerateDataTableFilters` flag will ensure that the "generateFilterDataFields" script will run and compute the relevant filter data values for the new record. By default this is `false`, but you should enable it for all instances of `modifyRecord` where you are inserting data that can be viewed in [Data Views](Data-View.md). Even if you have no filter data filters defined currently, having this set to `true` ensures that any definitions you configure in the future will automatically create the appropriate filter data values for new records.
 
 **Notes:**
 
@@ -404,11 +398,27 @@ Creates a link between a user and an organisation -- i.e. user is a "member" of 
 
 - _Action Code:_ **`joinUserOrg`**
 
-| Input parameters<br />(\*required) <br/>    | Output properties |
-| ------------------------------------------- | ----------------- |
-| `user_id`\*                                 | `userOrgId`       |
-| `org_id` \*                                 |                   |
-| `user_role` (Arbitrary title, e.g. "Owner") |                   |
+| Input parameters<br />(\*required) <br/>   | Output properties |
+| ------------------------------------------ | ----------------- |
+| `userId`\*                                 | `userOrgId`       |
+| `orgId` \*                                 |                   |
+| `userRole` (Arbitrary title, e.g. "Owner") |                   |
+
+---
+
+### Remove User from Organsation
+
+The opposite of `joinUserOrg`. Removes user from company by deleting the `user_organisation` record.
+
+- _Action Code:_ **`removeUserOrg`**
+
+| Input parameters<br />(\*required) <br/>   | Output properties                                  |
+| ------------------------------------------ | -------------------------------------------------- |
+| `username` or `userId`                     | `removedUsers: {userOrgId, userId, orgId} [Array]` |
+| `orgName` or `orgId` o `organisation_id`\* |                                                    |
+| `deletePermissions` (default `true`)       |                                                    |
+
+In `removeUserOrg` the field to define from which organisation to remove user(s) `orgId` or `orgName` is compulsory, but you _can_ omit the user. In that case, it is treated as "remove ALL USERS". Also a flag defining if it should also remove any permission for removed user(s) on that organisation can be passed. After each user is removed there is no way to revert that action unless rejoinng the user to the organisation on one of provided workflows.
 
 ---
 
@@ -440,6 +450,8 @@ Revokes permissions from to user/org -- i.e. sets the `is_active` field to `fals
 | `orgName` or `orgId`                     |                                                                                      |
 | `permissionNames`\* [Array of names]     |                                                                                      |
 | `isRemovingPermission` (default: `true`) |                                                                                      |
+
+`revokePermissions` works differently to `grantPermissions`, in that you *can* omit the user or the org. In that case, it is treated as "apply to ALL". So if you only provide an `orgId`, it'll remove any permission for that organisation, regardless of which user (or `null`) is linked with it. However, if you explicitly set `null` for one of the values, it'll only match `null`.
 
 The `isRemovingPermission` parameter specifies whether or not the `permission_join` record should be _deleted_ (the default behaviour) or just set to inactive (which would mean the user can still _view_ their applications but not create new ones, or submit existing). _**NOTE**: This functionality not actually implemented yet in policies/front-end, so only full removal should be used currently -- TO-DO_
 

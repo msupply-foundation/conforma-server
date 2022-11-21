@@ -49,6 +49,13 @@ class GraphQLdb {
           isLastLevel
           isLastStage
           status
+          reviewer {
+            id
+            username
+            firstName
+            lastName
+            email
+          }
           latestDecision {
               decision
               comment
@@ -75,6 +82,13 @@ class GraphQLdb {
             isLastLevel
             isLastStage
             status
+            reviewer {
+              id
+              username
+              firstName
+              lastName
+              email
+            }
             latestDecision {
                 decision
                 comment
@@ -171,6 +185,23 @@ class GraphQLdb {
       { applicationId }
     )
     return data?.application.template.templatePermissions.nodes || null
+  }
+
+  public getFilePaths = async (batchSize: number, offset: number) => {
+    const data = await this.gqlQuery(
+      `
+      query getFilePaths($first:Int!, $offset:Int!) {
+        files(first: $first, offset: $offset) {
+          nodes {
+            filePath
+            id
+          }
+        }
+      }
+      `,
+      { first: batchSize, offset }
+    )
+    return data?.files?.nodes || []
   }
 }
 

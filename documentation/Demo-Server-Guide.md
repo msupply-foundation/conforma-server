@@ -77,7 +77,7 @@ _To see the actual Docker commands that are constructued, please inspect the fil
 
 ## Log in to the demo server with ssh
 
-- Get key file from Bitwarden (openstack-irims-demo-keypair) and save locally (e.g. in `~/Documents/private/conformakey.pem`)
+- Get key file from Bitwarden (Conforma demo (5 instances) server) and save locally (e.g. in `~/Documents/private/conformakey.pem`)
 - SSH login to server:
   ```bash
   export KEY_LOC='/Users/<you>/Documents/private/conformakey.pem' (or your local location)
@@ -91,18 +91,8 @@ _To see the actual Docker commands that are constructued, please inspect the fil
 - Pull image from docker hub:  
   `sudo docker pull <full-image-name>`
   Example: `sudo docker pull msupplyfoundation/conforma:build-v0.2.0-7_2022-04-07_ee35c8`
-- Run image:  
-  `sudo docker run -dti -p 8000:3000 -e 'SMTP_PASSWORD=<password>' -e 'WEB_HOST=<host-domain>' -e 'JWT_SECRET=<some-random-secret>' --name conforma-demo-on-8000 <full-image-name>`  
-   This will launch one instance. To launch other instances in their own container, run the same command, but change:
 
-  - name
-  - port 8000
-  - WEB_HOST url
-  - JWT_SECRET (this can be any random string, but should be a decent length, say > 24 alphanumeric characters. There's no need to record this key anywhere, as it can change anytime -- that just means existing JWTs become invalid, so users will need to re-login)
-
-  The system will be launched with “core_snapshot” data. Upload and load a new snapshot as required.
-
-  Note that this `docker run` procedure resets the container every time it is restarted, so any data changes are wiped out. In order to avoid this, we need persist the data using Docker volumes. See the [docker-compose](#docker-compose) section below for information regarding this.
+If the server is already configured, you can skip to [docker-compose](#docker-compose)
 
 ## Move files/folder to/from instance
 
@@ -114,21 +104,21 @@ Follow this process whenever the docker-compose or nginx configs are updated (`.
 
 ```bash
 cd conforma-server/docker
-scp -r -i $KEY_LOC ./demo_server ubuntu@irims-demo.msupply.org:/home/ubuntu/
+scp -r -i $KEY_LOC ./demo_server ubuntu@conforma-demo.msupply.org:/home/ubuntu/
 ```
 
 ## Save backup of nginx config from demo server to local
 
 ```bash
 cd conforma-server/docker
-scp -i $KEY_LOC ubuntu@irims-demo.msupply.org:/etc/nginx/sites-enabled/default ./demo_server/nginx_config
+scp -i $KEY_LOC ubuntu@conforma-demo.msupply.org:/etc/nginx/sites-enabled/default ./demo_server/nginx_config
 ```
 
 ## Upload nginx config back to demo server
 
 ### Option 1: Multi-instances server
 
-**Note** The configuration of nginx uses the certificate of irims-demo.msupply.org domain (following other steps of this setup) if needed for a new server, replace with new domain.
+**Note** The configuration of nginx uses the certificate of conforma-demo.msupply.org domain (following other steps of this setup) if needed for a new server, replace with new domain.
 
 ```bash
 # cannot directly replace default config, need to do it as sudo, so from within docker instance
@@ -176,16 +166,20 @@ For each instance, you'll need to create the following environment variables bef
 
 - `TAG` -- the name of the tag you're about to launch
 - `SMTP_SECRET` -- password for the email server specified in the "[sendNotification](List-of-Action-plugins.md#send-notification)" action
-- `WEB_URL` -- host name as will be shown in the applicaton URL (including port)
+- `WEB_URL` -- host name as will be shown in the application URL (including port)
 - `JWT_SECRET` -- private key for generating and verifying JWT tokens
+- `BACKUPS_FOLDER` -- path on the host system where the internal "backups" folder should be mapped to (optional -- default is the default volumes location). An appropriate location would be a folder that is synced to a cloud backup service. (See [Backups](Backups.md) for more info.)
+- `BACKUPS_PASSWORD` -- password for encrypting the backup archives (AES-encrypted .zip files) (optional -- if no password provided, the backups will be unencrypted .zip files)
 
 For example:
 
 ```bash
 export TAG='build-v0.2.0-7_2022-04-07_ee35c8'
 export SMTP_SECRET='<Your SMTP password>'
-export WEB_URL='https://irims-demo.msupply.org:<replace port>'
+export WEB_URL='https://conforma-demo.msupply.org:<replace port>'
 export JWT_SECRET='<random private key>'
+export BACKUPS_FOLDER='~/Dropbox/conforma_backups'
+export BACKUPS_PASSWORD='<super-secret-encryption-key>'
 ```
 
 Then for each instance, run the following launch commands, with the appropriate `PORT_APP` and `PORT_DASH` values:
@@ -203,6 +197,13 @@ PORT_APP=8008 PORT_DASH=8009 sudo -E docker-compose --project-name 'conforma-on-
 ```
 
 `-d` is for detached, if you want to see all output then start without `-d`
+
+`docker-compose` command may be `docker compose` in some of the servers.
+
+Note the above commands must be run within directory where compose.yml is contained. Typically this is `/demo_server`
+
+This will either launch or relaunch the server at the port specified in the WEB_URL
+
 
 ## Stop instances and reset volumes
 
@@ -263,3 +264,16 @@ From there the following commands might be useful:
 
 - view environment variables: `printenv`
 - check the server log: `tail -n 100 /var/log/conforma/server.log`
+
+### Copy the log file to your local environment:
+
+1. Log in to the server using terminal
+2. Copy the log to an accessible place (in the server) i.e. if getting log for instance 5000:
+`sudo cp /var/lib/docker/volumes/conforma-on-8000_logs/_data/server.log demo_server/2022-11-15.log`
+3. Now exit the server `exit` and on your local machine open the terminal 
+4. After navigate to a folder where you would like to save the log, run (some similat to this):
+\```
+scp -i $KEY_LOC ubuntu@conforma-demo.msupply.org:/home/ubuntu/demo_server/2022-11-15.log .
+\```
+- KEY_LOC is an environment variable for the server public key :)
+- And the `.` means it will create a file with the same file name on the current folder

@@ -40,14 +40,11 @@ const useSnapshot: SnapshotOperation = async ({
   createDefaultDataFolders()
 
   try {
-    console.log(`using snapshot, name: ${snapshotName}`)
+    console.log(`Using snapshot: ${snapshotName}`)
 
     const snapshotFolder = path.join(SNAPSHOT_FOLDER, snapshotName)
 
     const options = await getOptions(snapshotFolder, optionsName, inOptions)
-    const snapshotRaw = await fs.readFile(path.join(snapshotFolder, `${SNAPSHOT_FILE_NAME}.json`), {
-      encoding: 'utf-8',
-    })
 
     // Don't proceed if snapshot version higher than current installation
     const infoFile = path.join(snapshotFolder, `${INFO_FILE_NAME}.json`)
@@ -63,38 +60,76 @@ const useSnapshot: SnapshotOperation = async ({
       throw `Snapshot was created with version: ${snapshotVersion}\n You can't install a snapshot created with a version newer than the current application version: ${config.version}`
     }
 
-    const snapshotObject = JSON.parse(snapshotRaw)
-
-    if (options.shouldReInitialise) {
-      await initialiseDatabase(options, snapshotFolder)
-    }
-
-    if (options.resetFiles) {
+    if (options.resetFiles || options.usePgDump) {
       execSync(`rm -rf ${FILES_FOLDER}/*`)
     }
 
-    // Prevent triggers from running while we insert data
-    triggerTables.forEach((table) => {
-      execSync(`psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} DISABLE TRIGGER ALL"`)
-    })
+    if (options.usePgDump) {
+      // The quick way, using pg_restore (whole database only, no partial
+      // exports)
+      console.log('Restoring database...')
 
-    // Pause to allow postgraphile "watch" to detect changed schema
-    delay(2500)
+      // Safer to drop and recreate whole schema, as there can be errors when
+      // trying to drop individual objects using --clean, especially if the
+      // incoming database differs from the current database, schema-wise
+      execSync(`psql -U postgres -d tmf_app_manager -c 'DROP schema public CASCADE;'`)
+      execSync(`psql -U postgres -d tmf_app_manager -c 'CREATE schema public;'`)
+      execSync(
+        `pg_restore -U postgres --clean --if-exists --dbname tmf_app_manager ${snapshotFolder}/database.dump`
+      )
 
-    console.log('inserting from snapshot ... ')
-    const insertedRecords = await importFromJson(
-      snapshotObject,
-      options,
-      options.shouldReInitialise
-    )
-    console.log('inserting from snapshot ... done')
+      console.log('Restoring database...done')
 
-    // Re-enable triggers
-    triggerTables.forEach((table) => {
-      execSync(`psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} ENABLE TRIGGER ALL"`)
-    })
+      // Copy files
+      console.log('Importing files...')
+      execSync(`cp -a '${snapshotFolder}/files'/. '${FILES_FOLDER}'`)
+      console.log('Importing files...done')
+    } else {
+      // The old way, using JSON database object export. Deprecated for full
+      // database export, but kept here for backwards compatibility, and for
+      // "custom" (i.e. not full database) snapshots (eg. template
+      // import/export)
+      const snapshotRaw = await fs.readFile(
+        path.join(snapshotFolder, `${SNAPSHOT_FILE_NAME}.json`),
+        {
+          encoding: 'utf-8',
+        }
+      )
+      const snapshotObject = JSON.parse(snapshotRaw)
 
-    await copyFiles(snapshotFolder, insertedRecords.file)
+      if (options.shouldReInitialise) {
+        await initialiseDatabase(options, snapshotFolder)
+      }
+
+      // Prevent triggers from running while we insert data, but only for full re-init
+      if (options.shouldReInitialise) {
+        triggerTables.forEach((table) => {
+          execSync(
+            `psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} DISABLE TRIGGER ALL"`
+          )
+        })
+      }
+
+      console.log('inserting from snapshot ... ')
+      const insertedRecords = await importFromJson(
+        snapshotObject,
+        options,
+        options.shouldReInitialise
+      )
+      console.log('inserting from snapshot ... done')
+
+      // Update serials
+      console.log('running serial update ... ')
+      execSync('./database/update_serials.sh', { cwd: ROOT_FOLDER, stdio: 'inherit' })
+      console.log('running serial update ... done')
+
+      // Re-enable triggers
+      triggerTables.forEach((table) => {
+        execSync(`psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} ENABLE TRIGGER ALL"`)
+      })
+
+      await copyFiles(snapshotFolder, insertedRecords.file)
+    }
 
     // Import localisations
     if (options?.includeLocalisation) {
@@ -116,14 +151,14 @@ const useSnapshot: SnapshotOperation = async ({
       }
     }
 
-    // Update serials
-    console.log('running serial update ... ')
-    execSync('./database/update_serials.sh', { cwd: ROOT_FOLDER, stdio: 'inherit' })
-    console.log('running serial update ... done')
+    // Pause to allow postgraphile "watch" to detect changed schema
+    delay(1500)
 
     // Migrate database to latest version
-    console.log('Migrating database (if required)...)')
-    await migrateData()
+    if (options.shouldReInitialise) {
+      console.log('Migrating database (if required)...)')
+      await migrateData()
+    }
 
     // Regenerate row level policies
     await updateRowPolicies()
@@ -137,13 +172,15 @@ const useSnapshot: SnapshotOperation = async ({
     // To ensure generic thumbnails are not wiped out, even if server doesn't restart
     createDefaultDataFolders()
 
-    // Store snapshot name in database
-    const text = `INSERT INTO system_info (name, value)
-    VALUES('snapshot', $1)`
-    await DBConnect.query({
-      text,
-      values: [JSON.stringify(snapshotName)],
-    })
+    // Store snapshot name in database (for full imports only)
+    if (options.shouldReInitialise) {
+      const text = `INSERT INTO system_info (name, value)
+      VALUES('snapshot', $1)`
+      await DBConnect.query({
+        text,
+        values: [JSON.stringify(snapshotName)],
+      })
+    }
 
     return { success: true, message: `snapshot loaded ${snapshotName}` }
   } catch (e) {
@@ -220,37 +257,24 @@ export const getDirectoryFromPath = (filePath: string) => {
   const [_, ...directory] = filePath.split('/').reverse()
   return directory.join('/')
 }
-// Get base files (thumbnails)
-export const getBaseFiles = async (filesFolder: string) => {
-  try {
-    let dirents = await fs.readdir(filesFolder, {
-      encoding: 'utf-8',
-      withFileTypes: true,
-    })
-    return dirents
-      .filter((dirent) => !dirent.isDirectory() && !dirent.name.startsWith('.'))
-      .map((dirent) => dirent.name)
-  } catch {
-    return []
-  }
-}
 
 const copyFiles = async (snapshotFolder: string, fileRecords: ObjectRecord[] = []) => {
-  // copy only files that associated with import file records and base filed in snapshot folder (thumbnails)
+  // copy only files that associated with import file records
   const filePaths = fileRecords.map((oldAndNewFileRecord) => oldAndNewFileRecord.new.filePath)
   filePaths.push(...fileRecords.map((oldAndNewFileRecord) => oldAndNewFileRecord.new.thumbnailPath))
   const snapshotFilesFolder = `${snapshotFolder}/files`
-  const baseFilePaths = await getBaseFiles(snapshotFilesFolder)
 
-  for (const filePath of [...filePaths, ...baseFilePaths]) {
+  for (const filePath of [...filePaths]) {
     try {
-      console.log('copying file', filePath)
+      if (path.dirname(filePath) !== config.genericThumbnailsFolderName) {
+        console.log('copying file', filePath)
 
-      const destinationDirectory = `${FILES_FOLDER}/${getDirectoryFromPath(filePath)}`
-      // -p = no error if exists, create parent
-      execSync(`mkdir -p '${destinationDirectory}'`)
+        const destinationDirectory = `${FILES_FOLDER}/${getDirectoryFromPath(filePath)}`
+        // -p = no error if exists, create parent
+        execSync(`mkdir -p '${destinationDirectory}'`)
 
-      execSync(`cp '${snapshotFilesFolder}/${filePath}' '${destinationDirectory}'`)
+        execSync(`cp '${snapshotFilesFolder}/${filePath}' '${destinationDirectory}'`)
+      }
     } catch (e) {
       console.log('failed to copy file', e)
     }

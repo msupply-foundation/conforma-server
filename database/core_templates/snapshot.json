@@ -396,6 +396,21 @@
       "requiredParameters": [
         "records"
       ]
+    },
+    {
+      "code": "removeUserOrg",
+      "description": "Removes a user from an organistion",
+      "id": 23,
+      "name": "Remove User from Organisation",
+      "optionalParameters": [],
+      "outputProperties": [
+        "userOrgId"
+      ],
+      "path": "../plugins/action_remove_user_org/src/index.ts",
+      "requiredParameters": [
+        "user_id",
+        "org_id"
+      ]
     }
   ],
   "counter": [
@@ -1169,6 +1184,54 @@
       "id": 17,
       "name": "snapshot",
       "timestamp": "2022-09-07T18:09:06.216504+12:00",
+      "value": "core_templates"
+    },
+    {
+      "id": 18,
+      "name": "version",
+      "timestamp": "2022-09-19T14:31:06.195383+12:00",
+      "value": "0.4.5-13"
+    },
+    {
+      "id": 19,
+      "name": "snapshot",
+      "timestamp": "2022-09-19T14:31:06.36259+12:00",
+      "value": "core_templates"
+    },
+    {
+      "id": 20,
+      "name": "version",
+      "timestamp": "2022-09-27T15:30:47.097853+13:00",
+      "value": "0.4.5-16"
+    },
+    {
+      "id": 21,
+      "name": "snapshot",
+      "timestamp": "2022-09-27T15:30:47.282514+13:00",
+      "value": "core_templates"
+    },
+    {
+      "id": 22,
+      "name": "version",
+      "timestamp": "2022-10-06T10:30:53.462257+13:00",
+      "value": "0.4.6-1"
+    },
+    {
+      "id": 23,
+      "name": "snapshot",
+      "timestamp": "2022-10-06T10:30:53.571952+13:00",
+      "value": "core_templates"
+    },
+    {
+      "id": 24,
+      "name": "version",
+      "timestamp": "2022-10-11T10:32:54.304393+13:00",
+      "value": "0.4.6-3"
+    },
+    {
+      "id": 25,
+      "name": "snapshot",
+      "timestamp": "2022-10-11T10:32:54.384871+13:00",
       "value": "core_templates"
     }
   ],
@@ -4259,7 +4322,7 @@
       "parameterQueries": {
         "newStatus": "SUBMITTED"
       },
-      "sequence": 50,
+      "sequence": 6,
       "templateId": 10,
       "trigger": "ON_REVIEW_SUBMIT"
     },
@@ -4278,7 +4341,7 @@
           "operator": "objectProperties"
         }
       },
-      "sequence": 51,
+      "sequence": 50,
       "templateId": 10,
       "trigger": "ON_REVIEW_SUBMIT"
     },
@@ -4304,7 +4367,7 @@
           "operator": "objectProperties"
         }
       },
-      "sequence": 52,
+      "sequence": 51,
       "templateId": 10,
       "trigger": "ON_REVIEW_SUBMIT"
     },
@@ -4355,7 +4418,7 @@
       "eventCode": null,
       "id": 212,
       "parameterQueries": {},
-      "sequence": 53,
+      "sequence": 52,
       "templateId": 10,
       "trigger": "ON_REVIEW_SUBMIT"
     },
@@ -4367,7 +4430,7 @@
       "eventCode": null,
       "id": 213,
       "parameterQueries": {},
-      "sequence": 54,
+      "sequence": 53,
       "templateId": 10,
       "trigger": "ON_REVIEW_SUBMIT"
     },
@@ -4401,7 +4464,7 @@
       "eventCode": null,
       "id": 214,
       "parameterQueries": {},
-      "sequence": 6,
+      "sequence": 54,
       "templateId": 10,
       "trigger": "ON_REVIEW_SUBMIT"
     },
@@ -4451,37 +4514,50 @@
             "children": [
               {
                 "children": [
-                  "applicationData.reviewData.latestDecision.decision",
-                  null
+                  {
+                    "children": [
+                      "applicationData.reviewData.latestDecision.decision"
+                    ],
+                    "operator": "objectProperties"
+                  },
+                  "CONFORM"
                 ],
-                "operator": "objectProperties"
+                "operator": "="
               },
               {
-                "type": "string",
                 "children": [
-                  "CONFORM",
-                  "NON_CONFORM"
+                  "applicationData.reviewData.isLastStage"
                 ],
-                "operator": "OR"
+                "operator": "objectProperties"
               }
             ],
-            "operator": "="
+            "operator": "AND"
           },
           {
             "children": [
-              "applicationData.reviewData.isLastLevel"
+              {
+                "children": [
+                  {
+                    "children": [
+                      "applicationData.reviewData.latestDecision.decision"
+                    ],
+                    "operator": "objectProperties"
+                  },
+                  "NON_CONFORM"
+                ],
+                "operator": "="
+              },
+              {
+                "children": [
+                  "applicationData.reviewData.isLastLevel"
+                ],
+                "operator": "objectProperties"
+              }
             ],
-            "operator": "objectProperties"
-          },
-          {
-            "children": [
-              "applicationData.reviewData.isLastStage",
-              null
-            ],
-            "operator": "objectProperties"
+            "operator": "AND"
           }
         ],
-        "operator": "AND"
+        "operator": "OR"
       },
       "description": "**CORE-ACTION** Change application outcome when last level and last stage - usually a final decision - submits a review as CONFORM or NON_CONFORM. Outcome will be APPROVED or REJECTED accordingly",
       "eventCode": "",
@@ -4513,31 +4589,6 @@
       "trigger": "ON_REVIEW_SUBMIT"
     },
     {
-      "actionCode": "updateReviewAssignmentsStatus",
-      "code": null,
-      "condition": true,
-      "description": "**CORE-ACTION** Change other review assignment statuses to SELF_ASSIGNED_BY_ANOTHER after one of the review assignment with AVAILABLE_FOR_SELF_ASSIGNMENT is self-assigned by the reviewer",
-      "eventCode": null,
-      "id": 217,
-      "parameterQueries": {
-        "trigger": {
-          "children": [
-            "applicationData.action_payload.trigger_payload.trigger"
-          ],
-          "operator": "objectProperties"
-        },
-        "reviewAssignmentId": {
-          "children": [
-            "applicationData.action_payload.trigger_payload.record_id"
-          ],
-          "operator": "objectProperties"
-        }
-      },
-      "sequence": null,
-      "templateId": 10,
-      "trigger": "ON_REVIEW_ASSIGN"
-    },
-    {
       "actionCode": "cLog",
       "code": null,
       "condition": true,
@@ -4554,7 +4605,7 @@
           "operator": "stringSubstitution"
         }
       },
-      "sequence": null,
+      "sequence": 6,
       "templateId": 10,
       "trigger": "ON_APPLICATION_SUBMIT"
     },
@@ -4577,17 +4628,11 @@
       "eventCode": null,
       "id": 219,
       "parameterQueries": {
-        "name": {
-          "children": [
-            "applicationData.responses.name.text"
-          ],
-          "operator": "objectProperties"
-        },
-        "address": {
-          "children": [
-            "applicationData.responses.physAdd.text"
-          ],
-          "operator": "objectProperties"
+        "data": {
+          "name": "responses.name.text",
+          "address": "responses.physAdd.text",
+          "registration": "responses.rego.text",
+          "registration_documentation": "responses.regoDoc"
         },
         "logo_url": {
           "children": [
@@ -4601,19 +4646,7 @@
           ],
           "operator": "CONCAT"
         },
-        "tableName": "organisation",
-        "registration": {
-          "children": [
-            "applicationData.responses.rego.text"
-          ],
-          "operator": "objectProperties"
-        },
-        "registration_documentation": {
-          "children": [
-            "applicationData.responses.regoDoc"
-          ],
-          "operator": "objectProperties"
-        }
+        "tableName": "organisation"
       },
       "sequence": 101,
       "templateId": 10,
@@ -5154,9 +5187,7 @@
             }
           ],
           "operator": "stringSubstitution"
-        },
-        "fromName": "Application Manager",
-        "fromEmail": "no-reply@sussol.net"
+        }
       },
       "sequence": 105,
       "templateId": 10,
@@ -6568,8 +6599,23 @@
       "actionCode": "changeStatus",
       "code": null,
       "condition": {
-        "children": true,
-        "operator": "objectProperties"
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  "applicationData.reviewData.reviewId",
+                  null
+                ],
+                "operator": "objectProperties"
+              },
+              null
+            ],
+            "operator": "objectProperties"
+          },
+          null
+        ],
+        "operator": "!="
       },
       "description": "**CORE-ACTION** On Re-assignment happens change previous review status to DISCONTINUED",
       "eventCode": "",
@@ -6737,7 +6783,7 @@
         "children": [
           {
             "children": [
-              "applicationData.reviewData",
+              "applicationData.reviewData.reviewId",
               null
             ],
             "operator": "objectProperties"
@@ -6923,7 +6969,7 @@
           "operator": "objectProperties"
         }
       },
-      "sequence": null,
+      "sequence": 2,
       "templateId": 10,
       "trigger": "ON_REVIEW_ASSIGN"
     },
@@ -7806,10 +7852,10 @@
       "index": 0,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "text": "Please update your user information"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 1,
       "templateCode": "UserEdit",
       "templateVersion": 1,
@@ -7841,10 +7887,10 @@
       "index": 1,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "First Name"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 1,
       "templateCode": "UserEdit",
       "templateVersion": 1,
@@ -7889,10 +7935,10 @@
       "index": 2,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Last Name"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 1,
       "templateCode": "UserEdit",
       "templateVersion": 1,
@@ -7924,10 +7970,10 @@
       "index": 3,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Select a username"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 1,
       "templateCode": "UserEdit",
       "templateVersion": 1,
@@ -8009,10 +8055,10 @@
       "index": 4,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Email"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 1,
       "templateCode": "UserEdit",
       "templateVersion": 1,
@@ -8042,7 +8088,6 @@
       "index": 5,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "type": "toggle",
         "label": "Do you wish to change your password?",
@@ -8050,6 +8095,7 @@
           "Yes"
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 1,
       "templateCode": "UserEdit",
       "templateVersion": 1,
@@ -8068,7 +8114,6 @@
       "index": 6,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Current Password",
         "placeholder": "Current password",
@@ -8109,6 +8154,7 @@
         "requireConfirmation": false,
         "validationMessageInternal": "Incorrect password"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 1,
       "templateCode": "UserEdit",
       "templateVersion": 1,
@@ -8138,7 +8184,6 @@
       "index": 7,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "New Password",
         "description": "Please select a new password",
@@ -8159,6 +8204,7 @@
         },
         "validationMessageInternal": "Password must be at least 8 characters"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 1,
       "templateCode": "UserEdit",
       "templateVersion": 1,
@@ -8189,11 +8235,11 @@
       "index": 10,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "style": "basic",
         "title": "## Welcome to IRIMS Application Manager"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 2,
       "templateCode": "UserRegistration",
       "templateVersion": 1,
@@ -8212,10 +8258,10 @@
       "index": 20,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "First Name"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 2,
       "templateCode": "UserRegistration",
       "templateVersion": 1,
@@ -8234,10 +8280,10 @@
       "index": 30,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Last Name"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 2,
       "templateCode": "UserRegistration",
       "templateVersion": 1,
@@ -8256,11 +8302,11 @@
       "index": 40,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Select a username",
         "description": "You can use 3 or more letters, numbers and - . _ or @"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 2,
       "templateCode": "UserRegistration",
       "templateVersion": 1,
@@ -8330,10 +8376,10 @@
       "index": 50,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Email"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 2,
       "templateCode": "UserRegistration",
       "templateVersion": 1,
@@ -8363,7 +8409,6 @@
       "index": 60,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Password",
         "maskedInput": true,
@@ -8384,6 +8429,7 @@
         },
         "validationMessageInternal": "Password must be at least 6 characters"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 2,
       "templateCode": "UserRegistration",
       "templateVersion": 1,
@@ -8402,11 +8448,11 @@
       "index": 10,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "style": "info",
         "title": "## Organisation details"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 11,
       "templateCode": "OrgRegistration",
       "templateVersion": 3,
@@ -8425,10 +8471,10 @@
       "index": 20,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "What is the name of your organisation?"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 11,
       "templateCode": "OrgRegistration",
       "templateVersion": 3,
@@ -8475,10 +8521,10 @@
       "index": 30,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Please enter your organisation registration code"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 11,
       "templateCode": "OrgRegistration",
       "templateVersion": 3,
@@ -8527,10 +8573,10 @@
       "index": 40,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Organisation **physical** address"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 11,
       "templateCode": "OrgRegistration",
       "templateVersion": 3,
@@ -8549,7 +8595,6 @@
       "index": 50,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Is the organisation **postal** address *different* to the physical address?",
         "checkboxes": [
@@ -8560,6 +8605,7 @@
           }
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 11,
       "templateCode": "OrgRegistration",
       "templateVersion": 3,
@@ -8578,11 +8624,11 @@
       "index": 60,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Organisation **postal** address",
         "description": "*Note: in the current schema only one address value is actually saved to the database. This is just for demonstration purposes.*"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 11,
       "templateCode": "OrgRegistration",
       "templateVersion": 3,
@@ -8612,8 +8658,8 @@
       "index": 70,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": null,
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 11,
       "templateCode": "OrgRegistration",
       "templateVersion": 3,
@@ -8632,7 +8678,6 @@
       "index": 80,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Upload a logo for your organisation",
         "description": "File must be an image type (.jpg, .jpeg, .png, .gif, .svg) and less than 5MB",
@@ -8646,6 +8691,7 @@
           "svg"
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 11,
       "templateCode": "OrgRegistration",
       "templateVersion": 3,
@@ -8664,7 +8710,6 @@
       "index": 90,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "What is your organisation's primary activity",
         "options": [
@@ -8673,6 +8718,7 @@
           "Producer"
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 11,
       "templateCode": "OrgRegistration",
       "templateVersion": 3,
@@ -8691,7 +8737,6 @@
       "index": 10,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "text": {
           "children": [
@@ -8719,6 +8764,7 @@
           "operator": "stringSubstitution"
         }
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 12,
       "templateCode": "OrgRegistration",
       "templateVersion": 3,
@@ -8737,7 +8783,6 @@
       "index": 20,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "url": {
           "children": [
@@ -8760,6 +8805,7 @@
         "altText": "Organisation logo",
         "alignment": "center"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 12,
       "templateCode": "OrgRegistration",
       "templateVersion": 3,
@@ -8778,7 +8824,6 @@
       "index": 30,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Please provide proof of your organisation registration",
         "description": "Allowed formats: .pdf, .doc, .jpg, .png",
@@ -8793,6 +8838,7 @@
           "docx"
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 12,
       "templateCode": "OrgRegistration",
       "templateVersion": 3,
@@ -8811,7 +8857,6 @@
       "index": 40,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Please provide any other documentation pertinent to your organisation's activities",
         "description": "Allowed formats: .pdf, .doc, .jpg, .png",
@@ -8825,6 +8870,7 @@
           "docx"
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 12,
       "templateCode": "OrgRegistration",
       "templateVersion": 3,
@@ -8843,7 +8889,6 @@
       "index": 0,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "style": "basic",
         "title": {
@@ -8859,6 +8904,7 @@
           "operator": "stringSubstitution"
         }
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 13,
       "templateCode": "OrgJoin",
       "templateVersion": 2,
@@ -8877,7 +8923,6 @@
       "index": 1,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Please select the organisation you wish to join",
         "search": true,
@@ -8892,6 +8937,7 @@
         },
         "optionsDisplayProperty": "name"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 13,
       "templateCode": "OrgJoin",
       "templateVersion": 2,
@@ -8910,11 +8956,11 @@
       "index": 2,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Reason for joining",
         "description": "Please provide a brief summary of your relationship to this organisation"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 13,
       "templateCode": "OrgJoin",
       "templateVersion": 2,
@@ -8933,8 +8979,8 @@
       "index": 3,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": null,
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 13,
       "templateCode": "OrgJoin",
       "templateVersion": 2,
@@ -8953,11 +8999,11 @@
       "index": 4,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "style": "basic",
         "title": "### Documentation"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 13,
       "templateCode": "OrgJoin",
       "templateVersion": 2,
@@ -8976,7 +9022,6 @@
       "index": 5,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Please provide photo ID",
         "description": "Please upload a copy of your photo ID. Must be in **image** or **PDF** format and under 5MB.",
@@ -8989,6 +9034,7 @@
           "jpeg"
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 13,
       "templateCode": "OrgJoin",
       "templateVersion": 2,
@@ -9007,7 +9053,6 @@
       "index": 6,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Please upload additional documentation",
         "description": "If necessary, please provide additional documentation showing your relationship to this organisation.\nYou can upload more than one file if necessary, with same restrictions as above.",
@@ -9020,6 +9065,7 @@
           "jpeg"
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 13,
       "templateCode": "OrgJoin",
       "templateVersion": 2,
@@ -9038,10 +9084,10 @@
       "index": 0,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "First Name"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9060,7 +9106,6 @@
       "index": 1,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": {
           "children": [
@@ -9076,6 +9121,7 @@
           "operator": "stringSubstitution"
         }
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9126,7 +9172,6 @@
       "index": 2,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "text": {
           "children": [
@@ -9169,6 +9214,7 @@
           "operator": "stringSubstitution"
         }
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9187,13 +9233,13 @@
       "index": 3,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Description",
         "lines": 8,
         "maxLength": 101,
         "placeholder": "Enter here..."
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9223,7 +9269,6 @@
       "index": 4,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Password",
         "placeholder": "Password must be at least 8 chars long",
@@ -9244,6 +9289,7 @@
         },
         "validationMessageInternal": "Password must be at least 8 characters"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9262,8 +9308,8 @@
       "index": 5,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": null,
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9282,11 +9328,11 @@
       "index": 6,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "text": "Shows other selectors as a result of your **selection** which can be **dynamically defined**",
         "title": "### This page demonstrates selectors options"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9305,7 +9351,6 @@
       "index": 7,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Organisation Type",
         "options": [
@@ -9318,6 +9363,7 @@
         },
         "description": "_Select which type of organisation you belong to._"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9336,7 +9382,6 @@
       "index": 8,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Select Manufacturer",
         "options": [
@@ -9346,6 +9391,7 @@
         ],
         "placeholder": "Select"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9377,7 +9423,6 @@
       "index": 9,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Select Distributor",
         "options": [
@@ -9387,6 +9432,7 @@
         ],
         "placeholder": "Select"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9418,7 +9464,6 @@
       "index": 10,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Select Importer",
         "options": [
@@ -9428,6 +9473,7 @@
         ],
         "placeholder": "Select"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9459,8 +9505,8 @@
       "index": 12,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": null,
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9479,7 +9525,6 @@
       "index": 13,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "This Radio button group has no default",
         "options": [
@@ -9490,6 +9535,7 @@
         "hasOther": true,
         "otherPlaceholder": "Enter other answer"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9508,7 +9554,6 @@
       "index": 14,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Select an organisation (GraphQL query)",
         "options": {
@@ -9522,6 +9567,7 @@
         },
         "placeholder": "Select one"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9540,8 +9586,8 @@
       "index": 15,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": null,
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9560,12 +9606,12 @@
       "index": 16,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "text": "Different types and settings for Checkbox plugin",
         "style": "basic",
         "title": "## Checkbox demonstration"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9584,13 +9630,13 @@
       "index": 17,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "This is a single checkbox",
         "checkboxes": [
           "Tick me"
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9609,7 +9655,6 @@
       "index": 18,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Three checkboxes, one pre-selected",
         "checkboxes": [
@@ -9622,6 +9667,7 @@
           "Option 3"
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9640,7 +9686,6 @@
       "index": 19,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "type": "toggle",
         "label": "Behold! a **toggle** switch:",
@@ -9648,6 +9693,7 @@
           "ON"
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9666,7 +9712,6 @@
       "index": 20,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "title": {
           "children": [
@@ -9694,6 +9739,7 @@
           "operator": "stringSubstitution"
         }
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9712,7 +9758,6 @@
       "index": 21,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "type": "slider",
         "label": "And a couple of **sliders**:",
@@ -9730,6 +9775,7 @@
         ],
         "displayFormat": "checkboxes"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9748,7 +9794,6 @@
       "index": 22,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "text": {
           "children": [
@@ -9783,6 +9828,7 @@
           "operator": "stringSubstitution"
         }
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9801,7 +9847,6 @@
       "index": 23,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Lotsa boxes",
         "layout": "inline",
@@ -9822,6 +9867,7 @@
         "description": "If you have a lot of checkboxes, you may wish to use `layout: \"inline\"`.  \n_This selection is dynamically created from an online API._",
         "displayFormat": "checkboxes"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9840,8 +9886,8 @@
       "index": 24,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": null,
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9860,7 +9906,6 @@
       "index": 25,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "API Lookup: Choose a name from this list",
         "search": true,
@@ -9880,6 +9925,7 @@
         },
         "placeholder": "Select"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9898,10 +9944,10 @@
       "index": 26,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Enter 'magicword' to see a text box"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9920,7 +9966,6 @@
       "index": 27,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "text": {
           "children": [
@@ -9943,6 +9988,7 @@
         "style": "success",
         "title": "This has appeared because you typed \"magicword\" above."
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -9974,7 +10020,6 @@
       "index": 28,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "text": "A text info box can be presented in a number of **styles**.\n\n*Please select one below*",
         "style": {
@@ -9985,6 +10030,7 @@
         },
         "title": "## Many ways to deliver information!"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -10003,7 +10049,6 @@
       "index": 29,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Select a style",
         "default": "none",
@@ -10019,6 +10064,7 @@
         ],
         "placeholder": "Select"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 14,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -10037,12 +10083,12 @@
       "index": 100,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "text": "A demonstration of the File Upload plugin",
         "style": "info",
         "title": "### This sections allows you to upload files"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 15,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -10061,7 +10107,6 @@
       "index": 101,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Please upload your documentation",
         "description": "You can provide multiple files.  \nFiles must be **image** files or **PDF** and under 5MB.",
@@ -10073,6 +10118,7 @@
           "jpg"
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 15,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -10091,8 +10137,8 @@
       "index": 102,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": null,
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 15,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -10111,7 +10157,6 @@
       "index": 103,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Please add some more files",
         "description": {
@@ -10129,6 +10174,7 @@
         },
         "fileCountLimit": 99
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 15,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -10147,8 +10193,8 @@
       "index": 104,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": null,
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 15,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -10167,7 +10213,6 @@
       "index": 105,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Please upload an image file to display",
         "description": "Only 1 file allowed, must be an image type (.jpg, .jpeg, .png, .gif, .svg) and less than 5MB",
@@ -10181,6 +10226,7 @@
           "svg"
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 15,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -10199,7 +10245,6 @@
       "index": 106,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "url": {
           "children": [
@@ -10232,6 +10277,7 @@
           "operator": "objectProperties"
         }
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 15,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -10261,7 +10307,6 @@
       "index": 107,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Select image size",
         "default": 3,
@@ -10276,6 +10321,7 @@
           "massive"
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 15,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -10305,7 +10351,6 @@
       "index": 108,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Select image alignment",
         "default": 1,
@@ -10315,6 +10360,7 @@
           "right"
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 15,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -10344,12 +10390,12 @@
       "index": 3,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "text": "List items can be displayed in **Card** or **Table** form",
         "style": "info",
         "title": "## Ingredients list demonstration"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 16,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -10368,7 +10414,6 @@
       "index": 4,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Ingredients list",
         "modalText": "## Ingredient item \n\nPlease enter details for **one** ingredient",
@@ -10468,6 +10513,7 @@
         },
         "createModalButtonText": "Add ingredient"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 16,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -10486,7 +10532,6 @@
       "index": 5,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Display style for Ingredients list",
         "default": "cards",
@@ -10496,6 +10541,7 @@
         ],
         "placeholder": "Select"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 16,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -10514,8 +10560,8 @@
       "index": 6,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": null,
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 16,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -10534,7 +10580,6 @@
       "index": 7,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "icon": "user",
         "label": "Search for users",
@@ -10562,6 +10607,7 @@
           "description": "${username}"
         }
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 16,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -10580,7 +10626,6 @@
       "index": 8,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "icon": "world",
         "label": "Search for countries",
@@ -10610,6 +10655,7 @@
         },
         "minCharacters": 2
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 16,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -10628,7 +10674,6 @@
       "index": 9,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "icon": "pills",
         "label": "Lookup mSupply Universal Codes",
@@ -10662,6 +10707,7 @@
         },
         "minCharacters": 3
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 16,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -10680,7 +10726,6 @@
       "index": 11,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "icon": "building",
         "label": "Search for an organisation",
@@ -10705,6 +10750,7 @@
         "placeholder": "Search organisations",
         "minCharacters": 6
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 16,
       "templateCode": "Demo",
       "templateVersion": 2,
@@ -10723,11 +10769,11 @@
       "index": 10,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "style": "basic",
         "title": "## Organisation details"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 17,
       "templateCode": "CoreActions",
       "templateVersion": 2,
@@ -10746,10 +10792,10 @@
       "index": 20,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "What is the name of your organisation?"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 17,
       "templateCode": "CoreActions",
       "templateVersion": 2,
@@ -10796,10 +10842,10 @@
       "index": 30,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Please enter your organisation registration code"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 17,
       "templateCode": "CoreActions",
       "templateVersion": 2,
@@ -10848,10 +10894,10 @@
       "index": 40,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Organisation **physical** address"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 17,
       "templateCode": "CoreActions",
       "templateVersion": 2,
@@ -10870,7 +10916,6 @@
       "index": 50,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Is the organisation **postal** address *different* to the physical address?",
         "checkboxes": [
@@ -10881,6 +10926,7 @@
           }
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 17,
       "templateCode": "CoreActions",
       "templateVersion": 2,
@@ -10899,11 +10945,11 @@
       "index": 60,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Organisation **postal** address",
         "description": "*Note: in the current schema only one address value is actually saved to the database. This is just for demonstration purposes.*"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 17,
       "templateCode": "CoreActions",
       "templateVersion": 2,
@@ -10933,8 +10979,8 @@
       "index": 70,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": null,
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 17,
       "templateCode": "CoreActions",
       "templateVersion": 2,
@@ -10953,7 +10999,6 @@
       "index": 80,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Upload a logo for your organisation",
         "description": "File must be an image type (.jpg, .jpeg, .png, .gif, .svg) and less than 5MB",
@@ -10967,6 +11012,7 @@
           "svg"
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 17,
       "templateCode": "CoreActions",
       "templateVersion": 2,
@@ -10985,7 +11031,6 @@
       "index": 90,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "What is your organisation's primary activity",
         "options": [
@@ -10994,6 +11039,7 @@
           "Producer"
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 17,
       "templateCode": "CoreActions",
       "templateVersion": 2,
@@ -11012,7 +11058,6 @@
       "index": 10,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "text": {
           "children": [
@@ -11040,6 +11085,7 @@
           "operator": "stringSubstitution"
         }
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 18,
       "templateCode": "CoreActions",
       "templateVersion": 2,
@@ -11058,7 +11104,6 @@
       "index": 20,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "url": {
           "children": [
@@ -11081,6 +11126,7 @@
         "altText": "Organisation logo",
         "alignment": "center"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 18,
       "templateCode": "CoreActions",
       "templateVersion": 2,
@@ -11099,7 +11145,6 @@
       "index": 30,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Please provide proof of your organisation registration",
         "description": "Allowed formats: .pdf, .doc, .jpg, .png",
@@ -11114,6 +11159,7 @@
           "docx"
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 18,
       "templateCode": "CoreActions",
       "templateVersion": 2,
@@ -11132,7 +11178,6 @@
       "index": 40,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "label": "Please provide any other documentation pertinent to your organisation's activities",
         "description": "Allowed formats: .pdf, .doc, .jpg, .png",
@@ -11146,6 +11191,7 @@
           "docx"
         ]
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 18,
       "templateCode": "CoreActions",
       "templateVersion": 2,
@@ -11164,11 +11210,11 @@
       "index": 10,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "style": "success",
         "title": "### Password reset request"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 19,
       "templateCode": "PasswordReset",
       "templateVersion": 2,
@@ -11199,10 +11245,10 @@
         "operator": "="
       },
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Please enter your username"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 19,
       "templateCode": "PasswordReset",
       "templateVersion": 2,
@@ -11257,7 +11303,6 @@
       "index": 41,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "New password",
         "maskedInput": true,
@@ -11278,6 +11323,7 @@
         },
         "validationMessageInternal": "Password must be at least 6 characters"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 19,
       "templateCode": "PasswordReset",
       "templateVersion": 2,
@@ -11308,7 +11354,6 @@
       "index": 1,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "icon": "user",
         "label": "User",
@@ -11341,6 +11386,7 @@
         },
         "minCharacters": 3
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 20,
       "templateCode": "grantUserPermissions",
       "templateVersion": 1,
@@ -11359,7 +11405,6 @@
       "index": 3,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Permissions",
         "checkboxes": {
@@ -11372,6 +11417,7 @@
           "operator": "graphQL"
         }
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 20,
       "templateCode": "grantUserPermissions",
       "templateVersion": 1,
@@ -11390,7 +11436,6 @@
       "index": 2,
       "isEditable": true,
       "isRequired": false,
-      "isReviewable": null,
       "parameters": {
         "icon": "building",
         "label": "Organisation",
@@ -11421,6 +11466,7 @@
         },
         "minCharacters": 3
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 20,
       "templateCode": "grantUserPermissions",
       "templateVersion": 1,
@@ -11439,7 +11485,6 @@
       "index": 1,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "icon": "user",
         "label": "User",
@@ -11472,6 +11517,7 @@
         },
         "minCharacters": 3
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 21,
       "templateCode": "addToCompany",
       "templateVersion": 1,
@@ -11490,7 +11536,6 @@
       "index": 2,
       "isEditable": true,
       "isRequired": true,
-      "isReviewable": null,
       "parameters": {
         "label": "Select an organisation to add user to",
         "search": true,
@@ -11505,6 +11550,7 @@
         },
         "optionsDisplayProperty": "name"
       },
+      "reviewability": "ONLY_IF_APPLICANT_ANSWER",
       "sectionId": 21,
       "templateCode": "addToCompany",
       "templateVersion": 1,
@@ -11742,14 +11788,39 @@
     {
       "applicationId": 10,
       "id": 130,
-      "isValid": null,
-      "stageNumber": null,
+      "isValid": true,
+      "stageNumber": 1,
       "status": "DRAFT",
       "templateElementId": 164,
       "timeCreated": "2021-09-08T19:33:44.292633+12:00",
       "timeSubmitted": null,
-      "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
-      "value": null
+      "timeUpdated": "2022-09-19T14:40:05.752533+12:00",
+      "value": {
+        "text": "*Nenhum selecionado*",
+        "values": {
+          "1": {
+            "key": "1",
+            "text": "Yes",
+            "label": "Yes",
+            "selected": false,
+            "textNegative": ""
+          }
+        },
+        "textUnselected": "Yes",
+        "textMarkdownList": "- *Nenhum selecionado*\n",
+        "selectedValuesArray": [],
+        "unselectedValuesArray": [
+          {
+            "key": "1",
+            "text": "Yes",
+            "label": "Yes",
+            "selected": false,
+            "textNegative": ""
+          }
+        ],
+        "textMarkdownPropertyList": "- Yes: \n",
+        "textUnselectedMarkdownList": "- Yes\n"
+      }
     },
     {
       "applicationId": 10,
@@ -11767,12 +11838,12 @@
       "applicationId": 10,
       "id": 132,
       "isValid": null,
-      "stageNumber": null,
+      "stageNumber": 1,
       "status": "DRAFT",
       "templateElementId": 167,
       "timeCreated": "2021-09-08T19:33:44.292633+12:00",
       "timeSubmitted": null,
-      "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
+      "timeUpdated": "2022-09-19T14:40:13.263232+12:00",
       "value": null
     },
     {
@@ -11815,24 +11886,24 @@
       "applicationId": 10,
       "id": 136,
       "isValid": null,
-      "stageNumber": null,
+      "stageNumber": 1,
       "status": "DRAFT",
       "templateElementId": 171,
       "timeCreated": "2021-09-08T19:33:44.292633+12:00",
       "timeSubmitted": null,
-      "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
+      "timeUpdated": "2022-09-19T14:40:15.932352+12:00",
       "value": null
     },
     {
       "applicationId": 10,
       "id": 137,
       "isValid": null,
-      "stageNumber": null,
+      "stageNumber": 1,
       "status": "DRAFT",
       "templateElementId": 172,
       "timeCreated": "2021-09-08T19:33:44.292633+12:00",
       "timeSubmitted": null,
-      "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
+      "timeUpdated": "2022-09-19T14:40:15.937243+12:00",
       "value": null
     },
     {
@@ -12651,7 +12722,7 @@
       "templateElementId": 176,
       "timeCreated": "2021-10-04T10:57:44.305915+13:00",
       "timeSubmitted": null,
-      "timeUpdated": "2022-08-15T14:36:14.69687+12:00",
+      "timeUpdated": "2022-09-27T15:31:51.425497+13:00",
       "value": null
     },
     {
@@ -12663,7 +12734,7 @@
       "templateElementId": 178,
       "timeCreated": "2021-10-04T10:57:44.305915+13:00",
       "timeSubmitted": null,
-      "timeUpdated": "2022-08-15T14:36:14.694295+12:00",
+      "timeUpdated": "2022-09-27T15:32:09.29642+13:00",
       "value": null
     },
     {
@@ -12675,9 +12746,9 @@
       "templateElementId": 177,
       "timeCreated": "2021-10-04T10:57:44.305915+13:00",
       "timeSubmitted": null,
-      "timeUpdated": "2022-08-15T14:36:14.728519+12:00",
+      "timeUpdated": "2022-09-27T15:31:51.452271+13:00",
       "value": {
-        "text": "*Nothing Selected*",
+        "text": "*Nenhum selecionado*",
         "values": {
           "0": {
             "key": 0,
@@ -12786,7 +12857,7 @@
           }
         },
         "textUnselected": "admin, applyUserRegistration, applyUserEdit, applyGeneral, reviewOrgRego, reviewJoinOrg, assignGeneral, reviewGeneral, reviewScreening, reviewAssessmentSection1Level1, reviewAssessmentSection2Level1, reviewAssessmentLevel2, reviewFinalDecision, applyNonRegistered, systemManager",
-        "textMarkdownList": "- *Nothing Selected*\n",
+        "textMarkdownList": "- *Nenhum selecionado*\n",
         "selectedValuesArray": [],
         "unselectedValuesArray": [
           {
@@ -13131,6 +13202,7 @@
   ],
   "review": [],
   "reviewAssignmentAssignerJoin": [],
+  "notification": [],
   "reviewDecision": [],
   "reviewResponse": [],
   "reviewStatusHistory": []

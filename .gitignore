@@ -43,6 +43,8 @@ typings/
 # Localisation & Preferences folder -- gets restored from core_templates
 /localisation
 /preferences
+/snapshot_test_scripts
+/backups
 
 #GraphQL schema auto-generated
 database/schema.graphql
@@ -67,3 +69,4 @@ database/snapshot_path_aliases.json
 
 #Other secrets
 testSecrets.json
+.vscode/settings.json

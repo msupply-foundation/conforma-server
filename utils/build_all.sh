@@ -17,4 +17,4 @@ echo 'copying import/export scripts for snapshots'
 cp -R database/*.sh build/database
 cp -R database/*.sql build/database
 echo 'building plugins'
-node ./utils/pluginScripts/buildPlugins.js
+node --unhandled-rejections=strict ./utils/pluginScripts/buildPlugins.js

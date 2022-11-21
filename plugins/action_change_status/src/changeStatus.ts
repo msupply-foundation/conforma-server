@@ -64,11 +64,11 @@ const changeApplicationStatus = async (
         `WARNING: Application ${applicationId} already has status: ${newStatus}. No changes were made.`
       )
       returnObject.status = ActionQueueStatus.Success
-      returnObject.error_log = 'Status not changed'
+      returnObject.error_log = 'Application Status not changed'
       returnObject.output = {
         status: newStatus,
         statusId: current.status_history_id,
-        applicationStatusHistoryTimestamp: current.statu_history_time_created,
+        applicationStatusHistoryTimestamp: current.status_history_time_created,
       }
       return returnObject
     }
@@ -115,7 +115,7 @@ const changeReviewStatus = async (
 ): Promise<ActionPluginOutput> => {
   const returnObject: ActionPluginOutput = {
     status: ActionQueueStatus.Fail,
-    error_log: 'uknown error',
+    error_log: '',
   }
   console.log(`Changing the Status of Review ${reviewId}...`)
 
@@ -128,11 +128,11 @@ const changeReviewStatus = async (
         `WARNING: Review ${reviewId} already has status: ${newStatus}. No changes were made.`
       )
       returnObject.status = ActionQueueStatus.Success
-      returnObject.error_log = 'Status not changed'
+      returnObject.error_log = 'Review Status not changed'
       returnObject.output = {
         status: newStatus,
         statusId: currentStatus.status_history_id,
-        reviewStatusHistoryTimestamp: currentStatus.status_history_time_created,
+        reviewStatusHistoryTimestamp: currentStatus.time_created,
       }
       return returnObject
     }

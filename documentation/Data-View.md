@@ -5,8 +5,8 @@
 ## Contents
   - [API](#api)
   - [Configuration](#configuration)
-    - [`data_view` table](#data_display-table)
-    - [`data_view_column_definition` table](#data_display_column_definition-table)
+    - [`data_view` table](#data_view-table)
+    - [`data_view_column_definition` table](#data_view_column_definition-table)
     - [Additional formatting](#additional-formatting)
     - [A note about Array data](#a-note-about-array-data)
   - [Real use-case example](#real-use-case-example)
@@ -17,6 +17,7 @@ Display of (custom) **Data** tables (e.g. Products, Users, Orgs) (or any table, 
 - what columns to show different types of user
 - "special" columns, which show the result of an [evaluator](Query-Syntax.md) expression, so can show some fields combined, or queries to another table, for example
 - how columns should be formatted in the UI
+- how filters and sorting should work for each table field (explained separately in [Data View Filtering](Data-View-Filters.md))
 
 The data is served to the front-end via the `/data-views` API end-points, and serves data based on the request's JWT header, so we can ensure that no user can receive data that they haven't been configured to be allowed to see.
 
@@ -35,7 +36,8 @@ Returns an array of data table views the user is allowed to see (based on JWT he
     {
         "tableName": "user",
         "title": "Users (Restricted View)",
-        "code": "userRestricted"
+        "code": "userRestricted",
+        "urlSlug":"user-restricted"
     },
     ...etc.
 ]
@@ -43,11 +45,11 @@ Returns an array of data table views the user is allowed to see (based on JWT he
 
 This endpoint is called in order to populate the Database menu in the UI.
 
-### `/data-views/table/<tableName>?<queries>`
+### `/data-views/<dataViewCode>?<queries>`
 
 For querying a specific table. Data is returned in the following structure:
 
-```
+```js
 {
     "tableName": "user",
     "title": "Users (Restricted View)",
@@ -87,6 +89,8 @@ For querying a specific table. Data is returned in the following structure:
         },
         ...etc.
     ],
+    "searchFields": ["firstName", "lastName"],
+    "filterDefinitions": ... // See Data View Filters page
     "totalCount": 13
 }
 ```
@@ -106,7 +110,7 @@ Query parameters are (currently) as follows:
 
 Eventually, there will be additional parameters for searching and filtering -- not yet implemented
 
-### `/data-views/table/<tableName>/item/<id>`
+### `/data-views/<dataViewCode>/<itemId>`
 
 Fetches data about a single item, for display in data "Details" view. Data is returned in the following format:
 
@@ -198,7 +202,7 @@ Note the different types of data returned and the formatting instructions. Also,
 In order to make outcome data available to the front-end, the minimal configuration requirements are a single entry in the `data_view` table with the following fields provided:
 
 - `table_name` -- name of the table we are displaying
-- `code` a unique (per table) identifier
+- `code` the identifier for the particular "view". It's possible to have multiple views with the same code, but only one will be shown to a given user, based on their permissions, and the `priority` value (see below). You can create multiple views with different codes per `table_name`, for example you might have a `usersExt` view and a `usersInt` view for the 'user' table.
 
 And with that, the "table_name" table will show up in the Database menu, and it will show all fields to everyone in both Table and Details view.
 
@@ -218,8 +222,11 @@ Some things to be aware of:
 - `table_view_exclude_columns`: an array of columns to exclude. Basically, it takes all the columns collected from the "include" list, and removes any named here.
 - `detail_view_include_columns` / `detail_view_exclude_columns`: exactly the same as the "table_view" fields, except applies to the fields that show up in the Details view
 - `detail_view_header_column`: name of the field/column whose value should be used as the Header display in Details view. If not specified, the table name will just be used.
+- `default_sort_column`: the column that the table data will be ordered by when no column-sort is selected in the front-end. You should rarely need to set this -- the default is `id`, which usually corresponds to the order in which items were added, so is fine for most purposes. However, if you need to override it with a different column, this allows it.
 - `show_linked_applications`: if `true`, the `/item` endpoint will also return an array of linked applications connected to this particular item. These are taken from the outcome "join" tables, whose records are created on successful application approvals.
-- `priority`: when multiple layouts match the request (i.e. user has permissions for more than one Layout), the returned columns will be a union of the columns specified in both layouts. However,there will still only be one "Title" and "Header column" returned and each layout may have a different one, so the layout with the highest priority will be used. In general you'd want to give the more "restrcited" permission the higher priority, but most of the time you won't need to consider this as the Title and Header would often be the same. Default value: `1`.
+- `priority`: when multiple views match the `code` (i.e. user has permissions for more than one), the view with the highest priority will be returned the to the user. A typical use case for this would be if you have a particular view that is open to all users (i.e `permissionNames` is `null`), but you want users with certain permissions to see a different view for the same request (e.g Staff might be able to see *all* users, whereas external users can only see those in their own organisation). Default value: `1`.
+
+(We also have fields `filter_include_columns`, `filter_exclude_columns`, `table_search_columns` but they are explained in [Data View Filters](Data-View-Filters.md)))
 
 Okay, so if you're just wanting to display fields directly taken from the outcome table in question, and the formatting requirements are all "simple" types (text, number, boolean, Date) the `data_view` table is all you need. However, if you want to return columns with more complex data (such as a list of ingredients, or a query to another table) or require non-default formatting, you'll need to define these in the `data_view_column_definition` table.
 
@@ -254,6 +261,8 @@ The input fields are as follows:
 }
 ```  
 `firstName` and `lastName` are native fields on the "user" table, and are at the root level of the passed-in object here. Note that this object contains *all* fields, not just the ones being returned, so you can extract values from fields not being returned, such as in this case (where you wouldn't want to return `firstName` and `lastName` fields as well as a `fullName` column.)
+
+(Again, columns relating to sorting or filtering (`sort_column`, `filter_parameters`, `filter_expression`, `filter_data_type`) are explained in [Data View Filters](Data-View-Filters.md))
 
 ### Additional formatting
 
@@ -423,3 +432,13 @@ All up, these definitions will be interpreted by the front-end and displayed in 
 And a Details view like this:
 
 ![Details View](images/data-view-detail-view.png)
+
+## Lookup tables
+
+By default, when viewing individual lookup tables in `/admin/lookup-tables` the user sees a basic plain-text table view of the data. This is fine for simple tables with only a few rows ("Dosage forms" for example), but if you have a table with thousands of entries (e.g. ingredients list), this will be quite cumbersome to view, with no pagination or filtering available.
+
+Therefore, we've made it possible to take advantage of the data view configurations to view lookup table data. In order to achieve that, you need to enter a value in the `data_view_code` field of the `data_table` table (where overall info about all lookup and data tables is stored). If `data_view_code` is specified, the data will be displayed with that data view. If not, the default plain table will be used.
+
+You'll probably want to *not* show lookup table views in the "Database" menu though, since they've been imported as lookup tables and would generally be viewed and configured in the `/lookup-tables` area. In order to achieve this, simply add the special "dummy" permission name "**lookupTables**" to the `permission_names` field of the `data_view` table. This will ensure the view is not returned in the list of available views in the Database table, but will be returned when viewing the table in `/lookup-tables` (assuming you have `isAdmin` permission, which is required to access the lookup table routes).
+
+Note that you *can* show lookup table views in the Database menu (and therefore make them available to more people) if you add regular permission names to the `permission_names` array, just as you normally would.
