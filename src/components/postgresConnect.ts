@@ -692,16 +692,18 @@ class PostgresDB {
       WHERE id = $1
       `
     const text2 = `
-      SELECT name as "orgName"
-      FROM organisation
-      WHERE id = $1
+    SELECT distinct("orgName"), "permissionName"
+      FROM permissions_all
+      WHERE ("userId" = $1 OR "userId" IS NULL) 
+      AND "orgId" = $2
       `
     try {
       const result = await this.query({ text, values: [userId] })
       const userData = { ...result.rows[0], orgName: null }
       if (orgId) {
-        const orgResult = await this.query({ text: text2, values: [orgId] })
+        const orgResult = await this.query({ text: text2, values: [userId, orgId] })
         userData.orgName = orgResult.rows[0].orgName
+        userData.permissionNames = orgResult.rows.map(({ permissionName }) => permissionName)
       }
       return userData
     } catch (err) {

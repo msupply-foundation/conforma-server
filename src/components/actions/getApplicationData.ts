@@ -67,10 +67,16 @@ export const getApplicationData = async (input: {
     ({ code }: { code: string }) => code
   )
 
+  const adminPermission = 'admin' // TODO: Should be added to preferences too
+  const managementPrefName =
+    config?.systemManagerPermissionName ?? config.defaultSystemManagerPermissionName
+
   return {
     action_payload: input?.payload,
     ...applicationData,
     ...userData,
+    isAdmin: !!userData?.permissionNames.includes(adminPermission),
+    isManager: !!userData?.permissionNames.includes(managementPrefName),
     responses: responseData,
     reviewData,
     environmentData,
