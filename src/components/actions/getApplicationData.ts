@@ -3,6 +3,7 @@ import DBConnect from '../databaseConnect'
 import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
 import { getAppEntryPointDir } from '../utilityFunctions'
 import config from '../../config'
+import { getUserInfo } from '../permissions/loginHelpers'
 
 // Add more data (such as org/review, etc.) here as required
 export const getApplicationData = async (input: {
@@ -27,9 +28,23 @@ export const getApplicationData = async (input: {
 
   const applicationData = applicationResult ? applicationResult : { applicationId }
 
-  const userData = applicationData?.userId
-    ? await DBConnect.getUserData(applicationData?.userId, applicationData?.orgId)
-    : null
+  const {
+    user: {
+      firstName,
+      lastName,
+      organisation: orgName,
+      username,
+      dateOfBirth,
+      email,
+      permissionNames,
+    },
+  } = await getUserInfo({
+    userId: applicationData.userId,
+    username: applicationData.username,
+    orgId: applicationData.orgId,
+  })
+
+  const userData = { firstName, lastName, orgName, username, dateOfBirth, email, permissionNames }
 
   const responses = await DBConnect.getApplicationResponses(applicationId)
 
@@ -67,10 +82,16 @@ export const getApplicationData = async (input: {
     ({ code }: { code: string }) => code
   )
 
+  const adminPermission = 'admin' // TODO: Should be added to preferences too
+  const managementPrefName =
+    config?.systemManagerPermissionName ?? config.defaultSystemManagerPermissionName
+
   return {
     action_payload: input?.payload,
     ...applicationData,
     ...userData,
+    isAdmin: !!userData?.permissionNames.includes(adminPermission),
+    isManager: !!userData?.permissionNames.includes(managementPrefName),
     responses: responseData,
     reviewData,
     environmentData,
