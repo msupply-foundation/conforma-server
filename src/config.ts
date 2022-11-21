@@ -46,6 +46,7 @@ const config: { [key: string]: any } = {
   filterListMaxLength: 10,
   filterColumnSuffix: '_filter_data', // snake_case,
   isProductionBuild,
+  defaultSystemManagerPermissionName: 'systemManager',
   ...serverPrefs,
 }
 
