@@ -8,6 +8,7 @@
   "elementTypePlugin"
  ],
  "shouldReInitialise": true,
+ "usePgDump": true,
  "insertScriptsLocale": "dev",
  "includeInsertScripts": [
   "none"
