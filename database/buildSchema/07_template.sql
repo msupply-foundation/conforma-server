@@ -16,6 +16,7 @@ CREATE TABLE public.template (
     status public.template_status,
     submission_message jsonb DEFAULT '"Thank you! Your application has been submitted."' ::jsonb,
     icon varchar,
+    serial_pattern varchar,
     template_category_id integer REFERENCES public.template_category (id),
     version_timestamp timestamptz DEFAULT CURRENT_TIMESTAMP,
     version integer DEFAULT 1

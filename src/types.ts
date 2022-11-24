@@ -18,6 +18,7 @@ export interface ActionInTemplate {
   condition: EvaluatorNode
   parameter_queries: { [key: string]: any }
   parameters_evaluated: { [key: string]: any }
+  serial_pattern?: string
 }
 
 export interface ActionSequential extends ActionInTemplate {

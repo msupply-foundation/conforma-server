@@ -60,6 +60,8 @@ class DBConnect {
 
   public getActionsByTemplateId = PostgresDB.getActionsByTemplateId
 
+  public getTemplateSerialPattern = PostgresDB.getTemplateSerialPattern
+
   public getSingleTemplateAction = PostgresDB.getSingleTemplateAction
 
   public updateActionPlugin = PostgresDB.updateActionPlugin

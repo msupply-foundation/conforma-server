@@ -529,11 +529,24 @@ class PostgresDB {
     return result.rows[0].template_id
   }
 
+  public getTemplateSerialPattern = async (templateId: number) => {
+    const text = `
+      SELECT serial_pattern FROM template
+      WHERE id = $1`
+
+    try {
+      const result = await this.query({ text, values: [templateId] })
+      return result.rows[0].serial_pattern
+    } catch (err) {
+      throw err
+    }
+  }
+
   public getActionsByTemplateId = async (
     templateId: number,
     trigger: Trigger
   ): Promise<ActionInTemplate[]> => {
-    const text = `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, template_action.event_code AS event_code, sequence, condition, parameter_queries 
+    const text = `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, template_action.event_code AS event_code, sequence, condition, parameter_queries
     FROM template 
     JOIN template_action ON template.id = template_action.template_id 
     JOIN action_plugin ON template_action.action_code = action_plugin.code 
