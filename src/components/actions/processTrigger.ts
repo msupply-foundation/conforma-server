@@ -2,6 +2,7 @@ import { TriggerPayload, ActionResult } from '../../types'
 import DBConnect from '../databaseConnect'
 import { actionLibrary } from '../pluginsConnect'
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
+import coreActions from './coreActions'
 import { executeAction } from './executeAction'
 import { ActionQueueStatus, TriggerQueueStatus } from '../../generated/graphql'
 import { swapOutAliasedAction } from './helpers'
@@ -30,7 +31,10 @@ export async function processTrigger(payload: TriggerPayload): Promise<ActionRes
   const actionsSequential = resolvedActions.filter(({ sequence }) => !!sequence)
   const actionsAsync = resolvedActions.filter(({ sequence }) => !sequence)
 
-  for (const action of [...actionsAsync, ...actionsSequential]) {
+  // Get core actions for the current trigger
+  const currentCoreActions = coreActions?.[trigger] ?? []
+
+  for (const action of [...actionsAsync, ...currentCoreActions, ...actionsSequential]) {
     // Add all actions to Action Queue
     await DBConnect.addActionQueue({
       trigger_event: trigger_id,
