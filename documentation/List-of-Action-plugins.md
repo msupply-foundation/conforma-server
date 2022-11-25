@@ -515,10 +515,10 @@ Whenever an application or review is submitted, this Action "cleans up", by dele
 
 - _Action Code:_ **`trimResponses`**
 
-| Input parameters<br />(\*required) <br/> | Output properties |
-| ---------------------------------------- | ----------------- |
-| `applicationId` _OR_                     | `deletedIds`      |
-| `reviewId`                               | `updatedIds`      |
+| Input parameters<br />(\*required) <br/> | Output properties  |
+| ---------------------------------------- | ------------------ |
+| `applicationId` _OR_                     | `deletedResponses` |
+| `reviewId`                               | `updatedResponses` |
 
 ---
 

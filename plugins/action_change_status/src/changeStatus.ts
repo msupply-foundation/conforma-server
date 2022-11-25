@@ -67,8 +67,9 @@ const changeApplicationStatus = async (
       returnObject.error_log = 'Application Status not changed'
       returnObject.output = {
         status: newStatus,
-        statusId: current.status_history_id,
-        applicationStatusHistoryTimestamp: current.status_history_time_created,
+        statusId: current.statusHistoryId,
+        applicationStatusHistoryTimestamp: current.statusHistoryTimeCreated,
+        applicationId,
       }
       return returnObject
     }
@@ -90,6 +91,7 @@ const changeApplicationStatus = async (
         status: newStatus,
         statusId: result.id,
         applicationStatusHistoryTimestamp: result.time_created,
+        applicationId,
       }
       console.log(`New status_history created: ${newStatus}`)
     } else {
@@ -99,7 +101,7 @@ const changeApplicationStatus = async (
     }
 
     // Create output object and return
-    returnObject.output = { ...returnObject.output, applicationId }
+    returnObject.output = { ...returnObject.output }
     return returnObject
   } catch (err) {
     returnObject.status = ActionQueueStatus.Fail
@@ -131,8 +133,9 @@ const changeReviewStatus = async (
       returnObject.error_log = 'Review Status not changed'
       returnObject.output = {
         status: newStatus,
-        statusId: currentStatus.status_history_id,
+        statusId: currentStatus.id,
         reviewStatusHistoryTimestamp: currentStatus.time_created,
+        reviewId,
       }
       return returnObject
     }
@@ -145,6 +148,7 @@ const changeReviewStatus = async (
         status: newStatus,
         statusId: result.id,
         reviewStatusHistoryTimestamp: result.time_created,
+        reviewId,
       }
       console.log(`New review_status_history created: ${newStatus}`)
     } else {
@@ -154,7 +158,7 @@ const changeReviewStatus = async (
     }
 
     // Create output object and return
-    returnObject.output = { ...returnObject.output, reviewId }
+    returnObject.output = { ...returnObject.output }
     return returnObject
   } catch (err) {
     returnObject.status = ActionQueueStatus.Fail
