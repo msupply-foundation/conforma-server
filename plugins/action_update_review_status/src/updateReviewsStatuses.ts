@@ -1,9 +1,4 @@
-import {
-  ActionQueueStatus,
-  Decision,
-  ReviewResponseDecision,
-  ReviewStatus,
-} from '../../../src/generated/graphql'
+import { ActionQueueStatus, ReviewStatus } from '../../../src/generated/graphql'
 import { ActionPluginOutput, ActionPluginType } from '../../types'
 import databaseMethods from './databaseMethods'
 import { action as changeStatus } from '../../action_change_status/src'
@@ -15,14 +10,9 @@ interface Review {
   applicationId: number
   reviewerId: number
   levelNumber: number
+  assignedSections: string[]
   reviewStatus: ReviewStatus
 }
-
-interface ReviewAssignment {
-  reviewAssignmentId: number
-  isLocked: boolean
-}
-
 interface ChangedResponse {
   applicationResponseId: number
   templateElementId: number
@@ -43,19 +33,18 @@ const updateReviewsStatuses: ActionPluginType = async ({
   // Changed responses normally come from the output of the "trimResponses"
   // action
   const changedResponses: ChangedResponse[] = parameters.changedResponses || []
+
   const triggeredBy: TriggeredBy = parameters.triggeredBy || 'APPLICATION'
 
   console.log(
-    'Updating statuses of reviews associated with ' + triggeredBy === 'REVIEW'
-      ? 'review Id: ' + reviewId
-      : 'application Id: ' + applicationId
+    `Updating statuses of reviews associated with ${
+      triggeredBy === 'REVIEW' ? 'review Id: ' + reviewId : 'application Id: ' + applicationId
+    }`
   )
-
-  // WHY IS THERE TOO MANY CHANGED RESPONSES??
 
   try {
     if (triggeredBy === 'APPLICATION') {
-      const reviews = await db.getAssociatedReviews(applicationId, stageNumber, 1)
+      const reviews: Review[] = await db.getAssociatedReviews(applicationId, stageNumber, 1)
 
       // Get section codes of the changed responses
       const changedSections = await db.getChangedSections(

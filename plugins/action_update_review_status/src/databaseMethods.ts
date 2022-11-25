@@ -1,21 +1,7 @@
 import { Review, ReviewStatus } from '../../../src/generated/graphql'
 
 const databaseMethods = (DBConnect: any) => ({
-  getAssociatedReviews: async (
-    applicationId: number,
-    stageId: number,
-    level: number
-  ): Promise<
-    {
-      reviewId: number
-      reviewAssignmentId: number
-      applicationId: number
-      reviewerId: number
-      levelNumber: number
-      assignedSections: string[]
-      reviewStatus: ReviewStatus
-    }[]
-  > => {
+  getAssociatedReviews: async (applicationId: number, stageId: number, level: number) => {
     const text = `
     SELECT
       review.id AS "reviewId",
