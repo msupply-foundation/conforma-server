@@ -663,7 +663,7 @@ const migrateData = async () => {
       DROP TYPE public.review_status_old; 
       `)
 
-    console.log('Add serial_pattern field to template')
+    console.log(' - Add serial_pattern field to template')
     await DB.changeSchema(`
       ALTER TABLE public.template
         ADD COLUMN IF NOT EXISTS serial_pattern varchar;

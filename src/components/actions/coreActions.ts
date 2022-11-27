@@ -52,6 +52,18 @@ const coreActions: CoreActions = {
           children: ['applicationData.templateCode'],
         },
         updateRecord: true,
+        // Provides functionality to support `<?year>` in pattern string.
+        // Add more functionality here as required
+        customFields: { year: 'year' },
+        additionalData: {
+          operator: 'buildObject',
+          properties: [
+            {
+              key: 'year',
+              value: { operator: 'objectFunctions', children: ['functions.getYear'] },
+            },
+          ],
+        },
       },
     },
     // Set initial stage
