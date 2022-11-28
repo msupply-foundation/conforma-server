@@ -149,7 +149,7 @@ const coreActions: CoreActions = {
 
     // Change outcome to APPROVED if there are no other "changeOutcome" actions
     // associated with this template.
-    // Used for non-reviewable templates or when there isn't another specific
+    // Used for non-reviewable templates when there isn't another specific
     // "changeOutcome" included
     {
       code: 'changeOutcome',
@@ -159,22 +159,46 @@ const coreActions: CoreActions = {
       event_code: null,
       sequence: -1,
       condition: {
-        operator: '=',
+        operator: 'AND',
         children: [
           {
-            operator: 'graphQL',
+            operator: '=',
             children: [
-              'query getChangeOutcomeActionCount($templateId: Int!) {\n  templateActions(\n    condition: { templateId: $templateId, actionCode: "changeOutcome" }\n  ) {\n    totalCount\n  }\n}\n',
-              'graphQLEndpoint',
-              ['templateId'],
               {
-                operator: 'objectProperties',
-                children: ['applicationData.templateId', null],
+                operator: 'graphQL',
+                children: [
+                  'query getChangeOutcomeActionCount($templateId: Int!) {\n  templateActions(\n    condition: { templateId: $templateId, actionCode: "changeOutcome" }\n  ) {\n    totalCount\n  }\n}\n',
+                  'graphQLEndpoint',
+                  ['templateId'],
+                  {
+                    operator: 'objectProperties',
+                    children: ['applicationData.templateId', null],
+                  },
+                  'templateActions.totalCount',
+                ],
               },
-              'templateActions.totalCount',
+              0,
             ],
           },
-          0,
+          {
+            operator: '=',
+            children: [
+              {
+                operator: 'graphQL',
+                children: [
+                  'query getTotalReviewCount($templateId: Int!) {\n  templateStageReviewLevels(filter: {stage: {templateId: {equalTo: $templateId}}}) {\n    totalCount\n  }\n}',
+                  'graphQLEndpoint',
+                  ['templateId'],
+                  {
+                    operator: 'objectProperties',
+                    children: ['applicationData.templateId', null],
+                  },
+                  'templateStageReviewLevels.totalCount',
+                ],
+              },
+              0,
+            ],
+          },
         ],
       },
       parameter_queries: {
