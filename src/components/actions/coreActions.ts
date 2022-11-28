@@ -119,7 +119,7 @@ const coreActions: CoreActions = {
       name: 'Change Status',
       trigger: 'ON_APPLICATION_SUBMIT',
       event_code: null,
-      sequence: -5,
+      sequence: -6,
       condition: true,
       parameter_queries: { newStatus: 'SUBMITTED' },
     },
@@ -130,7 +130,7 @@ const coreActions: CoreActions = {
       name: 'Trim duplicate responses',
       trigger: 'ON_APPLICATION_SUBMIT',
       event_code: null,
-      sequence: -4,
+      sequence: -5,
       condition: true,
       parameter_queries: {},
     },
@@ -141,7 +141,7 @@ const coreActions: CoreActions = {
       name: 'Generate Review Assignment Records',
       trigger: 'ON_APPLICATION_SUBMIT',
       event_code: null,
-      sequence: -3,
+      sequence: -4,
       condition: true,
       parameter_queries: {},
     },
@@ -153,7 +153,7 @@ const coreActions: CoreActions = {
       name: 'Clean up application files',
       trigger: 'ON_APPLICATION_SUBMIT',
       event_code: null,
-      sequence: -2,
+      sequence: -3,
       condition: true,
       parameter_queries: {},
     },
@@ -165,7 +165,7 @@ const coreActions: CoreActions = {
     //   name: 'Update Review Statuses',
     //   trigger: 'ON_APPLICATION_SUBMIT',
     //   event_code: null,
-    //   sequence: -1,
+    //   sequence: -2,
     //   condition: true,
     //   parameter_queries: {
     //     changedResponses: {
@@ -174,6 +174,39 @@ const coreActions: CoreActions = {
     //     },
     //   },
     // },
+
+    // Change outcome to APPROVED if there are no other "changeOutcome" actions
+    // associated with this template
+    {
+      code: 'changeOutcome',
+      path: '../plugins/action_change_outcome/src/index.ts',
+      name: 'Change Outcome',
+      trigger: 'ON_APPLICATION_SUBMIT',
+      event_code: null,
+      sequence: -1,
+      condition: {
+        operator: '=',
+        children: [
+          {
+            operator: 'graphQL',
+            children: [
+              'query getChangeOutcomeActionCount($templateId: Int!) {\n  templateActions(\n    condition: { templateId: $templateId, actionCode: "changeOutcome" }\n  ) {\n    totalCount\n  }\n}\n',
+              'graphQLEndpoint',
+              ['templateId'],
+              {
+                operator: 'objectProperties',
+                children: ['applicationData.templateId', null],
+              },
+              'templateActions.totalCount',
+            ],
+          },
+          0,
+        ],
+      },
+      parameter_queries: {
+        newOutcome: 'APPROVED',
+      },
+    },
   ],
   [Trigger.OnReviewAssign]: [
     // If any reviews already exist for the current assignment, set them to
