@@ -76,7 +76,7 @@ const coreActions: CoreActions = {
       condition: true,
       parameter_queries: {},
     },
-    // Generate name for application based on template code and serial
+    // Generate initial name for application based on template code and serial
     {
       code: 'generateTextString',
       path: '../plugins/action_generate_text_string/src/index.ts',
@@ -99,20 +99,22 @@ const coreActions: CoreActions = {
     },
   ],
   [Trigger.OnApplicationRestart]: [
-    // Set status = DRAFT
+    // Change application status from CHANGES REQUIRED to DRAFT when the
+    // applicant restarts an application with to-do updates (as requested in
+    // review)
     {
       code: 'changeStatus',
       path: '../plugins/action_change_status/src/index.ts',
       name: 'Change Status',
-      trigger: 'ON_APPLICATION_SUBMIT',
+      trigger: 'ON_APPLICATION_RESTART',
       event_code: null,
       sequence: -1,
       condition: true,
-      parameter_queries: { newStatus: 'SUBMITTED' },
+      parameter_queries: { newStatus: 'DRAFT' },
     },
   ],
   [Trigger.OnApplicationSubmit]: [
-    // Set status = SUBMITTED
+    // Set status = SUBMITTED when applicant submits (or re-submits)
     {
       code: 'changeStatus',
       path: '../plugins/action_change_status/src/index.ts',
@@ -123,7 +125,8 @@ const coreActions: CoreActions = {
       condition: true,
       parameter_queries: { newStatus: 'SUBMITTED' },
     },
-    // Trim application responses that haven't changed since previous submission
+    // Remove duplicate/unchanged application responses since previous
+    // application submission
     {
       code: 'trimResponses',
       path: '../plugins/action_trim_responses/src/index.ts',
@@ -134,7 +137,8 @@ const coreActions: CoreActions = {
       condition: true,
       parameter_queries: {},
     },
-    // Create review assignment records for the next review level
+    // Generate level 1 review assignments in current stage after application is
+    // submitted by the applicant
     {
       code: 'generateReviewAssignments',
       path: '../plugins/action_generate_review_assignment_records/src/index.ts',
@@ -157,26 +161,24 @@ const coreActions: CoreActions = {
       condition: true,
       parameter_queries: {},
     },
-    // Update review statuses
+    // Update reviews status with review assignment linked to changed responses
+    // by applicant when application is resubmitted.
     // TO-DO: Un-comment once action is re-implemented
     // {
-    //   code: 'updateReviewStatuses',
-    //   path: '../plugins/action_update_review_statuses/src/index.ts',
-    //   name: 'Update Review Statuses',
-    //   trigger: 'ON_APPLICATION_SUBMIT',
-    //   event_code: null,
-    //   sequence: -2,
-    //   condition: true,
-    //   parameter_queries: {
-    //     changedResponses: {
-    //       operator: 'objectProperties',
-    //       children: ['outputCumulative.updatedResponses'],
+    //   code: 'updateReviewStatuses', path:
+    //   '../plugins/action_update_review_statuses/src/index.ts', name: 'Update
+    //   Review Statuses', trigger: 'ON_APPLICATION_SUBMIT', event_code: null,
+    //   sequence: -2, condition: true, parameter_queries: { changedResponses: {
+    //   operator: 'objectProperties', children:
+    //   ['outputCumulative.updatedResponses'],
     //     },
     //   },
     // },
 
     // Change outcome to APPROVED if there are no other "changeOutcome" actions
-    // associated with this template
+    // associated with this template.
+    // Used for non-reviewable templates or when there isn't another specific
+    // "changeOutcome" included
     {
       code: 'changeOutcome',
       path: '../plugins/action_change_outcome/src/index.ts',
@@ -236,7 +238,7 @@ const coreActions: CoreActions = {
     },
   ],
   [Trigger.OnReviewCreate]: [
-    // Set to DRAFT
+    // Set to DRAFT when reviewer starts their review
     {
       code: 'changeStatus',
       path: '../plugins/action_change_status/src/index.ts',
@@ -249,12 +251,13 @@ const coreActions: CoreActions = {
     },
   ],
   [Trigger.OnReviewRestart]: [
-    // Set to DRAFT
+    // Set to DRAFT when reviewer re-starts their review after an applicant
+    // re-submission or change request from higher-level reviewer
     {
       code: 'changeStatus',
       path: '../plugins/action_change_status/src/index.ts',
       name: 'Change Status',
-      trigger: 'ON_REVIEW_CREATE',
+      trigger: 'ON_REVIEW_RESTART',
       event_code: '',
       sequence: -1,
       condition: true,
@@ -262,7 +265,7 @@ const coreActions: CoreActions = {
     },
   ],
   [Trigger.OnReviewSubmit]: [
-    // Set review status => SUBMITTED
+    // Set review status to SUBMITTED when reviews submits review
     {
       code: 'changeStatus',
       path: '../plugins/action_change_status/src/index.ts',
@@ -274,7 +277,8 @@ const coreActions: CoreActions = {
       parameter_queries: { newStatus: 'SUBMITTED' },
     },
 
-    // Remove any review responses that have not changed since previous review
+    // Remove duplicated and unchanged responses or ones without a decision made
+    // when review is re-submitted by the reviewer.
     {
       code: 'trimResponses',
       path: '../plugins/action_trim_responses/src/index.ts',
@@ -288,20 +292,16 @@ const coreActions: CoreActions = {
         children: ['outputCumulative.reviewStatusHistoryTimestamp'],
       },
     },
-    // Update review statuses
+    // Update other review status to PENDING or CHANGES REQUESTED after one
+    // review is submitted to another reviewer in the chain of review-levels
     // TO-DO: Un-comment once action is re-implemented
     // {
-    //   code: 'updateReviewStatuses',
-    //   path: '../plugins/action_update_review_statuses/src/index.ts',
-    //   name: 'Update Review Statuses',
-    //   trigger: 'ON_REVIEW_SUBMIT',
-    //   event_code: null,
-    //   sequence: -5,
-    //   condition: true,
-    //   parameter_queries: {
-    //     changedResponses: {
-    //       operator: 'objectProperties',
-    //       children: ['outputCumulative.updatedResponses'],
+    //   code: 'updateReviewStatuses', path:
+    //   '../plugins/action_update_review_statuses/src/index.ts', name: 'Update
+    //   Review Statuses', trigger: 'ON_REVIEW_SUBMIT', event_code: null,
+    //   sequence: -5, condition: true, parameter_queries: { changedResponses: {
+    //   operator: 'objectProperties', children:
+    //   ['outputCumulative.updatedResponses'],
     //     },
     //   },
     // },
@@ -409,10 +409,14 @@ const coreActions: CoreActions = {
       event_code: null,
       sequence: -1,
       condition: {
-        operator: 'OR',
+        operator: 'AND',
         children: [
           {
-            operator: 'AND',
+            operator: 'objectProperties',
+            children: ['applicationData.reviewData.latestDecision.decision'],
+          },
+          {
+            operator: 'OR',
             children: [
               {
                 operator: '=',
@@ -425,15 +429,6 @@ const coreActions: CoreActions = {
                 ],
               },
               {
-                operator: 'objectProperties',
-                children: ['applicationData.reviewData.isLastStage'],
-              },
-            ],
-          },
-          {
-            operator: 'AND',
-            children: [
-              {
                 operator: '=',
                 children: [
                   {
@@ -442,10 +437,6 @@ const coreActions: CoreActions = {
                   },
                   'NON_CONFORM',
                 ],
-              },
-              {
-                operator: 'objectProperties',
-                children: ['applicationData.reviewData.isLastLevel'],
               },
             ],
           },
