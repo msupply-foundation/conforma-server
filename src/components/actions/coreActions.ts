@@ -23,7 +23,6 @@ export const getCoreActions = async (trigger: Trigger, templateId: number) => {
   switch (trigger) {
     case Trigger.OnApplicationCreate:
       const serialPattern = await DBConnect.getTemplateSerialPattern(templateId)
-      console.log('serialPattern', serialPattern)
       if (serialPattern) currentCoreActions[0].parameter_queries.pattern = serialPattern
     // Other cases as required...
   }
