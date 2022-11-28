@@ -59,13 +59,13 @@ const updateReviewsStatuses: ActionPluginType = async ({
           assignedSections.some((sectionCode) => changedSections.includes(sectionCode))
       )
 
-      // Set remaining reviews to "DRAFT" (using the "changeStatus" action)
+      // Set remaining reviews to "PENDING" (using the "changeStatus" action)
       const results: Promise<ActionPluginOutput>[] = []
       reviewsToUpdate.forEach((review) =>
         results.push(
           changeStatus({
             parameters: {
-              newStatus: ReviewStatus.Draft,
+              newStatus: ReviewStatus.Pending,
               reviewId: review.reviewId,
               isReview: true,
             },
@@ -86,7 +86,8 @@ const updateReviewsStatuses: ActionPluginType = async ({
       }
     }
     if (triggeredBy === 'REVIEW') {
-      // To-do
+      // If is_last_level, return
+
       return {
         status: ActionQueueStatus.Success,
         error_log: '',
