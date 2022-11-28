@@ -3,7 +3,6 @@ import {
   ActionQueueStatus,
   ApplicationOutcome,
   ApplicationStatus,
-  Review,
   Trigger,
   TriggerQueueStatus,
 } from './generated/graphql'
@@ -76,8 +75,26 @@ export interface ActionResult {
   errorLog: string | null
 }
 
-export interface ActionApplicationData {
-  action_payload: ActionPayload
+export interface ReviewData {
+  reviewId?: number
+  levelNumber?: number
+  isLastLevel?: boolean
+  status?: string
+  reviewer?: {
+    id: number
+    username: string
+    firstName: string
+    lastName: string
+    email: string
+  }
+  latestDecision?: {
+    decision: string
+    comment: string | null
+  }
+}
+
+// Comes from database query "getApplicationData"
+export interface BaseApplicationData {
   applicationId: number
   applicationSerial: string
   applicationName: string
@@ -96,33 +113,23 @@ export interface ActionApplicationData {
   userId: number
   orgId: number | null
   outcome: ApplicationOutcome
-  firstName: string
-  lastName: string
+}
+
+export interface ActionApplicationData extends BaseApplicationData {
+  action_payload: ActionPayload | undefined
+  firstName: string | null
+  lastName: string | null
   username: string
   dateOfBirth: Date | null
   email: string
   orgName: string | null
   sectionCodes: string[]
+  isAdmin: boolean
+  isManager: boolean
   responses: {
     [key: string]: any
   }
-  reviewData: {
-    reviewId?: number
-    levelNumber?: number
-    isLastLevel?: boolean
-    status?: string
-    reviewer?: {
-      id: number
-      username: string
-      firstName: string
-      lastName: string
-      email: string
-    }
-    latestDecision?: {
-      decision: string
-      comment: string | null
-    }
-  }
+  reviewData: ReviewData
   environmentData: {
     appRootFolder: string
     filesFolder: string
@@ -214,10 +221,10 @@ export interface TriggerQueueUpdatePayload {
 export interface User {
   userId: number
   firstName: string
-  lastName?: string | null
+  lastName: string | null
   username: string
   email: string
-  dateOfBirth?: Date | null
+  dateOfBirth: Date | null
   organisation?: Organisation
   passwordHash?: string
 }
