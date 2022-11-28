@@ -112,7 +112,7 @@ const updateReviewsStatuses: ActionPluginType = async ({
         ({ levelNumber }) => levelNumber === thisReviewLevel + 1
       )
 
-      // Set review status to "PENDING" for all higher level reviews
+      // Set review status to "PENDING" for next-level reviews
       const results: Promise<ActionPluginOutput>[] = []
       nextLevelReview.forEach((review) =>
         results.push(
