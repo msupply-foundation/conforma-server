@@ -55,10 +55,11 @@ const updateReviewsStatuses: ActionPluginType = async ({
   )
 
   try {
-    // All reviews for this application/stage. We do additional filtering (e.g
-    // for review level) as required further on.
+    // Get all reviews for this application/stage. We do additional filtering
+    // (e.g for review level) as required further on.
     const reviews = await db.getAssociatedReviews(applicationId, stageNumber)
 
+    // APPLICATION SUBMISSIONS:
     if (triggeredBy === 'APPLICATION') {
       // Get section codes of the changed responses
       const changedSections = await db.getChangedSections(
@@ -100,18 +101,20 @@ const updateReviewsStatuses: ActionPluginType = async ({
         },
       }
     } else {
-      // triggeredBy === 'REVIEW'
-      if (!reviewId) throw new Error('Missing review Id')
+      // REVIEW SUBMISSIONS:
+      if (!reviewId) throw new Error('Missing reviewId')
 
       const thisReviewLevel = reviews.find((review) => review.reviewId === reviewId)?.levelNumber
 
       if (!thisReviewLevel) throw new Error('Invalid reviewId')
 
-      const higherReviews = reviews.filter(({ levelNumber }) => levelNumber > thisReviewLevel)
+      const nextLevelReview = reviews.filter(
+        ({ levelNumber }) => levelNumber === thisReviewLevel + 1
+      )
 
       // Set review status to "PENDING" for all higher level reviews
       const results: Promise<ActionPluginOutput>[] = []
-      higherReviews.forEach((review) =>
+      nextLevelReview.forEach((review) =>
         results.push(
           changeStatus({
             parameters: {
@@ -126,7 +129,7 @@ const updateReviewsStatuses: ActionPluginType = async ({
       )
 
       if (thisReviewLevel > 1) {
-        // Set lower-level review to "CHANGES REQUIRED" if the current review
+        // Set lower-level review to "CHANGES REQUESTED" if the current review
         // has disagreed with any response decisions:
 
         const disagreedSections = await db.getChangedSections(
@@ -148,7 +151,7 @@ const updateReviewsStatuses: ActionPluginType = async ({
           results.push(
             changeStatus({
               parameters: {
-                newStatus: ReviewStatus.Pending,
+                newStatus: ReviewStatus.ChangesRequested,
                 reviewId: review.reviewId,
                 isReview: true,
               },
