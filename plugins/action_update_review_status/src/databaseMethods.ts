@@ -1,7 +1,7 @@
-import { Review, ReviewStatus } from '../../../src/generated/graphql'
+import { Review } from './updateReviewsStatuses'
 
 const databaseMethods = (DBConnect: any) => ({
-  getAssociatedReviews: async (applicationId: number, stageId: number, level: number) => {
+  getAssociatedReviews: async (applicationId: number, stageId: number): Promise<Review[]> => {
     const text = `
     SELECT
       review.id AS "reviewId",
@@ -19,10 +19,9 @@ const databaseMethods = (DBConnect: any) => ({
       WHERE 
         review.application_id = $1
         AND review.stage_number = $2
-        AND review.level_number = $3
     `
     try {
-      const result = await DBConnect.query({ text, values: [applicationId, stageId, level] })
+      const result = await DBConnect.query({ text, values: [applicationId, stageId] })
       return result.rows
     } catch (err) {
       console.log(err.message)

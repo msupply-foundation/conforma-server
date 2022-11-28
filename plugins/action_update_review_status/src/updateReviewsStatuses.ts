@@ -1,10 +1,14 @@
-import { ActionQueueStatus, ReviewStatus } from '../../../src/generated/graphql'
+import {
+  ActionQueueStatus,
+  ReviewResponseDecision,
+  ReviewStatus,
+} from '../../../src/generated/graphql'
 import { ActionPluginOutput, ActionPluginType } from '../../types'
 import databaseMethods from './databaseMethods'
 import { action as changeStatus } from '../../action_change_status/src'
 
 type TriggeredBy = 'REVIEW' | 'APPLICATION'
-interface Review {
+export interface Review {
   reviewId: number
   reviewAssignmentId: number
   applicationId: number
@@ -13,10 +17,18 @@ interface Review {
   assignedSections: string[]
   reviewStatus: ReviewStatus
 }
-interface ChangedResponse {
+interface ChangedApplicationResponse {
   applicationResponseId: number
   templateElementId: number
 }
+
+interface ChangedReviewResponse {
+  reviewResponseId: number
+  reviewResponseDecision: ReviewResponseDecision
+  templateElementId: number
+}
+
+type ChangedResponse = ChangedApplicationResponse | ChangedReviewResponse
 
 const updateReviewsStatuses: ActionPluginType = async ({
   parameters,
@@ -43,18 +55,21 @@ const updateReviewsStatuses: ActionPluginType = async ({
   )
 
   try {
-    if (triggeredBy === 'APPLICATION') {
-      const reviews: Review[] = await db.getAssociatedReviews(applicationId, stageNumber, 1)
+    // All reviews for this application/stage. We do additional filtering (e.g
+    // for review level) as required further on.
+    const reviews = await db.getAssociatedReviews(applicationId, stageNumber)
 
+    if (triggeredBy === 'APPLICATION') {
       // Get section codes of the changed responses
       const changedSections = await db.getChangedSections(
         changedResponses.map(({ templateElementId }) => templateElementId)
       )
 
-      // Filter out reviews that don't intersect with changed section codes
+      // Filter out reviews that are not level 1 and don't intersect with
+      // changed section codes
       const reviewsToUpdate = reviews.filter(
-        ({ reviewStatus, assignedSections }) =>
-          // Is this correct? (SUBMITTED?)
+        ({ reviewStatus, levelNumber, assignedSections }) =>
+          levelNumber === 1 &&
           reviewStatus === ReviewStatus.Submitted &&
           assignedSections.some((sectionCode) => changedSections.includes(sectionCode))
       )
@@ -84,24 +99,75 @@ const updateReviewsStatuses: ActionPluginType = async ({
           updatedReviews: reviewStatuses.map(({ output }) => output),
         },
       }
-    }
-    if (triggeredBy === 'REVIEW') {
-      // If is_last_level, return
+    } else {
+      // triggeredBy === 'REVIEW'
+      if (!reviewId) throw new Error('Missing review Id')
+
+      const thisReviewLevel = reviews.find((review) => review.reviewId === reviewId)?.levelNumber
+
+      if (!thisReviewLevel) throw new Error('Invalid reviewId')
+
+      const higherReviews = reviews.filter(({ levelNumber }) => levelNumber > thisReviewLevel)
+
+      // Set review status to "PENDING" for all higher level reviews
+      const results: Promise<ActionPluginOutput>[] = []
+      higherReviews.forEach((review) =>
+        results.push(
+          changeStatus({
+            parameters: {
+              newStatus: ReviewStatus.Pending,
+              reviewId: review.reviewId,
+              isReview: true,
+            },
+            applicationData,
+            DBConnect,
+          })
+        )
+      )
+
+      if (thisReviewLevel > 1) {
+        // Set lower-level review to "CHANGES REQUIRED" if the current review
+        // has disagreed with any response decisions:
+
+        const disagreedSections = await db.getChangedSections(
+          (changedResponses as ChangedReviewResponse[])
+            .filter(
+              ({ reviewResponseDecision }) =>
+                reviewResponseDecision === ReviewResponseDecision.Disagree
+            )
+            .map(({ templateElementId }) => templateElementId)
+        )
+
+        const lowerReviewsToUpdate = reviews.filter(
+          ({ levelNumber, assignedSections }) =>
+            levelNumber < thisReviewLevel &&
+            assignedSections.some((section) => disagreedSections.includes(section))
+        )
+
+        lowerReviewsToUpdate.forEach((review) =>
+          results.push(
+            changeStatus({
+              parameters: {
+                newStatus: ReviewStatus.Pending,
+                reviewId: review.reviewId,
+                isReview: true,
+              },
+              applicationData,
+              DBConnect,
+            })
+          )
+        )
+      }
+
+      const reviewStatuses = await Promise.all(results)
 
       return {
         status: ActionQueueStatus.Success,
         error_log: '',
         output: {
-          updatedReviews: [],
+          updatedReviews: reviewStatuses.map(({ output }) => output),
         },
       }
-    }
-    return {
-      status: ActionQueueStatus.Success,
-      error_log: '',
-      output: {
-        updatedReviews: [],
-      },
     }
   } catch (err) {
     console.log(err.message)
