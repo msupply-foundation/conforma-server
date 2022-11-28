@@ -76,11 +76,11 @@ const coreActions: CoreActions = {
       code: 'changeStatus',
       path: '../plugins/action_change_status/src/index.ts',
       name: 'Change Status',
-      trigger: 'ON_APPLICATION_SUBMIT',
+      trigger: 'ON_APPLICATION_RESTART',
       event_code: null,
       sequence: -1,
       condition: true,
-      parameter_queries: { newStatus: 'SUBMITTED' },
+      parameter_queries: { newStatus: 'DRAFT' },
     },
   ],
   [Trigger.OnApplicationSubmit]: [
@@ -148,7 +148,9 @@ const coreActions: CoreActions = {
     // },
 
     // Change outcome to APPROVED if there are no other "changeOutcome" actions
-    // associated with this template
+    // associated with this template.
+    // Used for non-reviewable templates or when there isn't another specific
+    // "changeOutcome" included
     {
       code: 'changeOutcome',
       path: '../plugins/action_change_outcome/src/index.ts',
@@ -226,7 +228,7 @@ const coreActions: CoreActions = {
       code: 'changeStatus',
       path: '../plugins/action_change_status/src/index.ts',
       name: 'Change Status',
-      trigger: 'ON_REVIEW_CREATE',
+      trigger: 'ON_REVIEW_RESTART',
       event_code: '',
       sequence: -1,
       condition: true,
@@ -381,10 +383,14 @@ const coreActions: CoreActions = {
       event_code: null,
       sequence: -1,
       condition: {
-        operator: 'OR',
+        operator: 'AND',
         children: [
           {
-            operator: 'AND',
+            operator: 'objectProperties',
+            children: ['applicationData.reviewData.latestDecision.decision'],
+          },
+          {
+            operator: 'OR',
             children: [
               {
                 operator: '=',
@@ -397,15 +403,6 @@ const coreActions: CoreActions = {
                 ],
               },
               {
-                operator: 'objectProperties',
-                children: ['applicationData.reviewData.isLastStage'],
-              },
-            ],
-          },
-          {
-            operator: 'AND',
-            children: [
-              {
                 operator: '=',
                 children: [
                   {
@@ -414,10 +411,6 @@ const coreActions: CoreActions = {
                   },
                   'NON_CONFORM',
                 ],
-              },
-              {
-                operator: 'objectProperties',
-                children: ['applicationData.reviewData.isLastLevel'],
               },
             ],
           },
