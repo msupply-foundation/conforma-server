@@ -70,6 +70,19 @@ const coreActions: CoreActions = {
       },
     },
   ],
+  [Trigger.OnApplicationRestart]: [
+    // Set status = DRAFT
+    {
+      code: 'changeStatus',
+      path: '../plugins/action_change_status/src/index.ts',
+      name: 'Change Status',
+      trigger: 'ON_APPLICATION_SUBMIT',
+      event_code: null,
+      sequence: -1,
+      condition: true,
+      parameter_queries: { newStatus: 'SUBMITTED' },
+    },
+  ],
   [Trigger.OnApplicationSubmit]: [
     // Set status = SUBMITTED
     {
@@ -78,7 +91,7 @@ const coreActions: CoreActions = {
       name: 'Change Status',
       trigger: 'ON_APPLICATION_SUBMIT',
       event_code: null,
-      sequence: -4,
+      sequence: -5,
       condition: true,
       parameter_queries: { newStatus: 'SUBMITTED' },
     },
@@ -89,7 +102,7 @@ const coreActions: CoreActions = {
       name: 'Trim duplicate responses',
       trigger: 'ON_APPLICATION_SUBMIT',
       event_code: null,
-      sequence: -3,
+      sequence: -4,
       condition: true,
       parameter_queries: {},
     },
@@ -100,7 +113,7 @@ const coreActions: CoreActions = {
       name: 'Generate Review Assignment Records',
       trigger: 'ON_APPLICATION_SUBMIT',
       event_code: null,
-      sequence: -2,
+      sequence: -3,
       condition: true,
       parameter_queries: {},
     },
@@ -112,20 +125,39 @@ const coreActions: CoreActions = {
       name: 'Clean up application files',
       trigger: 'ON_APPLICATION_SUBMIT',
       event_code: null,
-      sequence: -1,
+      sequence: -2,
       condition: true,
       parameter_queries: {},
     },
+    // Update review statuses
+    // TO-DO: Un-comment once action is re-implemented
+    // {
+    //   code: 'updateReviewStatuses',
+    //   path: '../plugins/action_update_review_statuses/src/index.ts',
+    //   name: 'Update Review Statuses',
+    //   trigger: 'ON_APPLICATION_SUBMIT',
+    //   event_code: null,
+    //   sequence: -1,
+    //   condition: true,
+    //   parameter_queries: {
+    //     changedResponses: {
+    //       operator: 'objectProperties',
+    //       children: ['outputCumulative.updatedResponses'],
+    //     },
+    //   },
+    // },
   ],
   [Trigger.OnReviewAssign]: [
-    // TO-DO: this is not correct -- needs to be worked out exactly
+    // If any reviews already exist for the current assignment, set them to
+    // "DRAFT" (this would happen if the reviewer had been unasssigned and then
+    // re-assigned)
     {
       code: 'changeStatus',
       path: '../plugins/action_change_status/src/index.ts',
       name: 'Change Status',
       trigger: 'ON_REVIEW_ASSIGN',
       event_code: null,
-      sequence: 1,
+      sequence: -1,
       condition: {
         operator: '!=',
         children: [
@@ -138,15 +170,12 @@ const coreActions: CoreActions = {
       },
       parameter_queries: {
         isReview: true,
-        reviewId: {
-          operator: 'objectProperties',
-          children: ['applicationData.reviewData.reviewId', null],
-        },
         newStatus: 'DRAFT',
       },
     },
   ],
   [Trigger.OnReviewCreate]: [
+    // Set to DRAFT
     {
       code: 'changeStatus',
       path: '../plugins/action_change_status/src/index.ts',
@@ -159,9 +188,63 @@ const coreActions: CoreActions = {
     },
   ],
   [Trigger.OnReviewRestart]: [
-    // Is this even used?
+    // Set to DRAFT
+    {
+      code: 'changeStatus',
+      path: '../plugins/action_change_status/src/index.ts',
+      name: 'Change Status',
+      trigger: 'ON_REVIEW_CREATE',
+      event_code: '',
+      sequence: -1,
+      condition: true,
+      parameter_queries: { newStatus: 'DRAFT' },
+    },
   ],
   [Trigger.OnReviewSubmit]: [
+    // Set review status => SUBMITTED
+    {
+      code: 'changeStatus',
+      path: '../plugins/action_change_status/src/index.ts',
+      name: 'Change Status',
+      trigger: 'ON_REVIEW_SUBMIT',
+      event_code: '',
+      sequence: -7,
+      condition: true,
+      parameter_queries: { newStatus: 'SUBMITTED' },
+    },
+
+    // Remove any review responses that have not changed since previous review
+    {
+      code: 'trimResponses',
+      path: '../plugins/action_trim_responses/src/index.ts',
+      name: 'Trim duplicate review responses',
+      trigger: 'ON_REVIEW_SUBMIT',
+      event_code: '',
+      sequence: -6,
+      condition: true,
+      parameter_queries: {
+        operator: 'objectProperties',
+        children: ['outputCumulative.reviewStatusHistoryTimestamp'],
+      },
+    },
+    // Update review statuses
+    // TO-DO: Un-comment once action is re-implemented
+    // {
+    //   code: 'updateReviewStatuses',
+    //   path: '../plugins/action_update_review_statuses/src/index.ts',
+    //   name: 'Update Review Statuses',
+    //   trigger: 'ON_REVIEW_SUBMIT',
+    //   event_code: null,
+    //   sequence: -5,
+    //   condition: true,
+    //   parameter_queries: {
+    //     changedResponses: {
+    //       operator: 'objectProperties',
+    //       children: ['outputCumulative.updatedResponses'],
+    //     },
+    //   },
+    // },
+
     // If sent back to applicant for further information (LOQ), this sets which
     // review responses are visible to the applicant
     {
@@ -170,7 +253,7 @@ const coreActions: CoreActions = {
       name: "Update Applicant's Review Visibility",
       trigger: 'ON_REVIEW_SUBMIT',
       event_code: '',
-      sequence: -3,
+      sequence: -4,
       condition: {
         operator: 'AND',
         children: [
@@ -192,29 +275,139 @@ const coreActions: CoreActions = {
       },
       parameter_queries: {},
     },
-    // Set review status => SUBMITTED
+    // Will always increment stage if and only if last-level decision is
+    // "CONFORM". Any other cases for incrementing stage must be specified in
+    // template actions.
+    {
+      code: 'incrementStage',
+      path: '../plugins/action_increment_stage/src/index.ts',
+      name: 'Increment Stage',
+      trigger: 'ON_REVIEW_SUBMIT',
+      event_code: null,
+      sequence: -3,
+      condition: {
+        operator: 'AND',
+        children: [
+          {
+            operator: 'objectProperties',
+            children: ['applicationData.reviewData.isLastLevel'],
+          },
+          {
+            operator: '=',
+            children: [
+              {
+                operator: 'objectProperties',
+                children: ['applicationData.reviewData.latestDecision.decision'],
+              },
+              'CONFORM',
+            ],
+          },
+        ],
+      },
+      parameter_queries: {},
+    },
+    // Change status to "CHANGES_REQUIRED" if last level and decision = LOQ
     {
       code: 'changeStatus',
       path: '../plugins/action_change_status/src/index.ts',
       name: 'Change Status',
       trigger: 'ON_REVIEW_SUBMIT',
-      event_code: '',
+      event_code: null,
       sequence: -2,
-      condition: true,
-      parameter_queries: { newStatus: 'SUBMITTED' },
-    },
-    // Remove any review responses that have not changed since previous review
-    {
-      code: 'trimResponses',
-      path: '../plugins/action_trim_responses/src/index.ts',
-      name: 'Trim duplicate review responses',
-      trigger: 'ON_REVIEW_SUBMIT',
-      event_code: '',
-      sequence: -1,
-      condition: true,
+      condition: {
+        operator: 'AND',
+        children: [
+          {
+            operator: '=',
+            children: [
+              {
+                operator: 'objectProperties',
+                children: ['applicationData.reviewData.latestDecision.decision'],
+              },
+              'LIST_OF_QUESTIONS',
+            ],
+          },
+          {
+            operator: 'objectProperties',
+            children: ['applicationData.reviewData.isLastLevel'],
+          },
+        ],
+      },
       parameter_queries: {
-        operator: 'objectProperties',
-        children: ['outputCumulative.reviewStatusHistoryTimestamp'],
+        isReview: false,
+        newStatus: 'CHANGES_REQUIRED',
+      },
+    },
+    // Change outcome accordingly if final level and stage is CONFORM or
+    // NON_CONFORM
+    {
+      code: 'changeOutcome',
+      path: '../plugins/action_change_outcome/src/index.ts',
+      name: 'Change Outcome',
+      trigger: 'ON_REVIEW_SUBMIT',
+      event_code: null,
+      sequence: -1,
+      condition: {
+        operator: 'OR',
+        children: [
+          {
+            operator: 'AND',
+            children: [
+              {
+                operator: '=',
+                children: [
+                  {
+                    operator: 'objectProperties',
+                    children: ['applicationData.reviewData.latestDecision.decision'],
+                  },
+                  'CONFORM',
+                ],
+              },
+              {
+                operator: 'objectProperties',
+                children: ['applicationData.reviewData.isLastStage'],
+              },
+            ],
+          },
+          {
+            operator: 'AND',
+            children: [
+              {
+                operator: '=',
+                children: [
+                  {
+                    operator: 'objectProperties',
+                    children: ['applicationData.reviewData.latestDecision.decision'],
+                  },
+                  'NON_CONFORM',
+                ],
+              },
+              {
+                operator: 'objectProperties',
+                children: ['applicationData.reviewData.isLastLevel'],
+              },
+            ],
+          },
+        ],
+      },
+      parameter_queries: {
+        newOutcome: {
+          operator: '?',
+          children: [
+            {
+              operator: '=',
+              children: [
+                {
+                  operator: 'objectProperties',
+                  children: ['applicationData.reviewData.latestDecision.decision', null],
+                },
+                'CONFORM',
+              ],
+            },
+            'APPROVED',
+            'REJECTED',
+          ],
+        },
       },
     },
     // Generate review assignments for next stage/level
@@ -231,8 +424,36 @@ const coreActions: CoreActions = {
     },
   ],
   [Trigger.OnReviewUnassign]: [
-    // Is this used?
-    // Maybe needs to set status to "DISCONTINUED"?
+    // If any reviews for this assignment already exist, then set them to
+    // DISCONTINUED
+    {
+      code: 'changeStatus',
+      path: '../plugins/action_change_status/src/index.ts',
+      name: 'Change Status',
+      trigger: 'ON_REVIEW_UNASSIGN',
+      event_code: null,
+      sequence: -1,
+      condition: {
+        operator: '!=',
+        children: [
+          {
+            operator: 'objectProperties',
+            children: [
+              {
+                children: ['applicationData.reviewData.reviewId', null],
+                operator: 'objectProperties',
+              },
+              null,
+            ],
+          },
+          null,
+        ],
+      },
+      parameter_queries: {
+        isReview: true,
+        newStatus: 'DISCONTINUED',
+      },
+    },
   ],
 }
 
