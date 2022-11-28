@@ -332,9 +332,8 @@ const coreActions: CoreActions = {
       },
       parameter_queries: {},
     },
-    // Will always increment stage if and only if last-level decision is
-    // "CONFORM". Any other cases for incrementing stage must be specified in
-    // template actions.
+    // Will increment stage if and only if last-level decision is "CONFORM". Any
+    // other cases for incrementing stage must be specified in template actions.
     {
       code: 'incrementStage',
       path: '../plugins/action_increment_stage/src/index.ts',
@@ -345,6 +344,10 @@ const coreActions: CoreActions = {
       condition: {
         operator: 'AND',
         children: [
+          {
+            operator: 'objectProperties',
+            children: ['applicationData.reviewData.isLastStage'],
+          },
           {
             operator: 'objectProperties',
             children: ['applicationData.reviewData.isLastLevel'],
