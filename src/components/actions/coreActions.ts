@@ -181,8 +181,6 @@ const coreActions: CoreActions = {
 
     // Change outcome to APPROVED if there are no other "changeOutcome" actions
     // associated with this template.
-    // Used for non-reviewable templates when there isn't another specific
-    // "changeOutcome" included
     {
       code: 'changeOutcome',
       path: '../plugins/action_change_outcome/src/index.ts',
@@ -190,6 +188,9 @@ const coreActions: CoreActions = {
       trigger: 'ON_APPLICATION_SUBMIT',
       event_code: null,
       sequence: -1,
+      // Condition checks that the templates is not reviewable (no associated
+      // templateStageReviewLevels) and that there are no other "changeOutcome"
+      // actions implemented
       condition: {
         operator: 'AND',
         children: [
