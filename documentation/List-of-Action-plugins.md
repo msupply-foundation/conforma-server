@@ -539,7 +539,7 @@ Updates the applicant visibility of level 1 review responses based on the recomm
 
 ### Update Review Statuses
 
-When an applicant re-submits an application after making changes, or a reviewer submits their review, this Action updates the status of associated reviews to determine whether they should be "Pending" or "Changes Requested" (or left as is).
+When an applicant re-submits an application after making changes, or a reviewer submits their review, this Action updates the status of associated reviews to determine whether they should be "Pending" or "Changes Requested" (or left as is). We only consider "active" reviews, so those with status "Discontinued" are ignored.
 
 The logic is as follows:
 

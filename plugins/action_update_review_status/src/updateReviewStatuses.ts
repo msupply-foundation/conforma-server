@@ -57,7 +57,9 @@ const updateReviewStatuses: ActionPluginType = async ({
   try {
     // Get all reviews for this application/stage. We do additional filtering
     // (e.g for review level) as required further on.
-    const reviews = await db.getAssociatedReviews(applicationId, stageNumber)
+    const reviews = (await db.getAssociatedReviews(applicationId, stageNumber))
+      // Ignore all "Discontinued" reviews
+      .filter(({ reviewStatus }) => reviewStatus !== ReviewStatus.Discontinued)
 
     // APPLICATION SUBMISSIONS:
     if (triggeredBy === 'APPLICATION') {
