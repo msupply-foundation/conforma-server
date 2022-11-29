@@ -1,6 +1,6 @@
 {
   "type": "action_plugin",
-  "code": "updateReviewsStatuses",
+  "code": "updateReviewStatuses",
   "name": "Update Review Statuses",
   "description": "Updates status of associated reviews when applications and reviews are submitted",
   "required_parameters": ["changedResponses"],

@@ -30,7 +30,7 @@ interface ChangedReviewResponse {
 
 type ChangedResponse = ChangedApplicationResponse | ChangedReviewResponse
 
-const updateReviewsStatuses: ActionPluginType = async ({
+const updateReviewStatuses: ActionPluginType = async ({
   parameters,
   applicationData,
   DBConnect,
@@ -181,4 +181,4 @@ const updateReviewsStatuses: ActionPluginType = async ({
   }
 }
 
-export default updateReviewsStatuses
+export default updateReviewStatuses

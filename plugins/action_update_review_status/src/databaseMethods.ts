@@ -1,4 +1,4 @@
-import { Review } from './updateReviewsStatuses'
+import { Review } from './updateReviewStatuses'
 
 const databaseMethods = (DBConnect: any) => ({
   getAssociatedReviews: async (applicationId: number, stageId: number): Promise<Review[]> => {

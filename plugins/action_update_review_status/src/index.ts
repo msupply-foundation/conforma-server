@@ -1,4 +1,4 @@
 import { ActionPluginType } from '../../types'
-import updateReviewsStatuses from './updateReviewsStatuses'
-const action: ActionPluginType = updateReviewsStatuses
+import updateReviewStatuses from './updateReviewStatuses'
+const action: ActionPluginType = updateReviewStatuses
 export { action }
