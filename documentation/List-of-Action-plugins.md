@@ -548,7 +548,7 @@ The logic is as follows:
 
 **ON_REVIEW_SUBMIT**:
 - Set review one level higher than this review to "PENDING". (This should cover cases when reviewer is reviewing new applicant changes AND when they themselves have had to change an existing review before sending back to applicant).
-- If this review is not level 1 (i.e. it's a Consolidation), level 1 reviews that have sections containing responses that this reviewer has disagreed with, change status to "CHANGES REQUESTED".
+- If this review is not level 1 (i.e. it's a Consolidation), the lower level reviews that have sections that have responses marked as REJECTED (meaning that this reviewer has disagreed with), will change status to "CHANGES REQUESTED".
 
 - _Action Code:_ **`updateReviewsStatuses`**
 
