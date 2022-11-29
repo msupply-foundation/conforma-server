@@ -7,11 +7,27 @@ they've been hard-coded here in order to:
 - prevent accidental misconfiguration or removal
 */
 
+import DBConnect from '../databaseConnect'
 import { Trigger } from '../../generated/graphql'
 import { ActionInTemplate } from '../../types'
 
 type CoreActions = {
   [key in Trigger]?: Omit<ActionInTemplate, 'parameters_evaluated'>[]
+}
+
+export const getCoreActions = async (trigger: Trigger, templateId: number) => {
+  const currentCoreActions = coreActions?.[trigger] ?? []
+
+  // Inject configuration over-rides for a limited selection of core action
+  // parameters (currently only serialPattern)
+  switch (trigger) {
+    case Trigger.OnApplicationCreate:
+      const serialPattern = await DBConnect.getTemplateSerialPattern(templateId)
+      if (serialPattern) currentCoreActions[0].parameter_queries.pattern = serialPattern
+    // Other cases as required...
+  }
+
+  return currentCoreActions
 }
 
 const coreActions: CoreActions = {
@@ -35,6 +51,18 @@ const coreActions: CoreActions = {
           children: ['applicationData.templateCode'],
         },
         updateRecord: true,
+        // Provides functionality to support `<?year>` in pattern string.
+        // Add more functionality here as required
+        customFields: { year: 'year' },
+        additionalData: {
+          operator: 'buildObject',
+          properties: [
+            {
+              key: 'year',
+              value: { operator: 'objectFunctions', children: ['functions.getYear'] },
+            },
+          ],
+        },
       },
     },
     // Set initial stage
@@ -412,6 +440,10 @@ const coreActions: CoreActions = {
         children: [
           {
             operator: 'objectProperties',
+            children: ['applicationData.reviewData.isLastStage'],
+          },
+          {
+            operator: 'objectProperties',
             children: ['applicationData.reviewData.latestDecision.decision'],
           },
           {
@@ -507,5 +539,3 @@ const coreActions: CoreActions = {
     },
   ],
 }
-
-export default coreActions
