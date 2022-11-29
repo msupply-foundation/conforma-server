@@ -250,7 +250,7 @@ const coreActions: CoreActions = {
         children: [
           {
             operator: 'objectProperties',
-            children: ['applicationData.reviewData', null],
+            children: ['applicationData.reviewData.reviewId', null],
           },
           null,
         ],
