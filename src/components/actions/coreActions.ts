@@ -163,22 +163,24 @@ const coreActions: CoreActions = {
     },
     // Update reviews status with review assignment linked to changed responses
     // by applicant when application is resubmitted.
-    // TO-DO: Un-comment once action is re-implemented
-    // {
-    //   code: 'updateReviewStatuses', path:
-    //   '../plugins/action_update_review_statuses/src/index.ts', name: 'Update
-    //   Review Statuses', trigger: 'ON_APPLICATION_SUBMIT', event_code: null,
-    //   sequence: -2, condition: true, parameter_queries: { changedResponses: {
-    //   operator: 'objectProperties', children:
-    //   ['outputCumulative.updatedResponses'],
-    //     },
-    //   },
-    // },
+    {
+      code: 'updateReviewStatuses',
+      path: '../plugins/action_update_review_statuses/src/index.ts',
+      name: 'Update Review Statuses',
+      trigger: 'ON_APPLICATION_SUBMIT',
+      event_code: null,
+      sequence: -2,
+      condition: true,
+      parameter_queries: {
+        changedResponses: {
+          operator: 'objectProperties',
+          children: ['outputCumulative.updatedResponses'],
+        },
+      },
+    },
 
     // Change outcome to APPROVED if there are no other "changeOutcome" actions
     // associated with this template.
-    // Used for non-reviewable templates when there isn't another specific
-    // "changeOutcome" included
     {
       code: 'changeOutcome',
       path: '../plugins/action_change_outcome/src/index.ts',
@@ -186,6 +188,9 @@ const coreActions: CoreActions = {
       trigger: 'ON_APPLICATION_SUBMIT',
       event_code: null,
       sequence: -1,
+      // Condition checks that the templates is not reviewable (no associated
+      // templateStageReviewLevels) and that there are no other "changeOutcome"
+      // actions implemented
       condition: {
         operator: 'AND',
         children: [
@@ -318,17 +323,21 @@ const coreActions: CoreActions = {
     },
     // Update other review status to PENDING or CHANGES REQUESTED after one
     // review is submitted to another reviewer in the chain of review-levels
-    // TO-DO: Un-comment once action is re-implemented
-    // {
-    //   code: 'updateReviewStatuses', path:
-    //   '../plugins/action_update_review_statuses/src/index.ts', name: 'Update
-    //   Review Statuses', trigger: 'ON_REVIEW_SUBMIT', event_code: null,
-    //   sequence: -5, condition: true, parameter_queries: { changedResponses: {
-    //   operator: 'objectProperties', children:
-    //   ['outputCumulative.updatedResponses'],
-    //     },
-    //   },
-    // },
+    {
+      code: 'updateReviewStatuses',
+      path: '../plugins/action_update_review_statuses/src/index.ts',
+      name: 'Update Review Statuses',
+      trigger: 'ON_REVIEW_SUBMIT',
+      event_code: null,
+      sequence: -5,
+      condition: true,
+      parameter_queries: {
+        changedResponses: {
+          operator: 'objectProperties',
+          children: ['outputCumulative.updatedResponses'],
+        },
+      },
+    },
 
     // If sent back to applicant for further information (LOQ), this sets which
     // review responses are visible to the applicant

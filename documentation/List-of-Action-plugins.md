@@ -18,6 +18,7 @@
   - [Refresh Review Assignments](#refresh-review-assignments)
   - [Trim Responses](#trim-responses)
   - [Update Review Visibility](#update-review-visibility)
+  - [Update Review Statuses](#update-review-statuses)
   - [Generate Document](#generate-document)
   - [Send Notification](#send-notification)
   - [Schedule Action](#schedule-action)
@@ -515,10 +516,10 @@ Whenever an application or review is submitted, this Action "cleans up", by dele
 
 - _Action Code:_ **`trimResponses`**
 
-| Input parameters<br />(\*required) <br/> | Output properties |
-| ---------------------------------------- | ----------------- |
-| `applicationId` _OR_                     | `deletedIds`      |
-| `reviewId`                               | `updatedIds`      |
+| Input parameters<br />(\*required) <br/> | Output properties  |
+| ---------------------------------------- | ------------------ |
+| `applicationId` _OR_                     | `deletedResponses` |
+| `reviewId`                               | `updatedResponses` |
 
 ---
 
@@ -533,6 +534,36 @@ Updates the applicant visibility of level 1 review responses based on the recomm
 | `reviewId`                               | `reviewResponsesWithUpdatedVisibility` |
 
 **Note:** If `reviewId` is not provided, the plugin will attempt to fetch it from `applicationData`
+
+---
+
+### Update Review Statuses
+
+When an applicant re-submits an application after making changes, or a reviewer submits their review, this Action updates the status of associated reviews to determine whether they should be "Pending" or "Changes Requested" (or left as is). We only consider "active" reviews, so those with status "Discontinued" are ignored.
+
+The logic is as follows:
+
+**ON_APPLICATION_SUBMIT**:
+- For all Level 1 "SUBMITTED" reviews that have sections that have changed responses, set status to "PENDING".
+
+**ON_REVIEW_SUBMIT**:
+- Set review one level higher than this review to "PENDING". (This should cover cases when reviewer is reviewing new applicant changes AND when they themselves have had to change an existing review before sending back to applicant).
+- If this review is not level 1 (i.e. it's a Consolidation), the lower level reviews that have sections that have responses marked as REJECTED (meaning that this reviewer has disagreed with), will change status to "CHANGES REQUESTED".
+
+- _Action Code:_ **`updateReviewsStatuses`**
+
+| Input parameters<br />(\*required) <br/>            | Output properties          |
+| --------------------------------------------------- | -------------------------- |
+| `applicationId`                                     | `updatedReviews`           |
+| `reviewId`                                          | `updatedReviewAssignments` |
+| `triggeredBy` Enum: REVIEW or APPLICATION (Default) |                            |
+| `changedResponses`\*                                |                            |
+| `level`                                             |                            |
+| `stageId`                                           |                            |
+
+`changedResponses` is an array of `applicationResponseId`s or `reviewResponseId`s and is usually provided by the output of the `trimResponses` action (which must run first).
+
+**Note:** - If `applicationId` or `reviewId` is not provided, the plugin will attempt to fetch it from `applicationData`. In case the `reviewId` is received, this Action will be updating status of related reviews of same stage in the current and next level reviews. Otherwise (for an application submit - without passing `reviewId` this Action will be updating only reviews of current level/stage.
 
 ---
 
@@ -698,48 +729,6 @@ The "condition" field (common to all template_actions) can also override the ori
 
 ## Core Actions
 
-There are certain Actions that _must_ run on particular events to facilitate a standard application/review workflow process. We have called these **Core Actions**, and they have been collected in a single "core_mutations.js" file (for insertion into database via GraphQL). Each template (other than "User Registration") has this block slugged into it as a template literal (`${coreActions}`) in its Action insertion block, before any Actions that are specific to that template.
+There are certain Actions that _must_ run on particular events to facilitate a standard application/review workflow process. We have called these **Core Actions**, and have hard-coded them into the server to ensure that they cannot be tampered with, misconfigured or accidentally removed. It also allows us to make any changes in one place and know that all templates will behave correctly without further re-configuration.
 
-Here is a summary of the core actions and the triggers that launch them:
-
-#### On Application Create:
-
-- Increment Stage (sets to Stage 1, also sets Status to "Draft")
-
-#### On Application Submit
-
-- Change Status (to "Submitted")
-- Trim Responses (removes Null responses and unchanged ones if re-submission)
-- Generate Review Assignments (for first level reviewers)
-- Update Reviews (statuses)
-- Cleanup Files
-
-#### On Application Restart (i.e. after "Changes Requested"):
-
-- Change Status (back to "Draft")
-
-#### On Review Self-Assign:
-
-- Update Review Assignment Status (for other reviewers)
-
-#### On Review Assign (by other)
-
-- Nothing yet (To-do?)
-
-#### On Review Create
-
-- Change Status (to "Draft")
-
-#### On Review Submit:
-
-- Change Status (to "Submitted")
-- Trim Responses
-- Update Review Statuses (for other reviews related to this review submission)
-- Increment Stage (if last level reviewer approves)
-- Generate Review Assignments (for next level review)
-- Update review response visibility (for applicant)
-- Change Status (Application, conditional on the review decision)
-
-#### On Review Restart: (i.e. review making changes based on higher level requests)
-
-- Change Status (review status to "Draft")
+The core actions are contained in a single object, indexed by trigger, in `coreActions.ts` in the back-end. Each action has a comment describing what it does and why it required, so please inspect that file for further detail.
