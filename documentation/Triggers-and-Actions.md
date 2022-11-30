@@ -4,13 +4,14 @@
 
 ## Article Contents
 
+- [Article Contents](#article-contents)
 - [Overview of Trigger and Action system](#overview-of-trigger-and-action-system)
-	- [List of available Triggers](#list-of-available-triggers)
-    - [Database tables that have a TRIGGER field that is listened to:](#database-tables-that-have-a-trigger-field-that-is-listened-to)
+  - [List of available Triggers](#list-of-available-triggers)
+  - [Database tables that have a TRIGGER field that is listened to:](#database-tables-that-have-a-trigger-field-that-is-listened-to)
 - [Actions](#actions)
 - [Action parameters](#action-parameters)
 - [Passing information to Actions](#passing-information-to-actions)
-	- [Running Actions via REST endpoint](#running-actions-via-rest-endpoint)
+  - [Running Actions via REST endpoint](#running-actions-via-rest-endpoint)
 
 <!-- tocstop -->
 
@@ -43,13 +44,12 @@ Actions also return an **output** object (e.g. `changeStatus` Action returns the
 - `ON_REVIEW_CREATE`
 - `ON_REVIEW_SUBMIT`
 - `ON_REVIEW_RESTART`
-- `ON_REVIEW_START`
 - `ON_REVIEW_ASSIGN`
-- `ON_REVIEW_SELF_ASSIGN`
+- `ON_REVIEW_UNASSIGN`
 - `ON_APPROVAL_SUBMIT`
 - `ON_VERIFICATION`
+- `ON_SCHEDULE`
 - `DEV_TEST` (For testing purposes)
-- `ON_SCHEDULE_TIME` (Not yet implemented)
 
 Two other possible Trigger states are `PROCESSING` and `ERROR`. The state of triggers goes through the following steps:
 

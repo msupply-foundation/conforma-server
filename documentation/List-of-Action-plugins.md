@@ -25,10 +25,9 @@
   - [Clean Up Files](#clean-up-files)
   - [Aliasing existing template actions](#aliasing-existing-template-actions)
 - [Core Actions](#core-actions)
-
-* [Core Actions](#core-actions)
-
 <!-- tocstop -->
+
+**Note**: Many of these actions won't need to be specifically configured as they are ["Core Actions"](#core-actions) and hard-coded to work correctly for all templates.
 
 ---
 
@@ -731,4 +730,45 @@ The "condition" field (common to all template_actions) can also override the ori
 
 There are certain Actions that _must_ run on particular events to facilitate a standard application/review workflow process. We have called these **Core Actions**, and have hard-coded them into the server to ensure that they cannot be tampered with, misconfigured or accidentally removed. It also allows us to make any changes in one place and know that all templates will behave correctly without further re-configuration.
 
-The core actions are contained in a single object, indexed by trigger, in `coreActions.ts` in the back-end. Each action has a comment describing what it does and why it required, so please inspect that file for further detail.
+The core actions are contained in a single object, indexed by trigger, in `coreActions.ts` in the back-end. Each action in there has a comment describing what it does and why it is required, but here is a summary and some relevant notes:
+
+**ON_APPLICATION_CREATE**:
+- Generate application serial (`generateTextString`). Default pattern `S-[A-Z]{3}-<+dddd>` but can be over-ridden in the Template Builder "General" tab
+- Set initial stage (`incrementStage`) (Also sets the status to "DRAFT")
+- Generate application name (`generateTextString`) based on template code and serial. This can be over-ridden just by specifying an additional `generateTextString` action in the template actions configuration.
+
+**ON_APPLICATION_RESTART**:  
+(This runs when an applicant re-starts an application after a reviewer requests changes)
+- Set application status to "DRAFT" (`changeStatus`)
+
+**ON_APPLICATION_SUBMIT**:
+- Set status to "SUBMITTED" (`changeStatus`)
+- Trim duplicate or empty applicant responses (`trimResponses`)
+- Generate review assignments (`generateReviewAssignments`) for the level 1 reviewers
+- Clean up (delete) any files that were uploaded but not submitted as part of the application (`cleanupFiles`)
+- Update review status (`updateReviewStatuses`) for any existing reviews based on applicant responses that have been changed since the last submission.
+- Change outcome to "APPROVED" (`changeOutcome`), but *only if* there are no other `changeOutcome` actions defined for this template *and* it is a non-reviewable (i.e. automatic) template. So if you need to change the behaviour or condition of when the outcome changes, you can define a specific template action, which will ensure this automatic one doesn't run.
+
+**ON_REVIEW_ASSIGN**:
+- If any reviews already exist for this assignment, set them to "DRAFT" (this would only happen if the reviewer had been unasssigned and then re-assigned) (`updateReviewStatuses`)
+
+**ON_REVIEW_CREATE**:
+- Set review status (`changeStatus`) to "DRAFT"
+
+**ON_REVIEW_RESTART**:
+- Set review status (`changeStatus`) to "DRAFT" when reviewer re-starts their review (after an applicant re-submission, or request for changes from a senior reviewer)
+
+**ON_REVIEW_SUBMIT**:
+- Set review status (`changeStatus`) to "SUBMITTED"
+- Remove unchanged or empty review responses (`trimResponses`)
+- Update status of *other* reviews (`updateReviewStatuses`) to "PENDING" or "CHANGES REQUESTED" based on reviewer responses. (Higher level reviews will be set to "PENDING", lower-level reviewers will depend on which response the reviewer agreed with.)
+- Set which review responses are visible to the applicant (`updateReviewVisibility`) if sending a request for further information (LOQ).
+- Increment stage (`incrementStage`), but only if this review is a last-level review with the decision "CONFORM". Any other conditions for incrementing the stage must be specified in additional template actions.
+- Set application status to "CHANGES REQUIRED" (`changeStatus`) if this is a last-level review and the decision is "LOQ".
+- Change outcome (`changeOutcome`), but only if this is the final stage and it's a final level review, and the decision is "CONFORM" or "NON_CONFORM". Outcome will be "APPROVED" or "REJECTED" accordingly.
+- Create or update review assignments (`generateReviewAssignments`) for the *next* review level (if there is one)
+
+**ON_REVIEW_UNASSIGN**:
+- If any reviews already exist (i.e. previousuly-assigned reviewer has started their review), set the review status (`changeStatus`) to "DISCONTINUED"
+
+
