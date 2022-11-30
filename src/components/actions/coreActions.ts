@@ -84,7 +84,7 @@ const coreActions: CoreActions = {
       trigger: 'ON_APPLICATION_CREATE',
       event_code: null,
       // Sequence set high so it goes AFTER template actions
-      sequence: 100,
+      sequence: -1,
       condition: true,
       parameter_queries: {
         pattern: '<?templateName> - <?serial>',
