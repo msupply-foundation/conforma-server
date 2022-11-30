@@ -68,7 +68,7 @@ Two other possible Trigger states are `PROCESSING` and `ERROR`. The state of tri
 
 ## Actions
 
-Actions are implemented as **plug-ins** -- standalone packages that can be created and customised outisde the main application. As far as the Server is concerned, an Action plug-in is basically an imported **function**, with a defined set of expected parameters.
+Actions are implemented as **plug-ins** -- standalone packages that can be created and customised outside the main application. As far as the Server is concerned, an Action plug-in is basically an imported **function**, with a defined set of expected parameters.
 
 See the [list of Action plugins](List-of-Action-plugins.md) for currently available Action plugins.
 
