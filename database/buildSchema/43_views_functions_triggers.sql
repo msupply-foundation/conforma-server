@@ -286,6 +286,20 @@ $$
 LANGUAGE SQL
 IMMUTABLE;
 
+-- FUNCTION to return json parameters as string (for searching)
+CREATE OR REPLACE FUNCTION public.template_element_parameters_string (template_element public.template_element)
+    RETURNS text
+    AS $$
+    SELECT
+        parameters::text
+    FROM
+        public.template_element
+    WHERE
+        id = $1.id
+$$
+LANGUAGE sql
+STABLE;
+
 -- Add columns (and index) to template_element table that use the above 2
 -- functions
 ALTER TABLE public.template_element
