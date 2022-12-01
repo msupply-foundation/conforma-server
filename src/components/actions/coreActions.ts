@@ -529,14 +529,8 @@ const coreActions: CoreActions = {
         operator: '!=',
         children: [
           {
+            children: ['applicationData.reviewData.reviewId', null],
             operator: 'objectProperties',
-            children: [
-              {
-                children: ['applicationData.reviewData.reviewId', null],
-                operator: 'objectProperties',
-              },
-              null,
-            ],
           },
           null,
         ],
