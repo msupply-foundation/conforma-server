@@ -383,10 +383,6 @@ const coreActions: CoreActions = {
         children: [
           {
             operator: 'objectProperties',
-            children: ['applicationData.reviewData.isLastStage'],
-          },
-          {
-            operator: 'objectProperties',
             children: ['applicationData.reviewData.isLastLevel'],
           },
           {
