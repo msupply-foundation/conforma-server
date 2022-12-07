@@ -1476,6 +1476,44 @@ $$
 LANGUAGE sql
 STABLE;
 
+DROP VIEW IF EXISTS unnested_sections CASCADE;
+
+-- Unnest creates a row for each array member
+CREATE VIEW unnested_sections AS
+SELECT
+    id,
+    unnest(assigned_sections) AS section
+FROM
+    review_assignment;
+
+DROP VIEW IF EXISTS assigned_sections_by_stage_and_level CASCADE;
+
+-- Two counts, grouped by application, stage, level and assigner (from assigner_join)
+-- assigned_section_for_level (how many sections are assigned)
+-- assigned_in_progress_sections (how many sections are assigned and review hasn't been started or review is not submitted)
+CREATE VIEW assigned_sections_by_stage_and_level AS
+SELECT
+    review_assignment.application_id,
+    review_assignment.stage_id,
+    review_assignment.level_number,
+    review_assignment_assigner_join.assigner_id,
+    count(DISTINCT unnested_sections.section) FILTER (WHERE review_assignment.status = 'ASSIGNED') AS assigned_section_for_level,
+    count(DISTINCT unnested_sections.section) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+        AND review_status_history.status IS NULL
+        OR review_status_history.status != 'SUBMITTED') AS assigned_in_progress_sections
+FROM
+    review_assignment
+    JOIN review_assignment_assigner_join ON review_assignment_assigner_join.review_assignment_id = review_assignment.id
+    LEFT JOIN unnested_sections ON unnested_sections.id = review_assignment.id
+    LEFT JOIN review ON review.review_assignment_id = review_assignment.id
+    LEFT JOIN review_status_history ON review.id = review_status_history.review_id
+        AND review_status_history.is_current = TRUE
+GROUP BY
+    1,
+    2,
+    3,
+    4;
+
 -- APPLICATION_LIST_VIEW
 -- Aggregated VIEW method of all data required for application list page
 -- Requires an empty table as setof return and smart comment to make orderBy work (https://github.com/graphile/graphile-engine/pull/378)
@@ -1506,12 +1544,13 @@ CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
     RETURNS SETOF application_list_shape
     AS $$
     SELECT
+        -- BASE
         app.id,
         app.serial,
         app.name,
         template.code AS template_code,
         template.name AS template_name,
-        CONCAT(first_name, ' ', last_name) AS applicant,
+        CONCAT(applicant.first_name, ' ', applicant.last_name) AS applicant_name,
         org.name AS org_name,
         stage_status.stage,
         stage_status.stage_colour,
@@ -1519,24 +1558,106 @@ CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
         app.outcome,
         status_history_time_created AS last_active_date,
         ts.time_scheduled AS applicant_deadline,
-        assigners,
-        reviewers,
-        reviewer_action,
-        assigner_action
+        -- REVIEWERS and ASSIGNERS
+        CASE WHEN count(assigner_user.id) = 0 THEN
+            NULL
+        ELSE
+            ARRAY_AGG(DISTINCT (CONCAT(assigner_user.first_name, ' ', assigner_user.last_name)::varchar))
+        END AS assigners,
+        CASE WHEN count(reviewer_user.id) = 0 THEN
+            NULL
+        ELSE
+            ARRAY_AGG(DISTINCT (CONCAT(reviewer_user.first_name, ' ', reviewer_user.last_name)::varchar))
+        END AS reviewers,
+        -- REVIEWER ACTIONS
+        CASE WHEN COUNT(*) FILTER (WHERE action_review_status_history.status = 'CHANGES_REQUESTED') != 0 THEN
+            'UPDATE_REVIEW'
+        WHEN COUNT(*) FILTER (WHERE action_review_status_history.status = 'PENDING') != 0 THEN
+            'RESTART_REVIEW'
+        WHEN COUNT(*) FILTER (WHERE action_review_status_history.status = 'DRAFT'
+            AND review_is_locked (action_review) = FALSE) != 0 THEN
+            'CONTINUE_REVIEW'
+        WHEN COUNT(*) FILTER (WHERE reviewer_assignment.status = 'ASSIGNED'
+            AND reviewer_assignment.is_final_decision = TRUE
+            AND reviewer_assignment.is_last_stage = TRUE
+            AND action_review = NULL) != 0 THEN
+            'MAKE_DECISION'
+        WHEN COUNT(*) FILTER (WHERE reviewer_assignment.status = 'ASSIGNED'
+            AND action_review.id IS NULL) != 0 THEN
+            'START_REVIEW'
+        WHEN COUNT(*) FILTER (WHERE reviewer_assignment.status = 'AVAILABLE'
+            AND reviewer_assignment.is_self_assignable = TRUE
+            AND review_assignment_available_sections (reviewer_assignment) != '{}'
+            AND action_review.id IS NULL) != 0 THEN
+            'SELF_ASSIGN'
+        WHEN COUNT(*) FILTER (WHERE (stage_status.status = 'CHANGES_REQUIRED'
+            OR stage_status.status = 'DRAFT')
+            AND reviewer_assignment.status = 'ASSIGNED'
+            AND action_review_status_history.status = 'SUBMITTED') != 0 THEN
+            'AWAITING_RESPONSE'
+        WHEN COUNT(*) FILTER (WHERE reviewer_assignment.status = 'ASSIGNED'
+            OR action_review_status_history.status = 'SUBMITTED') != 0 THEN
+            'VIEW_REVIEW'
+        ELSE
+            NULL
+        END::reviewer_action,
+        -- ASSIGNER ACTIONS
+        CASE
+        -- Using MIN becuase number_of_assigned_sections is for each level (i.e. there are multiple levels grouped by stage_id)
+        WHEN MIN(assigned_sections_by_stage_and_level.assigned_section_for_level) < COUNT(DISTINCT (assignable_sections.id)) THEN
+            'ASSIGN'
+        WHEN MIN(assigned_sections_by_stage_and_level.assigned_in_progress_sections) = COUNT(DISTINCT (assignable_sections.id)) THEN
+            'RE_ASSIGN'
+        ELSE
+            NULL
+        END::assigner_action
     FROM
+        -- BASE
         public.application app
-    LEFT JOIN public.template ON app.template_id = template.id
-    LEFT JOIN public."user" ON user_id = "user".id
-    LEFT JOIN public.application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
-    LEFT JOIN public.organisation org ON app.org_id = org.id
-    LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
-    LEFT JOIN review_list (stage_status.stage_id, $1, stage_status.status) ON app.id = review_list.application_id
-    LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
-    LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
-        AND ts.is_active = TRUE
-        AND ts.event_code = 'applicantDeadline'
+        JOIN public.template ON app.template_id = template.id
+        JOIN public."user" AS applicant ON app.user_id = applicant.id
+        LEFT JOIN public.application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
+        LEFT JOIN public.organisation org ON app.org_id = org.id
+        LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
+            AND ts.is_active = TRUE
+            AND ts.event_code = 'applicantDeadline'
+            -- REVIEWERS and ASSIGNERS
+    LEFT JOIN review_assignment AS assigned_assignment ON (assigned_assignment.application_id = app.id
+            AND assigned_assignment.stage_id = stage_status.stage_id
+            AND assigned_assignment.status = 'ASSIGNED')
+    LEFT JOIN public."user" AS assigner_user ON assigned_assignment.assigner_id = assigner_user.id
+    LEFT JOIN public."user" AS reviewer_user ON assigned_assignment.reviewer_id = reviewer_user.id
+    -- REVIEWER ACTIONS
+    LEFT JOIN review_assignment AS reviewer_assignment ON (reviewer_assignment.application_id = app.id
+            AND reviewer_assignment.stage_id = stage_status.stage_id
+            AND app.outcome = 'PENDING'
+            AND reviewer_assignment.reviewer_id = userId)
+    LEFT JOIN review AS action_review ON action_review.review_assignment_id = reviewer_assignment.id
+    LEFT JOIN review_status_history AS action_review_status_history ON (action_review_status_history.review_id = action_review.id
+            AND action_review_status_history.is_current = TRUE)
+        -- ASSIGNER ACTIONS
+    LEFT JOIN assigned_sections_by_stage_and_level ON (assigned_sections_by_stage_and_level.application_id = app.id
+            AND assigned_sections_by_stage_and_level.stage_id = stage_status.stage_id
+            AND app.outcome = 'PENDING'
+            AND assigned_sections_by_stage_and_level.assigner_id = userId)
+    LEFT JOIN template_section AS assignable_sections ON assignable_sections.template_id = template.id
 WHERE
     app.is_config = FALSE
+GROUP BY
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    stage_status.stage_id
 $$
 LANGUAGE sql
 STABLE;
