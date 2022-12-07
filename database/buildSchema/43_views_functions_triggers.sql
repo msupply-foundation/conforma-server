@@ -1168,6 +1168,106 @@ $$
 LANGUAGE sql
 STABLE;
 
+-- Function to return elements of assigned questions for current stage/level
+CREATE OR REPLACE FUNCTION public.assigned_questions (app_id int, stage_id int, level_number int)
+    RETURNS TABLE (
+        review_id int,
+        response_id int,
+        review_assignment_id int,
+        review_response_code varchar,
+        review_response_status public.review_response_status,
+        decision public.review_response_decision,
+        is_optional boolean,
+        is_lastest_review boolean
+    )
+    AS $$
+    SELECT DISTINCT ON (review_response_code)
+        rr.review_id,
+        rq.response_id,
+        ra.id AS review_assignment_id,
+        rq.code AS review_response_code,
+        rr.status AS review_response_status,
+        rr.decision,
+        rq.is_optional,
+        rr.is_latest_review
+    FROM (
+        SELECT
+            id,
+            application_id,
+            stage_id,
+            level_number,
+            status,
+            UNNEST(assigned_sections) AS section_code
+        FROM
+            public.review_assignment) ra
+    JOIN public.template_section ts ON ra.section_code = ts.code
+    JOIN public.template_element te ON ts.id = te.section_id
+    JOIN public.reviewable_questions (app_id) rq ON rq.code = te.code
+    LEFT JOIN public.review ON review.review_assignment_id = ra.id
+    LEFT JOIN public.review_response rr ON (rr.application_response_id = rq.response_id
+            AND rr.review_id = review.id)
+WHERE
+    ra.application_id = $1
+    AND ra.stage_id = $2
+    AND ra.level_number = $3
+    AND ra.status = 'ASSIGNED'
+GROUP BY
+    ra.id,
+    rr.review_id,
+    rr.is_latest_review,
+    rq.is_optional,
+    rr.status,
+    rr.decision,
+    rq.code,
+    rq.response_id
+ORDER BY
+    review_response_code,
+    is_latest_review DESC
+$$
+LANGUAGE sql
+STABLE;
+
+-- Function to return TOTAL of reviewable questions (per application)
+CREATE OR REPLACE FUNCTION public.reviewable_questions_count (app_id int)
+    RETURNS bigint
+    AS $$
+    SELECT
+        COUNT(*)
+    FROM
+        reviewable_questions (app_id)
+$$
+LANGUAGE sql
+STABLE;
+
+-- Function to return TOTAL assigned questions for current stage/level
+-- Need to DROP first, due to error with parameter name
+DROP FUNCTION IF EXISTS public.assigned_questions_count;
+
+CREATE FUNCTION public.assigned_questions_count (app_id int, stage_id int, level_number int)
+    RETURNS bigint
+    AS $$
+    SELECT
+        COUNT(*)
+    FROM
+        assigned_questions (app_id, stage_id, level_number)
+$$
+LANGUAGE sql
+STABLE;
+
+-- Function to return TOTAL of assigned and submitted (element that can't be re-assigned)
+CREATE OR REPLACE FUNCTION public.submitted_assigned_questions_count (app_id int, stage_id int, level_number int)
+    RETURNS bigint
+    AS $$
+    SELECT
+        COUNT(*)
+    FROM
+        assigned_questions (app_id, stage_id, level_number) aq
+WHERE
+    aq.review_response_status = 'SUBMITTED'
+$$
+LANGUAGE sql
+STABLE;
+
 -- FILE
 -- Function to Notify server of File record deletion
 CREATE OR REPLACE FUNCTION public.notify_file_server ()
@@ -1223,6 +1323,144 @@ CREATE TRIGGER verification_trigger
     FOR EACH ROW
     WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
     EXECUTE FUNCTION public.add_event_to_trigger_queue ();
+
+-- ASSIGNMENT_LIST
+-- Aggregated VIEW method to get list of assigners and reviewers usernames to allow filtering by those on the application list page
+CREATE OR REPLACE FUNCTION assignment_list (stageid int)
+    RETURNS TABLE (
+        application_id int,
+        reviewers varchar[],
+        assigners varchar[]
+    )
+    AS $$
+    SELECT
+        review_assignment.application_id,
+        ARRAY_AGG(DISTINCT (CONCAT(reviewer_user.first_name, ' ', reviewer_user.last_name)::varchar)) AS reviewers,
+        ARRAY_AGG(DISTINCT (CONCAT(assigner_user.first_name, ' ', assigner_user.last_name)::varchar)) AS assigners
+    FROM
+        public.review_assignment
+    LEFT JOIN public."user" AS assigner_user ON review_assignment.assigner_id = assigner_user.id
+    LEFT JOIN public."user" AS reviewer_user ON review_assignment.reviewer_id = reviewer_user.id
+WHERE
+    review_assignment.stage_id = $1
+    AND review_assignment.status = 'ASSIGNED'
+    -- WHERE assigner_user IS NOT NULL
+GROUP BY
+    review_assignment.application_id;
+
+$$
+LANGUAGE sql
+STABLE;
+
+-- ASSIGNER_ACTION_LIST
+-- Aggregated VIEW method of all related assigner data to each application on application list page
+DROP FUNCTION IF EXISTS assigner_list (integer, integer);
+
+CREATE OR REPLACE FUNCTION assigner_list (stage_id int, assigner_id int)
+    RETURNS TABLE (
+        application_id int,
+        assigner_action public.assigner_action
+    )
+    AS $$
+    SELECT
+        review_assignment.application_id AS application_id,
+        CASE WHEN COUNT(DISTINCT (review_assignment.id)) != 0
+            AND assigned_questions_count (application_id, $1, level_number) >= reviewable_questions_count (application_id)
+            AND submitted_assigned_questions_count (application_id, $1, level_number) < assigned_questions_count (application_id, $1, level_number) THEN
+            'RE_ASSIGN'
+        WHEN COUNT(DISTINCT (review_assignment.id)) != 0
+            AND assigned_questions_count (application_id, $1, level_number) < reviewable_questions_count (application_id) THEN
+            'ASSIGN'
+        ELSE
+            NULL
+        END::assigner_action
+    FROM
+        public.review_assignment
+    LEFT JOIN public.review_assignment_assigner_join ON review_assignment.id = review_assignment_assigner_join.review_assignment_id
+WHERE
+    review_assignment.stage_id = $1
+    AND review_assignment_assigner_join.assigner_id = $2
+    AND (
+        SELECT
+            outcome
+        FROM
+            public.application
+        WHERE
+            id = review_assignment.application_id) = 'PENDING'
+GROUP BY
+    review_assignment.application_id,
+    review_assignment.level_number;
+
+$$
+LANGUAGE sql
+STABLE;
+
+-- REVIEWER_ACTION_LIST
+-- Aggregated VIEW method of reviewer action to each application on application list page
+DROP FUNCTION IF EXISTS review_list (integer, integer);
+
+DROP FUNCTION IF EXISTS review_list (integer, integer, public.application_status);
+
+CREATE OR REPLACE FUNCTION review_list (stageid int, reviewerid int, appstatus public.application_status)
+    RETURNS TABLE (
+        application_id int,
+        reviewer_action public.reviewer_action
+    )
+    AS $$
+    SELECT
+        review_assignment.application_id AS application_id,
+        CASE WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'CHANGES_REQUESTED') != 0 THEN
+            'UPDATE_REVIEW'
+        WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'PENDING') != 0 THEN
+            'RESTART_REVIEW'
+        WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'DRAFT'
+            AND review_is_locked (review) = FALSE) != 0 THEN
+            'CONTINUE_REVIEW'
+        WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+            AND review_assignment.is_final_decision = TRUE
+            AND review_assignment.is_last_stage = TRUE
+            AND review = NULL) != 0 THEN
+            'MAKE_DECISION'
+        WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+            AND review.id IS NULL) != 0 THEN
+            'START_REVIEW'
+        WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'AVAILABLE'
+            AND is_self_assignable = TRUE
+            AND review_assignment_available_sections (review_assignment) != '{}'
+            AND review.id IS NULL) != 0 THEN
+            'SELF_ASSIGN'
+        WHEN COUNT(*) FILTER (WHERE (appstatus = 'CHANGES_REQUIRED'
+            OR appstatus = 'DRAFT')
+            AND review_assignment.status = 'ASSIGNED'
+            AND review_status_history.status = 'SUBMITTED') != 0 THEN
+            'AWAITING_RESPONSE'
+        WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
+            OR review_status_history.status = 'SUBMITTED') != 0 THEN
+            'VIEW_REVIEW'
+        ELSE
+            NULL
+        END::public.reviewer_action
+    FROM
+        public.review_assignment
+    LEFT JOIN public.review ON review.review_assignment_id = review_assignment.id
+    LEFT JOIN public.review_status_history ON (review_status_history.review_id = review.id
+            AND is_current = TRUE)
+WHERE
+    review_assignment.stage_id = $1
+    AND review_assignment.reviewer_id = $2
+    AND (
+        SELECT
+            outcome
+        FROM
+            public.application
+        WHERE
+            id = review_assignment.application_id) = 'PENDING'
+GROUP BY
+    review_assignment.application_id;
+
+$$
+LANGUAGE sql
+STABLE;
 
 DROP VIEW IF EXISTS unnested_sections CASCADE;
 
@@ -1921,19 +2159,4 @@ CREATE TRIGGER permission_delete_activity_trigger
     BEFORE DELETE ON public.permission_join
     FOR EACH ROW
     EXECUTE FUNCTION permission_activity_log ();
-
--- Below previously used for application list
-DROP FUNCTION IF EXISTS assignment_list;
-
-DROP FUNCTION IF EXISTS assigner_list;
-
-DROP FUNCTION IF EXISTS assigned_questions_count;
-
-DROP FUNCTION IF EXISTS submitted_questions_count;
-
-DROP FUNCTION IF EXISTS reviewable_questions_count;
-
-DROP FUNCTION IF EXISTS assigned_questions;
-
-DROP FUNCTION IF EXISTS review_list;
 
