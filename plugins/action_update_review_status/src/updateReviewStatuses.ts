@@ -46,7 +46,7 @@ const updateReviewStatuses: ActionPluginType = async ({
   // action
   const changedResponses: ChangedResponse[] = parameters.changedResponses || []
 
-  const triggeredBy: TriggeredBy = parameters.triggeredBy || 'APPLICATION'
+  const triggeredBy: TriggeredBy = reviewId ? 'REVIEW' : parameters.triggeredBy || 'APPLICATION'
 
   console.log(
     `Updating statuses of reviews associated with ${
@@ -60,8 +60,6 @@ const updateReviewStatuses: ActionPluginType = async ({
     const reviews = (await db.getAssociatedReviews(applicationId, stageNumber))
       // Ignore all "Discontinued" reviews
       .filter(({ reviewStatus }) => reviewStatus !== ReviewStatus.Discontinued)
-      // Ignore current review
-      .filter(({ reviewId: id }) => id !== reviewId)
 
     // APPLICATION SUBMISSIONS:
     if (triggeredBy === 'APPLICATION') {
@@ -110,9 +108,12 @@ const updateReviewStatuses: ActionPluginType = async ({
 
       const thisReviewLevel = reviews.find((review) => review.reviewId === reviewId)?.levelNumber
 
+      // Remove current review
+      const otherReviews = reviews.filter(({ reviewId: id }) => id !== reviewId)
+
       if (!thisReviewLevel) throw new Error('Invalid reviewId')
 
-      const nextLevelReview = reviews.filter(
+      const nextLevelReview = otherReviews.filter(
         ({ levelNumber }) => levelNumber === thisReviewLevel + 1
       )
 
@@ -145,7 +146,7 @@ const updateReviewStatuses: ActionPluginType = async ({
             .map(({ templateElementId }) => templateElementId)
         )
 
-        const lowerReviewsToUpdate = reviews.filter(
+        const lowerReviewsToUpdate = otherReviews.filter(
           ({ levelNumber, assignedSections }) =>
             levelNumber < thisReviewLevel &&
             assignedSections.some((section) => disagreedSections.includes(section))
