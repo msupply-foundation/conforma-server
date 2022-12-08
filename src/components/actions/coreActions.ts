@@ -448,6 +448,10 @@ const coreActions: CoreActions = {
             children: ['applicationData.reviewData.isLastStage'],
           },
           {
+            operator: 'objectProperties',
+            children: ['applicationData.reviewData.isLastLevel'],
+          },
+          {
             operator: 'OR',
             children: [
               {
