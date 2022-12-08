@@ -336,10 +336,6 @@ const coreActions: CoreActions = {
           operator: 'objectProperties',
           children: ['outputCumulative.updatedResponses'],
         },
-        reviewId: {
-          operator: 'objectProperties',
-          children: ['applicationData.reviewData.reviewId'],
-        },
       },
     },
 
