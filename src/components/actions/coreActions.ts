@@ -395,6 +395,48 @@ const coreActions: CoreActions = {
               'CONFORM',
             ],
           },
+          // We also want to make sure that it won't move to the next stage if
+          // the reviewer is not reviewing the whole application (NEEDS
+          // RE-WORDING)
+          {
+            operator: '=',
+            children: [
+              {
+                operator: 'graphQL',
+                children: [
+                  'query approvedAssignedQuestionsCount(\n  $appId: Int!\n  $stageId: Int!\n  $levelNumber: Int!\n) {\n  assignedQuestions(\n    appId: $appId\n    stageId: $stageId\n    levelNumber: $levelNumber\n    filter: {\n      or: [{ decision: { equalTo: APPROVE } }, { decision: { equalTo: AGREE } }]\n    }\n  ) {\n    totalCount\n  }\n}',
+                  'graphqlendpoint',
+                  ['appId', 'stageId', 'levelNumber'],
+                  {
+                    operator: 'objectProperties',
+                    children: ['applicationData.applicationId', null],
+                  },
+                  {
+                    operator: 'objectProperties',
+                    children: ['applicationData.stageId', null],
+                  },
+                  {
+                    operator: 'objectProperties',
+                    children: ['applicationData.reviewData.levelNumber', null],
+                  },
+                  'assignedQuestions.totalCount',
+                ],
+              },
+              {
+                operator: 'graphQL',
+                children: [
+                  'query reviewableQuestionsCount($appId: Int!) {\n  reviewableQuestionsCount(\n    appId: $appId\n  )\n}',
+                  'graphqlendpoint',
+                  ['appId'],
+                  {
+                    operator: 'objectProperties',
+                    children: ['applicationData.applicationId', null],
+                  },
+                  'reviewableQuestionsCount',
+                ],
+              },
+            ],
+          },
         ],
       },
       parameter_queries: {},
