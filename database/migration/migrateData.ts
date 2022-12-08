@@ -619,6 +619,12 @@ const migrateData = async () => {
     `)
 
     console.log(' - Simplify how we handle "locked" reviews')
+    // We need to drop these first so we can subsequently manipulate
+    // review_status and review_status_old.
+    await DB.changeSchema(`
+      DROP VIEW IF EXISTS assigned_sections_by_stage_and_level CASCADE;
+      DROP TYPE IF EXISTS public.review_status_old;
+    `)
     await DB.changeSchema(`
       ALTER TABLE public.review_assignment DROP column IF EXISTS
       is_locked;
