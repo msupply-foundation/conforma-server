@@ -17,11 +17,11 @@ export type Scalars = {
   Datetime: any;
   /** The day, does not include a time. */
   Date: any;
+  /** A signed eight-byte integer. The upper big integer values are greater than the max value for a JavaScript number. Therefore all big integers will be output as strings and not numbers. */
+  BigInt: any;
   CharacterData: any;
   SqlIdentifier: any;
   YesOrNo: any;
-  /** A signed eight-byte integer. The upper big integer values are greater than the max value for a JavaScript number. Therefore all big integers will be output as strings and not numbers. */
-  BigInt: any;
 };
 
 export type ActionPlugin = Node & {
@@ -516,6 +516,7 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -4086,6 +4087,7 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -4358,6 +4360,96 @@ export type AssignedQuestionsRecordFilter = {
   not?: Maybe<AssignedQuestionsRecordFilter>;
 };
 
+export type AssignedSectionsByStageAndLevel = {
+  __typename?: 'AssignedSectionsByStageAndLevel';
+  applicationId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  levelNumber?: Maybe<Scalars['Int']>;
+  assignerId?: Maybe<Scalars['Int']>;
+  assignedSectionForLevel?: Maybe<Scalars['BigInt']>;
+  assignedInProgressSections?: Maybe<Scalars['BigInt']>;
+};
+
+/**
+ * A condition to be used against `AssignedSectionsByStageAndLevel` object types.
+ * All fields are tested for equality and combined with a logical ‘and.’
+ */
+export type AssignedSectionsByStageAndLevelCondition = {
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stageId` field. */
+  stageId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `levelNumber` field. */
+  levelNumber?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `assignerId` field. */
+  assignerId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `assignedSectionForLevel` field. */
+  assignedSectionForLevel?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `assignedInProgressSections` field. */
+  assignedInProgressSections?: Maybe<Scalars['BigInt']>;
+};
+
+/** A filter to be used against `AssignedSectionsByStageAndLevel` object types. All fields are combined with a logical ‘and.’ */
+export type AssignedSectionsByStageAndLevelFilter = {
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageId` field. */
+  stageId?: Maybe<IntFilter>;
+  /** Filter by the object’s `levelNumber` field. */
+  levelNumber?: Maybe<IntFilter>;
+  /** Filter by the object’s `assignerId` field. */
+  assignerId?: Maybe<IntFilter>;
+  /** Filter by the object’s `assignedSectionForLevel` field. */
+  assignedSectionForLevel?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `assignedInProgressSections` field. */
+  assignedInProgressSections?: Maybe<BigIntFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<AssignedSectionsByStageAndLevelFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<AssignedSectionsByStageAndLevelFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<AssignedSectionsByStageAndLevelFilter>;
+};
+
+/** A connection to a list of `AssignedSectionsByStageAndLevel` values. */
+export type AssignedSectionsByStageAndLevelsConnection = {
+  __typename?: 'AssignedSectionsByStageAndLevelsConnection';
+  /** A list of `AssignedSectionsByStageAndLevel` objects. */
+  nodes: Array<Maybe<AssignedSectionsByStageAndLevel>>;
+  /** A list of edges which contains the `AssignedSectionsByStageAndLevel` and cursor to aid in pagination. */
+  edges: Array<AssignedSectionsByStageAndLevelsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AssignedSectionsByStageAndLevel` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `AssignedSectionsByStageAndLevel` edge in the connection. */
+export type AssignedSectionsByStageAndLevelsEdge = {
+  __typename?: 'AssignedSectionsByStageAndLevelsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `AssignedSectionsByStageAndLevel` at the end of the edge. */
+  node?: Maybe<AssignedSectionsByStageAndLevel>;
+};
+
+/** Methods to use when ordering `AssignedSectionsByStageAndLevel`. */
+export enum AssignedSectionsByStageAndLevelsOrderBy {
+  Natural = 'NATURAL',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  StageIdAsc = 'STAGE_ID_ASC',
+  StageIdDesc = 'STAGE_ID_DESC',
+  LevelNumberAsc = 'LEVEL_NUMBER_ASC',
+  LevelNumberDesc = 'LEVEL_NUMBER_DESC',
+  AssignerIdAsc = 'ASSIGNER_ID_ASC',
+  AssignerIdDesc = 'ASSIGNER_ID_DESC',
+  AssignedSectionForLevelAsc = 'ASSIGNED_SECTION_FOR_LEVEL_ASC',
+  AssignedSectionForLevelDesc = 'ASSIGNED_SECTION_FOR_LEVEL_DESC',
+  AssignedInProgressSectionsAsc = 'ASSIGNED_IN_PROGRESS_SECTIONS_ASC',
+  AssignedInProgressSectionsDesc = 'ASSIGNED_IN_PROGRESS_SECTIONS_DESC'
+}
+
 export enum AssignerAction {
   Assign = 'ASSIGN',
   ReAssign = 'RE_ASSIGN'
@@ -4474,6 +4566,32 @@ export type AssignmentListRecordFilter = {
   not?: Maybe<AssignmentListRecordFilter>;
 };
 
+
+/** A filter to be used against BigInt fields. All fields are combined with a logical ‘and.’ */
+export type BigIntFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<Scalars['BigInt']>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<Scalars['BigInt']>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<Scalars['BigInt']>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<Scalars['BigInt']>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<Scalars['BigInt']>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<Scalars['BigInt']>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<Scalars['BigInt']>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<Scalars['BigInt']>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<Scalars['BigInt']>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<Scalars['BigInt']>;
+};
 
 /** A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’ */
 export type BooleanFilter = {
@@ -9913,6 +10031,7 @@ export type FileTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -14608,6 +14727,8 @@ export type Query = Node & {
   applicationStageStatusLatests?: Maybe<ApplicationStageStatusLatestsConnection>;
   /** Reads and enables pagination through a set of `ApplicationStatusHistory`. */
   applicationStatusHistories?: Maybe<ApplicationStatusHistoriesConnection>;
+  /** Reads and enables pagination through a set of `AssignedSectionsByStageAndLevel`. */
+  assignedSectionsByStageAndLevels?: Maybe<AssignedSectionsByStageAndLevelsConnection>;
   /** Reads and enables pagination through a set of `ConstraintsInfo`. */
   constraintsInfos?: Maybe<ConstraintsInfosConnection>;
   /** Reads and enables pagination through a set of `Counter`. */
@@ -14676,6 +14797,8 @@ export type Query = Node & {
   triggerQueues?: Maybe<TriggerQueuesConnection>;
   /** Reads and enables pagination through a set of `TriggerSchedule`. */
   triggerSchedules?: Maybe<TriggerSchedulesConnection>;
+  /** Reads and enables pagination through a set of `UnnestedSection`. */
+  unnestedSections?: Maybe<UnnestedSectionsConnection>;
   /** Reads and enables pagination through a set of `User`. */
   users?: Maybe<UsersConnection>;
   /** Reads and enables pagination through a set of `UserOrgJoin`. */
@@ -15004,6 +15127,19 @@ export type QueryApplicationStatusHistoriesArgs = {
   orderBy?: Maybe<Array<ApplicationStatusHistoriesOrderBy>>;
   condition?: Maybe<ApplicationStatusHistoryCondition>;
   filter?: Maybe<ApplicationStatusHistoryFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAssignedSectionsByStageAndLevelsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<AssignedSectionsByStageAndLevelsOrderBy>>;
+  condition?: Maybe<AssignedSectionsByStageAndLevelCondition>;
+  filter?: Maybe<AssignedSectionsByStageAndLevelFilter>;
 };
 
 
@@ -15446,6 +15582,19 @@ export type QueryTriggerSchedulesArgs = {
   orderBy?: Maybe<Array<TriggerSchedulesOrderBy>>;
   condition?: Maybe<TriggerScheduleCondition>;
   filter?: Maybe<TriggerScheduleFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUnnestedSectionsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<UnnestedSectionsOrderBy>>;
+  condition?: Maybe<UnnestedSectionCondition>;
+  filter?: Maybe<UnnestedSectionFilter>;
 };
 
 
@@ -18208,6 +18357,7 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -20604,6 +20754,7 @@ export type Template = Node & {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   /** Reads a single `TemplateCategory` that is related to this `Template`. */
   templateCategory?: Maybe<TemplateCategory>;
   /** Reads and enables pagination through a set of `TemplateSection`. */
@@ -21011,6 +21162,7 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -21244,6 +21396,8 @@ export type TemplateCondition = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `version` field. */
   version?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `serialPattern` field. */
+  serialPattern?: Maybe<Scalars['String']>;
 };
 
 export type TemplateElement = Node & {
@@ -21789,6 +21943,8 @@ export type TemplateFilter = {
   versionTimestamp?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `version` field. */
   version?: Maybe<IntFilter>;
+  /** Filter by the object’s `serialPattern` field. */
+  serialPattern?: Maybe<StringFilter>;
   /** Filter by the object’s `templateSections` relation. */
   templateSections?: Maybe<TemplateToManyTemplateSectionFilter>;
   /** Some related `templateSections` exist. */
@@ -22107,6 +22263,7 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -22143,6 +22300,7 @@ export type TemplateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -22348,6 +22506,7 @@ export type TemplatePatch = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -22681,6 +22840,7 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -22979,6 +23139,7 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -23072,6 +23233,8 @@ export enum TemplatesOrderBy {
   VersionTimestampDesc = 'VERSION_TIMESTAMP_DESC',
   VersionAsc = 'VERSION_ASC',
   VersionDesc = 'VERSION_DESC',
+  SerialPatternAsc = 'SERIAL_PATTERN_ASC',
+  SerialPatternDesc = 'SERIAL_PATTERN_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -23636,6 +23799,7 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -23802,6 +23966,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   icon?: Maybe<Scalars['String']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -24655,6 +24820,7 @@ export type TriggerScheduleTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -24740,6 +24906,68 @@ export type UiLocationListFilter = {
   /** Any array item is greater than or equal to the specified value. */
   anyGreaterThanOrEqualTo?: Maybe<UiLocation>;
 };
+
+export type UnnestedSection = {
+  __typename?: 'UnnestedSection';
+  id?: Maybe<Scalars['Int']>;
+  section?: Maybe<Scalars['String']>;
+};
+
+/**
+ * A condition to be used against `UnnestedSection` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type UnnestedSectionCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `section` field. */
+  section?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `UnnestedSection` object types. All fields are combined with a logical ‘and.’ */
+export type UnnestedSectionFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `section` field. */
+  section?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<UnnestedSectionFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<UnnestedSectionFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<UnnestedSectionFilter>;
+};
+
+/** A connection to a list of `UnnestedSection` values. */
+export type UnnestedSectionsConnection = {
+  __typename?: 'UnnestedSectionsConnection';
+  /** A list of `UnnestedSection` objects. */
+  nodes: Array<Maybe<UnnestedSection>>;
+  /** A list of edges which contains the `UnnestedSection` and cursor to aid in pagination. */
+  edges: Array<UnnestedSectionsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `UnnestedSection` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `UnnestedSection` edge in the connection. */
+export type UnnestedSectionsEdge = {
+  __typename?: 'UnnestedSectionsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `UnnestedSection` at the end of the edge. */
+  node?: Maybe<UnnestedSection>;
+};
+
+/** Methods to use when ordering `UnnestedSection`. */
+export enum UnnestedSectionsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  SectionAsc = 'SECTION_ASC',
+  SectionDesc = 'SECTION_DESC'
+}
 
 /** All input for the `updateActionPluginByCode` mutation. */
 export type UpdateActionPluginByCodeInput = {
@@ -28172,6 +28400,7 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28200,6 +28429,7 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28228,6 +28458,7 @@ export type UpdateTemplateOnFileForFileTemplateIdFkeyPatch = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28256,6 +28487,7 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28284,6 +28516,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28312,6 +28545,7 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28339,6 +28573,7 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   icon?: Maybe<Scalars['String']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28367,6 +28602,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28395,6 +28631,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28423,6 +28660,7 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28451,6 +28689,7 @@ export type UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
+  serialPattern?: Maybe<Scalars['String']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -31467,6 +31706,14 @@ export type ResolversTypes = {
   ApplicationStageStatusLatestsConnection: ResolverTypeWrapper<ApplicationStageStatusLatestsConnection>;
   ApplicationStageStatusLatest: ResolverTypeWrapper<ApplicationStageStatusLatest>;
   ApplicationStageStatusLatestsEdge: ResolverTypeWrapper<ApplicationStageStatusLatestsEdge>;
+  AssignedSectionsByStageAndLevelsOrderBy: AssignedSectionsByStageAndLevelsOrderBy;
+  AssignedSectionsByStageAndLevelCondition: AssignedSectionsByStageAndLevelCondition;
+  BigInt: ResolverTypeWrapper<Scalars['BigInt']>;
+  AssignedSectionsByStageAndLevelFilter: AssignedSectionsByStageAndLevelFilter;
+  BigIntFilter: BigIntFilter;
+  AssignedSectionsByStageAndLevelsConnection: ResolverTypeWrapper<AssignedSectionsByStageAndLevelsConnection>;
+  AssignedSectionsByStageAndLevel: ResolverTypeWrapper<AssignedSectionsByStageAndLevel>;
+  AssignedSectionsByStageAndLevelsEdge: ResolverTypeWrapper<AssignedSectionsByStageAndLevelsEdge>;
   ConstraintsInfosOrderBy: ConstraintsInfosOrderBy;
   ConstraintsInfoCondition: ConstraintsInfoCondition;
   CharacterData: ResolverTypeWrapper<Scalars['CharacterData']>;
@@ -31553,6 +31800,12 @@ export type ResolversTypes = {
   TriggerQueueCondition: TriggerQueueCondition;
   TriggerQueuesConnection: ResolverTypeWrapper<TriggerQueuesConnection>;
   TriggerQueuesEdge: ResolverTypeWrapper<TriggerQueuesEdge>;
+  UnnestedSectionsOrderBy: UnnestedSectionsOrderBy;
+  UnnestedSectionCondition: UnnestedSectionCondition;
+  UnnestedSectionFilter: UnnestedSectionFilter;
+  UnnestedSectionsConnection: ResolverTypeWrapper<UnnestedSectionsConnection>;
+  UnnestedSection: ResolverTypeWrapper<UnnestedSection>;
+  UnnestedSectionsEdge: ResolverTypeWrapper<UnnestedSectionsEdge>;
   UsersOrderBy: UsersOrderBy;
   UserCondition: UserCondition;
   UsersConnection: ResolverTypeWrapper<UsersConnection>;
@@ -31577,7 +31830,6 @@ export type ResolversTypes = {
   AssignedQuestionsConnection: ResolverTypeWrapper<AssignedQuestionsConnection>;
   AssignedQuestionsRecord: ResolverTypeWrapper<AssignedQuestionsRecord>;
   AssignedQuestionEdge: ResolverTypeWrapper<AssignedQuestionEdge>;
-  BigInt: ResolverTypeWrapper<Scalars['BigInt']>;
   AssignerListRecordFilter: AssignerListRecordFilter;
   AssignerListConnection: ResolverTypeWrapper<AssignerListConnection>;
   AssignerListRecord: ResolverTypeWrapper<AssignerListRecord>;
@@ -33145,6 +33397,13 @@ export type ResolversParentTypes = {
   ApplicationStageStatusLatestsConnection: ApplicationStageStatusLatestsConnection;
   ApplicationStageStatusLatest: ApplicationStageStatusLatest;
   ApplicationStageStatusLatestsEdge: ApplicationStageStatusLatestsEdge;
+  AssignedSectionsByStageAndLevelCondition: AssignedSectionsByStageAndLevelCondition;
+  BigInt: Scalars['BigInt'];
+  AssignedSectionsByStageAndLevelFilter: AssignedSectionsByStageAndLevelFilter;
+  BigIntFilter: BigIntFilter;
+  AssignedSectionsByStageAndLevelsConnection: AssignedSectionsByStageAndLevelsConnection;
+  AssignedSectionsByStageAndLevel: AssignedSectionsByStageAndLevel;
+  AssignedSectionsByStageAndLevelsEdge: AssignedSectionsByStageAndLevelsEdge;
   ConstraintsInfoCondition: ConstraintsInfoCondition;
   CharacterData: Scalars['CharacterData'];
   SqlIdentifier: Scalars['SqlIdentifier'];
@@ -33216,6 +33475,11 @@ export type ResolversParentTypes = {
   TriggerQueueCondition: TriggerQueueCondition;
   TriggerQueuesConnection: TriggerQueuesConnection;
   TriggerQueuesEdge: TriggerQueuesEdge;
+  UnnestedSectionCondition: UnnestedSectionCondition;
+  UnnestedSectionFilter: UnnestedSectionFilter;
+  UnnestedSectionsConnection: UnnestedSectionsConnection;
+  UnnestedSection: UnnestedSection;
+  UnnestedSectionsEdge: UnnestedSectionsEdge;
   UserCondition: UserCondition;
   UsersConnection: UsersConnection;
   UsersEdge: UsersEdge;
@@ -33238,7 +33502,6 @@ export type ResolversParentTypes = {
   AssignedQuestionsConnection: AssignedQuestionsConnection;
   AssignedQuestionsRecord: AssignedQuestionsRecord;
   AssignedQuestionEdge: AssignedQuestionEdge;
-  BigInt: Scalars['BigInt'];
   AssignerListRecordFilter: AssignerListRecordFilter;
   AssignerListConnection: AssignerListConnection;
   AssignerListRecord: AssignerListRecord;
@@ -34989,6 +35252,30 @@ export type AssignedQuestionsRecordResolvers<ContextType = any, ParentType exten
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type AssignedSectionsByStageAndLevelResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssignedSectionsByStageAndLevel'] = ResolversParentTypes['AssignedSectionsByStageAndLevel']> = {
+  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  stageId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  levelNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  assignerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  assignedSectionForLevel?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
+  assignedInProgressSections?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AssignedSectionsByStageAndLevelsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssignedSectionsByStageAndLevelsConnection'] = ResolversParentTypes['AssignedSectionsByStageAndLevelsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['AssignedSectionsByStageAndLevel']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['AssignedSectionsByStageAndLevelsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AssignedSectionsByStageAndLevelsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssignedSectionsByStageAndLevelsEdge'] = ResolversParentTypes['AssignedSectionsByStageAndLevelsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['AssignedSectionsByStageAndLevel']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type AssignerListConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssignerListConnection'] = ResolversParentTypes['AssignerListConnection']> = {
   nodes?: Resolver<Array<Maybe<ResolversTypes['AssignerListRecord']>>, ParentType, ContextType>;
   edges?: Resolver<Array<ResolversTypes['AssignerListEdge']>, ParentType, ContextType>;
@@ -36606,6 +36893,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationStageStatusAlls?: Resolver<Maybe<ResolversTypes['ApplicationStageStatusAllsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStageStatusAllsArgs, 'orderBy'>>;
   applicationStageStatusLatests?: Resolver<Maybe<ResolversTypes['ApplicationStageStatusLatestsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStageStatusLatestsArgs, 'orderBy'>>;
   applicationStatusHistories?: Resolver<Maybe<ResolversTypes['ApplicationStatusHistoriesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoriesArgs, 'orderBy'>>;
+  assignedSectionsByStageAndLevels?: Resolver<Maybe<ResolversTypes['AssignedSectionsByStageAndLevelsConnection']>, ParentType, ContextType, RequireFields<QueryAssignedSectionsByStageAndLevelsArgs, 'orderBy'>>;
   constraintsInfos?: Resolver<Maybe<ResolversTypes['ConstraintsInfosConnection']>, ParentType, ContextType, RequireFields<QueryConstraintsInfosArgs, 'orderBy'>>;
   counters?: Resolver<Maybe<ResolversTypes['CountersConnection']>, ParentType, ContextType, RequireFields<QueryCountersArgs, 'orderBy'>>;
   dataTables?: Resolver<Maybe<ResolversTypes['DataTablesConnection']>, ParentType, ContextType, RequireFields<QueryDataTablesArgs, 'orderBy'>>;
@@ -36640,6 +36928,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   templateStageReviewLevels?: Resolver<Maybe<ResolversTypes['TemplateStageReviewLevelsConnection']>, ParentType, ContextType, RequireFields<QueryTemplateStageReviewLevelsArgs, 'orderBy'>>;
   triggerQueues?: Resolver<Maybe<ResolversTypes['TriggerQueuesConnection']>, ParentType, ContextType, RequireFields<QueryTriggerQueuesArgs, 'orderBy'>>;
   triggerSchedules?: Resolver<Maybe<ResolversTypes['TriggerSchedulesConnection']>, ParentType, ContextType, RequireFields<QueryTriggerSchedulesArgs, 'orderBy'>>;
+  unnestedSections?: Resolver<Maybe<ResolversTypes['UnnestedSectionsConnection']>, ParentType, ContextType, RequireFields<QueryUnnestedSectionsArgs, 'orderBy'>>;
   users?: Resolver<Maybe<ResolversTypes['UsersConnection']>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'orderBy'>>;
   userOrgJoins?: Resolver<Maybe<ResolversTypes['UserOrgJoinsConnection']>, ParentType, ContextType, RequireFields<QueryUserOrgJoinsArgs, 'orderBy'>>;
   userOrganisations?: Resolver<Maybe<ResolversTypes['UserOrganisationsConnection']>, ParentType, ContextType, RequireFields<QueryUserOrganisationsArgs, 'orderBy'>>;
@@ -37094,6 +37383,7 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
   templateCategoryId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   versionTimestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   version?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  serialPattern?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   templateCategory?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType>;
   templateSections?: Resolver<ResolversTypes['TemplateSectionsConnection'], ParentType, ContextType, RequireFields<TemplateTemplateSectionsArgs, 'orderBy'>>;
   templateStages?: Resolver<ResolversTypes['TemplateStagesConnection'], ParentType, ContextType, RequireFields<TemplateTemplateStagesArgs, 'orderBy'>>;
@@ -37411,6 +37701,26 @@ export type TriggerSchedulesConnectionResolvers<ContextType = any, ParentType ex
 export type TriggerSchedulesEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['TriggerSchedulesEdge'] = ResolversParentTypes['TriggerSchedulesEdge']> = {
   cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
   node?: Resolver<Maybe<ResolversTypes['TriggerSchedule']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UnnestedSectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UnnestedSection'] = ResolversParentTypes['UnnestedSection']> = {
+  id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  section?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UnnestedSectionsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UnnestedSectionsConnection'] = ResolversParentTypes['UnnestedSectionsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['UnnestedSection']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['UnnestedSectionsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UnnestedSectionsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['UnnestedSectionsEdge'] = ResolversParentTypes['UnnestedSectionsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['UnnestedSection']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -37980,6 +38290,9 @@ export type Resolvers<ContextType = any> = {
   AssignedQuestionEdge?: AssignedQuestionEdgeResolvers<ContextType>;
   AssignedQuestionsConnection?: AssignedQuestionsConnectionResolvers<ContextType>;
   AssignedQuestionsRecord?: AssignedQuestionsRecordResolvers<ContextType>;
+  AssignedSectionsByStageAndLevel?: AssignedSectionsByStageAndLevelResolvers<ContextType>;
+  AssignedSectionsByStageAndLevelsConnection?: AssignedSectionsByStageAndLevelsConnectionResolvers<ContextType>;
+  AssignedSectionsByStageAndLevelsEdge?: AssignedSectionsByStageAndLevelsEdgeResolvers<ContextType>;
   AssignerListConnection?: AssignerListConnectionResolvers<ContextType>;
   AssignerListEdge?: AssignerListEdgeResolvers<ContextType>;
   AssignerListRecord?: AssignerListRecordResolvers<ContextType>;
@@ -38189,6 +38502,9 @@ export type Resolvers<ContextType = any> = {
   TriggerSchedule?: TriggerScheduleResolvers<ContextType>;
   TriggerSchedulesConnection?: TriggerSchedulesConnectionResolvers<ContextType>;
   TriggerSchedulesEdge?: TriggerSchedulesEdgeResolvers<ContextType>;
+  UnnestedSection?: UnnestedSectionResolvers<ContextType>;
+  UnnestedSectionsConnection?: UnnestedSectionsConnectionResolvers<ContextType>;
+  UnnestedSectionsEdge?: UnnestedSectionsEdgeResolvers<ContextType>;
   UpdateActionPluginPayload?: UpdateActionPluginPayloadResolvers<ContextType>;
   UpdateActionQueuePayload?: UpdateActionQueuePayloadResolvers<ContextType>;
   UpdateActivityLogPayload?: UpdateActivityLogPayloadResolvers<ContextType>;

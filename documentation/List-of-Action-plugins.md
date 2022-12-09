@@ -1,33 +1,32 @@
-## Contents
+## Contents <!-- omit in toc -->
 
 <!-- toc -->
 
-- [Contents](#contents)
-  - [Console Log](#console-log)
-  - [Change Outcome](#change-outcome)
-  - [Increment Stage](#increment-stage)
-  - [Change Status](#change-status)
-  - [Modify Record](#modify-record)
-  - [Modify Multiple Records](#modify-multiple-records)
-  - [Generate Text String](#generate-text-string)
-  - [Join User to Organsation](#join-user-to-organsation)
-  - [Remove User from Organsation](#remove-user-from-organsation)
-  - [Grant Permissions](#grant-permissions)
-  - [Revoke Permissions](#revoke-permissions)
-  - [Generate Review Assignments](#generate-review-assignments)
-  - [Refresh Review Assignments](#refresh-review-assignments)
-  - [Trim Responses](#trim-responses)
-  - [Update Review Visibility](#update-review-visibility)
-  - [Generate Document](#generate-document)
-  - [Send Notification](#send-notification)
-  - [Schedule Action](#schedule-action)
-  - [Clean Up Files](#clean-up-files)
-  - [Aliasing existing template actions](#aliasing-existing-template-actions)
+- [Console Log](#console-log)
+- [Change Outcome](#change-outcome)
+- [Increment Stage](#increment-stage)
+- [Change Status](#change-status)
+- [Modify Record](#modify-record)
+- [Modify Multiple Records](#modify-multiple-records)
+- [Generate Text String](#generate-text-string)
+- [Join User to Organsation](#join-user-to-organsation)
+- [Remove User from Organsation](#remove-user-from-organsation)
+- [Grant Permissions](#grant-permissions)
+- [Revoke Permissions](#revoke-permissions)
+- [Generate Review Assignments](#generate-review-assignments)
+- [Refresh Review Assignments](#refresh-review-assignments)
+- [Trim Responses](#trim-responses)
+- [Update Review Visibility](#update-review-visibility)
+- [Update Review Statuses](#update-review-statuses)
+- [Generate Document](#generate-document)
+- [Send Notification](#send-notification)
+- [Schedule Action](#schedule-action)
+- [Clean Up Files](#clean-up-files)
+- [Aliasing existing template actions](#aliasing-existing-template-actions)
 - [Core Actions](#core-actions)
-
-* [Core Actions](#core-actions)
-
 <!-- tocstop -->
+
+**Note**: Many of these actions won't need to be specifically configured as they are ["Core Actions"](#core-actions) and hard-coded to work correctly for all templates.
 
 ---
 
@@ -515,10 +514,10 @@ Whenever an application or review is submitted, this Action "cleans up", by dele
 
 - _Action Code:_ **`trimResponses`**
 
-| Input parameters<br />(\*required) <br/> | Output properties |
-| ---------------------------------------- | ----------------- |
-| `applicationId` _OR_                     | `deletedIds`      |
-| `reviewId`                               | `updatedIds`      |
+| Input parameters<br />(\*required) <br/> | Output properties  |
+| ---------------------------------------- | ------------------ |
+| `applicationId` _OR_                     | `deletedResponses` |
+| `reviewId`                               | `updatedResponses` |
 
 ---
 
@@ -533,6 +532,36 @@ Updates the applicant visibility of level 1 review responses based on the recomm
 | `reviewId`                               | `reviewResponsesWithUpdatedVisibility` |
 
 **Note:** If `reviewId` is not provided, the plugin will attempt to fetch it from `applicationData`
+
+---
+
+### Update Review Statuses
+
+When an applicant re-submits an application after making changes, or a reviewer submits their review, this Action updates the status of associated reviews to determine whether they should be "Pending" or "Changes Requested" (or left as is). We only consider "active" reviews, so those with status "Discontinued" are ignored.
+
+The logic is as follows:
+
+**ON_APPLICATION_SUBMIT**:
+- For all Level 1 "SUBMITTED" reviews that have sections that have changed responses, set status to "PENDING".
+
+**ON_REVIEW_SUBMIT**:
+- Set review one level higher than this review to "PENDING". (This should cover cases when reviewer is reviewing new applicant changes AND when they themselves have had to change an existing review before sending back to applicant).
+- If this review is not level 1 (i.e. it's a Consolidation), the lower level reviews that have sections that have responses marked as REJECTED (meaning that this reviewer has disagreed with), will change status to "CHANGES REQUESTED".
+
+- _Action Code:_ **`updateReviewsStatuses`**
+
+| Input parameters<br />(\*required) <br/>            | Output properties          |
+| --------------------------------------------------- | -------------------------- |
+| `applicationId`                                     | `updatedReviews`           |
+| `reviewId`                                          | `updatedReviewAssignments` |
+| `triggeredBy` Enum: REVIEW or APPLICATION (Default) |                            |
+| `changedResponses`\*                                |                            |
+| `level`                                             |                            |
+| `stageId`                                           |                            |
+
+`changedResponses` is an array of `applicationResponseId`s or `reviewResponseId`s and is usually provided by the output of the `trimResponses` action (which must run first).
+
+**Note:** - If `applicationId` or `reviewId` is not provided, the plugin will attempt to fetch it from `applicationData`. In case the `reviewId` is received, this Action will be updating status of related reviews of same stage in the current and next level reviews. Otherwise (for an application submit - without passing `reviewId` this Action will be updating only reviews of current level/stage.
 
 ---
 
@@ -698,48 +727,47 @@ The "condition" field (common to all template_actions) can also override the ori
 
 ## Core Actions
 
-There are certain Actions that _must_ run on particular events to facilitate a standard application/review workflow process. We have called these **Core Actions**, and they have been collected in a single "core_mutations.js" file (for insertion into database via GraphQL). Each template (other than "User Registration") has this block slugged into it as a template literal (`${coreActions}`) in its Action insertion block, before any Actions that are specific to that template.
+There are certain Actions that _must_ run on particular events to facilitate a standard application/review workflow process. We have called these **Core Actions**, and have hard-coded them into the server to ensure that they cannot be tampered with, misconfigured or accidentally removed. It also allows us to make any changes in one place and know that all templates will behave correctly without further re-configuration.
 
-Here is a summary of the core actions and the triggers that launch them:
+The core actions are contained in a single object, indexed by trigger, in `coreActions.ts` in the back-end. Each action in there has a comment describing what it does and why it is required, but here is a summary and some relevant notes:
 
-#### On Application Create:
+**ON_APPLICATION_CREATE**:
+- Generate application serial (`generateTextString`). Default pattern `S-[A-Z]{3}-<+dddd>` but can be over-ridden in the Template Builder "General" tab
+- Set initial stage (`incrementStage`) (Also sets the status to "DRAFT")
+- Generate application name (`generateTextString`) based on template code and serial. This can be over-ridden just by specifying an additional `generateTextString` action in the template actions configuration.
 
-- Increment Stage (sets to Stage 1, also sets Status to "Draft")
+**ON_APPLICATION_RESTART**:  
+(This runs when an applicant re-starts an application after a reviewer requests changes)
+- Set application status to "DRAFT" (`changeStatus`)
 
-#### On Application Submit
+**ON_APPLICATION_SUBMIT**:
+- Set status to "SUBMITTED" (`changeStatus`)
+- Trim duplicate or empty applicant responses (`trimResponses`)
+- Generate review assignments (`generateReviewAssignments`) for the level 1 reviewers
+- Clean up (delete) any files that were uploaded but not submitted as part of the application (`cleanupFiles`)
+- Update review status (`updateReviewStatuses`) for any existing reviews based on applicant responses that have been changed since the last submission.
+- Change outcome to "APPROVED" (`changeOutcome`), but *only if* there are no other `changeOutcome` actions defined for this template *and* it is a non-reviewable (i.e. automatic) template. So if you need to change the behaviour or condition of when the outcome changes, you can define a specific template action, which will ensure this automatic one doesn't run.
 
-- Change Status (to "Submitted")
-- Trim Responses (removes Null responses and unchanged ones if re-submission)
-- Generate Review Assignments (for first level reviewers)
-- Update Reviews (statuses)
-- Cleanup Files
+**ON_REVIEW_ASSIGN**:
+- If any reviews already exist for this assignment, set them to "DRAFT" (this would only happen if the reviewer had been unasssigned and then re-assigned) (`updateReviewStatuses`)
 
-#### On Application Restart (i.e. after "Changes Requested"):
+**ON_REVIEW_CREATE**:
+- Set review status (`changeStatus`) to "DRAFT"
 
-- Change Status (back to "Draft")
+**ON_REVIEW_RESTART**:
+- Set review status (`changeStatus`) to "DRAFT" when reviewer re-starts their review (after an applicant re-submission, or request for changes from a senior reviewer)
 
-#### On Review Self-Assign:
+**ON_REVIEW_SUBMIT**:
+- Set review status (`changeStatus`) to "SUBMITTED"
+- Remove unchanged or empty review responses (`trimResponses`)
+- Update status of *other* reviews (`updateReviewStatuses`) to "PENDING" or "CHANGES REQUESTED" based on reviewer responses. (Higher level reviews will be set to "PENDING", lower-level reviewers will depend on which response the reviewer agreed with.)
+- Set which review responses are visible to the applicant (`updateReviewVisibility`) if sending a request for further information (LOQ).
+- Increment stage (`incrementStage`), but only if this review is a last-level review with the decision "CONFORM". Any other conditions for incrementing the stage must be specified in additional template actions.
+- Set application status to "CHANGES REQUIRED" (`changeStatus`) if this is a last-level review and the decision is "LOQ".
+- Change outcome (`changeOutcome`), but only if this is the final stage and it's a final level review, and the decision is "CONFORM" or "NON_CONFORM". Outcome will be "APPROVED" or "REJECTED" accordingly.
+- Create or update review assignments (`generateReviewAssignments`) for the *next* review level (if there is one)
 
-- Update Review Assignment Status (for other reviewers)
+**ON_REVIEW_UNASSIGN**:
+- If any reviews already exist (i.e. previousuly-assigned reviewer has started their review), set the review status (`changeStatus`) to "DISCONTINUED"
 
-#### On Review Assign (by other)
 
-- Nothing yet (To-do?)
-
-#### On Review Create
-
-- Change Status (to "Draft")
-
-#### On Review Submit:
-
-- Change Status (to "Submitted")
-- Trim Responses
-- Update Review Statuses (for other reviews related to this review submission)
-- Increment Stage (if last level reviewer approves)
-- Generate Review Assignments (for next level review)
-- Update review response visibility (for applicant)
-- Change Status (Application, conditional on the review decision)
-
-#### On Review Restart: (i.e. review making changes based on higher level requests)
-
-- Change Status (review status to "Draft")
