@@ -550,18 +550,17 @@ The logic is as follows:
 
 - _Action Code:_ **`updateReviewsStatuses`**
 
-| Input parameters<br />(\*required) <br/>            | Output properties          |
-| --------------------------------------------------- | -------------------------- |
-| `applicationId`                                     | `updatedReviews`           |
-| `reviewId`                                          | `updatedReviewAssignments` |
-| `triggeredBy` Enum: REVIEW or APPLICATION (Default) |                            |
-| `changedResponses`\*                                |                            |
-| `level`                                             |                            |
-| `stageId`                                           |                            |
+| Input parameters<br />(\*required) <br/> | Output properties          |
+| ---------------------------------------- | -------------------------- |
+| `applicationId`                          | `updatedReviews`           |
+| `reviewId`                               | `updatedReviewAssignments` |
+| `changedResponses`\*                     |                            |
+| `level`                                  |                            |
+| `stageId`                                |                            |
 
 `changedResponses` is an array of `applicationResponseId`s or `reviewResponseId`s and is usually provided by the output of the `trimResponses` action (which must run first).
 
-**Note:** - If `applicationId` or `reviewId` is not provided, the plugin will attempt to fetch it from `applicationData`. In case the `reviewId` is received, this Action will be updating status of related reviews of same stage in the current and next level reviews. Otherwise (for an application submit - without passing `reviewId` this Action will be updating only reviews of current level/stage.
+**Note:** - If `applicationId` or `reviewId` is not provided, the plugin will attempt to fetch it from `applicationData`. In case the `reviewId` is received, this Action will be updating status of related reviews of same stage in the current and next level reviews. Otherwise (for an application submit - without passing `reviewId`) this Action will be updating only reviews of current level/stage.
 
 ---
 
