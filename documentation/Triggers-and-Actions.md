@@ -2,9 +2,8 @@
 
 <!-- toc -->
 
-## Article Contents
+## Article Contents <!-- omit in toc -->
 
-- [Article Contents](#article-contents)
 - [Overview of Trigger and Action system](#overview-of-trigger-and-action-system)
   - [List of available Triggers](#list-of-available-triggers)
   - [Database tables that have a TRIGGER field that is listened to:](#database-tables-that-have-a-trigger-field-that-is-listened-to)
