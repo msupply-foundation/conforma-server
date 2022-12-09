@@ -27,8 +27,8 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
   const suppressEmail = other?.suppressEmail ?? false
 
   const {
-    userId = applicationData?.userId,
-    email = applicationData?.email,
+    userId,
+    email,
     to = email,
     cc,
     bcc,
