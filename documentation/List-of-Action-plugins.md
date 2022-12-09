@@ -636,9 +636,9 @@ SMTP_PASSWORD=<password>
 
 `subject` and `message` are just the email subject line and message
 
-`to (email)`, `cc`, `bcc` -- the email address(es) to send the email to, in the "to" "cc" and "bcc" fields, respectively. Can be a string (single email address) or an array of strings if multiple recipients. If not supplied, will use the "email" field from `applicationData`.
+`to (email)`, `cc`, `bcc` -- the email address(es) to send the email to, in the "to" "cc" and "bcc" fields, respectively. Can be a string (single email address) or an array of strings if multiple recipients.
 
-`userId` for the notification recipient. If not supplied, it will be taken from `applicationData`.
+`userId` for the notification recipient.
 
 `fromName` / `fromEmail` refer to who the apparent sender of the email is. Default value(s) should be supplied in `config.json`, but can be over-ridden on a case-by-case basis.
 
