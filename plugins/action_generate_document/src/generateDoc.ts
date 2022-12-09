@@ -13,7 +13,10 @@ const generateDoc: ActionPluginType = async ({
     parameters
   const userId = parameters?.userId ?? applicationData?.userId
   const applicationSerial = parameters?.applicationSerial ?? applicationData?.applicationSerial
-  const templateId = parameters?.templateId ?? applicationData?.templateId
+  // We don't want to include template id normally, as that will link the file
+  // to the template when exporting, which we only want for Carbone docs and the
+  // like. So we'll only use "templateId" if it's explicitly provided.
+  const templateId = parameters?.templateId
 
   // Build full data object
   const allData = {

@@ -11,12 +11,19 @@
     "templateStage",
     "templateSection",
     "templateStageReviewLevel",
+    "templateCategory",
     "permissionName",
     "file"
   ],
   "//tablesToUpdateOnInsertFail": "deprecated, in favour of skipTableOnInsertFail",
-  "//skipTableOnInsertFail": "These tables have unique contraint other then ID, they will be skippped if insert fail, and any related records will reference existing record",
-  "skipTableOnInsertFail": ["permissionName", "permissionPolicy", "filter", "file"],
+  "//skipTableOnInsertFail": "These tables have unique constraint other then ID, they will be skipped if insert fail, and any related records will reference existing record",
+  "skipTableOnInsertFail": [
+    "permissionName",
+    "permissionPolicy",
+    "filter",
+    "file",
+    "templateCategory"
+  ],
   "excludeTables": [],
   "insertScriptsLocale": "dev",
   "includeInsertScripts": [],

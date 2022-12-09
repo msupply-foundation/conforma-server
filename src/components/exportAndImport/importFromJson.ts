@@ -132,6 +132,7 @@ const getForeignKeyReplacements = (
           referenceTableName
         )
         if (referenceValue) foreignKeyReplacements[columnName] = referenceValue
+        else foreignKeyReplacements[columnName] = null
       }
     )
   return foreignKeyReplacements

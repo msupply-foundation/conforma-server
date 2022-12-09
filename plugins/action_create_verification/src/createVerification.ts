@@ -9,7 +9,7 @@ const createVerification: ActionPluginType = async ({ parameters, applicationDat
   const {
     applicationId = applicationData?.applicationId,
     expiry = null, // duration in hours
-    uniqueId = nanoid(24),
+    uniqueId = getUrlSafeId(),
     message = '## Verification successful\n\nThank you',
     eventCode = null,
     data = null,
@@ -38,6 +38,19 @@ const createVerification: ActionPluginType = async ({ parameters, applicationDat
       error_log: error.message,
     }
   }
+}
+
+// If a url ends in an "_", most email clients and markdown processors don't
+// parse it as part of the url when creating auto-links. So for safety, we'll
+// make sure verification Ids don't end with "_" -- the last character gets
+// replaced with a random alphanumeric character if so.
+const getUrlSafeId = (size: number = 24) => {
+  const id = nanoid(size)
+
+  if (id[size - 1] !== '_') return id
+
+  const availableChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  return id.slice(0, size - 1) + availableChars[Math.floor(Math.random() * 62)]
 }
 
 export default createVerification

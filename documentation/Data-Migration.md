@@ -43,7 +43,10 @@ An advantage of having to run the migration script manually during development i
 
 - Each version's migration code should follow linearly after the last. Look for the comment `// Other version migrations continue here...` for where to insert the next migration.
 - Database queries should be added to the "databaseMethods.ts" file and called from the main script.
-- For SQL statements that are just schema changes (i.e. they don't modify data), use the database method `changeSchema()`, and write the raw query as the function argument (see migrateData.ts for examples. The difference between this and other database methods is that this one *won't* throw an error on failure, as it's assumed that the error will be due to trying to modify something that already exists (i.e. you've already run the migration script).
+- For SQL statements that are just schema changes (i.e. they don't modify data), use the database method `changeSchema()`
+  - Write the raw query as the function argument (see migrateData.ts for examples). The difference between this and other database methods is that this one *won't* throw an error on failure, as it's assumed that the error will be due to trying to modify something that already exists (i.e. you've already run the migration script).
+  - Do the same changes in both places - the `.sql` file the table belongs to and `migrationData.ts` to apply this schema migration.
+  - When you wish to be adding/changing functions, views and triggers please add to file `43_views_functions_triggers.sql` so those are fully recreated (and there isn't a repetition which could be slightly different).
 - Each migration block should be wrapped in an `if (databaseVersionLessThan(<version>))` block. For example:
   ```
   if (databaseVersionLessThan('0.2.0')) {

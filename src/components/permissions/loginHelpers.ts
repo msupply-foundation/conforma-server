@@ -70,29 +70,35 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
 
   const isAdmin = !!templatePermissionRows.find((row) => !!row?.isAdmin)
 
+  const managementPrefName =
+    config?.systemManagerPermissionName || config.defaultSystemManagerPermissionName
+  const isManager = !!templatePermissionRows.includes(managementPrefName)
+
   return {
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
-    permissionNames: Array.from(
-      new Set(templatePermissionRows.map(({ permissionName }) => permissionName))
-    ),
     JWT: await getSignedJWT({
       userId: userId || newUserId,
       orgId,
       templatePermissionRows,
       sessionId: returnSessionId,
       isAdmin,
+      isManager,
     }),
     user: {
       userId: userId || newUserId,
       username: username || newUsername,
+      permissionNames: Array.from(
+        new Set(templatePermissionRows.map(({ permissionName }) => permissionName))
+      ),
       firstName,
       lastName,
       email,
       dateOfBirth,
       organisation: selectedOrg?.[0],
       sessionId: returnSessionId,
+      isAdmin,
+      isManager,
     },
-    isAdmin,
     orgList,
   }
 }

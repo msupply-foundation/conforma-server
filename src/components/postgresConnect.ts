@@ -349,7 +349,7 @@ class PostgresDB {
     }
   }
 
-  public cleanUpPreviewFiles = async () => {
+  public cleanUpFiles = async () => {
     const text = `
       DELETE FROM file
       WHERE to_be_deleted = true
@@ -359,6 +359,32 @@ class PostgresDB {
     try {
       const result = await this.query({ text })
       return result.rows.length
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public deleteMissingFileRecords = async (fileIds: number[]) => {
+    const text = `
+      DELETE FROM file
+      WHERE id = ANY($1);
+    `
+    try {
+      await this.query({ text, values: [fileIds] })
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public checkIfInFileTable = async (filePath: string) => {
+    const text = `
+    SELECT id 
+    FROM file
+    WHERE file_path = $1 OR thumbnail_path = $1
+    `
+    try {
+      const result = await this.query({ text, values: [filePath] })
+      return result.rows.length !== 0
     } catch (err) {
       throw err
     }
@@ -503,11 +529,24 @@ class PostgresDB {
     return result.rows[0].template_id
   }
 
+  public getTemplateSerialPattern = async (templateId: number) => {
+    const text = `
+      SELECT serial_pattern FROM template
+      WHERE id = $1`
+
+    try {
+      const result = await this.query({ text, values: [templateId] })
+      return result.rows[0].serial_pattern
+    } catch (err) {
+      throw err
+    }
+  }
+
   public getActionsByTemplateId = async (
     templateId: number,
     trigger: Trigger
   ): Promise<ActionInTemplate[]> => {
-    const text = `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, template_action.event_code AS event_code, sequence, condition, parameter_queries 
+    const text = `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, template_action.event_code AS event_code, sequence, condition, parameter_queries
     FROM template 
     JOIN template_action ON template.id = template_action.template_id 
     JOIN action_plugin ON template_action.action_code = action_plugin.code 

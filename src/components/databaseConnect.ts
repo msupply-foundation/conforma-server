@@ -44,7 +44,13 @@ class DBConnect {
 
   public getFileDownloadInfo = PostgresDB.getFileDownloadInfo
 
-  public cleanUpPreviewFiles = PostgresDB.cleanUpPreviewFiles
+  public getFilePaths = GraphQLdb.getFilePaths
+
+  public cleanUpFiles = PostgresDB.cleanUpFiles
+
+  public deleteMissingFileRecords = PostgresDB.deleteMissingFileRecords
+
+  public checkIfInFileTable = PostgresDB.checkIfInFileTable
 
   public addActionPlugin = PostgresDB.addActionPlugin
 
@@ -53,6 +59,8 @@ class DBConnect {
   public getActionPlugins = PostgresDB.getActionPlugins
 
   public getActionsByTemplateId = PostgresDB.getActionsByTemplateId
+
+  public getTemplateSerialPattern = PostgresDB.getTemplateSerialPattern
 
   public getSingleTemplateAction = PostgresDB.getSingleTemplateAction
 

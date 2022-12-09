@@ -2,6 +2,7 @@ import DBConnect from '../databaseConnect'
 import scheduler from 'node-schedule'
 import config from '../../config'
 import { DateTime } from 'luxon'
+import cleanUpFiles from '../files/cleanup'
 import createBackup from '../exportAndImport/backup'
 
 // Dev config option
@@ -39,7 +40,7 @@ scheduler.scheduleJob(checkActionSchedule, () => {
   triggerScheduledActions()
 })
 scheduler.scheduleJob(cleanUpPreviewsSchedule, () => {
-  cleanUpPreviewFiles()
+  cleanUpFiles()
 })
 scheduler.scheduleJob(backupSchedule, () => {
   startBackup()
@@ -51,15 +52,6 @@ export const triggerScheduledActions = async () => {
     'Checking scheduled actions...'
   )
   DBConnect.triggerScheduledActions()
-}
-
-export const cleanUpPreviewFiles = async () => {
-  console.log(
-    DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
-    'Cleaning up preview files...'
-  )
-  const deleteCount = await DBConnect.cleanUpPreviewFiles()
-  if (deleteCount > 0) console.log(`${deleteCount} files removed.`)
 }
 
 const startBackup = async () => {
