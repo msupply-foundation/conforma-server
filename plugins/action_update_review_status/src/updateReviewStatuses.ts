@@ -47,6 +47,7 @@ const updateReviewStatuses: ActionPluginType = async ({
   const changedResponses: ChangedResponse[] = parameters.changedResponses || []
 
   const triggeredBy: TriggeredBy = reviewId ? 'REVIEW' : parameters.triggeredBy || 'APPLICATION'
+  // `triggeredBy` parameter deprecated
 
   console.log(
     `Updating statuses of reviews associated with ${
@@ -148,7 +149,7 @@ const updateReviewStatuses: ActionPluginType = async ({
 
         const lowerReviewsToUpdate = otherReviews.filter(
           ({ levelNumber, assignedSections }) =>
-            levelNumber < thisReviewLevel &&
+            levelNumber === thisReviewLevel - 1 &&
             assignedSections.some((section) => disagreedSections.includes(section))
         )
 

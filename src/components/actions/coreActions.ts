@@ -369,7 +369,9 @@ const coreActions: CoreActions = {
       },
       parameter_queries: {},
     },
-    // Will increment stage if and only if last-level decision is "CONFORM". Any
+    // Will increment stage if and only if last-level decision is "CONFORM" AND
+    // all reviewable questions have been approved/agreed -- this prevents a
+    // partial consolidation (with approval) from moving to the next stage. Any
     // other cases for incrementing stage must be specified in template actions.
     {
       code: 'incrementStage',
@@ -395,9 +397,6 @@ const coreActions: CoreActions = {
               'CONFORM',
             ],
           },
-          // We also want to make sure that it won't move to the next stage if
-          // the reviewer is not reviewing the whole application (NEEDS
-          // RE-WORDING)
           {
             operator: '=',
             children: [
