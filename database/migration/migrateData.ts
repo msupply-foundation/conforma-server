@@ -674,6 +674,20 @@ const migrateData = async () => {
       ALTER TABLE public.template
         ADD COLUMN IF NOT EXISTS serial_pattern varchar;
     `)
+
+    console.log(' - Ensure only one review can exist per review assignment')
+    // First we need to delete any reviews that are duplicates of the same
+    // review assignment before we can add a uniqueness constraint:
+    await DB.changeSchema(`
+      DELETE FROM public.review a
+        USING review b
+      WHERE a.id < b.id
+      AND a.review_assignment_id = b.review_assignment_id;
+    `)
+    await DB.changeSchema(`
+      ALTER TABLE review
+        ADD CONSTRAINT review_review_assignment_id_key UNIQUE (review_assignment_id);
+    `)
   }
 
   // Other version migrations continue here...
