@@ -8,7 +8,6 @@ Please see [ReadMe](__README.md) for information about maintaining this document
 
 **General**
 
-- [Overview](Overview.md)
 - [Glossary](Glossary.md)
 - [Docker](Docker.md)
 
