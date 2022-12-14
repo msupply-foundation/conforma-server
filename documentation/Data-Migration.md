@@ -1,5 +1,3 @@
-# Data Migration
-
 When upgrading to a new version of **Conforma** we may need to modify the existing database if the database schema has changed, or we've changed what data is stored in what fields.
 
 We need to account for both the following scenarios:

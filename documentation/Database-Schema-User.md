@@ -1,5 +1,3 @@
-# Database Schema User
-
 ![Database Schema](images/database-schema-user.png)
 
 # Database Area description: User

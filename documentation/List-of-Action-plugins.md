@@ -1,7 +1,5 @@
 ## Contents <!-- omit in toc -->
-
 <!-- toc -->
-
 - [Console Log](#console-log)
 - [Change Outcome](#change-outcome)
 - [Increment Stage](#increment-stage)
