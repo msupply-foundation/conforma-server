@@ -592,7 +592,7 @@ GET: `/all-languages`
 POST: `/remove-language?code=<languageCode>`
 - uninstalls the language from the server
 
-See [Localisation documentation](https://github.com/openmsupply/conforma-web-app/wiki/Localisation.md) for more info
+See [Localisation documentation](https://github.com/openmsupply/conforma-web-app/wiki/Localisation) for more info
 
 #### Snapshot endpoints
 
@@ -609,4 +609,4 @@ See [Snapshot documentation](Snapshots.md) for more info
 - POST: `/lookup-table/import`
 - GET: `/lookup-table/export`
 
-See [Lookup table documentation](https://github.com/openmsupply/conforma-web-app/wiki/Lookup-Tables.md) for more info
+See [Lookup table documentation](https://github.com/openmsupply/conforma-web-app/wiki/Lookup-Tables) for more info
