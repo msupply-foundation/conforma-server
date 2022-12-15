@@ -301,7 +301,7 @@ const coreActions: CoreActions = {
       name: 'Change Status',
       trigger: 'ON_REVIEW_SUBMIT',
       event_code: '',
-      sequence: -7,
+      sequence: -6,
       condition: true,
       parameter_queries: { newStatus: 'SUBMITTED' },
     },
@@ -314,7 +314,7 @@ const coreActions: CoreActions = {
       name: 'Trim duplicate review responses',
       trigger: 'ON_REVIEW_SUBMIT',
       event_code: '',
-      sequence: -6,
+      sequence: -5,
       condition: true,
       parameter_queries: {
         operator: 'objectProperties',
@@ -329,7 +329,7 @@ const coreActions: CoreActions = {
       name: 'Update Review Statuses',
       trigger: 'ON_REVIEW_SUBMIT',
       event_code: null,
-      sequence: -5,
+      sequence: -4,
       condition: true,
       parameter_queries: {
         changedResponses: {
@@ -347,7 +347,7 @@ const coreActions: CoreActions = {
       name: "Update Applicant's Review Visibility",
       trigger: 'ON_REVIEW_SUBMIT',
       event_code: '',
-      sequence: -4,
+      sequence: -3,
       condition: {
         operator: 'AND',
         children: [
@@ -364,77 +364,6 @@ const coreActions: CoreActions = {
           {
             operator: 'objectProperties',
             children: ['applicationData.reviewData.isLastLevel'],
-          },
-        ],
-      },
-      parameter_queries: {},
-    },
-    // Will increment stage if and only if last-level decision is "CONFORM" AND
-    // all reviewable questions have been approved/agreed -- this prevents a
-    // partial consolidation (with approval) from moving to the next stage. Any
-    // other cases for incrementing stage must be specified in template actions.
-    {
-      code: 'incrementStage',
-      path: '../plugins/action_increment_stage/src/index.ts',
-      name: 'Increment Stage',
-      trigger: 'ON_REVIEW_SUBMIT',
-      event_code: null,
-      sequence: -3,
-      condition: {
-        operator: 'AND',
-        children: [
-          {
-            operator: 'objectProperties',
-            children: ['applicationData.reviewData.isLastLevel'],
-          },
-          {
-            operator: '=',
-            children: [
-              {
-                operator: 'objectProperties',
-                children: ['applicationData.reviewData.latestDecision.decision'],
-              },
-              'CONFORM',
-            ],
-          },
-          {
-            operator: '=',
-            children: [
-              {
-                operator: 'graphQL',
-                children: [
-                  'query approvedAssignedQuestionsCount(\n  $appId: Int!\n  $stageId: Int!\n  $levelNumber: Int!\n) {\n  assignedQuestions(\n    appId: $appId\n    stageId: $stageId\n    levelNumber: $levelNumber\n    filter: {\n      or: [{ decision: { equalTo: APPROVE } }, { decision: { equalTo: AGREE } }]\n    }\n  ) {\n    totalCount\n  }\n}',
-                  'graphqlendpoint',
-                  ['appId', 'stageId', 'levelNumber'],
-                  {
-                    operator: 'objectProperties',
-                    children: ['applicationData.applicationId', null],
-                  },
-                  {
-                    operator: 'objectProperties',
-                    children: ['applicationData.stageId', null],
-                  },
-                  {
-                    operator: 'objectProperties',
-                    children: ['applicationData.reviewData.levelNumber', null],
-                  },
-                  'assignedQuestions.totalCount',
-                ],
-              },
-              {
-                operator: 'graphQL',
-                children: [
-                  'query reviewableQuestionsCount($appId: Int!) {\n  reviewableQuestionsCount(\n    appId: $appId\n  )\n}',
-                  'graphqlendpoint',
-                  ['appId'],
-                  {
-                    operator: 'objectProperties',
-                    children: ['applicationData.applicationId', null],
-                  },
-                  'reviewableQuestionsCount',
-                ],
-              },
-            ],
           },
         ],
       },
@@ -538,6 +467,78 @@ const coreActions: CoreActions = {
           ],
         },
       },
+    },
+    // Will increment stage if and only if last-level decision is "CONFORM" AND
+    // all reviewable questions have been approved/agreed -- this prevents a
+    // partial consolidation (with approval) from moving to the next stage. Any
+    // other cases for incrementing stage must be specified in template actions.
+    {
+      code: 'incrementStage',
+      path: '../plugins/action_increment_stage/src/index.ts',
+      name: 'Increment Stage',
+      trigger: 'ON_REVIEW_SUBMIT',
+      event_code: null,
+      // This will make this action run after other specific actions defined
+      sequence: 99,
+      condition: {
+        operator: 'AND',
+        children: [
+          {
+            operator: 'objectProperties',
+            children: ['applicationData.reviewData.isLastLevel'],
+          },
+          {
+            operator: '=',
+            children: [
+              {
+                operator: 'objectProperties',
+                children: ['applicationData.reviewData.latestDecision.decision'],
+              },
+              'CONFORM',
+            ],
+          },
+          {
+            operator: '=',
+            children: [
+              {
+                operator: 'graphQL',
+                children: [
+                  'query approvedAssignedQuestionsCount(\n  $appId: Int!\n  $stageId: Int!\n  $levelNumber: Int!\n) {\n  assignedQuestions(\n    appId: $appId\n    stageId: $stageId\n    levelNumber: $levelNumber\n    filter: {\n      or: [{ decision: { equalTo: APPROVE } }, { decision: { equalTo: AGREE } }]\n    }\n  ) {\n    totalCount\n  }\n}',
+                  'graphqlendpoint',
+                  ['appId', 'stageId', 'levelNumber'],
+                  {
+                    operator: 'objectProperties',
+                    children: ['applicationData.applicationId', null],
+                  },
+                  {
+                    operator: 'objectProperties',
+                    children: ['applicationData.stageId', null],
+                  },
+                  {
+                    operator: 'objectProperties',
+                    children: ['applicationData.reviewData.levelNumber', null],
+                  },
+                  'assignedQuestions.totalCount',
+                ],
+              },
+              {
+                operator: 'graphQL',
+                children: [
+                  'query reviewableQuestionsCount($appId: Int!) {\n  reviewableQuestionsCount(\n    appId: $appId\n  )\n}',
+                  'graphqlendpoint',
+                  ['appId'],
+                  {
+                    operator: 'objectProperties',
+                    children: ['applicationData.applicationId', null],
+                  },
+                  'reviewableQuestionsCount',
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      parameter_queries: {},
     },
     // Generate review assignments for next stage/level
     {
