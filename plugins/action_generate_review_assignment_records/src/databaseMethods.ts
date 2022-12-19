@@ -53,6 +53,7 @@ const databaseMethods = (DBConnect: any) => ({
       AND "stageNumber" = $2
       AND "reviewLevel" = $3
       AND "permissionType" = '${type}'
+      AND "userId" IS NOT NULL;
     `
     try {
       const result = await DBConnect.query({
