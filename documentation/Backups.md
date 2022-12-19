@@ -1,5 +1,3 @@
-# Backups
-
 Conforma server has built-in simple backup functionality -- it will save an (optionally) AES-encrypted [snapshot](Snapshots.md) .zip file to a backups folder, which can be synced to a cloud service, such as [Dropbox](https://www.dropbox.com).
 
 Internally (within the Docker container), backups are always saved to the root `/backups` folder. However, using docker-compose configuration, this folder can be mapped to any folder on the host system, which can be synced to a cloud storage service.

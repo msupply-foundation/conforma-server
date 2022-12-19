@@ -1,3 +1,0 @@
-## To Do...
-
-[<< Back to Home](Home.md)

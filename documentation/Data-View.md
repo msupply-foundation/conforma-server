@@ -1,15 +1,17 @@
-# Data Views
-
+## Contents  <!-- omit in toc -->
 <!-- toc -->
-
-## Contents
-  - [API](#api)
-  - [Configuration](#configuration)
-    - [`data_view` table](#data_view-table)
-    - [`data_view_column_definition` table](#data_view_column_definition-table)
-    - [Additional formatting](#additional-formatting)
-    - [A note about Array data](#a-note-about-array-data)
-  - [Real use-case example](#real-use-case-example)
+- [API](#api)
+  - [`/data-views`](#data-views)
+  - [`/data-views/<dataViewCode>?<queries>`](#data-viewsdataviewcodequeries)
+  - [`/data-views/<dataViewCode>/<itemId>`](#data-viewsdataviewcodeitemid)
+- [Configuration](#configuration)
+  - [`data_view` table](#data_view-table)
+  - [`data_view_column_definition` table](#data_view_column_definition-table)
+  - [Additional formatting](#additional-formatting)
+  - [A note about Array data](#a-note-about-array-data)
+- [Real use-case example](#real-use-case-example)
+- [Lookup tables](#lookup-tables)
+<!-- tocstop -->
 
 Display of (custom) **Data** tables (e.g. Products, Users, Orgs) (or any table, strictly speaking) can be configured for viewing in the UI by setting entries in the `data_view` and `data_view_column_definition` database tables. This allows us to set:
 

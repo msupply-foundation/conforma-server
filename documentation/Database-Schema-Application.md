@@ -1,5 +1,3 @@
-# Database Schema Application
-
 ![Database Schema](images/database-schema-application.png)
 
 # Database Area description: Application
