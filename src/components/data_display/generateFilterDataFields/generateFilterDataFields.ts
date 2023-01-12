@@ -96,9 +96,9 @@ export const generateFilterDataFields = async (table: string, fullUpdate: boolea
     }
 
     // Delete unused (no filter definitions) columns
-    // for (const { name } of currentColumns) {
-    //   await db.dropColumn(tableNameFull, name)
-    // }
+    for (const { name } of currentColumns) {
+      await db.dropColumn(tableNameFullSnake, name)
+    }
 
     // Iterate over all data table records and update their filter field values
     const allFields = (await DBConnect.getDataTableColumns(tableNameFullSnake)).map(({ name }) =>
