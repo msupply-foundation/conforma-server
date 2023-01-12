@@ -5,6 +5,7 @@ import {
   ActionQueueExecutePayload,
 } from '../../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
+import FigTreeEvaluator from 'fig-tree-evaluator'
 import { merge } from 'lodash'
 import functions from './evaluatorFunctions'
 import DBConnect from '../databaseConnect'
@@ -20,6 +21,12 @@ import { getAdminJWT } from '../permissions/loginHelpers'
 const showApplicationDataLog = false
 
 const graphQLEndpoint = config.graphQLendpoint
+
+const fig = new FigTreeEvaluator({
+  functions,
+  pgConnection: DBConnect,
+  graphQLConnection: { endpoint: graphQLEndpoint },
+})
 
 export async function executeAction(
   payload: ActionPayload,
@@ -47,10 +54,14 @@ export async function executeAction(
   // Evaluate condition
   let condition
   try {
-    condition = await evaluateExpression(
-      payload.condition_expression as EvaluatorNode,
-      evaluatorParams
-    )
+    condition = await fig.evaluate(payload.condition_expression, {
+      data: { applicationData, ...additionalObjects },
+      headers: {
+        Authorization: `Bearer ${await getAdminJWT()}`,
+      },
+    })
+
+    // await evaluateExpression(payload.condition_expression as EvaluatorNode, evaluatorParams)
   } catch (err) {
     console.log('>> Error evaluating condition for action:', payload.code)
     const actionResult = {
