@@ -3424,10 +3424,10 @@ fd-slicer@~1.1.0:
   dependencies:
     pend "~1.2.0"
 
-fig-tree-evaluator@^2.4.9:
-  version "2.4.9"
-  resolved "https://registry.yarnpkg.com/fig-tree-evaluator/-/fig-tree-evaluator-2.4.9.tgz#845a8ede78d7c0e697048980ca7c730f36c52fdc"
-  integrity sha512-EFXDCEn+uvFZ2pYgtxj0K9dbdHAa+TVQnxU3P9Phmnq+5S+0xvW6CpI863JJ+aNU68RR78ycWydybUzY9TWOow==
+fig-tree-evaluator@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/fig-tree-evaluator/-/fig-tree-evaluator-2.5.0.tgz#15487c9559b8b9382d2b1071aaf29ef9455da800"
+  integrity sha512-ySH4xXyrVcp0LRw1r0esJZr7CV1gyZeHIt+cOa9r6TpfQz5HOvbaXmCF3zgyQIfJ+23v+XeTC5sKuKKvwWL7Ug==
   dependencies:
     axios "^0.27.2"
     change-case "^4.1.2"
