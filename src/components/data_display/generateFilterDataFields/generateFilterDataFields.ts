@@ -57,13 +57,22 @@ export const generateAllFilterFilterFields = async (fullUpdate: boolean = true) 
 export const generateFilterDataFields = async (table: string, fullUpdate: boolean = false) => {
   try {
     const db = databaseMethods(DBConnect)
-    const tableNameFull = snakeCase(getValidTableName(table))
+    const tableNameNoPrefix = table.replace('dataTable', '').replace('data_table_', '')
+    const tableNameFullSnake = getValidTableName(table)
+    const tableNameSnake = snakeCase(tableNameNoPrefix)
+    const tableNameFullCamel = camelCase(tableNameFullSnake)
+    const tableNameCamel = camelCase(tableNameNoPrefix)
 
     // Get all filter-data-generating columns for table from
     // data_view_column_definitions (must have "filter_expression defined" and
     // have "FilterData" as the column name suffix)
     const filterTextColumnDefinitions: FilterTextColumnDefinition[] = (
-      await db.getTableFilterColumnDefintions(table)
+      await db.getTableFilterColumnDefinitions({
+        tableNameFullSnake,
+        tableNameSnake,
+        tableNameFullCamel,
+        tableNameCamel,
+      })
     ).map(({ column, expression, dataType }: FilterTextColumnDefinition) => ({
       column: snakeCase(column),
       expression,
@@ -71,14 +80,14 @@ export const generateFilterDataFields = async (table: string, fullUpdate: boolea
     }))
 
     // Get all current columns from whole database with "_filter_data" suffix
-    let currentColumns: Column[] = await db.getCurrentFilterColumns(tableNameFull)
+    let currentColumns: Column[] = await db.getCurrentFilterColumns(tableNameFullSnake)
 
     const changedColumns: string[] = []
 
     // Create or update database columns
     for (const { column, dataType } of filterTextColumnDefinitions) {
       if (!currentColumns.find((col) => column === col.name && dataType === col.dataType)) {
-        await db.addOrUpdateColumn(tableNameFull, column, dataType)
+        await db.addOrUpdateColumn(tableNameFullSnake, column, dataType)
         changedColumns.push(column)
       }
 
@@ -88,11 +97,11 @@ export const generateFilterDataFields = async (table: string, fullUpdate: boolea
 
     // Delete unused (no filter definitions) columns
     for (const { name } of currentColumns) {
-      await db.dropColumn(tableNameFull, name)
+      await db.dropColumn(tableNameFullSnake, name)
     }
 
     // Iterate over all data table records and update their filter field values
-    const allFields = (await DBConnect.getDataTableColumns(tableNameFull)).map(({ name }) =>
+    const allFields = (await DBConnect.getDataTableColumns(tableNameFullSnake)).map(({ name }) =>
       camelCase(name)
     )
 
@@ -112,7 +121,7 @@ export const generateFilterDataFields = async (table: string, fullUpdate: boolea
 
     while (fetchedCount < total) {
       const { fetchedRecords, totalCount, error } = await queryDataTable(
-        camelCase(tableNameFull),
+        camelCase(tableNameFullSnake),
         allFields,
         gqlFilter,
         blockSize,
@@ -143,7 +152,7 @@ export const generateFilterDataFields = async (table: string, fullUpdate: boolea
             // If evaluation fails, just continue with next record
           }
         }
-        const result = await updateRecord(camelCase(tableNameFull), record.id, patch, '')
+        const result = await updateRecord(camelCase(tableNameFullSnake), record.id, patch, '')
 
         if (result?.error) return result.error
       }
@@ -151,7 +160,7 @@ export const generateFilterDataFields = async (table: string, fullUpdate: boolea
 
     return {
       success: true,
-      table: tableNameFull,
+      table: tableNameFullSnake,
       updatedDatabaseColumns: changedColumns,
       unchangedDatabaseColumns: filterTextColumnDefinitions
         .map(({ column }) => column)
