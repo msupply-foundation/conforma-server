@@ -33,6 +33,20 @@ export const setDataTypes = (fieldMaps: FieldMapType[], rows: object[]) => {
   })
 }
 
+// Prepares table export by stringifying jsonb fields
+// Mutates rows *in-place*
+export const exportDataRows = (fieldMaps: FieldMapType[], rows: { [key: string]: any }[]) => {
+  const jsonFields = fieldMaps.filter((e) => e.dataType === 'jsonb').map((e) => e.fieldname)
+
+  rows.forEach((row) => {
+    jsonFields.forEach((jsonField: string) => {
+      row[jsonField] = row[jsonField] !== null ? JSON.stringify(row[jsonField]) : ''
+    })
+  })
+
+  return rows
+}
+
 type PostgresDataType = 'varchar' | 'boolean' | 'integer' | 'double precision' | 'jsonb'
 
 const getType = (value: string): PostgresDataType | null => {
