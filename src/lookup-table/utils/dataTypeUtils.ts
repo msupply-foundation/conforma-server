@@ -79,6 +79,7 @@ const getType = (value: string): PostgresDataType | null => {
     return 'jsonb'
   } catch {}
 
+  // Default to string
   return 'varchar'
 }
 
