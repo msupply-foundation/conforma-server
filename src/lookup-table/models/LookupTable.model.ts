@@ -159,7 +159,7 @@ const LookupTableModel = () => {
     tableName: string,
     fieldMaps: FieldMapType[]
   ): Promise<boolean> => {
-    const text = `UPDATE data_table SET field_map = $1 WHERE display_name = $2`
+    const text = `UPDATE data_table SET field_map = $1 WHERE table_name = $2`
     try {
       await DBConnect.query({ text, values: [JSON.stringify(fieldMaps), tableName] })
       return true

@@ -21,13 +21,13 @@ export const setDataTypes = (fieldMaps: FieldMapType[], rows: object[]) => {
   const fieldMap: { [key: string]: any } = fieldMaps.reduce((acc, curr) => {
     const name = curr.fieldname
     const type = curr.dataType
-    console.log(name, type)
     return { ...acc, [name]: type }
   }, {})
 
   // Now mutate rows based on those types
   rows.forEach((row, index) => {
     rows[index] = mapValues(row, (value, key) => {
+      if (key === 'id') return value
       return convertType(value, fieldMap[key])
     })
   })

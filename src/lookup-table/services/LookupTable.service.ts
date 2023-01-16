@@ -54,7 +54,7 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
       dataType: 'serial PRIMARY KEY',
     }
 
-    // Mutates field maps and rows *in-place* with the correct Postgres data
+    // Mutate field maps and rows *in-place* with the correct Postgres data
     // types
     setDataTypes(fieldMaps, rows)
 
@@ -87,7 +87,7 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
 
     const results = await compareFieldMaps()
 
-    // Mutates field maps and rows *in-place* with the correct Postgres data
+    // Mutate field maps and rows *in-place* with the correct Postgres data
     // types
     setDataTypes(fieldMaps, rows)
 
