@@ -1,3 +1,5 @@
+import { setDataTypes } from './dataTypeUtils'
+
 const toSnakeCase = (str: any) => {
   return (
     str &&
@@ -13,4 +15,4 @@ const toCamelCase = (text: string) => {
   return text.substr(0, 1).toLowerCase() + text.substr(1)
 }
 
-export { toSnakeCase, toCamelCase }
+export { toSnakeCase, toCamelCase, setDataTypes }

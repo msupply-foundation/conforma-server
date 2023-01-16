@@ -1,7 +1,7 @@
 import { singular } from 'pluralize'
 import { LookupTableModel } from '../models'
 import { FieldMapType, LookupTableStructureFull } from '../types'
-import { toCamelCase, toSnakeCase } from '../utils'
+import { setDataTypes, toCamelCase, toSnakeCase } from '../utils'
 import { LookupTableHeadersValidator, LookupTableNameValidator } from '../utils/validations'
 import { ValidationErrors } from '../utils/validations/error'
 import { ILookupTableNameValidator, IValidator } from '../utils/validations/types'
@@ -53,6 +53,10 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
       gqlName: 'id',
       dataType: 'serial PRIMARY KEY',
     }
+
+    // Mutates field maps and rows *in-place* with the correct Postgres data
+    // types
+    setDataTypes(fieldMaps, rows)
 
     const newTableFieldMap = [idField, ...fieldMaps]
 
