@@ -1,5 +1,6 @@
 import { mapValues } from 'lodash'
 import { FieldMapType } from '../types'
+import { DateTime } from 'luxon'
 
 export const setDataTypes = (fieldMaps: FieldMapType[], rows: object[]) => {
   // Determine type
@@ -47,7 +48,13 @@ export const exportDataRows = (fieldMaps: FieldMapType[], rows: { [key: string]:
   return rows
 }
 
-type PostgresDataType = 'varchar' | 'boolean' | 'integer' | 'double precision' | 'jsonb'
+type PostgresDataType =
+  | 'varchar'
+  | 'boolean'
+  | 'integer'
+  | 'double precision'
+  | 'jsonb'
+  | 'timestamptz'
 
 const getType = (value: string): PostgresDataType | null => {
   if (value === '') return null
@@ -62,7 +69,9 @@ const getType = (value: string): PostgresDataType | null => {
     else return 'integer'
   }
 
-  // TO-DO: Recognize ISO date/time strings
+  // Date/Time
+  const d = DateTime.fromISO(value)
+  if (d.isValid) return 'timestamptz'
 
   // JSON Data
   try {
@@ -86,6 +95,8 @@ const convertType = (value: string, type: PostgresDataType) => {
       return parseFloat(value)
     case 'jsonb':
       return value
+    case 'timestamptz':
+      return new Date(value)
     default:
       return value
   }
