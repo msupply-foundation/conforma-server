@@ -86,6 +86,11 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
     dbFieldMap = structure.fieldMap
 
     const results = await compareFieldMaps()
+
+    // Mutates field maps and rows *in-place* with the correct Postgres data
+    // types
+    setDataTypes(fieldMaps, rows)
+
     await createNewColumns()
     await createUpdateRows()
 
