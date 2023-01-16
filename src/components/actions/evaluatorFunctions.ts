@@ -8,7 +8,15 @@ Any changes done here should also be replicated in front-end
 
 import { DateTime, Duration } from 'luxon'
 
-const generateExpiry = (duration: Duration) => DateTime.now().plus(duration).toJSDate()
+const generateExpiry = (duration: Duration, startDate?: string | Date) => {
+  const date = startDate
+    ? typeof startDate === 'string'
+      ? DateTime.fromISO(startDate)
+      : DateTime.fromJSDate(startDate)
+    : DateTime.now()
+
+  return date.plus(duration).toJSDate()
+}
 
 // getYear() => "2022"
 // getYear("short") => "22"
