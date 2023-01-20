@@ -16,9 +16,14 @@ interface FilterOptions {
 
 const filterArray = (valuesArray: unknown[], options: FilterOptions) => {
   const { key, rule = 'exclude', values } = options
+
   const compareValues = Array.isArray(values) ? values : [values]
+
+  const isObject = (element: unknown) =>
+    typeof element === 'object' && !Array.isArray(element) && element !== null
+
   return valuesArray.filter((element) => {
-    if (key && typeof element === 'object')
+    if (key && isObject(element))
       return Object.entries(element as Object).find(
         ([keyMap, value]) =>
           keyMap === key &&
