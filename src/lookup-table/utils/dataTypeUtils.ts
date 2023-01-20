@@ -55,6 +55,7 @@ type PostgresDataType =
   | 'double precision'
   | 'jsonb'
   | 'timestamptz'
+  | 'date'
 
 const getType = (value: string): PostgresDataType | null => {
   if (value === '') return null
@@ -65,13 +66,16 @@ const getType = (value: string): PostgresDataType | null => {
   // Number
   if (!isNaN(Number(value))) {
     // Integer or float? Check for decimal part
-    if (/^\d+\.\d+$/.test(value)) return 'double precision'
-    else return 'integer'
+    return /^\d+\.\d+$/.test(value) ? 'double precision' : 'integer'
   }
 
   // Date/Time
   const d = DateTime.fromISO(value)
-  if (d.isValid) return 'timestamptz'
+  if (d.isValid) {
+    // If the string matches YYYY-MM-DD treat is as a date, otherwise treat as
+    // timestamp
+    return /^\d{4}-(0\d|1[0-2])-([0-2]\d|3[0-1])$/.test(value) ? 'date' : 'timestamptz'
+  }
 
   // JSON Data
   try {
@@ -97,6 +101,7 @@ const convertType = (value: string, type: PostgresDataType) => {
     case 'jsonb':
       return value
     case 'timestamptz':
+    case 'date':
       return new Date(value)
     default:
       return value
