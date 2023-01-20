@@ -1,7 +1,7 @@
 import { singular } from 'pluralize'
 import { LookupTableModel } from '../models'
 import { FieldMapType, LookupTableStructureFull } from '../types'
-import { toCamelCase, toSnakeCase } from '../utils'
+import { setDataTypes, toCamelCase, toSnakeCase } from '../utils'
 import { LookupTableHeadersValidator, LookupTableNameValidator } from '../utils/validations'
 import { ValidationErrors } from '../utils/validations/error'
 import { ILookupTableNameValidator, IValidator } from '../utils/validations/types'
@@ -45,31 +45,39 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
     if (!lookupTableNameValidator.isValid)
       throw new ValidationErrors(lookupTableNameValidator.errors)
 
-    const results = await compareFieldMaps()
+    try {
+      const results = await compareFieldMaps()
 
-    const idField = {
-      label: 'id',
-      fieldname: 'id',
-      gqlName: 'id',
-      dataType: 'serial PRIMARY KEY',
+      const idField = {
+        label: 'id',
+        fieldname: 'id',
+        gqlName: 'id',
+        dataType: 'serial PRIMARY KEY',
+      }
+
+      // Mutate field maps and rows *in-place* with the correct Postgres data
+      // types
+      setDataTypes(fieldMaps, rows)
+
+      const newTableFieldMap = [idField, ...fieldMaps]
+
+      tableId = await lookupTableModel.createStructure({
+        tableName,
+        displayName: name,
+        fieldMap: newTableFieldMap,
+      })
+
+      await lookupTableModel.createTable({
+        tableName,
+        fieldMap: newTableFieldMap,
+      })
+
+      await createUpdateRows()
+
+      return buildSuccessMessage(results)
+    } catch (err) {
+      throw err
     }
-
-    const newTableFieldMap = [idField, ...fieldMaps]
-
-    tableId = await lookupTableModel.createStructure({
-      tableName,
-      displayName: name,
-      fieldMap: newTableFieldMap,
-    })
-
-    await lookupTableModel.createTable({
-      tableName,
-      fieldMap: newTableFieldMap,
-    })
-
-    await createUpdateRows()
-
-    return buildSuccessMessage(results)
   }
 
   const addRow = (row: object): void => {
@@ -81,11 +89,20 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
     tableId = structure.id
     dbFieldMap = structure.fieldMap
 
-    const results = await compareFieldMaps()
-    await createNewColumns()
-    await createUpdateRows()
+    try {
+      const results = await compareFieldMaps()
 
-    return buildSuccessMessage(results)
+      // Mutate field maps and rows *in-place* with the correct Postgres data
+      // types
+      setDataTypes(fieldMaps, rows)
+
+      await createNewColumns()
+      await createUpdateRows()
+
+      return buildSuccessMessage(results)
+    } catch (err) {
+      throw err
+    }
   }
 
   const parseCsvHeaders = (headers: any) => {
