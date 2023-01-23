@@ -14,11 +14,11 @@ CREATE TABLE public.application (
     org_id integer REFERENCES public.organisation (id) ON DELETE CASCADE,
     session_id varchar,
     serial varchar UNIQUE,
-    registration varchar UNIQUE,
     name varchar,
     outcome public.application_outcome DEFAULT 'PENDING',
+    outcome_registration varchar UNIQUE,
     is_active bool,
     is_config bool DEFAULT FALSE,
-    TRIGGER public.trigger,
+    TRIGGER public.trigger
 );
 

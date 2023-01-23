@@ -695,7 +695,7 @@ const migrateData = async () => {
     console.log(' - Add registration field to application Table')
     await DB.changeSchema(`
       ALTER TABLE public.application
-        ADD COLUMN IF NOT EXISTS registration varchar UNIQUE;
+        ADD COLUMN IF NOT EXISTS outcome_registration varchar UNIQUE;
     `)
   }
 
