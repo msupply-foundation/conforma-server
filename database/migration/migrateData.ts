@@ -690,6 +690,15 @@ const migrateData = async () => {
     `)
   }
 
+  // v0.5.0
+  if (databaseVersionLessThan('0.5.2')) {
+    console.log(' - Add registration field to application Table')
+    await DB.changeSchema(`
+      ALTER TABLE public.application
+        ADD COLUMN IF NOT EXISTS outcome_registration varchar UNIQUE;
+    `)
+  }
+
   // Other version migrations continue here...
 
   // Update (almost all) Indexes, Views, Functions, Triggers regardless, since

@@ -16,6 +16,7 @@ CREATE TABLE public.application (
     serial varchar UNIQUE,
     name varchar,
     outcome public.application_outcome DEFAULT 'PENDING',
+    outcome_registration varchar UNIQUE,
     is_active bool,
     is_config bool DEFAULT FALSE,
     TRIGGER public.trigger
