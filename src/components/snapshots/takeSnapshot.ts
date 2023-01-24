@@ -136,7 +136,7 @@ const getOptions = async (
 }
 
 const zipSnapshot = async (snapshotFolder: string, snapshotName: string) => {
-  const output = fs.createWriteStream(path.join(SNAPSHOT_FOLDER, `${snapshotName}.zip`))
+  const output = await fs.createWriteStream(path.join(SNAPSHOT_FOLDER, `${snapshotName}.zip`))
   const archive = archiver('zip', { zlib: { level: 9 } })
 
   await archive.pipe(output)
