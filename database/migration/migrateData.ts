@@ -699,6 +699,22 @@ const migrateData = async () => {
     `)
   }
 
+  if (databaseVersionLessThan('0.5.3')) {
+    console.log(' - Change "default_value" field to "initial_value"')
+    await DB.changeSchema(`
+      DO $$
+      BEGIN
+        IF EXISTS(SELECT * FROM information_schema.columns
+          WHERE table_name = 'template_element'
+          AND column_name = 'default_value')
+        THEN
+          ALTER TABLE public.template_element
+          RENAME COLUMN default_value TO initial_value;
+        END IF;
+      END $$;
+    `)
+  }
+
   // Other version migrations continue here...
 
   // Update (almost all) Indexes, Views, Functions, Triggers regardless, since
