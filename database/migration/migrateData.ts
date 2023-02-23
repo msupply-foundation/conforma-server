@@ -699,7 +699,7 @@ const migrateData = async () => {
     `)
   }
 
-  if (databaseVersionLessThan('0.5.3')) {
+  if (databaseVersionLessThan('0.5.6')) {
     console.log(' - Change "default_value" field to "initial_value"')
     await DB.changeSchema(`
       DO $$
