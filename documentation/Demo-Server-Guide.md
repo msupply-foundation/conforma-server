@@ -292,5 +292,3 @@ Prior to changing any settings on CloudVPS, it is a good idea to take a backup s
 4. Click “resize instance” from dropdown
 5. Select new flavour package
 6. Upon set up, conforma docker image will need environment variables set up again, and run, using the [commands above](Demo-Server-Guide.md#launching-instances-with-docker-compose). Images and snapshots will persist when a server's capacity is changed.
-
-([volumes](https://docs.docker.com/storage/volumes/))
