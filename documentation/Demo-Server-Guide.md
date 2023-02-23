@@ -204,7 +204,6 @@ Note the above commands must be run within directory where compose.yml is contai
 
 This will either launch or relaunch the server at the port specified in the WEB_URL
 
-
 ## Stop instances and reset volumes
 
 Stop a particular docker-compose instance:
@@ -269,11 +268,29 @@ From there the following commands might be useful:
 
 1. Log in to the server using terminal
 2. Copy the log to an accessible place (in the server) i.e. if getting log for instance 5000:
-`sudo cp /var/lib/docker/volumes/conforma-on-8000_logs/_data/server.log demo_server/2022-11-15.log`
-3. Now exit the server `exit` and on your local machine open the terminal 
+   `sudo cp /var/lib/docker/volumes/conforma-on-8000_logs/_data/server.log demo_server/2022-11-15.log`
+3. Now exit the server `exit` and on your local machine open the terminal
 4. After navigate to a folder where you would like to save the log, run (some similat to this):
-\```
-scp -i $KEY_LOC ubuntu@conforma-demo.msupply.org:/home/ubuntu/demo_server/2022-11-15.log .
-\```
+   \```
+   scp -i $KEY_LOC ubuntu@conforma-demo.msupply.org:/home/ubuntu/demo_server/2022-11-15.log .
+   \```
+
 - KEY_LOC is an environment variable for the server public key :)
 - And the `.` means it will create a file with the same file name on the current folder
+
+## Managing CloudVPS hosted servers
+
+Conforma live servers are usually hosted on ([CloudVPS](https://www.cloudvps.com/)), an ([openstack](https://www.openstack.org/)) server provider.
+
+### Chaning CloudVPS server settings
+
+Prior to changing any settings on CloudVPS, it is a good idea to take a backup snapshot of the live server, and ensure back ups are logging correctly to dropbox or wherever you are keeping your backups.
+
+1. Log in to ([CloudVPS](https://openstack.cloudvps.com/auth/login/?next=/)). Credentials are available through Bitwarden.
+2. Access all instances through compute / instances
+3. Search for the relevant instance ie “conforma”
+4. Click “resize instance” from dropdown
+5. Select new flavour package
+6. Upon set up, conforma docker image will need environment variables set up again, and run, using the [commands above](Demo-Server-Guide.md#launching-instances-with-docker-compose). Images and snapshots will persist when a server's capacity is changed.
+
+([volumes](https://docs.docker.com/storage/volumes/))
