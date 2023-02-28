@@ -237,6 +237,7 @@ This is the filter that shows by default when the incoming data type is a `strin
 
 The list of options can be configured with the following `filter_parameters` (they are all optional):
 
+- `filterList`: the filter list can be manually specified, in which case this will be returned as-is with no further processing. This is useful for situations where you have a very simple filter list (say, only 2 values), but a very large data table that would take significant time to process and find those values. The filter list must be a string array.
 - `searchFields`: an array of column names specifying what to filter by. By default each filter just searches the column for which it's been generated (i.e. itself), so you'll rarely need to specify this. But, like the "Address" example [above](#sorting), you might wish to specify a few different database fields to search by (i.e. `address`, `province`, `country`) (You could have also generated a "filter_data" column that combines all three values into a single text field but, since all these values are text, this wouldn't be needed -- just specify the `searchFields` instead.) *The `searchFields` parameter is the only parameter which is common to *all* filters described here.*
 - `delimiter`: this one is important for handling multiple values in a single field, as alluded to [earlier](#creating-filter-data-with-multiple-values). In the example shown in the image here, the filter options are actually derived from text fields structured like this:
    ```
