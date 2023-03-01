@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 12.13
--- Dumped by pg_dump version 14.5
+-- Dumped by pg_dump version 15.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -279,6 +279,7 @@ ALTER TABLE IF EXISTS ONLY public.application_stage_history DROP CONSTRAINT IF E
 ALTER TABLE IF EXISTS ONLY public.application DROP CONSTRAINT IF EXISTS application_serial_key;
 ALTER TABLE IF EXISTS ONLY public.application_response DROP CONSTRAINT IF EXISTS application_response_pkey;
 ALTER TABLE IF EXISTS ONLY public.application DROP CONSTRAINT IF EXISTS application_pkey;
+ALTER TABLE IF EXISTS ONLY public.application DROP CONSTRAINT IF EXISTS application_outcome_registration_key;
 ALTER TABLE IF EXISTS ONLY public.application_note DROP CONSTRAINT IF EXISTS application_note_pkey;
 ALTER TABLE IF EXISTS ONLY public.activity_log DROP CONSTRAINT IF EXISTS activity_log_pkey;
 ALTER TABLE IF EXISTS ONLY public.action_queue DROP CONSTRAINT IF EXISTS action_queue_pkey;
@@ -505,6 +506,7 @@ DROP TYPE IF EXISTS public.application_response_status;
 DROP TYPE IF EXISTS public.application_outcome;
 DROP TYPE IF EXISTS public.action_queue_status;
 DROP EXTENSION IF EXISTS citext;
+-- *not* dropping schema, since initdb creates it
 DROP SCHEMA IF EXISTS postgraphile_watch;
 --
 -- Name: postgraphile_watch; Type: SCHEMA; Schema: -; Owner: postgres
@@ -514,6 +516,22 @@ CREATE SCHEMA postgraphile_watch;
 
 
 ALTER SCHEMA postgraphile_watch OWNER TO postgres;
+
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+ALTER SCHEMA public OWNER TO postgres;
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON SCHEMA public IS '';
+
 
 --
 -- Name: citext; Type: EXTENSION; Schema: -; Owner: -
@@ -1172,7 +1190,8 @@ CREATE TABLE public.application (
     outcome public.application_outcome DEFAULT 'PENDING'::public.application_outcome,
     is_active boolean,
     is_config boolean DEFAULT false,
-    trigger public.trigger
+    trigger public.trigger,
+    outcome_registration character varying
 );
 
 
@@ -2872,7 +2891,7 @@ CREATE TABLE public.template_element (
     is_required jsonb DEFAULT 'true'::jsonb,
     is_editable jsonb DEFAULT 'true'::jsonb,
     validation jsonb DEFAULT 'true'::jsonb,
-    default_value jsonb,
+    initial_value jsonb,
     validation_message character varying,
     help_text character varying,
     parameters jsonb,
@@ -5047,17 +5066,17 @@ INSERT INTO public.activity_log VALUES (4, 'PERMISSION', 'Granted', '2022-12-20 
 -- Data for Name: application; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.application VALUES (1, 1, 2, NULL, '81YuHj9EFcvKanvB', 'UE-CJD-0100', 'Edit User Details - UE-CJD-0100', 'PENDING', true, true, NULL);
-INSERT INTO public.application VALUES (10, 10, 2, NULL, 'WXsvhggdwhlsHadx', 'S-EMF-0001', 'Core-actions Templates - S-EMF-0001', 'PENDING', true, true, NULL);
-INSERT INTO public.application VALUES (11, 9, 2, NULL, 'WXsvhggdwhlsHadx', 'S-XHH-0002', 'Demo -- Feature Showcase - S-XHH-0002', 'PENDING', true, true, NULL);
-INSERT INTO public.application VALUES (12, 8, 2, NULL, 'WXsvhggdwhlsHadx', 'S-RDR-0002', 'Join Company - S-RDR-0002', 'PENDING', true, true, NULL);
-INSERT INTO public.application VALUES (13, 7, 2, NULL, 'WXsvhggdwhlsHadx', 'S-TNQ-0006', 'Company Registration - S-TNQ-0006', 'PENDING', true, true, NULL);
-INSERT INTO public.application VALUES (14, 2, 2, NULL, 'c2RCyfSn9SKAMkHV', 'UR-MJO-0100', 'User Registration - UR-MJO-0100', 'PENDING', true, true, NULL);
-INSERT INTO public.application VALUES (15, 11, 2, NULL, 'MzIFSjFjwPB62Fm4', 'FGNcKlqknNdtQOx8hjWeKbSH', 'Reset Password - 0100', 'PENDING', true, true, NULL);
-INSERT INTO public.application VALUES (16, 12, 2, NULL, 'TkxXnE-usV5cYb2a', 'P-TFT-0001', 'Grant User Permissions - P-TFT-0001', 'PENDING', true, true, NULL);
-INSERT INTO public.application VALUES (17, 13, 2, NULL, 'TkxXnE-usV5cYb2a', 'P-NLI-0001', 'Add User to Company - P-NLI-0001', 'PENDING', true, true, NULL);
-INSERT INTO public.application VALUES (18, 11, 1, NULL, 'oD3wTEt3AkljPFtP', '3jHSayW8nGJb1yjQlWKCIWis', 'Reset Password - 0106', 'PENDING', true, false, NULL);
-INSERT INTO public.application VALUES (19, 11, 1, NULL, 'Eu2RD6_X5XMtTVrM', 'DMvXoQQWe5Uhkb6ukmrhBOID', 'Reset Password - 0107', 'PENDING', true, false, NULL);
+INSERT INTO public.application VALUES (1, 1, 2, NULL, '81YuHj9EFcvKanvB', 'UE-CJD-0100', 'Edit User Details - UE-CJD-0100', 'PENDING', true, true, NULL, NULL);
+INSERT INTO public.application VALUES (10, 10, 2, NULL, 'WXsvhggdwhlsHadx', 'S-EMF-0001', 'Core-actions Templates - S-EMF-0001', 'PENDING', true, true, NULL, NULL);
+INSERT INTO public.application VALUES (11, 9, 2, NULL, 'WXsvhggdwhlsHadx', 'S-XHH-0002', 'Demo -- Feature Showcase - S-XHH-0002', 'PENDING', true, true, NULL, NULL);
+INSERT INTO public.application VALUES (12, 8, 2, NULL, 'WXsvhggdwhlsHadx', 'S-RDR-0002', 'Join Company - S-RDR-0002', 'PENDING', true, true, NULL, NULL);
+INSERT INTO public.application VALUES (13, 7, 2, NULL, 'WXsvhggdwhlsHadx', 'S-TNQ-0006', 'Company Registration - S-TNQ-0006', 'PENDING', true, true, NULL, NULL);
+INSERT INTO public.application VALUES (14, 2, 2, NULL, 'c2RCyfSn9SKAMkHV', 'UR-MJO-0100', 'User Registration - UR-MJO-0100', 'PENDING', true, true, NULL, NULL);
+INSERT INTO public.application VALUES (15, 11, 2, NULL, 'MzIFSjFjwPB62Fm4', 'FGNcKlqknNdtQOx8hjWeKbSH', 'Reset Password - 0100', 'PENDING', true, true, NULL, NULL);
+INSERT INTO public.application VALUES (16, 12, 2, NULL, 'TkxXnE-usV5cYb2a', 'P-TFT-0001', 'Grant User Permissions - P-TFT-0001', 'PENDING', true, true, NULL, NULL);
+INSERT INTO public.application VALUES (17, 13, 2, NULL, 'TkxXnE-usV5cYb2a', 'P-NLI-0001', 'Add User to Company - P-NLI-0001', 'PENDING', true, true, NULL, NULL);
+INSERT INTO public.application VALUES (18, 11, 1, NULL, 'oD3wTEt3AkljPFtP', '3jHSayW8nGJb1yjQlWKCIWis', 'Reset Password - 0106', 'PENDING', true, false, NULL, NULL);
+INSERT INTO public.application VALUES (19, 11, 1, NULL, 'Eu2RD6_X5XMtTVrM', 'DMvXoQQWe5Uhkb6ukmrhBOID', 'Reset Password - 0107', 'PENDING', true, false, NULL, NULL);
 
 
 --
@@ -5234,8 +5253,8 @@ INSERT INTO public.counter VALUES (9, 'addToCompany', 2);
 
 INSERT INTO public.data_view VALUES (1, 'user', 'Users (current organisation)', 'userPublic', NULL, '{"userOrganisations": {"some": {"organisationId": {"equalTo": "$orgId"}}}}', '{usernamePlain,firstName,lastName}', NULL, NULL, '{id,firstName,lastName,passwordHash}', 'fullName', false, 1, NULL, NULL, NULL, NULL);
 INSERT INTO public.data_view VALUES (2, 'organisation', 'My Organisations', 'organisation', NULL, '{"userOrganisations": {"some": {"userId": {"equalTo": "$userId"}}}}', '{logoUrl,name,address}', NULL, '{logoUrl,...,members}', '{id,name,isSystemOrg}', 'name', true, 1, NULL, NULL, NULL, NULL);
-INSERT INTO public.data_view VALUES (3, 'user', 'Users', 'userRestricted', '{admin,consolProduct}', NULL, NULL, '{id,passwordHash,dateOfBirth,usernamePlain}', '{...,orgs}', '{id,firstName,lastName,passwordHash}', 'fullName', true, 2, NULL, NULL, NULL, NULL);
 INSERT INTO public.data_view VALUES (4, 'organisation', 'Organisations', 'organisationAdmin', '{admin}', NULL, '{logoUrl,name,address}', NULL, '{logoUrl,...,members}', '{id,name,isSystemOrg}', 'name', true, 2, NULL, NULL, NULL, NULL);
+INSERT INTO public.data_view VALUES (3, 'user', 'Users', 'userRestricted', '{admin,consolProduct}', '{"username": {"notEqualTo": "nonRegistered"}}', NULL, '{id,passwordHash,dateOfBirth,usernamePlain}', '{...,orgs}', '{id,firstName,lastName,passwordHash}', 'fullName', true, 2, NULL, NULL, NULL, NULL);
 
 
 --
@@ -5243,11 +5262,11 @@ INSERT INTO public.data_view VALUES (4, 'organisation', 'Organisations', 'organi
 --
 
 INSERT INTO public.data_view_column_definition VALUES (2, 'user', 'fullName', 'Full Name', NULL, NULL, NULL, '{"children": ["%1 %2", {"children": ["firstName"], "operator": "objectProperties"}, {"children": ["lastName"], "operator": "objectProperties"}], "operator": "stringSubstitution"}', NULL, NULL, NULL, NULL);
-INSERT INTO public.data_view_column_definition VALUES (6, 'organisation', 'logoUrl', 'Logo', 'imageDisplay', '{"url": {"children": [{"children": ["applicationData.config.serverREST"], "operator": "objectProperties"}, "/public", {"children": ["responses.thisResponse"], "operator": "objectProperties"}], "operator": "+"}, "size": "tiny", "altText": "No logo supplied"}', NULL, '{}', NULL, NULL, NULL, NULL);
 INSERT INTO public.data_view_column_definition VALUES (8, 'organisation', 'registrationDocumentation', 'Registration docs', 'fileUpload', '{}', NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO public.data_view_column_definition VALUES (10, 'organisation', 'members', 'Members', NULL, NULL, '{"substitution": "[${user.firstName} ${user.lastName}](/outcomes/user/${user.id})"}', '{"children": ["query getOrgUsers($id:Int!) { userOrganisations(filter: {organisationId: {equalTo: $id}}) { nodes { user { id, firstName, lastName }}}}", "graphQLEndpoint", ["id"], {"children": ["id"], "operator": "objectProperties"}, "userOrganisations"], "operator": "graphQL"}', NULL, NULL, NULL, NULL);
 INSERT INTO public.data_view_column_definition VALUES (15, 'user', 'usernamePlain', 'Username', NULL, NULL, NULL, '{"children": ["username"], "operator": "objectProperties"}', NULL, NULL, NULL, NULL);
 INSERT INTO public.data_view_column_definition VALUES (19, 'user', 'orgs', 'Member of', NULL, NULL, '{"substitution": "[${organisation.name}](/outcomes/organisation/${organisation.id})"}', '{"children": ["query getUsersOrgs($id: Int!) {  userOrganisations(filter: {userId: {equalTo: $id}}) { nodes { organisation { name, id }}}}", "graphQLEndpoint", ["id"], {"children": ["id"], "operator": "objectProperties"}, "userOrganisations"], "operator": "graphQL"}', NULL, NULL, NULL, NULL);
+INSERT INTO public.data_view_column_definition VALUES (6, 'organisation', 'logoUrl', 'Logo', 'imageDisplay', '{"url": {"children": [{"children": ["applicationData.config.serverREST"], "operator": "objectProperties"}, "/public", {"children": ["responses.thisResponse"], "operator": "objectProperties"}], "operator": "+"}, "size": "tiny", "altText": "No logo supplied"}', NULL, NULL, NULL, NULL, NULL, NULL);
 
 
 --
@@ -5417,6 +5436,8 @@ INSERT INTO public.system_info VALUES (26, 'version', '"0.5.0-11"', '2022-12-09 
 INSERT INTO public.system_info VALUES (27, 'snapshot', '"core_templates"', '2022-12-09 17:10:48.65425+13');
 INSERT INTO public.system_info VALUES (28, 'version', '"0.5.0-12"', '2022-12-20 11:21:35.485494+13');
 INSERT INTO public.system_info VALUES (29, 'snapshot', '"core_templates"', '2022-12-20 11:21:35.586781+13');
+INSERT INTO public.system_info VALUES (30, 'version', '"0.5.6-0"', '2023-03-01 16:13:19.696625+13');
+INSERT INTO public.system_info VALUES (31, 'snapshot', '"core_templates"', '2023-03-01 16:13:19.808599+13');
 
 
 --
@@ -5519,6 +5540,7 @@ INSERT INTO public.template_element VALUES (14, 2, 'Q5Password', 60, 'Password',
 INSERT INTO public.template_element VALUES (94, 11, 'S1T1', 10, 'Intro Section 1', 'INFORMATION', 'textInfo', 'true', 'true', 'true', 'true', NULL, NULL, NULL, '{"style": "info", "title": "## Organisation details"}', 'ONLY_IF_APPLICANT_ANSWER', DEFAULT, DEFAULT);
 INSERT INTO public.template_element VALUES (95, 11, 'name', 20, 'Organisation Name', 'QUESTION', 'shortText', 'true', 'true', 'true', '{"children": [{"children": [{"children": ["applicationData.config.serverREST"], "operator": "objectProperties"}, "/check-unique"], "operator": "CONCAT"}, ["type", "value"], "organisation", {"children": ["responses.thisResponse"], "operator": "objectProperties"}, "unique"], "operator": "API"}', NULL, 'An organisation with that name already exists', NULL, '{"label": "What is the name of your organisation?"}', 'ONLY_IF_APPLICANT_ANSWER', DEFAULT, DEFAULT);
 INSERT INTO public.template_element VALUES (138, 14, 'D1', 25, 'API Selection demo', 'QUESTION', 'dropdownChoice', 'true', 'false', 'true', 'true', NULL, NULL, NULL, '{"label": "API Lookup: Choose a name from this list", "search": true, "options": {"children": [{"value": "https://jsonplaceholder.typicode.com/users"}, {"value": []}, {"value": "name"}], "operator": "API"}, "placeholder": "Select"}', 'ONLY_IF_APPLICANT_ANSWER', DEFAULT, DEFAULT);
+INSERT INTO public.template_element VALUES (173, 19, 'infoHeader', 10, 'Intro Section 1', 'INFORMATION', 'textInfo', 'true', 'true', 'true', 'true', NULL, '', '', '{"style": "success", "title": "### Password reset request"}', 'ONLY_IF_APPLICANT_ANSWER', DEFAULT, DEFAULT);
 INSERT INTO public.template_element VALUES (96, 11, 'rego', 30, 'Registration', 'QUESTION', 'shortText', 'true', 'true', 'true', '{"children": [{"children": [{"children": ["applicationData.config.serverREST"], "operator": "objectProperties"}, "/check-unique"], "operator": "CONCAT"}, ["table", "field", "value"], "organisation", "registration", {"children": ["responses.thisResponse"], "operator": "objectProperties"}, "unique"], "operator": "API"}', NULL, 'An organisation with that registration code already exists', 'The details entered here should match with the documents issued by the governing body in your jurisdiction. You will attach evidence of these documents in the following section.', '{"label": "Please enter your organisation registration code"}', 'ONLY_IF_APPLICANT_ANSWER', DEFAULT, DEFAULT);
 INSERT INTO public.template_element VALUES (97, 11, 'physAdd', 40, 'Address', 'QUESTION', 'longText', 'true', 'true', 'true', 'true', NULL, NULL, NULL, '{"label": "Organisation **physical** address"}', 'ONLY_IF_APPLICANT_ANSWER', DEFAULT, DEFAULT);
 INSERT INTO public.template_element VALUES (98, 11, 'addressCheckbox', 50, 'Postal Address Checkbox', 'QUESTION', 'checkbox', 'true', 'true', 'true', 'true', NULL, NULL, NULL, '{"label": "Is the organisation **postal** address *different* to the physical address?", "checkboxes": [{"key": "1", "label": "Yes", "selected": false}]}', 'ONLY_IF_APPLICANT_ANSWER', DEFAULT, DEFAULT);
@@ -5595,7 +5617,6 @@ INSERT INTO public.template_element VALUES (168, 17, 'activity', 90, 'Organisati
 INSERT INTO public.template_element VALUES (169, 18, 'orgInfo', 10, 'Intro Section 2 - Page 1/2', 'INFORMATION', 'textInfo', 'true', 'true', 'true', 'true', NULL, NULL, NULL, '{"text": {"children": ["Registration no. **%1**", {"children": ["responses.rego.text"], "operator": "objectProperties"}], "operator": "stringSubstitution"}, "style": "basic", "title": {"children": ["**Documentation for Organisation: %1**", {"children": ["responses.name.text"], "operator": "objectProperties"}], "operator": "stringSubstitution"}}', 'ONLY_IF_APPLICANT_ANSWER', DEFAULT, DEFAULT);
 INSERT INTO public.template_element VALUES (170, 18, 'logoShow', 20, 'Show uploaded logo', 'INFORMATION', 'imageDisplay', 'true', 'true', 'true', 'true', NULL, NULL, NULL, '{"url": {"children": [{"children": ["applicationData.config.serverREST"], "operator": "objectProperties"}, {"children": ["responses.logo.files.fileUrl"], "operator": "objectProperties"}], "operator": "CONCAT"}, "size": "tiny", "altText": "Organisation logo", "alignment": "center"}', 'ONLY_IF_APPLICANT_ANSWER', DEFAULT, DEFAULT);
 INSERT INTO public.template_element VALUES (172, 18, 'otherDoc', 40, 'Other documentation upload', 'QUESTION', 'fileUpload', 'true', 'false', 'true', 'true', NULL, NULL, 'Examples might include import permits.', '{"label": "Please provide any other documentation pertinent to your organisation''s activities", "description": "Allowed formats: .pdf, .doc, .jpg, .png", "fileSizeLimit": 5000, "fileExtensions": ["jpg", "jpeg", "png", "pdf", "doc", "docx"]}', 'ONLY_IF_APPLICANT_ANSWER', DEFAULT, DEFAULT);
-INSERT INTO public.template_element VALUES (173, 19, 'infoHeader', 10, 'Intro Section 1', 'INFORMATION', 'textInfo', 'true', 'true', 'true', 'true', NULL, '', '', '{"style": "success", "title": "### Password reset request"}', 'ONLY_IF_APPLICANT_ANSWER', DEFAULT, DEFAULT);
 INSERT INTO public.template_element VALUES (174, 19, 'username', 40, 'Username', 'QUESTION', 'shortText', 'true', 'true', '{"children": [1, {"children": ["applicationData.current.stage.number", null], "operator": "objectProperties"}], "operator": "="}', '{"children": [false, {"children": [{"children": [{"children": ["applicationData.config.serverREST"], "operator": "objectProperties"}, "/check-unique"], "operator": "+"}, ["type", "caseInsensitive", "value"], "username", "false", {"children": ["responses.thisResponse"], "operator": "objectProperties"}, "unique"], "operator": "GET"}], "operator": "="}', NULL, 'Sorry, this username is not recognised. Ensure capitalisation of username is correct.', NULL, '{"label": "Please enter your username"}', 'ONLY_IF_APPLICANT_ANSWER', DEFAULT, DEFAULT);
 INSERT INTO public.template_element VALUES (176, 20, 'user', 1, 'user', 'QUESTION', 'search', 'true', 'true', 'true', 'true', NULL, '', '', '{"icon": "user", "label": "User", "source": {"children": ["query findUser($search: String!) {\n  users(\n    filter: {\n      or: [\n        { email: { includesInsensitive: $search } }\n        { firstName: { includesInsensitive: $search } }\n        { lastName: { includesInsensitive: $search } }\n        { username: { includesInsensitive: $search } }\n      ]\n    }\n  ) {\n    nodes {\n      email\n      firstName\n      lastName\n      username\n      id\n    }\n  }\n}\n", "graphQLEndpoint", ["search"], {"children": ["search.text"], "operator": "objectProperties"}, "users.nodes"], "operator": "graphQL"}, "multiSelect": false, "placeholder": "Search for User", "resultFormat": {"title": "${username}", "description": "First Name: ${firstName} \nLast Name:${lastName} \nemail:${email}"}, "displayFormat": {"title": "${username}", "description": "First Name: ${firstName} \nLast Name:${lastName} \nemail:${email}"}, "minCharacters": 3}', 'ONLY_IF_APPLICANT_ANSWER', DEFAULT, DEFAULT);
 INSERT INTO public.template_element VALUES (177, 20, 'permissions', 3, 'permissions', 'QUESTION', 'checkbox', 'true', 'true', 'true', 'true', NULL, '', '', '{"label": "Permissions", "checkboxes": {"children": ["query getPermissionNames {\n  permissionNames {\n    nodes {\n      name\n    }\n  }\n}", "graphQLEndpoint", [], "permissionNames.nodes.name"], "operator": "graphQL"}}', 'ONLY_IF_APPLICANT_ANSWER', DEFAULT, DEFAULT);
@@ -5945,7 +5966,7 @@ SELECT pg_catalog.setval('public.review_status_history_id_seq', 1, true);
 -- Name: system_info_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.system_info_id_seq', 29, true);
+SELECT pg_catalog.setval('public.system_info_id_seq', 31, true);
 
 
 --
@@ -6084,6 +6105,14 @@ ALTER TABLE ONLY public.activity_log
 
 ALTER TABLE ONLY public.application_note
     ADD CONSTRAINT application_note_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: application application_outcome_registration_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.application
+    ADD CONSTRAINT application_outcome_registration_key UNIQUE (outcome_registration);
 
 
 --
@@ -8063,6 +8092,7 @@ CREATE POLICY view_pp8 ON public.application FOR SELECT USING (((COALESCE(curren
 -- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
 --
 
+REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 GRANT ALL ON SCHEMA public TO graphile_user;
 
 
