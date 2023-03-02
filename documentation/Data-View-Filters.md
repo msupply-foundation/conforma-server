@@ -1,5 +1,3 @@
-# Data View Filters
-
 Data View Tables can be filtered, sorted and searched comprehensively in the front end. However, since the type and structure of the data being displayed could be anything, we sometimes need to give explicit definitions of exactly how filtering, searching and sorting should work -- although the defaults are often fine in simple cases.
 
 <!-- toc -->

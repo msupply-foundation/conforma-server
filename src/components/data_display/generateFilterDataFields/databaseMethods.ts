@@ -34,7 +34,17 @@ const databaseMethods = (DBConnect: any) => ({
       throw err
     }
   },
-  getTableFilterColumnDefintions: async (tableName: string) => {
+  getTableFilterColumnDefinitions: async ({
+    tableNameFullSnake,
+    tableNameSnake,
+    tableNameFullCamel,
+    tableNameCamel,
+  }: {
+    tableNameFullSnake: string
+    tableNameSnake: string
+    tableNameFullCamel: string
+    tableNameCamel: string
+  }) => {
     const text = `
         SELECT column_name AS column,
           filter_expression AS expression,
@@ -42,12 +52,13 @@ const databaseMethods = (DBConnect: any) => ({
         FROM data_view_column_definition
           WHERE filter_expression IS NOT NULL
           AND column_name LIKE '%${FILTER_TEXT_SUFFIX}'
-          AND table_name = $1;
+          AND (table_name = $1 OR table_name = $2
+            OR table_name = $3 OR table_name = $4);
         `
     try {
       const result = await DBConnect.query({
         text,
-        values: [tableName],
+        values: [tableNameFullSnake, tableNameSnake, tableNameFullCamel, tableNameCamel],
       })
       return result.rows
     } catch (err) {

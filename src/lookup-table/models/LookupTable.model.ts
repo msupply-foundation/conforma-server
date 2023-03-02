@@ -8,6 +8,7 @@ import {
   LookupTableStructure,
 } from '../types'
 import config from '../../config'
+import { exportDataRows } from '../utils/dataTypeUtils'
 
 const { dataTablePrefix } = config
 
@@ -17,7 +18,7 @@ const LookupTableModel = () => {
     const fields = fieldMap.map(mappedField).join(',')
     const text = `SELECT ${fields} FROM ${dataTablePrefix}${tableName}`
     const result = await DBConnect.query({ text })
-    return result.rows
+    return exportDataRows(fieldMap, result.rows)
   }
 
   const createStructure = async ({ tableName, displayName, fieldMap }: LookupTableStructure) => {
@@ -158,7 +159,7 @@ const LookupTableModel = () => {
     tableName: string,
     fieldMaps: FieldMapType[]
   ): Promise<boolean> => {
-    const text = `UPDATE data_table SET field_map = $1 WHERE display_name = $2`
+    const text = `UPDATE data_table SET field_map = $1 WHERE table_name = $2`
     try {
       await DBConnect.query({ text, values: [JSON.stringify(fieldMaps), tableName] })
       return true

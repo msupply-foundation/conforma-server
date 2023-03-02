@@ -1,4 +1,4 @@
-# _Conforma_ New server setup on Ubuntu 10.04
+## _Conforma_ New server setup on Ubuntu 10.04
 
 Steps to create new server:
 
@@ -17,6 +17,8 @@ Steps to create new server:
   - `export WEB_URL='<host-domain>:50000'`
   - `export JWT_SECRET='<make-your-own>'`
   - `export SMTP_SECRET='<secret-in-BW>'`
+  - `export BACKUPS_FOLDER='~/Dropbox/conforma_backups'`
+  - `export BACKUPS_PASSWORD='<super-secret-encryption-key>'`
 - Install Docker compose:
   `sudo apt install docker-compose`
 - Upgrade Docker compose to v2 as instructed here: https://docs.docker.com/compose/cli-command/#install-on-linux

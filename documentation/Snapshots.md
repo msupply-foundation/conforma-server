@@ -1,5 +1,3 @@
-# Snapshots
-
 It's possible to create a 'snapshot' of current state of database `yarn take_snapshot` and load that snapshot via `yarn use_snapshot`, optional snapshot parameter can be specified `yarn take/use_snapshot {snapshot name}`, defaults to `current`
 
 ### What is a Snapshot ?
