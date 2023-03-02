@@ -134,7 +134,7 @@ export interface ActionApplicationData extends BaseApplicationData {
   environmentData: {
     appRootFolder: string
     filesFolder: string
-    SMTPConfig: {
+    SMTPConfig?: {
       host: string
       port: number
       secure: boolean
@@ -243,3 +243,37 @@ export interface Organisation {
 export interface UserOrg extends User, Organisation {
   id: number
 }
+
+export interface ServerPreferences {
+  thumbnailMaxWidth: number
+  thumbnailMaxHeight: number
+  hoursSchedule?: number[]
+  SMTPConfig?: {
+    host: string
+    port: number
+    secure: boolean
+    user: string
+    defaultFromName: string
+    defaultFromEmail: string
+  }
+  systemManagerPermissionName?: string
+  previewDocsMinKeepTime?: string
+  previewDocsCleanupSchedule?: number[]
+  backupSchedule?: number[]
+  backupFilePrefix?: string
+  maxBackupDurationDays?: number
+}
+
+export const serverPrefKeys: (keyof ServerPreferences)[] = [
+  // Must contain ALL keys of ServerPreferences -- please check
+  'thumbnailMaxHeight',
+  'thumbnailMaxWidth',
+  'hoursSchedule',
+  'SMTPConfig',
+  'systemManagerPermissionName',
+  'previewDocsMinKeepTime',
+  'previewDocsCleanupSchedule',
+  'backupSchedule',
+  'backupFilePrefix',
+  'maxBackupDurationDays',
+]
