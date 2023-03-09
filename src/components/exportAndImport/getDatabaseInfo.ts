@@ -15,6 +15,7 @@ const getDatabaseInfo = async () => {
       table_name,
       table_type,
       column_name,
+      is_nullable,
       is_generated,
       data_type,
       sub_data_type,
@@ -38,6 +39,7 @@ const getDatabaseInfo = async () => {
       const isPrimary = constraint_type === 'PRIMARY KEY'
       const isUnique = constraint_type === 'UNIQUE'
       const isReference = constraint_type === 'FOREIGN KEY'
+      const isNullable = is_nullable === 'YES'
       const isGenerated = is_generated === 'ALWAYS'
       const isEnum = data_type === 'USER-DEFINED'
       const isJson = data_type === 'jsonb'
@@ -50,6 +52,7 @@ const getDatabaseInfo = async () => {
         columnName,
         isPrimary,
         isUnique,
+        isNullable,
         isGenerated,
         isReference,
         isEnum,

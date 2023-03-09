@@ -13,19 +13,19 @@ const getRecordsAsObject = async ({
 
   const tablesToExport = filterByIncludeAndExclude(includeTables, excludeTables, databaseTables)
 
-  const fitleredRecords: ObjectRecords = {}
+  const filteredRecords: ObjectRecords = {}
   const records: ObjectRecords = {}
 
   for (const table of tablesToExport) {
     const { tableName } = table
-    const filteredReferences = getFilteredReferences(table, fitleredRecords)
-    const baseFilter = filters?.[tableName] || {}
+    const baseFilter = filters?.[tableName]
+    const filteredReferences = getFilteredReferences(table, filteredRecords, baseFilter)
 
     const { gql, getter, hasFilter } = constructGqlAndGetter(table, filteredReferences, baseFilter)
     const result = await databaseConnect.gqlQuery(gql)
     const rows = getter(result)
     records[tableName] = rows
-    if (hasFilter) fitleredRecords[tableName] = rows
+    if (hasFilter) filteredRecords[tableName] = rows
   }
 
   return records
@@ -33,11 +33,12 @@ const getRecordsAsObject = async ({
 
 const getFilteredReferences = (
   { referenceTables, columns }: DatabaseTable,
-  previousFilteredRecords: ObjectRecords
+  previousFilteredRecords: ObjectRecords,
+  baseFilter: object | undefined
 ) => {
   if (referenceTables.length === 0) return {}
 
-  // i.e. { sectionn: {id: {in: [10, 20]}}}
+  // i.e. { section: {id: {in: [10, 20]}}}
   const filters: {
     [referenceColumnName: string]: { in: any[] }
   } = {}
@@ -45,10 +46,16 @@ const getFilteredReferences = (
   columns.forEach(
     ({
       isReference,
+      isNullable,
       reference: { tableName: referencedTableName, columnName: referencedColumnName },
       columnName,
     }) => {
       if (!isReference) return
+      // If the column is nullable and there is already a base filter defined
+      // (in options) for this table, then don't make additional filters based
+      // on references, otherwise it can filter out to much (particularly for
+      // template export)
+      if (baseFilter && isNullable) return
       const filteredRecords = previousFilteredRecords[referencedTableName]
       if (!filteredRecords) return
 
@@ -64,9 +71,9 @@ const getFilteredReferences = (
 const constructGqlAndGetter = (
   { tableName, columns }: DatabaseTable,
   filteredReferences: object,
-  baseFilter: object
+  baseFilter: object | undefined
 ) => {
-  const filter = { ...filteredReferences, ...baseFilter }
+  const filter = { ...baseFilter, ...filteredReferences }
   const hasFilter = Object.keys(filter).length > 0
 
   const filterString = !hasFilter ? '' : `(filter: ${noQuoteKeyStringify(filter)})`
