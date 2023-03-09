@@ -18,8 +18,8 @@ const getRecordsAsObject = async ({
 
   for (const table of tablesToExport) {
     const { tableName } = table
-    const filteredReferences = getFilteredReferences(table, filteredRecords)
     const baseFilter = filters?.[tableName]
+    const filteredReferences = getFilteredReferences(table, filteredRecords, baseFilter)
 
     const { gql, getter, hasFilter } = constructGqlAndGetter(table, filteredReferences, baseFilter)
     const result = await databaseConnect.gqlQuery(gql)
@@ -33,7 +33,8 @@ const getRecordsAsObject = async ({
 
 const getFilteredReferences = (
   { referenceTables, columns }: DatabaseTable,
-  previousFilteredRecords: ObjectRecords
+  previousFilteredRecords: ObjectRecords,
+  baseFilter: object | undefined
 ) => {
   if (referenceTables.length === 0) return {}
 
@@ -45,10 +46,16 @@ const getFilteredReferences = (
   columns.forEach(
     ({
       isReference,
+      isNullable,
       reference: { tableName: referencedTableName, columnName: referencedColumnName },
       columnName,
     }) => {
       if (!isReference) return
+      // If the column is nullable and there is already a base filter defined
+      // (in options) for this table, then don't make additional filters based
+      // on references, otherwise it can filter out to much (particularly for
+      // template export)
+      if (baseFilter && isNullable) return
       const filteredRecords = previousFilteredRecords[referencedTableName]
       if (!filteredRecords) return
 
@@ -64,11 +71,9 @@ const getFilteredReferences = (
 const constructGqlAndGetter = (
   { tableName, columns }: DatabaseTable,
   filteredReferences: object,
-  baseFilter: object
+  baseFilter: object | undefined
 ) => {
-  // If filters already defined in options (baseFilter), just use that,
-  // otherwise we can end up filtering out too much
-  const filter = baseFilter ?? filteredReferences ?? {}
+  const filter = { ...baseFilter, ...filteredReferences }
   const hasFilter = Object.keys(filter).length > 0
 
   const filterString = !hasFilter ? '' : `(filter: ${noQuoteKeyStringify(filter)})`
