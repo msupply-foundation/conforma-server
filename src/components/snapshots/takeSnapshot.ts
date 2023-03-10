@@ -26,6 +26,7 @@ import {
   DATABASE_FOLDER,
 } from '../../constants'
 import { getDirectoryFromPath } from './useSnapshot'
+import DBConnect from '../../../src/components/databaseConnect'
 import config from '../../config'
 import { DateTime } from 'luxon'
 const asyncRimRaf = promisify(rimraf)
@@ -106,6 +107,16 @@ const takeSnapshot: SnapshotOperation = async ({
     )
 
     if (!options.skipZip) await zipSnapshot(newSnapshotFolder, snapshotName)
+
+    // Store snapshot name in database (for full exports only)
+    if (options.shouldReInitialise) {
+      const text = `INSERT INTO system_info (name, value)
+      VALUES('snapshot', $1)`
+      await DBConnect.query({
+        text,
+        values: [JSON.stringify(snapshotName)],
+      })
+    }
 
     return { success: true, message: `created snapshot ${snapshotName}` }
   } catch (e) {
