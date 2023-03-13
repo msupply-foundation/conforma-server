@@ -36,7 +36,7 @@ const scheduleAction: ActionPluginType = async ({
     const scheduledEvent = await db.createOrUpdateTriggerSchedule({
       applicationId,
       templateId,
-      scheduledTime: scheduledDateTime,
+      scheduledDateTime,
       eventCode,
       data,
       cancel,
@@ -44,7 +44,7 @@ const scheduleAction: ActionPluginType = async ({
     console.log('Trigger/Action event scheduled:', {
       applicationId,
       eventCode,
-      scheduledTime: scheduledDateTime,
+      scheduledDateTime,
     })
     return {
       status: ActionQueueStatus.Success,
