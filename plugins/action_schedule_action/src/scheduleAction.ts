@@ -1,7 +1,7 @@
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import databaseMethods from './databaseMethods'
-import { DateTime } from 'luxon'
+import { DateTime, Duration } from 'luxon'
 
 const scheduleAction: ActionPluginType = async ({
   parameters,
@@ -13,7 +13,8 @@ const scheduleAction: ActionPluginType = async ({
   const {
     applicationId = applicationData?.applicationId,
     templateId = applicationData?.templateId,
-    duration, // either number (weeks) or Luxon duration object
+    date, // either ISO string, JSDate or object in Luxon DateTime format
+    duration, // either number (weeks) or object in Luxon Duration format
     eventCode = null,
     cancel = false,
     data = { outputCumulative },
@@ -30,20 +31,21 @@ const scheduleAction: ActionPluginType = async ({
       }
     }
 
-    const scheduledTime =
-      typeof duration === 'number'
-        ? DateTime.now().plus({ weeks: duration }).toISO()
-        : DateTime.now().plus(duration).toISO()
+    const scheduledDateTime = getScheduledDateTime({ date, duration })
     // Add record
     const scheduledEvent = await db.createOrUpdateTriggerSchedule({
       applicationId,
       templateId,
-      scheduledTime,
+      scheduledTime: scheduledDateTime,
       eventCode,
       data,
       cancel,
     })
-    console.log('Trigger/Action event scheduled:', { applicationId, eventCode, scheduledTime })
+    console.log('Trigger/Action event scheduled:', {
+      applicationId,
+      eventCode,
+      scheduledTime: scheduledDateTime,
+    })
     return {
       status: ActionQueueStatus.Success,
       error_log: '',
@@ -68,3 +70,26 @@ const scheduleAction: ActionPluginType = async ({
 }
 
 export default scheduleAction
+
+const getScheduledDateTime = ({
+  date,
+  duration,
+}: {
+  date?: string | Date | object
+  duration?: number | object
+}): string => {
+  if (date) {
+    if (typeof date === 'string') return date
+    if (date instanceof Date) return DateTime.fromJSDate(date).toISO()
+    const luxDate = DateTime.fromObject(date)
+    if (DateTime.isDateTime(luxDate)) return luxDate.toISO()
+    throw new Error('"date" must be ISO string, JS Date or object in Luxon DateTime format')
+  }
+  if (duration) {
+    if (typeof duration === 'number') return DateTime.now().plus({ weeks: duration }).toISO()
+    const luxDuration = Duration.fromObject(duration)
+    if (Duration.isDuration(luxDuration)) return DateTime.now().plus(duration).toISO()
+    throw new Error('"duration" must be a number or object in Luxon Duration')
+  }
+  throw new Error('Requires either "date" or "duration" parameter')
+}
