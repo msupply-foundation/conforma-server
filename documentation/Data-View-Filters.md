@@ -61,7 +61,7 @@ Sorting requests are passed to the server as part of the query parameters of the
 
 ## Filters
 
-In the front end, there are several diffent UI elements for filtering table data. Which one is shown for a given data value is determined by a combination of the data type and explicit filter definitions specified in `data_view_column_definition`.
+In the front end, there are several different UI elements for filtering table data. Which one is shown for a given data value is determined by a combination of the data type and explicit filter definitions specified in `data_view_column_definition`.
 
 ### Handling complex data structures
 
