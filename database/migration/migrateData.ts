@@ -719,7 +719,7 @@ const migrateData = async () => {
     console.log(' - Add "default_filter_string" to data_views')
     await DB.changeSchema(`
       ALTER TABLE public.data_view
-      ADD COLUMN IF NOT EXISTS default_filter jsonb;
+      ADD COLUMN IF NOT EXISTS default_filter_string varchar;
     `)
   }
 
