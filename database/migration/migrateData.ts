@@ -715,6 +715,14 @@ const migrateData = async () => {
     `)
   }
 
+  if (databaseVersionLessThan('0.5.7')) {
+    console.log(' - Add "default_filter_string" to data_views')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_view
+      ADD COLUMN IF NOT EXISTS default_filter_string varchar;
+    `)
+  }
+
   // Other version migrations continue here...
 
   // Update (almost all) Indexes, Views, Functions, Triggers regardless, since

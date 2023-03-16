@@ -39,7 +39,8 @@ Returns an array of data table views the user is allowed to see (based on JWT he
         "tableName": "user",
         "title": "Users (Restricted View)",
         "code": "userRestricted",
-        "urlSlug":"user-restricted"
+        "urlSlug":"user-restricted",
+        "defaultFilter" "isActive=true"
     },
     ...etc.
 ]
@@ -227,8 +228,9 @@ Some things to be aware of:
 - `default_sort_column`: the column that the table data will be ordered by when no column-sort is selected in the front-end. You should rarely need to set this -- the default is `id`, which usually corresponds to the order in which items were added, so is fine for most purposes. However, if you need to override it with a different column, this allows it.
 - `show_linked_applications`: if `true`, the `/item` endpoint will also return an array of linked applications connected to this particular item. These are taken from the outcome "join" tables, whose records are created on successful application approvals.
 - `priority`: when multiple views match the `code` (i.e. user has permissions for more than one), the view with the highest priority will be returned the to the user. A typical use case for this would be if you have a particular view that is open to all users (i.e `permissionNames` is `null`), but you want users with certain permissions to see a different view for the same request (e.g Staff might be able to see *all* users, whereas external users can only see those in their own organisation). Default value: `1`.
+- `default_filter_string`: a string that will be appended to the url of the data view in the front-end in order to implement the default filtering for the view (see [Data View Filters](Data-View-Filters.md)). You can work out what the string should be by setting the filters (in the front-end) and just copying the url query string. For example, a default filter for a product table might want to restrict the initial view to active (non-cancelled) products from Australia, so the `default_filter_string` would be something like `is-active=true&registered-in=Australia`
 
-(We also have fields `filter_include_columns`, `filter_exclude_columns`, `table_search_columns` but they are explained in [Data View Filters](Data-View-Filters.md)))
+(We also have fields `filter_include_columns`, `filter_exclude_columns`, `table_search_columns` but they are explained in [Data View Filters](Data-View-Filters.md))
 
 Okay, so if you're just wanting to display fields directly taken from the outcome table in question, and the formatting requirements are all "simple" types (text, number, boolean, Date) the `data_view` table is all you need. However, if you want to return columns with more complex data (such as a list of ingredients, or a query to another table) or require non-default formatting, you'll need to define these in the `data_view_column_definition` table.
 
