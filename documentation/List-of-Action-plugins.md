@@ -663,14 +663,17 @@ A "special" action that allows other actions to be triggered at some time in the
 
 | Input parameters<br />(\*required) <br/> | Output properties |
 | ---------------------------------------- | ----------------- |
-| `duration`\*                             | `scheduledEvent`  |
+| `duration`                               | `scheduledEvent`  |
+| `date`                                   | `scheduledEvent`  |
 | `eventCode`                              |                   |
 | `applicationId`                          |                   |
 | `templateId`                             |                   |
 | `cancel`                                 |                   |
 | `data`                                   |                   |
 
-This Action stores an "event" in the database `trigger_schedule` table, scheduled for a time in the future specified by `duration`. When this time is reached, a special trigger is fired (`ON_SCHEDULE`) which can be used as the trigger for subsequent actions.
+*Either* of `duration` or `date` is required
+
+This Action stores an "event" in the database `trigger_schedule` table, scheduled for a time in the future specified by `duration` (a certain length of time from *now*) or `date` (a specific point in time). When this time is reached, a special trigger is fired (`ON_SCHEDULE`) which can be used as the trigger for subsequent actions.
 
 Each scheduled event can be saved with an `eventCode` -- this is used by Actions that are triggered by this event to determine *which* action should be fired for any given `ON_SCHEDULE` trigger on each template type. Every Action defined for each template has an optional `scheduledActionCode` field, which can be used to match specific events. If no event code is provided, then *every* action for that template type with an `ON_SCHEDULE` trigger will be executed.
 
@@ -678,7 +681,9 @@ By default, when an event is saved, the `outputCumulative` object from the `sche
 
 The `cancel` parameter is a way to prevent a previously scheduled event from occurring. Passing in `cancel: true` will, instead of creating a new event, find any *existing* event that has matching `applicationId` and `eventCode` and set to to inactive without it ever firing. In practice, though, targeting an event by `applicationId` is often not feasible, so the preferred way to cancel a scheduled event is to just apply an appropriate Condition to the subsequent action -- so the event is still triggered, but the matching action won't occur if the condition is not met (e.g. don't expire a product if registration has been renewed)
 
-Note: the `duration` value can be *either* a number (representing time in weeks) or a [Luxon duration object](https://moment.github.io/luxon/api-docs/index.html#duration).
+Note:
+- the `duration` value can be *either* a number (representing time in weeks) or an object in [Luxon Duration format](https://moment.github.io/luxon/api-docs/index.html#duration).
+- the `date` value can be *either* an ISO string, a JS Date object or an object in [Luxon DateTime format](https://moment.github.io/luxon/api-docs/index.html#datetime)
 
 
 ---
