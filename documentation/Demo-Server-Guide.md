@@ -4,7 +4,7 @@
 
 - Add token to githubtoken.txt (for downloading expression-evaluator)
   - requires token that has read access to packages on server repo
-  - Trobleshoting error 403 Unauthorised when running `yarn install` [Source](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token):
+  - Trobleshooting error 403 Unauthorised when running `yarn install` [Source](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token):
     - Run `npm login --scope=@openmsupply --registry=https://npm.pkg.github.com`
     - Then enter your github registration `username`, `passowrd` (token) and `email`
 - Ensure your back-end `.env` has a variable called `FRONT_END_PATH` with the _full_ path to the front-end repo on your local system.  
