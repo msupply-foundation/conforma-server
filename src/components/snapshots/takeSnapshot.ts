@@ -108,8 +108,8 @@ const takeSnapshot: SnapshotOperation = async ({
 
     if (!options.skipZip) await zipSnapshot(newSnapshotFolder, snapshotName)
 
-    // Store snapshot name in database (for full exports only)
-    if (options.shouldReInitialise) {
+    // Store snapshot name in database (for full exports only, but not backups)
+    if (options.shouldReInitialise && !options.skipZip) {
       const text = `INSERT INTO system_info (name, value)
       VALUES('snapshot', $1)`
       await DBConnect.query({
