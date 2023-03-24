@@ -1,5 +1,5 @@
 import path from 'path'
-import fs from 'fs'
+import fs, { readFileSync } from 'fs'
 import { camelCase, snakeCase, mapKeys } from 'lodash'
 import { singular } from 'pluralize'
 import config from '../config'
