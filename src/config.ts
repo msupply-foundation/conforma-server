@@ -44,6 +44,7 @@ const config: { [key: string]: any } = {
   // columns added (i.e. schema changes):
   allowedTablesNoColumns: ['application', 'file'],
   filterListMaxLength: 10,
+  filterListBatchSize: 1000,
   filterColumnSuffix: '_filter_data', // snake_case,
   isProductionBuild,
   defaultSystemManagerPermissionName: 'systemManager',
