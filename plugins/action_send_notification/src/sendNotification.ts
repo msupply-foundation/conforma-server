@@ -192,7 +192,7 @@ const prepareAttachments = async (
   filesFolder: string
 ): Promise<Attachment[]> => {
   const attachmentInput = Array.isArray(attachments) ? attachments : [attachments]
-  const attachmentObjects = []
+  const attachmentObjects: Attachment[] = []
   for (const file of attachmentInput) {
     if (typeof file === 'object') {
       if (!file?.path || !file?.filename) throw new Error('Invalid attachment')

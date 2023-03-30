@@ -73,7 +73,7 @@ export const getApplicationData = async (input: {
     appRootFolder: getAppEntryPointDir(),
     filesFolder: config.filesFolder,
     webHostUrl: process.env.WEB_HOST,
-    SMTPConfig: config.SMTPConfig,
+    SMTPConfig: config?.SMTPConfig,
   }
 
   const sectionCodes = (await DBConnect.getApplicationSections(applicationId)).map(
