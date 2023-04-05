@@ -58,6 +58,7 @@ const routeDataViewTable = async (request: any, reply: any) => {
     searchFields,
     filterDefinitions,
     defaultSortColumn,
+    defaultFilterString,
     gqlFilters,
     title,
     code,
@@ -91,7 +92,8 @@ const routeDataViewTable = async (request: any, reply: any) => {
     fetchedRecords,
     totalCount,
     searchFields,
-    filterDefinitions
+    filterDefinitions,
+    defaultFilterString
   )
 
   return reply.send(response)

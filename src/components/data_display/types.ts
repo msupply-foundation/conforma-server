@@ -40,6 +40,7 @@ export interface DataViewsTableResponse {
   tableRows: TableRow[]
   searchFields: string[]
   filterDefinitions: FilterDefinition[]
+  defaultFilterString: string | null
   totalCount: number
   message?: string
 }
@@ -68,6 +69,7 @@ export interface ColumnDetailOutput {
   filterDefinitions: FilterDefinition[]
   headerDefinition: ColumnDefinition | undefined
   defaultSortColumn: string | null
+  defaultFilterString: string | null
   showLinkedApplications: boolean
 }
 
