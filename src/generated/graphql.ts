@@ -6684,6 +6684,7 @@ export type DataView = Node & {
   filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   defaultSortColumn?: Maybe<Scalars['String']>;
+  defaultFilterString?: Maybe<Scalars['String']>;
 };
 
 export type DataViewColumnDefinition = Node & {
@@ -6893,6 +6894,8 @@ export type DataViewCondition = {
   filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `defaultSortColumn` field. */
   defaultSortColumn?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `defaultFilterString` field. */
+  defaultFilterString?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `DataView` object types. All fields are combined with a logical ‘and.’ */
@@ -6931,6 +6934,8 @@ export type DataViewFilter = {
   filterExcludeColumns?: Maybe<StringListFilter>;
   /** Filter by the object’s `defaultSortColumn` field. */
   defaultSortColumn?: Maybe<StringFilter>;
+  /** Filter by the object’s `defaultFilterString` field. */
+  defaultFilterString?: Maybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<DataViewFilter>>;
   /** Checks for any expressions in this list. */
@@ -6958,6 +6963,7 @@ export type DataViewInput = {
   filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   defaultSortColumn?: Maybe<Scalars['String']>;
+  defaultFilterString?: Maybe<Scalars['String']>;
 };
 
 /** Represents an update to a `DataView`. Fields that are set will be updated. */
@@ -6979,6 +6985,7 @@ export type DataViewPatch = {
   filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   defaultSortColumn?: Maybe<Scalars['String']>;
+  defaultFilterString?: Maybe<Scalars['String']>;
 };
 
 /** A connection to a list of `DataView` values. */
@@ -7040,6 +7047,8 @@ export enum DataViewsOrderBy {
   FilterExcludeColumnsDesc = 'FILTER_EXCLUDE_COLUMNS_DESC',
   DefaultSortColumnAsc = 'DEFAULT_SORT_COLUMN_ASC',
   DefaultSortColumnDesc = 'DEFAULT_SORT_COLUMN_DESC',
+  DefaultFilterStringAsc = 'DEFAULT_FILTER_STRING_ASC',
+  DefaultFilterStringDesc = 'DEFAULT_FILTER_STRING_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -36269,6 +36278,7 @@ export type DataViewResolvers<ContextType = any, ParentType extends ResolversPar
   filterIncludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   filterExcludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   defaultSortColumn?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  defaultFilterString?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
