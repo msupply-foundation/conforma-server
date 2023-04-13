@@ -69,7 +69,14 @@ export const buildAllColumnDefinitions = async ({
 
   const dataView = dataViews[0]
 
-  const { tableName, title, code, tableSearchColumns, defaultSortColumn } = dataView
+  const {
+    tableName,
+    title,
+    code,
+    tableSearchColumns,
+    defaultSortColumn = null,
+    defaultFilterString = null,
+  } = dataView
 
   const tableNameProper = camelCase(getValidTableName(tableName))
 
@@ -149,7 +156,8 @@ export const buildAllColumnDefinitions = async ({
     headerDefinition,
     searchFields: (tableSearchColumns as string[]) || [],
     filterDefinitions,
-    defaultSortColumn: defaultSortColumn ?? null,
+    defaultSortColumn,
+    defaultFilterString,
     showLinkedApplications,
   }
 }
@@ -334,7 +342,8 @@ export const constructTableResponse = async (
   fetchedRecords: { id: number; [key: string]: any }[],
   totalCount: number,
   searchFields: string[],
-  filterDefinitions: FilterDefinition[]
+  filterDefinitions: FilterDefinition[],
+  defaultFilterString: string | null
 ): Promise<DataViewsTableResponse> => {
   // Build table headers, which also carry any additional display/format
   // definitions for each column
@@ -413,6 +422,7 @@ export const constructTableResponse = async (
     tableRows,
     searchFields,
     filterDefinitions,
+    defaultFilterString,
     totalCount,
   }
 }
