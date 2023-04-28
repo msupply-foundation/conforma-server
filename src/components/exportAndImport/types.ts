@@ -2,6 +2,7 @@ export type DatabaseColumn = {
   columnName: string
   isPrimary: boolean
   isUnique: boolean
+  isNullable: boolean
   isGenerated: boolean
   isReference: boolean
   isEnum: boolean
