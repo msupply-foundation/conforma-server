@@ -692,7 +692,19 @@ class PostgresDB {
     }
   }
 
-  // Remove all user
+  public getOrgName = async (orgId: number | null) => {
+    if (!orgId) return null
+    const text = `
+      SELECT name FROM organisation
+      WHERE id = $1
+    `
+    try {
+      const result = await this.query({ text, values: [orgId] })
+      return result.rows[0].name
+    } catch (err) {
+      throw err
+    }
+  }
 
   // Used by triggers/actions -- please don't modify
   public getUserData = async (userId: number, orgId: number) => {
