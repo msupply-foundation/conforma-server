@@ -741,7 +741,7 @@ const migrateData = async () => {
         REFERENCES public.application (id) ON DELETE CASCADE;
       `)
       console.log(' ...and updating trigger_queue data')
-      await DB.populateTriggerQueueApplicationId()
+      await DB.populateQueueApplicationIds('trigger_queue')
     }
     if (!(await DB.checkColumnExists('action_queue', 'application_id'))) {
       await DB.changeSchema(`
@@ -750,9 +750,8 @@ const migrateData = async () => {
         REFERENCES public.application (id) ON DELETE CASCADE;
       `)
       console.log(' ...and updating action_queue data')
-      await DB.populateActionQueueApplicationId()
+      await DB.populateQueueApplicationIds('action_queue')
     }
-    // await DB.populateActionQueueApplicationId()
   }
 
   // Other version migrations continue here...
