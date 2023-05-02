@@ -594,13 +594,19 @@ class PostgresDB {
     }
   }
 
-  public updateTriggerQueueStatus = async (
-    payload: TriggerQueueUpdatePayload
-  ): Promise<boolean> => {
-    const text = 'UPDATE trigger_queue SET status = $1 WHERE id = $2'
-    // TODO: Dynamically select what is being updated
+  public updateTriggerQueueStatus = async ({
+    id,
+    application_id,
+    status,
+  }: TriggerQueueUpdatePayload): Promise<boolean> => {
+    const text = `UPDATE trigger_queue SET status = $1${
+      application_id ? ', application_id = $3' : ''
+    } WHERE id = $2`
+    const values = [status, id]
+    if (application_id) values.push(application_id)
+
     try {
-      await this.query({ text, values: Object.values(payload) })
+      await this.query({ text, values })
       return true
     } catch (err) {
       throw err
