@@ -33,7 +33,7 @@ const loadCurrentPrefs = () =>
 // Serve prefs to front-end
 export const routeGetPrefs = async (request: any, reply: any) => {
   const prefs = loadCurrentPrefs()
-  const languageOptions = readLanguageOptions
+  const languageOptions = readLanguageOptions()
   const latestSnapshot = await databaseConnect.getLatestSnapshotName()
   reply.send({ preferences: prefs.web, languageOptions, latestSnapshot })
 }
