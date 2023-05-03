@@ -1,7 +1,11 @@
 import config from '../../config'
 import path from 'path'
 import sharp from 'sharp'
-const { thumbnailMaxWidth, thumbnailMaxHeight } = config
+import { DEFAULT_THUMBNAIL_MAX_WIDTH, DEFAULT_THUMBNAIL_MAX_HEIGHT } from '../../constants'
+const {
+  thumbnailMaxWidth = DEFAULT_THUMBNAIL_MAX_WIDTH,
+  thumbnailMaxHeight = DEFAULT_THUMBNAIL_MAX_HEIGHT,
+} = config
 const { genericThumbnailsFolderName } = config
 
 // Maps file types (mimetype or ext) to generic

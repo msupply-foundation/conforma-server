@@ -245,8 +245,8 @@ export interface UserOrg extends User, Organisation {
 }
 
 export interface ServerPreferences {
-  thumbnailMaxWidth: number
-  thumbnailMaxHeight: number
+  thumbnailMaxWidth?: number
+  thumbnailMaxHeight?: number
   hoursSchedule?: number[]
   SMTPConfig?: {
     host: string
