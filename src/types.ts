@@ -134,6 +134,7 @@ export interface ActionApplicationData extends BaseApplicationData {
   environmentData: {
     appRootFolder: string
     filesFolder: string
+    webHostUrl: string
     SMTPConfig?: {
       host: string
       port: number
@@ -142,6 +143,7 @@ export interface ActionApplicationData extends BaseApplicationData {
       defaultFromName: string
       defaultFromEmail: string
     }
+    productionHost?: string
   }
   other?: {
     // Use this for dev related stuff, shouldn't be used in actual configs
@@ -262,6 +264,7 @@ export interface ServerPreferences {
   backupSchedule?: number[]
   backupFilePrefix?: string
   maxBackupDurationDays?: number
+  testingEmail?: string
 }
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
@@ -276,4 +279,5 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'backupSchedule',
   'backupFilePrefix',
   'maxBackupDurationDays',
+  'testingEmail',
 ]

@@ -50,6 +50,7 @@ const config = {
   isProductionBuild,
   defaultSystemManagerPermissionName: 'systemManager',
   ...serverPrefs,
+  productionHost: (prefs.web as any)?.siteHost,
 }
 
 export default config
