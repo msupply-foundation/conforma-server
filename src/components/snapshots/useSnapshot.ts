@@ -10,7 +10,7 @@ import importFromJson from '../exportAndImport/importFromJson'
 import { triggerTables } from './triggerTables'
 import semverCompare from 'semver/functions/compare'
 import config from '../../../src/config'
-import { serverPrefKeys, ServerPreferences } from '../../types'
+import { serverPrefKeys, ServerPreferences, WebAppPrefs } from '../../types'
 // @ts-ignore
 import delay from 'delay-sync'
 import { createDefaultDataFolders } from '../files/createDefaultFolders'
@@ -286,12 +286,17 @@ const copyFiles = async (snapshotFolder: string, fileRecords: ObjectRecord[] = [
 // Mutate the active config object to inject new preferences
 type Config = typeof config
 export const refreshPreferences = (config: Config) => {
-  const serverPrefs: ServerPreferences = JSON.parse(readFileSync(PREFERENCES_FILE, 'utf-8')).server
+  console.log('Refreshing configuration...')
+  const prefs = JSON.parse(readFileSync(PREFERENCES_FILE, 'utf-8'))
+  const serverPrefs: ServerPreferences = prefs.server
+  const webAppPrefs: WebAppPrefs = prefs.web
   serverPrefKeys.forEach((key) => {
     if (serverPrefs[key]) {
       config[key] = serverPrefs[key] as never
     } else delete config[key]
   })
+  if (webAppPrefs.siteHost) config.productionHost = webAppPrefs.siteHost
+  else config.productionHost = undefined
 }
 
 export default useSnapshot

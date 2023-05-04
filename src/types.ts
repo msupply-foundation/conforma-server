@@ -143,7 +143,8 @@ export interface ActionApplicationData extends BaseApplicationData {
       defaultFromName: string
       defaultFromEmail: string
     }
-    productionHost?: string
+    testingEmail: string | null
+    productionHost: string | null
   }
   other?: {
     // Use this for dev related stuff, shouldn't be used in actual configs
@@ -281,3 +282,15 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'maxBackupDurationDays',
   'testingEmail',
 ]
+
+export interface WebAppPrefs {
+  paginationPresets?: number[]
+  paginationDefault?: number
+  defaultLanguageCode: string
+  brandLogoFileId?: string
+  brandLogoOnDarkFileId?: string
+  defaultListFilters?: string[]
+  systemManagerPermissionName?: string
+  style?: { headerBgColor?: string }
+  siteHost?: string
+}

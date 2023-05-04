@@ -81,11 +81,9 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     : null
 
   try {
-    const toAddressString = mode === 'TEST_EMAIL' ? '' : stringifyEmailRecipientsList(to)
-    const ccAddressString = mode === 'TEST_EMAIL' ? '' : stringifyEmailRecipientsList(cc)
-    const bccAddressString = (
-      mode === 'TEST_EMAIL' ? testingEmail : stringifyEmailRecipientsList(bcc)
-    ) as string
+    const toAddressString = stringifyEmailRecipientsList(to)
+    const ccAddressString = stringifyEmailRecipientsList(cc)
+    const bccAddressString = stringifyEmailRecipientsList(bcc)
 
     const hasValidEmails = !(
       toAddressString === '' &&
@@ -109,13 +107,17 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     console.log(`Email mode: ${mode}`)
     console.log(`Action sendEmail setting: ${sendEmail}`)
     if (mode !== 'NO_EMAIL' && sendEmail && hasValidEmails && transporter) {
-      console.log('Sending email...')
+      console.log(
+        `Sending email to: ${toAddressString}\ncc:${ccAddressString}\nbcc: ${bccAddressString}\nSubject: ${
+          subject || ''
+        }\n`
+      )
       transporter
         .sendMail({
           from: `${fromName} <${fromEmail}>`,
-          to: toAddressString,
-          cc: ccAddressString,
-          bcc: bccAddressString,
+          to: mode === 'TEST_EMAIL' ? '' : toAddressString,
+          cc: mode === 'TEST_EMAIL' ? '' : ccAddressString,
+          bcc: mode === 'TEST_EMAIL' ? testingEmail : bccAddressString,
           subject,
           text: message,
           html: marked(message),
@@ -130,11 +132,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
             (!rejected || rejected.length === 0) &&
             (!pending || pending.length === 0)
           ) {
-            console.log(
-              `Email successfully sent to: ${envelope.to}\ncc:${envelope.cc || ''}\nbcc: ${
-                envelope.bcc || ''
-              }\nSubject: ${subject || ''}\n`
-            )
+            console.log(`Email successfully sent to: ${envelope.to}\n`)
             // Update notification table with email sent confirmation
             db.notificationEmailSent(notificationResult.id, serverLogText)
           } else {
@@ -234,16 +232,16 @@ const prepareAttachments = async (
   return attachmentObjects
 }
 
-const isLiveServer = (webHostUrl: string, productionHost?: string) => {
+const isLiveServer = (webHostUrl: string, productionHost?: string | null) => {
   if (!productionHost) return true
 
-  const re = new RegExp(`https?${productionHost}.*`)
+  const re = new RegExp(`^https?:\/\/${productionHost}.*`)
   return re.test(webHostUrl)
 }
 
 interface OpModeParameters {
   webHostUrl: string
-  productionHost?: string
+  productionHost: string | null
   mailHog: boolean
   suppressEmail: boolean
   testingEmail?: string
