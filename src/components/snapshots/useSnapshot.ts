@@ -291,7 +291,7 @@ export const refreshPreferences = (config: Config) => {
   const serverPrefs: ServerPreferences = prefs.server
   const webAppPrefs: WebAppPrefs = prefs.web
   serverPrefKeys.forEach((key) => {
-    if (serverPrefs[key]) {
+    if (serverPrefs[key] !== undefined) {
       config[key] = serverPrefs[key] as never
     } else delete config[key]
   })
