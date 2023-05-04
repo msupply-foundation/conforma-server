@@ -135,6 +135,7 @@ export interface ActionApplicationData extends BaseApplicationData {
   environmentData: {
     appRootFolder: string
     filesFolder: string
+    webHostUrl: string
     SMTPConfig?: {
       host: string
       port: number
@@ -143,6 +144,8 @@ export interface ActionApplicationData extends BaseApplicationData {
       defaultFromName: string
       defaultFromEmail: string
     }
+    testingEmail: string | null
+    productionHost: string | null
   }
   other?: {
     // Use this for dev related stuff, shouldn't be used in actual configs
@@ -247,8 +250,8 @@ export interface UserOrg extends User, Organisation {
 }
 
 export interface ServerPreferences {
-  thumbnailMaxWidth: number
-  thumbnailMaxHeight: number
+  thumbnailMaxWidth?: number
+  thumbnailMaxHeight?: number
   hoursSchedule?: number[]
   SMTPConfig?: {
     host: string
@@ -264,6 +267,7 @@ export interface ServerPreferences {
   backupSchedule?: number[]
   backupFilePrefix?: string
   maxBackupDurationDays?: number
+  testingEmail?: string
 }
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
@@ -278,4 +282,16 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'backupSchedule',
   'backupFilePrefix',
   'maxBackupDurationDays',
+  'testingEmail',
 ]
+
+export interface WebAppPrefs {
+  paginationPresets?: number[]
+  paginationDefault?: number
+  defaultLanguageCode: string
+  brandLogoFileId?: string
+  brandLogoOnDarkFileId?: string
+  defaultListFilters?: string[]
+  style?: { headerBgColor?: string }
+  siteHost?: string
+}

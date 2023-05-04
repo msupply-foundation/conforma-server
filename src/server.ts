@@ -12,9 +12,9 @@ import {
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
-  routeGetPrefs,
   routecheckUnique,
 } from './components/permissions'
+import { routeGetPrefs, routeGetAllPrefs, routeSetPrefs } from './components/preferences'
 import {
   routeDataViews,
   routeDataViewTable,
@@ -130,6 +130,8 @@ const startServer = async () => {
         server.post('/install-language', routeInstallLanguage)
         server.post('/remove-language', routeRemoveLanguage)
         server.get('/all-languages', routeGetAllLanguageFiles)
+        server.get('/get-all-prefs', routeGetAllPrefs)
+        server.post('/set-prefs', routeSetPrefs)
         // Dev only actions -- never call from app
         server.post('/run-action', routeRunAction)
         server.post('/test-trigger', routeTestTrigger)

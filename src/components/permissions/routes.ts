@@ -4,11 +4,7 @@ import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
 import { UserOrg } from '../../types'
 import { PermissionDetails } from '../permissions/types'
-import path from 'path'
-import { readFileSync } from 'fs'
 import { startCase } from 'lodash'
-import { getAppEntryPointDir } from '../utilityFunctions'
-import { readLanguageOptions } from '../localisation/routes'
 
 const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
 
@@ -207,16 +203,6 @@ const routeVerification = async (request: any, reply: any) => {
   }
 }
 
-// Serve prefs to front-end
-const routeGetPrefs = async (request: any, reply: any) => {
-  const prefs = JSON.parse(
-    readFileSync(path.join(getAppEntryPointDir(), '../preferences/preferences.json'), 'utf8')
-  )
-  const languageOptions = readLanguageOptions()
-  const latestSnapshot = await databaseConnect.getLatestSnapshotName()
-  reply.send({ preferences: prefs.web, languageOptions, latestSnapshot })
-}
-
 // Unique name/email/organisation/other check
 const routecheckUnique = async (request: any, reply: any) => {
   const { type, value, table, field, caseInsensitive } = request.query
@@ -277,6 +263,5 @@ export {
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
-  routeGetPrefs,
   routecheckUnique,
 }

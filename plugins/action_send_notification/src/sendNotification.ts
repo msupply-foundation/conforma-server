@@ -1,4 +1,4 @@
-const TEST_MODE = false // Change to true to test with local Mailhog
+const USE_MAIL_HOG = false // Change to true to test with local Mailhog
 
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
@@ -10,6 +10,21 @@ import configTest from '../configTest.json'
 import { Attachment } from 'nodemailer/lib/mailer'
 import { getFilePath } from '../../../src/components/files/fileHandler'
 import { ActionApplicationData } from '../../../src/types'
+import config from '../../../src/config'
+
+type OperationMode = 'NORMAL' | 'TEST_EMAIL' | 'NO_EMAIL' | 'MAILHOG'
+/*
+Operation modes:
+
+- NORMAL: Emails are sent normally according to action configurations
+- TEST_EMAIL: All emails are sent to a single address, defined in server
+  preferences "testingEmail" property. Used on testing servers or in
+  development.
+- NO_EMAIL: No emails are sent at all. Used for automated testing, or when a
+  "testingEmail" address is not provided.
+- MAIL_HOG: All emails are relayed through a local MailHog SMTP server (so not
+  actually sent). An alternative development mode.
+*/
 
 const isValidEmail = (email: string) => /^[\w\-_+.]+@([\w\-]+\.)+[A-Za-z]{2,}$/gm.test(email)
 // Test this regex: https://regex101.com/r/ysGgNx/2
@@ -18,9 +33,19 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
   const db = databaseMethods(DBConnect)
 
   const {
-    environmentData: { appRootFolder, filesFolder, SMTPConfig },
+    environmentData: { appRootFolder, filesFolder, SMTPConfig, webHostUrl, productionHost },
     other,
   } = applicationData as ActionApplicationData
+
+  const testingEmail = config.testingEmail
+
+  const mode = getOperationMode({
+    mailHog: USE_MAIL_HOG,
+    webHostUrl,
+    productionHost,
+    suppressEmail: other?.suppressEmail ?? false,
+    testingEmail,
+  })
 
   // Used to disable email sending when testing -- turned on by trigger testing
   // tool by default
@@ -42,7 +67,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
 
   const transporter = SMTPConfig
     ? nodemailer.createTransport(
-        TEST_MODE
+        mode === 'MAILHOG'
           ? configTest
           : {
               host: SMTPConfig.host,
@@ -80,14 +105,20 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     })
 
     // Send email
-    if (sendEmail && hasValidEmails && transporter && !suppressEmail) {
-      console.log('Sending email...')
+    console.log(`Email mode: ${mode}`)
+    console.log(`Action sendEmail setting: ${sendEmail}`)
+    if (mode !== 'NO_EMAIL' && sendEmail && hasValidEmails && transporter) {
+      console.log(
+        `Sending email to: ${toAddressString}\ncc:${ccAddressString}\nbcc: ${bccAddressString}\nSubject: ${
+          subject || ''
+        }\n`
+      )
       transporter
         .sendMail({
           from: `${fromName} <${fromEmail}>`,
-          to: toAddressString,
-          cc: ccAddressString,
-          bcc: bccAddressString,
+          to: mode === 'TEST_EMAIL' ? '' : toAddressString,
+          cc: mode === 'TEST_EMAIL' ? '' : ccAddressString,
+          bcc: mode === 'TEST_EMAIL' ? testingEmail : bccAddressString,
           subject,
           text: message,
           html: marked(message),
@@ -102,11 +133,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
             (!rejected || rejected.length === 0) &&
             (!pending || pending.length === 0)
           ) {
-            console.log(
-              `Email successfully sent to: ${envelope.to}\ncc:${envelope.cc || ''}\nbcc: ${
-                envelope.bcc || ''
-              }\nSubject: ${subject || ''}\n`
-            )
+            console.log(`Email successfully sent to: ${envelope.to}\n`)
             // Update notification table with email sent confirmation
             db.notificationEmailSent(notificationResult.id, serverLogText)
           } else {
@@ -134,8 +161,6 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
       console.log('Email not sent - no valid email address')
       db.notificationEmailError(notificationResult.id, `WARNING: No valid email addresses`)
     }
-
-    if (suppressEmail) console.log('Email not sent during testing')
 
     // NOTE: Because sending email happens asynchronously, the output object
     // for this Action does not reflect whether email has sent successfully.
@@ -206,4 +231,40 @@ const prepareAttachments = async (
     }
   }
   return attachmentObjects
+}
+
+const isLiveServer = (webHostUrl: string, productionHost?: string | null) => {
+  if (!productionHost) return true
+
+  const re = new RegExp(`^https?:\/\/${productionHost}.*`)
+  return re.test(webHostUrl)
+}
+
+interface OpModeParameters {
+  webHostUrl: string
+  productionHost: string | null
+  mailHog: boolean
+  suppressEmail: boolean
+  testingEmail?: string
+}
+
+const getOperationMode = ({
+  webHostUrl,
+  productionHost,
+  mailHog,
+  suppressEmail,
+  testingEmail,
+}: OpModeParameters): OperationMode => {
+  switch (true) {
+    case suppressEmail:
+      return 'NO_EMAIL'
+    case mailHog:
+      return 'MAILHOG'
+    case isLiveServer(webHostUrl, productionHost):
+      return 'NORMAL'
+    case !!testingEmail:
+      return 'TEST_EMAIL'
+    default:
+      return 'NO_EMAIL'
+  }
 }
