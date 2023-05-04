@@ -20,7 +20,8 @@ Operation modes:
 - TEST_EMAIL: All emails are sent to a single address, defined in server
   preferences "testingEmail" property. Used on testing servers or in
   development.
-- NO_EMAIL: No emails are sent at all. Used for automated testing.
+- NO_EMAIL: No emails are sent at all. Used for automated testing, or when a
+  "testingEmail" address is not provided.
 - MAIL_HOG: All emails are relayed through a local MailHog SMTP server (so not
   actually sent). An alternative development mode.
 */

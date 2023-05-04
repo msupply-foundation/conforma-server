@@ -290,7 +290,6 @@ export interface WebAppPrefs {
   brandLogoFileId?: string
   brandLogoOnDarkFileId?: string
   defaultListFilters?: string[]
-  systemManagerPermissionName?: string
   style?: { headerBgColor?: string }
   siteHost?: string
 }

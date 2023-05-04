@@ -1,7 +1,7 @@
 import prefs from '../preferences/preferences.json'
 require('dotenv').config()
 import { version } from '../package.json'
-import { ServerPreferences } from './types'
+import { ServerPreferences, WebAppPrefs } from './types'
 const isProductionBuild = process.env.NODE_ENV === 'production'
 const serverPrefs: ServerPreferences = prefs.server
 
@@ -50,7 +50,7 @@ const config = {
   isProductionBuild,
   defaultSystemManagerPermissionName: 'systemManager',
   ...serverPrefs,
-  productionHost: (prefs.web as any)?.siteHost,
+  productionHost: (prefs.web as WebAppPrefs)?.siteHost,
 }
 
 export default config
