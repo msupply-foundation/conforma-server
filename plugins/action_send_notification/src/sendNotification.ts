@@ -47,10 +47,6 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     testingEmail,
   })
 
-  // Used to disable email sending when testing -- turned on by trigger testing
-  // tool by default
-  const suppressEmail = other?.suppressEmail ?? false
-
   const {
     userId,
     email,
