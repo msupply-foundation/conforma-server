@@ -286,6 +286,7 @@ const copyFiles = async (snapshotFolder: string, fileRecords: ObjectRecord[] = [
 // Mutate the active config object to inject new preferences
 type Config = typeof config
 export const refreshPreferences = (config: Config) => {
+  console.log('Refreshing configuration...')
   const serverPrefs: ServerPreferences = JSON.parse(readFileSync(PREFERENCES_FILE, 'utf-8')).server
   serverPrefKeys.forEach((key) => {
     if (serverPrefs[key]) {
