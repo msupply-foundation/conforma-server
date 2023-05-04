@@ -33,13 +33,21 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
   const db = databaseMethods(DBConnect)
 
   const {
-    environmentData: { appRootFolder, filesFolder, SMTPConfig, webHostUrl, productionHost },
+    environmentData: {
+      appRootFolder,
+      filesFolder,
+      SMTPConfig,
+      webHostUrl,
+      productionHost,
+      emailTestMode,
+    },
     other,
   } = applicationData as ActionApplicationData
 
   const testingEmail = config.testingEmail
 
   const mode = getOperationMode({
+    emailTestMode,
     mailHog: USE_MAIL_HOG,
     webHostUrl,
     productionHost,
@@ -235,6 +243,7 @@ const isLiveServer = (webHostUrl: string, productionHost?: string | null) => {
 }
 
 interface OpModeParameters {
+  emailTestMode?: boolean
   webHostUrl: string
   productionHost: string | null
   mailHog: boolean
@@ -243,6 +252,7 @@ interface OpModeParameters {
 }
 
 const getOperationMode = ({
+  emailTestMode,
   webHostUrl,
   productionHost,
   mailHog,
@@ -250,6 +260,10 @@ const getOperationMode = ({
   testingEmail,
 }: OpModeParameters): OperationMode => {
   switch (true) {
+    case emailTestMode === false:
+      return 'NORMAL'
+    case emailTestMode === true && !!testingEmail:
+      return 'TEST_EMAIL'
     case suppressEmail:
       return 'NO_EMAIL'
     case mailHog:
