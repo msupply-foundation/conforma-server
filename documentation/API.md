@@ -610,3 +610,12 @@ See [Snapshot documentation](Snapshots.md) for more info
 - GET: `/lookup-table/export`
 
 See [Lookup table documentation](https://github.com/openmsupply/conforma-web-app/wiki/Lookup-Tables) for more info
+
+#### Preference management endpoints
+
+- GET: `/get-all-prefs`
+- POST: `/set-prefs`
+
+The difference between these and the public `get-prefs` endpoint is that these read and write both web app *and* server preferences, whereas the public `get-prefs` is just for the web app.
+
+See [Preferences documentation](Preferences.md) for more info
