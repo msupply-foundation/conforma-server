@@ -1,9 +1,10 @@
-import prefs from '../preferences/preferences.json'
 require('dotenv').config()
+import preferences from '../preferences/preferences.json'
+import { readFileSync } from 'fs'
 import { version } from '../package.json'
-import { ServerPreferences, WebAppPrefs } from './types'
+import { serverPrefKeys, ServerPreferences, WebAppPrefs } from './types'
+const serverPrefs: ServerPreferences = preferences.server
 const isProductionBuild = process.env.NODE_ENV === 'production'
-const serverPrefs: ServerPreferences = prefs.server
 
 const config = {
   pg_database_connection: {
@@ -50,7 +51,26 @@ const config = {
   isProductionBuild,
   defaultSystemManagerPermissionName: 'systemManager',
   ...serverPrefs,
-  productionHost: (prefs.web as WebAppPrefs)?.siteHost,
+  productionHost: (preferences.web as WebAppPrefs)?.siteHost,
+}
+
+// Mutate the active config object to inject new preferences
+type Config = typeof config
+export const refreshConfig = (config: Config, prefsFilePath: string) => {
+  // prefsFilePath is passed in rather than imported from constants to prevent
+  // circular reference
+  const prefs = JSON.parse(readFileSync(prefsFilePath, 'utf-8'))
+  const serverPrefs: ServerPreferences = prefs.server
+  const webAppPrefs: WebAppPrefs = prefs.web
+  serverPrefKeys.forEach((key) => {
+    if (serverPrefs[key] !== undefined) {
+      config[key] = serverPrefs[key] as never
+    } else delete config[key]
+  })
+  if (webAppPrefs.siteHost) config.productionHost = webAppPrefs.siteHost
+  else config.productionHost = undefined
+
+  console.log('Configuration refreshed with updated preferences')
 }
 
 export default config

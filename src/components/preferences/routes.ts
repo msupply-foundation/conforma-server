@@ -7,12 +7,9 @@ import {
   combineRequestParams,
   isObject,
 } from '../../components/utilityFunctions'
-import config from '../../config'
+import config, { refreshConfig } from '../../config'
 import { PREFERENCES_FILE } from '../../constants'
-import { refreshPreferences } from '../snapshots/useSnapshot'
 import { readLanguageOptions } from '../localisation/routes'
-
-const { localisationsFolder } = config
 
 const writeFilePromise = promisify(writeFile)
 
@@ -53,7 +50,7 @@ export const routeSetPrefs = async (request: any, reply: any) => {
 
   await writeFilePromise(PREFERENCES_FILE, JSON.stringify({ server, web }, null, 2))
 
-  refreshPreferences(config)
+  refreshConfig(config, PREFERENCES_FILE)
 
   return reply.send({ success: true, preferences: { server, web }, config })
 }
