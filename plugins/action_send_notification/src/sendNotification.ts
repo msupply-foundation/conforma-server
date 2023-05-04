@@ -33,23 +33,27 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
   const db = databaseMethods(DBConnect)
 
   const {
-    environmentData: { appRootFolder, filesFolder, SMTPConfig, webHostUrl, productionHost },
+    environmentData: {
+      appRootFolder,
+      filesFolder,
+      SMTPConfig,
+      webHostUrl,
+      productionHost,
+      emailTestMode,
+    },
     other,
   } = applicationData as ActionApplicationData
 
   const testingEmail = config.testingEmail
 
   const mode = getOperationMode({
+    emailTestMode,
     mailHog: USE_MAIL_HOG,
     webHostUrl,
     productionHost,
     suppressEmail: other?.suppressEmail ?? false,
     testingEmail,
   })
-
-  // Used to disable email sending when testing -- turned on by trigger testing
-  // tool by default
-  const suppressEmail = other?.suppressEmail ?? false
 
   const {
     userId,
@@ -82,14 +86,14 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     : null
 
   try {
-    const toAddressString = stringifyEmailRecipientsList(to)
-    const ccAddressString = stringifyEmailRecipientsList(cc)
-    const bccAddressString = stringifyEmailRecipientsList(bcc)
+    const toAddresses = validateEmailRecipientsList(to)
+    const ccAddresses = validateEmailRecipientsList(cc)
+    const bccAddresses = validateEmailRecipientsList(bcc)
 
     const hasValidEmails = !(
-      toAddressString === '' &&
-      ccAddressString === '' &&
-      bccAddressString === ''
+      toAddresses.length === 0 &&
+      ccAddresses.length === 0 &&
+      bccAddresses.length === 0
     )
 
     // Create notification database record
@@ -98,7 +102,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
       userId,
       applicationId: applicationData?.applicationId,
       reviewId: applicationData?.reviewData?.reviewId,
-      emailAddressString: concatEmails(toAddressString, ccAddressString, bccAddressString),
+      emailAddressString: concatEmails(toAddresses, ccAddresses, bccAddresses),
       subject,
       message,
       attachments: Array.isArray(attachments) ? attachments : [attachments],
@@ -109,16 +113,16 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     console.log(`Action sendEmail setting: ${sendEmail}`)
     if (mode !== 'NO_EMAIL' && sendEmail && hasValidEmails && transporter) {
       console.log(
-        `Sending email to: ${toAddressString}\ncc:${ccAddressString}\nbcc: ${bccAddressString}\nSubject: ${
+        `Sending email to: ${toAddresses}\ncc:${ccAddresses}\nbcc: ${bccAddresses}\nSubject: ${
           subject || ''
         }\n`
       )
       transporter
         .sendMail({
           from: `${fromName} <${fromEmail}>`,
-          to: mode === 'TEST_EMAIL' ? '' : toAddressString,
-          cc: mode === 'TEST_EMAIL' ? '' : ccAddressString,
-          bcc: mode === 'TEST_EMAIL' ? testingEmail : bccAddressString,
+          to: mode === 'TEST_EMAIL' ? [] : toAddresses,
+          cc: mode === 'TEST_EMAIL' ? [] : ccAddresses,
+          bcc: mode === 'TEST_EMAIL' ? testingEmail : bccAddresses,
           subject,
           text: message,
           html: marked(message),
@@ -138,9 +142,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
             db.notificationEmailSent(notificationResult.id, serverLogText)
           } else {
             console.log(
-              `Email sending had a problem: ${envelope.to}\ncc:${
-                envelope.cc || ''
-              }\nServer response: ${response}
+              `Email sending had a problem: ${envelope.to}\nServer response: ${response}
               \nCheck "email_server_log" in "notification" table`
             )
             db.notificationEmailError(notificationResult.id, serverLogText)
@@ -186,15 +188,15 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
 
 export default sendNotification
 
-const stringifyEmailRecipientsList = (emailAddresses: string | string[]): string => {
-  if (!Array.isArray(emailAddresses)) return isValidEmail(emailAddresses) ? emailAddresses : ''
-  return emailAddresses.filter((address) => isValidEmail(address)).join(', ')
+const validateEmailRecipientsList = (emailAddresses: string | string[]): string[] => {
+  if (!Array.isArray(emailAddresses)) return isValidEmail(emailAddresses) ? [emailAddresses] : []
+  return emailAddresses.filter((address) => isValidEmail(address))
 }
 
-const concatEmails = (to: string, cc: string, bcc: string): string => {
-  let output = to
-  if (cc) output += output ? ', ' + cc : cc
-  if (bcc) output += output ? ', ' + bcc : bcc
+const concatEmails = (to: string[], cc: string[], bcc: string[]): string => {
+  let output = to.join(', ')
+  if (cc) output += output ? ', ' + cc.join(', ') : cc.join(', ')
+  if (bcc) output += output ? ', ' + bcc.join(', ') : bcc.join(', ')
   return output
 }
 
@@ -241,6 +243,7 @@ const isLiveServer = (webHostUrl: string, productionHost?: string | null) => {
 }
 
 interface OpModeParameters {
+  emailTestMode?: boolean
   webHostUrl: string
   productionHost: string | null
   mailHog: boolean
@@ -249,6 +252,7 @@ interface OpModeParameters {
 }
 
 const getOperationMode = ({
+  emailTestMode,
   webHostUrl,
   productionHost,
   mailHog,
@@ -256,6 +260,10 @@ const getOperationMode = ({
   testingEmail,
 }: OpModeParameters): OperationMode => {
   switch (true) {
+    case emailTestMode === false:
+      return 'NORMAL'
+    case emailTestMode === true && !!testingEmail:
+      return 'TEST_EMAIL'
     case suppressEmail:
       return 'NO_EMAIL'
     case mailHog:

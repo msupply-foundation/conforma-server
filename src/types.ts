@@ -144,6 +144,7 @@ export interface ActionApplicationData extends BaseApplicationData {
       defaultFromName: string
       defaultFromEmail: string
     }
+    emailTestMode?: boolean
     testingEmail: string | null
     productionHost: string | null
   }
@@ -267,6 +268,7 @@ export interface ServerPreferences {
   backupSchedule?: number[]
   backupFilePrefix?: string
   maxBackupDurationDays?: number
+  emailTestMode?: boolean
   testingEmail?: string
 }
 
@@ -282,6 +284,7 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'backupSchedule',
   'backupFilePrefix',
   'maxBackupDurationDays',
+  'emailTestMode',
   'testingEmail',
 ]
 
@@ -293,5 +296,6 @@ export interface WebAppPrefs {
   brandLogoOnDarkFileId?: string
   defaultListFilters?: string[]
   style?: { headerBgColor?: string }
+  googleAnalyticsId?: string
   siteHost?: string
 }

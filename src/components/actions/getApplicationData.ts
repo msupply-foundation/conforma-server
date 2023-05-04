@@ -77,6 +77,7 @@ export const getApplicationData = async (input: {
     webHostUrl: process.env.WEB_HOST ?? 'MissingHost',
     SMTPConfig: config?.SMTPConfig,
     productionHost: config?.productionHost ?? null,
+    emailTestMode: config?.emailTestMode,
     testingEmail: config?.testingEmail ?? null,
   }
 
