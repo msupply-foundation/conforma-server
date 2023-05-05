@@ -40,6 +40,15 @@ const databaseMethods = {
       throw err
     }
   },
+  checkColumnExists: async (tableName: string, columnName: string) => {
+    const text = `
+      SELECT COUNT(*) FROM public.schema_columns 
+      where table_name = $1
+      AND column_name = $2;
+    `
+    const result = await DBConnect.query({ text, values: [tableName, columnName] })
+    return result.rows[0].count > 0
+  },
   addAssignedSectionsColumn: async () => {
     const text = `ALTER TABLE review_assignment
         ADD COLUMN assigned_sections varchar[] DEFAULT array[]::varchar[];`
@@ -107,6 +116,54 @@ const databaseMethods = {
     } catch (err) {
       // Table record already exists, probably
       console.log(err.message)
+    }
+  },
+  populateQueueApplicationIds: async (tableName: 'trigger_queue' | 'action_queue') => {
+    const count = (await DBConnect.query({ text: `SELECT MAX(id) FROM ${tableName};` })).rows[0].max
+
+    // This is duplicated in the later functions script, but we need it here
+    // now, otherwise there'll be no application_id data in the review table.
+    await DBConnect.query({
+      text: `
+      ALTER TABLE public.review
+        DROP COLUMN IF EXISTS application_id CASCADE,
+        ADD COLUMN IF NOT EXISTS application_id integer GENERATED ALWAYS AS (public.review_application_id (review_assignment_id)) STORED REFERENCES public.application (id) ON DELETE CASCADE;
+      `,
+    })
+
+    for (let id = 1; id <= count; id++) {
+      const trigger_data =
+        tableName === 'trigger_queue'
+          ? (
+              await DBConnect.query({
+                text: 'SELECT "table", record_id FROM trigger_queue WHERE id = $1',
+                values: [id],
+              })
+            ).rows[0]
+          : (
+              await DBConnect.query({
+                text: 'SELECT trigger_payload FROM action_queue WHERE id = $1',
+                values: [id],
+              })
+            ).rows[0]?.trigger_payload
+
+      if (!trigger_data) continue
+
+      const { table, record_id } = trigger_data
+
+      try {
+        const application_id = await DBConnect.getApplicationIdFromTrigger(table, record_id)
+        await DBConnect.query({
+          text: `UPDATE ${tableName} SET application_id = $1 WHERE id = $2`,
+          values: [application_id, id],
+        })
+      } catch {
+        // Application no longer exists, so delete the queue record
+        await DBConnect.query({
+          text: `DELETE FROM ${tableName} WHERE id = $1`,
+          values: [id],
+        })
+      }
     }
   },
 }

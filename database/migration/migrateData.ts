@@ -723,6 +723,37 @@ const migrateData = async () => {
     `)
   }
 
+  // v0.6.0
+  if (databaseVersionLessThan('0.6.0')) {
+    console.log(' - Update FK reference to trigger_queue in action_queue')
+    await DB.changeSchema(`
+      ALTER TABLE action_queue DROP CONSTRAINT IF EXISTS   
+        action_queue_trigger_event_fkey; 
+      ALTER TABLE action_queue ADD CONSTRAINT action_queue_trigger_event_fkey
+        FOREIGN KEY (trigger_event) REFERENCES trigger_queue (id) ON DELETE CASCADE;
+    `)
+
+    console.log(' - Add application_id column to trigger_queue & action_queue')
+    if (!(await DB.checkColumnExists('trigger_queue', 'application_id'))) {
+      await DB.changeSchema(`
+      ALTER TABLE public.trigger_queue
+        ADD COLUMN IF NOT EXISTS application_id INTEGER
+        REFERENCES public.application (id) ON DELETE CASCADE;
+      `)
+      console.log(' ...and updating trigger_queue data')
+      await DB.populateQueueApplicationIds('trigger_queue')
+    }
+    if (!(await DB.checkColumnExists('action_queue', 'application_id'))) {
+      await DB.changeSchema(`
+      ALTER TABLE public.action_queue
+        ADD COLUMN IF NOT EXISTS application_id INTEGER
+        REFERENCES public.application (id) ON DELETE CASCADE;
+      `)
+      console.log(' ...and updating action_queue data')
+      await DB.populateQueueApplicationIds('action_queue')
+    }
+  }
+
   // Other version migrations continue here...
 
   // Update (almost all) Indexes, Views, Functions, Triggers regardless, since
