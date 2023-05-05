@@ -754,6 +754,18 @@ const migrateData = async () => {
     }
   }
 
+  // v0.7.0 ?? Set correct version before PR
+  if (databaseVersionLessThan('0.7.0')) {
+    console.log(' - Adding unique identifier column to data view')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_view   
+        ADD COLUMN IF NOT EXISTS identifier VARCHAR UNIQUE;
+      UPDATE public.data_view SET identifier = CONCAT(title, '_', id)
+        WHERE identifier IS NULL;
+      ALTER TABLE public.data_view ALTER COLUMN identifier SET NOT NULL;
+    `)
+  }
+
   // Other version migrations continue here...
 
   // Update (almost all) Indexes, Views, Functions, Triggers regardless, since
