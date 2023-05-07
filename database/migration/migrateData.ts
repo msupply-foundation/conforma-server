@@ -763,6 +763,7 @@ const migrateData = async () => {
       UPDATE public.data_view SET identifier = CONCAT(title, '_', id)
         WHERE identifier IS NULL;
       ALTER TABLE public.data_view ALTER COLUMN identifier SET NOT NULL;
+      ALTER TABLE public.data_view_column_definition ALTER COLUMN column_name SET NOT NULL;
     `)
   }
 
