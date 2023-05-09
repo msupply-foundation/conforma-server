@@ -272,6 +272,7 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'hoursSchedule',
   'SMTPConfig',
   'systemManagerPermissionName',
+  'managerCanEditLookupTables',
   'previewDocsMinKeepTime',
   'previewDocsCleanupSchedule',
   'backupSchedule',
