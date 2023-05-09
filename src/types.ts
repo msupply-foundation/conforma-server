@@ -257,6 +257,7 @@ export interface ServerPreferences {
     defaultFromEmail: string
   }
   systemManagerPermissionName?: string
+  managerCanEditLookupTables?: boolean
   previewDocsMinKeepTime?: string
   previewDocsCleanupSchedule?: number[]
   backupSchedule?: number[]

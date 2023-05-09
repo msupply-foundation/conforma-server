@@ -140,6 +140,8 @@ class DBConnect {
 
   public getTemplatePermissions = PostgresDB.getTemplatePermissions
 
+  public getUserAdminStatus = PostgresDB.getUserAdminStatus
+
   public getAllGeneratedRowPolicies = PostgresDB.getAllGeneratedRowPolicies
 
   public getUserOrgPermissionNames = PostgresDB.getUserOrgPermissionNames

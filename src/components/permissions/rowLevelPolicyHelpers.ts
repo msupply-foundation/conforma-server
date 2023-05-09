@@ -7,7 +7,7 @@ import { permissionPolicyColumns } from '../postgresConnect'
 
 export const baseJWT = { aud: 'postgraphile' }
 
-/* Compiles JWT from userInfo and PerissionRows
+/* Compiles JWT from userInfo and PermissionRows
   in { userId: 1, ... }, [
   {
     templatePermissionRestrictions: {
@@ -31,9 +31,10 @@ export const baseJWT = { aud: 'postgraphile' }
   }
 */
 const compileJWT = (JWTelements: any) => {
-  const { userId, orgId, username, templatePermissionRows, sessionId, isAdmin } = JWTelements
+  const { userId, orgId, username, templatePermissionRows, sessionId, isAdmin, isManager } =
+    JWTelements
 
-  let JWT: any = { ...baseJWT, userId, orgId, username, sessionId, isAdmin }
+  let JWT: any = { ...baseJWT, userId, orgId, username, sessionId, isAdmin, isManager }
   const templateIdsForPolicy: { [policyAbbreviation: string]: number[] } = {}
 
   templatePermissionRows.forEach((permissionRow: PermissionRow) => {

@@ -68,11 +68,14 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
 
   const returnSessionId = sessionId ?? nanoid(16)
 
-  const isAdmin = !!templatePermissionRows.find((row) => !!row?.isAdmin)
-
   const managementPrefName =
     config?.systemManagerPermissionName || config.defaultSystemManagerPermissionName
-  const isManager = !!templatePermissionRows.includes(managementPrefName)
+
+  const { isAdmin, isManager } = await databaseConnect.getUserAdminStatus(
+    managementPrefName,
+    newUserId,
+    orgId ?? null
+  )
 
   return {
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
