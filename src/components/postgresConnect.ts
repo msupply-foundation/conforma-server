@@ -996,6 +996,35 @@ class PostgresDB {
     }
   }
 
+  public getUserAdminStatus = async (
+    managementPrefName: string,
+    userId: number,
+    orgId: number | null
+  ) => {
+    const orgMatch = `"organisation_id" ${orgId ? '= $3' : 'IS NULL'}`
+    const text = `
+      SELECT name, user_id, organisation_id, permission_name_id
+      FROM permission_join pj JOIN permission_name pn
+      ON pj.permission_name_id = pn.id
+      WHERE user_id = $2
+      AND ${orgMatch}
+      AND (name = 'admin' OR name = $1)
+      AND is_active = true
+    `
+    const values = [managementPrefName, userId]
+    if (orgId) values.push(orgId)
+    try {
+      const result = await this.query({ text, values })
+      console.log(result.rows)
+      const isAdmin = result.rows.some((row) => row.name === 'admin')
+      const isManager = result.rows.some((row) => row.name === managementPrefName)
+      return { isAdmin, isManager }
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
   public getAllGeneratedRowPolicies = async () => {
     const text = `
       SELECT policyname, tablename 

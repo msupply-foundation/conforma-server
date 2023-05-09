@@ -122,7 +122,6 @@ const startServer = async () => {
           }
         })
 
-        server.register(lookupTableRoutes, { prefix: '/lookup-table' })
         server.register(snapshotRoutes, { prefix: '/snapshot' })
         server.get('/updateRowPolicies', routeUpdateRowPolicies)
         server.get('/get-application-data', routeGetApplicationData)
@@ -155,6 +154,8 @@ const startServer = async () => {
     server.get('/check-triggers', routeTriggers)
     server.post('/preview-actions', routePreviewActions)
     server.post('/extend-application', routeExtendApplication)
+    // Lookup tables requires "systemManager" permission
+    server.register(lookupTableRoutes, { prefix: '/lookup-table' })
 
     // File upload endpoint
     server.post('/upload', async function (request: any, reply) {

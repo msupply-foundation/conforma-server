@@ -263,6 +263,7 @@ export interface ServerPreferences {
     defaultFromEmail: string
   }
   systemManagerPermissionName?: string
+  managerCanEditLookupTables?: boolean
   previewDocsMinKeepTime?: string
   previewDocsCleanupSchedule?: number[]
   backupSchedule?: number[]
@@ -279,6 +280,7 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'hoursSchedule',
   'SMTPConfig',
   'systemManagerPermissionName',
+  'managerCanEditLookupTables',
   'previewDocsMinKeepTime',
   'previewDocsCleanupSchedule',
   'backupSchedule',

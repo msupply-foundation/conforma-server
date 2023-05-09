@@ -32,6 +32,7 @@ The back-end currently has two server instances which are launched to handle inc
       - [User Permissions](#user-permissions)
       - [Check Triggers](#check-triggers)
       - [Generate PDF](#generate-pdf)
+      - [Lookup table endpoints](#lookup-table-endpoints)
     - [Data Views](#data-views)
     - [Preview Actions](#preview-actions)
     - [Extend application deadline](#extend-application-deadline)
@@ -40,7 +41,6 @@ The back-end currently has two server instances which are launched to handle inc
       - [Run Action](#run-action)
       - [Manage localisations](#manage-localisations)
       - [Snapshot endpoints](#snapshot-endpoints)
-      - [Lookup table endpoints](#lookup-table-endpoints)
       - [Preferences management endpoints](#preference-management-endpoints)
 
 <!-- tocstop -->
@@ -473,6 +473,15 @@ It works by finding an event in the `trigger_schedule` table with matching `appl
 }
 ```
 
+#### Lookup table endpoints
+
+- POST: `/lookup-table/import`
+- GET: `/lookup-table/export`
+
+Require either "admin" or "systemManger" permissions.
+
+See [Lookup table documentation](https://github.com/openmsupply/conforma-web-app/wiki/Lookup-Tables) for more info
+
 ---
 
 ### Admin only endpoints
@@ -604,13 +613,6 @@ See [Localisation documentation](https://github.com/openmsupply/conforma-web-app
 - POST: `/snapshot/delete`
 
 See [Snapshot documentation](Snapshots.md) for more info
-
-#### Lookup table endpoints
-
-- POST: `/lookup-table/import`
-- GET: `/lookup-table/export`
-
-See [Lookup table documentation](https://github.com/openmsupply/conforma-web-app/wiki/Lookup-Tables) for more info
 
 #### Preference management endpoints
 
