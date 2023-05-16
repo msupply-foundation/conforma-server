@@ -26,11 +26,12 @@ const routeDataViews = async (request: any, reply: any) => {
   const dataViews = await DBConnect.getAllowedDataViews(permissionNames)
   const distinctDataViews = getDistinctObjects(dataViews, 'code', 'priority')
   const dataViewResponse: DataViewsResponse = distinctDataViews.map(
-    ({ table_name, title, code }) => ({
+    ({ table_name, title, code, default_filter_string }) => ({
       tableName: camelCase(table_name),
       title,
       code,
       urlSlug: kebabCase(code),
+      defaultFilter: default_filter_string,
     })
   )
   return reply.send(dataViewResponse)
@@ -57,6 +58,7 @@ const routeDataViewTable = async (request: any, reply: any) => {
     searchFields,
     filterDefinitions,
     defaultSortColumn,
+    defaultFilterString,
     gqlFilters,
     title,
     code,
@@ -90,7 +92,8 @@ const routeDataViewTable = async (request: any, reply: any) => {
     fetchedRecords,
     totalCount,
     searchFields,
-    filterDefinitions
+    filterDefinitions,
+    defaultFilterString
   )
 
   return reply.send(response)
@@ -156,6 +159,7 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
     searchText = '',
     delimiter,
     includeNull,
+    filterList: filterListParameter,
   } = request.body ?? {}
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
   if (request.auth.isAdmin) permissionNames.push(LOOKUP_TABLE_PERMISSION_NAME)
@@ -167,6 +171,10 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
   if (dataViews.length === 0) throw new Error(`No matching data views: "${dataViewCode}"`)
 
   const dataView = dataViews[0]
+
+  // Check for manually defined filter list in parameters
+  if (filterListParameter)
+    return reply.send({ list: filterListParameter, moreResultsAvailable: false })
 
   // TO-DO: Create search filters for types other than string (number, bool, array)
   const searchFilter =
@@ -184,7 +192,7 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
 
   const filterList = new Set()
 
-  const { filterListMaxLength = 10 } = config
+  const { filterListMaxLength = 10, filterListBatchSize = 1000 } = config
 
   let fetchedCount = 0
   let offset = 0
@@ -195,7 +203,7 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
       camelCase(getValidTableName(dataView.tableName)),
       searchFields,
       gqlFilters,
-      filterListMaxLength,
+      filterListBatchSize,
       offset,
       authHeaders
     )

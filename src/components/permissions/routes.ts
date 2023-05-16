@@ -76,13 +76,20 @@ template permissions and new JWT token
 */
 const routeUserInfo = async (request: any, reply: any) => {
   const { sessionId } = request.query
-  const { userId, orgId, sessionId: returnSessionId, error } = request.auth
+  const { userId, orgId, username, sessionId: returnSessionId, error } = request.auth
+
   if (error) return reply.send({ success: false, message: error })
 
-  return reply.send({
-    success: true,
-    ...(await getUserInfo({ userId, orgId, sessionId: sessionId ?? returnSessionId })),
-  })
+  const userData = await getUserInfo({ userId, orgId, sessionId: sessionId ?? returnSessionId })
+
+  // This check is to prevent a user remaining logged in as a different user if
+  // the snapshot changes and their userId corresponds to a different username
+  // on the new system. So we check that the username matches the one from the
+  // JWT too, and return error if no match
+  if (userData.user.username !== username)
+    return reply.send({ success: false, message: 'Invalid username' })
+
+  return reply.send({ success: true, ...userData })
 }
 
 const routeUserPermissions = async (request: any, reply: any) => {

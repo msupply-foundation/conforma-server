@@ -690,6 +690,39 @@ const migrateData = async () => {
     `)
   }
 
+  // v0.5.0
+  if (databaseVersionLessThan('0.5.2')) {
+    console.log(' - Add registration field to application Table')
+    await DB.changeSchema(`
+      ALTER TABLE public.application
+        ADD COLUMN IF NOT EXISTS outcome_registration varchar UNIQUE;
+    `)
+  }
+
+  if (databaseVersionLessThan('0.5.6')) {
+    console.log(' - Change "default_value" field to "initial_value"')
+    await DB.changeSchema(`
+      DO $$
+      BEGIN
+        IF EXISTS(SELECT * FROM information_schema.columns
+          WHERE table_name = 'template_element'
+          AND column_name = 'default_value')
+        THEN
+          ALTER TABLE public.template_element
+          RENAME COLUMN default_value TO initial_value;
+        END IF;
+      END $$;
+    `)
+  }
+
+  if (databaseVersionLessThan('0.5.7')) {
+    console.log(' - Add "default_filter_string" to data_views')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_view
+      ADD COLUMN IF NOT EXISTS default_filter_string varchar;
+    `)
+  }
+
   // Other version migrations continue here...
 
   // Update (almost all) Indexes, Views, Functions, Triggers regardless, since

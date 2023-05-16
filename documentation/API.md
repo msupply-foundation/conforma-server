@@ -472,6 +472,15 @@ It works by finding an event in the `trigger_schedule` table with matching `appl
 }
 ```
 
+#### Lookup table endpoints
+
+- POST: `/lookup-table/import`
+- GET: `/lookup-table/export`
+
+Require either "admin" or "systemManger" permissions.
+
+See [Lookup table documentation](https://github.com/openmsupply/conforma-web-app/wiki/Lookup-Tables) for more info
+
 ---
 
 ### Admin only endpoints
@@ -604,9 +613,3 @@ See [Localisation documentation](https://github.com/openmsupply/conforma-web-app
 
 See [Snapshot documentation](Snapshots.md) for more info
 
-#### Lookup table endpoints
-
-- POST: `/lookup-table/import`
-- GET: `/lookup-table/export`
-
-See [Lookup table documentation](https://github.com/openmsupply/conforma-web-app/wiki/Lookup-Tables) for more info

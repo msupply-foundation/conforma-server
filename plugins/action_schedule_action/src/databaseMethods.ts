@@ -2,7 +2,7 @@ const databaseMethods = (DBConnect: any) => ({
   createOrUpdateTriggerSchedule: async ({
     applicationId,
     templateId,
-    scheduledTime,
+    scheduledDateTime,
     eventCode,
     data,
   }: any) => {
@@ -16,7 +16,7 @@ const databaseMethods = (DBConnect: any) => ({
     try {
       const result = await DBConnect.query({
         text,
-        values: [eventCode, scheduledTime, applicationId, templateId, data],
+        values: [eventCode, scheduledDateTime, applicationId, templateId, data],
       })
       return result?.rows[0]
     } catch (err) {

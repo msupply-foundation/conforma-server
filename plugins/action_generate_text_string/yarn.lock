@@ -2,26 +2,12 @@
 # yarn lockfile v1
 
 
-axios@^0.21.1:
-  version "0.21.1"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
-  integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
+custom_string_patterns@^0.6.4:
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/custom_string_patterns/-/custom_string_patterns-0.6.4.tgz#e15363f268a1ff1ea184d370ba5155fb51aa53ba"
+  integrity sha512-grNgIOYXvBWFsIhmaqO2eUbPrHftvHSGEMmzCHjGHYntDYKShHXUJs20is+hOKpThsAhJLOKkG5SmJJ/6clv2Q==
   dependencies:
-    follow-redirects "^1.10.0"
-
-checkdigit@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/checkdigit/-/checkdigit-1.1.1.tgz#08df08de493a3eaa3fa9183e5864b27beef96687"
-  integrity sha1-CN8I3kk6Pqo/qRg+WGSye+75Zoc=
-
-custom_string_patterns@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/custom_string_patterns/-/custom_string_patterns-0.5.0.tgz#628064a96e1b2406cd6a755aed88b3f1c8133d0b"
-  integrity sha512-7qvao087P9OT/qJiVYphaOmAe56zoPjCkGRBjgba+BIRMAoPBoXYXZ3YbCKA7sEXkxhg8j0mKOD+mVUDKyBoQw==
-  dependencies:
-    axios "^0.21.1"
-    checkdigit "^1.1.1"
-    lodash "^4.17.21"
+    object-property-extractor "^1.0.3"
     randexp "^0.5.3"
 
 drange@^1.0.2:
@@ -29,15 +15,10 @@ drange@^1.0.2:
   resolved "https://registry.yarnpkg.com/drange/-/drange-1.1.1.tgz#b2aecec2aab82fcef11dbbd7b9e32b83f8f6c0b8"
   integrity sha512-pYxfDYpued//QpnLIm4Avk7rsNtAtQkUES2cwAYSvD/wd2pKD71gN2Ebj3e7klzXwjocvE8c5vx/1fxwpqmSxA==
 
-follow-redirects@^1.10.0:
-  version "1.14.1"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.1.tgz#d9114ded0a1cfdd334e164e6662ad02bfd91ff43"
-  integrity sha512-HWqDgT7ZEkqRzBvc2s64vSZ/hfOceEol3ac/7tKwzuvEyWx3/4UegXh5oBOIotkGsObyk3xznnSRVADBgWSQVg==
-
-lodash@^4.17.21:
-  version "4.17.21"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
-  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
+object-property-extractor@^1.0.3:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/object-property-extractor/-/object-property-extractor-1.0.6.tgz#823dabe27e646fd6922db5874191a4bd9962f886"
+  integrity sha512-75926oo0hL87mquCqKHLgWTBW2fOEXIZy3CuHl3hgpruBRJvCMUMGuowm+ipOiDNHV+85pcR7xpOrTutNe4G5Q==
 
 randexp@^0.5.3:
   version "0.5.3"

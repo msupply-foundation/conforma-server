@@ -1,10 +1,11 @@
 import prefs from '../preferences/preferences.json'
 require('dotenv').config()
 import { version } from '../package.json'
+import { ServerPreferences } from './types'
 const isProductionBuild = process.env.NODE_ENV === 'production'
-const serverPrefs: { [key: string]: any } = prefs.server
+const serverPrefs: ServerPreferences = prefs.server
 
-const config: { [key: string]: any } = {
+const config = {
   pg_database_connection: {
     user: 'postgres',
     host: 'localhost',
@@ -44,6 +45,7 @@ const config: { [key: string]: any } = {
   // columns added (i.e. schema changes):
   allowedTablesNoColumns: ['application', 'file'],
   filterListMaxLength: 10,
+  filterListBatchSize: 1000,
   filterColumnSuffix: '_filter_data', // snake_case,
   isProductionBuild,
   defaultSystemManagerPermissionName: 'systemManager',
