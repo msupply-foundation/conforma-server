@@ -16,6 +16,7 @@ import { ActionQueueStatus } from '../../generated/graphql'
 import config from '../../config'
 import { evaluateParameters } from './helpers'
 import { getAdminJWT } from '../permissions/loginHelpers'
+import { Client } from 'pg'
 
 // Dev config
 const showApplicationDataLog = false
@@ -24,7 +25,7 @@ const graphQLEndpoint = config.graphQLendpoint
 
 const fig = new FigTreeEvaluator({
   functions,
-  pgConnection: DBConnect,
+  pgConnection: DBConnect as any,
   graphQLConnection: { endpoint: graphQLEndpoint },
 })
 

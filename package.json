@@ -86,7 +86,7 @@
     "fastify-cors": "^4.1.0",
     "fastify-multipart": "^3.1.0",
     "fastify-static": "^4.2.2",
-    "fig-tree-evaluator": "^2.5.0",
+    "fig-tree-evaluator": "^2.8.5",
     "json-sql-builder2": "^1.0.24",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
