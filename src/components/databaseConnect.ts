@@ -124,6 +124,8 @@ class DBConnect {
 
   public addNewReviewStatusHistory = PostgresDB.addNewReviewStatusHistory
 
+  public getOrgName = PostgresDB.getOrgName
+
   public getUserData = PostgresDB.getUserData
 
   public getUserOrgData = PostgresDB.getUserOrgData

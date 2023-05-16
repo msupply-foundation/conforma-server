@@ -48,6 +48,7 @@ export interface ActionQueuePayload {
   trigger_event: number | null
   trigger_payload: TriggerPayload
   template_id: number
+  application_id: number
   action_code: string
   sequence: number | null
   condition_expression: EvaluatorNode
@@ -216,6 +217,7 @@ export interface TriggerPayload {
 
 export interface TriggerQueueUpdatePayload {
   id: number
+  application_id?: number
   status: TriggerQueueStatus
 }
 
