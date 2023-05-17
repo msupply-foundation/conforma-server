@@ -6,6 +6,7 @@ import {
   Trigger,
   TriggerQueueStatus,
 } from './generated/graphql'
+import { EmailOperationMode } from './config'
 
 export interface ActionInTemplate {
   code: string
@@ -143,7 +144,7 @@ export interface ActionApplicationData extends BaseApplicationData {
       defaultFromName: string
       defaultFromEmail: string
     }
-    emailTestMode?: boolean
+    emailMode: EmailOperationMode
     testingEmail: string | null
     productionHost: string | null
   }

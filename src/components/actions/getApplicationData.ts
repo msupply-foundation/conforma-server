@@ -72,10 +72,11 @@ export const getApplicationData = async (input: {
   const environmentData = {
     appRootFolder: getAppEntryPointDir(),
     filesFolder: config.filesFolder,
-    webHostUrl: process.env.WEB_HOST ?? 'MissingHost',
+    webHostUrl: config.webHostUrl ?? 'MissingHost',
     SMTPConfig: config?.SMTPConfig,
     productionHost: config?.productionHost ?? null,
-    emailTestMode: config?.emailTestMode,
+    isLiveServer: config.isLiveServer,
+    emailMode: config?.emailMode,
     testingEmail: config?.testingEmail ?? null,
   }
 

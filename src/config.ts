@@ -5,6 +5,26 @@ import { version } from '../package.json'
 import { serverPrefKeys, ServerPreferences, WebAppPrefs } from './types'
 const serverPrefs: ServerPreferences = preferences.server
 const isProductionBuild = process.env.NODE_ENV === 'production'
+const siteHost = (preferences.web as WebAppPrefs)?.siteHost
+const webHostUrl = process.env.WEB_HOST
+const isLiveServer = getIsLiveServer(webHostUrl, siteHost)
+
+// Change to true to force email server to use local Mailhog
+const USE_MAIL_HOG = false
+
+export type EmailOperationMode = 'LIVE' | 'TEST' | 'NONE' | 'MAILHOG'
+/*
+Operation modes:
+
+- LIVE: Emails are sent normally according to action configurations
+- TEST: All emails are sent to a single address, defined in server
+  preferences "testingEmail" property. Used on testing servers or in
+  development.
+- NONE: No emails are sent at all. Used for automated testing, or when a
+  "testingEmail" address is not provided.
+- MAILHOG: All emails are relayed through a local MailHog SMTP server (so not
+  actually sent). An alternative development mode.
+*/
 
 const config = {
   pg_database_connection: {
@@ -51,7 +71,10 @@ const config = {
   isProductionBuild,
   defaultSystemManagerPermissionName: 'systemManager',
   ...serverPrefs,
-  productionHost: (preferences.web as WebAppPrefs)?.siteHost,
+  webHostUrl,
+  productionHost: siteHost,
+  isLiveServer,
+  emailMode: getEmailOperationMode(serverPrefs.emailTestMode, serverPrefs.testingEmail),
 }
 
 // Mutate the active config object to inject new preferences
@@ -67,10 +90,44 @@ export const refreshConfig = (config: Config, prefsFilePath: string) => {
       config[key] = serverPrefs[key] as never
     } else delete config[key]
   })
+
   if (webAppPrefs.siteHost) config.productionHost = webAppPrefs.siteHost
   else config.productionHost = undefined
 
-  console.log('Configuration refreshed with updated preferences')
+  config.isLiveServer = getIsLiveServer(webHostUrl, webAppPrefs.siteHost)
+  config.emailMode = getEmailOperationMode(serverPrefs.emailTestMode, serverPrefs.testingEmail)
+
+  console.log('\nConfiguration refreshed with updated preferences')
+  console.log('Email mode:', config.emailMode)
+  if (config.emailMode === 'TEST') console.log('Email sent to:', config.testingEmail)
+}
+
+function getIsLiveServer(webHostUrl: string | undefined, productionHost?: string | null) {
+  if (!webHostUrl) return false
+  if (!productionHost) return true
+
+  const re = new RegExp(`^https?:\/\/${productionHost}.*`)
+  return re.test(webHostUrl)
+}
+
+function getEmailOperationMode(
+  emailTestMode: boolean | undefined,
+  testingEmail: string | undefined
+): EmailOperationMode {
+  switch (true) {
+    case emailTestMode === false:
+      return 'LIVE'
+    case emailTestMode === true && !!testingEmail:
+      return 'TEST'
+    case USE_MAIL_HOG as boolean:
+      return 'MAILHOG'
+    case isLiveServer:
+      return 'LIVE'
+    case !!testingEmail:
+      return 'TEST'
+    default:
+      return 'NONE'
+  }
 }
 
 export default config

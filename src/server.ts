@@ -178,7 +178,9 @@ const startServer = async () => {
       process.exit(1)
     }
     console.log(generateAsciiHeader(config.version))
-    console.log(`Server listening at ${address}`)
+    console.log('Email mode:', config.emailMode)
+    if (config.emailMode === 'TEST') console.log('All email will be sent to:', config.testingEmail)
+    console.log(`\nServer listening at ${address}`)
   })
 
   // Fastify TO DO:
