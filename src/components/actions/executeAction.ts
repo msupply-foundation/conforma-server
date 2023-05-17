@@ -6,6 +6,7 @@ import {
 } from '../../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import FigTreeEvaluator from 'fig-tree-evaluator'
+// import { FigTreeEvaluator } from '../../modules/package'
 import { merge } from 'lodash'
 import functions from './evaluatorFunctions'
 import DBConnect from '../databaseConnect'
