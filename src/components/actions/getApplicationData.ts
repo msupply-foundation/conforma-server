@@ -27,7 +27,7 @@ export const getApplicationData = async (input: {
   if (!applicationData) throw new Error("Can't get application data")
 
   const {
-    user: { firstName, lastName, organisation, username, dateOfBirth, email, permissionNames },
+    user: { firstName, lastName, username, dateOfBirth, email, permissionNames },
   } = await getUserInfo({
     userId: applicationData.userId,
     orgId: applicationData?.orgId || undefined,
@@ -36,8 +36,10 @@ export const getApplicationData = async (input: {
   const userData = {
     firstName,
     lastName,
-    orgName: organisation?.orgName || null,
-    orgId: organisation?.orgId || null,
+    // Org data needs to come from application info (not "getUserInfo") as user
+    // may no longer belong to the organisation that applied as.
+    orgName: await DBConnect.getOrgName(applicationData?.orgId),
+    orgId: applicationData?.orgId || null,
     username,
     dateOfBirth,
     email,

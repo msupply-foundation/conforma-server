@@ -14,7 +14,8 @@ export async function processTrigger(payload: TriggerPayload): Promise<ActionRes
   const { trigger_id, trigger, table, record_id, data, event_code, applicationDataOverride } =
     payload
 
-  const templateId = await DBConnect.getTemplateIdFromTrigger(payload.table, payload.record_id)
+  const templateId = await DBConnect.getTemplateIdFromTrigger(table, record_id)
+  const applicationId = await DBConnect.getApplicationIdFromTrigger(table, record_id)
 
   // Get Actions from matching Template (and match templateActionCode if applicable)
   const actions = (await DBConnect.getActionsByTemplateId(templateId, trigger))
@@ -40,6 +41,7 @@ export async function processTrigger(payload: TriggerPayload): Promise<ActionRes
       trigger_event: trigger_id,
       trigger_payload: payload,
       template_id: templateId,
+      application_id: applicationId,
       sequence: action.sequence,
       action_code: action.code,
       parameter_queries: action.parameter_queries,
@@ -54,6 +56,7 @@ export async function processTrigger(payload: TriggerPayload): Promise<ActionRes
   if (trigger_id)
     await DBConnect.updateTriggerQueueStatus({
       status: TriggerQueueStatus.ActionsDispatched,
+      application_id: applicationId,
       id: trigger_id,
     })
 

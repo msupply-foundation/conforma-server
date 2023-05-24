@@ -124,6 +124,8 @@ class DBConnect {
 
   public addNewReviewStatusHistory = PostgresDB.addNewReviewStatusHistory
 
+  public getOrgName = PostgresDB.getOrgName
+
   public getUserData = PostgresDB.getUserData
 
   public getUserOrgData = PostgresDB.getUserOrgData
@@ -139,6 +141,8 @@ class DBConnect {
   public getAllPermissions = PostgresDB.getAllPermissions
 
   public getTemplatePermissions = PostgresDB.getTemplatePermissions
+
+  public getUserAdminStatus = PostgresDB.getUserAdminStatus
 
   public getAllGeneratedRowPolicies = PostgresDB.getAllGeneratedRowPolicies
 
