@@ -12,6 +12,10 @@ export function getAppEntryPointDir() {
   return path.dirname(__dirname)
 }
 
+// Returns true if input is a "proper" object (i.e. not an array or null)
+export const isObject = (element: unknown) =>
+  typeof element === 'object' && !Array.isArray(element) && element !== null
+
 // Convert object keys to camelCase
 export const objectKeysToCamelCase = (obj: { [key: string]: any }) =>
   mapKeys(obj, (_, key) => camelCase(key))

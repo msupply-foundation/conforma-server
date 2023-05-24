@@ -41,6 +41,7 @@ The back-end currently has two server instances which are launched to handle inc
       - [Manage localisations](#manage-localisations)
       - [Snapshot endpoints](#snapshot-endpoints)
       - [Lookup table endpoints](#lookup-table-endpoints)
+      - [Preferences management endpoints](#preference-management-endpoints)
 
 <!-- tocstop -->
 
@@ -613,3 +614,11 @@ See [Localisation documentation](https://github.com/openmsupply/conforma-web-app
 
 See [Snapshot documentation](Snapshots.md) for more info
 
+#### Preference management endpoints
+
+- GET: `/get-all-prefs`
+- POST: `/set-prefs`
+
+The difference between these and the [public `get-prefs` endpoint](#get-preferences-endpoint) is that these read and write both web app *and* server preferences, whereas the public `get-prefs` is just for the web app.
+
+See [Preferences documentation](Preferences.md) for more info
