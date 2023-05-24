@@ -6,6 +6,7 @@ import {
   Trigger,
   TriggerQueueStatus,
 } from './generated/graphql'
+import { EmailOperationMode } from './config'
 
 export interface ActionInTemplate {
   code: string
@@ -135,6 +136,7 @@ export interface ActionApplicationData extends BaseApplicationData {
   environmentData: {
     appRootFolder: string
     filesFolder: string
+    webHostUrl: string
     SMTPConfig?: {
       host: string
       port: number
@@ -143,6 +145,9 @@ export interface ActionApplicationData extends BaseApplicationData {
       defaultFromName: string
       defaultFromEmail: string
     }
+    emailMode: EmailOperationMode
+    testingEmail: string | null
+    productionHost: string | null
   }
   other?: {
     // Use this for dev related stuff, shouldn't be used in actual configs
@@ -265,6 +270,8 @@ export interface ServerPreferences {
   backupSchedule?: number[]
   backupFilePrefix?: string
   maxBackupDurationDays?: number
+  emailTestMode?: boolean
+  testingEmail?: string
 }
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
@@ -280,4 +287,18 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'backupSchedule',
   'backupFilePrefix',
   'maxBackupDurationDays',
+  'emailTestMode',
+  'testingEmail',
 ]
+
+export interface WebAppPrefs {
+  paginationPresets?: number[]
+  paginationDefault?: number
+  defaultLanguageCode: string
+  brandLogoFileId?: string
+  brandLogoOnDarkFileId?: string
+  defaultListFilters?: string[]
+  style?: { headerBgColor?: string }
+  googleAnalyticsId?: string
+  siteHost?: string
+}
