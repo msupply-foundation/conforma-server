@@ -6,6 +6,7 @@ import {
   Trigger,
   TriggerQueueStatus,
 } from './generated/graphql'
+import { EmailOperationMode } from './config'
 
 export interface ActionInTemplate {
   code: string
@@ -144,7 +145,7 @@ export interface ActionApplicationData extends BaseApplicationData {
       defaultFromName: string
       defaultFromEmail: string
     }
-    emailTestMode?: boolean
+    emailMode: EmailOperationMode
     testingEmail: string | null
     productionHost: string | null
   }
@@ -263,6 +264,7 @@ export interface ServerPreferences {
     defaultFromEmail: string
   }
   systemManagerPermissionName?: string
+  managerCanEditLookupTables?: boolean
   previewDocsMinKeepTime?: string
   previewDocsCleanupSchedule?: number[]
   backupSchedule?: number[]
@@ -279,6 +281,7 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'hoursSchedule',
   'SMTPConfig',
   'systemManagerPermissionName',
+  'managerCanEditLookupTables',
   'previewDocsMinKeepTime',
   'previewDocsCleanupSchedule',
   'backupSchedule',

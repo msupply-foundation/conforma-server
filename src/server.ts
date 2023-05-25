@@ -122,7 +122,6 @@ const startServer = async () => {
           }
         })
 
-        server.register(lookupTableRoutes, { prefix: '/lookup-table' })
         server.register(snapshotRoutes, { prefix: '/snapshot' })
         server.get('/updateRowPolicies', routeUpdateRowPolicies)
         server.get('/get-application-data', routeGetApplicationData)
@@ -155,6 +154,8 @@ const startServer = async () => {
     server.get('/check-triggers', routeTriggers)
     server.post('/preview-actions', routePreviewActions)
     server.post('/extend-application', routeExtendApplication)
+    // Lookup tables requires "systemManager" permission
+    server.register(lookupTableRoutes, { prefix: '/lookup-table' })
 
     // File upload endpoint
     server.post('/upload', async function (request: any, reply) {
@@ -178,7 +179,9 @@ const startServer = async () => {
       process.exit(1)
     }
     console.log(generateAsciiHeader(config.version))
-    console.log(`Server listening at ${address}`)
+    console.log('Email mode:', config.emailMode)
+    if (config.emailMode === 'TEST') console.log('All email will be sent to:', config.testingEmail)
+    console.log(`\nServer listening at ${address}`)
   })
 
   // Fastify TO DO:

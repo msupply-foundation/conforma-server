@@ -12,20 +12,6 @@ import { getFilePath } from '../../../src/components/files/fileHandler'
 import { ActionApplicationData } from '../../../src/types'
 import config from '../../../src/config'
 
-type OperationMode = 'NORMAL' | 'TEST_EMAIL' | 'NO_EMAIL' | 'MAILHOG'
-/*
-Operation modes:
-
-- NORMAL: Emails are sent normally according to action configurations
-- TEST_EMAIL: All emails are sent to a single address, defined in server
-  preferences "testingEmail" property. Used on testing servers or in
-  development.
-- NO_EMAIL: No emails are sent at all. Used for automated testing, or when a
-  "testingEmail" address is not provided.
-- MAIL_HOG: All emails are relayed through a local MailHog SMTP server (so not
-  actually sent). An alternative development mode.
-*/
-
 const isValidEmail = (email: string) => /^[\w\-_+.]+@([\w\-]+\.)+[A-Za-z]{2,}$/gm.test(email)
 // Test this regex: https://regex101.com/r/ysGgNx/2
 
@@ -33,27 +19,11 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
   const db = databaseMethods(DBConnect)
 
   const {
-    environmentData: {
-      appRootFolder,
-      filesFolder,
-      SMTPConfig,
-      webHostUrl,
-      productionHost,
-      emailTestMode,
-    },
+    environmentData: { appRootFolder, filesFolder, SMTPConfig, emailMode },
     other,
   } = applicationData as ActionApplicationData
 
   const testingEmail = config.testingEmail
-
-  const mode = getOperationMode({
-    emailTestMode,
-    mailHog: USE_MAIL_HOG,
-    webHostUrl,
-    productionHost,
-    suppressEmail: other?.suppressEmail ?? false,
-    testingEmail,
-  })
 
   const {
     userId,
@@ -71,7 +41,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
 
   const transporter = SMTPConfig
     ? nodemailer.createTransport(
-        mode === 'MAILHOG'
+        emailMode === 'MAILHOG'
           ? configTest
           : {
               host: SMTPConfig.host,
@@ -109,9 +79,17 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     })
 
     // Send email
-    console.log(`Email mode: ${mode}`)
+    console.log(`Email mode: ${emailMode}`)
     console.log(`Action sendEmail setting: ${sendEmail}`)
-    if (mode !== 'NO_EMAIL' && sendEmail && hasValidEmails && transporter) {
+    console.log(`Suppress email override: ${!!other?.suppressEmail}`)
+
+    if (
+      emailMode !== 'NONE' &&
+      sendEmail &&
+      !other?.suppressEmail &&
+      hasValidEmails &&
+      transporter
+    ) {
       console.log(
         `Sending email to: ${toAddresses}\ncc:${ccAddresses}\nbcc: ${bccAddresses}\nSubject: ${
           subject || ''
@@ -120,9 +98,9 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
       transporter
         .sendMail({
           from: `${fromName} <${fromEmail}>`,
-          to: mode === 'TEST_EMAIL' ? [] : toAddresses,
-          cc: mode === 'TEST_EMAIL' ? [] : ccAddresses,
-          bcc: mode === 'TEST_EMAIL' ? testingEmail : bccAddresses,
+          to: emailMode === 'TEST' ? [] : toAddresses,
+          cc: emailMode === 'TEST' ? [] : ccAddresses,
+          bcc: emailMode === 'TEST' ? testingEmail : bccAddresses,
           subject,
           text: message,
           html: marked(message),
@@ -233,46 +211,4 @@ const prepareAttachments = async (
     }
   }
   return attachmentObjects
-}
-
-const isLiveServer = (webHostUrl: string, productionHost?: string | null) => {
-  if (!productionHost) return true
-
-  const re = new RegExp(`^https?:\/\/${productionHost}.*`)
-  return re.test(webHostUrl)
-}
-
-interface OpModeParameters {
-  emailTestMode?: boolean
-  webHostUrl: string
-  productionHost: string | null
-  mailHog: boolean
-  suppressEmail: boolean
-  testingEmail?: string
-}
-
-const getOperationMode = ({
-  emailTestMode,
-  webHostUrl,
-  productionHost,
-  mailHog,
-  suppressEmail,
-  testingEmail,
-}: OpModeParameters): OperationMode => {
-  switch (true) {
-    case emailTestMode === false:
-      return 'NORMAL'
-    case emailTestMode === true && !!testingEmail:
-      return 'TEST_EMAIL'
-    case suppressEmail:
-      return 'NO_EMAIL'
-    case mailHog:
-      return 'MAILHOG'
-    case isLiveServer(webHostUrl, productionHost):
-      return 'NORMAL'
-    case !!testingEmail:
-      return 'TEST_EMAIL'
-    default:
-      return 'NO_EMAIL'
-  }
 }
