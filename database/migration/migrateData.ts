@@ -760,11 +760,6 @@ const migrateData = async () => {
       console.log(' ...and updating action_queue data')
       await DB.populateQueueApplicationIds('action_queue')
     }
-  }
-
-  // v0.7.0 ?? Set correct version before PR
-  if (databaseVersionLessThan('0.7.0')) {
-    console.log('Migrating to v?.?.????...')
 
     console.log(' - Adding unique identifier column to data view')
     await DB.changeSchema(`
