@@ -1015,7 +1015,6 @@ class PostgresDB {
     if (orgId) values.push(orgId)
     try {
       const result = await this.query({ text, values })
-      console.log(result.rows)
       const isAdmin = result.rows.some((row) => row.name === 'admin')
       const isManager = result.rows.some((row) => row.name === managementPrefName)
       return { isAdmin, isManager }

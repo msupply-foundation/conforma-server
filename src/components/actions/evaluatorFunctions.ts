@@ -1,10 +1,6 @@
-/*
-Utility functions to extend capabilities of expression evaluator via the
-"objectFunctions" operator.
-
-Any changes done here should also be replicated in front-end
-"evaluatorFunctions.ts"so they can be simulated in the Template Builder.
- */
+// This file should be identical to the back-end "evaluatorFunctions.ts". It
+// allows us to preview the "objectFunctions" operator in the Template Builder
+// Actions config
 
 import { DateTime, Duration } from 'luxon'
 
@@ -93,6 +89,21 @@ const extractNumber = (input: string) => {
 // See https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript
 const removeAccents = (input: string) => input.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 
+// Arithmetic
+const multiply = (num1: number, num2: number, decimals: number) => {
+  const product = num1 * num2
+  const roundingMultiplier = 10 ** decimals
+  return isNaN(roundingMultiplier)
+    ? product
+    : Math.round(product * roundingMultiplier) / roundingMultiplier
+}
+
+// Array
+const split = (text: string, delimiter: string = ',') => {
+  const values = text.split(delimiter)
+  return values.map((v) => v.trim())
+}
+
 export default {
   filterArray,
   generateExpiry,
@@ -102,4 +113,6 @@ export default {
   getISODate,
   extractNumber,
   removeAccents,
+  multiply,
+  split,
 }
