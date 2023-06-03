@@ -26,11 +26,12 @@ const routeDataViews = async (request: any, reply: any) => {
   const dataViews = await DBConnect.getAllowedDataViews(permissionNames)
   const distinctDataViews = getDistinctObjects(dataViews, 'code', 'priority')
   const dataViewResponse: DataViewsResponse = distinctDataViews.map(
-    ({ table_name, title, code, default_filter_string }) => ({
+    ({ table_name, title, code, submenu, default_filter_string }) => ({
       tableName: camelCase(table_name),
       title,
       code,
       urlSlug: kebabCase(code),
+      submenu,
       defaultFilter: default_filter_string,
     })
   )

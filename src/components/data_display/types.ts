@@ -5,6 +5,9 @@ export type DataViewsResponse = {
   tableName: string
   title: string
   code: string
+  urlSlug: string
+  submenu: string | null
+  defaultFilter: string | null
 }[]
 
 interface FormatOptions {
