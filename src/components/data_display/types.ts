@@ -1,14 +1,14 @@
 import { DataViewColumnDefinition } from '../../generated/graphql'
 
 // Response value of /data-views endpoint
-export type DataViewsResponse = {
+export type DataViewDetail = {
   tableName: string
   title: string
   code: string
   urlSlug: string
   submenu: string | null
   defaultFilter: string | null
-}[]
+}
 
 interface FormatOptions {
   elementTypePluginCode: string

@@ -14,18 +14,19 @@ import {
   queryLinkedApplications,
 } from './gqlDynamicQueries'
 import { camelCase, kebabCase } from 'lodash'
-import { ColumnDefinition, LinkedApplication, DataViewsResponse } from './types'
+import { ColumnDefinition, LinkedApplication, DataViewDetail } from './types'
 import { DataView } from '../../generated/graphql'
 import config from '../../config'
+import { FastifyReply, FastifyRequest } from 'fastify'
 
 // CONSTANTS
 const LOOKUP_TABLE_PERMISSION_NAME = 'lookupTables'
 
-const routeDataViews = async (request: any, reply: any) => {
+const routeDataViews = async (request: FastifyRequest, reply: FastifyReply) => {
   const { permissionNames } = await getPermissionNamesFromJWT(request)
   const dataViews = await DBConnect.getAllowedDataViews(permissionNames)
   const distinctDataViews = getDistinctObjects(dataViews, 'code', 'priority')
-  const dataViewResponse: DataViewsResponse = distinctDataViews.map(
+  const dataViewResponse: DataViewDetail[] = distinctDataViews.map(
     ({ table_name, title, code, submenu, default_filter_string }) => ({
       tableName: camelCase(table_name),
       title,
@@ -35,7 +36,21 @@ const routeDataViews = async (request: any, reply: any) => {
       defaultFilter: default_filter_string,
     })
   )
-  return reply.send(dataViewResponse)
+  const submenus: Record<string, DataViewDetail[]> = {}
+  const dataViewsTopLevel: DataViewDetail[] = []
+  dataViewResponse.forEach((dataView) => {
+    if (dataView.submenu !== null) {
+      if (dataView.submenu in submenus) submenus[dataView.submenu].push(dataView)
+      else submenus[dataView.submenu] = [dataView]
+    } else {
+      dataViewsTopLevel.push(dataView)
+    }
+  })
+
+  return reply.send([
+    ...dataViewsTopLevel,
+    ...Object.entries(submenus).map(([key, val]) => ({ submenu: key, items: val })),
+  ])
 }
 
 const routeDataViewTable = async (request: any, reply: any) => {
