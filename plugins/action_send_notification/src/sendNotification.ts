@@ -1,5 +1,3 @@
-const USE_MAIL_HOG = false // Change to true to test with local Mailhog
-
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import databaseMethods from './databaseMethods'
