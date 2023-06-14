@@ -36,21 +36,7 @@ const routeDataViews = async (request: FastifyRequest, reply: FastifyReply) => {
       defaultFilter: default_filter_string,
     })
   )
-  const submenus: Record<string, DataViewDetail[]> = {}
-  const dataViewsTopLevel: DataViewDetail[] = []
-  dataViewResponse.forEach((dataView) => {
-    if (dataView.submenu !== null) {
-      if (dataView.submenu in submenus) submenus[dataView.submenu].push(dataView)
-      else submenus[dataView.submenu] = [dataView]
-    } else {
-      dataViewsTopLevel.push(dataView)
-    }
-  })
-
-  return reply.send([
-    ...dataViewsTopLevel,
-    ...Object.entries(submenus).map(([key, val]) => ({ submenu: key, items: val })),
-  ])
+  return reply.send(dataViewResponse)
 }
 
 const routeDataViewTable = async (request: any, reply: any) => {
