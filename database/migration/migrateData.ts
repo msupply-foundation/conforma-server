@@ -777,6 +777,12 @@ const migrateData = async () => {
         ADD COLUMN IF NOT EXISTS submenu VARCHAR;
     `)
 
+    console.log(' - Adding enabled column to data view')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_view   
+        ADD COLUMN IF NOT EXISTS enabled BOOLEAN DEFAULT TRUE NOT NULL;
+    `)
+
     console.log(' - Adding is_submenu column to template_category')
     await DB.changeSchema(`
       ALTER TABLE public.template_category   
