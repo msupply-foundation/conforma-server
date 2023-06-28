@@ -658,6 +658,7 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -2153,7 +2154,6 @@ export type ApplicationNoteOrgIdFkeyOrganisationCreateInput = {
   registrationDocumentation?: Maybe<Scalars['JSON']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
-  companyType?: Maybe<Scalars['String']>;
   contactEmail?: Maybe<Scalars['String']>;
   contactPhone?: Maybe<Scalars['String']>;
   postalAddress?: Maybe<Scalars['String']>;
@@ -2164,6 +2164,10 @@ export type ApplicationNoteOrgIdFkeyOrganisationCreateInput = {
   license?: Maybe<Scalars['JSON']>;
   businessCertificate?: Maybe<Scalars['JSON']>;
   tinLetter?: Maybe<Scalars['JSON']>;
+  subType?: Maybe<Scalars['String']>;
+  otherDocuments?: Maybe<Scalars['JSON']>;
+  isSponsorCompany?: Maybe<Scalars['Boolean']>;
+  isChemicalImporter?: Maybe<Scalars['Boolean']>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
@@ -3008,7 +3012,6 @@ export type ApplicationOrgIdFkeyOrganisationCreateInput = {
   registrationDocumentation?: Maybe<Scalars['JSON']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
-  companyType?: Maybe<Scalars['String']>;
   contactEmail?: Maybe<Scalars['String']>;
   contactPhone?: Maybe<Scalars['String']>;
   postalAddress?: Maybe<Scalars['String']>;
@@ -3019,6 +3022,10 @@ export type ApplicationOrgIdFkeyOrganisationCreateInput = {
   license?: Maybe<Scalars['JSON']>;
   businessCertificate?: Maybe<Scalars['JSON']>;
   tinLetter?: Maybe<Scalars['JSON']>;
+  subType?: Maybe<Scalars['String']>;
+  otherDocuments?: Maybe<Scalars['JSON']>;
+  isSponsorCompany?: Maybe<Scalars['Boolean']>;
+  isChemicalImporter?: Maybe<Scalars['Boolean']>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
@@ -4802,6 +4809,7 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -6297,6 +6305,39 @@ export type CreateDataTableCountryPayloadDataTableCountryEdgeArgs = {
   orderBy?: Maybe<Array<DataTableCountriesOrderBy>>;
 };
 
+/** All input for the create `DataTableDosageFormGroup` mutation. */
+export type CreateDataTableDosageFormGroupInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableDosageFormGroup` to be created by this mutation. */
+  dataTableDosageFormGroup: DataTableDosageFormGroupInput;
+};
+
+/** The output of our create `DataTableDosageFormGroup` mutation. */
+export type CreateDataTableDosageFormGroupPayload = {
+  __typename?: 'CreateDataTableDosageFormGroupPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableDosageFormGroup` that was created by this mutation. */
+  dataTableDosageFormGroup?: Maybe<DataTableDosageFormGroup>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableDosageFormGroup`. May be used by Relay 1. */
+  dataTableDosageFormGroupEdge?: Maybe<DataTableDosageFormGroupsEdge>;
+};
+
+
+/** The output of our create `DataTableDosageFormGroup` mutation. */
+export type CreateDataTableDosageFormGroupPayloadDataTableDosageFormGroupEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableDosageFormGroupsOrderBy>>;
+};
+
 /** All input for the create `DataTableDosageForm` mutation. */
 export type CreateDataTableDosageFormInput = {
   /**
@@ -6405,6 +6446,39 @@ export type CreateDataTableListOfSraPayload = {
 /** The output of our create `DataTableListOfSra` mutation. */
 export type CreateDataTableListOfSraPayloadDataTableListOfSraEdgeArgs = {
   orderBy?: Maybe<Array<DataTableListOfSrasOrderBy>>;
+};
+
+/** All input for the create `DataTableManufacturer` mutation. */
+export type CreateDataTableManufacturerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableManufacturer` to be created by this mutation. */
+  dataTableManufacturer: DataTableManufacturerInput;
+};
+
+/** The output of our create `DataTableManufacturer` mutation. */
+export type CreateDataTableManufacturerPayload = {
+  __typename?: 'CreateDataTableManufacturerPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableManufacturer` that was created by this mutation. */
+  dataTableManufacturer?: Maybe<DataTableManufacturer>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableManufacturer`. May be used by Relay 1. */
+  dataTableManufacturerEdge?: Maybe<DataTableManufacturersEdge>;
+};
+
+
+/** The output of our create `DataTableManufacturer` mutation. */
+export type CreateDataTableManufacturerPayloadDataTableManufacturerEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableManufacturersOrderBy>>;
 };
 
 /** The output of our create `DataTable` mutation. */
@@ -8777,6 +8851,84 @@ export type DataTableDosageFormFilter = {
   not?: Maybe<DataTableDosageFormFilter>;
 };
 
+export type DataTableDosageFormGroup = Node & {
+  __typename?: 'DataTableDosageFormGroup';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  dosageFormGroups?: Maybe<Scalars['String']>;
+};
+
+/**
+ * A condition to be used against `DataTableDosageFormGroup` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
+ */
+export type DataTableDosageFormGroupCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `dosageFormGroups` field. */
+  dosageFormGroups?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `DataTableDosageFormGroup` object types. All fields are combined with a logical ‘and.’ */
+export type DataTableDosageFormGroupFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `dosageFormGroups` field. */
+  dosageFormGroups?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<DataTableDosageFormGroupFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<DataTableDosageFormGroupFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<DataTableDosageFormGroupFilter>;
+};
+
+/** An input for mutations affecting `DataTableDosageFormGroup` */
+export type DataTableDosageFormGroupInput = {
+  id?: Maybe<Scalars['Int']>;
+  dosageFormGroups?: Maybe<Scalars['String']>;
+};
+
+/** Represents an update to a `DataTableDosageFormGroup`. Fields that are set will be updated. */
+export type DataTableDosageFormGroupPatch = {
+  id?: Maybe<Scalars['Int']>;
+  dosageFormGroups?: Maybe<Scalars['String']>;
+};
+
+/** A connection to a list of `DataTableDosageFormGroup` values. */
+export type DataTableDosageFormGroupsConnection = {
+  __typename?: 'DataTableDosageFormGroupsConnection';
+  /** A list of `DataTableDosageFormGroup` objects. */
+  nodes: Array<Maybe<DataTableDosageFormGroup>>;
+  /** A list of edges which contains the `DataTableDosageFormGroup` and cursor to aid in pagination. */
+  edges: Array<DataTableDosageFormGroupsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `DataTableDosageFormGroup` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `DataTableDosageFormGroup` edge in the connection. */
+export type DataTableDosageFormGroupsEdge = {
+  __typename?: 'DataTableDosageFormGroupsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `DataTableDosageFormGroup` at the end of the edge. */
+  node?: Maybe<DataTableDosageFormGroup>;
+};
+
+/** Methods to use when ordering `DataTableDosageFormGroup`. */
+export enum DataTableDosageFormGroupsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  DosageFormGroupsAsc = 'DOSAGE_FORM_GROUPS_ASC',
+  DosageFormGroupsDesc = 'DOSAGE_FORM_GROUPS_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
 /** An input for mutations affecting `DataTableDosageForm` */
 export type DataTableDosageFormInput = {
   id?: Maybe<Scalars['Int']>;
@@ -9059,6 +9211,102 @@ export enum DataTableListOfSrasOrderBy {
   IdDesc = 'ID_DESC',
   SraAsc = 'SRA_ASC',
   SraDesc = 'SRA_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+export type DataTableManufacturer = Node & {
+  __typename?: 'DataTableManufacturer';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  manufacturer?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+};
+
+/**
+ * A condition to be used against `DataTableManufacturer` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type DataTableManufacturerCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `manufacturer` field. */
+  manufacturer?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `country` field. */
+  country?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `address` field. */
+  address?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `DataTableManufacturer` object types. All fields are combined with a logical ‘and.’ */
+export type DataTableManufacturerFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `manufacturer` field. */
+  manufacturer?: Maybe<StringFilter>;
+  /** Filter by the object’s `country` field. */
+  country?: Maybe<StringFilter>;
+  /** Filter by the object’s `address` field. */
+  address?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<DataTableManufacturerFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<DataTableManufacturerFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<DataTableManufacturerFilter>;
+};
+
+/** An input for mutations affecting `DataTableManufacturer` */
+export type DataTableManufacturerInput = {
+  id?: Maybe<Scalars['Int']>;
+  manufacturer?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+};
+
+/** Represents an update to a `DataTableManufacturer`. Fields that are set will be updated. */
+export type DataTableManufacturerPatch = {
+  id?: Maybe<Scalars['Int']>;
+  manufacturer?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+};
+
+/** A connection to a list of `DataTableManufacturer` values. */
+export type DataTableManufacturersConnection = {
+  __typename?: 'DataTableManufacturersConnection';
+  /** A list of `DataTableManufacturer` objects. */
+  nodes: Array<Maybe<DataTableManufacturer>>;
+  /** A list of edges which contains the `DataTableManufacturer` and cursor to aid in pagination. */
+  edges: Array<DataTableManufacturersEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `DataTableManufacturer` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `DataTableManufacturer` edge in the connection. */
+export type DataTableManufacturersEdge = {
+  __typename?: 'DataTableManufacturersEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `DataTableManufacturer` at the end of the edge. */
+  node?: Maybe<DataTableManufacturer>;
+};
+
+/** Methods to use when ordering `DataTableManufacturer`. */
+export enum DataTableManufacturersOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  ManufacturerAsc = 'MANUFACTURER_ASC',
+  ManufacturerDesc = 'MANUFACTURER_DESC',
+  CountryAsc = 'COUNTRY_ASC',
+  CountryDesc = 'COUNTRY_DESC',
+  AddressAsc = 'ADDRESS_ASC',
+  AddressDesc = 'ADDRESS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -11574,6 +11822,8 @@ export type DataView = Node & {
   defaultSortColumn?: Maybe<Scalars['String']>;
   defaultFilterString?: Maybe<Scalars['String']>;
   identifier: Scalars['String'];
+  submenu?: Maybe<Scalars['String']>;
+  enabled: Scalars['Boolean'];
 };
 
 export type DataViewColumnDefinition = Node & {
@@ -11582,7 +11832,7 @@ export type DataViewColumnDefinition = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   tableName?: Maybe<Scalars['String']>;
-  columnName?: Maybe<Scalars['String']>;
+  columnName: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
   elementParameters?: Maybe<Scalars['JSON']>;
@@ -11663,7 +11913,7 @@ export type DataViewColumnDefinitionFilter = {
 export type DataViewColumnDefinitionInput = {
   id?: Maybe<Scalars['Int']>;
   tableName?: Maybe<Scalars['String']>;
-  columnName?: Maybe<Scalars['String']>;
+  columnName: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
   elementParameters?: Maybe<Scalars['JSON']>;
@@ -11787,6 +12037,10 @@ export type DataViewCondition = {
   defaultFilterString?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `identifier` field. */
   identifier?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `submenu` field. */
+  submenu?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `enabled` field. */
+  enabled?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against `DataView` object types. All fields are combined with a logical ‘and.’ */
@@ -11829,6 +12083,10 @@ export type DataViewFilter = {
   defaultFilterString?: Maybe<StringFilter>;
   /** Filter by the object’s `identifier` field. */
   identifier?: Maybe<StringFilter>;
+  /** Filter by the object’s `submenu` field. */
+  submenu?: Maybe<StringFilter>;
+  /** Filter by the object’s `enabled` field. */
+  enabled?: Maybe<BooleanFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<DataViewFilter>>;
   /** Checks for any expressions in this list. */
@@ -11858,6 +12116,8 @@ export type DataViewInput = {
   defaultSortColumn?: Maybe<Scalars['String']>;
   defaultFilterString?: Maybe<Scalars['String']>;
   identifier: Scalars['String'];
+  submenu?: Maybe<Scalars['String']>;
+  enabled?: Maybe<Scalars['Boolean']>;
 };
 
 /** Represents an update to a `DataView`. Fields that are set will be updated. */
@@ -11881,6 +12141,8 @@ export type DataViewPatch = {
   defaultSortColumn?: Maybe<Scalars['String']>;
   defaultFilterString?: Maybe<Scalars['String']>;
   identifier?: Maybe<Scalars['String']>;
+  submenu?: Maybe<Scalars['String']>;
+  enabled?: Maybe<Scalars['Boolean']>;
 };
 
 /** A connection to a list of `DataView` values. */
@@ -11946,6 +12208,10 @@ export enum DataViewsOrderBy {
   DefaultFilterStringDesc = 'DEFAULT_FILTER_STRING_DESC',
   IdentifierAsc = 'IDENTIFIER_ASC',
   IdentifierDesc = 'IDENTIFIER_DESC',
+  SubmenuAsc = 'SUBMENU_ASC',
+  SubmenuDesc = 'SUBMENU_DESC',
+  EnabledAsc = 'ENABLED_ASC',
+  EnabledDesc = 'ENABLED_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -12844,6 +13110,50 @@ export type DeleteDataTableDosageFormByNodeIdInput = {
   nodeId: Scalars['ID'];
 };
 
+/** All input for the `deleteDataTableDosageFormGroupByNodeId` mutation. */
+export type DeleteDataTableDosageFormGroupByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataTableDosageFormGroup` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteDataTableDosageFormGroup` mutation. */
+export type DeleteDataTableDosageFormGroupInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `DataTableDosageFormGroup` mutation. */
+export type DeleteDataTableDosageFormGroupPayload = {
+  __typename?: 'DeleteDataTableDosageFormGroupPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableDosageFormGroup` that was deleted by this mutation. */
+  dataTableDosageFormGroup?: Maybe<DataTableDosageFormGroup>;
+  deletedDataTableDosageFormGroupNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableDosageFormGroup`. May be used by Relay 1. */
+  dataTableDosageFormGroupEdge?: Maybe<DataTableDosageFormGroupsEdge>;
+};
+
+
+/** The output of our delete `DataTableDosageFormGroup` mutation. */
+export type DeleteDataTableDosageFormGroupPayloadDataTableDosageFormGroupEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableDosageFormGroupsOrderBy>>;
+};
+
 /** All input for the `deleteDataTableDosageForm` mutation. */
 export type DeleteDataTableDosageFormInput = {
   /**
@@ -12973,6 +13283,50 @@ export type DeleteDataTableListOfSraPayload = {
 /** The output of our delete `DataTableListOfSra` mutation. */
 export type DeleteDataTableListOfSraPayloadDataTableListOfSraEdgeArgs = {
   orderBy?: Maybe<Array<DataTableListOfSrasOrderBy>>;
+};
+
+/** All input for the `deleteDataTableManufacturerByNodeId` mutation. */
+export type DeleteDataTableManufacturerByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataTableManufacturer` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteDataTableManufacturer` mutation. */
+export type DeleteDataTableManufacturerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `DataTableManufacturer` mutation. */
+export type DeleteDataTableManufacturerPayload = {
+  __typename?: 'DeleteDataTableManufacturerPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableManufacturer` that was deleted by this mutation. */
+  dataTableManufacturer?: Maybe<DataTableManufacturer>;
+  deletedDataTableManufacturerNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableManufacturer`. May be used by Relay 1. */
+  dataTableManufacturerEdge?: Maybe<DataTableManufacturersEdge>;
+};
+
+
+/** The output of our delete `DataTableManufacturer` mutation. */
+export type DeleteDataTableManufacturerPayloadDataTableManufacturerEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableManufacturersOrderBy>>;
 };
 
 /** The output of our delete `DataTable` mutation. */
@@ -16209,6 +16563,7 @@ export type FileTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -16716,10 +17071,14 @@ export type Mutation = {
   createDataTableCountry?: Maybe<CreateDataTableCountryPayload>;
   /** Creates a single `DataTableDosageForm`. */
   createDataTableDosageForm?: Maybe<CreateDataTableDosageFormPayload>;
+  /** Creates a single `DataTableDosageFormGroup`. */
+  createDataTableDosageFormGroup?: Maybe<CreateDataTableDosageFormGroupPayload>;
   /** Creates a single `DataTableGenericIngredient`. */
   createDataTableGenericIngredient?: Maybe<CreateDataTableGenericIngredientPayload>;
   /** Creates a single `DataTableListOfSra`. */
   createDataTableListOfSra?: Maybe<CreateDataTableListOfSraPayload>;
+  /** Creates a single `DataTableManufacturer`. */
+  createDataTableManufacturer?: Maybe<CreateDataTableManufacturerPayload>;
   /** Creates a single `DataTablePermitChemical`. */
   createDataTablePermitChemical?: Maybe<CreateDataTablePermitChemicalPayload>;
   /** Creates a single `DataTablePermitChemicalApplicationJoin`. */
@@ -16892,6 +17251,10 @@ export type Mutation = {
   updateDataTableDosageFormByNodeId?: Maybe<UpdateDataTableDosageFormPayload>;
   /** Updates a single `DataTableDosageForm` using a unique key and a patch. */
   updateDataTableDosageForm?: Maybe<UpdateDataTableDosageFormPayload>;
+  /** Updates a single `DataTableDosageFormGroup` using its globally unique id and a patch. */
+  updateDataTableDosageFormGroupByNodeId?: Maybe<UpdateDataTableDosageFormGroupPayload>;
+  /** Updates a single `DataTableDosageFormGroup` using a unique key and a patch. */
+  updateDataTableDosageFormGroup?: Maybe<UpdateDataTableDosageFormGroupPayload>;
   /** Updates a single `DataTableGenericIngredient` using its globally unique id and a patch. */
   updateDataTableGenericIngredientByNodeId?: Maybe<UpdateDataTableGenericIngredientPayload>;
   /** Updates a single `DataTableGenericIngredient` using a unique key and a patch. */
@@ -16900,6 +17263,10 @@ export type Mutation = {
   updateDataTableListOfSraByNodeId?: Maybe<UpdateDataTableListOfSraPayload>;
   /** Updates a single `DataTableListOfSra` using a unique key and a patch. */
   updateDataTableListOfSra?: Maybe<UpdateDataTableListOfSraPayload>;
+  /** Updates a single `DataTableManufacturer` using its globally unique id and a patch. */
+  updateDataTableManufacturerByNodeId?: Maybe<UpdateDataTableManufacturerPayload>;
+  /** Updates a single `DataTableManufacturer` using a unique key and a patch. */
+  updateDataTableManufacturer?: Maybe<UpdateDataTableManufacturerPayload>;
   /** Updates a single `DataTablePermitChemical` using its globally unique id and a patch. */
   updateDataTablePermitChemicalByNodeId?: Maybe<UpdateDataTablePermitChemicalPayload>;
   /** Updates a single `DataTablePermitChemical` using a unique key and a patch. */
@@ -17190,6 +17557,10 @@ export type Mutation = {
   deleteDataTableDosageFormByNodeId?: Maybe<DeleteDataTableDosageFormPayload>;
   /** Deletes a single `DataTableDosageForm` using a unique key. */
   deleteDataTableDosageForm?: Maybe<DeleteDataTableDosageFormPayload>;
+  /** Deletes a single `DataTableDosageFormGroup` using its globally unique id. */
+  deleteDataTableDosageFormGroupByNodeId?: Maybe<DeleteDataTableDosageFormGroupPayload>;
+  /** Deletes a single `DataTableDosageFormGroup` using a unique key. */
+  deleteDataTableDosageFormGroup?: Maybe<DeleteDataTableDosageFormGroupPayload>;
   /** Deletes a single `DataTableGenericIngredient` using its globally unique id. */
   deleteDataTableGenericIngredientByNodeId?: Maybe<DeleteDataTableGenericIngredientPayload>;
   /** Deletes a single `DataTableGenericIngredient` using a unique key. */
@@ -17198,6 +17569,10 @@ export type Mutation = {
   deleteDataTableListOfSraByNodeId?: Maybe<DeleteDataTableListOfSraPayload>;
   /** Deletes a single `DataTableListOfSra` using a unique key. */
   deleteDataTableListOfSra?: Maybe<DeleteDataTableListOfSraPayload>;
+  /** Deletes a single `DataTableManufacturer` using its globally unique id. */
+  deleteDataTableManufacturerByNodeId?: Maybe<DeleteDataTableManufacturerPayload>;
+  /** Deletes a single `DataTableManufacturer` using a unique key. */
+  deleteDataTableManufacturer?: Maybe<DeleteDataTableManufacturerPayload>;
   /** Deletes a single `DataTablePermitChemical` using its globally unique id. */
   deleteDataTablePermitChemicalByNodeId?: Maybe<DeleteDataTablePermitChemicalPayload>;
   /** Deletes a single `DataTablePermitChemical` using a unique key. */
@@ -17525,6 +17900,12 @@ export type MutationCreateDataTableDosageFormArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDataTableDosageFormGroupArgs = {
+  input: CreateDataTableDosageFormGroupInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateDataTableGenericIngredientArgs = {
   input: CreateDataTableGenericIngredientInput;
 };
@@ -17533,6 +17914,12 @@ export type MutationCreateDataTableGenericIngredientArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateDataTableListOfSraArgs = {
   input: CreateDataTableListOfSraInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDataTableManufacturerArgs = {
+  input: CreateDataTableManufacturerInput;
 };
 
 
@@ -18053,6 +18440,18 @@ export type MutationUpdateDataTableDosageFormArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableDosageFormGroupByNodeIdArgs = {
+  input: UpdateDataTableDosageFormGroupByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableDosageFormGroupArgs = {
+  input: UpdateDataTableDosageFormGroupInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateDataTableGenericIngredientByNodeIdArgs = {
   input: UpdateDataTableGenericIngredientByNodeIdInput;
 };
@@ -18073,6 +18472,18 @@ export type MutationUpdateDataTableListOfSraByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateDataTableListOfSraArgs = {
   input: UpdateDataTableListOfSraInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableManufacturerByNodeIdArgs = {
+  input: UpdateDataTableManufacturerByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableManufacturerArgs = {
+  input: UpdateDataTableManufacturerInput;
 };
 
 
@@ -18947,6 +19358,18 @@ export type MutationDeleteDataTableDosageFormArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableDosageFormGroupByNodeIdArgs = {
+  input: DeleteDataTableDosageFormGroupByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableDosageFormGroupArgs = {
+  input: DeleteDataTableDosageFormGroupInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteDataTableGenericIngredientByNodeIdArgs = {
   input: DeleteDataTableGenericIngredientByNodeIdInput;
 };
@@ -18967,6 +19390,18 @@ export type MutationDeleteDataTableListOfSraByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteDataTableListOfSraArgs = {
   input: DeleteDataTableListOfSraInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableManufacturerByNodeIdArgs = {
+  input: DeleteDataTableManufacturerByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableManufacturerArgs = {
+  input: DeleteDataTableManufacturerInput;
 };
 
 
@@ -20152,7 +20587,6 @@ export type Organisation = Node & {
   registrationDocumentation?: Maybe<Scalars['JSON']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
-  companyType?: Maybe<Scalars['String']>;
   contactEmail?: Maybe<Scalars['String']>;
   contactPhone?: Maybe<Scalars['String']>;
   postalAddress?: Maybe<Scalars['String']>;
@@ -20163,6 +20597,10 @@ export type Organisation = Node & {
   license?: Maybe<Scalars['JSON']>;
   businessCertificate?: Maybe<Scalars['JSON']>;
   tinLetter?: Maybe<Scalars['JSON']>;
+  subType?: Maybe<Scalars['String']>;
+  otherDocuments?: Maybe<Scalars['JSON']>;
+  isSponsorCompany?: Maybe<Scalars['Boolean']>;
+  isChemicalImporter?: Maybe<Scalars['Boolean']>;
   /** Reads and enables pagination through a set of `Application`. */
   applicationsByOrgId: ApplicationsConnection;
   /** Reads and enables pagination through a set of `ReviewAssignment`. */
@@ -20533,7 +20971,6 @@ export type OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput
   registrationDocumentation?: Maybe<Scalars['JSON']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
-  companyType?: Maybe<Scalars['String']>;
   contactEmail?: Maybe<Scalars['String']>;
   contactPhone?: Maybe<Scalars['String']>;
   postalAddress?: Maybe<Scalars['String']>;
@@ -20544,6 +20981,10 @@ export type OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput
   license?: Maybe<Scalars['JSON']>;
   businessCertificate?: Maybe<Scalars['JSON']>;
   tinLetter?: Maybe<Scalars['JSON']>;
+  subType?: Maybe<Scalars['String']>;
+  otherDocuments?: Maybe<Scalars['JSON']>;
+  isSponsorCompany?: Maybe<Scalars['Boolean']>;
+  isChemicalImporter?: Maybe<Scalars['Boolean']>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
@@ -20620,8 +21061,6 @@ export type OrganisationCondition = {
   country?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `province` field. */
   province?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `companyType` field. */
-  companyType?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `contactEmail` field. */
   contactEmail?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `contactPhone` field. */
@@ -20642,6 +21081,14 @@ export type OrganisationCondition = {
   businessCertificate?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `tinLetter` field. */
   tinLetter?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `subType` field. */
+  subType?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `otherDocuments` field. */
+  otherDocuments?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `isSponsorCompany` field. */
+  isSponsorCompany?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isChemicalImporter` field. */
+  isChemicalImporter?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against `Organisation` object types. All fields are combined with a logical ‘and.’ */
@@ -20664,8 +21111,6 @@ export type OrganisationFilter = {
   country?: Maybe<StringFilter>;
   /** Filter by the object’s `province` field. */
   province?: Maybe<StringFilter>;
-  /** Filter by the object’s `companyType` field. */
-  companyType?: Maybe<StringFilter>;
   /** Filter by the object’s `contactEmail` field. */
   contactEmail?: Maybe<StringFilter>;
   /** Filter by the object’s `contactPhone` field. */
@@ -20686,6 +21131,14 @@ export type OrganisationFilter = {
   businessCertificate?: Maybe<JsonFilter>;
   /** Filter by the object’s `tinLetter` field. */
   tinLetter?: Maybe<JsonFilter>;
+  /** Filter by the object’s `subType` field. */
+  subType?: Maybe<StringFilter>;
+  /** Filter by the object’s `otherDocuments` field. */
+  otherDocuments?: Maybe<JsonFilter>;
+  /** Filter by the object’s `isSponsorCompany` field. */
+  isSponsorCompany?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isChemicalImporter` field. */
+  isChemicalImporter?: Maybe<BooleanFilter>;
   /** Filter by the object’s `applicationsByOrgId` relation. */
   applicationsByOrgId?: Maybe<OrganisationToManyApplicationFilter>;
   /** Some related `applicationsByOrgId` exist. */
@@ -20733,7 +21186,6 @@ export type OrganisationInput = {
   registrationDocumentation?: Maybe<Scalars['JSON']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
-  companyType?: Maybe<Scalars['String']>;
   contactEmail?: Maybe<Scalars['String']>;
   contactPhone?: Maybe<Scalars['String']>;
   postalAddress?: Maybe<Scalars['String']>;
@@ -20744,6 +21196,10 @@ export type OrganisationInput = {
   license?: Maybe<Scalars['JSON']>;
   businessCertificate?: Maybe<Scalars['JSON']>;
   tinLetter?: Maybe<Scalars['JSON']>;
+  subType?: Maybe<Scalars['String']>;
+  otherDocuments?: Maybe<Scalars['JSON']>;
+  isSponsorCompany?: Maybe<Scalars['Boolean']>;
+  isChemicalImporter?: Maybe<Scalars['Boolean']>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
@@ -21009,7 +21465,6 @@ export type OrganisationPatch = {
   registrationDocumentation?: Maybe<Scalars['JSON']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
-  companyType?: Maybe<Scalars['String']>;
   contactEmail?: Maybe<Scalars['String']>;
   contactPhone?: Maybe<Scalars['String']>;
   postalAddress?: Maybe<Scalars['String']>;
@@ -21020,6 +21475,10 @@ export type OrganisationPatch = {
   license?: Maybe<Scalars['JSON']>;
   businessCertificate?: Maybe<Scalars['JSON']>;
   tinLetter?: Maybe<Scalars['JSON']>;
+  subType?: Maybe<Scalars['String']>;
+  otherDocuments?: Maybe<Scalars['JSON']>;
+  isSponsorCompany?: Maybe<Scalars['Boolean']>;
+  isChemicalImporter?: Maybe<Scalars['Boolean']>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
@@ -21072,8 +21531,6 @@ export enum OrganisationsOrderBy {
   CountryDesc = 'COUNTRY_DESC',
   ProvinceAsc = 'PROVINCE_ASC',
   ProvinceDesc = 'PROVINCE_DESC',
-  CompanyTypeAsc = 'COMPANY_TYPE_ASC',
-  CompanyTypeDesc = 'COMPANY_TYPE_DESC',
   ContactEmailAsc = 'CONTACT_EMAIL_ASC',
   ContactEmailDesc = 'CONTACT_EMAIL_DESC',
   ContactPhoneAsc = 'CONTACT_PHONE_ASC',
@@ -21094,6 +21551,14 @@ export enum OrganisationsOrderBy {
   BusinessCertificateDesc = 'BUSINESS_CERTIFICATE_DESC',
   TinLetterAsc = 'TIN_LETTER_ASC',
   TinLetterDesc = 'TIN_LETTER_DESC',
+  SubTypeAsc = 'SUB_TYPE_ASC',
+  SubTypeDesc = 'SUB_TYPE_DESC',
+  OtherDocumentsAsc = 'OTHER_DOCUMENTS_ASC',
+  OtherDocumentsDesc = 'OTHER_DOCUMENTS_DESC',
+  IsSponsorCompanyAsc = 'IS_SPONSOR_COMPANY_ASC',
+  IsSponsorCompanyDesc = 'IS_SPONSOR_COMPANY_DESC',
+  IsChemicalImporterAsc = 'IS_CHEMICAL_IMPORTER_ASC',
+  IsChemicalImporterDesc = 'IS_CHEMICAL_IMPORTER_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -21375,7 +21840,6 @@ export type PermissionJoinOrganisationIdFkeyOrganisationCreateInput = {
   registrationDocumentation?: Maybe<Scalars['JSON']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
-  companyType?: Maybe<Scalars['String']>;
   contactEmail?: Maybe<Scalars['String']>;
   contactPhone?: Maybe<Scalars['String']>;
   postalAddress?: Maybe<Scalars['String']>;
@@ -21386,6 +21850,10 @@ export type PermissionJoinOrganisationIdFkeyOrganisationCreateInput = {
   license?: Maybe<Scalars['JSON']>;
   businessCertificate?: Maybe<Scalars['JSON']>;
   tinLetter?: Maybe<Scalars['JSON']>;
+  subType?: Maybe<Scalars['String']>;
+  otherDocuments?: Maybe<Scalars['JSON']>;
+  isSponsorCompany?: Maybe<Scalars['Boolean']>;
+  isChemicalImporter?: Maybe<Scalars['Boolean']>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
@@ -22583,10 +23051,14 @@ export type Query = Node & {
   dataTableCountries?: Maybe<DataTableCountriesConnection>;
   /** Reads and enables pagination through a set of `DataTableDosageForm`. */
   dataTableDosageForms?: Maybe<DataTableDosageFormsConnection>;
+  /** Reads and enables pagination through a set of `DataTableDosageFormGroup`. */
+  dataTableDosageFormGroups?: Maybe<DataTableDosageFormGroupsConnection>;
   /** Reads and enables pagination through a set of `DataTableGenericIngredient`. */
   dataTableGenericIngredients?: Maybe<DataTableGenericIngredientsConnection>;
   /** Reads and enables pagination through a set of `DataTableListOfSra`. */
   dataTableListOfSras?: Maybe<DataTableListOfSrasConnection>;
+  /** Reads and enables pagination through a set of `DataTableManufacturer`. */
+  dataTableManufacturers?: Maybe<DataTableManufacturersConnection>;
   /** Reads and enables pagination through a set of `DataTablePermitChemical`. */
   dataTablePermitChemicals?: Maybe<DataTablePermitChemicalsConnection>;
   /** Reads and enables pagination through a set of `DataTablePermitChemicalApplicationJoin`. */
@@ -22710,8 +23182,10 @@ export type Query = Node & {
   dataTableContainer?: Maybe<DataTableContainer>;
   dataTableCountry?: Maybe<DataTableCountry>;
   dataTableDosageForm?: Maybe<DataTableDosageForm>;
+  dataTableDosageFormGroup?: Maybe<DataTableDosageFormGroup>;
   dataTableGenericIngredient?: Maybe<DataTableGenericIngredient>;
   dataTableListOfSra?: Maybe<DataTableListOfSra>;
+  dataTableManufacturer?: Maybe<DataTableManufacturer>;
   dataTablePermitChemical?: Maybe<DataTablePermitChemical>;
   dataTablePermitChemicalApplicationJoin?: Maybe<DataTablePermitChemicalApplicationJoin>;
   dataTablePreRegisteredProductsProvisional?: Maybe<DataTablePreRegisteredProductsProvisional>;
@@ -22839,10 +23313,14 @@ export type Query = Node & {
   dataTableCountryByNodeId?: Maybe<DataTableCountry>;
   /** Reads a single `DataTableDosageForm` using its globally unique `ID`. */
   dataTableDosageFormByNodeId?: Maybe<DataTableDosageForm>;
+  /** Reads a single `DataTableDosageFormGroup` using its globally unique `ID`. */
+  dataTableDosageFormGroupByNodeId?: Maybe<DataTableDosageFormGroup>;
   /** Reads a single `DataTableGenericIngredient` using its globally unique `ID`. */
   dataTableGenericIngredientByNodeId?: Maybe<DataTableGenericIngredient>;
   /** Reads a single `DataTableListOfSra` using its globally unique `ID`. */
   dataTableListOfSraByNodeId?: Maybe<DataTableListOfSra>;
+  /** Reads a single `DataTableManufacturer` using its globally unique `ID`. */
+  dataTableManufacturerByNodeId?: Maybe<DataTableManufacturer>;
   /** Reads a single `DataTablePermitChemical` using its globally unique `ID`. */
   dataTablePermitChemicalByNodeId?: Maybe<DataTablePermitChemical>;
   /** Reads a single `DataTablePermitChemicalApplicationJoin` using its globally unique `ID`. */
@@ -23242,6 +23720,19 @@ export type QueryDataTableDosageFormsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryDataTableDosageFormGroupsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<DataTableDosageFormGroupsOrderBy>>;
+  condition?: Maybe<DataTableDosageFormGroupCondition>;
+  filter?: Maybe<DataTableDosageFormGroupFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryDataTableGenericIngredientsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -23264,6 +23755,19 @@ export type QueryDataTableListOfSrasArgs = {
   orderBy?: Maybe<Array<DataTableListOfSrasOrderBy>>;
   condition?: Maybe<DataTableListOfSraCondition>;
   filter?: Maybe<DataTableListOfSraFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableManufacturersArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<DataTableManufacturersOrderBy>>;
+  condition?: Maybe<DataTableManufacturerCondition>;
+  filter?: Maybe<DataTableManufacturerFilter>;
 };
 
 
@@ -24056,6 +24560,12 @@ export type QueryDataTableDosageFormArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryDataTableDosageFormGroupArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryDataTableGenericIngredientArgs = {
   id: Scalars['Int'];
 };
@@ -24063,6 +24573,12 @@ export type QueryDataTableGenericIngredientArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryDataTableListOfSraArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableManufacturerArgs = {
   id: Scalars['Int'];
 };
 
@@ -24801,6 +25317,12 @@ export type QueryDataTableDosageFormByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryDataTableDosageFormGroupByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryDataTableGenericIngredientByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
@@ -24808,6 +25330,12 @@ export type QueryDataTableGenericIngredientByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryDataTableListOfSraByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableManufacturerByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -25920,7 +26448,6 @@ export type ReviewAssignmentAssignerJoinOrganisationIdFkeyOrganisationCreateInpu
   registrationDocumentation?: Maybe<Scalars['JSON']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
-  companyType?: Maybe<Scalars['String']>;
   contactEmail?: Maybe<Scalars['String']>;
   contactPhone?: Maybe<Scalars['String']>;
   postalAddress?: Maybe<Scalars['String']>;
@@ -25931,6 +26458,10 @@ export type ReviewAssignmentAssignerJoinOrganisationIdFkeyOrganisationCreateInpu
   license?: Maybe<Scalars['JSON']>;
   businessCertificate?: Maybe<Scalars['JSON']>;
   tinLetter?: Maybe<Scalars['JSON']>;
+  subType?: Maybe<Scalars['String']>;
+  otherDocuments?: Maybe<Scalars['JSON']>;
+  isSponsorCompany?: Maybe<Scalars['Boolean']>;
+  isChemicalImporter?: Maybe<Scalars['Boolean']>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
@@ -26540,7 +27071,6 @@ export type ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput = {
   registrationDocumentation?: Maybe<Scalars['JSON']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
-  companyType?: Maybe<Scalars['String']>;
   contactEmail?: Maybe<Scalars['String']>;
   contactPhone?: Maybe<Scalars['String']>;
   postalAddress?: Maybe<Scalars['String']>;
@@ -26551,6 +27081,10 @@ export type ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput = {
   license?: Maybe<Scalars['JSON']>;
   businessCertificate?: Maybe<Scalars['JSON']>;
   tinLetter?: Maybe<Scalars['JSON']>;
+  subType?: Maybe<Scalars['String']>;
+  otherDocuments?: Maybe<Scalars['JSON']>;
+  isSponsorCompany?: Maybe<Scalars['Boolean']>;
+  isChemicalImporter?: Maybe<Scalars['Boolean']>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
@@ -27006,6 +27540,7 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -29498,6 +30033,7 @@ export type Template = Node & {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Reads a single `TemplateCategory` that is related to this `Template`. */
   templateCategory?: Maybe<TemplateCategory>;
   /** Reads and enables pagination through a set of `Application`. */
@@ -29906,6 +30442,7 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -29954,6 +30491,8 @@ export enum TemplateCategoriesOrderBy {
   IconDesc = 'ICON_DESC',
   UiLocationAsc = 'UI_LOCATION_ASC',
   UiLocationDesc = 'UI_LOCATION_DESC',
+  IsSubmenuAsc = 'IS_SUBMENU_ASC',
+  IsSubmenuDesc = 'IS_SUBMENU_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -29967,6 +30506,7 @@ export type TemplateCategory = Node & {
   title?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
   uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
+  isSubmenu?: Maybe<Scalars['Boolean']>;
   /** Reads and enables pagination through a set of `Template`. */
   templates: TemplatesConnection;
 };
@@ -29998,6 +30538,8 @@ export type TemplateCategoryCondition = {
   icon?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `uiLocation` field. */
   uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
+  /** Checks for equality with the object’s `isSubmenu` field. */
+  isSubmenu?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against `TemplateCategory` object types. All fields are combined with a logical ‘and.’ */
@@ -30012,6 +30554,8 @@ export type TemplateCategoryFilter = {
   icon?: Maybe<StringFilter>;
   /** Filter by the object’s `uiLocation` field. */
   uiLocation?: Maybe<UiLocationListFilter>;
+  /** Filter by the object’s `isSubmenu` field. */
+  isSubmenu?: Maybe<BooleanFilter>;
   /** Filter by the object’s `templates` relation. */
   templates?: Maybe<TemplateCategoryToManyTemplateFilter>;
   /** Some related `templates` exist. */
@@ -30031,6 +30575,7 @@ export type TemplateCategoryInput = {
   title?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
   uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
+  isSubmenu?: Maybe<Scalars['Boolean']>;
   templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
 };
 
@@ -30075,6 +30620,7 @@ export type TemplateCategoryPatch = {
   title?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
   uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
+  isSubmenu?: Maybe<Scalars['Boolean']>;
   templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
 };
 
@@ -30141,6 +30687,8 @@ export type TemplateCondition = {
   version?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `serialPattern` field. */
   serialPattern?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `dashboardRestrictions` field. */
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type TemplateElement = Node & {
@@ -30688,6 +31236,8 @@ export type TemplateFilter = {
   version?: Maybe<IntFilter>;
   /** Filter by the object’s `serialPattern` field. */
   serialPattern?: Maybe<StringFilter>;
+  /** Filter by the object’s `dashboardRestrictions` field. */
+  dashboardRestrictions?: Maybe<StringListFilter>;
   /** Filter by the object’s `applications` relation. */
   applications?: Maybe<TemplateToManyApplicationFilter>;
   /** Some related `applications` exist. */
@@ -31007,6 +31557,7 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -31044,6 +31595,7 @@ export type TemplateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -31250,6 +31802,7 @@ export type TemplatePatch = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -31584,6 +32137,7 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -31883,6 +32437,7 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -31978,6 +32533,8 @@ export enum TemplatesOrderBy {
   VersionDesc = 'VERSION_DESC',
   SerialPatternAsc = 'SERIAL_PATTERN_ASC',
   SerialPatternDesc = 'SERIAL_PATTERN_DESC',
+  DashboardRestrictionsAsc = 'DASHBOARD_RESTRICTIONS_ASC',
+  DashboardRestrictionsDesc = 'DASHBOARD_RESTRICTIONS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -32543,6 +33100,7 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -32692,6 +33250,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCategoryCreateInput = {
   title?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
   uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
+  isSubmenu?: Maybe<Scalars['Boolean']>;
   templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
 };
 
@@ -32710,6 +33269,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -33713,6 +34273,7 @@ export type TriggerScheduleTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -35692,6 +36253,53 @@ export type UpdateDataTableDosageFormByNodeIdInput = {
   patch: DataTableDosageFormPatch;
 };
 
+/** All input for the `updateDataTableDosageFormGroupByNodeId` mutation. */
+export type UpdateDataTableDosageFormGroupByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataTableDosageFormGroup` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `DataTableDosageFormGroup` being updated. */
+  patch: DataTableDosageFormGroupPatch;
+};
+
+/** All input for the `updateDataTableDosageFormGroup` mutation. */
+export type UpdateDataTableDosageFormGroupInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `DataTableDosageFormGroup` being updated. */
+  patch: DataTableDosageFormGroupPatch;
+  id: Scalars['Int'];
+};
+
+/** The output of our update `DataTableDosageFormGroup` mutation. */
+export type UpdateDataTableDosageFormGroupPayload = {
+  __typename?: 'UpdateDataTableDosageFormGroupPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableDosageFormGroup` that was updated by this mutation. */
+  dataTableDosageFormGroup?: Maybe<DataTableDosageFormGroup>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableDosageFormGroup`. May be used by Relay 1. */
+  dataTableDosageFormGroupEdge?: Maybe<DataTableDosageFormGroupsEdge>;
+};
+
+
+/** The output of our update `DataTableDosageFormGroup` mutation. */
+export type UpdateDataTableDosageFormGroupPayloadDataTableDosageFormGroupEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableDosageFormGroupsOrderBy>>;
+};
+
 /** All input for the `updateDataTableDosageForm` mutation. */
 export type UpdateDataTableDosageFormInput = {
   /**
@@ -35830,6 +36438,53 @@ export type UpdateDataTableListOfSraPayload = {
 /** The output of our update `DataTableListOfSra` mutation. */
 export type UpdateDataTableListOfSraPayloadDataTableListOfSraEdgeArgs = {
   orderBy?: Maybe<Array<DataTableListOfSrasOrderBy>>;
+};
+
+/** All input for the `updateDataTableManufacturerByNodeId` mutation. */
+export type UpdateDataTableManufacturerByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataTableManufacturer` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `DataTableManufacturer` being updated. */
+  patch: DataTableManufacturerPatch;
+};
+
+/** All input for the `updateDataTableManufacturer` mutation. */
+export type UpdateDataTableManufacturerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `DataTableManufacturer` being updated. */
+  patch: DataTableManufacturerPatch;
+  id: Scalars['Int'];
+};
+
+/** The output of our update `DataTableManufacturer` mutation. */
+export type UpdateDataTableManufacturerPayload = {
+  __typename?: 'UpdateDataTableManufacturerPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableManufacturer` that was updated by this mutation. */
+  dataTableManufacturer?: Maybe<DataTableManufacturer>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableManufacturer`. May be used by Relay 1. */
+  dataTableManufacturerEdge?: Maybe<DataTableManufacturersEdge>;
+};
+
+
+/** The output of our update `DataTableManufacturer` mutation. */
+export type UpdateDataTableManufacturerPayloadDataTableManufacturerEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableManufacturersOrderBy>>;
 };
 
 /** The output of our update `DataTable` mutation. */
@@ -37182,7 +37837,6 @@ export type UpdateOrganisationOnApplicationForApplicationOrgIdFkeyPatch = {
   registrationDocumentation?: Maybe<Scalars['JSON']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
-  companyType?: Maybe<Scalars['String']>;
   contactEmail?: Maybe<Scalars['String']>;
   contactPhone?: Maybe<Scalars['String']>;
   postalAddress?: Maybe<Scalars['String']>;
@@ -37193,6 +37847,10 @@ export type UpdateOrganisationOnApplicationForApplicationOrgIdFkeyPatch = {
   license?: Maybe<Scalars['JSON']>;
   businessCertificate?: Maybe<Scalars['JSON']>;
   tinLetter?: Maybe<Scalars['JSON']>;
+  subType?: Maybe<Scalars['String']>;
+  otherDocuments?: Maybe<Scalars['JSON']>;
+  isSponsorCompany?: Maybe<Scalars['Boolean']>;
+  isChemicalImporter?: Maybe<Scalars['Boolean']>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
@@ -37213,7 +37871,6 @@ export type UpdateOrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyPatch 
   registrationDocumentation?: Maybe<Scalars['JSON']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
-  companyType?: Maybe<Scalars['String']>;
   contactEmail?: Maybe<Scalars['String']>;
   contactPhone?: Maybe<Scalars['String']>;
   postalAddress?: Maybe<Scalars['String']>;
@@ -37224,6 +37881,10 @@ export type UpdateOrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyPatch 
   license?: Maybe<Scalars['JSON']>;
   businessCertificate?: Maybe<Scalars['JSON']>;
   tinLetter?: Maybe<Scalars['JSON']>;
+  subType?: Maybe<Scalars['String']>;
+  otherDocuments?: Maybe<Scalars['JSON']>;
+  isSponsorCompany?: Maybe<Scalars['Boolean']>;
+  isChemicalImporter?: Maybe<Scalars['Boolean']>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
@@ -37244,7 +37905,6 @@ export type UpdateOrganisationOnOrganisationApplicationJoinForOrganisationApplic
   registrationDocumentation?: Maybe<Scalars['JSON']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
-  companyType?: Maybe<Scalars['String']>;
   contactEmail?: Maybe<Scalars['String']>;
   contactPhone?: Maybe<Scalars['String']>;
   postalAddress?: Maybe<Scalars['String']>;
@@ -37255,6 +37915,10 @@ export type UpdateOrganisationOnOrganisationApplicationJoinForOrganisationApplic
   license?: Maybe<Scalars['JSON']>;
   businessCertificate?: Maybe<Scalars['JSON']>;
   tinLetter?: Maybe<Scalars['JSON']>;
+  subType?: Maybe<Scalars['String']>;
+  otherDocuments?: Maybe<Scalars['JSON']>;
+  isSponsorCompany?: Maybe<Scalars['Boolean']>;
+  isChemicalImporter?: Maybe<Scalars['Boolean']>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
@@ -37275,7 +37939,6 @@ export type UpdateOrganisationOnPermissionJoinForPermissionJoinOrganisationIdFke
   registrationDocumentation?: Maybe<Scalars['JSON']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
-  companyType?: Maybe<Scalars['String']>;
   contactEmail?: Maybe<Scalars['String']>;
   contactPhone?: Maybe<Scalars['String']>;
   postalAddress?: Maybe<Scalars['String']>;
@@ -37286,6 +37949,10 @@ export type UpdateOrganisationOnPermissionJoinForPermissionJoinOrganisationIdFke
   license?: Maybe<Scalars['JSON']>;
   businessCertificate?: Maybe<Scalars['JSON']>;
   tinLetter?: Maybe<Scalars['JSON']>;
+  subType?: Maybe<Scalars['String']>;
+  otherDocuments?: Maybe<Scalars['JSON']>;
+  isSponsorCompany?: Maybe<Scalars['Boolean']>;
+  isChemicalImporter?: Maybe<Scalars['Boolean']>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
@@ -37306,7 +37973,6 @@ export type UpdateOrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentA
   registrationDocumentation?: Maybe<Scalars['JSON']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
-  companyType?: Maybe<Scalars['String']>;
   contactEmail?: Maybe<Scalars['String']>;
   contactPhone?: Maybe<Scalars['String']>;
   postalAddress?: Maybe<Scalars['String']>;
@@ -37317,6 +37983,10 @@ export type UpdateOrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentA
   license?: Maybe<Scalars['JSON']>;
   businessCertificate?: Maybe<Scalars['JSON']>;
   tinLetter?: Maybe<Scalars['JSON']>;
+  subType?: Maybe<Scalars['String']>;
+  otherDocuments?: Maybe<Scalars['JSON']>;
+  isSponsorCompany?: Maybe<Scalars['Boolean']>;
+  isChemicalImporter?: Maybe<Scalars['Boolean']>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
@@ -37337,7 +38007,6 @@ export type UpdateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationI
   registrationDocumentation?: Maybe<Scalars['JSON']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
-  companyType?: Maybe<Scalars['String']>;
   contactEmail?: Maybe<Scalars['String']>;
   contactPhone?: Maybe<Scalars['String']>;
   postalAddress?: Maybe<Scalars['String']>;
@@ -37348,6 +38017,10 @@ export type UpdateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationI
   license?: Maybe<Scalars['JSON']>;
   businessCertificate?: Maybe<Scalars['JSON']>;
   tinLetter?: Maybe<Scalars['JSON']>;
+  subType?: Maybe<Scalars['String']>;
+  otherDocuments?: Maybe<Scalars['JSON']>;
+  isSponsorCompany?: Maybe<Scalars['Boolean']>;
+  isChemicalImporter?: Maybe<Scalars['Boolean']>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
@@ -37368,7 +38041,6 @@ export type UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationI
   registrationDocumentation?: Maybe<Scalars['JSON']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
-  companyType?: Maybe<Scalars['String']>;
   contactEmail?: Maybe<Scalars['String']>;
   contactPhone?: Maybe<Scalars['String']>;
   postalAddress?: Maybe<Scalars['String']>;
@@ -37379,6 +38051,10 @@ export type UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationI
   license?: Maybe<Scalars['JSON']>;
   businessCertificate?: Maybe<Scalars['JSON']>;
   tinLetter?: Maybe<Scalars['JSON']>;
+  subType?: Maybe<Scalars['String']>;
+  otherDocuments?: Maybe<Scalars['JSON']>;
+  isSponsorCompany?: Maybe<Scalars['Boolean']>;
+  isChemicalImporter?: Maybe<Scalars['Boolean']>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
@@ -38778,6 +39454,7 @@ export type UpdateTemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyPat
   title?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
   uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
+  isSubmenu?: Maybe<Scalars['Boolean']>;
   templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
 };
 
@@ -39035,6 +39712,7 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -39064,6 +39742,7 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -39093,6 +39772,7 @@ export type UpdateTemplateOnFileForFileTemplateIdFkeyPatch = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -39122,6 +39802,7 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -39151,6 +39832,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -39180,6 +39862,7 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -39208,6 +39891,7 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -39237,6 +39921,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -39266,6 +39951,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -39295,6 +39981,7 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -39324,6 +40011,7 @@ export type UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -41513,7 +42201,6 @@ export type UserOrganisationOrganisationIdFkeyOrganisationCreateInput = {
   registrationDocumentation?: Maybe<Scalars['JSON']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
-  companyType?: Maybe<Scalars['String']>;
   contactEmail?: Maybe<Scalars['String']>;
   contactPhone?: Maybe<Scalars['String']>;
   postalAddress?: Maybe<Scalars['String']>;
@@ -41524,6 +42211,10 @@ export type UserOrganisationOrganisationIdFkeyOrganisationCreateInput = {
   license?: Maybe<Scalars['JSON']>;
   businessCertificate?: Maybe<Scalars['JSON']>;
   tinLetter?: Maybe<Scalars['JSON']>;
+  subType?: Maybe<Scalars['String']>;
+  otherDocuments?: Maybe<Scalars['JSON']>;
+  isSponsorCompany?: Maybe<Scalars['Boolean']>;
+  isChemicalImporter?: Maybe<Scalars['Boolean']>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
@@ -42513,7 +43204,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Application'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['User'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['TemplateElement'] | ResolversTypes['TemplateSection'] | ResolversTypes['File'] | ResolversTypes['ApplicationNote'] | ResolversTypes['Organisation'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['OrganisationApplicationJoin'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['UserOrganisation'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['UserApplicationJoin'] | ResolversTypes['TemplateStage'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['TemplateAction'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['ActivityLog'] | ResolversTypes['DataTablePermitChemicalApplicationJoin'] | ResolversTypes['DataTablePermitChemical'] | ResolversTypes['DataTableProductApplicationJoin'] | ResolversTypes['DataTableProvisionalProductApplicationJoin'] | ResolversTypes['DataTableProvisionalProduct'] | ResolversTypes['Verification'] | ResolversTypes['Counter'] | ResolversTypes['DataTable'] | ResolversTypes['DataTableActiveIngredient'] | ResolversTypes['DataTableAdministrationRoute'] | ResolversTypes['DataTableAnnex'] | ResolversTypes['DataTableAnnex2'] | ResolversTypes['DataTableAtcCode'] | ResolversTypes['DataTableContainer'] | ResolversTypes['DataTableCountry'] | ResolversTypes['DataTableDosageForm'] | ResolversTypes['DataTableGenericIngredient'] | ResolversTypes['DataTableListOfSra'] | ResolversTypes['DataTablePreRegisteredProductsProvisional'] | ResolversTypes['DataTableProcessingStep'] | ResolversTypes['DataTableProduct'] | ResolversTypes['DataTableScheduledChemical'] | ResolversTypes['DataTableStorageCondition'] | ResolversTypes['DataTableUnitsOfProportion'] | ResolversTypes['DataView'] | ResolversTypes['DataViewColumnDefinition'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['GrafanaDashboardImage'] | ResolversTypes['SystemInfo'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Application'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['User'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['TemplateElement'] | ResolversTypes['TemplateSection'] | ResolversTypes['File'] | ResolversTypes['ApplicationNote'] | ResolversTypes['Organisation'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['OrganisationApplicationJoin'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['UserOrganisation'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['UserApplicationJoin'] | ResolversTypes['TemplateStage'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['TemplateAction'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['ActivityLog'] | ResolversTypes['DataTablePermitChemicalApplicationJoin'] | ResolversTypes['DataTablePermitChemical'] | ResolversTypes['DataTableProductApplicationJoin'] | ResolversTypes['DataTableProvisionalProductApplicationJoin'] | ResolversTypes['DataTableProvisionalProduct'] | ResolversTypes['Verification'] | ResolversTypes['Counter'] | ResolversTypes['DataTable'] | ResolversTypes['DataTableActiveIngredient'] | ResolversTypes['DataTableAdministrationRoute'] | ResolversTypes['DataTableAnnex'] | ResolversTypes['DataTableAnnex2'] | ResolversTypes['DataTableAtcCode'] | ResolversTypes['DataTableContainer'] | ResolversTypes['DataTableCountry'] | ResolversTypes['DataTableDosageForm'] | ResolversTypes['DataTableDosageFormGroup'] | ResolversTypes['DataTableGenericIngredient'] | ResolversTypes['DataTableListOfSra'] | ResolversTypes['DataTableManufacturer'] | ResolversTypes['DataTablePreRegisteredProductsProvisional'] | ResolversTypes['DataTableProcessingStep'] | ResolversTypes['DataTableProduct'] | ResolversTypes['DataTableScheduledChemical'] | ResolversTypes['DataTableStorageCondition'] | ResolversTypes['DataTableUnitsOfProportion'] | ResolversTypes['DataView'] | ResolversTypes['DataViewColumnDefinition'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['GrafanaDashboardImage'] | ResolversTypes['SystemInfo'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -42960,6 +43651,12 @@ export type ResolversTypes = {
   DataTableDosageFormsConnection: ResolverTypeWrapper<DataTableDosageFormsConnection>;
   DataTableDosageForm: ResolverTypeWrapper<DataTableDosageForm>;
   DataTableDosageFormsEdge: ResolverTypeWrapper<DataTableDosageFormsEdge>;
+  DataTableDosageFormGroupsOrderBy: DataTableDosageFormGroupsOrderBy;
+  DataTableDosageFormGroupCondition: DataTableDosageFormGroupCondition;
+  DataTableDosageFormGroupFilter: DataTableDosageFormGroupFilter;
+  DataTableDosageFormGroupsConnection: ResolverTypeWrapper<DataTableDosageFormGroupsConnection>;
+  DataTableDosageFormGroup: ResolverTypeWrapper<DataTableDosageFormGroup>;
+  DataTableDosageFormGroupsEdge: ResolverTypeWrapper<DataTableDosageFormGroupsEdge>;
   DataTableGenericIngredientsOrderBy: DataTableGenericIngredientsOrderBy;
   DataTableGenericIngredientCondition: DataTableGenericIngredientCondition;
   DataTableGenericIngredientFilter: DataTableGenericIngredientFilter;
@@ -42972,6 +43669,12 @@ export type ResolversTypes = {
   DataTableListOfSrasConnection: ResolverTypeWrapper<DataTableListOfSrasConnection>;
   DataTableListOfSra: ResolverTypeWrapper<DataTableListOfSra>;
   DataTableListOfSrasEdge: ResolverTypeWrapper<DataTableListOfSrasEdge>;
+  DataTableManufacturersOrderBy: DataTableManufacturersOrderBy;
+  DataTableManufacturerCondition: DataTableManufacturerCondition;
+  DataTableManufacturerFilter: DataTableManufacturerFilter;
+  DataTableManufacturersConnection: ResolverTypeWrapper<DataTableManufacturersConnection>;
+  DataTableManufacturer: ResolverTypeWrapper<DataTableManufacturer>;
+  DataTableManufacturersEdge: ResolverTypeWrapper<DataTableManufacturersEdge>;
   DataTablePermitChemicalsOrderBy: DataTablePermitChemicalsOrderBy;
   DataTablePermitChemicalCondition: DataTablePermitChemicalCondition;
   DataTablePermitChemicalsConnection: ResolverTypeWrapper<DataTablePermitChemicalsConnection>;
@@ -44229,12 +44932,18 @@ export type ResolversTypes = {
   CreateDataTableDosageFormInput: CreateDataTableDosageFormInput;
   DataTableDosageFormInput: DataTableDosageFormInput;
   CreateDataTableDosageFormPayload: ResolverTypeWrapper<CreateDataTableDosageFormPayload>;
+  CreateDataTableDosageFormGroupInput: CreateDataTableDosageFormGroupInput;
+  DataTableDosageFormGroupInput: DataTableDosageFormGroupInput;
+  CreateDataTableDosageFormGroupPayload: ResolverTypeWrapper<CreateDataTableDosageFormGroupPayload>;
   CreateDataTableGenericIngredientInput: CreateDataTableGenericIngredientInput;
   DataTableGenericIngredientInput: DataTableGenericIngredientInput;
   CreateDataTableGenericIngredientPayload: ResolverTypeWrapper<CreateDataTableGenericIngredientPayload>;
   CreateDataTableListOfSraInput: CreateDataTableListOfSraInput;
   DataTableListOfSraInput: DataTableListOfSraInput;
   CreateDataTableListOfSraPayload: ResolverTypeWrapper<CreateDataTableListOfSraPayload>;
+  CreateDataTableManufacturerInput: CreateDataTableManufacturerInput;
+  DataTableManufacturerInput: DataTableManufacturerInput;
+  CreateDataTableManufacturerPayload: ResolverTypeWrapper<CreateDataTableManufacturerPayload>;
   CreateDataTablePermitChemicalInput: CreateDataTablePermitChemicalInput;
   DataTablePermitChemicalInput: DataTablePermitChemicalInput;
   CreateDataTablePermitChemicalPayload: ResolverTypeWrapper<CreateDataTablePermitChemicalPayload>;
@@ -44440,6 +45149,10 @@ export type ResolversTypes = {
   DataTableDosageFormPatch: DataTableDosageFormPatch;
   UpdateDataTableDosageFormPayload: ResolverTypeWrapper<UpdateDataTableDosageFormPayload>;
   UpdateDataTableDosageFormInput: UpdateDataTableDosageFormInput;
+  UpdateDataTableDosageFormGroupByNodeIdInput: UpdateDataTableDosageFormGroupByNodeIdInput;
+  DataTableDosageFormGroupPatch: DataTableDosageFormGroupPatch;
+  UpdateDataTableDosageFormGroupPayload: ResolverTypeWrapper<UpdateDataTableDosageFormGroupPayload>;
+  UpdateDataTableDosageFormGroupInput: UpdateDataTableDosageFormGroupInput;
   UpdateDataTableGenericIngredientByNodeIdInput: UpdateDataTableGenericIngredientByNodeIdInput;
   DataTableGenericIngredientPatch: DataTableGenericIngredientPatch;
   UpdateDataTableGenericIngredientPayload: ResolverTypeWrapper<UpdateDataTableGenericIngredientPayload>;
@@ -44448,6 +45161,10 @@ export type ResolversTypes = {
   DataTableListOfSraPatch: DataTableListOfSraPatch;
   UpdateDataTableListOfSraPayload: ResolverTypeWrapper<UpdateDataTableListOfSraPayload>;
   UpdateDataTableListOfSraInput: UpdateDataTableListOfSraInput;
+  UpdateDataTableManufacturerByNodeIdInput: UpdateDataTableManufacturerByNodeIdInput;
+  DataTableManufacturerPatch: DataTableManufacturerPatch;
+  UpdateDataTableManufacturerPayload: ResolverTypeWrapper<UpdateDataTableManufacturerPayload>;
+  UpdateDataTableManufacturerInput: UpdateDataTableManufacturerInput;
   UpdateDataTablePermitChemicalByNodeIdInput: UpdateDataTablePermitChemicalByNodeIdInput;
   UpdateDataTablePermitChemicalPayload: ResolverTypeWrapper<UpdateDataTablePermitChemicalPayload>;
   UpdateDataTablePermitChemicalInput: UpdateDataTablePermitChemicalInput;
@@ -44667,12 +45384,18 @@ export type ResolversTypes = {
   DeleteDataTableDosageFormByNodeIdInput: DeleteDataTableDosageFormByNodeIdInput;
   DeleteDataTableDosageFormPayload: ResolverTypeWrapper<DeleteDataTableDosageFormPayload>;
   DeleteDataTableDosageFormInput: DeleteDataTableDosageFormInput;
+  DeleteDataTableDosageFormGroupByNodeIdInput: DeleteDataTableDosageFormGroupByNodeIdInput;
+  DeleteDataTableDosageFormGroupPayload: ResolverTypeWrapper<DeleteDataTableDosageFormGroupPayload>;
+  DeleteDataTableDosageFormGroupInput: DeleteDataTableDosageFormGroupInput;
   DeleteDataTableGenericIngredientByNodeIdInput: DeleteDataTableGenericIngredientByNodeIdInput;
   DeleteDataTableGenericIngredientPayload: ResolverTypeWrapper<DeleteDataTableGenericIngredientPayload>;
   DeleteDataTableGenericIngredientInput: DeleteDataTableGenericIngredientInput;
   DeleteDataTableListOfSraByNodeIdInput: DeleteDataTableListOfSraByNodeIdInput;
   DeleteDataTableListOfSraPayload: ResolverTypeWrapper<DeleteDataTableListOfSraPayload>;
   DeleteDataTableListOfSraInput: DeleteDataTableListOfSraInput;
+  DeleteDataTableManufacturerByNodeIdInput: DeleteDataTableManufacturerByNodeIdInput;
+  DeleteDataTableManufacturerPayload: ResolverTypeWrapper<DeleteDataTableManufacturerPayload>;
+  DeleteDataTableManufacturerInput: DeleteDataTableManufacturerInput;
   DeleteDataTablePermitChemicalByNodeIdInput: DeleteDataTablePermitChemicalByNodeIdInput;
   DeleteDataTablePermitChemicalPayload: ResolverTypeWrapper<DeleteDataTablePermitChemicalPayload>;
   DeleteDataTablePermitChemicalInput: DeleteDataTablePermitChemicalInput;
@@ -44829,7 +45552,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Application'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['User'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationNote'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['OrganisationApplicationJoin'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['UserApplicationJoin'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['ActivityLog'] | ResolversParentTypes['DataTablePermitChemicalApplicationJoin'] | ResolversParentTypes['DataTablePermitChemical'] | ResolversParentTypes['DataTableProductApplicationJoin'] | ResolversParentTypes['DataTableProvisionalProductApplicationJoin'] | ResolversParentTypes['DataTableProvisionalProduct'] | ResolversParentTypes['Verification'] | ResolversParentTypes['Counter'] | ResolversParentTypes['DataTable'] | ResolversParentTypes['DataTableActiveIngredient'] | ResolversParentTypes['DataTableAdministrationRoute'] | ResolversParentTypes['DataTableAnnex'] | ResolversParentTypes['DataTableAnnex2'] | ResolversParentTypes['DataTableAtcCode'] | ResolversParentTypes['DataTableContainer'] | ResolversParentTypes['DataTableCountry'] | ResolversParentTypes['DataTableDosageForm'] | ResolversParentTypes['DataTableGenericIngredient'] | ResolversParentTypes['DataTableListOfSra'] | ResolversParentTypes['DataTablePreRegisteredProductsProvisional'] | ResolversParentTypes['DataTableProcessingStep'] | ResolversParentTypes['DataTableProduct'] | ResolversParentTypes['DataTableScheduledChemical'] | ResolversParentTypes['DataTableStorageCondition'] | ResolversParentTypes['DataTableUnitsOfProportion'] | ResolversParentTypes['DataView'] | ResolversParentTypes['DataViewColumnDefinition'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['GrafanaDashboardImage'] | ResolversParentTypes['SystemInfo'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Application'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['User'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationNote'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['OrganisationApplicationJoin'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['UserApplicationJoin'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['ActivityLog'] | ResolversParentTypes['DataTablePermitChemicalApplicationJoin'] | ResolversParentTypes['DataTablePermitChemical'] | ResolversParentTypes['DataTableProductApplicationJoin'] | ResolversParentTypes['DataTableProvisionalProductApplicationJoin'] | ResolversParentTypes['DataTableProvisionalProduct'] | ResolversParentTypes['Verification'] | ResolversParentTypes['Counter'] | ResolversParentTypes['DataTable'] | ResolversParentTypes['DataTableActiveIngredient'] | ResolversParentTypes['DataTableAdministrationRoute'] | ResolversParentTypes['DataTableAnnex'] | ResolversParentTypes['DataTableAnnex2'] | ResolversParentTypes['DataTableAtcCode'] | ResolversParentTypes['DataTableContainer'] | ResolversParentTypes['DataTableCountry'] | ResolversParentTypes['DataTableDosageForm'] | ResolversParentTypes['DataTableDosageFormGroup'] | ResolversParentTypes['DataTableGenericIngredient'] | ResolversParentTypes['DataTableListOfSra'] | ResolversParentTypes['DataTableManufacturer'] | ResolversParentTypes['DataTablePreRegisteredProductsProvisional'] | ResolversParentTypes['DataTableProcessingStep'] | ResolversParentTypes['DataTableProduct'] | ResolversParentTypes['DataTableScheduledChemical'] | ResolversParentTypes['DataTableStorageCondition'] | ResolversParentTypes['DataTableUnitsOfProportion'] | ResolversParentTypes['DataView'] | ResolversParentTypes['DataViewColumnDefinition'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['GrafanaDashboardImage'] | ResolversParentTypes['SystemInfo'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -45206,6 +45929,11 @@ export type ResolversParentTypes = {
   DataTableDosageFormsConnection: DataTableDosageFormsConnection;
   DataTableDosageForm: DataTableDosageForm;
   DataTableDosageFormsEdge: DataTableDosageFormsEdge;
+  DataTableDosageFormGroupCondition: DataTableDosageFormGroupCondition;
+  DataTableDosageFormGroupFilter: DataTableDosageFormGroupFilter;
+  DataTableDosageFormGroupsConnection: DataTableDosageFormGroupsConnection;
+  DataTableDosageFormGroup: DataTableDosageFormGroup;
+  DataTableDosageFormGroupsEdge: DataTableDosageFormGroupsEdge;
   DataTableGenericIngredientCondition: DataTableGenericIngredientCondition;
   DataTableGenericIngredientFilter: DataTableGenericIngredientFilter;
   DataTableGenericIngredientsConnection: DataTableGenericIngredientsConnection;
@@ -45216,6 +45944,11 @@ export type ResolversParentTypes = {
   DataTableListOfSrasConnection: DataTableListOfSrasConnection;
   DataTableListOfSra: DataTableListOfSra;
   DataTableListOfSrasEdge: DataTableListOfSrasEdge;
+  DataTableManufacturerCondition: DataTableManufacturerCondition;
+  DataTableManufacturerFilter: DataTableManufacturerFilter;
+  DataTableManufacturersConnection: DataTableManufacturersConnection;
+  DataTableManufacturer: DataTableManufacturer;
+  DataTableManufacturersEdge: DataTableManufacturersEdge;
   DataTablePermitChemicalCondition: DataTablePermitChemicalCondition;
   DataTablePermitChemicalsConnection: DataTablePermitChemicalsConnection;
   DataTablePermitChemicalsEdge: DataTablePermitChemicalsEdge;
@@ -46450,12 +47183,18 @@ export type ResolversParentTypes = {
   CreateDataTableDosageFormInput: CreateDataTableDosageFormInput;
   DataTableDosageFormInput: DataTableDosageFormInput;
   CreateDataTableDosageFormPayload: CreateDataTableDosageFormPayload;
+  CreateDataTableDosageFormGroupInput: CreateDataTableDosageFormGroupInput;
+  DataTableDosageFormGroupInput: DataTableDosageFormGroupInput;
+  CreateDataTableDosageFormGroupPayload: CreateDataTableDosageFormGroupPayload;
   CreateDataTableGenericIngredientInput: CreateDataTableGenericIngredientInput;
   DataTableGenericIngredientInput: DataTableGenericIngredientInput;
   CreateDataTableGenericIngredientPayload: CreateDataTableGenericIngredientPayload;
   CreateDataTableListOfSraInput: CreateDataTableListOfSraInput;
   DataTableListOfSraInput: DataTableListOfSraInput;
   CreateDataTableListOfSraPayload: CreateDataTableListOfSraPayload;
+  CreateDataTableManufacturerInput: CreateDataTableManufacturerInput;
+  DataTableManufacturerInput: DataTableManufacturerInput;
+  CreateDataTableManufacturerPayload: CreateDataTableManufacturerPayload;
   CreateDataTablePermitChemicalInput: CreateDataTablePermitChemicalInput;
   DataTablePermitChemicalInput: DataTablePermitChemicalInput;
   CreateDataTablePermitChemicalPayload: CreateDataTablePermitChemicalPayload;
@@ -46661,6 +47400,10 @@ export type ResolversParentTypes = {
   DataTableDosageFormPatch: DataTableDosageFormPatch;
   UpdateDataTableDosageFormPayload: UpdateDataTableDosageFormPayload;
   UpdateDataTableDosageFormInput: UpdateDataTableDosageFormInput;
+  UpdateDataTableDosageFormGroupByNodeIdInput: UpdateDataTableDosageFormGroupByNodeIdInput;
+  DataTableDosageFormGroupPatch: DataTableDosageFormGroupPatch;
+  UpdateDataTableDosageFormGroupPayload: UpdateDataTableDosageFormGroupPayload;
+  UpdateDataTableDosageFormGroupInput: UpdateDataTableDosageFormGroupInput;
   UpdateDataTableGenericIngredientByNodeIdInput: UpdateDataTableGenericIngredientByNodeIdInput;
   DataTableGenericIngredientPatch: DataTableGenericIngredientPatch;
   UpdateDataTableGenericIngredientPayload: UpdateDataTableGenericIngredientPayload;
@@ -46669,6 +47412,10 @@ export type ResolversParentTypes = {
   DataTableListOfSraPatch: DataTableListOfSraPatch;
   UpdateDataTableListOfSraPayload: UpdateDataTableListOfSraPayload;
   UpdateDataTableListOfSraInput: UpdateDataTableListOfSraInput;
+  UpdateDataTableManufacturerByNodeIdInput: UpdateDataTableManufacturerByNodeIdInput;
+  DataTableManufacturerPatch: DataTableManufacturerPatch;
+  UpdateDataTableManufacturerPayload: UpdateDataTableManufacturerPayload;
+  UpdateDataTableManufacturerInput: UpdateDataTableManufacturerInput;
   UpdateDataTablePermitChemicalByNodeIdInput: UpdateDataTablePermitChemicalByNodeIdInput;
   UpdateDataTablePermitChemicalPayload: UpdateDataTablePermitChemicalPayload;
   UpdateDataTablePermitChemicalInput: UpdateDataTablePermitChemicalInput;
@@ -46888,12 +47635,18 @@ export type ResolversParentTypes = {
   DeleteDataTableDosageFormByNodeIdInput: DeleteDataTableDosageFormByNodeIdInput;
   DeleteDataTableDosageFormPayload: DeleteDataTableDosageFormPayload;
   DeleteDataTableDosageFormInput: DeleteDataTableDosageFormInput;
+  DeleteDataTableDosageFormGroupByNodeIdInput: DeleteDataTableDosageFormGroupByNodeIdInput;
+  DeleteDataTableDosageFormGroupPayload: DeleteDataTableDosageFormGroupPayload;
+  DeleteDataTableDosageFormGroupInput: DeleteDataTableDosageFormGroupInput;
   DeleteDataTableGenericIngredientByNodeIdInput: DeleteDataTableGenericIngredientByNodeIdInput;
   DeleteDataTableGenericIngredientPayload: DeleteDataTableGenericIngredientPayload;
   DeleteDataTableGenericIngredientInput: DeleteDataTableGenericIngredientInput;
   DeleteDataTableListOfSraByNodeIdInput: DeleteDataTableListOfSraByNodeIdInput;
   DeleteDataTableListOfSraPayload: DeleteDataTableListOfSraPayload;
   DeleteDataTableListOfSraInput: DeleteDataTableListOfSraInput;
+  DeleteDataTableManufacturerByNodeIdInput: DeleteDataTableManufacturerByNodeIdInput;
+  DeleteDataTableManufacturerPayload: DeleteDataTableManufacturerPayload;
+  DeleteDataTableManufacturerInput: DeleteDataTableManufacturerInput;
   DeleteDataTablePermitChemicalByNodeIdInput: DeleteDataTablePermitChemicalByNodeIdInput;
   DeleteDataTablePermitChemicalPayload: DeleteDataTablePermitChemicalPayload;
   DeleteDataTablePermitChemicalInput: DeleteDataTablePermitChemicalInput;
@@ -47779,6 +48532,14 @@ export type CreateDataTableCountryPayloadResolvers<ContextType = any, ParentType
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateDataTableDosageFormGroupPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateDataTableDosageFormGroupPayload'] = ResolversParentTypes['CreateDataTableDosageFormGroupPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataTableDosageFormGroup?: Resolver<Maybe<ResolversTypes['DataTableDosageFormGroup']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  dataTableDosageFormGroupEdge?: Resolver<Maybe<ResolversTypes['DataTableDosageFormGroupsEdge']>, ParentType, ContextType, RequireFields<CreateDataTableDosageFormGroupPayloadDataTableDosageFormGroupEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateDataTableDosageFormPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateDataTableDosageFormPayload'] = ResolversParentTypes['CreateDataTableDosageFormPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   dataTableDosageForm?: Resolver<Maybe<ResolversTypes['DataTableDosageForm']>, ParentType, ContextType>;
@@ -47800,6 +48561,14 @@ export type CreateDataTableListOfSraPayloadResolvers<ContextType = any, ParentTy
   dataTableListOfSra?: Resolver<Maybe<ResolversTypes['DataTableListOfSra']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   dataTableListOfSraEdge?: Resolver<Maybe<ResolversTypes['DataTableListOfSrasEdge']>, ParentType, ContextType, RequireFields<CreateDataTableListOfSraPayloadDataTableListOfSraEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateDataTableManufacturerPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateDataTableManufacturerPayload'] = ResolversParentTypes['CreateDataTableManufacturerPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataTableManufacturer?: Resolver<Maybe<ResolversTypes['DataTableManufacturer']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  dataTableManufacturerEdge?: Resolver<Maybe<ResolversTypes['DataTableManufacturersEdge']>, ParentType, ContextType, RequireFields<CreateDataTableManufacturerPayloadDataTableManufacturerEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -48414,6 +49183,27 @@ export type DataTableDosageFormResolvers<ContextType = any, ParentType extends R
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DataTableDosageFormGroupResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTableDosageFormGroup'] = ResolversParentTypes['DataTableDosageFormGroup']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  dosageFormGroups?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DataTableDosageFormGroupsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTableDosageFormGroupsConnection'] = ResolversParentTypes['DataTableDosageFormGroupsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['DataTableDosageFormGroup']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['DataTableDosageFormGroupsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DataTableDosageFormGroupsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTableDosageFormGroupsEdge'] = ResolversParentTypes['DataTableDosageFormGroupsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['DataTableDosageFormGroup']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DataTableDosageFormsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTableDosageFormsConnection'] = ResolversParentTypes['DataTableDosageFormsConnection']> = {
   nodes?: Resolver<Array<Maybe<ResolversTypes['DataTableDosageForm']>>, ParentType, ContextType>;
   edges?: Resolver<Array<ResolversTypes['DataTableDosageFormsEdge']>, ParentType, ContextType>;
@@ -48472,6 +49262,29 @@ export type DataTableListOfSrasConnectionResolvers<ContextType = any, ParentType
 export type DataTableListOfSrasEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTableListOfSrasEdge'] = ResolversParentTypes['DataTableListOfSrasEdge']> = {
   cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
   node?: Resolver<Maybe<ResolversTypes['DataTableListOfSra']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DataTableManufacturerResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTableManufacturer'] = ResolversParentTypes['DataTableManufacturer']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  manufacturer?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DataTableManufacturersConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTableManufacturersConnection'] = ResolversParentTypes['DataTableManufacturersConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['DataTableManufacturer']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['DataTableManufacturersEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DataTableManufacturersEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTableManufacturersEdge'] = ResolversParentTypes['DataTableManufacturersEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['DataTableManufacturer']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -48837,6 +49650,8 @@ export type DataViewResolvers<ContextType = any, ParentType extends ResolversPar
   defaultSortColumn?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   defaultFilterString?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   identifier?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  submenu?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  enabled?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -48844,7 +49659,7 @@ export type DataViewColumnDefinitionResolvers<ContextType = any, ParentType exte
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   tableName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  columnName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  columnName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   elementTypePluginCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   elementParameters?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
@@ -49052,6 +49867,15 @@ export type DeleteDataTableCountryPayloadResolvers<ContextType = any, ParentType
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DeleteDataTableDosageFormGroupPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteDataTableDosageFormGroupPayload'] = ResolversParentTypes['DeleteDataTableDosageFormGroupPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataTableDosageFormGroup?: Resolver<Maybe<ResolversTypes['DataTableDosageFormGroup']>, ParentType, ContextType>;
+  deletedDataTableDosageFormGroupNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  dataTableDosageFormGroupEdge?: Resolver<Maybe<ResolversTypes['DataTableDosageFormGroupsEdge']>, ParentType, ContextType, RequireFields<DeleteDataTableDosageFormGroupPayloadDataTableDosageFormGroupEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DeleteDataTableDosageFormPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteDataTableDosageFormPayload'] = ResolversParentTypes['DeleteDataTableDosageFormPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   dataTableDosageForm?: Resolver<Maybe<ResolversTypes['DataTableDosageForm']>, ParentType, ContextType>;
@@ -49076,6 +49900,15 @@ export type DeleteDataTableListOfSraPayloadResolvers<ContextType = any, ParentTy
   deletedDataTableListOfSraNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   dataTableListOfSraEdge?: Resolver<Maybe<ResolversTypes['DataTableListOfSrasEdge']>, ParentType, ContextType, RequireFields<DeleteDataTableListOfSraPayloadDataTableListOfSraEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DeleteDataTableManufacturerPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteDataTableManufacturerPayload'] = ResolversParentTypes['DeleteDataTableManufacturerPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataTableManufacturer?: Resolver<Maybe<ResolversTypes['DataTableManufacturer']>, ParentType, ContextType>;
+  deletedDataTableManufacturerNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  dataTableManufacturerEdge?: Resolver<Maybe<ResolversTypes['DataTableManufacturersEdge']>, ParentType, ContextType, RequireFields<DeleteDataTableManufacturerPayloadDataTableManufacturerEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -49700,8 +50533,10 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createDataTableContainer?: Resolver<Maybe<ResolversTypes['CreateDataTableContainerPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableContainerArgs, 'input'>>;
   createDataTableCountry?: Resolver<Maybe<ResolversTypes['CreateDataTableCountryPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableCountryArgs, 'input'>>;
   createDataTableDosageForm?: Resolver<Maybe<ResolversTypes['CreateDataTableDosageFormPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableDosageFormArgs, 'input'>>;
+  createDataTableDosageFormGroup?: Resolver<Maybe<ResolversTypes['CreateDataTableDosageFormGroupPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableDosageFormGroupArgs, 'input'>>;
   createDataTableGenericIngredient?: Resolver<Maybe<ResolversTypes['CreateDataTableGenericIngredientPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableGenericIngredientArgs, 'input'>>;
   createDataTableListOfSra?: Resolver<Maybe<ResolversTypes['CreateDataTableListOfSraPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableListOfSraArgs, 'input'>>;
+  createDataTableManufacturer?: Resolver<Maybe<ResolversTypes['CreateDataTableManufacturerPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableManufacturerArgs, 'input'>>;
   createDataTablePermitChemical?: Resolver<Maybe<ResolversTypes['CreateDataTablePermitChemicalPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTablePermitChemicalArgs, 'input'>>;
   createDataTablePermitChemicalApplicationJoin?: Resolver<Maybe<ResolversTypes['CreateDataTablePermitChemicalApplicationJoinPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTablePermitChemicalApplicationJoinArgs, 'input'>>;
   createDataTablePreRegisteredProductsProvisional?: Resolver<Maybe<ResolversTypes['CreateDataTablePreRegisteredProductsProvisionalPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTablePreRegisteredProductsProvisionalArgs, 'input'>>;
@@ -49788,10 +50623,14 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateDataTableCountry?: Resolver<Maybe<ResolversTypes['UpdateDataTableCountryPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableCountryArgs, 'input'>>;
   updateDataTableDosageFormByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTableDosageFormPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableDosageFormByNodeIdArgs, 'input'>>;
   updateDataTableDosageForm?: Resolver<Maybe<ResolversTypes['UpdateDataTableDosageFormPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableDosageFormArgs, 'input'>>;
+  updateDataTableDosageFormGroupByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTableDosageFormGroupPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableDosageFormGroupByNodeIdArgs, 'input'>>;
+  updateDataTableDosageFormGroup?: Resolver<Maybe<ResolversTypes['UpdateDataTableDosageFormGroupPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableDosageFormGroupArgs, 'input'>>;
   updateDataTableGenericIngredientByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTableGenericIngredientPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableGenericIngredientByNodeIdArgs, 'input'>>;
   updateDataTableGenericIngredient?: Resolver<Maybe<ResolversTypes['UpdateDataTableGenericIngredientPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableGenericIngredientArgs, 'input'>>;
   updateDataTableListOfSraByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTableListOfSraPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableListOfSraByNodeIdArgs, 'input'>>;
   updateDataTableListOfSra?: Resolver<Maybe<ResolversTypes['UpdateDataTableListOfSraPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableListOfSraArgs, 'input'>>;
+  updateDataTableManufacturerByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTableManufacturerPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableManufacturerByNodeIdArgs, 'input'>>;
+  updateDataTableManufacturer?: Resolver<Maybe<ResolversTypes['UpdateDataTableManufacturerPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableManufacturerArgs, 'input'>>;
   updateDataTablePermitChemicalByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTablePermitChemicalPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTablePermitChemicalByNodeIdArgs, 'input'>>;
   updateDataTablePermitChemical?: Resolver<Maybe<ResolversTypes['UpdateDataTablePermitChemicalPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTablePermitChemicalArgs, 'input'>>;
   updateDataTablePermitChemicalApplicationJoinByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTablePermitChemicalApplicationJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTablePermitChemicalApplicationJoinByNodeIdArgs, 'input'>>;
@@ -49937,10 +50776,14 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteDataTableCountry?: Resolver<Maybe<ResolversTypes['DeleteDataTableCountryPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableCountryArgs, 'input'>>;
   deleteDataTableDosageFormByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTableDosageFormPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableDosageFormByNodeIdArgs, 'input'>>;
   deleteDataTableDosageForm?: Resolver<Maybe<ResolversTypes['DeleteDataTableDosageFormPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableDosageFormArgs, 'input'>>;
+  deleteDataTableDosageFormGroupByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTableDosageFormGroupPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableDosageFormGroupByNodeIdArgs, 'input'>>;
+  deleteDataTableDosageFormGroup?: Resolver<Maybe<ResolversTypes['DeleteDataTableDosageFormGroupPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableDosageFormGroupArgs, 'input'>>;
   deleteDataTableGenericIngredientByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTableGenericIngredientPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableGenericIngredientByNodeIdArgs, 'input'>>;
   deleteDataTableGenericIngredient?: Resolver<Maybe<ResolversTypes['DeleteDataTableGenericIngredientPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableGenericIngredientArgs, 'input'>>;
   deleteDataTableListOfSraByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTableListOfSraPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableListOfSraByNodeIdArgs, 'input'>>;
   deleteDataTableListOfSra?: Resolver<Maybe<ResolversTypes['DeleteDataTableListOfSraPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableListOfSraArgs, 'input'>>;
+  deleteDataTableManufacturerByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTableManufacturerPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableManufacturerByNodeIdArgs, 'input'>>;
+  deleteDataTableManufacturer?: Resolver<Maybe<ResolversTypes['DeleteDataTableManufacturerPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableManufacturerArgs, 'input'>>;
   deleteDataTablePermitChemicalByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTablePermitChemicalPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTablePermitChemicalByNodeIdArgs, 'input'>>;
   deleteDataTablePermitChemical?: Resolver<Maybe<ResolversTypes['DeleteDataTablePermitChemicalPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTablePermitChemicalArgs, 'input'>>;
   deleteDataTablePermitChemicalApplicationJoinByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTablePermitChemicalApplicationJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTablePermitChemicalApplicationJoinByNodeIdArgs, 'input'>>;
@@ -50049,7 +50892,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Application' | 'Template' | 'TemplateCategory' | 'ReviewAssignment' | 'User' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'ReviewResponse' | 'ApplicationResponse' | 'TemplateElement' | 'TemplateSection' | 'File' | 'ApplicationNote' | 'Organisation' | 'ReviewAssignmentAssignerJoin' | 'OrganisationApplicationJoin' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'UserOrganisation' | 'TriggerSchedule' | 'UserApplicationJoin' | 'TemplateStage' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'TemplateStageReviewLevel' | 'TemplateAction' | 'TemplateFilterJoin' | 'Filter' | 'ActivityLog' | 'DataTablePermitChemicalApplicationJoin' | 'DataTablePermitChemical' | 'DataTableProductApplicationJoin' | 'DataTableProvisionalProductApplicationJoin' | 'DataTableProvisionalProduct' | 'Verification' | 'Counter' | 'DataTable' | 'DataTableActiveIngredient' | 'DataTableAdministrationRoute' | 'DataTableAnnex' | 'DataTableAnnex2' | 'DataTableAtcCode' | 'DataTableContainer' | 'DataTableCountry' | 'DataTableDosageForm' | 'DataTableGenericIngredient' | 'DataTableListOfSra' | 'DataTablePreRegisteredProductsProvisional' | 'DataTableProcessingStep' | 'DataTableProduct' | 'DataTableScheduledChemical' | 'DataTableStorageCondition' | 'DataTableUnitsOfProportion' | 'DataView' | 'DataViewColumnDefinition' | 'ElementTypePlugin' | 'GrafanaDashboardImage' | 'SystemInfo', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Application' | 'Template' | 'TemplateCategory' | 'ReviewAssignment' | 'User' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'ReviewResponse' | 'ApplicationResponse' | 'TemplateElement' | 'TemplateSection' | 'File' | 'ApplicationNote' | 'Organisation' | 'ReviewAssignmentAssignerJoin' | 'OrganisationApplicationJoin' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'UserOrganisation' | 'TriggerSchedule' | 'UserApplicationJoin' | 'TemplateStage' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'TemplateStageReviewLevel' | 'TemplateAction' | 'TemplateFilterJoin' | 'Filter' | 'ActivityLog' | 'DataTablePermitChemicalApplicationJoin' | 'DataTablePermitChemical' | 'DataTableProductApplicationJoin' | 'DataTableProvisionalProductApplicationJoin' | 'DataTableProvisionalProduct' | 'Verification' | 'Counter' | 'DataTable' | 'DataTableActiveIngredient' | 'DataTableAdministrationRoute' | 'DataTableAnnex' | 'DataTableAnnex2' | 'DataTableAtcCode' | 'DataTableContainer' | 'DataTableCountry' | 'DataTableDosageForm' | 'DataTableDosageFormGroup' | 'DataTableGenericIngredient' | 'DataTableListOfSra' | 'DataTableManufacturer' | 'DataTablePreRegisteredProductsProvisional' | 'DataTableProcessingStep' | 'DataTableProduct' | 'DataTableScheduledChemical' | 'DataTableStorageCondition' | 'DataTableUnitsOfProportion' | 'DataView' | 'DataViewColumnDefinition' | 'ElementTypePlugin' | 'GrafanaDashboardImage' | 'SystemInfo', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -50098,7 +50941,6 @@ export type OrganisationResolvers<ContextType = any, ParentType extends Resolver
   registrationDocumentation?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   province?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  companyType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   contactEmail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   contactPhone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   postalAddress?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -50109,6 +50951,10 @@ export type OrganisationResolvers<ContextType = any, ParentType extends Resolver
   license?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   businessCertificate?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   tinLetter?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  subType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  otherDocuments?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  isSponsorCompany?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isChemicalImporter?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   applicationsByOrgId?: Resolver<ResolversTypes['ApplicationsConnection'], ParentType, ContextType, RequireFields<OrganisationApplicationsByOrgIdArgs, 'orderBy'>>;
   reviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<OrganisationReviewAssignmentsArgs, 'orderBy'>>;
   applicationNotesByOrgId?: Resolver<ResolversTypes['ApplicationNotesConnection'], ParentType, ContextType, RequireFields<OrganisationApplicationNotesByOrgIdArgs, 'orderBy'>>;
@@ -50342,8 +51188,10 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   dataTableContainers?: Resolver<Maybe<ResolversTypes['DataTableContainersConnection']>, ParentType, ContextType, RequireFields<QueryDataTableContainersArgs, 'orderBy'>>;
   dataTableCountries?: Resolver<Maybe<ResolversTypes['DataTableCountriesConnection']>, ParentType, ContextType, RequireFields<QueryDataTableCountriesArgs, 'orderBy'>>;
   dataTableDosageForms?: Resolver<Maybe<ResolversTypes['DataTableDosageFormsConnection']>, ParentType, ContextType, RequireFields<QueryDataTableDosageFormsArgs, 'orderBy'>>;
+  dataTableDosageFormGroups?: Resolver<Maybe<ResolversTypes['DataTableDosageFormGroupsConnection']>, ParentType, ContextType, RequireFields<QueryDataTableDosageFormGroupsArgs, 'orderBy'>>;
   dataTableGenericIngredients?: Resolver<Maybe<ResolversTypes['DataTableGenericIngredientsConnection']>, ParentType, ContextType, RequireFields<QueryDataTableGenericIngredientsArgs, 'orderBy'>>;
   dataTableListOfSras?: Resolver<Maybe<ResolversTypes['DataTableListOfSrasConnection']>, ParentType, ContextType, RequireFields<QueryDataTableListOfSrasArgs, 'orderBy'>>;
+  dataTableManufacturers?: Resolver<Maybe<ResolversTypes['DataTableManufacturersConnection']>, ParentType, ContextType, RequireFields<QueryDataTableManufacturersArgs, 'orderBy'>>;
   dataTablePermitChemicals?: Resolver<Maybe<ResolversTypes['DataTablePermitChemicalsConnection']>, ParentType, ContextType, RequireFields<QueryDataTablePermitChemicalsArgs, 'orderBy'>>;
   dataTablePermitChemicalApplicationJoins?: Resolver<Maybe<ResolversTypes['DataTablePermitChemicalApplicationJoinsConnection']>, ParentType, ContextType, RequireFields<QueryDataTablePermitChemicalApplicationJoinsArgs, 'orderBy'>>;
   dataTablePreRegisteredProductsProvisionals?: Resolver<Maybe<ResolversTypes['DataTablePreRegisteredProductsProvisionalsConnection']>, ParentType, ContextType, RequireFields<QueryDataTablePreRegisteredProductsProvisionalsArgs, 'orderBy'>>;
@@ -50417,8 +51265,10 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   dataTableContainer?: Resolver<Maybe<ResolversTypes['DataTableContainer']>, ParentType, ContextType, RequireFields<QueryDataTableContainerArgs, 'id'>>;
   dataTableCountry?: Resolver<Maybe<ResolversTypes['DataTableCountry']>, ParentType, ContextType, RequireFields<QueryDataTableCountryArgs, 'id'>>;
   dataTableDosageForm?: Resolver<Maybe<ResolversTypes['DataTableDosageForm']>, ParentType, ContextType, RequireFields<QueryDataTableDosageFormArgs, 'id'>>;
+  dataTableDosageFormGroup?: Resolver<Maybe<ResolversTypes['DataTableDosageFormGroup']>, ParentType, ContextType, RequireFields<QueryDataTableDosageFormGroupArgs, 'id'>>;
   dataTableGenericIngredient?: Resolver<Maybe<ResolversTypes['DataTableGenericIngredient']>, ParentType, ContextType, RequireFields<QueryDataTableGenericIngredientArgs, 'id'>>;
   dataTableListOfSra?: Resolver<Maybe<ResolversTypes['DataTableListOfSra']>, ParentType, ContextType, RequireFields<QueryDataTableListOfSraArgs, 'id'>>;
+  dataTableManufacturer?: Resolver<Maybe<ResolversTypes['DataTableManufacturer']>, ParentType, ContextType, RequireFields<QueryDataTableManufacturerArgs, 'id'>>;
   dataTablePermitChemical?: Resolver<Maybe<ResolversTypes['DataTablePermitChemical']>, ParentType, ContextType, RequireFields<QueryDataTablePermitChemicalArgs, 'id'>>;
   dataTablePermitChemicalApplicationJoin?: Resolver<Maybe<ResolversTypes['DataTablePermitChemicalApplicationJoin']>, ParentType, ContextType, RequireFields<QueryDataTablePermitChemicalApplicationJoinArgs, 'id'>>;
   dataTablePreRegisteredProductsProvisional?: Resolver<Maybe<ResolversTypes['DataTablePreRegisteredProductsProvisional']>, ParentType, ContextType, RequireFields<QueryDataTablePreRegisteredProductsProvisionalArgs, 'id'>>;
@@ -50527,8 +51377,10 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   dataTableContainerByNodeId?: Resolver<Maybe<ResolversTypes['DataTableContainer']>, ParentType, ContextType, RequireFields<QueryDataTableContainerByNodeIdArgs, 'nodeId'>>;
   dataTableCountryByNodeId?: Resolver<Maybe<ResolversTypes['DataTableCountry']>, ParentType, ContextType, RequireFields<QueryDataTableCountryByNodeIdArgs, 'nodeId'>>;
   dataTableDosageFormByNodeId?: Resolver<Maybe<ResolversTypes['DataTableDosageForm']>, ParentType, ContextType, RequireFields<QueryDataTableDosageFormByNodeIdArgs, 'nodeId'>>;
+  dataTableDosageFormGroupByNodeId?: Resolver<Maybe<ResolversTypes['DataTableDosageFormGroup']>, ParentType, ContextType, RequireFields<QueryDataTableDosageFormGroupByNodeIdArgs, 'nodeId'>>;
   dataTableGenericIngredientByNodeId?: Resolver<Maybe<ResolversTypes['DataTableGenericIngredient']>, ParentType, ContextType, RequireFields<QueryDataTableGenericIngredientByNodeIdArgs, 'nodeId'>>;
   dataTableListOfSraByNodeId?: Resolver<Maybe<ResolversTypes['DataTableListOfSra']>, ParentType, ContextType, RequireFields<QueryDataTableListOfSraByNodeIdArgs, 'nodeId'>>;
+  dataTableManufacturerByNodeId?: Resolver<Maybe<ResolversTypes['DataTableManufacturer']>, ParentType, ContextType, RequireFields<QueryDataTableManufacturerByNodeIdArgs, 'nodeId'>>;
   dataTablePermitChemicalByNodeId?: Resolver<Maybe<ResolversTypes['DataTablePermitChemical']>, ParentType, ContextType, RequireFields<QueryDataTablePermitChemicalByNodeIdArgs, 'nodeId'>>;
   dataTablePermitChemicalApplicationJoinByNodeId?: Resolver<Maybe<ResolversTypes['DataTablePermitChemicalApplicationJoin']>, ParentType, ContextType, RequireFields<QueryDataTablePermitChemicalApplicationJoinByNodeIdArgs, 'nodeId'>>;
   dataTablePreRegisteredProductsProvisionalByNodeId?: Resolver<Maybe<ResolversTypes['DataTablePreRegisteredProductsProvisional']>, ParentType, ContextType, RequireFields<QueryDataTablePreRegisteredProductsProvisionalByNodeIdArgs, 'nodeId'>>;
@@ -50898,6 +51750,7 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
   versionTimestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   version?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   serialPattern?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dashboardRestrictions?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   templateCategory?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType>;
   applications?: Resolver<ResolversTypes['ApplicationsConnection'], ParentType, ContextType, RequireFields<TemplateApplicationsArgs, 'orderBy'>>;
   reviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<TemplateReviewAssignmentsArgs, 'orderBy'>>;
@@ -50964,6 +51817,7 @@ export type TemplateCategoryResolvers<ContextType = any, ParentType extends Reso
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   icon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   uiLocation?: Resolver<Maybe<Array<Maybe<ResolversTypes['UiLocation']>>>, ParentType, ContextType>;
+  isSubmenu?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   templates?: Resolver<ResolversTypes['TemplatesConnection'], ParentType, ContextType, RequireFields<TemplateCategoryTemplatesArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -51383,6 +52237,14 @@ export type UpdateDataTableCountryPayloadResolvers<ContextType = any, ParentType
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateDataTableDosageFormGroupPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateDataTableDosageFormGroupPayload'] = ResolversParentTypes['UpdateDataTableDosageFormGroupPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataTableDosageFormGroup?: Resolver<Maybe<ResolversTypes['DataTableDosageFormGroup']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  dataTableDosageFormGroupEdge?: Resolver<Maybe<ResolversTypes['DataTableDosageFormGroupsEdge']>, ParentType, ContextType, RequireFields<UpdateDataTableDosageFormGroupPayloadDataTableDosageFormGroupEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateDataTableDosageFormPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateDataTableDosageFormPayload'] = ResolversParentTypes['UpdateDataTableDosageFormPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   dataTableDosageForm?: Resolver<Maybe<ResolversTypes['DataTableDosageForm']>, ParentType, ContextType>;
@@ -51404,6 +52266,14 @@ export type UpdateDataTableListOfSraPayloadResolvers<ContextType = any, ParentTy
   dataTableListOfSra?: Resolver<Maybe<ResolversTypes['DataTableListOfSra']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   dataTableListOfSraEdge?: Resolver<Maybe<ResolversTypes['DataTableListOfSrasEdge']>, ParentType, ContextType, RequireFields<UpdateDataTableListOfSraPayloadDataTableListOfSraEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UpdateDataTableManufacturerPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateDataTableManufacturerPayload'] = ResolversParentTypes['UpdateDataTableManufacturerPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataTableManufacturer?: Resolver<Maybe<ResolversTypes['DataTableManufacturer']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  dataTableManufacturerEdge?: Resolver<Maybe<ResolversTypes['DataTableManufacturersEdge']>, ParentType, ContextType, RequireFields<UpdateDataTableManufacturerPayloadDataTableManufacturerEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -52069,9 +52939,11 @@ export type Resolvers<ContextType = any> = {
   CreateDataTableAtcCodePayload?: CreateDataTableAtcCodePayloadResolvers<ContextType>;
   CreateDataTableContainerPayload?: CreateDataTableContainerPayloadResolvers<ContextType>;
   CreateDataTableCountryPayload?: CreateDataTableCountryPayloadResolvers<ContextType>;
+  CreateDataTableDosageFormGroupPayload?: CreateDataTableDosageFormGroupPayloadResolvers<ContextType>;
   CreateDataTableDosageFormPayload?: CreateDataTableDosageFormPayloadResolvers<ContextType>;
   CreateDataTableGenericIngredientPayload?: CreateDataTableGenericIngredientPayloadResolvers<ContextType>;
   CreateDataTableListOfSraPayload?: CreateDataTableListOfSraPayloadResolvers<ContextType>;
+  CreateDataTableManufacturerPayload?: CreateDataTableManufacturerPayloadResolvers<ContextType>;
   CreateDataTablePayload?: CreateDataTablePayloadResolvers<ContextType>;
   CreateDataTablePermitChemicalApplicationJoinPayload?: CreateDataTablePermitChemicalApplicationJoinPayloadResolvers<ContextType>;
   CreateDataTablePermitChemicalPayload?: CreateDataTablePermitChemicalPayloadResolvers<ContextType>;
@@ -52142,6 +53014,9 @@ export type Resolvers<ContextType = any> = {
   DataTableCountriesEdge?: DataTableCountriesEdgeResolvers<ContextType>;
   DataTableCountry?: DataTableCountryResolvers<ContextType>;
   DataTableDosageForm?: DataTableDosageFormResolvers<ContextType>;
+  DataTableDosageFormGroup?: DataTableDosageFormGroupResolvers<ContextType>;
+  DataTableDosageFormGroupsConnection?: DataTableDosageFormGroupsConnectionResolvers<ContextType>;
+  DataTableDosageFormGroupsEdge?: DataTableDosageFormGroupsEdgeResolvers<ContextType>;
   DataTableDosageFormsConnection?: DataTableDosageFormsConnectionResolvers<ContextType>;
   DataTableDosageFormsEdge?: DataTableDosageFormsEdgeResolvers<ContextType>;
   DataTableGenericIngredient?: DataTableGenericIngredientResolvers<ContextType>;
@@ -52150,6 +53025,9 @@ export type Resolvers<ContextType = any> = {
   DataTableListOfSra?: DataTableListOfSraResolvers<ContextType>;
   DataTableListOfSrasConnection?: DataTableListOfSrasConnectionResolvers<ContextType>;
   DataTableListOfSrasEdge?: DataTableListOfSrasEdgeResolvers<ContextType>;
+  DataTableManufacturer?: DataTableManufacturerResolvers<ContextType>;
+  DataTableManufacturersConnection?: DataTableManufacturersConnectionResolvers<ContextType>;
+  DataTableManufacturersEdge?: DataTableManufacturersEdgeResolvers<ContextType>;
   DataTablePermitChemical?: DataTablePermitChemicalResolvers<ContextType>;
   DataTablePermitChemicalApplicationJoin?: DataTablePermitChemicalApplicationJoinResolvers<ContextType>;
   DataTablePermitChemicalApplicationJoinsConnection?: DataTablePermitChemicalApplicationJoinsConnectionResolvers<ContextType>;
@@ -52209,9 +53087,11 @@ export type Resolvers<ContextType = any> = {
   DeleteDataTableAtcCodePayload?: DeleteDataTableAtcCodePayloadResolvers<ContextType>;
   DeleteDataTableContainerPayload?: DeleteDataTableContainerPayloadResolvers<ContextType>;
   DeleteDataTableCountryPayload?: DeleteDataTableCountryPayloadResolvers<ContextType>;
+  DeleteDataTableDosageFormGroupPayload?: DeleteDataTableDosageFormGroupPayloadResolvers<ContextType>;
   DeleteDataTableDosageFormPayload?: DeleteDataTableDosageFormPayloadResolvers<ContextType>;
   DeleteDataTableGenericIngredientPayload?: DeleteDataTableGenericIngredientPayloadResolvers<ContextType>;
   DeleteDataTableListOfSraPayload?: DeleteDataTableListOfSraPayloadResolvers<ContextType>;
+  DeleteDataTableManufacturerPayload?: DeleteDataTableManufacturerPayloadResolvers<ContextType>;
   DeleteDataTablePayload?: DeleteDataTablePayloadResolvers<ContextType>;
   DeleteDataTablePermitChemicalApplicationJoinPayload?: DeleteDataTablePermitChemicalApplicationJoinPayloadResolvers<ContextType>;
   DeleteDataTablePermitChemicalPayload?: DeleteDataTablePermitChemicalPayloadResolvers<ContextType>;
@@ -52383,9 +53263,11 @@ export type Resolvers<ContextType = any> = {
   UpdateDataTableAtcCodePayload?: UpdateDataTableAtcCodePayloadResolvers<ContextType>;
   UpdateDataTableContainerPayload?: UpdateDataTableContainerPayloadResolvers<ContextType>;
   UpdateDataTableCountryPayload?: UpdateDataTableCountryPayloadResolvers<ContextType>;
+  UpdateDataTableDosageFormGroupPayload?: UpdateDataTableDosageFormGroupPayloadResolvers<ContextType>;
   UpdateDataTableDosageFormPayload?: UpdateDataTableDosageFormPayloadResolvers<ContextType>;
   UpdateDataTableGenericIngredientPayload?: UpdateDataTableGenericIngredientPayloadResolvers<ContextType>;
   UpdateDataTableListOfSraPayload?: UpdateDataTableListOfSraPayloadResolvers<ContextType>;
+  UpdateDataTableManufacturerPayload?: UpdateDataTableManufacturerPayloadResolvers<ContextType>;
   UpdateDataTablePayload?: UpdateDataTablePayloadResolvers<ContextType>;
   UpdateDataTablePermitChemicalApplicationJoinPayload?: UpdateDataTablePermitChemicalApplicationJoinPayloadResolvers<ContextType>;
   UpdateDataTablePermitChemicalPayload?: UpdateDataTablePermitChemicalPayloadResolvers<ContextType>;
