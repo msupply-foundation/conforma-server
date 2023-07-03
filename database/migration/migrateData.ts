@@ -690,8 +690,10 @@ const migrateData = async () => {
     `)
   }
 
-  // v0.5.0
+  // v0.5.2
   if (databaseVersionLessThan('0.5.2')) {
+    console.log('Migrating to v0.5.2...')
+
     console.log(' - Add registration field to application Table')
     await DB.changeSchema(`
       ALTER TABLE public.application
@@ -700,6 +702,8 @@ const migrateData = async () => {
   }
 
   if (databaseVersionLessThan('0.5.6')) {
+    console.log('Migrating to v0.5.6...')
+
     console.log(' - Change "default_value" field to "initial_value"')
     await DB.changeSchema(`
       DO $$
@@ -716,6 +720,8 @@ const migrateData = async () => {
   }
 
   if (databaseVersionLessThan('0.5.7')) {
+    console.log('Migrating to v0.5.7...')
+
     console.log(' - Add "default_filter_string" to data_views')
     await DB.changeSchema(`
       ALTER TABLE public.data_view
@@ -725,6 +731,8 @@ const migrateData = async () => {
 
   // v0.6.0
   if (databaseVersionLessThan('0.6.0')) {
+    console.log('Migrating to v0.6.0...')
+
     console.log(' - Update FK reference to trigger_queue in action_queue')
     await DB.changeSchema(`
       ALTER TABLE action_queue DROP CONSTRAINT IF EXISTS   
@@ -752,6 +760,16 @@ const migrateData = async () => {
       console.log(' ...and updating action_queue data')
       await DB.populateQueueApplicationIds('action_queue')
     }
+
+    console.log(' - Adding unique identifier column to data view')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_view   
+        ADD COLUMN IF NOT EXISTS identifier VARCHAR UNIQUE;
+      UPDATE public.data_view SET identifier = CONCAT(title, '_', id)
+        WHERE identifier IS NULL;
+      ALTER TABLE public.data_view ALTER COLUMN identifier SET NOT NULL;
+      ALTER TABLE public.data_view_column_definition ALTER COLUMN column_name SET NOT NULL;
+    `)
   }
 
   // Other version migrations continue here...
