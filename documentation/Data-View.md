@@ -25,6 +25,8 @@ The data is served to the front-end via the `/data-views` API end-points, and se
 
 The database's row-level permissions ensure that only allowed rows are returned to the user, and the logic in the "dataViews" code returns allowed columns. We also support custom "rowRestrictions" for limiting the individual records a given user is allowed to see (see below).
 
+Configuration of the data views can be done in the UI by an Admin, using url `/admin-data-views`
+
 ## API
 
 Custom data is available at the following endpoints:
@@ -205,13 +207,14 @@ Note the different types of data returned and the formatting instructions. Also,
 In order to make outcome data available to the front-end, the minimal configuration requirements are a single entry in the `data_view` table with the following fields provided:
 
 - `table_name` -- name of the table we are displaying
-- `code` the identifier for the particular "view". It's possible to have multiple views with the same code, but only one will be shown to a given user, based on their permissions, and the `priority` value (see below). You can create multiple views with different codes per `table_name`, for example you might have a `usersExt` view and a `usersInt` view for the 'user' table.
+- `code` -- to match the particular "view", and what is shown the in the front-end URL. It's possible to have multiple views with the same code, but only one will be shown to a given user, based on their permissions, and the `priority` value (see below). You can create multiple views with different codes per `table_name`, for example you might have a `usersExt` view and a `usersInt` view for the 'user' table.
+- `identifier` -- this must be a *unique* value which should describe the specific data view. It is used in the front-end configuration UI to list the available views, so must be able to discriminate between multiple views with the same `code` for the same table. E.g. "External Users (Staff view)", "External Users (own company)". It cannot be `null`, but a default value with random suffix is generated when creating a new view in the UI.
 
 And with that, the "table_name" table will show up in the Database menu, and it will show all fields to everyone in both Table and Details view.
 
 However, we normally want to not show every field, and not to every user, so further specifications would normally be required.
 
-Different configurations of fields and who can see them can be set up for each table, so for convenience, we are calling a single configuation a "layout"
+Different configurations of fields and who can see them can be set up for each table, so for convenience, we are calling a single configuration a "layout"
 
 The following fields are also configurable in "data_view" layouts:
 
@@ -245,7 +248,7 @@ The input fields are as follows:
 - `title`: title to show for the field name. If not specified, it will just be the column_name in "Start Case".
 - `element_type_plugin_code`: if the value being returned is a whole application response, then it will be parsed and displayed using a front-end element plugin (SummaryView). This is where you specify the code of the plugin required. If `null`, value won't be sent to a SummaryView element for display.
 - `element_parameters`: if a plugin is specified above, then it will require input parameters. This value should be an object containing all the parameters required for display. Values of parameters can be literals or evaluator queries, and will be evaluated by the front-end in SummaryView just like a normal form element.
-- `additional_formatting`: a custom object specifiying additional formatting definitons. Detailed explanation below.
+- `additional_formatting`: a custom object specifying additional formatting definitions. Detailed explanation below.
 - `value_expression`: if `null`, the returned value will just be the value of the field from the table in question. However, if you are defining a custom column, or you want to over-ride the value of the field, this field should contain an evaluator expression. The "object" passed into the evaluator for "objectProperties" operator is the current record (item) represented as key-value pairs. 
    - For example, if you wanted to return a custom field from the "user" table that combined both first and last names (column name: `fullName`), your `value_expression` query would be:  
 ```

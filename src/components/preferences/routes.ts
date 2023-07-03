@@ -32,7 +32,8 @@ export const routeGetPrefs = async (request: any, reply: any) => {
   const prefs = loadCurrentPrefs()
   const languageOptions = readLanguageOptions()
   const latestSnapshot = await databaseConnect.getLatestSnapshotName()
-  reply.send({ preferences: prefs.web, languageOptions, latestSnapshot })
+  const allowedTableNames = config.allowedTableNames
+  reply.send({ preferences: prefs.web, languageOptions, latestSnapshot, allowedTableNames })
 }
 
 // Return all prefs for editing (Admin only)
