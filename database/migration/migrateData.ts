@@ -794,6 +794,23 @@ const migrateData = async () => {
       ALTER TABLE public.template   
         ADD COLUMN IF NOT EXISTS dashboard_restrictions VARCHAR[];
     `)
+
+    console.log(' - Updating template versioning schema')
+    await DB.changeSchema(`
+      ALTER TABLE public.template   
+        ADD COLUMN IF NOT EXISTS version_id VARCHAR UNIQUE;
+      ALTER TABLE public.template   
+        ADD COLUMN IF NOT EXISTS parent_version_id VARCHAR;
+      ALTER TABLE public.template   
+        ADD COLUMN IF NOT EXISTS version_history jsonb;
+    `)
+    // Migrate existing
+    await DB.migrateTemplateVersions()
+    // Add non-null constraint after migrating
+    await DB.changeSchema(`
+    ALTER TABLE public.template   
+      ALTER COLUMN version_id SET NOT NULL;
+    `)
   }
 
   // Other version migrations continue here...
