@@ -798,9 +798,11 @@ const migrateData = async () => {
     console.log(' - Updating template versioning schema')
     await DB.changeSchema(`
       ALTER TABLE public.template   
-        ADD COLUMN IF NOT EXISTS version_id VARCHAR UNIQUE;
+        ADD COLUMN IF NOT EXISTS version_id varchar;
+      ALTER TABLE public.template
+        ADD COLUMN IF NOT EXISTS parent_version_id varchar;
       ALTER TABLE public.template   
-        ADD COLUMN IF NOT EXISTS parent_version_id VARCHAR;
+        ADD COLUMN IF NOT EXISTS version_export_comment varchar;
       ALTER TABLE public.template   
         ADD COLUMN IF NOT EXISTS version_history jsonb;
     `)

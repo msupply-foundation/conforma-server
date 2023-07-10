@@ -193,20 +193,20 @@ const databaseMethods = {
         versionId: string
         timestamp: string
         parentVersionId: string | null
+        comment: string | null
       }[] = []
 
       for (const template of templates) {
         const versionId = nanoid()
         const timestamp = template.version_timestamp.toISOString()
         const parentVersionId = versionHistory.slice(-1)?.[0]?.versionId ?? null
-        const historyObject = { versionId, timestamp, parentVersionId }
+        const comment = `New version: ${versionId}`
+        const historyObject = { versionId, timestamp, parentVersionId, comment }
 
         const text = `UPDATE template SET version_id = $1,
           parent_version_id = $2,
           version_history = $3
           WHERE id = $4`
-
-        console.log('versionHistory', versionHistory)
 
         await DBConnect.query({
           text,
