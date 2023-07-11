@@ -286,6 +286,25 @@ ALTER TABLE public.template_element
 ALTER TABLE public.template_element
     ADD UNIQUE (template_code, code, template_version);
 
+-- FUNCTION/TRIGGER to re-compute the above generated values whenever the versionId or code changes
+CREATE OR REPLACE FUNCTION public.recompute_template_element_code_version ()
+    RETURNS TRIGGER
+    AS $template_element_event$
+BEGIN
+    UPDATE public.template_element
+        SET code=code
+        WHERE template_code = OLD.code;
+        RETURN NULL;
+END;
+$template_element_event$
+LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS template_version_code_update ON public.template;
+CREATE TRIGGER template_version_code_update
+    AFTER UPDATE OF version_id, code ON public.template
+    FOR EACH ROW
+    EXECUTE FUNCTION public.recompute_template_element_code_version ();
+
 -- APPLICATION
 --FUNCTION to update `is_active` to false
 -- and application status to "COMPLETED"
