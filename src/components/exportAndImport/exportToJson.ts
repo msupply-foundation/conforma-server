@@ -9,7 +9,7 @@ const getRecordsAsObject = async ({
   filters,
   includeTables,
   excludeTables,
-  resetTemplate,
+  templates,
 }: ExportAndImportOptions) => {
   const databaseTables = (await getDatabaseInfo()).filter(({ isView }) => !isView)
 
@@ -26,7 +26,7 @@ const getRecordsAsObject = async ({
     const { gql, getter, hasFilter } = constructGqlAndGetter(table, filteredReferences, baseFilter)
     const result = await databaseConnect.gqlQuery(gql)
     const rows = getter(result)
-    records[tableName] = tableName === 'template' && resetTemplate ? resetTemplates(rows) : rows
+    records[tableName] = tableName === 'template' ? updateTemplateData(rows, templates) : rows
     if (hasFilter) filteredRecords[tableName] = rows
   }
 
@@ -97,22 +97,45 @@ const constructGqlAndGetter = (
 // Reset the version info for templates. Used when duplicating a NEW template
 // version using a snapshot export/import. This intercepts the template records
 // and sets the version data accordingly.
-const resetTemplates = (templates: Template[]) =>
-  templates.map((template) => ({
-    ...template,
-    status: TemplateStatus.Draft,
-    versionHistory: [
-      ...template.versionHistory,
-      {
-        comment: template.versionExportComment,
-        timestamp: template.versionTimestamp,
-        versionId: template.versionId,
-        parentVersionId: template.parentVersionId,
-      },
-    ],
-    parentVersionId: template.versionId,
-    versionId: '*',
-    versionExportComment: null,
-  }))
+const updateTemplateData = (
+  templates: Template[],
+  templateOptions?: { resetVersion?: boolean; newCode?: string }
+) => {
+  if (templateOptions?.newCode) {
+    // Change template code and erase version history
+    return templates.map((template) => ({
+      ...template,
+      code: templateOptions.newCode,
+      name: `New template based from: ${template.name}`,
+      namePlural: null,
+      status: TemplateStatus.Draft,
+      versionHistory: [],
+      parentVersionId: null,
+      versionId: '*',
+      versionExportComment: null,
+    }))
+  }
+
+  if (templateOptions?.resetVersion)
+    // Set version to "*" (editable) and update version history
+    return templates.map((template) => ({
+      ...template,
+      status: TemplateStatus.Draft,
+      versionHistory: [
+        ...template.versionHistory,
+        {
+          comment: template.versionExportComment,
+          timestamp: template.versionTimestamp,
+          versionId: template.versionId,
+          parentVersionId: template.parentVersionId,
+        },
+      ],
+      parentVersionId: template.versionId,
+      versionId: '*',
+      versionExportComment: null,
+    }))
+
+  return templates
+}
 
 export default getRecordsAsObject
