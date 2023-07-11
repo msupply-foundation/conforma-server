@@ -113,7 +113,7 @@ const updateTemplateData = (
       versionHistory: [],
       parentVersionId: null,
       versionId: '*',
-      versionExportComment: null,
+      versionComment: null,
     }))
   }
 
@@ -125,7 +125,7 @@ const updateTemplateData = (
       versionHistory: [
         ...template.versionHistory,
         {
-          comment: template.versionExportComment,
+          comment: template.versionComment,
           timestamp: template.versionTimestamp,
           versionId: template.versionId,
           parentVersionId: template.parentVersionId,
@@ -133,7 +133,7 @@ const updateTemplateData = (
       ],
       parentVersionId: template.versionId,
       versionId: '*',
-      versionExportComment: null,
+      versionComment: null,
       versionTimestamp: DateTime.now().toISO(),
     }))
 

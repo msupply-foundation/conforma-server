@@ -51,7 +51,7 @@ const insertFromObject: InsertFromObject = async (
       // migrate it first
       if (!('versionId' in template)) {
         template.versionId = nanoid()
-        template.versionExportComment = 'Migrated from previous version format'
+        template.versionComment = 'Migrated from previous version format'
         template.versionHistory = new Array(template.version).fill(0).map((_) => ({
           comment: null,
           timestamp: DateTime.fromISO(template.versionTimestamp),
