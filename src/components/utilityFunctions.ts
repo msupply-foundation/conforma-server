@@ -49,7 +49,7 @@ export const makeFolder = (folderPath: string, message?: string) => {
 // specified property. When more than one exists, a "priority" field can be
 // specified to determine which to keep, otherwise it will return the first one.
 // Preserves the order of the original input array
-// TO-DO: Allow custom comparitor function
+// TO-DO: Allow custom comparator function
 type BasicObject = { [key: string]: any }
 type IndexObject = { [key: string]: number }
 export const getDistinctObjects = (

@@ -770,6 +770,18 @@ const migrateData = async () => {
       ALTER TABLE public.data_view ALTER COLUMN identifier SET NOT NULL;
       ALTER TABLE public.data_view_column_definition ALTER COLUMN column_name SET NOT NULL;
     `)
+
+    console.log(' - Adding submenu column to data view')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_view   
+        ADD COLUMN IF NOT EXISTS submenu VARCHAR;
+    `)
+
+    console.log(' - Adding is_submenu column to template_category')
+    await DB.changeSchema(`
+      ALTER TABLE public.template_category   
+        ADD COLUMN IF NOT EXISTS is_submenu BOOLEAN DEFAULT FALSE;
+    `)
   }
 
   // Other version migrations continue here...

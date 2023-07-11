@@ -14,23 +14,25 @@ import {
   queryLinkedApplications,
 } from './gqlDynamicQueries'
 import { camelCase, kebabCase } from 'lodash'
-import { ColumnDefinition, LinkedApplication, DataViewsResponse } from './types'
+import { ColumnDefinition, LinkedApplication, DataViewDetail } from './types'
 import { DataView } from '../../generated/graphql'
 import config from '../../config'
+import { FastifyReply, FastifyRequest } from 'fastify'
 
 // CONSTANTS
 const LOOKUP_TABLE_PERMISSION_NAME = 'lookupTables'
 
-const routeDataViews = async (request: any, reply: any) => {
+const routeDataViews = async (request: FastifyRequest, reply: FastifyReply) => {
   const { permissionNames } = await getPermissionNamesFromJWT(request)
   const dataViews = await DBConnect.getAllowedDataViews(permissionNames)
   const distinctDataViews = getDistinctObjects(dataViews, 'code', 'priority')
-  const dataViewResponse: DataViewsResponse = distinctDataViews.map(
-    ({ table_name, title, code, default_filter_string }) => ({
+  const dataViewResponse: DataViewDetail[] = distinctDataViews.map(
+    ({ table_name, title, code, submenu, default_filter_string }) => ({
       tableName: camelCase(table_name),
       title,
       code,
       urlSlug: kebabCase(code),
+      submenu,
       defaultFilter: default_filter_string,
     })
   )
