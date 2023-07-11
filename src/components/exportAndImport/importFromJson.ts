@@ -1,7 +1,7 @@
 import { camelCase, mapValues } from 'lodash'
 import databaseConnect from '../databaseConnect'
 import getDatabaseInfo from './getDatabaseInfo'
-import { filterByIncludeAndExclude } from './helpers'
+import { filterByIncludeAndExclude, getTemplateVersionId, isTemplateUnlocked } from './helpers'
 import { singular } from 'pluralize'
 import {
   DatabaseColumn,
@@ -11,11 +11,8 @@ import {
   ObjectRecord,
   ObjectRecords,
 } from './types'
-import { customAlphabet } from 'nanoid'
 import { DateTime } from 'luxon'
 import { Template } from '../../generated/graphql'
-
-const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 6)
 
 type InsertFromObject = (
   records: ObjectRecords,
@@ -50,12 +47,12 @@ const insertFromObject: InsertFromObject = async (
       // If template was exported using an earlier version schema, we need to
       // migrate it first
       if (!('versionId' in template)) {
-        template.versionId = nanoid()
+        template.versionId = getTemplateVersionId()
         template.versionComment = 'Migrated from previous version format'
         template.versionHistory = new Array(template.version).fill(0).map((_) => ({
           comment: null,
           timestamp: DateTime.fromISO(template.versionTimestamp),
-          versionId: nanoid(),
+          versionId: getTemplateVersionId(),
           parentVersionId: null,
         }))
         template.version = null
@@ -236,9 +233,5 @@ const getInsertKeyValues = (values: ObjectRecord, columns: DatabaseColumn[]) => 
       variableDeclarations.length === 0 ? '' : `(${variableDeclarations.join(',')})`,
   }
 }
-
-// Checks if template version starts with "*" character (i.e. template can be
-// modified)
-const isTemplateUnlocked = (template: Template) => /\*/.test(template.versionId)
 
 export default insertFromObject

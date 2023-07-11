@@ -1,6 +1,5 @@
-import { customAlphabet } from 'nanoid'
 import DBConnect from '../../src/components/databaseConnect'
-import { QueryResult } from 'pg'
+import { getTemplateVersionId } from '../../src/components/exportAndImport/helpers'
 
 type SchemaQueryOptions = {
   silent: boolean
@@ -169,7 +168,6 @@ const databaseMethods = {
     }
   },
   migrateTemplateVersions: async () => {
-    const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 6)
     // Get all templates
     let result
     try {
@@ -207,7 +205,7 @@ const databaseMethods = {
       }[] = []
 
       for (const template of templates) {
-        const versionId = nanoid()
+        const versionId = getTemplateVersionId()
         const timestamp = template.version_timestamp.toISOString()
         const parentVersionId = versionHistory.slice(-1)?.[0]?.versionId ?? null
         const comment = `New version: ${versionId}`

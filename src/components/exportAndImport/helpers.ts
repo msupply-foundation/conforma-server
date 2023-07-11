@@ -1,3 +1,4 @@
+import { customAlphabet } from 'nanoid'
 import { DatabaseTables } from './types'
 
 export const filterByIncludeAndExclude = (
@@ -34,3 +35,9 @@ export const noQuoteKeyStringify = (json: object) => {
 
   return result + (isArray ? ']' : '}')
 }
+
+export const getTemplateVersionId = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 6)
+
+// If versionId starts with "*" char, then it can be modified
+export const isTemplateUnlocked = (template: { versionId: string }) =>
+  template.versionId.startsWith('*')
