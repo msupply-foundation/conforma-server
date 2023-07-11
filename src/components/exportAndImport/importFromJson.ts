@@ -11,6 +11,10 @@ import {
   ObjectRecord,
   ObjectRecords,
 } from './types'
+import { customAlphabet } from 'nanoid'
+import { DateTime } from 'luxon'
+
+const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 6)
 
 type InsertFromObject = (
   records: ObjectRecords,
@@ -20,7 +24,7 @@ type InsertFromObject = (
 
 const insertFromObject: InsertFromObject = async (
   records,
-  { includeTables, excludeTables, skipTableOnInsertFail = [] },
+  { includeTables, excludeTables, skipTableOnInsertFail = [], templates },
   preserveIds = false
 ) => {
   const databaseTables = (await getDatabaseInfo()).filter(({ isView }) => !isView)
@@ -32,6 +36,35 @@ const insertFromObject: InsertFromObject = async (
     const { tableName } = table
     const recordsForTable = records[tableName]
     if (!recordsForTable || recordsForTable.length === 0) continue
+
+    // When importing a template, check that version doesn't already exist in
+    // the system
+    if (
+      tableName === 'template' &&
+      templates?.checkVersionOnImport &&
+      recordsForTable.length === 1
+    ) {
+      const template = recordsForTable[0]
+
+      // If template was exported using an earlier version schema, we need to
+      // migrate it first
+      if (!('versionId' in template)) {
+        template.versionId = nanoid()
+        template.versionExportComment = 'Migrated from previous version format'
+        template.versionHistory = new Array(template.version).fill(0).map((_) => ({
+          comment: null,
+          timestamp: DateTime.fromISO(template.versionTimestamp),
+          versionId: nanoid(),
+          parentVersionId: null,
+        }))
+      }
+
+      if (template.versionId === '*') throw new Error("Can't import without a committed versionId")
+
+      const existingVersions = await databaseConnect.getTemplateVersionIDs(template.code)
+      if (existingVersions.includes(template.versionId))
+        throw new Error('Template version already exists in the system')
+    }
 
     for (let record of recordsForTable) {
       const { insertQuery, getRecordQuery, insertGetter, getRecordGetter, variables } =

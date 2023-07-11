@@ -4,6 +4,7 @@ import { DatabaseTable, ExportAndImportOptions, ObjectRecords } from './types'
 import pluralize from 'pluralize'
 import { filterByIncludeAndExclude, noQuoteKeyStringify } from './helpers'
 import { Template, TemplateStatus } from '../../generated/graphql'
+import { DateTime } from 'luxon'
 
 const getRecordsAsObject = async ({
   filters,
@@ -133,6 +134,7 @@ const updateTemplateData = (
       parentVersionId: template.versionId,
       versionId: '*',
       versionExportComment: null,
+      versionTimestamp: DateTime.now().toISO(),
     }))
 
   return templates

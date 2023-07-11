@@ -164,6 +164,8 @@ class DBConnect {
 
   public getDataTableColumns = PostgresDB.getDataTableColumns
 
+  public getTemplateVersionIDs = PostgresDB.getTemplateVersionIDs
+
   public getPermissionPolicies = PostgresDB.getPermissionPolicies
 
   public getAllowedDataViews = PostgresDB.getAllowedDataViews
