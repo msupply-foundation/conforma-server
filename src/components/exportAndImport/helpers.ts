@@ -1,4 +1,4 @@
-import { customAlphabet } from 'nanoid'
+import { customAlphabet } from 'nanoid/non-secure'
 import { DatabaseTables } from './types'
 
 export const filterByIncludeAndExclude = (
