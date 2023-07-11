@@ -3,11 +3,13 @@ import getDatabaseInfo from './getDatabaseInfo'
 import { DatabaseTable, ExportAndImportOptions, ObjectRecords } from './types'
 import pluralize from 'pluralize'
 import { filterByIncludeAndExclude, noQuoteKeyStringify } from './helpers'
+import { Template, TemplateStatus } from '../../generated/graphql'
 
 const getRecordsAsObject = async ({
   filters,
   includeTables,
   excludeTables,
+  resetTemplate,
 }: ExportAndImportOptions) => {
   const databaseTables = (await getDatabaseInfo()).filter(({ isView }) => !isView)
 
@@ -24,7 +26,7 @@ const getRecordsAsObject = async ({
     const { gql, getter, hasFilter } = constructGqlAndGetter(table, filteredReferences, baseFilter)
     const result = await databaseConnect.gqlQuery(gql)
     const rows = getter(result)
-    records[tableName] = rows
+    records[tableName] = tableName === 'template' && resetTemplate ? resetTemplates(rows) : rows
     if (hasFilter) filteredRecords[tableName] = rows
   }
 
@@ -91,5 +93,26 @@ const constructGqlAndGetter = (
 
   return { gql, getter, hasFilter }
 }
+
+// Reset the version info for templates. Used when duplicating a NEW template
+// version using a snapshot export/import. This intercepts the template records
+// and sets the version data accordingly.
+const resetTemplates = (templates: Template[]) =>
+  templates.map((template) => ({
+    ...template,
+    status: TemplateStatus.Draft,
+    versionHistory: [
+      ...template.versionHistory,
+      {
+        comment: template.versionExportComment,
+        timestamp: template.versionTimestamp,
+        versionId: template.versionId,
+        parentVersionId: template.parentVersionId,
+      },
+    ],
+    parentVersionId: template.versionId,
+    versionId: '*',
+    versionExportComment: null,
+  }))
 
 export default getRecordsAsObject

@@ -42,6 +42,7 @@ export type ExportAndImportOptions = {
   includeLocalisation?: boolean
   includePrefs?: boolean
   resetFiles: boolean
+  resetTemplate?: boolean
 }
 
 export type ObjectRecord = { [columnName: string]: any }
