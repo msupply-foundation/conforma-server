@@ -808,10 +808,12 @@ const migrateData = async () => {
     `)
     // Migrate existing
     await DB.migrateTemplateVersions()
-    // Add non-null constraint after migrating
+    // Add non-null constraint and remove old version after migrating
     await DB.changeSchema(`
     ALTER TABLE public.template   
       ALTER COLUMN version_id SET NOT NULL;
+    ALTER TABLE public.template
+      DROP COLUMN IF EXISTS version;
     `)
   }
 

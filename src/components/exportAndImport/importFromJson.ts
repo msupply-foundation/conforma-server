@@ -13,6 +13,7 @@ import {
 } from './types'
 import { customAlphabet } from 'nanoid'
 import { DateTime } from 'luxon'
+import { Template } from '../../generated/graphql'
 
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 6)
 
@@ -57,11 +58,19 @@ const insertFromObject: InsertFromObject = async (
           versionId: nanoid(),
           parentVersionId: null,
         }))
+        template.version = null
       }
 
-      if (template.versionId === '*') throw new Error("Can't import without a committed versionId")
-
       const existingVersions = await databaseConnect.getTemplateVersionIDs(template.code)
+
+      // Make sure unlocked "*" templates have unique versionId
+      if (isTemplateUnlocked(template as Template)) {
+        let suffix = 1
+        while (existingVersions.includes(template.versionId)) {
+          template.versionId = `*_${suffix++}`
+        }
+      }
+
       if (existingVersions.includes(template.versionId))
         throw new Error('Template version already exists in the system')
     }
@@ -227,5 +236,9 @@ const getInsertKeyValues = (values: ObjectRecord, columns: DatabaseColumn[]) => 
       variableDeclarations.length === 0 ? '' : `(${variableDeclarations.join(',')})`,
   }
 }
+
+// Checks if template version starts with "*" character (i.e. template can be
+// modified)
+const isTemplateUnlocked = (template: Template) => /\*/.test(template.versionId)
 
 export default insertFromObject

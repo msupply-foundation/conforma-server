@@ -1,5 +1,6 @@
 import { customAlphabet } from 'nanoid'
 import DBConnect from '../../src/components/databaseConnect'
+import { QueryResult } from 'pg'
 
 type SchemaQueryOptions = {
   silent: boolean
@@ -170,10 +171,19 @@ const databaseMethods = {
   migrateTemplateVersions: async () => {
     const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 6)
     // Get all templates
-    const result = await DBConnect.query({
-      text: `SELECT id, code, version, version_timestamp, version_id FROM template`,
-    })
-    const allTemplates = result.rows
+    let result
+    try {
+      result = await DBConnect.query({
+        text: `SELECT id, code, version, version_timestamp, version_id FROM template`,
+      })
+    } catch {
+      // This will fail if the "version" column has already been deleted in an
+      // earlier migration run
+      console.log('...Template versions already migrated')
+      return
+    }
+
+    const allTemplates = result?.rows ?? []
 
     if (allTemplates.every((template) => template.version_id !== null)) {
       console.log('...Template versions already migrated')

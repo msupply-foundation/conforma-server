@@ -149,31 +149,12 @@ CREATE TRIGGER trigger_queue
     EXECUTE FUNCTION public.notify_trigger_queue ();
 
 -- TEMPLATES
--- FUNCTION to generate a new version of template (should run as a trigger)
-CREATE OR REPLACE FUNCTION public.set_template_verision ()
-    RETURNS TRIGGER
-    AS $template_event$
-BEGIN
-    IF (
-        SELECT
-            count(*)
-        FROM
-            public.template
-        WHERE
-            id != NEW.id AND code = NEW.code AND version = NEW.version) > 0 THEN
-        NEW.version = (
-            SELECT
-                max(version) + 1
-            FROM
-                public.template
-            WHERE
-                code = NEW.code);
-        NEW.version_timestamp = CURRENT_TIMESTAMP;
-    END IF;
-    RETURN NEW;
-END
-$template_event$
-LANGUAGE plpgsql;
+
+DROP FUNCTION IF EXISTS public.set_template_verision CASCADE; -- DEPRECATED
+
+-- Enforce unique versionId per template type
+ALTER TABLE public.template
+    ADD UNIQUE (code, version_id);
 
 -- FUNCTION to make sure duplicated templates have 'DRAFT' status
 --   but only if there is another version with 'AVAILABLE' status
@@ -228,14 +209,6 @@ END;
 $template_event$
 LANGUAGE plpgsql;
 
---TRIGGER to generate new version of template on insertion or update
-DROP TRIGGER IF EXISTS set_template_version_trigger ON public.template;
-
-CREATE TRIGGER set_template_version_trigger
-    BEFORE INSERT OR UPDATE ON public.template
-    FOR EACH ROW
-    EXECUTE FUNCTION public.set_template_verision ();
-
 --TRIGGER to make sure duplicates templates have 'DRAFT' status
 DROP TRIGGER IF EXISTS set_template_to_draft_trigger ON public.template;
 
@@ -246,7 +219,6 @@ CREATE TRIGGER set_template_to_draft_trigger
 
 -- TRIGGER to ensure only one template version can be 'AVAILABLE'
 DROP TRIGGER IF EXISTS template_status_update_trigger ON public.template;
-
 CREATE TRIGGER template_status_update_trigger
     AFTER UPDATE OF status ON public.template
     FOR EACH ROW
@@ -271,11 +243,12 @@ LANGUAGE SQL
 IMMUTABLE;
 
 -- FUNCTION to return template_version for current element/section
-CREATE OR REPLACE FUNCTION public.get_template_version (section_id int)
-    RETURNS integer
+DROP FUNCTION IF EXISTS public.get_template_version CASCADE;
+CREATE FUNCTION public.get_template_version (section_id int)
+    RETURNS varchar
     AS $$
     SELECT
-        template.version
+        template.version_id
     FROM
         public.template
         JOIN public.template_section ON template_id = template.id
@@ -308,7 +281,7 @@ ALTER TABLE public.template_element
 
 ALTER TABLE public.template_element
     DROP COLUMN IF EXISTS template_version,
-    ADD COLUMN IF NOT EXISTS template_version integer GENERATED ALWAYS AS (public.get_template_version (section_id)) STORED;
+    ADD COLUMN IF NOT EXISTS template_version varchar GENERATED ALWAYS AS (public.get_template_version (section_id)) STORED;
 
 ALTER TABLE public.template_element
     ADD UNIQUE (template_code, code, template_version);
