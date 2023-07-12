@@ -112,7 +112,8 @@ CREATE OR REPLACE FUNCTION public.add_event_to_trigger_queue ()
     RETURNS TRIGGER
     AS $trigger_queue$
 BEGIN
-    --
+    -- Prevent triggers being added to queue if another one for the same event
+    -- is already in progress:
     IF (
             SELECT COUNT(*) FROM trigger_queue
             WHERE trigger_type = NEW.trigger::public.trigger
