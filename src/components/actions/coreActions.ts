@@ -582,4 +582,20 @@ const coreActions: CoreActions = {
       },
     },
   ],
+  [Trigger.OnExtend]: [
+    // Set application outcome back to PENDING (from EXPIRED) if
+    // applicantDeadline is extended.
+    {
+      code: 'changeOutcome',
+      path: '../plugins/action_change_outcome/src/index.ts',
+      name: 'Change Outcome',
+      trigger: 'ON_EXTEND',
+      event_code: null,
+      sequence: -1,
+      condition: true,
+      parameter_queries: {
+        newOutcome: 'PENDING',
+      },
+    },
+  ],
 }
