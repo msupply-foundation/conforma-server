@@ -14,6 +14,8 @@ import {
   GENERIC_THUMBNAILS_SOURCE_FOLDER,
   DATABASE_FOLDER,
   BASE_SNAPSHOT_NAME,
+  SNAPSHOT_ARCHIVE_FOLDER,
+  ARCHIVE_FOLDER,
 } from '../../constants'
 import fs from 'fs'
 import path from 'path'
@@ -23,6 +25,7 @@ import { makeFolder } from '../utilityFunctions'
 export function createDefaultDataFolders() {
   try {
     makeFolder(SNAPSHOT_FOLDER, 'Creating SNAPSHOTS folder')
+    makeFolder(SNAPSHOT_ARCHIVE_FOLDER)
     makeFolder(BACKUPS_FOLDER, 'Creating BACKUPS folder')
     // Copy core_templates to snapshots folder
     execSync(`cp -r '${DATABASE_FOLDER}/${BASE_SNAPSHOT_NAME}' '${SNAPSHOT_FOLDER}'`)

@@ -815,6 +815,12 @@ const migrateData = async () => {
     ALTER TABLE public.template
       DROP COLUMN IF EXISTS version;
     `)
+
+    console.log(' - Creating archived flag for files')
+    await DB.changeSchema(`
+    ALTER TABLE public.file  
+      ADD COLUMN IF NOT EXISTS archived boolean DEFAULT FALSE NOT NULL;
+    `)
   }
 
   // Other version migrations continue here...

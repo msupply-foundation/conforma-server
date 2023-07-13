@@ -390,6 +390,44 @@ class PostgresDB {
     }
   }
 
+  // File archiving
+
+  public getFilesToArchive = async () => {
+    const duration = `${config?.archiveFileAgeMinimum ?? 7} days`
+    const text = `
+      SELECT unique_id, file_path, thumbnail_path, timestamp
+      FROM file
+      WHERE archived = FALSE
+      AND to_be_deleted = FALSE
+      AND timestamp < now() - interval '${duration}' 
+    `
+    try {
+      const result = await this.query({ text })
+      return result.rows
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public setFileArchived = async (file: {
+    unique_id: string
+    file_path: string
+    thumbnail_path: string
+  }) => {
+    const { unique_id, file_path, thumbnail_path } = file
+    const text = `
+      UPDATE file SET archived = TRUE,
+      file_path = $1,
+      thumbnail_path = $2 
+      WHERE unique_id = $3`
+    try {
+      const result = await this.query({ text, values: [file_path, thumbnail_path, unique_id] })
+      return result.rows
+    } catch (err) {
+      throw err
+    }
+  }
+
   public addActionPlugin = async (plugin: ActionPlugin): Promise<boolean> => {
     const text = `INSERT INTO action_plugin (${Object.keys(plugin)}) 
       VALUES (${this.getValuesPlaceholders(plugin)})`
@@ -1285,6 +1323,37 @@ class PostgresDB {
     try {
       const result = await this.query({ text })
       return result.rows[0]?.value ?? 'init'
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getSystemInfo = async (type: string) => {
+    const text = `SELECT value
+    FROM system_info
+    WHERE timestamp =
+      (SELECT MAX(timestamp) FROM system_info
+      WHERE name=$1)
+     `
+    try {
+      const result = await this.query({ text, values: [type] })
+      return result.rows[0]?.value ?? null
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public setSystemInfo = async (type: string, value: string) => {
+    const text = `
+      INSERT INTO system_info (name, value)
+      VALUES($1, $2)
+      RETURNING name, value, timestamp
+     `
+    try {
+      const result = await this.query({ text, values: [type, JSON.stringify(value)] })
+      return result.rows[0]
     } catch (err) {
       console.log(err.message)
       throw err

@@ -270,6 +270,8 @@ export interface ServerPreferences {
   backupSchedule?: number[]
   backupFilePrefix?: string
   maxBackupDurationDays?: number
+  archiveSchedule?: number[]
+  archiveFileAgeMinimum?: number
   emailTestMode?: boolean
   testingEmail?: string
 }
@@ -287,6 +289,8 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'backupSchedule',
   'backupFilePrefix',
   'maxBackupDurationDays',
+  'archiveSchedule',
+  'archiveFileAgeMinimum',
   'emailTestMode',
   'testingEmail',
 ]
