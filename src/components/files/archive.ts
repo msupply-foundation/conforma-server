@@ -59,7 +59,7 @@ export const archiveFiles = async () => {
 
   // Move files
   for (const file of files) {
-    const newFilePath = path.join(archivePath, file.file_path)
+    const newFilePath = path.join(archivePath, 'files', file.file_path)
     try {
       await move(path.join(FILES_FOLDER, file.file_path), path.join(FILES_FOLDER, newFilePath))
       file.file_path = newFilePath
@@ -69,7 +69,7 @@ export const archiveFiles = async () => {
     const shouldMoveThumbnail = !file.thumbnail_path.startsWith(config.genericThumbnailsFolderName)
 
     const newThumbnailPath = shouldMoveThumbnail
-      ? path.join(archivePath, file.thumbnail_path)
+      ? path.join(archivePath, 'files', file.thumbnail_path)
       : file.thumbnail_path
     if (shouldMoveThumbnail)
       try {
@@ -83,7 +83,7 @@ export const archiveFiles = async () => {
       }
   }
 
-  // Update database
+  // Update database with new file paths and "archived" flag
   for (const file of files) {
     await DBConnect.setFileArchived(file)
   }
