@@ -43,6 +43,7 @@ export type ExportAndImportOptions = {
   includePrefs?: boolean
   resetFiles: boolean
   templates?: { resetVersion?: boolean; newCode?: string; checkVersionOnImport?: boolean }
+  archive?: 'none' | 'full' | string | number
 }
 
 export type ObjectRecord = { [columnName: string]: any }

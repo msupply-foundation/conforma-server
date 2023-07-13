@@ -1,4 +1,5 @@
 import fs from 'fs'
+import fse from 'fs-extra'
 import archiver from 'archiver'
 import { ExportAndImportOptions, ObjectRecord, SnapshotOperation } from '../exportAndImport/types'
 import path from 'path'
@@ -24,6 +25,9 @@ import {
   PREFERENCES_FILE,
   PG_DFF_JS_LOCATION,
   DATABASE_FOLDER,
+  ARCHIVE_SUBFOLDER_NAME,
+  GENERIC_THUMBNAILS_FOLDER,
+  ARCHIVE_FOLDER,
 } from '../../constants'
 import { getDirectoryFromPath } from './useSnapshot'
 import DBConnect from '../../../src/components/databaseConnect'
@@ -31,6 +35,7 @@ import config from '../../config'
 import { DateTime } from 'luxon'
 const asyncRimRaf = promisify(rimraf)
 import { createDefaultDataFolders } from '../files/createDefaultFolders'
+import { getArchiveFolders } from '../files/helpers'
 
 const takeSnapshot: SnapshotOperation = async ({
   snapshotName = DEFAULT_SNAPSHOT_NAME,
@@ -66,9 +71,8 @@ const takeSnapshot: SnapshotOperation = async ({
       console.log('Dumping database...done')
 
       // Copy ALL files
-      console.log('Exporting files...')
-      execSync(`cp -a '${FILES_FOLDER}'/. '${newSnapshotFolder}/files'`)
-      console.log('Exporting files...done')
+
+      await copyFiles(newSnapshotFolder, options.archive)
     } else {
       // Do it the old way, using JSON database object export
       const snapshotObject = await getRecordsAsObject(options)
@@ -76,7 +80,7 @@ const takeSnapshot: SnapshotOperation = async ({
         path.join(newSnapshotFolder, `${SNAPSHOT_FILE_NAME}.json`),
         JSON.stringify(snapshotObject, null, 2)
       )
-      await copyFiles(newSnapshotFolder, snapshotObject.file ?? [])
+      await copyFilesPartial(newSnapshotFolder, snapshotObject.file ?? [])
     }
 
     // Export config
@@ -192,7 +196,9 @@ const getSchemaDiff = async (newSnapshotFolder: string) => {
   console.log('creating schema diff ... done ')
 }
 
-const copyFiles = async (newSnapshotFolder: string, fileRecords: ObjectRecord[]) => {
+// Copies a limited set of files, based on the records being exported. Usually
+// used for template export (will copy linked carbone docs, for example).
+const copyFilesPartial = async (newSnapshotFolder: string, fileRecords: ObjectRecord[]) => {
   // copy only files that associated with exported file records
   const filePaths = fileRecords.map((fileRecord) => fileRecord.filePath)
   filePaths.push(...fileRecords.map((fileRecord) => fileRecord.thumbnailPath))
@@ -211,6 +217,46 @@ const copyFiles = async (newSnapshotFolder: string, fileRecords: ObjectRecord[])
       console.log('failed to copy file', e)
     }
   }
+}
+
+const copyFiles = async (
+  newSnapshotFolder: string,
+  archiveOption: 'none' | 'full' | string | number = 'full'
+) => {
+  const archiveRegex = new RegExp(`.+${config.filesFolder}\/${ARCHIVE_SUBFOLDER_NAME}.*`)
+
+  console.log('Exporting files...')
+
+  // Copy files but not archive
+  await fse.copy(FILES_FOLDER, path.join(newSnapshotFolder, 'files'), {
+    filter: (src) => {
+      if (src === FILES_FOLDER) return true
+      if (src === GENERIC_THUMBNAILS_FOLDER) return false
+      return !archiveRegex.test(src)
+    },
+  })
+
+  // Figure out which archive folders we want
+  let archiveFolders: string[]
+  if (archiveOption === 'none') archiveFolders = []
+  else if (archiveOption === 'full') archiveFolders = await getArchiveFolders()
+  else archiveFolders = await getArchiveFolders(archiveOption)
+
+  // Copy the archive folders
+  for (const folder of archiveFolders) {
+    await fse.copy(
+      path.join(ARCHIVE_FOLDER, folder),
+      path.join(newSnapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME, folder)
+    )
+  }
+
+  // And copy the archive meta-data
+  await fse.copy(
+    path.join(ARCHIVE_FOLDER, 'archive.json'),
+    path.join(newSnapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME, 'archive.json')
+  )
+
+  console.log('Exporting files...done')
 }
 
 export default takeSnapshot

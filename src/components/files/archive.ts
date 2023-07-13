@@ -14,6 +14,19 @@ import { nanoid } from 'nanoid'
 
 const isManualArchive: Boolean = process.argv[2] === '--archive'
 
+export interface ArchiveInfo {
+  timestamp: number
+  archiveFolder: string
+  uid: string
+  prevArchiveFolder: string | null
+  prevUid: string | null
+}
+
+export interface ArchiveData {
+  archives: { [key: string]: ArchiveInfo }
+  history: ArchiveInfo[]
+}
+
 export const archiveFiles = async () => {
   console.log(
     DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
@@ -21,19 +34,14 @@ export const archiveFiles = async () => {
   )
 
   // Load archive history
-  let fullArchive: { [key: string]: { timestamp: number; archiveFolder: string } } = {}
+  let archiveData: ArchiveData
   try {
-    fullArchive = await readJSON(path.join(ARCHIVE_FOLDER, 'archive.json'))
+    archiveData = await readJSON(path.join(ARCHIVE_FOLDER, 'archive.json'))
   } catch {
-    fullArchive = {}
+    archiveData = { archives: {}, history: [] }
   }
-  const archiveHistory = Object.entries(fullArchive)
-    .map(([uid, { timestamp, archiveFolder }]) => ({
-      uid,
-      timestamp,
-      archiveFolder,
-    }))
-    .sort((a, b) => a.timestamp - b.timestamp)
+
+  const { archives, history } = archiveData
 
   // TO-DO: Verify integrity of existing archive
 
@@ -82,23 +90,29 @@ export const archiveFiles = async () => {
 
   await clearEmptyDirectories(FILES_FOLDER)
 
-  // Create info.json
-  const prevArchive = archiveHistory.pop()
+  // Create metadata
+  const prevArchive = history.slice(-1)?.[0]
   const uid = nanoid()
-  const archiveInfo = {
+  const archiveInfo: ArchiveInfo = {
     timestamp: timestamp.toMillis(),
     uid,
-    previousArchive: prevArchive?.archiveFolder ?? null,
-    previousUid: prevArchive?.uid ?? null,
+    archiveFolder: timestampString,
+    prevArchiveFolder: prevArchive?.archiveFolder ?? null,
+    prevUid: prevArchive?.uid ?? null,
   }
 
   await writeJSON(path.join(FILES_FOLDER, archivePath, 'info.json'), archiveInfo, { spaces: 2 })
 
   // Update archive.json
-  fullArchive[uid] = { timestamp: timestamp.toMillis(), archiveFolder: timestampString }
-  await writeJSON(path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME, 'archive.json'), fullArchive, {
-    spaces: 2,
-  })
+  archives[uid] = archiveInfo
+  history.push(archiveInfo)
+  await writeJSON(
+    path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME, 'archive.json'),
+    { archives, history },
+    {
+      spaces: 2,
+    }
+  )
 
   // Update system info
   await DBConnect.setSystemInfo('archive', uid)
