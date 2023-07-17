@@ -2,9 +2,11 @@ import fs from 'fs'
 import fse from 'fs-extra'
 import archiver from 'archiver'
 import {
+  ArchiveInfo,
   ArchiveOption,
   ExportAndImportOptions,
   ObjectRecord,
+  SnapshotInfo,
   SnapshotOperation,
 } from '../exportAndImport/types'
 import path from 'path'
@@ -42,6 +44,7 @@ import { DateTime } from 'luxon'
 const asyncRimRaf = promisify(rimraf)
 import { createDefaultDataFolders } from '../files/createDefaultFolders'
 import { getArchiveFolders } from '../files/helpers'
+import { arch } from 'os'
 
 const takeSnapshot: SnapshotOperation = async ({
   snapshotName = DEFAULT_SNAPSHOT_NAME,
@@ -51,6 +54,8 @@ const takeSnapshot: SnapshotOperation = async ({
 }) => {
   // Ensure relevant folders exist
   createDefaultDataFolders()
+
+  let archiveInfo: ArchiveInfo = null
 
   try {
     console.log(`taking snapshot, name: ${snapshotName}`)
@@ -78,7 +83,7 @@ const takeSnapshot: SnapshotOperation = async ({
 
       // Copy ALL files
       await copyFiles(newSnapshotFolder)
-      await copyArchiveFiles(newSnapshotFolder, options.archive)
+      archiveInfo = await copyArchiveFiles(newSnapshotFolder, options.archive)
     } else {
       // Do it the old way, using JSON database object export
       const snapshotObject = await getRecordsAsObject(options)
@@ -113,7 +118,7 @@ const takeSnapshot: SnapshotOperation = async ({
     // Save snapshot info (version, timestamp, etc)
     await fs.promises.writeFile(
       path.join(newSnapshotFolder, `${INFO_FILE_NAME}.json`),
-      JSON.stringify(getSnapshotInfo(), null, ' ')
+      JSON.stringify(getSnapshotInfo(archiveInfo), null, ' ')
     )
 
     if (!options.skipZip) await zipSnapshot(newSnapshotFolder, snapshotName)
@@ -222,11 +227,15 @@ const zipSnapshot = async (
   await archive.finalize()
 }
 
-const getSnapshotInfo = () => {
-  return {
+const getSnapshotInfo = (archiveInfo: ArchiveInfo = null) => {
+  const snapshotInfo: SnapshotInfo = {
     timestamp: DateTime.now().toISO(),
     version: config.version,
   }
+  if (archiveInfo === null) return snapshotInfo
+
+  snapshotInfo.archive = archiveInfo
+  return snapshotInfo
 }
 
 const getSchemaDiff = async (newSnapshotFolder: string) => {
@@ -302,7 +311,7 @@ const copyFiles = async (newSnapshotFolder: string) => {
 const copyArchiveFiles = async (
   newSnapshotFolder: string,
   archiveOption: ArchiveOption = 'full'
-) => {
+): Promise<ArchiveInfo> => {
   console.log('Exporting archive files...')
 
   // Figure out which archive folders we want
@@ -311,12 +320,18 @@ const copyArchiveFiles = async (
   else if (archiveOption === 'full') archiveFolders = await getArchiveFolders()
   else archiveFolders = await getArchiveFolders(archiveOption)
 
+  let archiveFrom = Infinity
+  let archiveTo = 0
+
   // Copy the archive folders
   for (const folder of archiveFolders) {
     await fse.copy(
       path.join(ARCHIVE_FOLDER, folder),
       path.join(newSnapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME, folder)
     )
+    const info = await fse.readJson(path.join(ARCHIVE_FOLDER, folder, 'info.json'))
+    if (info.timestamp < archiveFrom) archiveFrom = info.timestamp
+    if (info.timestamp > archiveTo) archiveTo = info.timestamp
   }
 
   // And copy the archive meta-data
@@ -326,6 +341,18 @@ const copyArchiveFiles = async (
   )
 
   console.log('Exporting archive files...done')
+  if (archiveOption === 'none') return { type: 'none' }
+  if (archiveOption === 'full')
+    return {
+      type: 'full',
+      from: DateTime.fromMillis(archiveFrom).toISO(),
+      to: DateTime.fromMillis(archiveTo).toISO(),
+    }
+  return {
+    type: 'partial',
+    from: DateTime.fromMillis(archiveFrom).toISO(),
+    to: DateTime.fromMillis(archiveTo).toISO(),
+  }
 }
 
 export default takeSnapshot

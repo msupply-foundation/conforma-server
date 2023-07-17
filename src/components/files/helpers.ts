@@ -8,6 +8,8 @@ import { ARCHIVE_FOLDER, ARCHIVE_SUBFOLDER_NAME, FILES_FOLDER } from '../../cons
 import config from '../../config'
 import { nanoid } from 'nanoid'
 import { ArchiveData, ArchiveInfo } from './archive'
+import { ArchiveOption } from '../exportAndImport/types'
+import { type } from 'os'
 
 export const loadArchiveData = async (source: string) => {
   let archiveData: ArchiveData
@@ -20,23 +22,33 @@ export const loadArchiveData = async (source: string) => {
 }
 
 // Gets a list of system archive sub-folders to export as part of snapshot
-export const getArchiveFolders = async (earliest: number | string = 0) => {
+export const getArchiveFolders = async (option: ArchiveOption = 0) => {
   // Load archive history
   const { archives, history } = (await loadArchiveData(ARCHIVE_FOLDER)) ?? {}
   if (!history || !archives) return []
 
-  let miniumTimestamp: number
+  const from = typeof option === 'object' ? option.from ?? 0 : option
+  const to = typeof option === 'object' ? option.to ?? Infinity : Infinity
 
-  // Search by UID
-  if (typeof earliest === 'string') {
-    const earliestArchive = archives[earliest]
-    if (!earliestArchive) throw new Error('Invalid Archive ID')
-    miniumTimestamp = earliestArchive.timestamp
-  } else miniumTimestamp = earliest
+  const miniumTimestamp = getTimestamp(from, archives)
+  const maximumTimestamp = getTimestamp(to, archives)
 
   return history
-    .filter((archive) => archive.timestamp >= miniumTimestamp)
+    .filter(
+      (archive) => archive.timestamp >= miniumTimestamp && archive.timestamp <= maximumTimestamp
+    )
     .map((archive) => archive.archiveFolder)
+}
+
+const getTimestamp = (
+  timestampOrArchiveId: number | string,
+  archives: { [key: string]: ArchiveInfo }
+): number => {
+  if (typeof timestampOrArchiveId === 'string') {
+    const archive = archives[timestampOrArchiveId]
+    if (!archive) throw new Error('Invalid Archive ID')
+    return archive.timestamp
+  } else return timestampOrArchiveId
 }
 
 // Checks the archive metadata in a snapshot and verifies that the complete
@@ -61,6 +73,7 @@ export const findArchiveSources = async (snapshotFolder: string) => {
   const sources = [
     path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME),
     path.join(snapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME),
+    // TO-DO:
     // All snapshot/archive subfolders
     // Backups if we can figure out how
   ]
