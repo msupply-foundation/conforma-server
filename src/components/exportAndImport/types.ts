@@ -64,3 +64,10 @@ export type SnapshotOperation = (props: {
   options?: ExportAndImportOptions
   extraOptions?: Partial<ExportAndImportOptions>
 }) => Promise<{ success: boolean; message: string; error?: string }>
+
+export type ArchiveSnapshotOperation = (props: {
+  snapshotName?: string
+  archiveOption?: ArchiveOption
+}) => Promise<{ success: boolean; message: string; error?: string }>
+
+export type ArchiveOption = 'none' | 'full' | string | number

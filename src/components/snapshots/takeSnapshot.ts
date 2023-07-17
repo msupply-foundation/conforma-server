@@ -1,7 +1,12 @@
 import fs from 'fs'
 import fse from 'fs-extra'
 import archiver from 'archiver'
-import { ExportAndImportOptions, ObjectRecord, SnapshotOperation } from '../exportAndImport/types'
+import {
+  ArchiveOption,
+  ExportAndImportOptions,
+  ObjectRecord,
+  SnapshotOperation,
+} from '../exportAndImport/types'
 import path from 'path'
 import { execSync } from 'child_process'
 import rimraf from 'rimraf'
@@ -28,6 +33,7 @@ import {
   ARCHIVE_SUBFOLDER_NAME,
   GENERIC_THUMBNAILS_FOLDER,
   ARCHIVE_FOLDER,
+  SNAPSHOT_ARCHIVES_FOLDER_NAME,
 } from '../../constants'
 import { getDirectoryFromPath } from './useSnapshot'
 import DBConnect from '../../../src/components/databaseConnect'
@@ -71,8 +77,8 @@ const takeSnapshot: SnapshotOperation = async ({
       console.log('Dumping database...done')
 
       // Copy ALL files
-
-      await copyFiles(newSnapshotFolder, options.archive)
+      await copyFiles(newSnapshotFolder)
+      await copyArchiveFiles(newSnapshotFolder, options.archive)
     } else {
       // Do it the old way, using JSON database object export
       const snapshotObject = await getRecordsAsObject(options)
@@ -128,6 +134,59 @@ const takeSnapshot: SnapshotOperation = async ({
   }
 }
 
+export const takeArchiveSnapshot: SnapshotOperation = async ({
+  snapshotName = DEFAULT_SNAPSHOT_NAME,
+  optionsName = DEFAULT_OPTIONS_NAME,
+  options: inOptions,
+  extraOptions = {},
+}) => {
+  // Ensure relevant folders exist
+  createDefaultDataFolders()
+
+  try {
+    console.log(`taking Archive snapshot, name: ${snapshotName}`)
+
+    const options = await getOptions(optionsName, inOptions, extraOptions)
+
+    const tempSnapshotFolder = path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME, 'temp')
+    const finalSnapshotFolder = path.join(
+      SNAPSHOT_FOLDER,
+      SNAPSHOT_ARCHIVES_FOLDER_NAME,
+      snapshotName
+    )
+    // Remove and create snapshot folder
+    await fse.emptyDir(tempSnapshotFolder)
+    await asyncRimRaf(finalSnapshotFolder)
+
+    // Copy Archive files
+    await copyArchiveFiles(tempSnapshotFolder, options.archive)
+
+    // Move archive files to top level of output folder
+    await fse.move(
+      path.join(tempSnapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME),
+      finalSnapshotFolder
+    )
+    asyncRimRaf(tempSnapshotFolder)
+
+    // Save snapshot info (version, timestamp, etc)
+    await fs.promises.writeFile(
+      path.join(finalSnapshotFolder, `${INFO_FILE_NAME}.json`),
+      JSON.stringify(getSnapshotInfo(), null, ' ')
+    )
+
+    if (!options.skipZip)
+      await zipSnapshot(
+        finalSnapshotFolder,
+        snapshotName,
+        path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME)
+      )
+
+    return { success: true, message: `created Archive snapshot ${snapshotName}` }
+  } catch (e) {
+    return { success: false, message: 'error while taking snapshot', error: e.toString() }
+  }
+}
+
 const getOptions = async (
   optionsName?: string,
   options?: ExportAndImportOptions,
@@ -150,8 +209,12 @@ const getOptions = async (
   return { ...parsedOptions, ...extraOptions }
 }
 
-const zipSnapshot = async (snapshotFolder: string, snapshotName: string) => {
-  const output = await fs.createWriteStream(path.join(SNAPSHOT_FOLDER, `${snapshotName}.zip`))
+const zipSnapshot = async (
+  snapshotFolder: string,
+  snapshotName: string,
+  destination = SNAPSHOT_FOLDER
+) => {
+  const output = await fs.createWriteStream(path.join(destination, `${snapshotName}.zip`))
   const archive = archiver('zip', { zlib: { level: 9 } })
 
   await archive.pipe(output)
@@ -219,10 +282,7 @@ const copyFilesPartial = async (newSnapshotFolder: string, fileRecords: ObjectRe
   }
 }
 
-const copyFiles = async (
-  newSnapshotFolder: string,
-  archiveOption: 'none' | 'full' | string | number = 'full'
-) => {
+const copyFiles = async (newSnapshotFolder: string) => {
   const archiveRegex = new RegExp(`.+${config.filesFolder}\/${ARCHIVE_SUBFOLDER_NAME}.*`)
 
   console.log('Exporting files...')
@@ -235,6 +295,15 @@ const copyFiles = async (
       return !archiveRegex.test(src)
     },
   })
+
+  console.log('Exporting files...done')
+}
+
+const copyArchiveFiles = async (
+  newSnapshotFolder: string,
+  archiveOption: ArchiveOption = 'full'
+) => {
+  console.log('Exporting archive files...')
 
   // Figure out which archive folders we want
   let archiveFolders: string[]
@@ -256,7 +325,7 @@ const copyFiles = async (
     path.join(newSnapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME, 'archive.json')
   )
 
-  console.log('Exporting files...done')
+  console.log('Exporting archive files...done')
 }
 
 export default takeSnapshot
