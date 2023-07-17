@@ -12,7 +12,7 @@ import { SnapshotInfo } from '../../exportAndImport/types'
 
 export const getSnapshotList = async () => {
   const dirents = await fs.readdir(SNAPSHOT_FOLDER, { encoding: 'utf-8', withFileTypes: true })
-  const snapshots: (SnapshotInfo & { name: string })[] = []
+  const snapshots: (SnapshotInfo & { name: string; size: number })[] = []
 
   for (const dirent of dirents) {
     if (!dirent.isDirectory()) continue
@@ -24,14 +24,21 @@ export const getSnapshotList = async () => {
     )
       continue
 
+    let size: number | null = null
+    try {
+      size = (await fs.stat(path.join(SNAPSHOT_FOLDER, `${dirent.name}.zip`))).size
+    } catch {
+      size = null
+    }
+
     const info = await fse.readJson(
       path.join(SNAPSHOT_FOLDER, dirent.name, `${INFO_FILE_NAME}.json`)
     )
 
-    snapshots.push({ name: dirent.name, ...info })
+    snapshots.push({ name: dirent.name, size, ...info })
   }
 
-  return { snapshotsNames: snapshots }
+  return snapshots
 }
 
 export const getSnapshotArchiveList = async () => {
@@ -54,5 +61,5 @@ export const getSnapshotArchiveList = async () => {
     snapshots.push({ name: dirent.name, ...info })
   }
 
-  return { snapshotsNames: snapshots }
+  return snapshots
 }
