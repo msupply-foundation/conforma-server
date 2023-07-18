@@ -1,10 +1,12 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { getSnapshotArchiveList, getSnapshotList } from './helpers'
+import { getCurrentArchiveList, getSnapshotArchiveList, getSnapshotList } from './helpers'
 
 const routeListSnapshots = async (request: FastifyRequest, reply: FastifyReply) => {
+  const currentArchives = await getCurrentArchiveList()
   const type = (request.query as { archive?: 'true' })?.archive ? 'archives' : 'snapshots'
-  if (type === 'snapshots') return reply.send(await getSnapshotList())
-  return reply.send(await getSnapshotArchiveList())
+  const snapshots = type === 'snapshots' ? await getSnapshotList() : await getSnapshotArchiveList()
+
+  return reply.send({ snapshots, currentArchives })
 }
 
 export default routeListSnapshots

@@ -15,12 +15,12 @@ import {
   DATABASE_FOLDER,
   BASE_SNAPSHOT_NAME,
   SNAPSHOT_ARCHIVE_FOLDER,
-  ARCHIVE_FOLDER,
 } from '../../constants'
 import fs from 'fs'
 import path from 'path'
 import { execSync } from 'child_process'
 import { makeFolder } from '../utilityFunctions'
+import { zipSnapshot } from '../snapshots/takeSnapshot'
 
 export function createDefaultDataFolders() {
   try {
@@ -29,6 +29,8 @@ export function createDefaultDataFolders() {
     makeFolder(BACKUPS_FOLDER, 'Creating BACKUPS folder')
     // Copy core_templates to snapshots folder
     execSync(`cp -r '${DATABASE_FOLDER}/${BASE_SNAPSHOT_NAME}' '${SNAPSHOT_FOLDER}'`)
+    if (!fs.existsSync(path.join(SNAPSHOT_FOLDER, `${BASE_SNAPSHOT_NAME}.zip`)))
+      zipSnapshot(path.join(SNAPSHOT_FOLDER, BASE_SNAPSHOT_NAME), BASE_SNAPSHOT_NAME)
   } catch {
     console.log('\nProblem creating SNAPSHOTS folder\n')
   }

@@ -214,7 +214,7 @@ const getOptions = async (
   return { ...parsedOptions, ...extraOptions }
 }
 
-const zipSnapshot = async (
+export const zipSnapshot = async (
   snapshotFolder: string,
   snapshotName: string,
   destination = SNAPSHOT_FOLDER

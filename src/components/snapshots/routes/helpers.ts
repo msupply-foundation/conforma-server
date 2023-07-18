@@ -2,6 +2,8 @@ import fs from 'fs/promises'
 import fsSync from 'fs'
 import fse from 'fs-extra'
 import {
+  ARCHIVE_SUBFOLDER_NAME,
+  FILES_FOLDER,
   INFO_FILE_NAME,
   SNAPSHOT_ARCHIVES_FOLDER_NAME,
   SNAPSHOT_FILE_NAME,
@@ -62,4 +64,11 @@ export const getSnapshotArchiveList = async () => {
   }
 
   return snapshots
+}
+
+export const getCurrentArchiveList = async () => {
+  const { history } = await fse.readJson(
+    path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME, 'archive.json')
+  )
+  return history
 }
