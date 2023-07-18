@@ -67,8 +67,12 @@ export const getSnapshotArchiveList = async () => {
 }
 
 export const getCurrentArchiveList = async () => {
-  const { history } = await fse.readJson(
-    path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME, 'archive.json')
-  )
-  return history
+  try {
+    const { history } = await fse.readJson(
+      path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME, 'archive.json')
+    )
+    return history
+  } catch {
+    return []
+  }
 }

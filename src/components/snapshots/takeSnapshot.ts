@@ -335,10 +335,14 @@ const copyArchiveFiles = async (
   }
 
   // And copy the archive meta-data
-  await fse.copy(
-    path.join(ARCHIVE_FOLDER, 'archive.json'),
-    path.join(newSnapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME, 'archive.json')
-  )
+  try {
+    await fse.copy(
+      path.join(ARCHIVE_FOLDER, 'archive.json'),
+      path.join(newSnapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME, 'archive.json')
+    )
+  } catch {
+    // No archive.json yet
+  }
 
   console.log('Exporting archive files...done')
   if (archiveOption === 'none') return { type: 'none' }

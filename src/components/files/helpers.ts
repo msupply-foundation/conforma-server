@@ -5,11 +5,8 @@ import { move, mkdirp, readJSON, pathExists } from 'fs-extra'
 import path from 'path'
 import { clearEmptyDirectories } from '../utilityFunctions'
 import { ARCHIVE_FOLDER, ARCHIVE_SUBFOLDER_NAME, FILES_FOLDER } from '../../constants'
-import config from '../../config'
-import { nanoid } from 'nanoid'
 import { ArchiveData, ArchiveInfo } from './archive'
 import { ArchiveOption } from '../exportAndImport/types'
-import { type } from 'os'
 
 export const loadArchiveData = async (source: string) => {
   let archiveData: ArchiveData
