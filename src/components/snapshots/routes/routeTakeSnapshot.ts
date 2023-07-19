@@ -4,25 +4,21 @@ import takeSnapshot, { takeArchiveSnapshot } from '../takeSnapshot'
 
 type Query = {
   name?: string
+  archive?: 'true'
   optionsName?: string
 }
 
 const routeTakeSnapshot = async (request: FastifyRequest, reply: FastifyReply) => {
-  // TODO can pass through options via post body
+  const isArchive = (request.query as Query).archive === 'true'
   const snapshotName = (request.query as Query).name
   const optionsName = (request.query as Query).optionsName
   const extraOptions = (request.body || {}) as Partial<ExportAndImportOptions>
 
-  reply.send(await takeSnapshot({ snapshotName, optionsName, extraOptions }))
-}
-
-export const routeTakeArchiveSnapshot = async (request: FastifyRequest, reply: FastifyReply) => {
-  // TODO can pass through options via post body
-  const snapshotName = (request.query as Query).name
-  const optionsName = (request.query as Query).optionsName
-  const extraOptions = (request.body || {}) as Partial<ExportAndImportOptions>
-
-  reply.send(await takeArchiveSnapshot({ snapshotName, optionsName, extraOptions }))
+  reply.send(
+    !isArchive
+      ? await takeSnapshot({ snapshotName, optionsName, extraOptions })
+      : await takeArchiveSnapshot({ snapshotName, optionsName, extraOptions })
+  )
 }
 
 export default routeTakeSnapshot

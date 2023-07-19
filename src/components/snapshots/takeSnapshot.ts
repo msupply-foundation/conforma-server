@@ -76,9 +76,9 @@ const takeSnapshot: SnapshotOperation = async ({
       )
       // This plain-text .sql script is NOT used for re-import, but could be
       // useful for debugging when dealing with troublesome snapshots
-      execSync(
-        `pg_dump -U postgres tmf_app_manager --format=plain --inserts --clean --if-exists -f ${newSnapshotFolder}/database.sql`
-      )
+      // execSync(
+      //   `pg_dump -U postgres tmf_app_manager --format=plain --inserts --clean --if-exists -f ${newSnapshotFolder}/database.sql`
+      // )
       console.log('Dumping database...done')
 
       // Copy ALL files
@@ -164,7 +164,7 @@ export const takeArchiveSnapshot: SnapshotOperation = async ({
     await asyncRimRaf(finalSnapshotFolder)
 
     // Copy Archive files
-    await copyArchiveFiles(tempSnapshotFolder, options.archive)
+    const archiveInfo = await copyArchiveFiles(tempSnapshotFolder, options.archive)
 
     // Move archive files to top level of output folder
     await fse.move(
@@ -176,7 +176,7 @@ export const takeArchiveSnapshot: SnapshotOperation = async ({
     // Save snapshot info (version, timestamp, etc)
     await fs.promises.writeFile(
       path.join(finalSnapshotFolder, `${INFO_FILE_NAME}.json`),
-      JSON.stringify(getSnapshotInfo(), null, ' ')
+      JSON.stringify(getSnapshotInfo(archiveInfo), null, ' ')
     )
 
     if (!options.skipZip)
@@ -219,12 +219,14 @@ export const zipSnapshot = async (
   snapshotName: string,
   destination = SNAPSHOT_FOLDER
 ) => {
+  console.log('Zipping snapshot...')
   const output = await fs.createWriteStream(path.join(destination, `${snapshotName}.zip`))
   const archive = archiver('zip', { zlib: { level: 9 } })
 
   await archive.pipe(output)
   await archive.directory(snapshotFolder, false)
   await archive.finalize()
+  console.log('Zipping snapshot...done')
 }
 
 const getSnapshotInfo = (archiveInfo: ArchiveInfo = null) => {
@@ -334,6 +336,8 @@ const copyArchiveFiles = async (
     if (info.timestamp > archiveTo) archiveTo = info.timestamp
   }
 
+  console.log('Exporting archive files...done')
+
   // And copy the archive meta-data
   try {
     await fse.copy(
@@ -342,9 +346,9 @@ const copyArchiveFiles = async (
     )
   } catch {
     // No archive.json yet
+    return null
   }
 
-  console.log('Exporting archive files...done')
   if (archiveOption === 'none') return { type: 'none' }
   if (archiveOption === 'full')
     return {

@@ -303,6 +303,16 @@ const copyFiles = async (snapshotFolder: string) => {
   // Restore the temp archives folder
   await fse.move(ARCHIVE_TEMP_FOLDER, path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME))
   console.log('Importing files...done')
+
+  // Restore "archive.json" from snapshot
+  try {
+    await fse.copy(
+      path.join(snapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME, 'archive.json'),
+      path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME)
+    )
+  } catch {
+    console.log('No archive.json in snapshot')
+  }
 }
 
 const collectArchives = async (snapshotFolder: string) => {

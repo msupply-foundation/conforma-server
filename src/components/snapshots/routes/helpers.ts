@@ -11,6 +11,7 @@ import {
 } from '../../../constants'
 import path from 'path'
 import { SnapshotInfo } from '../../exportAndImport/types'
+import { DateTime } from 'luxon'
 
 export const getSnapshotList = async () => {
   const dirents = await fs.readdir(SNAPSHOT_FOLDER, { encoding: 'utf-8', withFileTypes: true })
@@ -40,6 +41,10 @@ export const getSnapshotList = async () => {
     snapshots.push({ name: dirent.name, size, ...info })
   }
 
+  snapshots.sort(
+    (a, b) => DateTime.fromISO(b.timestamp).toMillis() - DateTime.fromISO(a.timestamp).toMillis()
+  )
+
   return snapshots
 }
 
@@ -60,7 +65,14 @@ export const getSnapshotArchiveList = async () => {
       path.join(archiveSnapshotFolder, dirent.name, `${INFO_FILE_NAME}.json`)
     )
 
-    snapshots.push({ name: dirent.name, ...info })
+    let size: number | null = null
+    try {
+      size = (await fs.stat(path.join(archiveSnapshotFolder, `${dirent.name}.zip`))).size
+    } catch {
+      size = null
+    }
+
+    snapshots.push({ name: dirent.name, size, ...info })
   }
 
   return snapshots
