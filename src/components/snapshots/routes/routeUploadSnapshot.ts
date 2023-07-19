@@ -24,14 +24,18 @@ const errorMessageBase = {
 const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply) => {
   const snapshotName = (request.query as Query).name
 
+  const isArchive = (request.query as Query)?.archive === 'true'
+
   if (!snapshotName) {
     return reply.send({ ...errorMessageBase, error: 'snapshot "name" must be provided' })
   }
 
   const data = await request.files()
 
-  const snapshotZipLocation = path.join(SNAPSHOT_FOLDER, snapshotName + '.zip')
-  const snapshotLocation = path.join(SNAPSHOT_FOLDER, snapshotName)
+  const destFolder = path.join(SNAPSHOT_FOLDER, isArchive ? SNAPSHOT_ARCHIVES_FOLDER_NAME : '')
+
+  const snapshotZipLocation = path.join(destFolder, snapshotName + '.zip')
+  const snapshotLocation = path.join(destFolder, snapshotName)
   try {
     // data is a Promise, so we await it before looping
     for await (const file of data) {
@@ -39,31 +43,22 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
 
       // Below synchronous operations are probably ok for snapshot routes
       const zip = new zipper(snapshotZipLocation)
+      const snapshotMainFileName = `${SNAPSHOT_FILE_NAME}.json`
 
-      const files = zip.getEntries().map(({ entryName }) => entryName)
-
-      if (!files.includes('info.json')) {
+      if (
+        !zip
+          .getEntries()
+          .find(
+            ({ entryName }) => entryName === snapshotMainFileName || entryName === 'database.dump'
+          )
+      ) {
         return reply.send({
           ...errorMessageBase,
-          error: `Invalid Snapshot or Archive .zip`,
+          error: `zip does not contain ${snapshotMainFileName}`,
         })
       }
 
-      const isOldSnapshot = files.includes(`${SNAPSHOT_FILE_NAME}.json`)
-      const isArchive = !files.includes('database.dump') && !isOldSnapshot
-
-      const destination = isArchive
-        ? path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME, snapshotName)
-        : snapshotLocation
-
-      zip.extractAllTo(destination, true)
-
-      if (isArchive)
-        fs.rename(
-          snapshotZipLocation,
-          path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME, snapshotName + '.zip'),
-          () => {}
-        )
+      zip.extractAllTo(snapshotLocation, true)
     }
   } catch (e) {
     console.log(e)

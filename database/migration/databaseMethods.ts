@@ -1,5 +1,5 @@
 import DBConnect from '../../src/components/databaseConnect'
-import { getSimpleId } from '../../src/components/exportAndImport/helpers'
+import { getTemplateVersionId } from '../../src/components/exportAndImport/helpers'
 
 type SchemaQueryOptions = {
   silent: boolean
@@ -205,7 +205,7 @@ const databaseMethods = {
       }[] = []
 
       for (const template of templates) {
-        const versionId = getSimpleId()
+        const versionId = getTemplateVersionId()
         const timestamp = template.version_timestamp.toISOString()
         const parentVersionId = versionHistory.slice(-1)?.[0]?.versionId ?? null
         const comment = `New version: ${versionId}`
