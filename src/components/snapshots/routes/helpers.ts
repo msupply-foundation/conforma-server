@@ -38,7 +38,9 @@ export const getSnapshotList = async () => {
       path.join(SNAPSHOT_FOLDER, dirent.name, `${INFO_FILE_NAME}.json`)
     )
 
-    snapshots.push({ name: dirent.name, size, ...info })
+    const snapshotId = info.id ?? ''
+
+    snapshots.push({ name: dirent.name.replace(`_${snapshotId}`, ''), size, ...info })
   }
 
   snapshots.sort(

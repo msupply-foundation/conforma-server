@@ -48,6 +48,7 @@ export type ExportAndImportOptions = {
 
 export type ArchiveInfo = { type: 'full' | 'none' | 'partial'; from?: string; to?: string } | null
 export interface SnapshotInfo {
+  id: string
   timestamp: string
   version: string
   archive?: ArchiveInfo

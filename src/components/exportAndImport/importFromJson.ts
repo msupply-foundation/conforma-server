@@ -1,7 +1,7 @@
 import { camelCase, mapValues } from 'lodash'
 import databaseConnect from '../databaseConnect'
 import getDatabaseInfo from './getDatabaseInfo'
-import { filterByIncludeAndExclude, getTemplateVersionId, isTemplateUnlocked } from './helpers'
+import { filterByIncludeAndExclude, getSimpleId, isTemplateUnlocked } from './helpers'
 import { singular } from 'pluralize'
 import {
   DatabaseColumn,
@@ -47,12 +47,12 @@ const insertFromObject: InsertFromObject = async (
       // If template was exported using an earlier version schema, we need to
       // migrate it first
       if (!('versionId' in template)) {
-        template.versionId = getTemplateVersionId()
+        template.versionId = getSimpleId()
         template.versionComment = 'Migrated from previous version format'
         template.versionHistory = new Array(template.version).fill(0).map((_) => ({
           comment: null,
           timestamp: DateTime.fromISO(template.versionTimestamp),
-          versionId: getTemplateVersionId(),
+          versionId: getSimpleId(),
           parentVersionId: null,
         }))
         template.version = null

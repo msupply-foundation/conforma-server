@@ -36,8 +36,9 @@ export const noQuoteKeyStringify = (json: object) => {
   return result + (isArray ? ']' : '}')
 }
 
-// Use nanoid to generate unique template version IDs
-export const getTemplateVersionId = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 6)
+// Use nanoid to generate simplified IDs (for template versions and snapshots)
+export const getSimpleId = (length: number = 6) =>
+  customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', length)()
 
 // If versionId starts with "*" char, then it can be modified
 export const isTemplateUnlocked = (template: { versionId: string }) =>

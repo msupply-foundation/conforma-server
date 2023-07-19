@@ -45,6 +45,7 @@ const asyncRimRaf = promisify(rimraf)
 import { createDefaultDataFolders } from '../files/createDefaultFolders'
 import { getArchiveFolders } from '../files/helpers'
 import { arch } from 'os'
+import { getSimpleId } from '../exportAndImport/helpers'
 
 const takeSnapshot: SnapshotOperation = async ({
   snapshotName = DEFAULT_SNAPSHOT_NAME,
@@ -62,7 +63,9 @@ const takeSnapshot: SnapshotOperation = async ({
 
     const options = await getOptions(optionsName, inOptions, extraOptions)
 
-    const newSnapshotFolder = path.join(SNAPSHOT_FOLDER, snapshotName)
+    const snapshotId = getSimpleId(8)
+
+    const newSnapshotFolder = path.join(SNAPSHOT_FOLDER, `${snapshotName}_${snapshotId}`)
     // Remove and create snapshot folder
     await asyncRimRaf(newSnapshotFolder)
     execSync(`mkdir ${newSnapshotFolder}`)
@@ -118,10 +121,10 @@ const takeSnapshot: SnapshotOperation = async ({
     // Save snapshot info (version, timestamp, etc)
     await fs.promises.writeFile(
       path.join(newSnapshotFolder, `${INFO_FILE_NAME}.json`),
-      JSON.stringify(getSnapshotInfo(archiveInfo), null, ' ')
+      JSON.stringify(getSnapshotInfo(snapshotId, archiveInfo), null, ' ')
     )
 
-    if (!options.skipZip) await zipSnapshot(newSnapshotFolder, snapshotName)
+    if (!options.skipZip) await zipSnapshot(newSnapshotFolder, `${snapshotName}_${snapshotId}`)
 
     // Store snapshot name in database (for full exports only, but not backups)
     if (options.shouldReInitialise && !options.skipZip) {
@@ -153,11 +156,13 @@ export const takeArchiveSnapshot: SnapshotOperation = async ({
 
     const options = await getOptions(optionsName, inOptions, extraOptions)
 
+    const snapshotId = getSimpleId(8)
+
     const tempSnapshotFolder = path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME, 'temp')
     const finalSnapshotFolder = path.join(
       SNAPSHOT_FOLDER,
       SNAPSHOT_ARCHIVES_FOLDER_NAME,
-      snapshotName
+      `${snapshotName}_${snapshotId}`
     )
     // Remove and create snapshot folder
     await fse.emptyDir(tempSnapshotFolder)
@@ -176,13 +181,13 @@ export const takeArchiveSnapshot: SnapshotOperation = async ({
     // Save snapshot info (version, timestamp, etc)
     await fs.promises.writeFile(
       path.join(finalSnapshotFolder, `${INFO_FILE_NAME}.json`),
-      JSON.stringify(getSnapshotInfo(archiveInfo), null, ' ')
+      JSON.stringify(getSnapshotInfo(snapshotId, archiveInfo), null, ' ')
     )
 
     if (!options.skipZip)
       await zipSnapshot(
         finalSnapshotFolder,
-        snapshotName,
+        `${snapshotName}_${snapshotId}`,
         path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME)
       )
 
@@ -229,8 +234,9 @@ export const zipSnapshot = async (
   console.log('Zipping snapshot...done')
 }
 
-const getSnapshotInfo = (archiveInfo: ArchiveInfo = null) => {
+const getSnapshotInfo = (snapshotId: string, archiveInfo: ArchiveInfo = null) => {
   const snapshotInfo: SnapshotInfo = {
+    id: snapshotId,
     timestamp: DateTime.now().toISO(),
     version: config.version,
   }
