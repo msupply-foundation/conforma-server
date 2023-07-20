@@ -22,43 +22,55 @@ const errorMessageBase = {
 }
 
 const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply) => {
-  const snapshotName = (request.query as Query).name
+  // const snapshotName = (request.query as Query).name
 
-  const isArchive = (request.query as Query)?.archive === 'true'
-
-  if (!snapshotName) {
-    return reply.send({ ...errorMessageBase, error: 'snapshot "name" must be provided' })
-  }
+  // if (!snapshotName) {
+  //   return reply.send({ ...errorMessageBase, error: 'snapshot "name" must be provided' })
+  // }
 
   const data = await request.files()
 
-  const destFolder = path.join(SNAPSHOT_FOLDER, isArchive ? SNAPSHOT_ARCHIVES_FOLDER_NAME : '')
+  // const snapshotZipLocation = path.join(SNAPSHOT_FOLDER, snapshotName + '.zip')
+  // const snapshotLocation = path.join(SNAPSHOT_FOLDER, snapshotName)
 
-  const snapshotZipLocation = path.join(destFolder, snapshotName + '.zip')
-  const snapshotLocation = path.join(destFolder, snapshotName)
+  let snapshotName: string = ''
   try {
     // data is a Promise, so we await it before looping
     for await (const file of data) {
+      snapshotName = file.filename.replace('.zip', '').replace('ARCHIVE_', '')
+
+      const snapshotZipLocation = path.join(SNAPSHOT_FOLDER, snapshotName + '.zip')
+      const snapshotLocation = path.join(SNAPSHOT_FOLDER, snapshotName)
+
       await pump(file.file, fs.createWriteStream(snapshotZipLocation))
 
       // Below synchronous operations are probably ok for snapshot routes
       const zip = new zipper(snapshotZipLocation)
-      const snapshotMainFileName = `${SNAPSHOT_FILE_NAME}.json`
 
-      if (
-        !zip
-          .getEntries()
-          .find(
-            ({ entryName }) => entryName === snapshotMainFileName || entryName === 'database.dump'
-          )
-      ) {
+      const files = zip.getEntries().map(({ entryName }) => entryName)
+
+      if (!files.includes('info.json')) {
         return reply.send({
           ...errorMessageBase,
-          error: `zip does not contain ${snapshotMainFileName}`,
+          error: `Invalid Snapshot or Archive .zip`,
         })
       }
 
-      zip.extractAllTo(snapshotLocation, true)
+      const isNotFullSystem = files.includes(`${SNAPSHOT_FILE_NAME}.json`) // e.g. a template
+      const isArchive = !files.includes('database.dump') && !isNotFullSystem
+
+      const destination = isArchive
+        ? path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME, snapshotName)
+        : snapshotLocation
+
+      zip.extractAllTo(destination, true)
+
+      if (isArchive)
+        fs.rename(
+          snapshotZipLocation,
+          path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME, snapshotName + '.zip'),
+          () => {}
+        )
     }
   } catch (e) {
     console.log(e)

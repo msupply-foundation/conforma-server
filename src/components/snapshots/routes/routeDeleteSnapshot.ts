@@ -13,16 +13,17 @@ type Query = {
 
 const routeDeleteSnapshot = async (request: FastifyRequest, reply: FastifyReply) => {
   const isArchive = (request.query as Query)?.archive === 'true'
-  const snapshotName = (request.query as Query)?.name
+  const snapshotName = (request.query as Query)?.name as string
   if (!snapshotName) reply.send({ success: false, message: 'No snapshot name provided' })
 
   const folderPath = isArchive
-    ? path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME, snapshotName as string)
-    : path.join(SNAPSHOT_FOLDER, snapshotName as string)
+    ? path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME)
+    : SNAPSHOT_FOLDER
 
   try {
-    await asyncRimRaf(folderPath)
+    await asyncRimRaf(path.join(folderPath, snapshotName))
     // Also delete the .zip if it exists
+    console.log(path.join(folderPath, `${snapshotName}.zip`))
     await asyncRimRaf(path.join(folderPath, `${snapshotName}.zip`))
     reply.send({ success: true })
   } catch (e) {

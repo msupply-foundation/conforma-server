@@ -44,7 +44,6 @@ import { DateTime } from 'luxon'
 const asyncRimRaf = promisify(rimraf)
 import { createDefaultDataFolders } from '../files/createDefaultFolders'
 import { getArchiveFolders } from '../files/helpers'
-import { arch } from 'os'
 
 const takeSnapshot: SnapshotOperation = async ({
   snapshotName = DEFAULT_SNAPSHOT_NAME,
@@ -116,12 +115,21 @@ const takeSnapshot: SnapshotOperation = async ({
     if (options?.includePrefs) execSync(`cp '${PREFERENCES_FILE}' '${newSnapshotFolder}'`)
 
     // Save snapshot info (version, timestamp, etc)
+    const info = getSnapshotInfo(archiveInfo)
     await fs.promises.writeFile(
       path.join(newSnapshotFolder, `${INFO_FILE_NAME}.json`),
-      JSON.stringify(getSnapshotInfo(archiveInfo), null, ' ')
+      JSON.stringify(info, null, ' ')
     )
 
-    if (!options.skipZip) await zipSnapshot(newSnapshotFolder, snapshotName)
+    // Rename snapshot folder to include timestamp
+    const timestampString = DateTime.fromISO(info.timestamp).toFormat('yyyy-LL-dd_HH-mm-ss')
+    const fullFolder = options.usePgDump
+      ? `${newSnapshotFolder}_${timestampString}`
+      : newSnapshotFolder
+    const fullName = options.usePgDump ? `${snapshotName}_${timestampString}` : snapshotName
+    await fs.promises.rename(newSnapshotFolder, fullFolder)
+
+    if (!options.skipZip) await zipSnapshot(fullFolder, fullName)
 
     // Store snapshot name in database (for full exports only, but not backups)
     if (options.shouldReInitialise && !options.skipZip) {
@@ -174,15 +182,22 @@ export const takeArchiveSnapshot: SnapshotOperation = async ({
     asyncRimRaf(tempSnapshotFolder)
 
     // Save snapshot info (version, timestamp, etc)
+    const info = getSnapshotInfo(archiveInfo)
     await fs.promises.writeFile(
       path.join(finalSnapshotFolder, `${INFO_FILE_NAME}.json`),
-      JSON.stringify(getSnapshotInfo(archiveInfo), null, ' ')
+      JSON.stringify(info, null, ' ')
     )
+
+    // Rename snapshot folder to include timestamp
+    const timestampString = DateTime.fromISO(info.timestamp).toFormat('yyyy-LL-dd_HH-mm-ss')
+    const fullFolder = `${finalSnapshotFolder}_${timestampString}`
+    const fullName = `${snapshotName}_${timestampString}`
+    await fs.promises.rename(finalSnapshotFolder, fullFolder)
 
     if (!options.skipZip)
       await zipSnapshot(
-        finalSnapshotFolder,
-        snapshotName,
+        fullFolder,
+        fullName,
         path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME)
       )
 

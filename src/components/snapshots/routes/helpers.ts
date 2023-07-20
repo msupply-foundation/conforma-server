@@ -38,7 +38,9 @@ export const getSnapshotList = async () => {
       path.join(SNAPSHOT_FOLDER, dirent.name, `${INFO_FILE_NAME}.json`)
     )
 
-    snapshots.push({ name: dirent.name, size, ...info })
+    const name = dirent.name.replace(/_\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d$/, '')
+
+    snapshots.push({ name, filename: dirent.name, size, ...info })
   }
 
   snapshots.sort(
@@ -72,7 +74,9 @@ export const getSnapshotArchiveList = async () => {
       size = null
     }
 
-    snapshots.push({ name: dirent.name, size, ...info })
+    const name = dirent.name.replace(/_\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d$/, '')
+
+    snapshots.push({ name, filename: dirent.name, size, ...info })
   }
 
   return snapshots
