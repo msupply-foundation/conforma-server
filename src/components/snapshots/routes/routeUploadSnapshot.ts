@@ -9,68 +9,82 @@ import fs from 'fs'
 import { pipeline } from 'stream'
 import { promisify } from 'util'
 import zipper from 'adm-zip'
+import { timestampStringExpression } from './helpers'
+import { DateTime } from 'luxon'
 const pump = promisify(pipeline)
-
-type Query = {
-  name?: string
-  archive?: string
-}
 
 const errorMessageBase = {
   success: false,
   message: 'failed to upload snapshot',
 }
 
+const TEMP_ZIP_FILE = 'tempUpload.zip'
+
 const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply) => {
-  // const snapshotName = (request.query as Query).name
-
-  // if (!snapshotName) {
-  //   return reply.send({ ...errorMessageBase, error: 'snapshot "name" must be provided' })
-  // }
-
   const data = await request.files()
-
-  // const snapshotZipLocation = path.join(SNAPSHOT_FOLDER, snapshotName + '.zip')
-  // const snapshotLocation = path.join(SNAPSHOT_FOLDER, snapshotName)
 
   let snapshotName: string = ''
   try {
     // data is a Promise, so we await it before looping
     for await (const file of data) {
-      snapshotName = file.filename.replace('.zip', '').replace('ARCHIVE_', '')
+      snapshotName = file.filename
+        .replace('.zip', '')
+        .replace('ARCHIVE_', '')
+        // Make sure no undesirable chars in name
+        .replace(/[^\w\d-]/g, '_')
 
-      const snapshotZipLocation = path.join(SNAPSHOT_FOLDER, snapshotName + '.zip')
-      const snapshotLocation = path.join(SNAPSHOT_FOLDER, snapshotName)
+      const tempZipLocation = path.join(SNAPSHOT_FOLDER, TEMP_ZIP_FILE)
 
-      await pump(file.file, fs.createWriteStream(snapshotZipLocation))
+      await pump(file.file, fs.createWriteStream(tempZipLocation))
 
       // Below synchronous operations are probably ok for snapshot routes
-      const zip = new zipper(snapshotZipLocation)
+      const zip = new zipper(tempZipLocation)
 
       const files = zip.getEntries().map(({ entryName }) => entryName)
 
       if (!files.includes('info.json')) {
         return reply.send({
           ...errorMessageBase,
-          error: `Invalid Snapshot or Archive .zip`,
+          error: 'Invalid Snapshot or Archive .zip',
         })
       }
 
-      const isNotFullSystem = files.includes(`${SNAPSHOT_FILE_NAME}.json`) // e.g. a template
-      const isArchive = !files.includes('database.dump') && !isNotFullSystem
+      const info = JSON.parse(zip.readFile('info.json')?.toString() || '{}')
+
+      // Add timestamp suffix to upload name if it doesn't already have it
+      if (!timestampStringExpression.test(snapshotName))
+        snapshotName =
+          snapshotName + DateTime.fromISO(info.timestamp).toFormat('_yyyy-LL-dd_HH-mm-ss')
+
+      const isArchive =
+        !files.includes('database.dump') &&
+        // i.e. "Template" uploads
+        !files.includes(`${SNAPSHOT_FILE_NAME}.json`)
 
       const destination = isArchive
         ? path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME, snapshotName)
-        : snapshotLocation
+        : path.join(SNAPSHOT_FOLDER, snapshotName)
 
+      // Make sure snapshot doesn't already exist
+      if (fs.existsSync(destination)) {
+        fs.unlink(path.join(SNAPSHOT_FOLDER, TEMP_ZIP_FILE), () => {})
+        {
+          return reply.send({
+            ...errorMessageBase,
+            error: `Snapshot already exists: ${snapshotName}`,
+          })
+        }
+      }
       zip.extractAllTo(destination, true)
 
-      if (isArchive)
-        fs.rename(
-          snapshotZipLocation,
-          path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME, snapshotName + '.zip'),
-          () => {}
-        )
+      // Move/rename original zip if filename has changed, or if it's an archive
+      fs.rename(
+        tempZipLocation,
+        isArchive
+          ? path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME, snapshotName + '.zip')
+          : path.join(SNAPSHOT_FOLDER, snapshotName + '.zip'),
+        () => {}
+      )
     }
   } catch (e) {
     console.log(e)

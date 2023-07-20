@@ -13,6 +13,8 @@ import path from 'path'
 import { SnapshotInfo } from '../../exportAndImport/types'
 import { DateTime } from 'luxon'
 
+export const timestampStringExpression = /_\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d$/
+
 export const getSnapshotList = async () => {
   const dirents = await fs.readdir(SNAPSHOT_FOLDER, { encoding: 'utf-8', withFileTypes: true })
   const snapshots: (SnapshotInfo & { name: string; size: number })[] = []
@@ -38,7 +40,7 @@ export const getSnapshotList = async () => {
       path.join(SNAPSHOT_FOLDER, dirent.name, `${INFO_FILE_NAME}.json`)
     )
 
-    const name = dirent.name.replace(/_\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d$/, '')
+    const name = dirent.name.replace(timestampStringExpression, '')
 
     snapshots.push({ name, filename: dirent.name, size, ...info })
   }
@@ -74,7 +76,7 @@ export const getSnapshotArchiveList = async () => {
       size = null
     }
 
-    const name = dirent.name.replace(/_\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d$/, '')
+    const name = dirent.name.replace(timestampStringExpression, '')
 
     snapshots.push({ name, filename: dirent.name, size, ...info })
   }
