@@ -28,9 +28,13 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
     // data is a Promise, so we await it before looping
     for await (const file of data) {
       snapshotName = file.filename
-        .replace('.zip', '')
-        .replace('ARCHIVE_', '')
-        // Make sure no undesirable chars in name
+        // Remove ".zip" file extension
+        .replace(/\.zip$/g, '')
+        // Remove "ARCHIVE_" prefix
+        .replace(/^ARCHIVE_/g, '')
+        // Remove (1) from end (added due to multiple downloads of same file)
+        .replace(/(\(\d+\))$/g, '')
+        // Restrict filename to alpha-numeric chars (and "-"/"_")
         .replace(/[^\w\d-]/g, '_')
 
       const tempZipLocation = path.join(SNAPSHOT_FOLDER, TEMP_ZIP_FILE)

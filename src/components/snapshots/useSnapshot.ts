@@ -308,7 +308,7 @@ const copyFiles = async (snapshotFolder: string) => {
   try {
     await fse.copy(
       path.join(snapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME, 'archive.json'),
-      path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME)
+      path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME, 'archive.json')
     )
   } catch {
     console.log('No archive.json in snapshot')
