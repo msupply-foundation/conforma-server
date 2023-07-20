@@ -45,91 +45,115 @@ const asyncRimRaf = promisify(rimraf)
 import { createDefaultDataFolders } from '../files/createDefaultFolders'
 import { getArchiveFolders } from '../files/helpers'
 
+const TEMP_SNAPSHOT_FOLDER_NAME = '__tempSnapshot'
+const TEMP_ARCHIVE_FOLDER_NAME = '__tempArchive'
+
 const takeSnapshot: SnapshotOperation = async ({
   snapshotName = DEFAULT_SNAPSHOT_NAME,
   optionsName = DEFAULT_OPTIONS_NAME,
   options: inOptions,
   extraOptions = {},
+  isArchiveSnapshot = false,
 }) => {
   // Ensure relevant folders exist
   createDefaultDataFolders()
 
   let archiveInfo: ArchiveInfo = null
 
+  const options = await getOptions(optionsName, inOptions, extraOptions)
+
   try {
-    console.log(`taking snapshot, name: ${snapshotName}`)
+    console.log(`Taking ${isArchiveSnapshot ? 'Archive ' : ''}snapshot, name: ${snapshotName}`)
 
-    const options = await getOptions(optionsName, inOptions, extraOptions)
-
-    const newSnapshotFolder = path.join(SNAPSHOT_FOLDER, snapshotName)
-    // Remove and create snapshot folder
-    await asyncRimRaf(newSnapshotFolder)
-    execSync(`mkdir ${newSnapshotFolder}`)
+    const tempFolder = path.join(SNAPSHOT_FOLDER, TEMP_SNAPSHOT_FOLDER_NAME)
+    const tempArchiveFolder = path.join(SNAPSHOT_FOLDER, TEMP_ARCHIVE_FOLDER_NAME)
+    await fse.emptyDir(tempFolder)
 
     // Write snapshot/database to folder
-    if (options.usePgDump) {
-      // The quick way, using pg_dump -- whole database only
-      console.log('Dumping database...')
-      execSync(
-        `pg_dump -U postgres tmf_app_manager --format=custom -f ${newSnapshotFolder}/database.dump`
-      )
-      // This plain-text .sql script is NOT used for re-import, but could be
-      // useful for debugging when dealing with troublesome snapshots
-      // execSync(
-      //   `pg_dump -U postgres tmf_app_manager --format=plain --inserts --clean --if-exists -f ${newSnapshotFolder}/database.sql`
-      // )
-      console.log('Dumping database...done')
+    if (!isArchiveSnapshot) {
+      if (options.usePgDump) {
+        // The quick way, using pg_dump -- whole database only
+        console.log('Dumping database...')
+        execSync(
+          `pg_dump -U postgres tmf_app_manager --format=custom -f ${tempFolder}/database.dump`
+        )
+        // This plain-text .sql script is NOT used for re-import, but could be
+        // useful for debugging when dealing with troublesome snapshots
+        // execSync(
+        //   `pg_dump -U postgres tmf_app_manager --format=plain --inserts --clean --if-exists -f ${tempFolder}/database.sql`
+        // )
+        console.log('Dumping database...done')
 
-      // Copy ALL files
-      await copyFiles(newSnapshotFolder)
-      archiveInfo = await copyArchiveFiles(newSnapshotFolder, options.archive)
+        // Copy ALL files
+        await copyFiles(tempFolder)
+        archiveInfo = await copyArchiveFiles(tempFolder, options.archive)
+      } else {
+        // Do it the old way, using JSON database object export
+        const snapshotObject = await getRecordsAsObject(options)
+        await fs.promises.writeFile(
+          path.join(tempFolder, `${SNAPSHOT_FILE_NAME}.json`),
+          JSON.stringify(snapshotObject, null, 2)
+        )
+        await copyFilesPartial(tempFolder, snapshotObject.file ?? [])
+      }
     } else {
-      // Do it the old way, using JSON database object export
-      const snapshotObject = await getRecordsAsObject(options)
-      await fs.promises.writeFile(
-        path.join(newSnapshotFolder, `${SNAPSHOT_FILE_NAME}.json`),
-        JSON.stringify(snapshotObject, null, 2)
-      )
-      await copyFilesPartial(newSnapshotFolder, snapshotObject.file ?? [])
+      // Archive snapshot
+      archiveInfo = await copyArchiveFiles(tempFolder, options.archive)
+
+      // Move archive files to archive temp folder
+      await fse.move(path.join(tempFolder, 'files', ARCHIVE_SUBFOLDER_NAME), tempArchiveFolder)
     }
 
     // Export config
     await fs.promises.writeFile(
-      path.join(newSnapshotFolder, `${OPTIONS_FILE_NAME}.json`),
+      path.join(tempFolder, `${OPTIONS_FILE_NAME}.json`),
       JSON.stringify(options, null, ' ')
     )
 
     if (options.shouldReInitialise && !options.usePgDump) {
-      await getSchemaDiff(newSnapshotFolder)
+      await getSchemaDiff(tempFolder)
       // Copy schema build script
-      execSync(
-        `cat ${DATABASE_FOLDER}/buildSchema/*.sql >> ${newSnapshotFolder}/${SCHEMA_FILE_NAME}.sql`
-      )
+      execSync(`cat ${DATABASE_FOLDER}/buildSchema/*.sql >> ${tempFolder}/${SCHEMA_FILE_NAME}.sql`)
     }
 
     // Copy localisation
     if (options?.includeLocalisation)
-      execSync(`cp -r '${LOCALISATION_FOLDER}/' '${newSnapshotFolder}/localisation'`)
+      execSync(`cp -r '${LOCALISATION_FOLDER}/' '${tempFolder}/localisation'`)
 
     // Copy prefs
-    if (options?.includePrefs) execSync(`cp '${PREFERENCES_FILE}' '${newSnapshotFolder}'`)
+    if (options?.includePrefs) execSync(`cp '${PREFERENCES_FILE}' '${tempFolder}'`)
+
+    const sourceFolder = isArchiveSnapshot ? tempArchiveFolder : tempFolder
 
     // Save snapshot info (version, timestamp, etc)
     const info = getSnapshotInfo(archiveInfo)
     await fs.promises.writeFile(
-      path.join(newSnapshotFolder, `${INFO_FILE_NAME}.json`),
+      path.join(sourceFolder, `${INFO_FILE_NAME}.json`),
       JSON.stringify(info, null, ' ')
     )
 
-    // Rename snapshot folder to include timestamp
+    // Snapshot folder to include timestamp
     const timestampString = DateTime.fromISO(info.timestamp).toFormat('yyyy-LL-dd_HH-mm-ss')
-    const fullFolder = options.usePgDump
-      ? `${newSnapshotFolder}_${timestampString}`
-      : newSnapshotFolder
+    const newFolderName = options.usePgDump ? `${snapshotName}_${timestampString}` : snapshotName
     const fullName = options.usePgDump ? `${snapshotName}_${timestampString}` : snapshotName
-    await fs.promises.rename(newSnapshotFolder, fullFolder)
 
-    if (!options.skipZip) await zipSnapshot(fullFolder, fullName)
+    const fullFolderPath = path.join(
+      SNAPSHOT_FOLDER,
+      isArchiveSnapshot ? SNAPSHOT_ARCHIVES_FOLDER_NAME : '',
+      newFolderName
+    )
+
+    if (!options.skipZip) await zipSnapshot(sourceFolder, fullName)
+
+    await fs.promises.rename(sourceFolder, fullFolderPath)
+    if (isArchiveSnapshot)
+      await fs.promises.rename(
+        path.join(SNAPSHOT_FOLDER, `${fullName}.zip`),
+        path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME, `${fullName}.zip`)
+      )
+
+    await fse.remove(tempArchiveFolder)
+    await fse.remove(tempFolder)
 
     // Store snapshot name in database (for full exports only, but not backups)
     if (options.shouldReInitialise && !options.skipZip) {
@@ -142,66 +166,6 @@ const takeSnapshot: SnapshotOperation = async ({
     }
 
     return { success: true, message: `created snapshot ${snapshotName}` }
-  } catch (e) {
-    return { success: false, message: 'error while taking snapshot', error: e.toString() }
-  }
-}
-
-export const takeArchiveSnapshot: SnapshotOperation = async ({
-  snapshotName = DEFAULT_SNAPSHOT_NAME,
-  optionsName = DEFAULT_OPTIONS_NAME,
-  options: inOptions,
-  extraOptions = {},
-}) => {
-  // Ensure relevant folders exist
-  createDefaultDataFolders()
-
-  try {
-    console.log(`taking Archive snapshot, name: ${snapshotName}`)
-
-    const options = await getOptions(optionsName, inOptions, extraOptions)
-
-    const tempSnapshotFolder = path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME, 'temp')
-    const finalSnapshotFolder = path.join(
-      SNAPSHOT_FOLDER,
-      SNAPSHOT_ARCHIVES_FOLDER_NAME,
-      snapshotName
-    )
-    // Remove and create snapshot folder
-    await fse.emptyDir(tempSnapshotFolder)
-    await asyncRimRaf(finalSnapshotFolder)
-
-    // Copy Archive files
-    const archiveInfo = await copyArchiveFiles(tempSnapshotFolder, options.archive)
-
-    // Move archive files to top level of output folder
-    await fse.move(
-      path.join(tempSnapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME),
-      finalSnapshotFolder
-    )
-    asyncRimRaf(tempSnapshotFolder)
-
-    // Save snapshot info (version, timestamp, etc)
-    const info = getSnapshotInfo(archiveInfo)
-    await fs.promises.writeFile(
-      path.join(finalSnapshotFolder, `${INFO_FILE_NAME}.json`),
-      JSON.stringify(info, null, ' ')
-    )
-
-    // Rename snapshot folder to include timestamp
-    const timestampString = DateTime.fromISO(info.timestamp).toFormat('yyyy-LL-dd_HH-mm-ss')
-    const fullFolder = `${finalSnapshotFolder}_${timestampString}`
-    const fullName = `${snapshotName}_${timestampString}`
-    await fs.promises.rename(finalSnapshotFolder, fullFolder)
-
-    if (!options.skipZip)
-      await zipSnapshot(
-        fullFolder,
-        fullName,
-        path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME)
-      )
-
-    return { success: true, message: `created Archive snapshot ${snapshotName}` }
   } catch (e) {
     return { success: false, message: 'error while taking snapshot', error: e.toString() }
   }
