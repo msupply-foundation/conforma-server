@@ -392,8 +392,8 @@ class PostgresDB {
 
   // File archiving
 
-  public getFilesToArchive = async () => {
-    const duration = `${config?.archiveFileAgeMinimum ?? 7} days`
+  public getFilesToArchive = async (days: number) => {
+    const duration = `${days} days`
     const text = `
       SELECT unique_id, file_path, thumbnail_path, timestamp
       FROM file

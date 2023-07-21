@@ -13,6 +13,8 @@ import config from '../../config'
 import { nanoid } from 'nanoid'
 
 const isManualArchive: Boolean = process.argv[2] === '--archive'
+const param = Number.parseInt(process.argv[3])
+const archiveDays = Number.isNaN(param) ? undefined : param
 
 export interface ArchiveInfo {
   timestamp: number
@@ -27,7 +29,7 @@ export interface ArchiveData {
   history: ArchiveInfo[]
 }
 
-export const archiveFiles = async () => {
+export const archiveFiles = async (days: number = config.archiveFileAgeMinimum ?? 7) => {
   console.log(
     DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
     'Archiving files...'
@@ -46,7 +48,7 @@ export const archiveFiles = async () => {
   // TO-DO: Verify integrity of existing archive
 
   // Get file list
-  const files = await DBConnect.getFilesToArchive()
+  const files = await DBConnect.getFilesToArchive(days)
   if (files.length === 0) {
     console.log('Nothing to archive')
     return
@@ -120,7 +122,7 @@ export const archiveFiles = async () => {
 
 // Manually launch archive with command `yarn cleanup`
 if (isManualArchive) {
-  archiveFiles().then(() => {
+  archiveFiles(archiveDays).then(() => {
     console.log('Archive -- Done!\n')
     process.exit(0)
   })
