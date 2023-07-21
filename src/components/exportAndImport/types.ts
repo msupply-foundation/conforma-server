@@ -71,7 +71,7 @@ export type SnapshotOperation = (props: {
   options?: ExportAndImportOptions
   extraOptions?: Partial<ExportAndImportOptions>
   isArchiveSnapshot?: boolean
-}) => Promise<{ success: boolean; message: string; error?: string }>
+}) => Promise<{ success: boolean; message: string; error?: string; snapshot?: string }>
 
 export type ArchiveSnapshotOperation = (props: {
   snapshotName?: string

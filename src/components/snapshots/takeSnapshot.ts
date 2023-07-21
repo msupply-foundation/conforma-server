@@ -146,7 +146,7 @@ const takeSnapshot: SnapshotOperation = async ({
     if (!options.skipZip) await zipSnapshot(sourceFolder, fullName)
 
     await fs.promises.rename(sourceFolder, fullFolderPath)
-    if (isArchiveSnapshot)
+    if (isArchiveSnapshot && !options.skipZip)
       await fs.promises.rename(
         path.join(SNAPSHOT_FOLDER, `${fullName}.zip`),
         path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME, `${fullName}.zip`)
@@ -165,7 +165,7 @@ const takeSnapshot: SnapshotOperation = async ({
       })
     }
 
-    return { success: true, message: `created snapshot ${snapshotName}` }
+    return { success: true, message: `created snapshot ${snapshotName}`, snapshot: fullName }
   } catch (e) {
     return { success: false, message: 'error while taking snapshot', error: e.toString() }
   }

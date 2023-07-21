@@ -31,7 +31,7 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
         // Remove ".zip" file extension
         .replace(/\.zip$/g, '')
         // Remove "ARCHIVE_" prefix
-        .replace(/^ARCHIVE_/g, '')
+        .replace(/^ARCHIVE_/gi, '')
         // Remove (1) from end (added due to multiple downloads of same file)
         .replace(/(\(\d+\))$/g, '')
         // Restrict filename to alpha-numeric chars (and "-"/"_")
