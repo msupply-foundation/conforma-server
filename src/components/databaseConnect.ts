@@ -178,8 +178,6 @@ class DBConnect {
 
   public getApplicationSections = PostgresDB.getApplicationSections
 
-  public getLatestSnapshotName = PostgresDB.getLatestSnapshotName
-
   public getSystemInfo = PostgresDB.getSystemInfo
 
   public setSystemInfo = PostgresDB.setSystemInfo
