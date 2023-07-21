@@ -47,6 +47,7 @@ import {
 import { routeTriggers } from './components/other/routeTriggers'
 import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
 import migrateData from '../database/migration/migrateData'
+import routeArchiveFiles from './components/files/routeArchiveFiles'
 require('dotenv').config()
 
 // Fastify server
@@ -131,6 +132,7 @@ const startServer = async () => {
         server.get('/all-languages', routeGetAllLanguageFiles)
         server.get('/get-all-prefs', routeGetAllPrefs)
         server.post('/set-prefs', routeSetPrefs)
+        server.get('/archive-files', routeArchiveFiles)
         // Dev only actions -- never call from app
         server.post('/run-action', routeRunAction)
         server.post('/test-trigger', routeTestTrigger)

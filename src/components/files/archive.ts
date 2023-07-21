@@ -22,6 +22,7 @@ export interface ArchiveInfo {
   uid: string
   prevArchiveFolder: string | null
   prevUid: string | null
+  numFiles: number
 }
 
 export interface ArchiveData {
@@ -32,7 +33,7 @@ export interface ArchiveData {
 export const archiveFiles = async (days: number = config.archiveFileAgeMinimum ?? 7) => {
   console.log(
     DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
-    'Archiving files...'
+    `Archiving files older than ${days} days...`
   )
 
   // Load archive history
@@ -51,7 +52,7 @@ export const archiveFiles = async (days: number = config.archiveFileAgeMinimum ?
   const files = await DBConnect.getFilesToArchive(days)
   if (files.length === 0) {
     console.log('Nothing to archive')
-    return
+    return null
   }
   // Create archive subfolder
   const timestamp = DateTime.now()
@@ -101,6 +102,7 @@ export const archiveFiles = async (days: number = config.archiveFileAgeMinimum ?
     archiveFolder: timestampString,
     prevArchiveFolder: prevArchive?.archiveFolder ?? null,
     prevUid: prevArchive?.uid ?? null,
+    numFiles: files.length,
   }
 
   await writeJSON(path.join(FILES_FOLDER, archivePath, 'info.json'), archiveInfo, { spaces: 2 })
@@ -118,6 +120,10 @@ export const archiveFiles = async (days: number = config.archiveFileAgeMinimum ?
 
   // Update system info
   await DBConnect.setSystemInfo('archive', uid)
+
+  console.log(`Archived ${files.length} files`)
+
+  return archiveInfo
 }
 
 // Manually launch archive with command `yarn cleanup`
