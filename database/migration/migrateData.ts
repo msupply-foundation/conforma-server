@@ -816,10 +816,10 @@ const migrateData = async () => {
       DROP COLUMN IF EXISTS version;
     `)
 
-    console.log(' - Creating archived flag for files')
+    console.log(' - Creating archive_path field for files')
     await DB.changeSchema(`
     ALTER TABLE public.file  
-      ADD COLUMN IF NOT EXISTS archived boolean DEFAULT FALSE NOT NULL;
+      ADD COLUMN IF NOT EXISTS archive_path varchar;
     `)
   }
 

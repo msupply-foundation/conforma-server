@@ -335,12 +335,8 @@ class PostgresDB {
     }
   }
 
-  public getFileDownloadInfo = async (
-    uid: string,
-    thumbnail = false
-  ): Promise<FileDownloadInfo | undefined> => {
-    const path = thumbnail ? 'thumbnail_path' : 'file_path'
-    const text = `SELECT original_filename, ${path} FROM file WHERE unique_id = $1`
+  public getFileDownloadInfo = async (uid: string): Promise<FileDownloadInfo | undefined> => {
+    const text = `SELECT original_filename, file_path, thumbnail_path, archive_path FROM file WHERE unique_id = $1`
     try {
       const result = await this.query({ text, values: [uid] })
       return result.rows[0] as FileDownloadInfo
@@ -397,7 +393,7 @@ class PostgresDB {
     const text = `
       SELECT unique_id, file_path, thumbnail_path, timestamp
       FROM file
-      WHERE archived = FALSE
+      WHERE archive_path IS NULL
       AND to_be_deleted = FALSE
       AND timestamp < now() - interval '${duration}' 
     `
@@ -409,19 +405,13 @@ class PostgresDB {
     }
   }
 
-  public setFileArchived = async (file: {
-    unique_id: string
-    file_path: string
-    thumbnail_path: string
-  }) => {
-    const { unique_id, file_path, thumbnail_path } = file
+  public setFileArchived = async (file: { unique_id: string; archive_path: string }) => {
+    const { unique_id, archive_path } = file
     const text = `
-      UPDATE file SET archived = TRUE,
-      file_path = $1,
-      thumbnail_path = $2 
-      WHERE unique_id = $3`
+      UPDATE file SET archive_path = $1 
+      WHERE unique_id = $2`
     try {
-      const result = await this.query({ text, values: [file_path, thumbnail_path, unique_id] })
+      const result = await this.query({ text, values: [archive_path, unique_id] })
       return result.rows
     } catch (err) {
       throw err

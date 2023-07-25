@@ -201,10 +201,10 @@ const prepareAttachments = async (
       if (!file?.path || !file?.filename) throw new Error('Invalid attachment')
       attachmentObjects.push(file)
     } else {
-      const { original_filename, file_path } = await getFilePath(file)
+      const { originalFilename, filePath } = await getFilePath(file)
       attachmentObjects.push({
-        path: path.join(appRootFolder, filesFolder, file_path as string),
-        filename: original_filename,
+        path: path.join(appRootFolder, filesFolder, filePath as string),
+        filename: originalFilename,
       })
     }
   }

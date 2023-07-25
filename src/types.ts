@@ -184,8 +184,9 @@ export interface ActionPluginPayload {
 
 export interface FileDownloadInfo {
   original_filename: string
-  file_path?: string
-  thumbnail_path?: string
+  file_path: string
+  thumbnail_path: string
+  archive_path: string | null
 }
 
 export interface FilePayload {

@@ -17,9 +17,18 @@ interface HttpQueryParameters {
 }
 
 export async function getFilePath(uid: string, thumbnail = false) {
-  const result = await DBConnect.getFileDownloadInfo(uid, thumbnail)
-  if (!result) throw new Error()
-  return result
+  const fileData = await DBConnect.getFileDownloadInfo(uid)
+  if (!fileData) throw new Error('Unable to retrieve file info')
+
+  const isGenericThumbnail =
+    thumbnail && fileData.thumbnail_path.startsWith(config.genericThumbnailsFolderName)
+
+  const filePath = path.join(fileData.archive_path ?? '', fileData.file_path)
+  const thumbnailPath = path.join(
+    !isGenericThumbnail ? fileData.archive_path ?? '' : '',
+    fileData.file_path
+  )
+  return { filePath, thumbnailPath, originalFilename: fileData.original_filename }
 }
 
 const pump = util.promisify(pipeline)

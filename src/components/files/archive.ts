@@ -57,7 +57,9 @@ export const archiveFiles = async (days: number = config.archiveFileAgeMinimum ?
   // Create archive subfolder
   const timestamp = DateTime.now()
   const timestampString = timestamp.toFormat('yyyy-LL-dd_HH-mm-ss')
-  const archivePath = path.join(ARCHIVE_SUBFOLDER_NAME, timestampString)
+  const uid = nanoid()
+  const folderName = `${timestampString}_${uid.slice(0, 6)}`
+  const archivePath = path.join(ARCHIVE_SUBFOLDER_NAME, folderName)
   await mkdirp(path.join(FILES_FOLDER, archivePath))
 
   // Move files
@@ -65,7 +67,7 @@ export const archiveFiles = async (days: number = config.archiveFileAgeMinimum ?
     const newFilePath = path.join(archivePath, 'files', file.file_path)
     try {
       await move(path.join(FILES_FOLDER, file.file_path), path.join(FILES_FOLDER, newFilePath))
-      file.file_path = newFilePath
+      file.archive_path = path.join(archivePath, 'files')
     } catch {
       console.log('Problem moving', file.file_path)
     }
@@ -80,7 +82,6 @@ export const archiveFiles = async (days: number = config.archiveFileAgeMinimum ?
           path.join(FILES_FOLDER, file.thumbnail_path),
           path.join(FILES_FOLDER, newThumbnailPath)
         )
-        file.thumbnail_path = newThumbnailPath
       } catch {
         console.log('Problem moving thumbnail', file.file_path)
       }
@@ -95,11 +96,10 @@ export const archiveFiles = async (days: number = config.archiveFileAgeMinimum ?
 
   // Create metadata
   const prevArchive = history.slice(-1)?.[0]
-  const uid = nanoid()
   const archiveInfo: ArchiveInfo = {
     timestamp: timestamp.toMillis(),
     uid,
-    archiveFolder: timestampString,
+    archiveFolder: folderName,
     prevArchiveFolder: prevArchive?.archiveFolder ?? null,
     prevUid: prevArchive?.uid ?? null,
     numFiles: files.length,

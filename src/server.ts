@@ -94,15 +94,12 @@ const startServer = async () => {
         server.get('/verify', routeVerification)
         // File download endpoint (get by unique ID)
         server.get('/file', async function (request: any, reply: any) {
-          const { uid, thumbnail } = request.query
-          const { original_filename, file_path, thumbnail_path } = await getFilePath(
-            uid,
-            thumbnail === 'true'
-          )
+          const { uid, thumbnail = false } = request.query
+          const { originalFilename, filePath, thumbnailPath } = await getFilePath(uid, thumbnail)
           // TO-DO Check for permission to access file
           try {
             // TO-DO: Rename file back to original for download
-            return reply.sendFile(file_path ? file_path : thumbnail_path)
+            return reply.sendFile(thumbnail ? thumbnailPath : filePath)
           } catch {
             return reply.send({ success: false, message: 'Unable to retrieve file' })
           }

@@ -61,9 +61,9 @@ export async function generatePDF({
 }: GeneratePDFInput) {
   // Existing Carbone Template properties
   const templateFileInfo = await getFilePath(fileId)
-  const templatePath = templateFileInfo?.file_path
+  const templatePath = templateFileInfo?.filePath
   const templateFullPath = path.join(appRootFolder, filesFolder, templatePath as string)
-  const templateName = path.parse(templateFileInfo?.original_filename).name
+  const templateName = path.parse(templateFileInfo?.originalFilename).name
 
   // Output file/folder properties
   const uniqueId = nanoid()
