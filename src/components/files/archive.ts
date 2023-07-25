@@ -5,7 +5,7 @@ Please see https://github.com/openmsupply/conforma-server/discussions/1059 for d
 
 import DBConnect from '../databaseConnect'
 import { DateTime } from 'luxon'
-import { move, mkdirp, readJSON, writeJSON } from 'fs-extra'
+import fsx from 'fs-extra'
 import path from 'path'
 import { clearEmptyDirectories } from '../utilityFunctions'
 import { ARCHIVE_FOLDER, ARCHIVE_SUBFOLDER_NAME, FILES_FOLDER } from '../../constants'
@@ -39,7 +39,7 @@ export const archiveFiles = async (days: number = config.archiveFileAgeMinimum ?
   // Load archive history
   let archiveData: ArchiveData
   try {
-    archiveData = await readJSON(path.join(ARCHIVE_FOLDER, 'archive.json'))
+    archiveData = await fsx.readJSON(path.join(ARCHIVE_FOLDER, 'archive.json'))
   } catch {
     archiveData = { archives: {}, history: [] }
   }
@@ -60,13 +60,13 @@ export const archiveFiles = async (days: number = config.archiveFileAgeMinimum ?
   const uid = nanoid()
   const folderName = `${timestampString}_${uid.slice(0, 6)}`
   const archivePath = path.join(ARCHIVE_SUBFOLDER_NAME, folderName)
-  await mkdirp(path.join(FILES_FOLDER, archivePath))
+  await fsx.mkdirp(path.join(FILES_FOLDER, archivePath))
 
   // Move files
   for (const file of files) {
     const newFilePath = path.join(archivePath, 'files', file.file_path)
     try {
-      await move(path.join(FILES_FOLDER, file.file_path), path.join(FILES_FOLDER, newFilePath))
+      await fsx.move(path.join(FILES_FOLDER, file.file_path), path.join(FILES_FOLDER, newFilePath))
       file.archive_path = path.join(archivePath, 'files')
     } catch {
       console.log('Problem moving', file.file_path)
@@ -78,7 +78,7 @@ export const archiveFiles = async (days: number = config.archiveFileAgeMinimum ?
       : file.thumbnail_path
     if (shouldMoveThumbnail)
       try {
-        await move(
+        await fsx.move(
           path.join(FILES_FOLDER, file.thumbnail_path),
           path.join(FILES_FOLDER, newThumbnailPath)
         )
@@ -87,7 +87,7 @@ export const archiveFiles = async (days: number = config.archiveFileAgeMinimum ?
       }
   }
 
-  // Update database with new file paths and "archived" flag
+  // Update database with "archive_path" prefixes
   for (const file of files) {
     await DBConnect.setFileArchived(file)
   }
@@ -105,12 +105,12 @@ export const archiveFiles = async (days: number = config.archiveFileAgeMinimum ?
     numFiles: files.length,
   }
 
-  await writeJSON(path.join(FILES_FOLDER, archivePath, 'info.json'), archiveInfo, { spaces: 2 })
+  await fsx.writeJSON(path.join(FILES_FOLDER, archivePath, 'info.json'), archiveInfo, { spaces: 2 })
 
   // Update archive.json
   archives[uid] = archiveInfo
   history.push(archiveInfo)
-  await writeJSON(
+  await fsx.writeJSON(
     path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME, 'archive.json'),
     { archives, history },
     {

@@ -7,7 +7,7 @@ The available properties are as follows (almost  are optional, as the system has
 ### Server
 - `thumbnailMaxWidth`: the maximum width (in pixels) of thumbnails that are generated for images uploaded with the [File Upload](API.md/#file-upload-endpoint) endpoint. (Default `300`)
 - **`thumbnailMaxHeight`**: Same as `thumbnailMaxWidth`, but for thumbnail height.
-- **`hoursSchedule`**: A schedule for how often scheduled actions should run, expressed in [node-schedule](https://www.npmjs.com/package/node-schedule) "hours" format (an array of numbers between 0 and 23, representing the hours at which the should should run). (Default: every hour)
+- **`actionSchedule`**: A schedule for how often scheduled actions should run, expressed as a [node-schedule](https://www.npmjs.com/package/node-schedule#recurrence-rule-scheduling) recurrence rule. (Default: every hour on the hour)
 - **`SMTPConfig`**: Configuration options for sending emails from the system using the [sendNotification action](List-of-Action-plugins.md/#send-notification), with the following properties:  
   ```ts
   {
@@ -22,12 +22,14 @@ The available properties are as follows (almost  are optional, as the system has
   The default is no configuration -- no emails will be sent.  
   Note: the **password** is not stored here, for security reasons. It must be passed in to the server as and environment variable: `SMTP_PASSWORD`. This should be in an `.env` file for development, or as part of the server start-up command for a live server.
 - **`systemManagerPermissionName`**: The "system manager" is a special permission that has certain system management rights (but not as extensive as "Admin"). Any existing permission name can be used for this special permission, in which case it should be specified here. (Default: `systemManager`)
-- **`previewDocsMinKeepTime`**: Documents generated as part of the Preview functionality will be periodically cleaned up, as they have no lasting use. It should be a Postgres duration string. The default is "2 hours".
-- **`previewDocsCleanupSchedule`**: The schedule for cleaning up (deleting) the preview documents, in node-schedule "hours" format, as above. (Default: once per day at 1 am)
-- **`backupSchedule`**: How often system backups should run, as per the node-schedule "hours" schedule above. (Default: once per day at 1 am)
+- **`previewDocsMinKeepTime`**: Documents generated as part of the Preview functionality will be periodically cleaned up, as they have no lasting use. It should be a Postgres duration string. (Default: "2 hours").
+- **`previewDocsCleanupSchedule`**: The schedule for cleaning up (deleting) the preview documents, as per the node-schedule syntax above. (Default: daily at 1:05am UTC)
+- **`backupSchedule`**: How often system backups should run, as per the node-schedule syntax above. (Default: daily at 1:15am UTC)
 - **`backupFilePrefix`**: System backups are saved with the name format `backupFilePrefix_date_time.zip`, e.g. `conforma_backup_2023-04-04_01-00-00.zip`. (Default: "conforma_backup")
 - **`maxBackupDurationDays`**: Backups are kept for this many days, after which they're deleted next time the backup schedule runs. The default is nothing -- all backups will be kept.
 - **`testingEmail`**: During development and on a testing server, we don't want emails being sent to real people. If this property is set, and the site is not running on the designated host (as defined in `siteHost` below), then all emails will be send to this address instead. (If no `testingEmail` is specified, no emails will be sent at all)
+- `archiveSchedule`: Schedule for [archiving system files](File-Archiving.md), as per the node-schedule syntax above. (Default: twice per week on Weds/Sun at 1:10am UTC)
+- `archiveFileAgeMinimum`: The number of days old a file needs to be before it is archived. (Default: 7)
 
 ### Web app
 

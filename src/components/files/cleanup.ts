@@ -37,12 +37,11 @@ const processMissingFileLinks = async () => {
     filePaths = await DBConnect.getFilePaths(BATCH_SIZE, offset)
   }
 
-  // await DBConnect.deleteMissingFileRecords(fileIdsToBeDeleted)
+  await DBConnect.deleteMissingFileRecords(fileIdsToBeDeleted)
   return fileIdsToBeDeleted.length
 }
 
 export const cleanUpFiles = async () => {
-  // return
   try {
     let filesMissingRecords = 0
 

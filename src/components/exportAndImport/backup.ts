@@ -100,7 +100,7 @@ const createBackup = async (password?: string) => {
     )
   } else console.log('No new archives to back up')
 
-  // Make new backup with no archives
+  // Make new snapshot with no archives
   const { snapshot } = await takeSnapshot({
     snapshotName,
     optionsName: 'backup',

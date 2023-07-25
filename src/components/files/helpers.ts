@@ -56,7 +56,7 @@ const getTimestamp = (
 // - system archive
 // - this snapshot
 // - the system snapshots/archives
-// - backups (Maybe -- TO-DO)
+// - backups (TO-DO)
 // If not, it returns an error
 // If so, returns a list of the paths to all the folders
 
@@ -87,7 +87,7 @@ export const findArchiveSources = async (snapshotFolder: string) => {
     }
 
     // TO-DO:
-    // Scan Backups if we can figure out how
+    // Scan Backups, but that will require unzipping so might not be worth it.
   }
 
   for await (const source of sources()) {
@@ -113,6 +113,7 @@ export const findArchiveSources = async (snapshotFolder: string) => {
   `)
 }
 
+// Scans a single archive source and return the archives within
 const scanArchive = async (source: string) => {
   const archives = new Set<ArchiveInfo>()
 

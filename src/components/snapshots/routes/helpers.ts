@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
 import fsSync from 'fs'
-import fse from 'fs-extra'
+import fsx from 'fs-extra'
 import {
   ARCHIVE_SUBFOLDER_NAME,
   FILES_FOLDER,
@@ -30,8 +30,8 @@ export const getSnapshotList = async (archive?: boolean) => {
     if (
       !archive &&
       !(
-        (await fse.pathExists(path.join(sourceFolder, dirent.name, `database.dump`))) ||
-        (await fse.pathExists(path.join(sourceFolder, dirent.name, `${SNAPSHOT_FILE_NAME}.json`)))
+        (await fsx.pathExists(path.join(sourceFolder, dirent.name, `database.dump`))) ||
+        (await fsx.pathExists(path.join(sourceFolder, dirent.name, `${SNAPSHOT_FILE_NAME}.json`)))
       )
     )
       continue
@@ -43,7 +43,7 @@ export const getSnapshotList = async (archive?: boolean) => {
       size = null
     }
 
-    const info = await fse.readJson(path.join(sourceFolder, dirent.name, `${INFO_FILE_NAME}.json`))
+    const info = await fsx.readJson(path.join(sourceFolder, dirent.name, `${INFO_FILE_NAME}.json`))
 
     const name = dirent.name.replace(timestampStringExpression, '')
 
@@ -59,7 +59,7 @@ export const getSnapshotList = async (archive?: boolean) => {
 
 export const getCurrentArchiveList = async () => {
   try {
-    const { history } = await fse.readJson(
+    const { history } = await fsx.readJson(
       path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME, 'archive.json')
     )
     return history

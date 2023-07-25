@@ -26,7 +26,7 @@ export async function getFilePath(uid: string, thumbnail = false) {
   const filePath = path.join(fileData.archive_path ?? '', fileData.file_path)
   const thumbnailPath = path.join(
     !isGenericThumbnail ? fileData.archive_path ?? '' : '',
-    fileData.file_path
+    fileData.thumbnail_path
   )
   return { filePath, thumbnailPath, originalFilename: fileData.original_filename }
 }

@@ -93,6 +93,7 @@ function getSchedule(
     },
     archive: {
       // Twice per week on Weds/Sun at 1:10am UTC
+      dayOfWeek: [0, 3],
       hour: [1],
       minute: 15,
       tz: 'Etc/UTC',
