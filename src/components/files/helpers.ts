@@ -106,7 +106,7 @@ export const findArchiveSources = async (snapshotFolder: string) => {
 
   // We haven't found all the required archives so throw an informative error
   const missingArchives = Array.from(requiredUids).map(
-    (uid) => ` - ${archives[uid].archiveFolder} (${uid})`
+    (uid) => ` - ${archives[uid].archiveFolder} (ID: ${uid})`
   )
   throw new Error(`Missing archive folders:
     ${missingArchives.join('\n')}

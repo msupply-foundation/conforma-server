@@ -86,10 +86,16 @@ const createBackup = async (password?: string) => {
 
     zipSources.push(path.join(SNAPSHOT_ARCHIVES_FOLDER_NAME, archiveSnapshot))
 
+    const archiveInfo = await fsx.readJSON(
+      path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME, archiveSnapshot, 'info.json')
+    )
+
     backupInfo.archives.push(
       ...archivesNotBackedUp.map(({ uid }) => ({
         uid,
         archiveSnapshot,
+        from: archiveInfo.archive.from,
+        to: archiveInfo.archive.to,
       }))
     )
   } else console.log('No new archives to back up')
@@ -106,6 +112,7 @@ const createBackup = async (password?: string) => {
   zipSources.push(snapshot)
 
   // Zip them using password (or unencrypted if no password)
+  console.log('Zipping backups...')
   for (const source of zipSources) {
     const output = fs.createWriteStream(path.join(BACKUPS_FOLDER, `${source}.zip`))
     const archive = password
@@ -130,9 +137,10 @@ const createBackup = async (password?: string) => {
     await archive.directory(path.join(SNAPSHOT_FOLDER, source), false)
     await archive.finalize()
 
-    // Make it writeable by everyone so Dropbox can sync it
+    // Make it read-writeable by everyone (so Dropbox can sync it)
     execSync(`chmod 666 ${BACKUPS_FOLDER}/${source}.zip`)
   }
+  console.log('Zipping backups...done')
 
   // Update backup.json
   backupInfo.latestBackup = snapshot
