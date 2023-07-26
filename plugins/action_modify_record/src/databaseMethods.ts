@@ -73,6 +73,16 @@ const databaseMethods = (DBConnect: any) => {
           text: `INSERT INTO data_table (table_name, display_name) VALUES($1, $2)`,
           values: [tableName.replace(DATA_TABLE_PREFIX, ''), tableNameOriginal],
         })
+        // Enable any pre-existing data views for this table -- we're assuming
+        // they're disabled because the table didn't exist yet
+        await DBConnect.query({
+          text: `UPDATE data_view SET enabled = TRUE
+            WHERE table_name = $1
+            OR table_name = $2
+            OR table_name = $3;
+            `,
+          values: [tableName, tableNameOriginal, tableName.replace(DATA_TABLE_PREFIX, '')],
+        })
       } catch (err) {
         console.log(err.message)
         throw new Error(`Failed to create table: ${tableName}`)
