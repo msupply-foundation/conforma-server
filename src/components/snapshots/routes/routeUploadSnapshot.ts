@@ -20,8 +20,15 @@ const errorMessageBase = {
 
 const TEMP_ZIP_FILE = 'tempUpload.zip'
 
+type Query = {
+  template?: 'true'
+}
+
 const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply) => {
   const data = await request.files()
+  const isTemplate = (request.query as Query)?.template === 'true'
+
+  console.log('isTemplate', isTemplate)
 
   let snapshotName: string = ''
   try {
@@ -55,8 +62,10 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
 
       const info = JSON.parse(zip.readFile('info.json')?.toString() || '{}')
 
-      // Add timestamp suffix to upload name if it doesn't already have it
-      if (!timestampStringExpression.test(snapshotName))
+      // Add timestamp suffix to upload name if it doesn't already have it. But
+      // we don't want this on template uploads as the front-end needs to refer
+      // to them by name, and we delete them immediately after anyway
+      if (!timestampStringExpression.test(snapshotName) && !isTemplate)
         snapshotName =
           snapshotName + DateTime.fromISO(info.timestamp).toFormat('_yyyy-LL-dd_HH-mm-ss')
 
@@ -95,7 +104,11 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
     return reply.send({ ...errorMessageBase, error: 'check server logs' })
   }
 
-  reply.send({ success: true, message: `uploaded snapshot ${snapshotName}` })
+  reply.send({
+    success: true,
+    message: `uploaded snapshot ${snapshotName}`,
+    snapshot: snapshotName,
+  })
 }
 
 export default routeUploadSnapshot
