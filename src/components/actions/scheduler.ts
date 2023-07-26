@@ -13,27 +13,19 @@ const schedulerTestMode = false // Runs scheduler every 30 seconds
 // Launch schedulers
 Scheduler.scheduleJob(
   getSchedule('action', schedulerTestMode, config.actionSchedule ?? config?.hoursSchedule),
-  () => {
-    triggerScheduledActions()
-  }
+  () => triggerScheduledActions()
 )
 Scheduler.scheduleJob(
   getSchedule('cleanup', schedulerTestMode, config?.previewDocsCleanupSchedule) as RecurrenceRule,
-  () => {
-    cleanUpFiles()
-  }
+  () => cleanUpFiles()
 )
 Scheduler.scheduleJob(
   getSchedule('backup', schedulerTestMode, config?.backupSchedule) as RecurrenceRule,
-  () => {
-    startBackup()
-  }
+  () => createBackup(process.env.BACKUPS_PASSWORD)
 )
 Scheduler.scheduleJob(
   getSchedule('archive', schedulerTestMode, config?.archiveSchedule) as RecurrenceRule,
-  () => {
-    archiveFiles()
-  }
+  () => archiveFiles()
 )
 
 export const triggerScheduledActions = async () => {
@@ -42,14 +34,6 @@ export const triggerScheduledActions = async () => {
     'Checking scheduled actions...'
   )
   DBConnect.triggerScheduledActions()
-}
-
-const startBackup = async () => {
-  console.log(
-    DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
-    'Starting backup...'
-  )
-  createBackup(process.env.BACKUPS_PASSWORD)
 }
 
 type ScheduleType = 'action' | 'cleanup' | 'backup' | 'archive'

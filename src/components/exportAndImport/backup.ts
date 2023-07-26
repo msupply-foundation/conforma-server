@@ -38,7 +38,10 @@ const createBackup = async (password?: string) => {
   const snapshotName = backupFilePrefix
   await fsx.ensureDir(path.join(BACKUPS_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME))
 
-  console.log(`Creating system backup: ${snapshotName}`)
+  console.log(
+    DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
+    `Creating system backup: ${snapshotName}`
+  )
 
   if (!password) console.log('WARNING: Backup is not encrypted')
 
