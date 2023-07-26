@@ -1,24 +1,69 @@
 import fs from 'fs/promises'
 import fsSync from 'fs'
-import { SNAPSHOT_FILE_NAME, SNAPSHOT_FOLDER } from '../../../constants'
+import fsx from 'fs-extra'
+import {
+  ARCHIVE_SUBFOLDER_NAME,
+  FILES_FOLDER,
+  INFO_FILE_NAME,
+  SNAPSHOT_ARCHIVES_FOLDER_NAME,
+  SNAPSHOT_FILE_NAME,
+  SNAPSHOT_FOLDER,
+} from '../../../constants'
 import path from 'path'
+import { SnapshotInfo } from '../../exportAndImport/types'
+import { DateTime } from 'luxon'
 
-export const getSnaphotList = async () => {
-  const dirents = await fs.readdir(SNAPSHOT_FOLDER, { encoding: 'utf-8', withFileTypes: true })
-  const snapshotsNames: string[] = []
+export const timestampStringExpression = /_\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d$/
+
+export const getSnapshotList = async (archive?: boolean) => {
+  const sourceFolder = archive
+    ? path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME)
+    : SNAPSHOT_FOLDER
+
+  const dirents = await fs.readdir(sourceFolder, { encoding: 'utf-8', withFileTypes: true })
+
+  const snapshots: (SnapshotInfo & { name: string; size: number })[] = []
 
   for (const dirent of dirents) {
     if (!dirent.isDirectory()) continue
+    if (!fsSync.existsSync(path.join(sourceFolder, dirent.name, `${INFO_FILE_NAME}.json`))) continue
     if (
+      !archive &&
       !(
-        fsSync.existsSync(path.join(SNAPSHOT_FOLDER, dirent.name, `${SNAPSHOT_FILE_NAME}.json`)) ||
-        fsSync.existsSync(path.join(SNAPSHOT_FOLDER, dirent.name, `database.dump`))
+        (await fsx.pathExists(path.join(sourceFolder, dirent.name, `database.dump`))) ||
+        (await fsx.pathExists(path.join(sourceFolder, dirent.name, `${SNAPSHOT_FILE_NAME}.json`)))
       )
     )
       continue
 
-    snapshotsNames.push(dirent.name)
+    let size: number | null = null
+    try {
+      size = (await fs.stat(path.join(sourceFolder, `${dirent.name}.zip`))).size
+    } catch {
+      size = null
+    }
+
+    const info = await fsx.readJson(path.join(sourceFolder, dirent.name, `${INFO_FILE_NAME}.json`))
+
+    const name = dirent.name.replace(timestampStringExpression, '')
+
+    snapshots.push({ name, filename: dirent.name, size, ...info })
   }
 
-  return { snapshotsNames }
+  snapshots.sort(
+    (a, b) => DateTime.fromISO(b.timestamp).toMillis() - DateTime.fromISO(a.timestamp).toMillis()
+  )
+
+  return snapshots
+}
+
+export const getCurrentArchiveList = async () => {
+  try {
+    const { history } = await fsx.readJson(
+      path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME, 'archive.json')
+    )
+    return history
+  } catch {
+    return []
+  }
 }

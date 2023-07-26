@@ -1,5 +1,6 @@
 import fs from 'fs/promises'
 import fsSync from 'fs'
+import fse from 'fs-extra'
 import path from 'path'
 import { execSync } from 'child_process'
 import insertData from '../../../database/insertData'
@@ -28,7 +29,10 @@ import {
   SCHEMA_FILE_NAME,
   INFO_FILE_NAME,
   PREFERENCES_FOLDER,
+  ARCHIVE_TEMP_FOLDER,
+  ARCHIVE_SUBFOLDER_NAME,
 } from '../../constants'
+import { findArchiveSources } from '../files/helpers'
 
 const useSnapshot: SnapshotOperation = async ({
   snapshotName = DEFAULT_SNAPSHOT_NAME,
@@ -59,6 +63,9 @@ const useSnapshot: SnapshotOperation = async ({
       throw `Snapshot was created with version: ${snapshotVersion}\n You can't install a snapshot created with a version newer than the current application version: ${config.version}`
     }
 
+    // Check that we can find all the archives needed:
+    await collectArchives(snapshotFolder)
+
     if (options.resetFiles || options.usePgDump) {
       execSync(`rm -rf ${FILES_FOLDER}/*`)
     }
@@ -80,9 +87,7 @@ const useSnapshot: SnapshotOperation = async ({
       console.log('Restoring database...done')
 
       // Copy files
-      console.log('Importing files...')
-      execSync(`cp -a '${snapshotFolder}/files'/. '${FILES_FOLDER}'`)
-      console.log('Importing files...done')
+      await copyFiles(snapshotFolder)
     } else {
       // The old way, using JSON database object export. Deprecated for full
       // database export, but kept here for backwards compatibility, and for
@@ -127,7 +132,7 @@ const useSnapshot: SnapshotOperation = async ({
         execSync(`psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} ENABLE TRIGGER ALL"`)
       })
 
-      await copyFiles(snapshotFolder, insertedRecords.file)
+      await copyFilesPartial(snapshotFolder, insertedRecords.file)
     }
 
     // Import localisations
@@ -261,7 +266,7 @@ export const getDirectoryFromPath = (filePath: string) => {
   return directory.join('/')
 }
 
-const copyFiles = async (snapshotFolder: string, fileRecords: ObjectRecord[] = []) => {
+const copyFilesPartial = async (snapshotFolder: string, fileRecords: ObjectRecord[] = []) => {
   // copy only files that associated with import file records
   const filePaths = fileRecords.map((oldAndNewFileRecord) => oldAndNewFileRecord.new.filePath)
   filePaths.push(...fileRecords.map((oldAndNewFileRecord) => oldAndNewFileRecord.new.thumbnailPath))
@@ -281,6 +286,41 @@ const copyFiles = async (snapshotFolder: string, fileRecords: ObjectRecord[] = [
     } catch (e) {
       console.log('failed to copy file', e)
     }
+  }
+}
+
+const copyFiles = async (snapshotFolder: string) => {
+  console.log('Importing files...')
+
+  // Copy files but not archive
+  const archiveRegex = new RegExp(`.+\/${ARCHIVE_SUBFOLDER_NAME}.*`)
+  await fse.copy(path.join(snapshotFolder, 'files'), FILES_FOLDER, {
+    filter: (src) => {
+      if (src === FILES_FOLDER) return true
+      return !archiveRegex.test(src)
+    },
+  })
+  // Restore the temp archives folder
+  await fse.move(ARCHIVE_TEMP_FOLDER, path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME))
+  console.log('Importing files...done')
+
+  // Restore "archive.json" from snapshot
+  try {
+    await fse.copy(
+      path.join(snapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME, 'archive.json'),
+      path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME, 'archive.json')
+    )
+  } catch {
+    console.log('No archive.json in snapshot')
+  }
+}
+
+const collectArchives = async (snapshotFolder: string) => {
+  const archiveSources = await findArchiveSources(snapshotFolder)
+  // Copy all archives to temp folder
+  await fse.emptyDir(ARCHIVE_TEMP_FOLDER)
+  for (const [source, folder] of archiveSources) {
+    await fse.copy(path.join(source, folder), path.join(ARCHIVE_TEMP_FOLDER, folder))
   }
 }
 

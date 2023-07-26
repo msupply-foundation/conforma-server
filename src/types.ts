@@ -7,6 +7,7 @@ import {
   TriggerQueueStatus,
 } from './generated/graphql'
 import { EmailOperationMode } from './config'
+import { RecurrenceRule } from 'node-schedule'
 
 export interface ActionInTemplate {
   code: string
@@ -183,8 +184,9 @@ export interface ActionPluginPayload {
 
 export interface FileDownloadInfo {
   original_filename: string
-  file_path?: string
-  thumbnail_path?: string
+  file_path: string
+  thumbnail_path: string
+  archive_path: string | null
 }
 
 export interface FilePayload {
@@ -251,10 +253,23 @@ export interface UserOrg extends User, Organisation {
   id: number
 }
 
+// node-scheduler recurrence rule format
+export interface ScheduleObject {
+  date?: number | number[] | null
+  dayOfWeek?: number | number[] | null
+  hour?: number | number[] | null
+  minute?: number | number[] | null
+  month?: number | number[] | null
+  second?: number | number[] | null
+  year?: number | number[] | null
+  tz?: string | null
+}
+
 export interface ServerPreferences {
   thumbnailMaxWidth?: number
   thumbnailMaxHeight?: number
-  hoursSchedule?: number[]
+  actionSchedule?: number[] | ScheduleObject
+  hoursSchedule?: number[] // deprecated, please use actionSchedule
   SMTPConfig?: {
     host: string
     port: number
@@ -266,10 +281,12 @@ export interface ServerPreferences {
   systemManagerPermissionName?: string
   managerCanEditLookupTables?: boolean
   previewDocsMinKeepTime?: string
-  previewDocsCleanupSchedule?: number[]
-  backupSchedule?: number[]
+  previewDocsCleanupSchedule?: number[] | ScheduleObject
+  backupSchedule?: number[] | ScheduleObject
   backupFilePrefix?: string
   maxBackupDurationDays?: number
+  archiveSchedule?: number[] | ScheduleObject
+  archiveFileAgeMinimum?: number
   emailTestMode?: boolean
   testingEmail?: string
 }
@@ -278,6 +295,7 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   // Must contain ALL keys of ServerPreferences -- please check
   'thumbnailMaxHeight',
   'thumbnailMaxWidth',
+  'actionSchedule',
   'hoursSchedule',
   'SMTPConfig',
   'systemManagerPermissionName',
@@ -287,6 +305,8 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'backupSchedule',
   'backupFilePrefix',
   'maxBackupDurationDays',
+  'archiveSchedule',
+  'archiveFileAgeMinimum',
   'emailTestMode',
   'testingEmail',
 ]

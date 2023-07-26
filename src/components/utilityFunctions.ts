@@ -1,5 +1,6 @@
 import path from 'path'
 import fs from 'fs'
+import fsProm from 'fs/promises'
 import { camelCase, snakeCase, mapKeys } from 'lodash'
 import { singular } from 'pluralize'
 import config from '../config'
@@ -101,6 +102,17 @@ export const crawlFileSystem = async (
     const subPath = path.join(directory, file)
     if (fs.statSync(subPath).isDirectory()) await crawlFileSystem(subPath, fileOperation)
     else await fileOperation(subPath)
+  }
+}
+
+// Recursively crawl a directory and remove any empty directories within
+export const clearEmptyDirectories = async (directory: string) => {
+  const directories = (await fsProm.readdir(directory)).filter((dir) =>
+    fs.statSync(path.join(directory, dir)).isDirectory()
+  )
+  for (const dir of directories) {
+    const files = await fsProm.readdir(path.join(directory, dir))
+    if (files.length === 0) await fsProm.rmdir(path.join(directory, dir))
   }
 }
 
