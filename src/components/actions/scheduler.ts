@@ -11,19 +11,19 @@ import { ScheduleObject } from '../../types'
 const schedulerTestMode = false // Runs scheduler every 30 seconds
 
 // Launch schedulers
-Scheduler.scheduleJob(
+const actionSchedule = Scheduler.scheduleJob(
   getSchedule('action', schedulerTestMode, config.actionSchedule ?? config?.hoursSchedule),
   () => triggerScheduledActions()
 )
-Scheduler.scheduleJob(
+const cleanupSchedule = Scheduler.scheduleJob(
   getSchedule('cleanup', schedulerTestMode, config?.previewDocsCleanupSchedule) as RecurrenceRule,
   () => cleanUpFiles()
 )
-Scheduler.scheduleJob(
+const backupSchedule = Scheduler.scheduleJob(
   getSchedule('backup', schedulerTestMode, config?.backupSchedule) as RecurrenceRule,
   () => createBackup(process.env.BACKUPS_PASSWORD)
 )
-Scheduler.scheduleJob(
+const archiveSchedule = Scheduler.scheduleJob(
   getSchedule('archive', schedulerTestMode, config?.archiveSchedule) as RecurrenceRule,
   () => archiveFiles()
 )
@@ -39,7 +39,7 @@ export const triggerScheduledActions = async () => {
 type ScheduleType = 'action' | 'cleanup' | 'backup' | 'archive'
 
 function getSchedule(
-  type: 'action' | 'cleanup' | 'backup' | 'archive',
+  type: ScheduleType,
   testMode: boolean,
   schedule?: number[] | ScheduleObject | RecurrenceSpecObjLit
 ): RecurrenceSpecObjLit {
@@ -108,4 +108,37 @@ function getSchedule(
   })
 
   return combinedSchedule
+}
+
+export function reschedule(
+  type: ScheduleType,
+  schedule?: number[] | ScheduleObject | RecurrenceSpecObjLit
+) {
+  let result: boolean
+  let nextSchedule: Date
+  switch (type) {
+    case 'action':
+      result = actionSchedule.reschedule(getSchedule('action', false, schedule) as RecurrenceRule)
+      nextSchedule = actionSchedule.nextInvocation()
+      break
+    case 'cleanup':
+      result = cleanupSchedule.reschedule(getSchedule('cleanup', false, schedule) as RecurrenceRule)
+      nextSchedule = cleanupSchedule.nextInvocation()
+      break
+    case 'backup':
+      result = backupSchedule.reschedule(getSchedule('backup', false, schedule) as RecurrenceRule)
+      nextSchedule = backupSchedule.nextInvocation()
+      break
+    case 'archive':
+      result = archiveSchedule.reschedule(getSchedule('archive', false, schedule) as RecurrenceRule)
+      nextSchedule = archiveSchedule.nextInvocation()
+      break
+  }
+  if (result) {
+    console.log(
+      `Next ${type} schedule: ${DateTime.fromJSDate((nextSchedule as any).toDate()).toLocaleString(
+        DateTime.DATETIME_SHORT
+      )}`
+    )
+  } else console.log(`Problem updating ${type} schedule!`)
 }
