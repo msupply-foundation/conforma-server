@@ -1,4 +1,5 @@
 require('dotenv').config()
+import { DateTime, Settings } from 'luxon'
 import preferences from '../preferences/preferences.json'
 import { readFileSync } from 'fs'
 import { version } from '../package.json'
@@ -81,6 +82,7 @@ const config = {
 // Mutate the active config object to inject new preferences
 type Config = typeof config
 export const refreshConfig = (config: Config, prefsFilePath: string) => {
+  console.log('\nUpdating system configuration...')
   // prefsFilePath is passed in rather than imported from constants to prevent
   // circular reference
   const prefs = JSON.parse(readFileSync(prefsFilePath, 'utf-8'))
@@ -98,26 +100,29 @@ export const refreshConfig = (config: Config, prefsFilePath: string) => {
   config.isLiveServer = getIsLiveServer(webHostUrl, webAppPrefs.siteHost)
   config.emailMode = getEmailOperationMode(serverPrefs.emailTestMode, serverPrefs.testingEmail)
 
-  //Update scheduled jobs from prefs
-  if (serverPrefs.hoursSchedule) {
-    reschedule('action', serverPrefs.hoursSchedule)
-  }
-  if (serverPrefs.actionSchedule) {
-    reschedule('action', serverPrefs.actionSchedule)
-  }
-  if (serverPrefs.backupSchedule) {
-    reschedule('backup', serverPrefs.backupSchedule)
-  }
-  if (serverPrefs.previewDocsCleanupSchedule) {
-    reschedule('cleanup', serverPrefs.previewDocsCleanupSchedule)
-  }
-  if (serverPrefs.archiveSchedule) {
-    reschedule('archive', serverPrefs.archiveSchedule)
+  // Update locale and timezone if changed
+  const newLocale = serverPrefs.locale ?? Intl.DateTimeFormat().resolvedOptions().locale
+  if (newLocale !== Settings.defaultLocale) {
+    console.log(`Changing locale to: ${newLocale}`)
+    Settings.defaultLocale = newLocale
   }
 
-  console.log('\nConfiguration refreshed with updated preferences')
+  const newTimezone = serverPrefs?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone
+  if (newTimezone !== Settings.defaultZoneName) {
+    console.log(`Changing timezone to: ${newTimezone}`)
+    Settings.defaultZoneName = newTimezone
+  }
+
+  //Update scheduled jobs from prefs
+  reschedule('action', serverPrefs.actionSchedule)
+  reschedule('backup', serverPrefs.backupSchedule)
+  reschedule('cleanup', serverPrefs.fileCleanupSchedule)
+  reschedule('archive', serverPrefs.archiveSchedule)
+
   console.log('Email mode:', config.emailMode)
   if (config.emailMode === 'TEST') console.log('Email sent to:', config.testingEmail)
+  console.log('Current time:', DateTime.now().toLocaleString(DateTime.DATETIME_HUGE_WITH_SECONDS))
+  console.log('Configuration refreshed with updated preferences\n')
 }
 
 function getIsLiveServer(webHostUrl: string | undefined, productionHost?: string | null) {

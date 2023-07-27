@@ -2,6 +2,7 @@ import fastify, { FastifyPluginCallback, FastifyReply } from 'fastify'
 import fastifyStatic from 'fastify-static'
 import fastifyMultipart from 'fastify-multipart'
 import fastifyCors from 'fastify-cors'
+import { DateTime, Settings } from 'luxon'
 import path from 'path'
 import { loadActionPlugins } from './components/pluginsConnect'
 import {
@@ -50,8 +51,11 @@ import migrateData from '../database/migration/migrateData'
 import routeArchiveFiles from './components/files/routeArchiveFiles'
 require('dotenv').config()
 
-// Fastify server
+// Set the default locale and timezone for date-time display (in console)
+Settings.defaultLocale = config.locale ?? Intl.DateTimeFormat().resolvedOptions().locale
+if (config.timezone) Settings.defaultZoneName = config.timezone
 
+// Fastify server
 const startServer = async () => {
   await migrateData()
   await loadActionPlugins() // Connects to Database and listens for Triggers
@@ -165,9 +169,11 @@ const startServer = async () => {
     done()
   }
 
-  server.get('/', async (request, reply) => {
-    console.log('Request made')
-    return 'This is the response\n'
+  server.get('/', async () => {
+    console.log('API Request received')
+    return `Welcome to CONFORMA\n${DateTime.now().toLocaleString(
+      DateTime.DATETIME_HUGE_WITH_SECONDS
+    )}`
   })
 
   server.register(api, { prefix: '/api' })
@@ -178,6 +184,9 @@ const startServer = async () => {
       process.exit(1)
     }
     console.log(generateAsciiHeader(config.version))
+    console.log(DateTime.now().toLocaleString(DateTime.DATETIME_HUGE_WITH_SECONDS))
+    console.log('Locale:', Settings.defaultLocale)
+    console.log('Timezone:', Settings.defaultZoneName)
     console.log('Email mode:', config.emailMode)
     if (config.emailMode === 'TEST') console.log('All email will be sent to:', config.testingEmail)
     console.log(`\nServer listening at ${address}`)

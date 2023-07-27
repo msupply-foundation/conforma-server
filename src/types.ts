@@ -281,7 +281,7 @@ export interface ServerPreferences {
   systemManagerPermissionName?: string
   managerCanEditLookupTables?: boolean
   previewDocsMinKeepTime?: string
-  previewDocsCleanupSchedule?: number[] | ScheduleObject
+  fileCleanupSchedule?: number[] | ScheduleObject
   backupSchedule?: number[] | ScheduleObject
   backupFilePrefix?: string
   maxBackupDurationDays?: number
@@ -289,6 +289,8 @@ export interface ServerPreferences {
   archiveFileAgeMinimum?: number
   emailTestMode?: boolean
   testingEmail?: string
+  locale?: string
+  timezone?: string
 }
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
@@ -296,12 +298,11 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'thumbnailMaxHeight',
   'thumbnailMaxWidth',
   'actionSchedule',
-  'hoursSchedule',
   'SMTPConfig',
   'systemManagerPermissionName',
   'managerCanEditLookupTables',
   'previewDocsMinKeepTime',
-  'previewDocsCleanupSchedule',
+  'fileCleanupSchedule',
   'backupSchedule',
   'backupFilePrefix',
   'maxBackupDurationDays',
@@ -309,6 +310,8 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'archiveFileAgeMinimum',
   'emailTestMode',
   'testingEmail',
+  'locale',
+  'timezone',
 ]
 
 export interface WebAppPrefs {
