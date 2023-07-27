@@ -1,5 +1,5 @@
 import fs from 'fs'
-import fse from 'fs-extra'
+import fsx from 'fs-extra'
 import archiver from 'archiver'
 import {
   ArchiveInfo,
@@ -11,9 +11,7 @@ import {
 } from '../exportAndImport/types'
 import path from 'path'
 import { execSync } from 'child_process'
-import rimraf from 'rimraf'
 import getRecordsAsObject from '../exportAndImport/exportToJson'
-import { promisify } from 'util'
 import pgDiffConfig from './pgDiffConfig.json'
 import {
   DEFAULT_SNAPSHOT_NAME,
@@ -41,7 +39,6 @@ import { getDirectoryFromPath } from './useSnapshot'
 import DBConnect from '../../../src/components/databaseConnect'
 import config from '../../config'
 import { DateTime } from 'luxon'
-const asyncRimRaf = promisify(rimraf)
 import { createDefaultDataFolders } from '../files/createDefaultFolders'
 import { getArchiveFolders } from '../files/helpers'
 
@@ -67,7 +64,7 @@ const takeSnapshot: SnapshotOperation = async ({
 
     const tempFolder = path.join(SNAPSHOT_FOLDER, TEMP_SNAPSHOT_FOLDER_NAME)
     const tempArchiveFolder = path.join(SNAPSHOT_FOLDER, TEMP_ARCHIVE_FOLDER_NAME)
-    await fse.emptyDir(tempFolder)
+    await fsx.emptyDir(tempFolder)
 
     // Write snapshot/database to folder
     if (!isArchiveSnapshot) {
@@ -101,7 +98,7 @@ const takeSnapshot: SnapshotOperation = async ({
       archiveInfo = await copyArchiveFiles(tempFolder, options.archive)
 
       // Move archive files to archive temp folder
-      await fse.move(path.join(tempFolder, 'files', ARCHIVE_SUBFOLDER_NAME), tempArchiveFolder)
+      await fsx.move(path.join(tempFolder, 'files', ARCHIVE_SUBFOLDER_NAME), tempArchiveFolder)
     }
 
     // Export config
@@ -152,8 +149,8 @@ const takeSnapshot: SnapshotOperation = async ({
         path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME, `${fullName}.zip`)
       )
 
-    await fse.remove(tempArchiveFolder)
-    await fse.remove(tempFolder)
+    await fsx.remove(tempArchiveFolder)
+    await fsx.remove(tempFolder)
 
     // Store snapshot name in database (for full exports only, but not backups)
     if (options.shouldReInitialise && !options.skipZip) {
@@ -278,7 +275,7 @@ const copyFiles = async (newSnapshotFolder: string) => {
   console.log('Exporting files...')
 
   // Copy files but not archive
-  await fse.copy(FILES_FOLDER, path.join(newSnapshotFolder, 'files'), {
+  await fsx.copy(FILES_FOLDER, path.join(newSnapshotFolder, 'files'), {
     filter: (src) => {
       if (src === FILES_FOLDER) return true
       if (src === GENERIC_THUMBNAILS_FOLDER) return false
@@ -306,20 +303,23 @@ const copyArchiveFiles = async (
 
   // Copy the archive folders
   for (const folder of archiveFolders) {
-    await fse.copy(
+    await fsx.copy(
       path.join(ARCHIVE_FOLDER, folder),
       path.join(newSnapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME, folder)
     )
-    const info = await fse.readJson(path.join(ARCHIVE_FOLDER, folder, 'info.json'))
+    const info = await fsx.readJson(path.join(ARCHIVE_FOLDER, folder, 'info.json'))
     if (info.timestamp < archiveFrom) archiveFrom = info.timestamp
     if (info.timestamp > archiveTo) archiveTo = info.timestamp
   }
+
+  console.log(archiveFrom)
+  console.log(archiveTo)
 
   console.log('Exporting archive files...done')
 
   // And copy the archive meta-data
   try {
-    await fse.copy(
+    await fsx.copy(
       path.join(ARCHIVE_FOLDER, 'archive.json'),
       path.join(newSnapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME, 'archive.json')
     )

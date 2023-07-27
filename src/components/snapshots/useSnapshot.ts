@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
 import fsSync from 'fs'
-import fse from 'fs-extra'
+import fsx from 'fs-extra'
 import path from 'path'
 import { execSync } from 'child_process'
 import insertData from '../../../database/insertData'
@@ -294,19 +294,19 @@ const copyFiles = async (snapshotFolder: string) => {
 
   // Copy files but not archive
   const archiveRegex = new RegExp(`.+\/${ARCHIVE_SUBFOLDER_NAME}.*`)
-  await fse.copy(path.join(snapshotFolder, 'files'), FILES_FOLDER, {
+  await fsx.copy(path.join(snapshotFolder, 'files'), FILES_FOLDER, {
     filter: (src) => {
       if (src === FILES_FOLDER) return true
       return !archiveRegex.test(src)
     },
   })
   // Restore the temp archives folder
-  await fse.move(ARCHIVE_TEMP_FOLDER, path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME))
+  await fsx.move(ARCHIVE_TEMP_FOLDER, path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME))
   console.log('Importing files...done')
 
   // Restore "archive.json" from snapshot
   try {
-    await fse.copy(
+    await fsx.copy(
       path.join(snapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME, 'archive.json'),
       path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME, 'archive.json')
     )
@@ -318,9 +318,9 @@ const copyFiles = async (snapshotFolder: string) => {
 const collectArchives = async (snapshotFolder: string) => {
   const archiveSources = await findArchiveSources(snapshotFolder)
   // Copy all archives to temp folder
-  await fse.emptyDir(ARCHIVE_TEMP_FOLDER)
+  await fsx.emptyDir(ARCHIVE_TEMP_FOLDER)
   for (const [source, folder] of archiveSources) {
-    await fse.copy(path.join(source, folder), path.join(ARCHIVE_TEMP_FOLDER, folder))
+    await fsx.copy(path.join(source, folder), path.join(ARCHIVE_TEMP_FOLDER, folder))
   }
 }
 
