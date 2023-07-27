@@ -1,7 +1,7 @@
 import DBConnect from '../databaseConnect'
 import Scheduler, { RecurrenceRule, RecurrenceSpecObjLit } from 'node-schedule'
 import config from '../../config'
-import { DateTime } from 'luxon'
+import { DateTime, Settings } from 'luxon'
 import cleanUpFiles from '../files/cleanup'
 import createBackup from '../exportAndImport/backup'
 import archiveFiles from '../files/archive'
@@ -15,8 +15,9 @@ const actionSchedule = Scheduler.scheduleJob(
   getSchedule('action', schedulerTestMode, config.actionSchedule ?? config?.hoursSchedule),
   () => triggerScheduledActions()
 )
+
 const cleanupSchedule = Scheduler.scheduleJob(
-  getSchedule('cleanup', schedulerTestMode, config?.previewDocsCleanupSchedule) as RecurrenceRule,
+  getSchedule('cleanup', schedulerTestMode, config?.fileCleanupSchedule) as RecurrenceRule,
   () => cleanUpFiles()
 )
 const backupSchedule = Scheduler.scheduleJob(
@@ -28,9 +29,14 @@ const archiveSchedule = Scheduler.scheduleJob(
   () => archiveFiles()
 )
 
+logNextAction(actionSchedule, 'action')
+logNextAction(cleanupSchedule, 'cleanup')
+logNextAction(backupSchedule, 'backup')
+logNextAction(archiveSchedule, 'archive')
+
 export const triggerScheduledActions = async () => {
   console.log(
-    DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
+    DateTime.now().toLocaleString(DateTime.DATETIME_SHORT),
     'Checking scheduled actions...'
   )
   DBConnect.triggerScheduledActions()
@@ -62,25 +68,26 @@ function getSchedule(
       // Every hour on the hour
       hour: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
       minute: 0,
+      tz: Settings.defaultZoneName,
     },
     cleanup: {
-      // Once per day at 1:05am UTC
+      // Once per day at 1:05am
       hour: [1],
       minute: 5,
-      tz: 'Etc/UTC',
+      tz: Settings.defaultZoneName,
     },
     backup: {
-      // Once per day at 1:15am UTC
+      // Once per day at 1:15am
       hour: [1],
       minute: 15,
-      tz: 'Etc/UTC',
+      tz: Settings.defaultZoneName,
     },
     archive: {
-      // Twice per week on Weds/Sun at 1:10am UTC
+      // Twice per week on Weds/Sun at 1:10am
       dayOfWeek: [0, 3],
       hour: [1],
       minute: 15,
-      tz: 'Etc/UTC',
+      tz: Settings.defaultZoneName,
     },
   }
 
@@ -115,30 +122,35 @@ export function reschedule(
   schedule?: number[] | ScheduleObject | RecurrenceSpecObjLit
 ) {
   let result: boolean
-  let nextSchedule: Date
+  let scheduler: Scheduler.Job
   switch (type) {
     case 'action':
       result = actionSchedule.reschedule(getSchedule('action', false, schedule) as RecurrenceRule)
-      nextSchedule = actionSchedule.nextInvocation()
+      scheduler = actionSchedule
       break
     case 'cleanup':
       result = cleanupSchedule.reschedule(getSchedule('cleanup', false, schedule) as RecurrenceRule)
-      nextSchedule = cleanupSchedule.nextInvocation()
+      scheduler = cleanupSchedule
       break
     case 'backup':
       result = backupSchedule.reschedule(getSchedule('backup', false, schedule) as RecurrenceRule)
-      nextSchedule = backupSchedule.nextInvocation()
+      scheduler = backupSchedule
       break
     case 'archive':
       result = archiveSchedule.reschedule(getSchedule('archive', false, schedule) as RecurrenceRule)
-      nextSchedule = archiveSchedule.nextInvocation()
+      scheduler = archiveSchedule
       break
   }
-  if (result) {
-    console.log(
-      `Next ${type} schedule: ${DateTime.fromJSDate((nextSchedule as any).toDate()).toLocaleString(
-        DateTime.DATETIME_SHORT
-      )}`
-    )
-  } else console.log(`Problem updating ${type} schedule!`)
+  if (result) logNextAction(scheduler, type)
+  else console.log(`Problem updating ${type} schedule!`)
+}
+
+function logNextAction(scheduler: Scheduler.Job, name: ScheduleType) {
+  // @ts-ignore -- the type of nextInvocation result is wrong, it's typed as Date but it's actually a "CronDate"
+  const nextSchedule = scheduler.nextInvocation().toDate() as Date
+  console.log(
+    `Next ${name} schedule: ${DateTime.fromJSDate(nextSchedule).toLocaleString(
+      DateTime.DATETIME_SHORT_WITH_SECONDS
+    )}`
+  )
 }
