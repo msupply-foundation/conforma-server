@@ -312,9 +312,6 @@ const copyArchiveFiles = async (
     if (info.timestamp > archiveTo) archiveTo = info.timestamp
   }
 
-  console.log(archiveFrom)
-  console.log(archiveTo)
-
   console.log('Exporting archive files...done')
 
   // And copy the archive meta-data
