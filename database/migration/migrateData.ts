@@ -843,6 +843,14 @@ const migrateData = async () => {
 
   // Finally, set the database version to the current version
   if (databaseVersionLessThan(version)) await DB.setDatabaseVersion(version)
+
+  const passwordHashOverride = process.env.USER_PASSWORD_HASH_OVERRIDE
+  if (passwordHashOverride) {
+    console.log('WARNING: Resetting user passwords for testing purposes...')
+    DB.changeSchema(`
+      UPDATE "user" SET password_hash = '${passwordHashOverride}'
+    `)
+  }
 }
 
 // For running migrationScript.ts manually using `yarn migrate`
