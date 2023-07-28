@@ -3,8 +3,7 @@ import { DateTime, Settings } from 'luxon'
 import preferences from '../preferences/preferences.json'
 import { readFileSync } from 'fs'
 import { version } from '../package.json'
-import { serverPrefKeys, ServerPreferences, WebAppPrefs } from './types'
-import { reschedule } from './components/actions'
+import { serverPrefKeys, ServerPreferences, WebAppPrefs, Config } from './types'
 const serverPrefs: ServerPreferences = preferences.server
 const isProductionBuild = process.env.NODE_ENV === 'production'
 const siteHost = (preferences.web as WebAppPrefs)?.siteHost
@@ -28,7 +27,7 @@ Operation modes:
   actually sent). An alternative development mode.
 */
 
-const config = {
+const config: Config = {
   pg_database_connection: {
     user: 'postgres',
     host: 'localhost',
@@ -79,8 +78,7 @@ const config = {
   emailMode: getEmailOperationMode(serverPrefs.emailTestMode, serverPrefs.testingEmail),
 }
 
-// Mutate the active config object to inject new preferences
-type Config = typeof config
+// Mutate the global config object to inject new preferences
 export const refreshConfig = (config: Config, prefsFilePath: string) => {
   console.log('\nUpdating system configuration...')
   // prefsFilePath is passed in rather than imported from constants to prevent
@@ -114,13 +112,15 @@ export const refreshConfig = (config: Config, prefsFilePath: string) => {
   }
 
   //Update scheduled jobs from prefs
-  reschedule('action', serverPrefs.actionSchedule)
-  reschedule('backup', serverPrefs.backupSchedule)
-  reschedule('cleanup', serverPrefs.fileCleanupSchedule)
-  reschedule('archive', serverPrefs.archiveSchedule)
+  if (config.scheduledJobs) {
+    config.scheduledJobs.reschedule('action', serverPrefs.actionSchedule)
+    config.scheduledJobs.reschedule('backup', serverPrefs.backupSchedule)
+    config.scheduledJobs.reschedule('cleanup', serverPrefs.fileCleanupSchedule)
+    config.scheduledJobs.reschedule('archive', serverPrefs.archiveSchedule)
+  }
 
   console.log('Email mode:', config.emailMode)
-  if (config.emailMode === 'TEST') console.log('Email sent to:', config.testingEmail)
+  if (config.emailMode === 'TEST') console.log('All Email sent to:', config.testingEmail)
   console.log('Current time:', DateTime.now().toLocaleString(DateTime.DATETIME_HUGE_WITH_SECONDS))
   console.log('Configuration refreshed with updated preferences\n')
 }
