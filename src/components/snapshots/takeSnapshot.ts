@@ -290,7 +290,7 @@ const copyArchiveFiles = async (
   newSnapshotFolder: string,
   archiveOption: ArchiveOption = 'full'
 ): Promise<ArchiveInfo> => {
-  console.log('Exporting archive files...')
+  console.log('Exporting archive data & files...')
 
   // Figure out which archive folders we want
   let archiveFolders: string[]
@@ -312,7 +312,7 @@ const copyArchiveFiles = async (
     if (info.timestamp > archiveTo) archiveTo = info.timestamp
   }
 
-  console.log('Exporting archive files...done')
+  console.log('Exporting archive data & files...done')
 
   // And copy the archive meta-data
   try {

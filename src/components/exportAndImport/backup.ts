@@ -37,6 +37,7 @@ const createBackup = async (password?: string) => {
   // Take snapshot
   const snapshotName = backupFilePrefix
   await fsx.ensureDir(path.join(BACKUPS_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME))
+  execSync(`chmod -R 777 ${BACKUPS_FOLDER}/${SNAPSHOT_ARCHIVES_FOLDER_NAME}`)
 
   console.log(
     DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
@@ -127,7 +128,6 @@ const createBackup = async (password?: string) => {
       : archiver('zip', { zlib: { level: 9 } })
 
     output.on('close', () => {
-      console.log(`Backup done`)
       fsx.remove(path.join(SNAPSHOT_FOLDER, source))
     })
 
@@ -148,8 +148,14 @@ const createBackup = async (password?: string) => {
   // Update backup.json
   backupInfo.latestBackup = snapshot
   await fsx.writeJSON(path.join(BACKUPS_FOLDER, 'backup.json'), backupInfo, { spaces: 2 })
+  execSync(`chmod 666 ${BACKUPS_FOLDER}/backup.json`)
 
   await cleanUpBackups()
+
+  console.log(
+    DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
+    `Backup complete!`
+  )
 
   if (isManualBackup) setTimeout(() => process.exit(0), 2000)
 }
