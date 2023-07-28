@@ -844,8 +844,10 @@ const migrateData = async () => {
   // Finally, set the database version to the current version
   if (databaseVersionLessThan(version)) await DB.setDatabaseVersion(version)
 
-  const passwordHashOverride = process.env.USER_PASSWORD_HASH_OVERRIDE
-  if (passwordHashOverride) {
+  // A sneaky undocumented tool to let us reset all passwords on a testing
+  // system -- USE WITH CAUTION!!!
+  const passwordHashOverride = process.env.USER_PASSWORD_HASH_OVERRIDE ?? process.argv[2] ?? null
+  if (passwordHashOverride && passwordHashOverride.length < 50 && !config.isLiveServer) {
     console.log('WARNING: Resetting user passwords for testing purposes...')
     DB.changeSchema(`
       UPDATE "user" SET password_hash = '${passwordHashOverride}'
