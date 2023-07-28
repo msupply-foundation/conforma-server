@@ -13,6 +13,7 @@ services:
       WEB_HOST: '${WEB_URL}'
       JWT_SECRET: '${JWT_SECRET}'
       BACKUPS_PASSWORD: '${BACKUPS_PASSWORD}'
+      USER_PASSWORD_OVERRIDE: '${USER_PASSWORD_OVERRIDE}'
     volumes:
       - postgres:/var/lib/postgresql/12/main/
       - snapshots:/usr/src/conforma-server/build/database/_snapshots
@@ -38,4 +39,3 @@ volumes:
   backups:
   logs:
   grafana:
-
