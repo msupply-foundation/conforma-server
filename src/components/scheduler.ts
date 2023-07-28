@@ -161,36 +161,6 @@ function getSchedule(
   return combinedSchedule
 }
 
-// export function reschedule(
-//   schedulers: Schedulers,
-//   type: ScheduleType,
-//   schedule?: number[] | ScheduleObject | RecurrenceSpecObjLit
-// ) {
-//   const { actionSchedule, cleanupSchedule, backupSchedule, archiveSchedule } = schedulers
-//   let result: boolean
-//   let scheduler: Scheduler.Job
-//   switch (type) {
-//     case 'action':
-//       result = actionSchedule.reschedule(getSchedule('action', false, schedule) as RecurrenceRule)
-//       scheduler = actionSchedule
-//       break
-//     case 'cleanup':
-//       result = cleanupSchedule.reschedule(getSchedule('cleanup', false, schedule) as RecurrenceRule)
-//       scheduler = cleanupSchedule
-//       break
-//     case 'backup':
-//       result = backupSchedule.reschedule(getSchedule('backup', false, schedule) as RecurrenceRule)
-//       scheduler = backupSchedule
-//       break
-//     case 'archive':
-//       result = archiveSchedule.reschedule(getSchedule('archive', false, schedule) as RecurrenceRule)
-//       scheduler = archiveSchedule
-//       break
-//   }
-//   if (result) logNextAction(scheduler, type)
-//   else console.log(`Problem updating ${type} schedule!`)
-// }
-
 function logNextAction(scheduler: Scheduler.Job, name: ScheduleType) {
   // @ts-ignore -- the type of nextInvocation result is wrong, it's typed as Date but it's actually a "CronDate"
   const nextSchedule = scheduler.nextInvocation().toDate() as Date
