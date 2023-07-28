@@ -20,20 +20,20 @@ const defaultSchedules: { [K in ScheduleType]: RecurrenceSpecObjLit } = {
   },
   cleanup: {
     // Once per day at 1:05am
-    hour: [1],
+    hour: 1,
     minute: 5,
     tz: Settings.defaultZoneName,
   },
   backup: {
     // Once per day at 1:15am
-    hour: [1],
+    hour: 1,
     minute: 15,
     tz: Settings.defaultZoneName,
   },
   archive: {
     // Twice per week on Weds/Sun at 1:10am
     dayOfWeek: [0, 3],
-    hour: [1],
+    hour: 1,
     minute: 15,
     tz: Settings.defaultZoneName,
   },
