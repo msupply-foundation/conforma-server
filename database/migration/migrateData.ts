@@ -5,6 +5,7 @@ import semverCompare from 'semver/functions/compare'
 import { execSync } from 'child_process'
 import path from 'path'
 import { readFileSync } from 'fs'
+import bcrypt from 'bcrypt'
 import { getAppEntryPointDir } from '../../src/components/utilityFunctions'
 
 // CONSTANTS
@@ -846,11 +847,11 @@ const migrateData = async () => {
 
   // A sneaky undocumented tool to let us reset all passwords on a testing
   // system -- USE WITH CAUTION!!!
-  const passwordHashOverride = process.env.USER_PASSWORD_HASH_OVERRIDE ?? process.argv[2] ?? null
-  if (passwordHashOverride && passwordHashOverride.length < 50 && !config.isLiveServer) {
+  const passwordOverride = process.env.USER_PASSWORD_OVERRIDE ?? process.argv[2] ?? null
+  if (passwordOverride && passwordOverride.length > 30 && !config.isLiveServer) {
     console.log('WARNING: Resetting user passwords for testing purposes...')
     DB.changeSchema(`
-      UPDATE "user" SET password_hash = '${passwordHashOverride}'
+      UPDATE "user" SET password_hash = '${await bcrypt.hash(passwordOverride, 10)}'
     `)
   }
 }
