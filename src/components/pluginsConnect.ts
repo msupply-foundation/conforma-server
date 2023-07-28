@@ -1,4 +1,5 @@
-import { loadActions, triggerScheduledActions } from './actions'
+import { loadActions } from './actions'
+import { triggerScheduledActions } from './scheduler'
 import registerPlugins from './registerPlugins'
 import { ActionLibrary } from '../types'
 

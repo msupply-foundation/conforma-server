@@ -53,5 +53,5 @@ export const routeSetPrefs = async (request: any, reply: any) => {
 
   refreshConfig(config, PREFERENCES_FILE)
 
-  return reply.send({ success: true, preferences: { server, web }, config })
+  return reply.send({ success: true, preferences: { server, web } })
 }

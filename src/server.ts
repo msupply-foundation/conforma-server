@@ -49,6 +49,7 @@ import { routeTriggers } from './components/other/routeTriggers'
 import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
 import migrateData from '../database/migration/migrateData'
 import routeArchiveFiles from './components/files/routeArchiveFiles'
+import { Schedulers } from './components/scheduler'
 require('dotenv').config()
 
 // Set the default locale and timezone for date-time display (in console)
@@ -61,6 +62,10 @@ const startServer = async () => {
   await loadActionPlugins() // Connects to Database and listens for Triggers
   createDefaultDataFolders()
   await cleanUpFiles() // Runs on schedule as well as startup
+
+  // Add schedulers to global "config" object so we can update them. There should
+  // only be a single global instance of Schedulers -- this one!
+  config.scheduledJobs = new Schedulers()
 
   const server = fastify()
 
