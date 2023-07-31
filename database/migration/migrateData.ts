@@ -821,6 +821,15 @@ const migrateData = async () => {
     ALTER TABLE public.file  
       ADD COLUMN IF NOT EXISTS archive_path varchar;
     `)
+
+    console.log(' - Creating file_size field for files')
+    await DB.changeSchema(`
+    ALTER TABLE public.file  
+      ADD COLUMN IF NOT EXISTS file_size bigint;
+    `)
+
+    console.log(' - Updating file sizes for existing files')
+    await DB.updateFileSizes()
   }
 
   // Other version migrations continue here...
