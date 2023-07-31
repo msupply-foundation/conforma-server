@@ -154,12 +154,7 @@ const takeSnapshot: SnapshotOperation = async ({
 
     // Store snapshot name in database (for full exports only, but not backups)
     if (options.shouldReInitialise && !options.skipZip) {
-      const text = `INSERT INTO system_info (name, value)
-      VALUES('snapshot', $1)`
-      await DBConnect.query({
-        text,
-        values: [JSON.stringify(snapshotName)],
-      })
+      await DBConnect.setSystemInfo('snapshot', fullName)
     }
 
     return { success: true, message: `created snapshot ${snapshotName}`, snapshot: fullName }
