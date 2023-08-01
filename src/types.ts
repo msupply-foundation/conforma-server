@@ -6,6 +6,7 @@ import {
   Trigger,
   TriggerQueueStatus,
 } from './generated/graphql'
+import { EmailOperationMode } from './config'
 
 export interface ActionInTemplate {
   code: string
@@ -48,6 +49,7 @@ export interface ActionQueuePayload {
   trigger_event: number | null
   trigger_payload: TriggerPayload
   template_id: number
+  application_id: number
   action_code: string
   sequence: number | null
   condition_expression: EvaluatorNode
@@ -134,7 +136,8 @@ export interface ActionApplicationData extends BaseApplicationData {
   environmentData: {
     appRootFolder: string
     filesFolder: string
-    SMTPConfig: {
+    webHostUrl: string
+    SMTPConfig?: {
       host: string
       port: number
       secure: boolean
@@ -142,6 +145,9 @@ export interface ActionApplicationData extends BaseApplicationData {
       defaultFromName: string
       defaultFromEmail: string
     }
+    emailMode: EmailOperationMode
+    testingEmail: string | null
+    productionHost: string | null
   }
   other?: {
     // Use this for dev related stuff, shouldn't be used in actual configs
@@ -216,6 +222,7 @@ export interface TriggerPayload {
 
 export interface TriggerQueueUpdatePayload {
   id: number
+  application_id?: number
   status: TriggerQueueStatus
 }
 
@@ -242,4 +249,56 @@ export interface Organisation {
 
 export interface UserOrg extends User, Organisation {
   id: number
+}
+
+export interface ServerPreferences {
+  thumbnailMaxWidth?: number
+  thumbnailMaxHeight?: number
+  hoursSchedule?: number[]
+  SMTPConfig?: {
+    host: string
+    port: number
+    secure: boolean
+    user: string
+    defaultFromName: string
+    defaultFromEmail: string
+  }
+  systemManagerPermissionName?: string
+  managerCanEditLookupTables?: boolean
+  previewDocsMinKeepTime?: string
+  previewDocsCleanupSchedule?: number[]
+  backupSchedule?: number[]
+  backupFilePrefix?: string
+  maxBackupDurationDays?: number
+  emailTestMode?: boolean
+  testingEmail?: string
+}
+
+export const serverPrefKeys: (keyof ServerPreferences)[] = [
+  // Must contain ALL keys of ServerPreferences -- please check
+  'thumbnailMaxHeight',
+  'thumbnailMaxWidth',
+  'hoursSchedule',
+  'SMTPConfig',
+  'systemManagerPermissionName',
+  'managerCanEditLookupTables',
+  'previewDocsMinKeepTime',
+  'previewDocsCleanupSchedule',
+  'backupSchedule',
+  'backupFilePrefix',
+  'maxBackupDurationDays',
+  'emailTestMode',
+  'testingEmail',
+]
+
+export interface WebAppPrefs {
+  paginationPresets?: number[]
+  paginationDefault?: number
+  defaultLanguageCode: string
+  brandLogoFileId?: string
+  brandLogoOnDarkFileId?: string
+  defaultListFilters?: string[]
+  style?: { headerBgColor?: string }
+  googleAnalyticsId?: string
+  siteHost?: string
 }

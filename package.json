@@ -1,6 +1,6 @@
 {
   "name": "conforma-server",
-  "version": "0.5.6-0",
+  "version": "0.5.6-58",
   "main": "server.js",
   "license": "MIT",
   "repository": {
@@ -75,7 +75,7 @@
     "adm-zip": "^0.5.5",
     "archiver": "^5.3.1",
     "archiver-zip-encrypted": "^1.0.11",
-    "bcrypt": "^5.0.0",
+    "bcrypt": "^5.1.0",
     "carbone": "^3.2.3",
     "comment-json": "^4.1.0",
     "concurrently": "^5.3.0",

@@ -4,11 +4,7 @@ import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
 import { UserOrg } from '../../types'
 import { PermissionDetails } from '../permissions/types'
-import path from 'path'
-import { readFileSync } from 'fs'
 import { startCase } from 'lodash'
-import { getAppEntryPointDir } from '../utilityFunctions'
-import { readLanguageOptions } from '../localisation/routes'
 
 const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
 
@@ -76,13 +72,20 @@ template permissions and new JWT token
 */
 const routeUserInfo = async (request: any, reply: any) => {
   const { sessionId } = request.query
-  const { userId, orgId, sessionId: returnSessionId, error } = request.auth
+  const { userId, orgId, username, sessionId: returnSessionId, error } = request.auth
+
   if (error) return reply.send({ success: false, message: error })
 
-  return reply.send({
-    success: true,
-    ...(await getUserInfo({ userId, orgId, sessionId: sessionId ?? returnSessionId })),
-  })
+  const userData = await getUserInfo({ userId, orgId, sessionId: sessionId ?? returnSessionId })
+
+  // This check is to prevent a user remaining logged in as a different user if
+  // the snapshot changes and their userId corresponds to a different username
+  // on the new system. So we check that the username matches the one from the
+  // JWT too, and return error if no match
+  if (userData.user.username !== username)
+    return reply.send({ success: false, message: 'Invalid username' })
+
+  return reply.send({ success: true, ...userData })
 }
 
 const routeUserPermissions = async (request: any, reply: any) => {
@@ -200,16 +203,6 @@ const routeVerification = async (request: any, reply: any) => {
   }
 }
 
-// Serve prefs to front-end
-const routeGetPrefs = async (request: any, reply: any) => {
-  const prefs = JSON.parse(
-    readFileSync(path.join(getAppEntryPointDir(), '../preferences/preferences.json'), 'utf8')
-  )
-  const languageOptions = readLanguageOptions()
-  const latestSnapshot = await databaseConnect.getLatestSnapshotName()
-  reply.send({ preferences: prefs.web, languageOptions, latestSnapshot })
-}
-
 // Unique name/email/organisation/other check
 const routecheckUnique = async (request: any, reply: any) => {
   const { type, value, table, field, caseInsensitive } = request.query
@@ -270,6 +263,5 @@ export {
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
-  routeGetPrefs,
   routecheckUnique,
 }

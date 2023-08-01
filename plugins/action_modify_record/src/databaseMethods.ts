@@ -43,6 +43,11 @@ const databaseMethods = (DBConnect: any) => {
       WHERE id = ${matchValuePlaceholder}
       RETURNING *
       `
+      // Adding extra diagnostic logs here due to odd server bug, where the
+      // serial wasn't being written on application create due to database
+      // duplicate foreign key error
+      console.log('Attempting query:', text)
+      console.log('With values:', [...Object.values(record), id])
       try {
         const result = await DBConnect.query({
           text,

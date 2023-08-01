@@ -25,16 +25,16 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
   const valueToMatch = matchValue ?? record[fieldToMatch]
   const applicationId = applicationData?.applicationId || 0
 
-  // Don't update fields with NULL
-  for (const key in record) {
-    if (record[key] === null || record[key] === undefined) delete record[key]
-  }
-
   // Build full record
   const fullRecord = objectKeysToSnakeCase({
     ...record,
     ...mapValues(data, (property) => get(applicationData, property, null)),
   })
+
+  // Don't update fields with NULL
+  for (const key in fullRecord) {
+    if (fullRecord[key] === null || fullRecord[key] === undefined) delete fullRecord[key]
+  }
 
   try {
     await createOrUpdateTable(DBConnect, db, tableNameProper, fullRecord, tableName)

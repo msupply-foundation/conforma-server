@@ -7,6 +7,7 @@ they've been hard-coded here in order to:
 - prevent accidental misconfiguration or removal
 */
 
+import { cloneDeep } from 'lodash'
 import DBConnect from '../databaseConnect'
 import { Trigger } from '../../generated/graphql'
 import { ActionInTemplate } from '../../types'
@@ -16,7 +17,9 @@ type CoreActions = {
 }
 
 export const getCoreActions = async (trigger: Trigger, templateId: number) => {
-  const currentCoreActions = coreActions?.[trigger] ?? []
+  // Need to make a deep copy of this, otherwise the properties get mutated in
+  // place and carry over to the next application using these actions
+  const currentCoreActions = cloneDeep(coreActions?.[trigger] ?? [])
 
   // Inject configuration over-rides for a limited selection of core action
   // parameters (currently only serialPattern)
@@ -576,6 +579,22 @@ const coreActions: CoreActions = {
       parameter_queries: {
         isReview: true,
         newStatus: 'DISCONTINUED',
+      },
+    },
+  ],
+  [Trigger.OnExtend]: [
+    // Set application outcome back to PENDING (from EXPIRED) if
+    // applicantDeadline is extended.
+    {
+      code: 'changeOutcome',
+      path: '../plugins/action_change_outcome/src/index.ts',
+      name: 'Change Outcome',
+      trigger: 'ON_EXTEND',
+      event_code: null,
+      sequence: -1,
+      condition: true,
+      parameter_queries: {
+        newOutcome: 'PENDING',
       },
     },
   ],

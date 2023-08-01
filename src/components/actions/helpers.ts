@@ -32,7 +32,7 @@ export const swapOutAliasedAction = async (templateId: number, action: ActionInT
 
   const aliasedAction = await DBConnect.getSingleTemplateAction(templateId, code)
 
-  if (!aliasedAction) throw new Error('No Action matching alias')
+  if (!aliasedAction) throw new Error('No Action matching alias: ' + code)
 
   // Override condition if specified
   // The alias condition (if specified) will take priority over the original

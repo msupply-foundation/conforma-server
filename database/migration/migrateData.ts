@@ -5,6 +5,7 @@ import semverCompare from 'semver/functions/compare'
 import { execSync } from 'child_process'
 import path from 'path'
 import { readFileSync } from 'fs'
+import bcrypt from 'bcrypt'
 import { getAppEntryPointDir } from '../../src/components/utilityFunctions'
 
 // CONSTANTS
@@ -690,8 +691,10 @@ const migrateData = async () => {
     `)
   }
 
-  // v0.5.0
+  // v0.5.2
   if (databaseVersionLessThan('0.5.2')) {
+    console.log('Migrating to v0.5.2...')
+
     console.log(' - Add registration field to application Table')
     await DB.changeSchema(`
       ALTER TABLE public.application
@@ -700,6 +703,8 @@ const migrateData = async () => {
   }
 
   if (databaseVersionLessThan('0.5.6')) {
+    console.log('Migrating to v0.5.6...')
+
     console.log(' - Change "default_value" field to "initial_value"')
     await DB.changeSchema(`
       DO $$
@@ -712,6 +717,71 @@ const migrateData = async () => {
           RENAME COLUMN default_value TO initial_value;
         END IF;
       END $$;
+    `)
+  }
+
+  if (databaseVersionLessThan('0.5.7')) {
+    console.log('Migrating to v0.5.7...')
+
+    console.log(' - Add "default_filter_string" to data_views')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_view
+      ADD COLUMN IF NOT EXISTS default_filter_string varchar;
+    `)
+  }
+
+  // v0.6.0
+  if (databaseVersionLessThan('0.6.0')) {
+    console.log('Migrating to v0.6.0...')
+
+    console.log(' - Update FK reference to trigger_queue in action_queue')
+    await DB.changeSchema(`
+      ALTER TABLE action_queue DROP CONSTRAINT IF EXISTS   
+        action_queue_trigger_event_fkey; 
+      ALTER TABLE action_queue ADD CONSTRAINT action_queue_trigger_event_fkey
+        FOREIGN KEY (trigger_event) REFERENCES trigger_queue (id) ON DELETE CASCADE;
+    `)
+
+    console.log(' - Add application_id column to trigger_queue & action_queue')
+    if (!(await DB.checkColumnExists('trigger_queue', 'application_id'))) {
+      await DB.changeSchema(`
+      ALTER TABLE public.trigger_queue
+        ADD COLUMN IF NOT EXISTS application_id INTEGER
+        REFERENCES public.application (id) ON DELETE CASCADE;
+      `)
+      console.log(' ...and updating trigger_queue data')
+      await DB.populateQueueApplicationIds('trigger_queue')
+    }
+    if (!(await DB.checkColumnExists('action_queue', 'application_id'))) {
+      await DB.changeSchema(`
+      ALTER TABLE public.action_queue
+        ADD COLUMN IF NOT EXISTS application_id INTEGER
+        REFERENCES public.application (id) ON DELETE CASCADE;
+      `)
+      console.log(' ...and updating action_queue data')
+      await DB.populateQueueApplicationIds('action_queue')
+    }
+
+    console.log(' - Adding unique identifier column to data view')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_view   
+        ADD COLUMN IF NOT EXISTS identifier VARCHAR UNIQUE;
+      UPDATE public.data_view SET identifier = CONCAT(title, '_', id)
+        WHERE identifier IS NULL;
+      ALTER TABLE public.data_view ALTER COLUMN identifier SET NOT NULL;
+      ALTER TABLE public.data_view_column_definition ALTER COLUMN column_name SET NOT NULL;
+    `)
+
+    console.log(' - Adding submenu column to data view')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_view   
+        ADD COLUMN IF NOT EXISTS submenu VARCHAR;
+    `)
+
+    console.log(' - Adding is_submenu column to template_category')
+    await DB.changeSchema(`
+      ALTER TABLE public.template_category   
+        ADD COLUMN IF NOT EXISTS is_submenu BOOLEAN DEFAULT FALSE;
     `)
   }
 
@@ -735,6 +805,16 @@ const migrateData = async () => {
 
   // Finally, set the database version to the current version
   if (databaseVersionLessThan(version)) await DB.setDatabaseVersion(version)
+
+  // A sneaky undocumented tool to let us reset all passwords on a testing
+  // system -- USE WITH CAUTION!!!
+  const passwordOverride = process.env.USER_PASSWORD_OVERRIDE ?? process.argv[2] ?? null
+  if (passwordOverride && passwordOverride.length > 30 && !config.isLiveServer) {
+    console.log('WARNING: Resetting user passwords for testing purposes...')
+    DB.changeSchema(`
+      UPDATE "user" SET password_hash = '${await bcrypt.hash(passwordOverride, 10)}'
+    `)
+  }
 }
 
 // For running migrationScript.ts manually using `yarn migrate`

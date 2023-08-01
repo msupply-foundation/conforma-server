@@ -1,11 +1,14 @@
 import { DataViewColumnDefinition } from '../../generated/graphql'
 
 // Response value of /data-views endpoint
-export type DataViewsResponse = {
+export type DataViewDetail = {
   tableName: string
   title: string
   code: string
-}[]
+  urlSlug: string
+  submenu: string | null
+  defaultFilter: string | null
+}
 
 interface FormatOptions {
   elementTypePluginCode: string
@@ -40,6 +43,7 @@ export interface DataViewsTableResponse {
   tableRows: TableRow[]
   searchFields: string[]
   filterDefinitions: FilterDefinition[]
+  defaultFilterString: string | null
   totalCount: number
   message?: string
 }
@@ -68,6 +72,7 @@ export interface ColumnDetailOutput {
   filterDefinitions: FilterDefinition[]
   headerDefinition: ColumnDefinition | undefined
   defaultSortColumn: string | null
+  defaultFilterString: string | null
   showLinkedApplications: boolean
 }
 

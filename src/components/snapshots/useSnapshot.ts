@@ -9,12 +9,11 @@ import { SnapshotOperation, ExportAndImportOptions, ObjectRecord } from '../expo
 import importFromJson from '../exportAndImport/importFromJson'
 import { triggerTables } from './triggerTables'
 import semverCompare from 'semver/functions/compare'
-import config from '../../../src/config'
+import config, { refreshConfig } from '../../../src/config'
 // @ts-ignore
 import delay from 'delay-sync'
 import { createDefaultDataFolders } from '../files/createDefaultFolders'
 import migrateData from '../../../database/migration/migrateData'
-
 import {
   DEFAULT_SNAPSHOT_NAME,
   SNAPSHOT_FILE_NAME,
@@ -180,6 +179,10 @@ const useSnapshot: SnapshotOperation = async ({
         values: [JSON.stringify(snapshotName)],
       })
     }
+
+    refreshConfig(config, PREFERENCES_FILE)
+
+    console.log('...Snapshot load complete!')
 
     return { success: true, message: `snapshot loaded ${snapshotName}` }
   } catch (e) {

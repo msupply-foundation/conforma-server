@@ -15,6 +15,9 @@ export const PG_DIFF_CONFIG_FILE_NAME = 'pg-diff-config'
 export const PG_SCHEMA_DIFF_FILE_NAME = 'schema_diff'
 export const PREFERENCES_FILE_NAME = config.preferencesFileName
 
+export const DEFAULT_THUMBNAIL_MAX_WIDTH = 300
+export const DEFAULT_THUMBNAIL_MAX_HEIGHT = 300
+
 export const ROOT_FOLDER = path.join(getAppEntryPointDir(), '../')
 export const DATABASE_FOLDER = path.join(getAppEntryPointDir(), config.databaseFolder)
 export const SNAPSHOT_FOLDER = path.join(DATABASE_FOLDER, SNAPSHOT_SUBFOLDER)
