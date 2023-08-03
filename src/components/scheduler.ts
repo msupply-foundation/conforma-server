@@ -31,7 +31,7 @@ const defaultSchedules: { [K in ScheduleType]: RecurrenceSpecObjLit } = {
     // Twice per week on Weds/Sun at 1:10am
     dayOfWeek: [0, 3],
     hour: 1,
-    minute: 15,
+    minute: 10,
   },
 }
 
