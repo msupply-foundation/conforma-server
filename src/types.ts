@@ -289,6 +289,7 @@ export interface ServerPreferences {
   maxBackupDurationDays?: number
   archiveSchedule?: number[] | ScheduleObject
   archiveFileAgeMinimum?: number
+  archiveMinSize?: number // MB
   emailTestMode?: boolean
   testingEmail?: string
   locale?: string
@@ -310,6 +311,7 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'maxBackupDurationDays',
   'archiveSchedule',
   'archiveFileAgeMinimum',
+  'archiveMinSize',
   'emailTestMode',
   'testingEmail',
   'locale',

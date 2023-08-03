@@ -54,6 +54,18 @@ export const archiveFiles = async (days: number = config.archiveFileAgeMinimum ?
     console.log('Nothing to archive')
     return null
   }
+
+  const totalFileSize = files.reduce((sum, { file_size }) => sum + Number(file_size), 0)
+  const minArchiveSize = config?.archiveMinSize ?? 100
+  if (totalFileSize < minArchiveSize * 1_000_000) {
+    console.log(
+      `Only ${
+        parseInt(String(totalFileSize / 100_000)) / 10
+      }MB of files to archive -- less than the required minimum ${minArchiveSize}MB ...skipping`
+    )
+    return null
+  }
+
   // Create archive subfolder
   const timestamp = DateTime.now()
   const timestampString = timestamp.toFormat('yyyy-LL-dd_HH-mm-ss')
