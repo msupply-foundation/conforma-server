@@ -12,9 +12,9 @@ import {
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
-  routeGetPrefs,
   routecheckUnique,
 } from './components/permissions'
+import { routeGetPrefs, routeGetAllPrefs, routeSetPrefs } from './components/preferences'
 import {
   routeDataViews,
   routeDataViewTable,
@@ -129,6 +129,8 @@ const startServer = async () => {
         server.post('/install-language', routeInstallLanguage)
         server.post('/remove-language', routeRemoveLanguage)
         server.get('/all-languages', routeGetAllLanguageFiles)
+        server.get('/get-all-prefs', routeGetAllPrefs)
+        server.post('/set-prefs', routeSetPrefs)
         // Dev only actions -- never call from app
         server.post('/run-action', routeRunAction)
         server.post('/test-trigger', routeTestTrigger)
@@ -177,7 +179,9 @@ const startServer = async () => {
       process.exit(1)
     }
     console.log(generateAsciiHeader(config.version))
-    console.log(`Server listening at ${address}`)
+    console.log('Email mode:', config.emailMode)
+    if (config.emailMode === 'TEST') console.log('All email will be sent to:', config.testingEmail)
+    console.log(`\nServer listening at ${address}`)
   })
 
   // Fastify TO DO:

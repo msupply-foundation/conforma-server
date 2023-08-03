@@ -115,6 +115,12 @@ export const testTrigger = async (params: RequestProps) => {
       finalApplicationData = await getApplicationData({ applicationId })
       break
 
+    case 'ON_VERIFICATION':
+      triggerPayload.trigger = Trigger.OnVerification
+      actionsOutput = await processTrigger(triggerPayload)
+      finalApplicationData = await getApplicationData({ applicationId })
+      break
+
     case 'ON_EXTEND':
       triggerPayload.trigger = Trigger.OnExtend
       actionsOutput = await processTrigger(triggerPayload)

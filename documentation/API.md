@@ -10,39 +10,39 @@ The back-end currently has two server instances which are launched to handle inc
 ---
 ## Contents
 
-<!-- toc -->
+<!-- TOC -->
 
-- [API specification](#api-specification)
-  - [Contents](#contents)
-  - [Postgraphile server API:](#postgraphile-server-api)
-  - [Fastify server API](#fastify-server-api)
-    - [Authentication](#authentication)
-    - [Public endpoints](#public-endpoints)
-      - [Login](#login)
-      - [Get preferences endpoint:](#get-preferences-endpoint)
-      - [Get language endpoint:](#get-language-endpoint)
-      - [Verification endpoint](#verification-endpoint)
-      - [File download endpoint:](#file-download-endpoint)
-    - [Authenticated endpoints](#authenticated-endpoints)
-      - [File upload endpoint:](#file-upload-endpoint)
-      - [Check unique endpoint](#check-unique-endpoint)
-      - [Create hash](#create-hash)
-      - [Login Organisation](#login-organisation)
-      - [User Info](#user-info)
-      - [User Permissions](#user-permissions)
-      - [Check Triggers](#check-triggers)
-      - [Generate PDF](#generate-pdf)
+- [Contents](#contents)
+- [Postgraphile server API:](#postgraphile-server-api)
+- [Fastify server API](#fastify-server-api)
+  - [Authentication](#authentication)
+  - [Public endpoints](#public-endpoints)
+    - [Login](#login)
+    - [Get preferences endpoint:](#get-preferences-endpoint)
+    - [Get language endpoint:](#get-language-endpoint)
+    - [Verification endpoint](#verification-endpoint)
+    - [File download endpoint:](#file-download-endpoint)
+  - [Authenticated endpoints](#authenticated-endpoints)
+    - [File upload endpoint:](#file-upload-endpoint)
+    - [Check unique endpoint](#check-unique-endpoint)
+    - [Create hash](#create-hash)
+    - [Login Organisation](#login-organisation)
+    - [User Info](#user-info)
+    - [User Permissions](#user-permissions)
+    - [Check Triggers](#check-triggers)
+    - [Generate PDF](#generate-pdf)
     - [Data Views](#data-views)
     - [Preview Actions](#preview-actions)
     - [Extend application deadline](#extend-application-deadline)
-    - [Admin only endpoints](#admin-only-endpoints)
-      - [Update row level policies](#update-row-level-policies)
-      - [Run Action](#run-action)
-      - [Manage localisations](#manage-localisations)
-      - [Snapshot endpoints](#snapshot-endpoints)
-      - [Lookup table endpoints](#lookup-table-endpoints)
+  - [Admin only endpoints](#admin-only-endpoints)
+    - [Update row level policies](#update-row-level-policies)
+    - [Run Action](#run-action)
+    - [Manage localisations](#manage-localisations)
+    - [Snapshot endpoints](#snapshot-endpoints)
+    - [Lookup table endpoints](#lookup-table-endpoints)
+    - [Preference management endpoints](#preference-management-endpoints)
 
-<!-- tocstop -->
+<!-- /TOC -->
 
 ## Postgraphile server API:
 
@@ -613,3 +613,11 @@ See [Localisation documentation](https://github.com/openmsupply/conforma-web-app
 
 See [Snapshot documentation](Snapshots.md) for more info
 
+#### Preference management endpoints
+
+- GET: `/get-all-prefs`
+- POST: `/set-prefs`
+
+The difference between these and the [public `get-prefs` endpoint](#get-preferences-endpoint) is that these read and write both web app *and* server preferences, whereas the public `get-prefs` is just for the web app.
+
+See [Preferences documentation](Preferences.md) for more info

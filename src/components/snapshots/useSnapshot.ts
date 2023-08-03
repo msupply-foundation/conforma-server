@@ -1,5 +1,5 @@
 import fs from 'fs/promises'
-import fsSync, { readFileSync } from 'fs'
+import fsSync from 'fs'
 import path from 'path'
 import { execSync } from 'child_process'
 import insertData from '../../../database/insertData'
@@ -9,8 +9,7 @@ import { SnapshotOperation, ExportAndImportOptions, ObjectRecord } from '../expo
 import importFromJson from '../exportAndImport/importFromJson'
 import { triggerTables } from './triggerTables'
 import semverCompare from 'semver/functions/compare'
-import config from '../../../src/config'
-import { serverPrefKeys, ServerPreferences } from '../../types'
+import config, { refreshConfig } from '../../../src/config'
 // @ts-ignore
 import delay from 'delay-sync'
 import { createDefaultDataFolders } from '../files/createDefaultFolders'
@@ -182,7 +181,9 @@ const useSnapshot: SnapshotOperation = async ({
       })
     }
 
-    refreshPreferences(config)
+    refreshConfig(config, PREFERENCES_FILE)
+
+    console.log('...Snapshot load complete!')
 
     return { success: true, message: `snapshot loaded ${snapshotName}` }
   } catch (e) {
@@ -281,17 +282,6 @@ const copyFiles = async (snapshotFolder: string, fileRecords: ObjectRecord[] = [
       console.log('failed to copy file', e)
     }
   }
-}
-
-// Mutate the active config object to inject new preferences
-type Config = typeof config
-export const refreshPreferences = (config: Config) => {
-  const serverPrefs: ServerPreferences = JSON.parse(readFileSync(PREFERENCES_FILE, 'utf-8')).server
-  serverPrefKeys.forEach((key) => {
-    if (serverPrefs[key]) {
-      config[key] = serverPrefs[key] as never
-    } else delete config[key]
-  })
 }
 
 export default useSnapshot

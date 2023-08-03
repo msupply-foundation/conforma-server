@@ -594,13 +594,19 @@ class PostgresDB {
     }
   }
 
-  public updateTriggerQueueStatus = async (
-    payload: TriggerQueueUpdatePayload
-  ): Promise<boolean> => {
-    const text = 'UPDATE trigger_queue SET status = $1 WHERE id = $2'
-    // TODO: Dynamically select what is being updated
+  public updateTriggerQueueStatus = async ({
+    id,
+    application_id,
+    status,
+  }: TriggerQueueUpdatePayload): Promise<boolean> => {
+    const text = `UPDATE trigger_queue SET status = $1${
+      application_id ? ', application_id = $3' : ''
+    } WHERE id = $2`
+    const values = [status, id]
+    if (application_id) values.push(application_id)
+
     try {
-      await this.query({ text, values: Object.values(payload) })
+      await this.query({ text, values })
       return true
     } catch (err) {
       throw err
@@ -692,7 +698,19 @@ class PostgresDB {
     }
   }
 
-  // Remove all user
+  public getOrgName = async (orgId: number | null) => {
+    if (!orgId) return null
+    const text = `
+      SELECT name FROM organisation
+      WHERE id = $1
+    `
+    try {
+      const result = await this.query({ text, values: [orgId] })
+      return result.rows[0].name
+    } catch (err) {
+      throw err
+    }
+  }
 
   // Used by triggers/actions -- please don't modify
   public getUserData = async (userId: number, orgId: number) => {
@@ -997,7 +1015,6 @@ class PostgresDB {
     if (orgId) values.push(orgId)
     try {
       const result = await this.query({ text, values })
-      console.log(result.rows)
       const isAdmin = result.rows.some((row) => row.name === 'admin')
       const isManager = result.rows.some((row) => row.name === managementPrefName)
       return { isAdmin, isManager }
