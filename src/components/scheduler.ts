@@ -16,26 +16,22 @@ const defaultSchedules: { [K in ScheduleType]: RecurrenceSpecObjLit } = {
     // Every hour on the hour
     hour: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
     minute: 0,
-    tz: Settings.defaultZoneName,
   },
   cleanup: {
     // Once per day at 1:05am
     hour: 1,
     minute: 5,
-    tz: Settings.defaultZoneName,
   },
   backup: {
     // Once per day at 1:15am
     hour: 1,
     minute: 15,
-    tz: Settings.defaultZoneName,
   },
   archive: {
     // Twice per week on Weds/Sun at 1:10am
     dayOfWeek: [0, 3],
     hour: 1,
     minute: 15,
-    tz: Settings.defaultZoneName,
   },
 }
 
@@ -135,7 +131,10 @@ function getSchedule(
     }
   }
 
-  const defaultSchedule = defaultSchedules[type]
+  // We need to insert default timezone here rather than in the above default
+  // definitions, as the "defaultZoneName" hasn't been loaded into Settings when
+  // those are initially loaded.
+  const defaultSchedule = { ...defaultSchedules[type], tz: Settings.defaultZoneName }
 
   if (!schedule) return defaultSchedule
 
