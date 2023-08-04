@@ -789,6 +789,12 @@ const migrateData = async () => {
       ALTER TABLE public.template_category   
         ADD COLUMN IF NOT EXISTS is_submenu BOOLEAN DEFAULT FALSE;
     `)
+
+    console.log(' - Adding dashboard_restrictions to template')
+    await DB.changeSchema(`
+      ALTER TABLE public.template   
+        ADD COLUMN IF NOT EXISTS dashboard_restrictions VARCHAR[];
+    `)
   }
 
   // Other version migrations continue here...
