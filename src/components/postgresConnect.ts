@@ -1235,6 +1235,7 @@ class PostgresDB {
               OR cardinality(permission_names) = 0
             )
       ${dataViewCode ? 'AND code = $2' : ''}
+       AND enabled = TRUE;
     `
     const values = dataViewCode ? [userPermissions, dataViewCode] : [userPermissions]
     try {
