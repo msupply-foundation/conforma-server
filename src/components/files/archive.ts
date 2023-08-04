@@ -23,6 +23,7 @@ export interface ArchiveInfo {
   prevArchiveFolder: string | null
   prevUid: string | null
   numFiles: number
+  totalFileSize: number
 }
 
 export interface ArchiveData {
@@ -115,6 +116,7 @@ export const archiveFiles = async (days: number = config.archiveFileAgeMinimum ?
     prevArchiveFolder: prevArchive?.archiveFolder ?? null,
     prevUid: prevArchive?.uid ?? null,
     numFiles: files.length,
+    totalFileSize,
   }
 
   await fsx.writeJSON(path.join(FILES_FOLDER, archivePath, 'info.json'), archiveInfo, { spaces: 2 })
