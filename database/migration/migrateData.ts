@@ -5,6 +5,7 @@ import semverCompare from 'semver/functions/compare'
 import { execSync } from 'child_process'
 import path from 'path'
 import { readFileSync } from 'fs'
+import bcrypt from 'bcrypt'
 import { getAppEntryPointDir } from '../../src/components/utilityFunctions'
 
 // CONSTANTS
@@ -777,10 +778,22 @@ const migrateData = async () => {
         ADD COLUMN IF NOT EXISTS submenu VARCHAR;
     `)
 
+    console.log(' - Adding enabled column to data view')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_view   
+        ADD COLUMN IF NOT EXISTS enabled BOOLEAN DEFAULT TRUE NOT NULL;
+    `)
+
     console.log(' - Adding is_submenu column to template_category')
     await DB.changeSchema(`
       ALTER TABLE public.template_category   
         ADD COLUMN IF NOT EXISTS is_submenu BOOLEAN DEFAULT FALSE;
+    `)
+
+    console.log(' - Adding dashboard_restrictions to template')
+    await DB.changeSchema(`
+      ALTER TABLE public.template   
+        ADD COLUMN IF NOT EXISTS dashboard_restrictions VARCHAR[];
     `)
   }
 
@@ -804,6 +817,16 @@ const migrateData = async () => {
 
   // Finally, set the database version to the current version
   if (databaseVersionLessThan(version)) await DB.setDatabaseVersion(version)
+
+  // A sneaky undocumented tool to let us reset all passwords on a testing
+  // system -- USE WITH CAUTION!!!
+  const passwordOverride = process.env.USER_PASSWORD_OVERRIDE ?? process.argv[2] ?? null
+  if (passwordOverride && passwordOverride.length > 30 && !config.isLiveServer) {
+    console.log('WARNING: Resetting user passwords for testing purposes...')
+    DB.changeSchema(`
+      UPDATE "user" SET password_hash = '${await bcrypt.hash(passwordOverride, 10)}'
+    `)
+  }
 }
 
 // For running migrationScript.ts manually using `yarn migrate`
