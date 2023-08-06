@@ -1,5 +1,6 @@
 import path from 'path'
 import fs from 'fs'
+import fsProm from 'fs/promises'
 import util from 'util'
 import { pipeline } from 'stream'
 import { nanoid } from 'nanoid'
@@ -17,9 +18,18 @@ interface HttpQueryParameters {
 }
 
 export async function getFilePath(uid: string, thumbnail = false) {
-  const result = await DBConnect.getFileDownloadInfo(uid, thumbnail)
-  if (!result) throw new Error()
-  return result
+  const fileData = await DBConnect.getFileDownloadInfo(uid)
+  if (!fileData) throw new Error('Unable to retrieve file info')
+
+  const isGenericThumbnail =
+    thumbnail && fileData.thumbnail_path.startsWith(config.genericThumbnailsFolderName)
+
+  const filePath = path.join(fileData.archive_path ?? '', fileData.file_path)
+  const thumbnailPath = path.join(
+    !isGenericThumbnail ? fileData.archive_path ?? '' : '',
+    fileData.thumbnail_path
+  )
+  return { filePath, thumbnailPath, originalFilename: fileData.original_filename }
 }
 
 const pump = util.promisify(pipeline)
@@ -43,6 +53,8 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
       makeFolder(path.join(getAppEntryPointDir(), filesFolder, subfolder))
       await pump(file.file, fs.createWriteStream(path.join(filesPath, file_path)))
 
+      const file_size = (await fsProm.stat(path.join(filesPath, file_path))).size
+
       // Create thumbnail from saved file
       const thumbnail_path = await createThumbnail({
         filesPath,
@@ -54,7 +66,14 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
       })
 
       // Save file info to database
-      await registerFileInDB({ unique_id, file, file_path, thumbnail_path, ...queryParams })
+      await registerFileInDB({
+        unique_id,
+        file,
+        file_path,
+        thumbnail_path,
+        file_size,
+        ...queryParams,
+      })
 
       filesInfo.push({
         filename: file.filename,
@@ -94,6 +113,7 @@ export async function registerFileInDB({
   file,
   file_path,
   thumbnail_path,
+  file_size,
   template_id,
   application_serial,
   user_id,
@@ -119,6 +139,7 @@ export async function registerFileInDB({
         to_be_deleted,
         file_path,
         thumbnail_path,
+        file_size,
         mimetype: file ? file.mimetype : mimetype,
       }) as FilePayload
     )

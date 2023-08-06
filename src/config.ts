@@ -1,8 +1,9 @@
 require('dotenv').config()
+import { DateTime, Settings } from 'luxon'
 import preferences from '../preferences/preferences.json'
 import { readFileSync } from 'fs'
 import { version } from '../package.json'
-import { serverPrefKeys, ServerPreferences, WebAppPrefs } from './types'
+import { serverPrefKeys, ServerPreferences, WebAppPrefs, Config } from './types'
 const serverPrefs: ServerPreferences = preferences.server
 const isProductionBuild = process.env.NODE_ENV === 'production'
 const siteHost = (preferences.web as WebAppPrefs)?.siteHost
@@ -26,7 +27,7 @@ Operation modes:
   actually sent). An alternative development mode.
 */
 
-const config = {
+const config: Config = {
   pg_database_connection: {
     user: 'postgres',
     host: 'localhost',
@@ -77,9 +78,9 @@ const config = {
   emailMode: getEmailOperationMode(serverPrefs.emailTestMode, serverPrefs.testingEmail),
 }
 
-// Mutate the active config object to inject new preferences
-type Config = typeof config
+// Mutate the global config object to inject new preferences
 export const refreshConfig = (config: Config, prefsFilePath: string) => {
+  console.log('\nUpdating system configuration...')
   // prefsFilePath is passed in rather than imported from constants to prevent
   // circular reference
   const prefs = JSON.parse(readFileSync(prefsFilePath, 'utf-8'))
@@ -97,9 +98,31 @@ export const refreshConfig = (config: Config, prefsFilePath: string) => {
   config.isLiveServer = getIsLiveServer(webHostUrl, webAppPrefs.siteHost)
   config.emailMode = getEmailOperationMode(serverPrefs.emailTestMode, serverPrefs.testingEmail)
 
-  console.log('\nConfiguration refreshed with updated preferences')
+  // Update locale and timezone if changed
+  const newLocale = serverPrefs.locale ?? Intl.DateTimeFormat().resolvedOptions().locale
+  if (newLocale !== Settings.defaultLocale) {
+    console.log(`Changing locale to: ${newLocale}`)
+    Settings.defaultLocale = newLocale
+  }
+
+  const newTimezone = serverPrefs?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone
+  if (newTimezone !== Settings.defaultZoneName) {
+    console.log(`Changing timezone to: ${newTimezone}`)
+    Settings.defaultZoneName = newTimezone
+  }
+
+  //Update scheduled jobs from prefs
+  if (config.scheduledJobs) {
+    config.scheduledJobs.reschedule('action', serverPrefs.actionSchedule)
+    config.scheduledJobs.reschedule('backup', serverPrefs.backupSchedule)
+    config.scheduledJobs.reschedule('cleanup', serverPrefs.fileCleanupSchedule)
+    config.scheduledJobs.reschedule('archive', serverPrefs.archiveSchedule)
+  }
+
   console.log('Email mode:', config.emailMode)
-  if (config.emailMode === 'TEST') console.log('Email sent to:', config.testingEmail)
+  if (config.emailMode === 'TEST') console.log('All Email sent to:', config.testingEmail)
+  console.log('Current time:', DateTime.now().toLocaleString(DateTime.DATETIME_HUGE_WITH_SECONDS))
+  console.log('Configuration refreshed with updated preferences\n')
 }
 
 function getIsLiveServer(webHostUrl: string | undefined, productionHost?: string | null) {

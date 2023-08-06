@@ -52,6 +52,10 @@ class DBConnect {
 
   public checkIfInFileTable = PostgresDB.checkIfInFileTable
 
+  public getFilesToArchive = PostgresDB.getFilesToArchive
+
+  public setFileArchived = PostgresDB.setFileArchived
+
   public addActionPlugin = PostgresDB.addActionPlugin
 
   public deleteActionPlugin = PostgresDB.deleteActionPlugin
@@ -164,6 +168,8 @@ class DBConnect {
 
   public getDataTableColumns = PostgresDB.getDataTableColumns
 
+  public getTemplateVersionIDs = PostgresDB.getTemplateVersionIDs
+
   public getPermissionPolicies = PostgresDB.getPermissionPolicies
 
   public getAllowedDataViews = PostgresDB.getAllowedDataViews
@@ -172,7 +178,9 @@ class DBConnect {
 
   public getApplicationSections = PostgresDB.getApplicationSections
 
-  public getLatestSnapshotName = PostgresDB.getLatestSnapshotName
+  public getSystemInfo = PostgresDB.getSystemInfo
+
+  public setSystemInfo = PostgresDB.setSystemInfo
 
   public waitForDatabaseValue = PostgresDB.waitForDatabaseValue
 

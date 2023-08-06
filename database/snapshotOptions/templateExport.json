@@ -30,5 +30,6 @@
   "excludeInsertScripts": [],
   "includePrefs": false,
   "includeLocalisation": false,
-  "resetFiles": false
+  "resetFiles": false,
+  "templates": { "checkVersionOnImport": true }
 }

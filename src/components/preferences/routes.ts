@@ -31,7 +31,7 @@ const loadCurrentPrefs = () =>
 export const routeGetPrefs = async (request: any, reply: any) => {
   const prefs = loadCurrentPrefs()
   const languageOptions = readLanguageOptions()
-  const latestSnapshot = await databaseConnect.getLatestSnapshotName()
+  const latestSnapshot = await databaseConnect.getSystemInfo('snapshot')
   const allowedTableNames = config.allowedTableNames
   reply.send({ preferences: prefs.web, languageOptions, latestSnapshot, allowedTableNames })
 }
@@ -53,5 +53,5 @@ export const routeSetPrefs = async (request: any, reply: any) => {
 
   refreshConfig(config, PREFERENCES_FILE)
 
-  return reply.send({ success: true, preferences: { server, web }, config })
+  return reply.send({ success: true, preferences: { server, web } })
 }

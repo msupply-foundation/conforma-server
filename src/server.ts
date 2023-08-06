@@ -2,6 +2,7 @@ import fastify, { FastifyPluginCallback, FastifyReply } from 'fastify'
 import fastifyStatic from 'fastify-static'
 import fastifyMultipart from 'fastify-multipart'
 import fastifyCors from 'fastify-cors'
+import { DateTime, Settings } from 'luxon'
 import path from 'path'
 import { loadActionPlugins } from './components/pluginsConnect'
 import {
@@ -47,15 +48,24 @@ import {
 import { routeTriggers } from './components/other/routeTriggers'
 import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
 import migrateData from '../database/migration/migrateData'
+import routeArchiveFiles from './components/files/routeArchiveFiles'
+import { Schedulers } from './components/scheduler'
 require('dotenv').config()
 
-// Fastify server
+// Set the default locale and timezone for date-time display (in console)
+Settings.defaultLocale = config.locale ?? Intl.DateTimeFormat().resolvedOptions().locale
+if (config.timezone) Settings.defaultZoneName = config.timezone
 
+// Fastify server
 const startServer = async () => {
   await migrateData()
   await loadActionPlugins() // Connects to Database and listens for Triggers
   createDefaultDataFolders()
   await cleanUpFiles() // Runs on schedule as well as startup
+
+  // Add schedulers to global "config" object so we can update them. There should
+  // only be a single global instance of Schedulers -- this one!
+  config.scheduledJobs = new Schedulers()
 
   const server = fastify()
 
@@ -93,15 +103,12 @@ const startServer = async () => {
         server.get('/verify', routeVerification)
         // File download endpoint (get by unique ID)
         server.get('/file', async function (request: any, reply: any) {
-          const { uid, thumbnail } = request.query
-          const { original_filename, file_path, thumbnail_path } = await getFilePath(
-            uid,
-            thumbnail === 'true'
-          )
+          const { uid, thumbnail = false } = request.query
+          const { originalFilename, filePath, thumbnailPath } = await getFilePath(uid, thumbnail)
           // TO-DO Check for permission to access file
           try {
             // TO-DO: Rename file back to original for download
-            return reply.sendFile(file_path ? file_path : thumbnail_path)
+            return reply.sendFile(thumbnail ? thumbnailPath : filePath)
           } catch {
             return reply.send({ success: false, message: 'Unable to retrieve file' })
           }
@@ -131,6 +138,7 @@ const startServer = async () => {
         server.get('/all-languages', routeGetAllLanguageFiles)
         server.get('/get-all-prefs', routeGetAllPrefs)
         server.post('/set-prefs', routeSetPrefs)
+        server.get('/archive-files', routeArchiveFiles)
         // Dev only actions -- never call from app
         server.post('/run-action', routeRunAction)
         server.post('/test-trigger', routeTestTrigger)
@@ -166,9 +174,11 @@ const startServer = async () => {
     done()
   }
 
-  server.get('/', async (request, reply) => {
-    console.log('Request made')
-    return 'This is the response\n'
+  server.get('/', async () => {
+    console.log('API Request received')
+    return `Welcome to CONFORMA\n${DateTime.now().toLocaleString(
+      DateTime.DATETIME_HUGE_WITH_SECONDS
+    )}`
   })
 
   server.register(api, { prefix: '/api' })
@@ -179,6 +189,9 @@ const startServer = async () => {
       process.exit(1)
     }
     console.log(generateAsciiHeader(config.version))
+    console.log(DateTime.now().toLocaleString(DateTime.DATETIME_HUGE_WITH_SECONDS))
+    console.log('Locale:', Settings.defaultLocale)
+    console.log('Timezone:', Settings.defaultZoneName)
     console.log('Email mode:', config.emailMode)
     if (config.emailMode === 'TEST') console.log('All email will be sent to:', config.testingEmail)
     console.log(`\nServer listening at ${address}`)

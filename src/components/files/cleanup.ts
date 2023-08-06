@@ -16,7 +16,7 @@ import fs from 'fs'
 import path from 'path'
 import { crawlFileSystem } from '../utilityFunctions'
 import { deleteFile } from '../files/deleteFiles'
-import { FILES_FOLDER, GENERIC_THUMBNAILS_FOLDER } from '../../constants'
+import { ARCHIVE_FOLDER, FILES_FOLDER, GENERIC_THUMBNAILS_FOLDER } from '../../constants'
 
 const isManualCleanup: Boolean = process.argv[2] === '--cleanup'
 
@@ -48,6 +48,7 @@ export const cleanUpFiles = async () => {
     // Check if file in database and delete if not
     const checkFile = async (filePath: string) => {
       if (path.dirname(filePath) === GENERIC_THUMBNAILS_FOLDER) return
+      if (path.dirname(filePath).startsWith(ARCHIVE_FOLDER)) return
 
       const relativeFilePath = filePath.replace(FILES_FOLDER + '/', '')
       const isFileInDatabase = await DBConnect.checkIfInFileTable(relativeFilePath)

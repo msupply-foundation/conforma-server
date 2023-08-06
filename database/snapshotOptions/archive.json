@@ -1,0 +1,13 @@
+{
+  "filters": {},
+  "includeTables": [],
+  "excludeTables": [],
+  "shouldReInitialise": false,
+  "usePgDump": true,
+  "insertScriptsLocale": "dev",
+  "includeInsertScripts": ["none"],
+  "excludeInsertScripts": [],
+  "includePrefs": false,
+  "includeLocalisation": false,
+  "resetFiles": false
+}

@@ -49,7 +49,7 @@ This repo has the following functionality implemented in basic form:
 - Triggers and Actions, including:
   - Register plugins on startup
   - Run actions in response to Database triggers
-  - Create scheduled actions (using `node-schedule` which I'm not sure is the best way to go)
+  - Create scheduled actions (using `node-schedule`)
 - `evaluateExpression` module
 
 ## Development

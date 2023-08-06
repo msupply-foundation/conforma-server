@@ -7,6 +7,8 @@ import {
 } from './generated/graphql'
 import { EmailOperationMode } from './config'
 import { EvaluatorNode } from 'fig-tree-evaluator'
+import { PoolConfig } from 'pg'
+import { Schedulers } from './components/scheduler'
 
 export interface ActionInTemplate {
   code: string
@@ -183,8 +185,9 @@ export interface ActionPluginPayload {
 
 export interface FileDownloadInfo {
   original_filename: string
-  file_path?: string
-  thumbnail_path?: string
+  file_path: string
+  thumbnail_path: string
+  archive_path: string | null
 }
 
 export interface FilePayload {
@@ -251,10 +254,23 @@ export interface UserOrg extends User, Organisation {
   id: number
 }
 
+// node-scheduler recurrence rule format
+export interface ScheduleObject {
+  date?: number | number[] | null
+  dayOfWeek?: number | number[] | null
+  hour?: number | number[] | null
+  minute?: number | number[] | null
+  month?: number | number[] | null
+  second?: number | number[] | null
+  year?: number | number[] | null
+  tz?: string | null
+}
+
 export interface ServerPreferences {
   thumbnailMaxWidth?: number
   thumbnailMaxHeight?: number
-  hoursSchedule?: number[]
+  actionSchedule?: number[] | ScheduleObject
+  hoursSchedule?: number[] // deprecated, please use actionSchedule
   SMTPConfig?: {
     host: string
     port: number
@@ -266,29 +282,39 @@ export interface ServerPreferences {
   systemManagerPermissionName?: string
   managerCanEditLookupTables?: boolean
   previewDocsMinKeepTime?: string
-  previewDocsCleanupSchedule?: number[]
-  backupSchedule?: number[]
+  fileCleanupSchedule?: number[] | ScheduleObject
+  backupSchedule?: number[] | ScheduleObject
   backupFilePrefix?: string
   maxBackupDurationDays?: number
+  archiveSchedule?: number[] | ScheduleObject
+  archiveFileAgeMinimum?: number
+  archiveMinSize?: number // MB
   emailTestMode?: boolean
   testingEmail?: string
+  locale?: string
+  timezone?: string
 }
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
   // Must contain ALL keys of ServerPreferences -- please check
   'thumbnailMaxHeight',
   'thumbnailMaxWidth',
-  'hoursSchedule',
+  'actionSchedule',
   'SMTPConfig',
   'systemManagerPermissionName',
   'managerCanEditLookupTables',
   'previewDocsMinKeepTime',
-  'previewDocsCleanupSchedule',
+  'fileCleanupSchedule',
   'backupSchedule',
   'backupFilePrefix',
   'maxBackupDurationDays',
+  'archiveSchedule',
+  'archiveFileAgeMinimum',
+  'archiveMinSize',
   'emailTestMode',
   'testingEmail',
+  'locale',
+  'timezone',
 ]
 
 export interface WebAppPrefs {
@@ -302,3 +328,35 @@ export interface WebAppPrefs {
   googleAnalyticsId?: string
   siteHost?: string
 }
+
+interface ConfigBase {
+  pg_database_connection: PoolConfig
+  version: string
+  graphQLendpoint: string
+  filesFolder: string
+  pluginsFolder: string
+  imagesFolder: string
+  databaseFolder: string
+  localisationsFolder: string
+  preferencesFolder: string
+  preferencesFileName: string
+  backupsFolder: string
+  genericThumbnailsFolderName: string
+  nodeModulesFolder: string
+  jwtSecret: string
+  RESTport: number
+  dataTablePrefix: string
+  allowedTableNames: string[]
+  allowedTablesNoColumns: string[]
+  filterListMaxLength: number
+  filterListBatchSize: number
+  filterColumnSuffix: string
+  isProductionBuild: boolean
+  defaultSystemManagerPermissionName: string
+  webHostUrl?: string
+  productionHost?: string
+  isLiveServer: boolean
+  emailMode: EmailOperationMode
+}
+
+export type Config = ConfigBase & ServerPreferences & { scheduledJobs?: Schedulers }
