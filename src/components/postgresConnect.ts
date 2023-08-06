@@ -1341,5 +1341,5 @@ type SchemaColumn = {
 }
 type GetDatabaseInfo = (tableName?: string) => Promise<SchemaColumn[]>
 
-const postgressDBInstance = PostgresDB.Instance
-export default postgressDBInstance
+const postgresDBInstance = PostgresDB.Instance
+export default postgresDBInstance

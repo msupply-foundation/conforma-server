@@ -1,20 +1,16 @@
 import { merge } from 'lodash'
 import { ActionInTemplate } from '../../types'
-import evaluateExpression from '@openmsupply/expression-evaluator'
-import { BasicObject, IParameters } from '@openmsupply/expression-evaluator/lib/types'
+import figTree from '../FigTreeEvaluator'
 import DBConnect from '../databaseConnect'
 
 export async function evaluateParameters(
-  parameterQueries: BasicObject,
-  evaluatorParameters: IParameters = {}
+  parameterQueries: { [key: string]: any },
+  data: { [key: string]: any } = {}
 ) {
-  const parametersEvaluated: BasicObject = {}
+  const parametersEvaluated: { [key: string]: any } = {}
   try {
     for (const key in parameterQueries) {
-      parametersEvaluated[key] = await evaluateExpression(
-        parameterQueries[key],
-        evaluatorParameters
-      )
+      parametersEvaluated[key] = await figTree.evaluate(parameterQueries[key], { data })
     }
     return parametersEvaluated
   } catch (err) {

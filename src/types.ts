@@ -1,4 +1,3 @@
-import { BasicObject, EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import {
   ActionQueueStatus,
   ApplicationOutcome,
@@ -7,6 +6,7 @@ import {
   TriggerQueueStatus,
 } from './generated/graphql'
 import { EmailOperationMode } from './config'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 
 export interface ActionInTemplate {
   code: string
@@ -68,13 +68,13 @@ export interface ActionQueueExecutePayload {
   error_log: string | null
   parameters_evaluated: { [key: string]: any } | null
   status: ActionQueueStatus
-  output: BasicObject | null
+  output: { [key: string]: any } | null
 }
 
 export interface ActionResult {
   action: string // code
   status: ActionQueueStatus
-  output: BasicObject | null
+  output: { [key: string]: any } | null
   errorLog: string | null
 }
 

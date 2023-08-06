@@ -1,7 +1,7 @@
 import databaseMethods from './databaseMethods'
 import DBConnect from '../../databaseConnect'
 import evaluateExpression from '@openmsupply/expression-evaluator'
-import functions from '../../actions/evaluatorFunctions'
+import functions from '../../FigTreeEvaluator/customFunctions'
 import { queryDataTable, updateRecord } from '../gqlDynamicQueries'
 import config from '../../../config'
 import { getValidTableName } from '../../utilityFunctions'

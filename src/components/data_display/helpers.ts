@@ -5,7 +5,7 @@ import {
   capitaliseFirstLetter,
 } from '../utilityFunctions'
 import evaluateExpression from '@openmsupply/expression-evaluator'
-import functions from '../actions/evaluatorFunctions'
+import functions from '../FigTreeEvaluator/customFunctions'
 import fetch from 'node-fetch'
 import { camelCase, snakeCase, startCase } from 'lodash'
 // @ts-ignore

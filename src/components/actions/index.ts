@@ -1,4 +1,4 @@
-export * from './evaluatorFunctions'
+export * from '../FigTreeEvaluator/customFunctions'
 export * from './getApplicationData'
 export * from './helpers'
 export * from './getApplicationDataRoute'
