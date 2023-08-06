@@ -112,7 +112,17 @@ CREATE OR REPLACE FUNCTION public.add_event_to_trigger_queue ()
     RETURNS TRIGGER
     AS $trigger_queue$
 BEGIN
-    --
+    -- Prevent triggers being added to queue if another one for the same event
+    -- is already in progress:
+    IF (
+            SELECT COUNT(*) FROM trigger_queue
+            WHERE trigger_type = NEW.trigger::public.trigger
+            AND "table" = TG_TABLE_NAME
+            AND record_id = NEW.id
+            AND (status = 'TRIGGERED' OR status = 'ACTIONS_DISPATCHED')
+        ) > 0 THEN
+        RETURN NULL;
+    END IF;
     IF TG_TABLE_NAME = 'trigger_schedule' OR TG_TABLE_NAME = 'verification' THEN
         INSERT INTO trigger_queue (trigger_type, "table", record_id, event_code, data, timestamp, status)
             VALUES (NEW.trigger::public.trigger, TG_TABLE_NAME, NEW.id, NEW.event_code, NEW.data, CURRENT_TIMESTAMP, 'TRIGGERED');
