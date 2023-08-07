@@ -20,20 +20,20 @@ const databaseMethods = (DBConnect: any) => {
   }
 
   return {
-    getRecordId: async (tableName: string, matchField: string, value: any) => {
+    getRecordIds: async (tableName: string, matchField: string, value: any) => {
       const text = `
       SELECT id FROM "${tableName}"
       WHERE "${matchField}" = $1
     `
       try {
         const result = await DBConnect.query({ text, values: [value] })
-        return result?.rows[0]?.id || 0
+        return result?.rows.map(({ id }: { id: number }) => id)
       } catch (err) {
         console.log(err.message)
         throw err
       }
     },
-    updateRecord: async (tableName: string, id: string, record: { [key: string]: any }) => {
+    updateRecord: async (tableName: string, id: number, record: { [key: string]: any }) => {
       const placeholders = DBConnect.getValuesPlaceholders(record)
       const matchValuePlaceholder = `$${placeholders.length + 1}`
 

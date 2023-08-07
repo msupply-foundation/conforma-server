@@ -133,7 +133,7 @@ The Action then checks if a record already exists, based on the `matchField` (e.
 
 If `matchField` is not provided, it will default to `id`.
 
-If `matchValue` is not provided, it will use the value supplied with the record for that field. So you only really need to provide `matchValue` if you're changing the value of `matchField`
+If `matchValue` is not provided, it will use the value supplied with the record for that field. So you only really need to provide `matchValue` if you're changing the value of `matchField`. (Note that if the table in question has *multiple* records where `matchField` is `matchValue`, they will *all* be updated.)
 
 For example:
 
@@ -148,7 +148,7 @@ For example:
 
 This will look for a user record with `username = "js"` and update it if found.
 
-Wheras:
+Whereas:
 
 ```
 {
