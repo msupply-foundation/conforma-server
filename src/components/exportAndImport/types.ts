@@ -43,6 +43,14 @@ export type ExportAndImportOptions = {
   includePrefs?: boolean
   resetFiles: boolean
   templates?: { resetVersion?: boolean; newCode?: string; checkVersionOnImport?: boolean }
+  archive?: ArchiveOption
+}
+
+export type ArchiveInfo = { type: 'full' | 'none' | 'partial'; from?: string; to?: string } | null
+export interface SnapshotInfo {
+  timestamp: string
+  version: string
+  archive?: ArchiveInfo
 }
 
 export type ObjectRecord = { [columnName: string]: any }
@@ -62,4 +70,17 @@ export type SnapshotOperation = (props: {
   optionsName?: string
   options?: ExportAndImportOptions
   extraOptions?: Partial<ExportAndImportOptions>
+  isArchiveSnapshot?: boolean
+}) => Promise<{ success: boolean; message: string; error?: string; snapshot?: string }>
+
+export type ArchiveSnapshotOperation = (props: {
+  snapshotName?: string
+  archiveOption?: ArchiveOption
 }) => Promise<{ success: boolean; message: string; error?: string }>
+
+export type ArchiveOption =
+  | 'none'
+  | 'full'
+  | string
+  | number
+  | { from: string | number; to: string | number }

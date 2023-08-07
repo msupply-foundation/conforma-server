@@ -31,7 +31,7 @@ const loadCurrentPrefs = () =>
 export const routeGetPrefs = async (request: any, reply: any) => {
   const prefs = loadCurrentPrefs()
   const languageOptions = readLanguageOptions()
-  const latestSnapshot = await databaseConnect.getLatestSnapshotName()
+  const latestSnapshot = await databaseConnect.getSystemInfo('snapshot')
   const allowedTableNames = config.allowedTableNames
   reply.send({ preferences: prefs.web, languageOptions, latestSnapshot, allowedTableNames })
 }

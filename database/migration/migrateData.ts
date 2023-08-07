@@ -816,6 +816,12 @@ const migrateData = async () => {
     ALTER TABLE public.template
       DROP COLUMN IF EXISTS version;
     `)
+
+    console.log(' - Creating archive_path field for files')
+    await DB.changeSchema(`
+    ALTER TABLE public.file  
+      ADD COLUMN IF NOT EXISTS archive_path varchar;
+    `)
   }
 
   // Other version migrations continue here...

@@ -3,6 +3,7 @@ import preferences from '../preferences/preferences.json'
 import { readFileSync } from 'fs'
 import { version } from '../package.json'
 import { serverPrefKeys, ServerPreferences, WebAppPrefs } from './types'
+import { reschedule } from './components/actions'
 const serverPrefs: ServerPreferences = preferences.server
 const isProductionBuild = process.env.NODE_ENV === 'production'
 const siteHost = (preferences.web as WebAppPrefs)?.siteHost
@@ -96,6 +97,23 @@ export const refreshConfig = (config: Config, prefsFilePath: string) => {
 
   config.isLiveServer = getIsLiveServer(webHostUrl, webAppPrefs.siteHost)
   config.emailMode = getEmailOperationMode(serverPrefs.emailTestMode, serverPrefs.testingEmail)
+
+  //Update scheduled jobs from prefs
+  if (serverPrefs.hoursSchedule) {
+    reschedule('action', serverPrefs.hoursSchedule)
+  }
+  if (serverPrefs.actionSchedule) {
+    reschedule('action', serverPrefs.actionSchedule)
+  }
+  if (serverPrefs.backupSchedule) {
+    reschedule('backup', serverPrefs.backupSchedule)
+  }
+  if (serverPrefs.previewDocsCleanupSchedule) {
+    reschedule('cleanup', serverPrefs.previewDocsCleanupSchedule)
+  }
+  if (serverPrefs.archiveSchedule) {
+    reschedule('archive', serverPrefs.archiveSchedule)
+  }
 
   console.log('\nConfiguration refreshed with updated preferences')
   console.log('Email mode:', config.emailMode)
