@@ -5,7 +5,7 @@ const databaseMethods = {
   // Gets the application/template info of the "config" application associated
   // with the template specified by "templateCode". If multiple versions of the
   // template exist, it will use the one marked "AVAILABLE" or, if none are
-  // available, the highest version number.
+  // available, the most recent version.
   getConfigApplicationInfo: async (templateCode: string) => {
     const text = `
     WITH available_count AS (
@@ -26,8 +26,8 @@ const databaseMethods = {
       SELECT id FROM template
       WHERE code = $1
       AND CASE
-        WHEN (SELECT count FROM available_count) = 0 THEN version = (
-        SELECT MAX(version) from template
+        WHEN (SELECT count FROM available_count) = 0 THEN version_timestamp = (
+        SELECT MAX(version_timestamp) from template
         WHERE code = $1
       ) ELSE status = 'AVAILABLE'
       END

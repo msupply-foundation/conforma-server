@@ -1,7 +1,7 @@
 import { camelCase, mapValues } from 'lodash'
 import databaseConnect from '../databaseConnect'
 import getDatabaseInfo from './getDatabaseInfo'
-import { filterByIncludeAndExclude } from './helpers'
+import { filterByIncludeAndExclude, getTemplateVersionId, isTemplateUnlocked } from './helpers'
 import { singular } from 'pluralize'
 import {
   DatabaseColumn,
@@ -11,6 +11,8 @@ import {
   ObjectRecord,
   ObjectRecords,
 } from './types'
+import { DateTime } from 'luxon'
+import { Template } from '../../generated/graphql'
 
 type InsertFromObject = (
   records: ObjectRecords,
@@ -20,7 +22,7 @@ type InsertFromObject = (
 
 const insertFromObject: InsertFromObject = async (
   records,
-  { includeTables, excludeTables, skipTableOnInsertFail = [] },
+  { includeTables, excludeTables, skipTableOnInsertFail = [], templates },
   preserveIds = false
 ) => {
   const databaseTables = (await getDatabaseInfo()).filter(({ isView }) => !isView)
@@ -32,6 +34,43 @@ const insertFromObject: InsertFromObject = async (
     const { tableName } = table
     const recordsForTable = records[tableName]
     if (!recordsForTable || recordsForTable.length === 0) continue
+
+    // When importing a template, check that version doesn't already exist in
+    // the system
+    if (
+      tableName === 'template' &&
+      templates?.checkVersionOnImport &&
+      recordsForTable.length === 1
+    ) {
+      const template = recordsForTable[0]
+
+      // If template was exported using an earlier version schema, we need to
+      // migrate it first
+      if (!('versionId' in template)) {
+        template.versionId = getTemplateVersionId()
+        template.versionComment = 'Migrated from previous version format'
+        template.versionHistory = new Array(template.version).fill(0).map((_) => ({
+          comment: null,
+          timestamp: DateTime.fromISO(template.versionTimestamp),
+          versionId: getTemplateVersionId(),
+          parentVersionId: null,
+        }))
+        template.version = null
+      }
+
+      const existingVersions = await databaseConnect.getTemplateVersionIDs(template.code)
+
+      // Make sure unlocked "*" templates have unique versionId
+      if (isTemplateUnlocked(template as Template)) {
+        let suffix = 1
+        while (existingVersions.includes(template.versionId)) {
+          template.versionId = `*_${suffix++}`
+        }
+      }
+
+      if (existingVersions.includes(template.versionId))
+        throw new Error('Template version already exists in the system')
+    }
 
     for (let record of recordsForTable) {
       const { insertQuery, getRecordQuery, insertGetter, getRecordGetter, variables } =

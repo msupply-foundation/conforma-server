@@ -1209,6 +1209,19 @@ class PostgresDB {
     }
   }
 
+  public getTemplateVersionIDs = async (templateCode: string) => {
+    const text = `
+      SELECT version_id FROM template WHERE code = $1;
+    `
+    try {
+      const result = await this.query({ text, values: [templateCode] })
+      return result.rows.map((row) => row.version_id)
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
   public getPermissionPolicies: GetPermissionPolicies = async () => {
     try {
       const result = await this.query({
