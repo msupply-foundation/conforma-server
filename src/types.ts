@@ -8,6 +8,8 @@ import {
 } from './generated/graphql'
 import { EmailOperationMode } from './config'
 import { RecurrenceRule } from 'node-schedule'
+import { PoolConfig } from 'pg'
+import { Schedulers } from './components/scheduler'
 
 export interface ActionInTemplate {
   code: string
@@ -281,14 +283,17 @@ export interface ServerPreferences {
   systemManagerPermissionName?: string
   managerCanEditLookupTables?: boolean
   previewDocsMinKeepTime?: string
-  previewDocsCleanupSchedule?: number[] | ScheduleObject
+  fileCleanupSchedule?: number[] | ScheduleObject
   backupSchedule?: number[] | ScheduleObject
   backupFilePrefix?: string
   maxBackupDurationDays?: number
   archiveSchedule?: number[] | ScheduleObject
   archiveFileAgeMinimum?: number
+  archiveMinSize?: number // MB
   emailTestMode?: boolean
   testingEmail?: string
+  locale?: string
+  timezone?: string
 }
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
@@ -296,19 +301,21 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'thumbnailMaxHeight',
   'thumbnailMaxWidth',
   'actionSchedule',
-  'hoursSchedule',
   'SMTPConfig',
   'systemManagerPermissionName',
   'managerCanEditLookupTables',
   'previewDocsMinKeepTime',
-  'previewDocsCleanupSchedule',
+  'fileCleanupSchedule',
   'backupSchedule',
   'backupFilePrefix',
   'maxBackupDurationDays',
   'archiveSchedule',
   'archiveFileAgeMinimum',
+  'archiveMinSize',
   'emailTestMode',
   'testingEmail',
+  'locale',
+  'timezone',
 ]
 
 export interface WebAppPrefs {
@@ -322,3 +329,35 @@ export interface WebAppPrefs {
   googleAnalyticsId?: string
   siteHost?: string
 }
+
+interface ConfigBase {
+  pg_database_connection: PoolConfig
+  version: string
+  graphQLendpoint: string
+  filesFolder: string
+  pluginsFolder: string
+  imagesFolder: string
+  databaseFolder: string
+  localisationsFolder: string
+  preferencesFolder: string
+  preferencesFileName: string
+  backupsFolder: string
+  genericThumbnailsFolderName: string
+  nodeModulesFolder: string
+  jwtSecret: string
+  RESTport: number
+  dataTablePrefix: string
+  allowedTableNames: string[]
+  allowedTablesNoColumns: string[]
+  filterListMaxLength: number
+  filterListBatchSize: number
+  filterColumnSuffix: string
+  isProductionBuild: boolean
+  defaultSystemManagerPermissionName: string
+  webHostUrl?: string
+  productionHost?: string
+  isLiveServer: boolean
+  emailMode: EmailOperationMode
+}
+
+export type Config = ConfigBase & ServerPreferences & { scheduledJobs?: Schedulers }

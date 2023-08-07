@@ -1,5 +1,8 @@
+import path from 'path'
 import DBConnect from '../../src/components/databaseConnect'
 import { getTemplateVersionId } from '../../src/components/exportAndImport/helpers'
+import { FILES_FOLDER } from '../../src/constants'
+import fs from 'fs/promises'
 
 type SchemaQueryOptions = {
   silent: boolean
@@ -221,6 +224,32 @@ const databaseMethods = {
           values: [versionId, parentVersionId, JSON.stringify(versionHistory), template.id],
         })
         versionHistory.push(historyObject)
+      }
+    }
+  },
+  updateFileSizes: async () => {
+    const files = (
+      await DBConnect.query({
+        text: `SELECT id, archive_path, file_path FROM file
+        WHERE file_size IS NULL;`,
+      })
+    ).rows
+
+    for (const file of files) {
+      const fileId = file.id
+      const archivePath = file.archive_path ?? ''
+      const filePath = file.file_path
+      const fullPath = path.join(FILES_FOLDER, archivePath, filePath)
+      try {
+        const size = (await fs.stat(fullPath)).size
+
+        await DBConnect.query({
+          text: `UPDATE file SET file_size = $1
+          WHERE id = $2`,
+          values: [size, fileId],
+        })
+      } catch {
+        console.log('Problem updating file size for:', fullPath)
       }
     }
   },
