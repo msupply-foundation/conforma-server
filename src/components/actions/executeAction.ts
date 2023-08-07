@@ -4,16 +4,18 @@ import {
   ActionPayload,
   ActionQueueExecutePayload,
 } from '../../types'
-import figTree from '../FigTreeEvaluator'
+import { figTreeOptions } from '../FigTreeEvaluator'
 import { merge } from 'lodash'
-import functions from '../FigTreeEvaluator/customFunctions'
 import DBConnect from '../databaseConnect'
 import { getApplicationData } from './getApplicationData'
 import { ActionQueueStatus } from '../../generated/graphql'
 import { evaluateParameters } from './helpers'
+import { FigTreeEvaluator } from 'fig-tree-evaluator'
 
 // Dev config
 const showApplicationDataLog = false
+
+const figTree = new FigTreeEvaluator(figTreeOptions)
 
 export async function executeAction(
   payload: ActionPayload,
@@ -61,11 +63,11 @@ export async function executeAction(
   // Condition met -- executing now...
   try {
     // Evaluate parameters
-    const parametersEvaluated = await evaluateParameters(payload.parameter_queries, {
+    const parametersEvaluated = await evaluateParameters(figTree, payload.parameter_queries, {
       applicationData,
-      functions,
       ...additionalObjects,
     })
+
     // TO-DO: Check all required parameters are present
 
     // TO-DO: If Scheduled, create a Job instead

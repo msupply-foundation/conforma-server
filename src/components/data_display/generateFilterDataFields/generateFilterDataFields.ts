@@ -1,11 +1,9 @@
 import databaseMethods from './databaseMethods'
 import DBConnect from '../../databaseConnect'
-import evaluateExpression from '@openmsupply/expression-evaluator'
-import functions from '../../FigTreeEvaluator/customFunctions'
+import { figTree } from '../helpers'
 import { queryDataTable, updateRecord } from '../gqlDynamicQueries'
 import config from '../../../config'
 import { getValidTableName } from '../../utilityFunctions'
-import fetch from 'node-fetch'
 import { camelCase, snakeCase } from 'lodash'
 // @ts-ignore
 import delay from 'delay-sync'
@@ -140,12 +138,8 @@ export const generateFilterDataFields = async (table: string, fullUpdate: boolea
         const patch: any = {}
         for (const { column, expression } of filterTextColumnDefinitions) {
           try {
-            const evaluatedResult = await evaluateExpression(expression, {
-              objects: { ...record, functions },
-              // pgConnection: DBConnect, probably don't want to allow SQL
-              APIfetch: fetch,
-              // TO-DO: Need to pass Auth headers to evaluator API calls
-              graphQLConnection: { fetch, endpoint: graphQLEndpoint },
+            const evaluatedResult = await figTree.evaluate(expression, {
+              data: { ...record },
             })
             patch[camelCase(column)] = evaluatedResult === '' ? null : evaluatedResult
           } catch {

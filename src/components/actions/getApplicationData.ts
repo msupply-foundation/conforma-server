@@ -1,6 +1,5 @@
 import { ActionApplicationData, ActionPayload, BaseApplicationData, ReviewData } from '../../types'
 import DBConnect from '../databaseConnect'
-import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
 import { getAppEntryPointDir } from '../utilityFunctions'
 import config from '../../config'
 import { getUserInfo } from '../permissions/loginHelpers'
@@ -48,7 +47,7 @@ export const getApplicationData = async (input: {
 
   const responses = await DBConnect.getApplicationResponses(applicationId)
 
-  const responseData: BasicObject = {}
+  const responseData: { [key: string]: any } = {}
   for (const response of responses) {
     responseData[response.code] = response.value
   }

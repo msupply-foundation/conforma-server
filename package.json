@@ -72,7 +72,6 @@
   },
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^6.0.0",
-    "@openmsupply/expression-evaluator": "^1.11.2",
     "adm-zip": "^0.5.5",
     "archiver": "^5.3.1",
     "archiver-zip-encrypted": "^1.0.11",
@@ -88,7 +87,7 @@
     "fastify-cors": "^4.1.0",
     "fastify-multipart": "^3.1.0",
     "fastify-static": "^4.2.2",
-    "fig-tree-evaluator": "^2.11.0",
+    "fig-tree-evaluator": "^2.11.3",
     "fs-extra": "^11.1.1",
     "json-sql-builder2": "^1.0.24",
     "jsonwebtoken": "^8.5.1",

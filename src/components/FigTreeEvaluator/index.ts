@@ -1,4 +1,4 @@
-import { FigTreeEvaluator, FigTreeOptions } from 'fig-tree-evaluator'
+import { FigTreeOptions } from 'fig-tree-evaluator'
 import functions from './customFunctions'
 import fragments from './fragments'
 import { Client } from 'pg'
@@ -13,10 +13,4 @@ export const figTreeOptions: FigTreeOptions = {
   nullEqualsUndefined: true,
 }
 
-const figTree = new FigTreeEvaluator(figTreeOptions)
-
-getAdminJWT().then((token) =>
-  figTree.updateOptions({ headers: { Authorization: `Bearer ${token}` } })
-)
-
-export default figTree
+getAdminJWT().then((token) => (figTreeOptions.headers = { Authorization: `Bearer ${token}` }))

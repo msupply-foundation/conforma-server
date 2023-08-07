@@ -1099,11 +1099,6 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@openmsupply/expression-evaluator@^1.11.2":
-  version "1.11.2"
-  resolved "https://npm.pkg.github.com/download/@openmsupply/expression-evaluator/1.11.2/f3f62ef32e97762ff6d16e8c3e98ff7b1fe2dec060088ee08e8b741126553d2c#b7cf84ba7747bad205162597ee8b2b01c6f9271a"
-  integrity sha512-S35MSJMXBJ4F103b78HXVYWnEIa25o+xXzFQOEuOGVa13V0W0bpuHD2qyYsYIqXx1j8I1RV+DF1tKzc1VaVWHw==
-
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.1.tgz#a21117b19ee9be70c379ec1877537ef2e1c63301"
@@ -3489,15 +3484,15 @@ fd-slicer@~1.1.0:
   dependencies:
     pend "~1.2.0"
 
-fig-tree-evaluator@^2.11.0:
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/fig-tree-evaluator/-/fig-tree-evaluator-2.11.0.tgz#b86997950b337513612a437a3ac92b36ee926417"
-  integrity sha512-c8O6T4+so9wYh7VGp5ZoZTd/CRpM0zhfPztEKYEjGr4Aq88ROuRsM2Z6WXosO5FbhecHebD+Vcv5Ebqc7McdRA==
+fig-tree-evaluator@^2.11.3:
+  version "2.11.3"
+  resolved "https://registry.yarnpkg.com/fig-tree-evaluator/-/fig-tree-evaluator-2.11.3.tgz#884838e44e6b93f7184965e6e1fb658079929409"
+  integrity sha512-9yS7OFrRwf54fSQsWwY/x8FtPClLuCes1IUC4WUuLAhBSX9YCIybAJC2UddBnZETY1NnpEBtJbuEzgR8oc3Bzg==
   dependencies:
     axios "^0.27.2"
     change-case "^4.1.2"
     dequal "^2.0.3"
-    object-property-extractor "^1.0.6"
+    object-property-extractor "^1.0.7"
 
 figlet@1.5.0:
   version "1.5.0"
@@ -5955,10 +5950,10 @@ object-keys@^1.0.12, object-keys@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.1.1.tgz#1c47f272df277f3b1daf061677d9c82e2322c60e"
 
-object-property-extractor@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/object-property-extractor/-/object-property-extractor-1.0.6.tgz#823dabe27e646fd6922db5874191a4bd9962f886"
-  integrity sha512-75926oo0hL87mquCqKHLgWTBW2fOEXIZy3CuHl3hgpruBRJvCMUMGuowm+ipOiDNHV+85pcR7xpOrTutNe4G5Q==
+object-property-extractor@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/object-property-extractor/-/object-property-extractor-1.0.7.tgz#5b80d6bc2109ca7f49239359b3762adf332cbb41"
+  integrity sha512-JiJtcIdSp7dTOTT5Ssztr/ZarFlruJAx11VEESgLPx6BTqjPzRgpg1KEqZjtnXlrf9MWc1Qcv1zaNMa1/3qLMA==
 
 object-visit@^1.0.0:
   version "1.0.1"

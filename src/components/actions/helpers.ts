@@ -1,9 +1,10 @@
 import { merge } from 'lodash'
 import { ActionInTemplate } from '../../types'
-import figTree from '../FigTreeEvaluator'
 import DBConnect from '../databaseConnect'
+import { FigTreeEvaluator } from 'fig-tree-evaluator'
 
 export async function evaluateParameters(
+  figTree: FigTreeEvaluator,
   parameterQueries: { [key: string]: any },
   data: { [key: string]: any } = {}
 ) {
@@ -14,6 +15,7 @@ export async function evaluateParameters(
     }
     return parametersEvaluated
   } catch (err) {
+    console.log(err.message)
     throw err
   }
 }
