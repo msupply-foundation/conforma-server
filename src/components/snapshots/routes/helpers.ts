@@ -22,7 +22,7 @@ export const getSnapshotList = async (archive?: boolean) => {
 
   const dirents = await fs.readdir(sourceFolder, { encoding: 'utf-8', withFileTypes: true })
 
-  const snapshots: (SnapshotInfo & { name: string; size: number })[] = []
+  const snapshots: (SnapshotInfo & { name: string; size: number; modifiedTimestamp: number })[] = []
 
   for (const dirent of dirents) {
     if (!dirent.isDirectory()) continue
@@ -37,8 +37,11 @@ export const getSnapshotList = async (archive?: boolean) => {
       continue
 
     let size: number | null = null
+    let modifiedTimestamp: number | null = null
     try {
-      size = (await fs.stat(path.join(sourceFolder, `${dirent.name}.zip`))).size
+      const fileInfo = await fs.stat(path.join(sourceFolder, `${dirent.name}.zip`))
+      size = fileInfo.size
+      modifiedTimestamp = fileInfo.mtimeMs
     } catch {
       size = null
     }
@@ -47,12 +50,10 @@ export const getSnapshotList = async (archive?: boolean) => {
 
     const name = dirent.name.replace(timestampStringExpression, '')
 
-    snapshots.push({ name, filename: dirent.name, size, ...info })
+    snapshots.push({ name, filename: dirent.name, size, ...info, modifiedTimestamp })
   }
 
-  snapshots.sort(
-    (a, b) => DateTime.fromISO(b.timestamp).toMillis() - DateTime.fromISO(a.timestamp).toMillis()
-  )
+  snapshots.sort((a, b) => b.modifiedTimestamp - a.modifiedTimestamp)
 
   return snapshots
 }
