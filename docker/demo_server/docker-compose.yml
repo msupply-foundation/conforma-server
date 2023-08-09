@@ -10,7 +10,8 @@ services:
       - '5432'
     environment:
       JWT_SECRET: '${JWT_SECRET}'
-      USER_PASSWORD_OVERRIDE: '${USER_PASSWORD_OVERRIDE:-""}'
+      # passwords override will be ignored if <30 chars
+      USER_PASSWORD_OVERRIDE: '${USER_PASSWORD_OVERRIDE:-"ignore"}'
     volumes:
       - postgres:/var/lib/postgresql/12/main/
       - snapshots:/usr/src/conforma-server/build/database/_snapshots
