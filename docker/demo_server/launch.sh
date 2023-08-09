@@ -1,27 +1,33 @@
 #!/bin/bash
 
-# Script to start (or restart) a container using docker-compose
-# - Image tag must be passed as either first argument or env variable $TAG
-# - The instance/port (e.g. 8000) is optional and can be passed as either the
-#   2nd arg or env variable $PORT. Will default to 8000 if not provided.
-
-PORT="${PORT:-8000}"
-
-export TAG="${1:-$TAG}"
-export PORT_APP="${2:-$PORT}"
-export PORT_DASH=$((PORT_APP + 1))
-export JWT_SECRET=$(openssl rand -hex 30)
+# Script to start (or restart) one or more containers using docker-compose
+# - Image tag must be provided as environment variable $TAG
+# - Provide the instances/ports (e.g. 8000 8002) as arguments -- each must
+#   correspond to an .env file in "/env_files". If no args provided, will
+#   default to 8000
 
 if [ -z "$TAG" ]; then
-    echo ">>Missing argument: image tag"
-    echo ">>Must be provided as first argument or env variable TAG=\"<tag>\""
+    echo ">> Missing environment variable: \$TAG"
     exit 1
 fi
 
-NAME=conforma-on-$PORT_APP
+if [ "$#" -eq 0 ]; then
+    ARGS=(8000)
+else
+    ARGS=("$@")
+fi
 
-# Stop current instance (if running)
-sudo -E docker compose --project-name $NAME down
+for PORT in "${ARGS[@]}"; do
+    export PORT_APP=$PORT
+    export PORT_DASH=$((PORT_APP + 1))
+    export JWT_SECRET=$(openssl rand -hex 10)
 
-# Restart using new image tag
-sudo -E docker compose --project-name $NAME up -d
+    NAME=conforma-on-$PORT_APP
+
+    # Stop current instance (if running)
+    echo -e "\n(Re-)starting $NAME..."
+    sudo -E docker-compose --project-name $NAME down
+
+    # Restart using new image tag
+    sudo -E docker-compose --project-name $NAME up -d
+done
