@@ -60,7 +60,7 @@ if (config.timezone) Settings.defaultZoneName = config.timezone
 const web_host = process.env.WEB_HOST
 if (!web_host) {
   console.error(
-    "ERROR!\nUnable to find the WEB_URL environment variable (maybe others too). The server won't start without access to this data.\n\nExiting now...\n"
+    "ERROR!\nUnable to find the WEB_URL environment variable (maybe others too). The server won't start without access without it.\n\nExiting now...\n"
   )
   process.exit(1)
 }
