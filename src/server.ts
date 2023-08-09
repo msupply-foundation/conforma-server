@@ -56,6 +56,15 @@ require('dotenv').config()
 Settings.defaultLocale = config.locale ?? Intl.DateTimeFormat().resolvedOptions().locale
 if (config.timezone) Settings.defaultZoneName = config.timezone
 
+// Don't start server if env variables not provided
+const web_host = process.env.WEB_HOST
+if (!web_host) {
+  console.error(
+    "ERROR!\nUnable to find the WEB_URL environment variable (maybe others too). The server won't start without access to this data.\n\nExiting now...\n"
+  )
+  process.exit(1)
+}
+
 // Fastify server
 const startServer = async () => {
   await migrateData()
