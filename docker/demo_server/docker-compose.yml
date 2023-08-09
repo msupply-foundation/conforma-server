@@ -21,12 +21,12 @@ services:
       - ${BACKUPS_FOLDER:-backups}:/usr/src/conforma-server/build/backups
       - logs:/var/log/conforma
     tty: true
-  # grafana:
-  #   image: 'grafana/grafana'
-  #   ports:
-  #     - '${PORT_DASH}:3000'
-  #   volumes:
-  #     - grafana:/var/lib/grafana
+  grafana:
+    image: 'grafana/grafana'
+    ports:
+      - '${PORT_DASH}:3000'
+    volumes:
+      - grafana:/var/lib/grafana
 
 volumes:
   postgres:
