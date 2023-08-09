@@ -18,10 +18,6 @@ if [ -z "$TAG" ]; then
     exit 1
 fi
 
-echo "Tag is $TAG"
-echo "Port is $PORT_APP"
-exit 0
-
 NAME=conforma-on-$PORT_APP
 
 # Stop current instance (if running)
