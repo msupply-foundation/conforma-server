@@ -195,6 +195,10 @@ const startServer = async () => {
     console.log('Email mode:', config.emailMode)
     if (config.emailMode === 'TEST') console.log('All email will be sent to:', config.testingEmail)
     console.log(`\nServer listening at ${address}`)
+
+    console.log('Env vars:')
+    const { SMTP_PASSWORD, BACKUPS_FOLDER, BACKUPS_PASSWORD, JWT_SECRET, WEB_HOST } = process.env
+    console.log({ SMTP_PASSWORD, BACKUPS_FOLDER, BACKUPS_PASSWORD, JWT_SECRET, WEB_HOST })
   })
 
   // Fastify TO DO:
