@@ -49,6 +49,11 @@ for instance in "${ARGS[@]}"; do
     export PORT_DASH=$((PORT_APP + 1))
     export JWT_SECRET=$(openssl rand -hex 64)
 
+    if [ -z "$PORT_APP" ]; then
+        echo "Can't find \$PORT value... skipping $instance"
+        break
+    fi
+
     NAME=conforma-on-$PORT_APP
 
     # Stop current instance (if running)
