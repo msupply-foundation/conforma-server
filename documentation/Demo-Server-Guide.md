@@ -225,7 +225,7 @@ To remove all currently unused volumes at once:
 ### View logs
 
 ```bash
-# don't need bash inside contiainer for this
+# don't need bash inside container for this
 sudo docker exec -ti conforma-on-8000_app_1 cat /var/log/conforma/server.log
 sudo docker exec -ti conforma-on-8000_app_1 cat /var/log/conforma/graphile.log
 ```
