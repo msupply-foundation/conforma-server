@@ -1,11 +1,7 @@
 #!/bin/bash
 
-# Script to start (or restart) one or more containers using docker-compose
-# - Image tag must be provided as environment variable $TAG, will prompt if
-#   missing
-# - Provide the instances you want to launch as arguments -- each must
-#   correspond to an .env file in "/env_files". Will prompt for a single
-#   instance if not provided
+# Same as "launch.sh", but doesn't use "sudo" -- use for running on local
+# computer if docker has trouble launching as sudo
 
 DEFAULT_INSTANCE=50000 #Set this for specific server, or leave blank
 

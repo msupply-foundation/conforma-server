@@ -3,7 +3,7 @@ services:
   app:
     image: 'msupplyfoundation/conforma:${TAG}'
     env_file:
-      - env_files/${PORT_APP}.env
+      - ${ENV_FILE}
     ports:
       - '${PORT_APP}:3000'
     expose:
