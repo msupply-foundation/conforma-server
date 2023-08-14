@@ -1,5 +1,6 @@
 import path from 'path'
 import fs from 'fs'
+import fsProm from 'fs/promises'
 import { camelCase, snakeCase, mapKeys } from 'lodash'
 import { singular } from 'pluralize'
 import config from '../config'
@@ -11,6 +12,10 @@ import config from '../config'
 export function getAppEntryPointDir() {
   return path.dirname(__dirname)
 }
+
+// Returns true if input is a "proper" object (i.e. not an array or null)
+export const isObject = (element: unknown) =>
+  typeof element === 'object' && !Array.isArray(element) && element !== null
 
 // Convert object keys to camelCase
 export const objectKeysToCamelCase = (obj: { [key: string]: any }) =>
@@ -45,7 +50,7 @@ export const makeFolder = (folderPath: string, message?: string) => {
 // specified property. When more than one exists, a "priority" field can be
 // specified to determine which to keep, otherwise it will return the first one.
 // Preserves the order of the original input array
-// TO-DO: Allow custom comparitor function
+// TO-DO: Allow custom comparator function
 type BasicObject = { [key: string]: any }
 type IndexObject = { [key: string]: number }
 export const getDistinctObjects = (
@@ -97,6 +102,17 @@ export const crawlFileSystem = async (
     const subPath = path.join(directory, file)
     if (fs.statSync(subPath).isDirectory()) await crawlFileSystem(subPath, fileOperation)
     else await fileOperation(subPath)
+  }
+}
+
+// Recursively crawl a directory and remove any empty directories within
+export const clearEmptyDirectories = async (directory: string) => {
+  const directories = (await fsProm.readdir(directory)).filter((dir) =>
+    fs.statSync(path.join(directory, dir)).isDirectory()
+  )
+  for (const dir of directories) {
+    const files = await fsProm.readdir(path.join(directory, dir))
+    if (files.length === 0) await fsProm.rmdir(path.join(directory, dir))
   }
 }
 

@@ -1,4 +1,4 @@
-import { ActionApplicationData, ActionPayload } from '../../types'
+import { ActionApplicationData, ActionPayload, BaseApplicationData, ReviewData } from '../../types'
 import DBConnect from '../databaseConnect'
 import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
 import { getAppEntryPointDir } from '../utilityFunctions'
@@ -23,28 +23,28 @@ export const getApplicationData = async (input: {
       trigger_payload?.record_id as number
     ))
 
-  const applicationResult = await DBConnect.getApplicationData(applicationId)
-  if (!applicationResult) throw new Error("Can't get application data")
-
-  const applicationData = applicationResult ? applicationResult : { applicationId }
+  const applicationData: BaseApplicationData = await DBConnect.getApplicationData(applicationId)
+  if (!applicationData) throw new Error("Can't get application data")
 
   const {
-    user: {
-      firstName,
-      lastName,
-      organisation: orgName,
-      username,
-      dateOfBirth,
-      email,
-      permissionNames,
-    },
+    user: { firstName, lastName, username, dateOfBirth, email, permissionNames },
   } = await getUserInfo({
     userId: applicationData.userId,
-    username: applicationData.username,
-    orgId: applicationData.orgId,
+    orgId: applicationData?.orgId || undefined,
   })
 
-  const userData = { firstName, lastName, orgName, username, dateOfBirth, email, permissionNames }
+  const userData = {
+    firstName,
+    lastName,
+    // Org data needs to come from application info (not "getUserInfo") as user
+    // may no longer belong to the organisation that applied as.
+    orgName: await DBConnect.getOrgName(applicationData?.orgId),
+    orgId: applicationData?.orgId || null,
+    username,
+    dateOfBirth,
+    email,
+    permissionNames,
+  }
 
   const responses = await DBConnect.getApplicationResponses(applicationId)
 
@@ -60,7 +60,7 @@ export const getApplicationData = async (input: {
     input?.reviewAssignmentId ??
     (trigger_payload?.table === 'review_assignment' ? trigger_payload?.record_id : null)
 
-  const reviewData = reviewId
+  const reviewData: ReviewData = reviewId
     ? {
         reviewId,
         ...(await DBConnect.getReviewData(reviewId)),
@@ -74,8 +74,12 @@ export const getApplicationData = async (input: {
   const environmentData = {
     appRootFolder: getAppEntryPointDir(),
     filesFolder: config.filesFolder,
-    webHostUrl: process.env.WEB_HOST,
-    SMTPConfig: config.SMTPConfig,
+    webHostUrl: config.webHostUrl ?? 'MissingHost',
+    SMTPConfig: config?.SMTPConfig,
+    productionHost: config?.productionHost ?? null,
+    isLiveServer: config.isLiveServer,
+    emailMode: config?.emailMode,
+    testingEmail: config?.testingEmail ?? null,
   }
 
   const sectionCodes = (await DBConnect.getApplicationSections(applicationId)).map(

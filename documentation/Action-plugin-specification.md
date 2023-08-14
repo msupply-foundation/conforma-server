@@ -1,5 +1,3 @@
-# Action plugin specification
-
 Please see [Triggers & Actions](./Triggers-and-Actions.md) for an explanation of how the trigger/action system works.
 
 This document details the specification for the **Action plugins** themselves.

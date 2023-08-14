@@ -1,5 +1,3 @@
-# Database Schema Template
-
 ![Database Schema](images/database-schema-template.png)
 
 # Database Area description: Template

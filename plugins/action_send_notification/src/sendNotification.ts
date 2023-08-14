@@ -1,5 +1,3 @@
-const TEST_MODE = false // Change to true to test with local Mailhog
-
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import databaseMethods from './databaseMethods'
@@ -10,6 +8,7 @@ import configTest from '../configTest.json'
 import { Attachment } from 'nodemailer/lib/mailer'
 import { getFilePath } from '../../../src/components/files/fileHandler'
 import { ActionApplicationData } from '../../../src/types'
+import config from '../../../src/config'
 
 const isValidEmail = (email: string) => /^[\w\-_+.]+@([\w\-]+\.)+[A-Za-z]{2,}$/gm.test(email)
 // Test this regex: https://regex101.com/r/ysGgNx/2
@@ -18,17 +17,15 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
   const db = databaseMethods(DBConnect)
 
   const {
-    environmentData: { appRootFolder, filesFolder, SMTPConfig },
+    environmentData: { appRootFolder, filesFolder, SMTPConfig, emailMode },
     other,
   } = applicationData as ActionApplicationData
 
-  // Used to disable email sending when testing -- turned on by trigger testing
-  // tool by default
-  const suppressEmail = other?.suppressEmail ?? false
+  const testingEmail = config.testingEmail
 
   const {
-    userId = applicationData?.userId,
-    email = applicationData?.email,
+    userId,
+    email,
     to = email,
     cc,
     bcc,
@@ -42,7 +39,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
 
   const transporter = SMTPConfig
     ? nodemailer.createTransport(
-        TEST_MODE
+        emailMode === 'MAILHOG'
           ? configTest
           : {
               host: SMTPConfig.host,
@@ -57,14 +54,14 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     : null
 
   try {
-    const toAddressString = stringifyEmailRecipientsList(to)
-    const ccAddressString = stringifyEmailRecipientsList(cc)
-    const bccAddressString = stringifyEmailRecipientsList(bcc)
+    const toAddresses = validateEmailRecipientsList(to)
+    const ccAddresses = validateEmailRecipientsList(cc)
+    const bccAddresses = validateEmailRecipientsList(bcc)
 
     const hasValidEmails = !(
-      toAddressString === '' &&
-      ccAddressString === '' &&
-      bccAddressString === ''
+      toAddresses.length === 0 &&
+      ccAddresses.length === 0 &&
+      bccAddresses.length === 0
     )
 
     // Create notification database record
@@ -73,21 +70,35 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
       userId,
       applicationId: applicationData?.applicationId,
       reviewId: applicationData?.reviewData?.reviewId,
-      emailAddressString: concatEmails(toAddressString, ccAddressString, bccAddressString),
+      emailAddressString: concatEmails(toAddresses, ccAddresses, bccAddresses),
       subject,
       message,
       attachments: Array.isArray(attachments) ? attachments : [attachments],
     })
 
     // Send email
-    if (sendEmail && hasValidEmails && transporter && !suppressEmail) {
-      console.log('Sending email...')
+    console.log(`Email mode: ${emailMode}`)
+    console.log(`Action sendEmail setting: ${sendEmail}`)
+    console.log(`Suppress email override: ${!!other?.suppressEmail}`)
+
+    if (
+      emailMode !== 'NONE' &&
+      sendEmail &&
+      !other?.suppressEmail &&
+      hasValidEmails &&
+      transporter
+    ) {
+      console.log(
+        `Sending email to: ${toAddresses}\ncc:${ccAddresses}\nbcc: ${bccAddresses}\nSubject: ${
+          subject || ''
+        }\n`
+      )
       transporter
         .sendMail({
           from: `${fromName} <${fromEmail}>`,
-          to: toAddressString,
-          cc: ccAddressString,
-          bcc: bccAddressString,
+          to: emailMode === 'TEST' ? [] : toAddresses,
+          cc: emailMode === 'TEST' ? [] : ccAddresses,
+          bcc: emailMode === 'TEST' ? testingEmail : bccAddresses,
           subject,
           text: message,
           html: marked(message),
@@ -102,18 +113,12 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
             (!rejected || rejected.length === 0) &&
             (!pending || pending.length === 0)
           ) {
-            console.log(
-              `Email successfully sent to: ${envelope.to}\ncc:${envelope.cc || ''}\nbcc: ${
-                envelope.bcc || ''
-              }\nSubject: ${subject || ''}\n`
-            )
+            console.log(`Email successfully sent to: ${envelope.to}\n`)
             // Update notification table with email sent confirmation
             db.notificationEmailSent(notificationResult.id, serverLogText)
           } else {
             console.log(
-              `Email sending had a problem: ${envelope.to}\ncc:${
-                envelope.cc || ''
-              }\nServer response: ${response}
+              `Email sending had a problem: ${envelope.to}\nServer response: ${response}
               \nCheck "email_server_log" in "notification" table`
             )
             db.notificationEmailError(notificationResult.id, serverLogText)
@@ -134,8 +139,6 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
       console.log('Email not sent - no valid email address')
       db.notificationEmailError(notificationResult.id, `WARNING: No valid email addresses`)
     }
-
-    if (suppressEmail) console.log('Email not sent during testing')
 
     // NOTE: Because sending email happens asynchronously, the output object
     // for this Action does not reflect whether email has sent successfully.
@@ -161,15 +164,15 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
 
 export default sendNotification
 
-const stringifyEmailRecipientsList = (emailAddresses: string | string[]): string => {
-  if (!Array.isArray(emailAddresses)) return isValidEmail(emailAddresses) ? emailAddresses : ''
-  return emailAddresses.filter((address) => isValidEmail(address)).join(', ')
+const validateEmailRecipientsList = (emailAddresses: string | string[]): string[] => {
+  if (!Array.isArray(emailAddresses)) return isValidEmail(emailAddresses) ? [emailAddresses] : []
+  return emailAddresses.filter((address) => isValidEmail(address))
 }
 
-const concatEmails = (to: string, cc: string, bcc: string): string => {
-  let output = to
-  if (cc) output += output ? ', ' + cc : cc
-  if (bcc) output += output ? ', ' + bcc : bcc
+const concatEmails = (to: string[], cc: string[], bcc: string[]): string => {
+  let output = to.join(', ')
+  if (cc) output += output ? ', ' + cc.join(', ') : cc.join(', ')
+  if (bcc) output += output ? ', ' + bcc.join(', ') : bcc.join(', ')
   return output
 }
 
@@ -192,16 +195,16 @@ const prepareAttachments = async (
   filesFolder: string
 ): Promise<Attachment[]> => {
   const attachmentInput = Array.isArray(attachments) ? attachments : [attachments]
-  const attachmentObjects = []
+  const attachmentObjects: Attachment[] = []
   for (const file of attachmentInput) {
     if (typeof file === 'object') {
       if (!file?.path || !file?.filename) throw new Error('Invalid attachment')
       attachmentObjects.push(file)
     } else {
-      const { original_filename, file_path } = await getFilePath(file)
+      const { originalFilename, filePath } = await getFilePath(file)
       attachmentObjects.push({
-        path: path.join(appRootFolder, filesFolder, file_path as string),
-        filename: original_filename,
+        path: path.join(appRootFolder, filesFolder, filePath as string),
+        filename: originalFilename,
       })
     }
   }

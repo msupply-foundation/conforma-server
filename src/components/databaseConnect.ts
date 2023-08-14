@@ -52,6 +52,10 @@ class DBConnect {
 
   public checkIfInFileTable = PostgresDB.checkIfInFileTable
 
+  public getFilesToArchive = PostgresDB.getFilesToArchive
+
+  public setFileArchived = PostgresDB.setFileArchived
+
   public addActionPlugin = PostgresDB.addActionPlugin
 
   public deleteActionPlugin = PostgresDB.deleteActionPlugin
@@ -59,6 +63,8 @@ class DBConnect {
   public getActionPlugins = PostgresDB.getActionPlugins
 
   public getActionsByTemplateId = PostgresDB.getActionsByTemplateId
+
+  public getTemplateSerialPattern = PostgresDB.getTemplateSerialPattern
 
   public getSingleTemplateAction = PostgresDB.getSingleTemplateAction
 
@@ -122,6 +128,8 @@ class DBConnect {
 
   public addNewReviewStatusHistory = PostgresDB.addNewReviewStatusHistory
 
+  public getOrgName = PostgresDB.getOrgName
+
   public getUserData = PostgresDB.getUserData
 
   public getUserOrgData = PostgresDB.getUserOrgData
@@ -137,6 +145,8 @@ class DBConnect {
   public getAllPermissions = PostgresDB.getAllPermissions
 
   public getTemplatePermissions = PostgresDB.getTemplatePermissions
+
+  public getUserAdminStatus = PostgresDB.getUserAdminStatus
 
   public getAllGeneratedRowPolicies = PostgresDB.getAllGeneratedRowPolicies
 
@@ -158,6 +168,8 @@ class DBConnect {
 
   public getDataTableColumns = PostgresDB.getDataTableColumns
 
+  public getTemplateVersionIDs = PostgresDB.getTemplateVersionIDs
+
   public getPermissionPolicies = PostgresDB.getPermissionPolicies
 
   public getAllowedDataViews = PostgresDB.getAllowedDataViews
@@ -166,7 +178,9 @@ class DBConnect {
 
   public getApplicationSections = PostgresDB.getApplicationSections
 
-  public getLatestSnapshotName = PostgresDB.getLatestSnapshotName
+  public getSystemInfo = PostgresDB.getSystemInfo
+
+  public setSystemInfo = PostgresDB.setSystemInfo
 
   public waitForDatabaseValue = PostgresDB.waitForDatabaseValue
 

@@ -1,6 +1,7 @@
 import fetch from 'node-fetch'
 import config from '../config'
 import { getAdminJWT } from './permissions/loginHelpers'
+import path from 'path'
 
 const endpoint = config.graphQLendpoint
 
@@ -49,6 +50,7 @@ class GraphQLdb {
           isLastLevel
           isLastStage
           status
+          isLocked
           reviewer {
             id
             username
@@ -59,9 +61,6 @@ class GraphQLdb {
           latestDecision {
               decision
               comment
-          }
-          reviewAssignment {
-            isLocked
           }
         }
       }
@@ -82,6 +81,7 @@ class GraphQLdb {
             isLastLevel
             isLastStage
             status
+            isLocked
             reviewer {
               id
               username
@@ -92,9 +92,6 @@ class GraphQLdb {
             latestDecision {
                 decision
                 comment
-            }
-            reviewAssignment {
-              isLocked
             }
           }
         }
@@ -193,6 +190,7 @@ class GraphQLdb {
       query getFilePaths($first:Int!, $offset:Int!) {
         files(first: $first, offset: $offset) {
           nodes {
+            archivePath
             filePath
             id
           }
@@ -201,7 +199,12 @@ class GraphQLdb {
       `,
       { first: batchSize, offset }
     )
-    return data?.files?.nodes || []
+    return (
+      data?.files?.nodes.map(({ archivePath, filePath, id }: any) => ({
+        filePath: path.join(archivePath ?? '', filePath),
+        id,
+      })) || []
+    )
   }
 }
 

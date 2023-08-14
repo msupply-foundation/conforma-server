@@ -1,10 +1,14 @@
-# _Conforma_ Server build, versioning, and install using Docker
+## _Conforma_ Server build, versioning, and install using Docker
+
+The following is a guide to building Conforma, pushing it to the servers, configuring the servers with Docker and docker-compose, and launching the app.
+
+Most of this can be accomplished using custom scripts we've made which reduces the effort required to upgrade a server to just a few short lines. Please see [Server Upgrade Guide](Server-Upgrade-Guide.md) for an overview of that process, as well as how to configure a new server with the launch scripts.
 
 ## Prep
 
 - Add token to githubtoken.txt (for downloading expression-evaluator)
   - requires token that has read access to packages on server repo
-  - Trobleshoting error 403 Unauthorised when running `yarn install` [Source](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token):
+  - Troubleshooting error 403 Unauthorised when running `yarn install` [Source](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token):
     - Run `npm login --scope=@openmsupply --registry=https://npm.pkg.github.com`
     - Then enter your github registration `username`, `passowrd` (token) and `email`
 - Ensure your back-end `.env` has a variable called `FRONT_END_PATH` with the _full_ path to the front-end repo on your local system.  
@@ -73,7 +77,7 @@ When the build (above) completes, it should print a command for running the new 
 
 You'll need to make sure you have the SMTP_PASSWORD in your local `.env` file.
 
-_To see the actual Docker commands that are constructued, please inspect the file `/docker/run.sh`_
+_To see the actual Docker commands that are constructed, please inspect the file `/docker/run.sh`_
 
 ## Log in to the demo server with ssh
 
@@ -162,48 +166,42 @@ E.g. (as on our demo server):
 
 ### Launching instances with docker-compose
 
-For each instance, you'll need to create the following environment variables before launching:
+For each instance, docker-compose is expecting a set of environment variables, some of which are contained within an `.env` file, and some included on the launch command.
 
-- `TAG` -- the name of the tag you're about to launch
-- `SMTP_SECRET` -- password for the email server specified in the "[sendNotification](List-of-Action-plugins.md#send-notification)" action
-- `WEB_URL` -- host name as will be shown in the application URL (including port)
-- `JWT_SECRET` -- private key for generating and verifying JWT tokens
-- `BACKUPS_FOLDER` -- path on the host system where the internal "backups" folder should be mapped to (optional -- default is the default volumes location). An appropriate location would be a folder that is synced to a cloud backup service. (See [Backups](Backups.md) for more info.)
-- `BACKUPS_PASSWORD` -- password for encrypting the backup archives (AES-encrypted .zip files) (optional -- if no password provided, the backups will be unencrypted .zip files)
+- In an `.env` file:
+  - `SMTP_PASSWORD` -- password for the email server specified in the "[sendNotification](List-of-Action-plugins.md#send-notification)" action
+  - `WEB_HOST` -- full host name as will be shown in the application URL (including port), e.g. `https://conforma-demo.msupply.org:50004`
+  - `BACKUPS_FOLDER` (optional, default: `~/backups`) -- path *on the host system* where the internal "backups" folder should be mapped to (optional -- default is the default volumes location). An appropriate location would be a folder that is synced to a cloud backup service. (See [Backups](Backups.md) for more info.)
+  - `BACKUPS_PASSWORD` (optional) -- password for encrypting the backup archives (AES-encrypted .zip files) (if no password provided, the backups will be unencrypted .zip files)
+- As part of the launch command (not included in `.env` file as they will change every time):
+  - `PORT_APP`: -- the Http port the Conforma server will listen on (recommend start with `8000` and increase by 2 for each additional instance)
+  - `PORT_DASH`: -- the Http port the Grafana server will listen on (recommend start with `8001` and increase by 2 for each additional instance)
+  - `TAG` -- the name of the tag you're about to launch
+  - `JWT_SECRET` -- private key for generating and verifying JWT tokens. Should be a strong, randomly generated string.
 
-For example:
+Then, for each instance, run the following launch commands (you can either `export` the env vars or include them in the command):
 
-```bash
-export TAG='build-v0.2.0-7_2022-04-07_ee35c8'
-export SMTP_SECRET='<Your SMTP password>'
-export WEB_URL='https://conforma-demo.msupply.org:<replace port>'
-export JWT_SECRET='<random private key>'
-export BACKUPS_FOLDER='~/Dropbox/conforma_backups'
-export BACKUPS_PASSWORD='<super-secret-encryption-key>'
+Option 1:
+```sh
+export PORT_APP=8000
+export PORT_DASH=8001
+export TAG='build-v0.5.6-76_2023-08-09_802505'
+export JWT_SECRET=$(openssl rand -hex 64) #one possible way to generate
+
+sudo -E docker compose --project-name 'conforma-on-8000' up -d
+# Change project name 'conforma-on-8000' for each instance
 ```
 
-Then for each instance, run the following launch commands, with the appropriate `PORT_APP` and `PORT_DASH` values:
-
-```
-PORT_APP=8000 PORT_DASH=8001 sudo -E docker-compose --project-name 'conforma-on-8000' up -d
-
-PORT_APP=8002 PORT_DASH=8003 sudo -E docker-compose --project-name 'conforma-on-8002' up -d
-
-PORT_APP=8004 PORT_DASH=8005 sudo -E docker-compose --project-name 'conforma-on-8004' up -d
-
-PORT_APP=8006 PORT_DASH=8007 sudo -E docker-compose --project-name 'conforma-on-8006' up -d
-
-PORT_APP=8008 PORT_DASH=8009 sudo -E docker-compose --project-name 'conforma-on-8008' up -d
+Option 1:
+```sh
+PORT_APP=8000 PORT_DASH=8001 TAG='build-v0.5.6-76_2023-08-09_802505' JWT_SECRET=<long-secret> sudo -E docker compose --project-name 'conforma-on-8000' up -d
 ```
 
 `-d` is for detached, if you want to see all output then start without `-d`
 
-`docker-compose` command may be `docker compose` in some of the servers.
-
 Note the above commands must be run within directory where compose.yml is contained. Typically this is `/demo_server`
 
-This will either launch or relaunch the server at the port specified in the WEB_URL
-
+This will either launch or relaunch the server at the port specified in the PORT_APP
 
 ## Stop instances and reset volumes
 
@@ -227,7 +225,7 @@ To remove all currently unused volumes at once:
 ### View logs
 
 ```bash
-# don't need bash inside contiainer for this
+# don't need bash inside container for this
 sudo docker exec -ti conforma-on-8000_app_1 cat /var/log/conforma/server.log
 sudo docker exec -ti conforma-on-8000_app_1 cat /var/log/conforma/graphile.log
 ```
@@ -269,11 +267,29 @@ From there the following commands might be useful:
 
 1. Log in to the server using terminal
 2. Copy the log to an accessible place (in the server) i.e. if getting log for instance 5000:
-`sudo cp /var/lib/docker/volumes/conforma-on-8000_logs/_data/server.log demo_server/2022-11-15.log`
-3. Now exit the server `exit` and on your local machine open the terminal 
-4. After navigate to a folder where you would like to save the log, run (some similat to this):
-\```
-scp -i $KEY_LOC ubuntu@conforma-demo.msupply.org:/home/ubuntu/demo_server/2022-11-15.log .
-\```
+
+   `sudo cp /var/lib/docker/volumes/conforma-on-8000_logs/_data/server.log demo_server/2022-11-15.log`
+
+3. Now exit the server `exit` and on your local machine open the terminal
+4. Navigate to a folder where you would like to save the log, run (some similar to this):
+   ```
+   scp -i $KEY_LOC ubuntu@conforma-demo.msupply.org:/home/ubuntu/demo_server/2022-11-15.log .
+   ```
+
 - KEY_LOC is an environment variable for the server public key :)
 - And the `.` means it will create a file with the same file name on the current folder
+
+## Managing CloudVPS hosted servers
+
+Conforma live servers are usually hosted on ([CloudVPS](https://www.cloudvps.com/)), an ([openstack](https://www.openstack.org/)) server provider.
+
+### Changing CloudVPS server settings
+
+Prior to changing any settings on CloudVPS, it is essential to take a backup snapshot of the live server, and ensure back ups are logging correctly to dropbox or wherever you are keeping your backups.
+
+1. Log in to ([CloudVPS](https://openstack.cloudvps.com/auth/login/?next=/)). Credentials are available through Bitwarden.
+2. Access all instances through compute / instances
+3. Search for the relevant instance ie “conforma”
+4. Click “resize instance” from dropdown
+5. Select new flavour package
+6. Upon set up, conforma docker image will need environment variables set up again, and run, using the [commands above](Demo-Server-Guide.md#launching-instances-with-docker-compose). Images and snapshots will persist when a server's capacity is changed.

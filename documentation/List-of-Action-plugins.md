@@ -1,35 +1,30 @@
-## Contents
-
+## Contents <!-- omit in toc -->
 <!-- toc -->
-
-- [Contents](#contents)
-  - [Console Log](#console-log)
-  - [Change Outcome](#change-outcome)
-  - [Increment Stage](#increment-stage)
-  - [Change Status](#change-status)
-  - [Modify Record](#modify-record)
-  - [Modify Multiple Records](#modify-multiple-records)
-  - [Generate Text String](#generate-text-string)
-  - [Join User to Organsation](#join-user-to-organsation)
-  - [Remove User from Organsation](#remove-user-from-organsation)
-  - [Grant Permissions](#grant-permissions)
-  - [Revoke Permissions](#revoke-permissions)
-  - [Generate Review Assignments](#generate-review-assignments)
-  - [Update Review Assignments](#update-review-assignments)
-  - [Refresh Review Assignments](#refresh-review-assignments)
-  - [Trim Responses](#trim-responses)
-  - [Update Review Visibility](#update-review-visibility)
-  - [Update Review Statuses](#update-review-statuses)
-  - [Generate Document](#generate-document)
-  - [Send Notification](#send-notification)
-  - [Schedule Action](#schedule-action)
-  - [Clean Up Files](#clean-up-files)
-  - [Aliasing existing template actions](#aliasing-existing-template-actions)
+- [Console Log](#console-log)
+- [Change Outcome](#change-outcome)
+- [Increment Stage](#increment-stage)
+- [Change Status](#change-status)
+- [Modify Record](#modify-record)
+- [Modify Multiple Records](#modify-multiple-records)
+- [Generate Text String](#generate-text-string)
+- [Join User to Organsation](#join-user-to-organsation)
+- [Remove User from Organsation](#remove-user-from-organsation)
+- [Grant Permissions](#grant-permissions)
+- [Revoke Permissions](#revoke-permissions)
+- [Generate Review Assignments](#generate-review-assignments)
+- [Refresh Review Assignments](#refresh-review-assignments)
+- [Trim Responses](#trim-responses)
+- [Update Review Visibility](#update-review-visibility)
+- [Update Review Statuses](#update-review-statuses)
+- [Generate Document](#generate-document)
+- [Send Notification](#send-notification)
+- [Schedule Action](#schedule-action)
+- [Clean Up Files](#clean-up-files)
+- [Aliasing existing template actions](#aliasing-existing-template-actions)
 - [Core Actions](#core-actions)
-
-* [Core Actions](#core-actions)
-
 <!-- tocstop -->
+
+**Note**: Many of these actions won't need to be specifically configured as they are ["Core Actions"](#core-actions) and hard-coded to work correctly for all templates.
 
 ---
 
@@ -138,7 +133,7 @@ The Action then checks if a record already exists, based on the `matchField` (e.
 
 If `matchField` is not provided, it will default to `id`.
 
-If `matchValue` is not provided, it will use the value supplied with the record for that field. So you only really need to provide `matchValue` if you're changing the value of `matchField`
+If `matchValue` is not provided, it will use the value supplied with the record for that field. So you only really need to provide `matchValue` if you're changing the value of `matchField`. (Note that if the table in question has *multiple* records where `matchField` is `matchValue`, they will *all* be updated.)
 
 For example:
 
@@ -153,7 +148,7 @@ For example:
 
 This will look for a user record with `username = "js"` and update it if found.
 
-Wheras:
+Whereas:
 
 ```
 {
@@ -461,7 +456,11 @@ See [Grant Permissions](#grant-permissions) above regarding acting on user-only 
 
 ### Generate Review Assignments
 
-Generates records in the `review_assignment` table -- i.e. which users (reviewers) are allowed to do a review for the current stage/level (and for which Sections). The records are set with `status` "Available" or "Assigned" and flags for `isSelfAssignable` and `isLocked` to help define when is allowed self-assignment.
+Generates records in the `review_assignment` table -- i.e. which users (reviewers) are allowed to do a review for the current stage/level (and for which Sections). 
+- Records are set with `status` "Available" or "Assigned". 
+- Each record has properties to specify the type of assignment: 
+  - `isSelfAssignable` if it should show for self-assignment when not assigned by another user
+  - `isLocked` defining that the review can start but not be submitted (Used for applications which has been sent back to Applicant for ammendments)
 
 It also creates records in the `review_assignment_assigner_join` table -- basically a list of users who have permission to make the _assignments_ in the review_assignment table.
 
@@ -484,21 +483,6 @@ Should be run whenever an application or review is submitted or re-submitted, an
 - If `applicationId` only is passed the action will generate reviewAssignments for **all** review levels on the current stage up to and including the current level. As well as generating first level review assignments for the first application submissiong, this also accounts for the case when an applicant *re-submits* after making changes and we need to generate fresh review_assignments for the first level even though higher level review assignments already exist (it will also regenerate the higher levels, but this won't cause any problems).
 - If `reviewId` is also received the action will generate reviewAssignments for the **next** level of reviews in the current stage or - if it was the last level on current stage, generate for 1st level of the **next** stage. Nothing is created if it reached the last level & stage.
 - In all of the cases, when a `reviewAssignment` record already exist (i.e. if it's a re-assignment), they will just be updated (with a new timestamp).
-
----
-
-### Update Review Assignments
-
-When a reviewer self-assigns themselves to a review_assignment (i.e. its status changes from "Available" to "Assigned") the other review assignment records pertaining to that review/stage/level are marked as "is_locked = true" so that no other reviewer can start a review for the same thing.
-
-- _Action Code:_ **`updateReviewAssignmentsStatus`**
-
-| Input parameters<br />(\*required) <br/>             | Output properties                                     |
-| ---------------------------------------------------- | ----------------------------------------------------- |
-| `reviewAssignmentId`\*                               | `reviewAssignmentUpdates` (`array` of `{id, status}`) |
-| `trigger` (only executes on `ON_REVIEW_SELF_ASSIGN`) |                                                       |
-
-**Note:** If `trigger` is not supplied, the plugin will try to infer it from `applicationData`
 
 ---
 
@@ -528,10 +512,10 @@ Whenever an application or review is submitted, this Action "cleans up", by dele
 
 - _Action Code:_ **`trimResponses`**
 
-| Input parameters<br />(\*required) <br/> | Output properties |
-| ---------------------------------------- | ----------------- |
-| `applicationId` _OR_                     | `deletedIds`      |
-| `reviewId`                               | `updatedIds`      |
+| Input parameters<br />(\*required) <br/> | Output properties  |
+| ---------------------------------------- | ------------------ |
+| `applicationId` _OR_                     | `deletedResponses` |
+| `reviewId`                               | `updatedResponses` |
 
 ---
 
@@ -551,25 +535,30 @@ Updates the applicant visibility of level 1 review responses based on the recomm
 
 ### Update Review Statuses
 
-When an applicant re-submits an application after making changes, this Action updates the status of associated reviews to determine whether they should be "Pending" or "Locked" (or left as is)
+When an applicant re-submits an application after making changes, or a reviewer submits their review, this Action updates the status of associated reviews to determine whether they should be "Pending" or "Changes Requested" (or left as is). We only consider "active" reviews, so those with status "Discontinued" are ignored.
+
+The logic is as follows:
+
+**ON_APPLICATION_SUBMIT**:
+- For all Level 1 "SUBMITTED" reviews that have sections that have changed responses, set status to "PENDING".
+
+**ON_REVIEW_SUBMIT**:
+- Set review one level higher than this review to "PENDING". (This should cover cases when reviewer is reviewing new applicant changes AND when they themselves have had to change an existing review before sending back to applicant).
+- If this review is not level 1 (i.e. it's a Consolidation), the lower level reviews that have sections that have responses marked as REJECTED (meaning that this reviewer has disagreed with), will change status to "CHANGES REQUESTED".
 
 - _Action Code:_ **`updateReviewsStatuses`**
 
-| Input parameters<br />(\*required) <br/>                                        | Output properties          |
-| ------------------------------------------------------------------------------- | -------------------------- |
-| `applicationId`                                                                 | `updatedReviews`           |
-| `reviewId`                                                                      | `updatedReviewAssignments` |
-| `triggeredBy` Enum: REVIEW or APPLICATION (Default)                             |                            |
-| `changedResponses`\* [Array of `applicationResponseIds` or `reviewReponsesIds`] |                            |
-| `level`                                                                         |                            |
-| `stageId`                                                                       |                            |
+| Input parameters<br />(\*required) <br/> | Output properties          |
+| ---------------------------------------- | -------------------------- |
+| `applicationId`                          | `updatedReviews`           |
+| `reviewId`                               | `updatedReviewAssignments` |
+| `changedResponses`\*                     |                            |
+| `level`                                  |                            |
+| `stageId`                                |                            |
 
-**Note:** - If `applicationId` or `reviewId` is not provided, the plugin will attempt to fetch it from `applicationData`. In case the `reviewId` is received, this Action will be updating status of related reviews of same stage in the current and next level reviews. Otherwhise (for an application submit - without passing `reviewId` this Action will be updating only reviewes of current level/stage.
-The list of changed review/responses submitted is passed as `changedResponses` to the action and will define which reviews statuses to update by:
+`changedResponses` is an array of `applicationResponseId`s or `reviewResponseId`s and is usually provided by the output of the `trimResponses` action (which must run first).
 
-- For application submission all related reviews assigned to the same `templateIds` will have status updated to **PENDING**.
-- For review submission to lower level reviewer (when review decision is **CHANGES_REQUEST**) all related reviews assigned to the same `templateIds` and that have a `reviewResponseDecision` as **DISAGREE** will have status updated to **PENDING**. Other reviews in same level will have status updated to **LOCKED**.
-- For review submission to upper level reviewer (not **CHANGES_REQUEST** and not last-level review) all reviews with **SUBMITTED** status will be updated to **PENDING**.
+**Note:** - If `applicationId` or `reviewId` is not provided, the plugin will attempt to fetch it from `applicationData`. In case the `reviewId` is received, this Action will be updating status of related reviews of same stage in the current and next level reviews. Otherwise (for an application submit - without passing `reviewId`) this Action will be updating only reviews of current level/stage.
 
 ---
 
@@ -644,9 +633,9 @@ SMTP_PASSWORD=<password>
 
 `subject` and `message` are just the email subject line and message
 
-`to (email)`, `cc`, `bcc` -- the email address(es) to send the email to, in the "to" "cc" and "bcc" fields, respectively. Can be a string (single email address) or an array of strings if multiple recipients. If not supplied, will use the "email" field from `applicationData`.
+`to (email)`, `cc`, `bcc` -- the email address(es) to send the email to, in the "to" "cc" and "bcc" fields, respectively. Can be a string (single email address) or an array of strings if multiple recipients.
 
-`userId` for the notification recipient. If not supplied, it will be taken from `applicationData`.
+`userId` for the notification recipient.
 
 `fromName` / `fromEmail` refer to who the apparent sender of the email is. Default value(s) should be supplied in `config.json`, but can be over-ridden on a case-by-case basis.
 
@@ -674,14 +663,17 @@ A "special" action that allows other actions to be triggered at some time in the
 
 | Input parameters<br />(\*required) <br/> | Output properties |
 | ---------------------------------------- | ----------------- |
-| `duration`\*                             | `scheduledEvent`  |
+| `duration`                               | `scheduledEvent`  |
+| `date`                                   | `scheduledEvent`  |
 | `eventCode`                              |                   |
 | `applicationId`                          |                   |
 | `templateId`                             |                   |
 | `cancel`                                 |                   |
 | `data`                                   |                   |
 
-This Action stores an "event" in the database `trigger_schedule` table, scheduled for a time in the future specified by `duration`. When this time is reached, a special trigger is fired (`ON_SCHEDULE`) which can be used as the trigger for subsequent actions.
+*Either* of `duration` or `date` is required
+
+This Action stores an "event" in the database `trigger_schedule` table, scheduled for a time in the future specified by `duration` (a certain length of time from *now*) or `date` (a specific point in time). When this time is reached, a special trigger is fired (`ON_SCHEDULE`) which can be used as the trigger for subsequent actions.
 
 Each scheduled event can be saved with an `eventCode` -- this is used by Actions that are triggered by this event to determine *which* action should be fired for any given `ON_SCHEDULE` trigger on each template type. Every Action defined for each template has an optional `scheduledActionCode` field, which can be used to match specific events. If no event code is provided, then *every* action for that template type with an `ON_SCHEDULE` trigger will be executed.
 
@@ -689,7 +681,9 @@ By default, when an event is saved, the `outputCumulative` object from the `sche
 
 The `cancel` parameter is a way to prevent a previously scheduled event from occurring. Passing in `cancel: true` will, instead of creating a new event, find any *existing* event that has matching `applicationId` and `eventCode` and set to to inactive without it ever firing. In practice, though, targeting an event by `applicationId` is often not feasible, so the preferred way to cancel a scheduled event is to just apply an appropriate Condition to the subsequent action -- so the event is still triggered, but the matching action won't occur if the condition is not met (e.g. don't expire a product if registration has been renewed)
 
-Note: the `duration` value can be *either* a number (representing time in weeks) or a [Luxon duration object](https://moment.github.io/luxon/api-docs/index.html#duration).
+Note:
+- the `duration` value can be *either* a number (representing time in weeks) or an object in [Luxon Duration format](https://moment.github.io/luxon/api-docs/index.html#duration).
+- the `date` value can be *either* an ISO string, a JS Date object or an object in [Luxon DateTime format](https://moment.github.io/luxon/api-docs/index.html#datetime)
 
 
 ---
@@ -735,48 +729,47 @@ The "condition" field (common to all template_actions) can also override the ori
 
 ## Core Actions
 
-There are certain Actions that _must_ run on particular events to facilitate a standard application/review workflow process. We have called these **Core Actions**, and they have been collected in a single "core_mutations.js" file (for insertion into database via GraphQL). Each template (other than "User Registration") has this block slugged into it as a template literal (`${coreActions}`) in its Action insertion block, before any Actions that are specific to that template.
+There are certain Actions that _must_ run on particular events to facilitate a standard application/review workflow process. We have called these **Core Actions**, and have hard-coded them into the server to ensure that they cannot be tampered with, misconfigured or accidentally removed. It also allows us to make any changes in one place and know that all templates will behave correctly without further re-configuration.
 
-Here is a summary of the core actions and the triggers that launch them:
+The core actions are contained in a single object, indexed by trigger, in `coreActions.ts` in the back-end. Each action in there has a comment describing what it does and why it is required, but here is a summary and some relevant notes:
 
-#### On Application Create:
+**ON_APPLICATION_CREATE**:
+- Generate application serial (`generateTextString`). Default pattern `S-[A-Z]{3}-<+dddd>` but can be over-ridden in the Template Builder "General" tab
+- Set initial stage (`incrementStage`) (Also sets the status to "DRAFT")
+- Generate application name (`generateTextString`) based on template code and serial. This can be over-ridden just by specifying an additional `generateTextString` action in the template actions configuration.
 
-- Increment Stage (sets to Stage 1, also sets Status to "Draft")
+**ON_APPLICATION_RESTART**:  
+(This runs when an applicant re-starts an application after a reviewer requests changes)
+- Set application status to "DRAFT" (`changeStatus`)
 
-#### On Application Submit
+**ON_APPLICATION_SUBMIT**:
+- Set status to "SUBMITTED" (`changeStatus`)
+- Trim duplicate or empty applicant responses (`trimResponses`)
+- Generate review assignments (`generateReviewAssignments`) for the level 1 reviewers
+- Clean up (delete) any files that were uploaded but not submitted as part of the application (`cleanupFiles`)
+- Update review status (`updateReviewStatuses`) for any existing reviews based on applicant responses that have been changed since the last submission.
+- Change outcome to "APPROVED" (`changeOutcome`), but *only if* there are no other `changeOutcome` actions defined for this template *and* it is a non-reviewable (i.e. automatic) template. So if you need to change the behaviour or condition of when the outcome changes, you can define a specific template action, which will ensure this automatic one doesn't run.
 
-- Change Status (to "Submitted")
-- Trim Responses (removes Null responses and unchanged ones if re-submission)
-- Generate Review Assignments (for first level reviewers)
-- Update Reviews (statuses)
-- Cleanup Files
+**ON_REVIEW_ASSIGN**:
+- If any reviews already exist for this assignment, set them to "DRAFT" (this would only happen if the reviewer had been unasssigned and then re-assigned) (`updateReviewStatuses`)
 
-#### On Application Restart (i.e. after "Changes Requested"):
+**ON_REVIEW_CREATE**:
+- Set review status (`changeStatus`) to "DRAFT"
 
-- Change Status (back to "Draft")
+**ON_REVIEW_RESTART**:
+- Set review status (`changeStatus`) to "DRAFT" when reviewer re-starts their review (after an applicant re-submission, or request for changes from a senior reviewer)
 
-#### On Review Self-Assign:
+**ON_REVIEW_SUBMIT**:
+- Set review status (`changeStatus`) to "SUBMITTED"
+- Remove unchanged or empty review responses (`trimResponses`)
+- Update status of *other* reviews (`updateReviewStatuses`) to "PENDING" or "CHANGES REQUESTED" based on reviewer responses. (Higher level reviews will be set to "PENDING", lower-level reviewers will depend on which response the reviewer agreed with.)
+- Set which review responses are visible to the applicant (`updateReviewVisibility`) if sending a request for further information (LOQ).
+- Increment stage (`incrementStage`), but only if this review is a last-level review with the decision "CONFORM". Any other conditions for incrementing the stage must be specified in additional template actions.
+- Set application status to "CHANGES REQUIRED" (`changeStatus`) if this is a last-level review and the decision is "LOQ".
+- Change outcome (`changeOutcome`), but only if this is the final stage and it's a final level review, and the decision is "CONFORM" or "NON_CONFORM". Outcome will be "APPROVED" or "REJECTED" accordingly.
+- Create or update review assignments (`generateReviewAssignments`) for the *next* review level (if there is one)
 
-- Update Review Assignment Status (for other reviewers)
+**ON_REVIEW_UNASSIGN**:
+- If any reviews already exist (i.e. previousuly-assigned reviewer has started their review), set the review status (`changeStatus`) to "DISCONTINUED"
 
-#### On Review Assign (by other)
 
-- Nothing yet (To-do?)
-
-#### On Review Create
-
-- Change Status (to "Draft")
-
-#### On Review Submit:
-
-- Change Status (to "Submitted")
-- Trim Responses
-- Update Review Statuses (for other reviews related to this review submission)
-- Increment Stage (if last level reviewer approves)
-- Generate Review Assignments (for next level review)
-- Update review response visibility (for applicant)
-- Change Status (Application, conditional on the review decision)
-
-#### On Review Restart: (i.e. review making changes based on higher level requests)
-
-- Change Status (review status to "Draft")

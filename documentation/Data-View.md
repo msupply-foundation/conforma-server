@@ -1,15 +1,17 @@
-# Data Views
-
+## Contents  <!-- omit in toc -->
 <!-- toc -->
-
-## Contents
-  - [API](#api)
-  - [Configuration](#configuration)
-    - [`data_view` table](#data_view-table)
-    - [`data_view_column_definition` table](#data_view_column_definition-table)
-    - [Additional formatting](#additional-formatting)
-    - [A note about Array data](#a-note-about-array-data)
-  - [Real use-case example](#real-use-case-example)
+- [API](#api)
+  - [`/data-views`](#data-views)
+  - [`/data-views/<dataViewCode>?<queries>`](#data-viewsdataviewcodequeries)
+  - [`/data-views/<dataViewCode>/<itemId>`](#data-viewsdataviewcodeitemid)
+- [Configuration](#configuration)
+  - [`data_view` table](#data_view-table)
+  - [`data_view_column_definition` table](#data_view_column_definition-table)
+  - [Additional formatting](#additional-formatting)
+  - [A note about Array data](#a-note-about-array-data)
+- [Real use-case example](#real-use-case-example)
+- [Lookup tables](#lookup-tables)
+<!-- tocstop -->
 
 Display of (custom) **Data** tables (e.g. Products, Users, Orgs) (or any table, strictly speaking) can be configured for viewing in the UI by setting entries in the `data_view` and `data_view_column_definition` database tables. This allows us to set:
 
@@ -22,6 +24,8 @@ Display of (custom) **Data** tables (e.g. Products, Users, Orgs) (or any table, 
 The data is served to the front-end via the `/data-views` API end-points, and serves data based on the request's JWT header, so we can ensure that no user can receive data that they haven't been configured to be allowed to see.
 
 The database's row-level permissions ensure that only allowed rows are returned to the user, and the logic in the "dataViews" code returns allowed columns. We also support custom "rowRestrictions" for limiting the individual records a given user is allowed to see (see below).
+
+Configuration of the data views can be done in the UI by an Admin, using url `/admin-data-views`
 
 ## API
 
@@ -37,7 +41,8 @@ Returns an array of data table views the user is allowed to see (based on JWT he
         "tableName": "user",
         "title": "Users (Restricted View)",
         "code": "userRestricted",
-        "urlSlug":"user-restricted"
+        "urlSlug":"user-restricted",
+        "defaultFilter" "isActive=true"
     },
     ...etc.
 ]
@@ -202,13 +207,14 @@ Note the different types of data returned and the formatting instructions. Also,
 In order to make outcome data available to the front-end, the minimal configuration requirements are a single entry in the `data_view` table with the following fields provided:
 
 - `table_name` -- name of the table we are displaying
-- `code` the identifier for the particular "view". It's possible to have multiple views with the same code, but only one will be shown to a given user, based on their permissions, and the `priority` value (see below). You can create multiple views with different codes per `table_name`, for example you might have a `usersExt` view and a `usersInt` view for the 'user' table.
+- `code` -- to match the particular "view", and what is shown the in the front-end URL. It's possible to have multiple views with the same code, but only one will be shown to a given user, based on their permissions, and the `priority` value (see below). You can create multiple views with different codes per `table_name`, for example you might have a `usersExt` view and a `usersInt` view for the 'user' table.
+- `identifier` -- this must be a *unique* value which should describe the specific data view. It is used in the front-end configuration UI to list the available views, so must be able to discriminate between multiple views with the same `code` for the same table. E.g. "External Users (Staff view)", "External Users (own company)". It cannot be `null`, but a default value with random suffix is generated when creating a new view in the UI.
 
 And with that, the "table_name" table will show up in the Database menu, and it will show all fields to everyone in both Table and Details view.
 
 However, we normally want to not show every field, and not to every user, so further specifications would normally be required.
 
-Different configurations of fields and who can see them can be set up for each table, so for convenience, we are calling a single configuation a "layout"
+Different configurations of fields and who can see them can be set up for each table, so for convenience, we are calling a single configuration a "layout"
 
 The following fields are also configurable in "data_view" layouts:
 
@@ -225,8 +231,11 @@ Some things to be aware of:
 - `default_sort_column`: the column that the table data will be ordered by when no column-sort is selected in the front-end. You should rarely need to set this -- the default is `id`, which usually corresponds to the order in which items were added, so is fine for most purposes. However, if you need to override it with a different column, this allows it.
 - `show_linked_applications`: if `true`, the `/item` endpoint will also return an array of linked applications connected to this particular item. These are taken from the outcome "join" tables, whose records are created on successful application approvals.
 - `priority`: when multiple views match the `code` (i.e. user has permissions for more than one), the view with the highest priority will be returned the to the user. A typical use case for this would be if you have a particular view that is open to all users (i.e `permissionNames` is `null`), but you want users with certain permissions to see a different view for the same request (e.g Staff might be able to see *all* users, whereas external users can only see those in their own organisation). Default value: `1`.
+- `default_filter_string`: a string that will be appended to the url of the data view in the front-end in order to implement the default filtering for the view (see [Data View Filters](Data-View-Filters.md)). You can work out what the string should be by setting the filters (in the front-end) and just copying the url query string. For example, a default filter for a product table might want to restrict the initial view to active (non-cancelled) products from Australia, so the `default_filter_string` would be something like `is-active=true&registered-in=Australia`
+- `submenu`: If specified, the view will appear in a sub-menu in the front-end menu bar. This provides a way to keep data views organised and group related ones together, if desired. If not specified, the view will show in the root "Database" menu.
+- `enabled`: Whether or not the data view is active (i.e. visible in the UI). It can be useful to pre-configure a data view for a certain table before any data has actually been created for that table, and so it doesn't exist yet. In this case, set `enabled` to false so the view won't show in the menu and display an error state when viewed. Note -- whenever a new table is created in the database any existing data views are automatically enabled.
 
-(We also have fields `filter_include_columns`, `filter_exclude_columns`, `table_search_columns` but they are explained in [Data View Filters](Data-View-Filters.md)))
+(We also have fields `filter_include_columns`, `filter_exclude_columns`, `table_search_columns` but they are explained in [Data View Filters](Data-View-Filters.md))
 
 Okay, so if you're just wanting to display fields directly taken from the outcome table in question, and the formatting requirements are all "simple" types (text, number, boolean, Date) the `data_view` table is all you need. However, if you want to return columns with more complex data (such as a list of ingredients, or a query to another table) or require non-default formatting, you'll need to define these in the `data_view_column_definition` table.
 
@@ -241,7 +250,7 @@ The input fields are as follows:
 - `title`: title to show for the field name. If not specified, it will just be the column_name in "Start Case".
 - `element_type_plugin_code`: if the value being returned is a whole application response, then it will be parsed and displayed using a front-end element plugin (SummaryView). This is where you specify the code of the plugin required. If `null`, value won't be sent to a SummaryView element for display.
 - `element_parameters`: if a plugin is specified above, then it will require input parameters. This value should be an object containing all the parameters required for display. Values of parameters can be literals or evaluator queries, and will be evaluated by the front-end in SummaryView just like a normal form element.
-- `additional_formatting`: a custom object specifiying additional formatting definitons. Detailed explanation below.
+- `additional_formatting`: a custom object specifying additional formatting definitions. Detailed explanation below.
 - `value_expression`: if `null`, the returned value will just be the value of the field from the table in question. However, if you are defining a custom column, or you want to over-ride the value of the field, this field should contain an evaluator expression. The "object" passed into the evaluator for "objectProperties" operator is the current record (item) represented as key-value pairs. 
    - For example, if you wanted to return a custom field from the "user" table that combined both first and last names (column name: `fullName`), your `value_expression` query would be:  
 ```

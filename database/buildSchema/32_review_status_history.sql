@@ -4,7 +4,6 @@ CREATE TYPE public.review_status AS ENUM (
     'SUBMITTED',
     'CHANGES_REQUESTED',
     'PENDING',
-    'LOCKED',
     'DISCONTINUED'
 );
 

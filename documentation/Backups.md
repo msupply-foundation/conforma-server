@@ -1,5 +1,3 @@
-# Backups
-
 Conforma server has built-in simple backup functionality -- it will save an (optionally) AES-encrypted [snapshot](Snapshots.md) .zip file to a backups folder, which can be synced to a cloud service, such as [Dropbox](https://www.dropbox.com).
 
 Internally (within the Docker container), backups are always saved to the root `/backups` folder. However, using docker-compose configuration, this folder can be mapped to any folder on the host system, which can be synced to a cloud storage service.
@@ -28,15 +26,21 @@ The `preferences.json` file (saved with each snapshot) contains three (optional)
   "server": {
     ...,
     "backupFilePrefix": "conforma_backup",
-    "backupSchedule": [1],
+    "backupSchedule": {"hour": 1},
     "maxBackupDurationDays: 10
   },
   ...
 }
 ```
 - `backupFilePrefix` -- backup files will be created with the filename: `<backupFilePrefix>_<timestamp>.zip`. E.g. `conforma_backup_2022-10-29_01-00-00.zip`. The default (if not provided) is `conforma_backup`
-- `backupSchedule` -- specifies the backup schedule in [node-schedule](https://www.npmjs.com/package/node-schedule) format. By default (and as shown here), this will be at 1 A.M daily.
+- `backupSchedule` -- specifies the backup schedule as [node-schedule Recurrence Rule](https://www.npmjs.com/package/node-schedule#recurrence-rule-scheduling). By default (and as shown here), this will be at 1:15 A.M daily (UTC).
 - `maxBackupDurationDays` -- specifies how long to keep backup files for. When a backup runs, any backups older than this are deleted. (Default: 10)
+
+## File archives
+
+To prevent wasting disk space in the backups location, we have a [file archiving system](#file-archives) to identify and organise files that have not changed since the last backup.
+
+When backups run, only *new* archives that have been added since the last backup are backed up. The backup folder stores progressive archives in an "_archives" subfolder. These are encrypted and zipped as per the main backup snapshot. The main backup snapshot is then saved with no archives included, only files that haven't yet been archived. Meta-data about the stored archives and the latest backup snapshot can be inspected in the `backup.json` file in the main backups location.
 
 ## Backing up with Dropbox
 

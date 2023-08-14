@@ -5,6 +5,7 @@ import semverCompare from 'semver/functions/compare'
 import { execSync } from 'child_process'
 import path from 'path'
 import { readFileSync } from 'fs'
+import bcrypt from 'bcrypt'
 import { getAppEntryPointDir } from '../../src/components/utilityFunctions'
 
 // CONSTANTS
@@ -486,15 +487,21 @@ const migrateData = async () => {
       ' - Rename TYPE is_reviewable to reviewability and update field in TABLE template_element'
     )
 
-    await DB.changeSchema(`
-    ALTER TYPE public.is_reviewable_status RENAME TO reviewability;`)
+    await DB.changeSchema(
+      `
+    ALTER TYPE public.is_reviewable_status RENAME TO reviewability;`,
+      { silent: true }
+    )
 
     await DB.changeSchema(`
     ALTER TYPE public.reviewability
       ADD VALUE IF NOT EXISTS 'ONLY_IF_APPLICANT_ANSWER' AFTER 'NEVER';`)
 
-    await DB.changeSchema(`
-    ALTER TABLE public.template_element RENAME COLUMN is_reviewable TO reviewability;`)
+    await DB.changeSchema(
+      `
+    ALTER TABLE public.template_element RENAME COLUMN is_reviewable TO reviewability;`,
+      { silent: true }
+    )
 
     console.log(' - Remove 4 unused fields from application_list')
     await DB.changeSchema(
@@ -581,13 +588,251 @@ const migrateData = async () => {
     await DB.changeSchema(`
       ALTER TABLE public.file DROP COLUMN IF EXISTS is_missing;
     `)
+  }
+
+  // v0.5.0
+  if (databaseVersionLessThan('0.5.0')) {
+    console.log('Migrating to v0.5.0...')
 
     console.log(' - Add column to data_table to link data views to lookup tables')
     await DB.changeSchema(`
       ALTER TABLE data_table
-      ADD COLUMN data_view_code varchar;
+      ADD COLUMN IF NOT EXISTS data_view_code varchar;
+    `)
+
+    console.log(' - Remove type ASSIGN_LOCKED from assign_action ENUM')
+    await DB.changeSchema(`
+      DROP TYPE IF EXISTS public.assigner_action CASCADE;
+
+      CREATE TYPE public.assigner_action AS ENUM
+      (
+        'ASSIGN',
+        'RE_ASSIGN'
+      );
+    `)
+
+    console.log(' - Remove any illegal (i.e. overlapping sections) assignment state')
+    await DB.changeSchema(`
+      UPDATE public.review_assignment
+      SET status='ASSIGNED',
+      assigned_sections = assigned_sections, \
+      trigger = 'DEV_TEST';
+    `)
+
+    console.log(' - Simplify how we handle "locked" reviews')
+    // We need to drop these first so we can subsequently manipulate
+    // review_status and review_status_old.
+    await DB.changeSchema(`
+      DROP VIEW IF EXISTS assigned_sections_by_stage_and_level CASCADE;
+      DROP TYPE IF EXISTS public.review_status_old;
+    `)
+    await DB.changeSchema(`
+      ALTER TABLE public.review_assignment DROP column IF EXISTS
+      is_locked;
+    `)
+    await DB.changeSchema(`
+      ALTER TYPE public.review_status RENAME to review_status_old;
+
+      CREATE TYPE public.review_status AS ENUM (
+        'DRAFT',
+        'SUBMITTED',
+        'CHANGES_REQUESTED',
+        'PENDING',
+        'DISCONTINUED'
+    );
+    `)
+
+    // The following commands all done in separate "changeSchema" functions, as
+    // individually they may fail based on current database state, but we still
+    // need to ensure subsequent commands are run
+    await DB.changeSchema(
+      `
+      ALTER TABLE review_status_history
+        ALTER COLUMN status TYPE public.review_status
+        USING status::text::public.review_status;
+      `,
+      { silent: true }
+    )
+
+    await DB.changeSchema(
+      `
+      UPDATE public.review_status_history
+        SET status = 'PENDING'
+        WHERE status = 'LOCKED';
+      `,
+      { silent: true }
+    )
+
+    await DB.changeSchema(`
+      DROP function review_status;
+      `)
+    await DB.changeSchema(`
+      DROP TYPE public.review_status_old; 
+      `)
+
+    console.log(' - Add serial_pattern field to template')
+    await DB.changeSchema(`
+      ALTER TABLE public.template
+        ADD COLUMN IF NOT EXISTS serial_pattern varchar;
+    `)
+
+    console.log(' - Ensure only one review can exist per review assignment')
+    // First we need to delete any reviews that are duplicates of the same
+    // review assignment before we can add a uniqueness constraint:
+    await DB.changeSchema(`
+      DELETE FROM public.review a
+        USING review b
+      WHERE a.id < b.id
+      AND a.review_assignment_id = b.review_assignment_id;
+    `)
+    await DB.changeSchema(`
+      ALTER TABLE review
+        ADD CONSTRAINT review_review_assignment_id_key UNIQUE (review_assignment_id);
     `)
   }
+
+  // v0.5.2
+  if (databaseVersionLessThan('0.5.2')) {
+    console.log('Migrating to v0.5.2...')
+
+    console.log(' - Add registration field to application Table')
+    await DB.changeSchema(`
+      ALTER TABLE public.application
+        ADD COLUMN IF NOT EXISTS outcome_registration varchar UNIQUE;
+    `)
+  }
+
+  if (databaseVersionLessThan('0.5.6')) {
+    console.log('Migrating to v0.5.6...')
+
+    console.log(' - Change "default_value" field to "initial_value"')
+    await DB.changeSchema(`
+      DO $$
+      BEGIN
+        IF EXISTS(SELECT * FROM information_schema.columns
+          WHERE table_name = 'template_element'
+          AND column_name = 'default_value')
+        THEN
+          ALTER TABLE public.template_element
+          RENAME COLUMN default_value TO initial_value;
+        END IF;
+      END $$;
+    `)
+  }
+
+  if (databaseVersionLessThan('0.5.7')) {
+    console.log('Migrating to v0.5.7...')
+
+    console.log(' - Add "default_filter_string" to data_views')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_view
+      ADD COLUMN IF NOT EXISTS default_filter_string varchar;
+    `)
+  }
+
+  // v0.6.0
+  if (databaseVersionLessThan('0.6.0')) {
+    console.log('Migrating to v0.6.0...')
+
+    console.log(' - Update FK reference to trigger_queue in action_queue')
+    await DB.changeSchema(`
+      ALTER TABLE action_queue DROP CONSTRAINT IF EXISTS   
+        action_queue_trigger_event_fkey; 
+      ALTER TABLE action_queue ADD CONSTRAINT action_queue_trigger_event_fkey
+        FOREIGN KEY (trigger_event) REFERENCES trigger_queue (id) ON DELETE CASCADE;
+    `)
+
+    console.log(' - Add application_id column to trigger_queue & action_queue')
+    if (!(await DB.checkColumnExists('trigger_queue', 'application_id'))) {
+      await DB.changeSchema(`
+      ALTER TABLE public.trigger_queue
+        ADD COLUMN IF NOT EXISTS application_id INTEGER
+        REFERENCES public.application (id) ON DELETE CASCADE;
+      `)
+      console.log(' ...and updating trigger_queue data')
+      await DB.populateQueueApplicationIds('trigger_queue')
+    }
+    if (!(await DB.checkColumnExists('action_queue', 'application_id'))) {
+      await DB.changeSchema(`
+      ALTER TABLE public.action_queue
+        ADD COLUMN IF NOT EXISTS application_id INTEGER
+        REFERENCES public.application (id) ON DELETE CASCADE;
+      `)
+      console.log(' ...and updating action_queue data')
+      await DB.populateQueueApplicationIds('action_queue')
+    }
+
+    console.log(' - Adding unique identifier column to data view')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_view   
+        ADD COLUMN IF NOT EXISTS identifier VARCHAR UNIQUE;
+      UPDATE public.data_view SET identifier = CONCAT(title, '_', id)
+        WHERE identifier IS NULL;
+      ALTER TABLE public.data_view ALTER COLUMN identifier SET NOT NULL;
+      ALTER TABLE public.data_view_column_definition ALTER COLUMN column_name SET NOT NULL;
+    `)
+
+    console.log(' - Adding submenu column to data view')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_view   
+        ADD COLUMN IF NOT EXISTS submenu VARCHAR;
+    `)
+
+    console.log(' - Adding enabled column to data view')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_view   
+        ADD COLUMN IF NOT EXISTS enabled BOOLEAN DEFAULT TRUE NOT NULL;
+    `)
+
+    console.log(' - Adding is_submenu column to template_category')
+    await DB.changeSchema(`
+      ALTER TABLE public.template_category   
+        ADD COLUMN IF NOT EXISTS is_submenu BOOLEAN DEFAULT FALSE;
+    `)
+
+    console.log(' - Adding dashboard_restrictions to template')
+    await DB.changeSchema(`
+      ALTER TABLE public.template   
+        ADD COLUMN IF NOT EXISTS dashboard_restrictions VARCHAR[];
+    `)
+
+    console.log(' - Updating template versioning schema')
+    await DB.changeSchema(`
+      ALTER TABLE public.template   
+        ADD COLUMN IF NOT EXISTS version_id varchar;
+      ALTER TABLE public.template
+        ADD COLUMN IF NOT EXISTS parent_version_id varchar;
+      ALTER TABLE public.template   
+        ADD COLUMN IF NOT EXISTS version_comment varchar;
+      ALTER TABLE public.template   
+        ADD COLUMN IF NOT EXISTS version_history jsonb;
+    `)
+    // Migrate existing
+    await DB.migrateTemplateVersions()
+    // Add non-null constraint and remove old version after migrating
+    await DB.changeSchema(`
+    ALTER TABLE public.template   
+      ALTER COLUMN version_id SET NOT NULL;
+    ALTER TABLE public.template
+      DROP COLUMN IF EXISTS version;
+    `)
+
+    console.log(' - Creating archive_path field for files')
+    await DB.changeSchema(`
+    ALTER TABLE public.file  
+      ADD COLUMN IF NOT EXISTS archive_path varchar;
+    `)
+
+    console.log(' - Creating file_size field for files')
+    await DB.changeSchema(`
+    ALTER TABLE public.file  
+      ADD COLUMN IF NOT EXISTS file_size bigint;
+    `)
+
+    console.log(' - Updating file sizes for existing files')
+    await DB.updateFileSizes()
+  }
+
   // Other version migrations continue here...
 
   // Update (almost all) Indexes, Views, Functions, Triggers regardless, since
@@ -608,6 +853,19 @@ const migrateData = async () => {
 
   // Finally, set the database version to the current version
   if (databaseVersionLessThan(version)) await DB.setDatabaseVersion(version)
+
+  // A sneaky undocumented tool to let us reset all passwords on a testing
+  // system -- USE WITH CAUTION!!!
+  const passwordOverride = process.env.USER_PASSWORD_OVERRIDE ?? null
+  if (passwordOverride && passwordOverride.length > 30 && !config.isLiveServer) {
+    console.log('WARNING: Resetting user passwords for testing purposes...')
+    await DB.changeSchema(`
+      UPDATE public."user" SET password_hash = '${await bcrypt.hash(
+        passwordOverride,
+        10
+      )}' WHERE username != 'nonRegistered';
+    `)
+  }
 }
 
 // For running migrationScript.ts manually using `yarn migrate`

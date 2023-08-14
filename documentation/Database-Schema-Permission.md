@@ -1,5 +1,3 @@
-# Database Schema Permission
-
 ![Database Schema](images/database-schema-permission.png)
 
 ## Database Area description: Permission

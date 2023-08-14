@@ -25,48 +25,69 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
   const valueToMatch = matchValue ?? record[fieldToMatch]
   const applicationId = applicationData?.applicationId || 0
 
-  // Don't update fields with NULL
-  for (const key in record) {
-    if (record[key] === null || record[key] === undefined) delete record[key]
-  }
-
   // Build full record
   const fullRecord = objectKeysToSnakeCase({
     ...record,
     ...mapValues(data, (property) => get(applicationData, property, null)),
   })
 
+  // Don't update fields with NULL
+  for (const key in fullRecord) {
+    if (fullRecord[key] === null || fullRecord[key] === undefined) delete fullRecord[key]
+  }
+
   try {
     await createOrUpdateTable(DBConnect, db, tableNameProper, fullRecord, tableName)
 
-    let recordId = await db.getRecordId(tableNameProper, fieldToMatch, valueToMatch)
-    const isUpdate = recordId !== 0
+    const recordIds: number[] = await db.getRecordIds(tableNameProper, fieldToMatch, valueToMatch)
 
-    let result: any = {}
+    const isUpdate = recordIds.length !== 0
+    const isMultiUpdate = recordIds.length > 1
+
+    let result: any[] = []
     if (isUpdate) {
       // UPDATE
-      console.log(`Updating ${tableNameProper} record: ${JSON.stringify(fullRecord, null, 2)}`)
-      result = await db.updateRecord(tableNameProper, recordId, fullRecord)
+      for (const recordId of recordIds) {
+        console.log(`Updating ${tableNameProper} record: ${JSON.stringify(fullRecord, null, 2)}`)
+        result.push(await db.updateRecord(tableNameProper, recordId, fullRecord))
+      }
     } else {
       // CREATE NEW
       console.log(`Creating ${tableNameProper} record: ${JSON.stringify(fullRecord, null, 2)}`)
-      result = await db.createRecord(tableNameProper, fullRecord)
-      recordId = result.recordId
+      const res = await db.createRecord(tableNameProper, fullRecord)
+      result.push(res)
+      recordIds.push(res.recordId)
     }
 
-    if (shouldCreateJoinTable)
-      await db.createJoinTableAndRecord(tableNameProper, applicationId, recordId)
+    for (const recordId of recordIds) {
+      if (shouldCreateJoinTable)
+        await db.createJoinTableAndRecord(tableNameProper, applicationId, recordId)
+    }
 
     // Run this one async so we don't block action sequence
     if (regenerateDataTableFilters) generateFilterDataFields(tableName)
 
-    if (!result.success) throw new Error('Problem creating or updating record')
+    if (result.some((result) => !result.success))
+      throw new Error('Problem creating or updating record(s)')
 
-    console.log(`${isUpdate ? 'Updated' : 'Created'} ${tableNameProper} record, ID: `, recordId)
+    recordIds.forEach((recordId) =>
+      console.log(`${isUpdate ? 'Updated' : 'Created'} ${tableNameProper} record, ID: `, recordId)
+    )
+
+    const firstRecord = result[0][tableNameProper]
+    const allRecords = result.map((res) => res[tableNameProper])
+
+    // Note: the structure of this output object is not ideal. We should really
+    // just have a single array of results. However, this could break backwards
+    // compatibility, hence separate fields for the "single" record and
+    // "allRecords" (if there are more than one)
+    const output = { [tableNameProper]: firstRecord }
+    if (isMultiUpdate) output.allRecords = allRecords
+
     return {
       status: ActionQueueStatus.Success,
       error_log: '',
-      output: { [tableNameProper]: result[tableNameProper] },
+      output,
     }
   } catch (error) {
     console.log(error.message)

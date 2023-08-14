@@ -335,12 +335,8 @@ class PostgresDB {
     }
   }
 
-  public getFileDownloadInfo = async (
-    uid: string,
-    thumbnail = false
-  ): Promise<FileDownloadInfo | undefined> => {
-    const path = thumbnail ? 'thumbnail_path' : 'file_path'
-    const text = `SELECT original_filename, ${path} FROM file WHERE unique_id = $1`
+  public getFileDownloadInfo = async (uid: string): Promise<FileDownloadInfo | undefined> => {
+    const text = `SELECT original_filename, file_path, thumbnail_path, archive_path FROM file WHERE unique_id = $1`
     try {
       const result = await this.query({ text, values: [uid] })
       return result.rows[0] as FileDownloadInfo
@@ -385,6 +381,39 @@ class PostgresDB {
     try {
       const result = await this.query({ text, values: [filePath] })
       return result.rows.length !== 0
+    } catch (err) {
+      throw err
+    }
+  }
+
+  // File archiving
+
+  public getFilesToArchive = async (days: number) => {
+    const duration = `${days} days`
+    const text = `
+      SELECT unique_id, file_path, thumbnail_path,
+        timestamp, file_size
+      FROM file
+      WHERE archive_path IS NULL
+      AND to_be_deleted = FALSE
+      AND timestamp < now() - interval '${duration}' 
+    `
+    try {
+      const result = await this.query({ text })
+      return result.rows
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public setFileArchived = async (file: { unique_id: string; archive_path: string }) => {
+    const { unique_id, archive_path } = file
+    const text = `
+      UPDATE file SET archive_path = $1 
+      WHERE unique_id = $2`
+    try {
+      const result = await this.query({ text, values: [archive_path, unique_id] })
+      return result.rows
     } catch (err) {
       throw err
     }
@@ -529,11 +558,24 @@ class PostgresDB {
     return result.rows[0].template_id
   }
 
+  public getTemplateSerialPattern = async (templateId: number) => {
+    const text = `
+      SELECT serial_pattern FROM template
+      WHERE id = $1`
+
+    try {
+      const result = await this.query({ text, values: [templateId] })
+      return result.rows[0].serial_pattern
+    } catch (err) {
+      throw err
+    }
+  }
+
   public getActionsByTemplateId = async (
     templateId: number,
     trigger: Trigger
   ): Promise<ActionInTemplate[]> => {
-    const text = `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, template_action.event_code AS event_code, sequence, condition, parameter_queries 
+    const text = `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, template_action.event_code AS event_code, sequence, condition, parameter_queries
     FROM template 
     JOIN template_action ON template.id = template_action.template_id 
     JOIN action_plugin ON template_action.action_code = action_plugin.code 
@@ -581,13 +623,19 @@ class PostgresDB {
     }
   }
 
-  public updateTriggerQueueStatus = async (
-    payload: TriggerQueueUpdatePayload
-  ): Promise<boolean> => {
-    const text = 'UPDATE trigger_queue SET status = $1 WHERE id = $2'
-    // TODO: Dynamically select what is being updated
+  public updateTriggerQueueStatus = async ({
+    id,
+    application_id,
+    status,
+  }: TriggerQueueUpdatePayload): Promise<boolean> => {
+    const text = `UPDATE trigger_queue SET status = $1${
+      application_id ? ', application_id = $3' : ''
+    } WHERE id = $2`
+    const values = [status, id]
+    if (application_id) values.push(application_id)
+
     try {
-      await this.query({ text, values: Object.values(payload) })
+      await this.query({ text, values })
       return true
     } catch (err) {
       throw err
@@ -679,7 +727,19 @@ class PostgresDB {
     }
   }
 
-  // Remove all user
+  public getOrgName = async (orgId: number | null) => {
+    if (!orgId) return null
+    const text = `
+      SELECT name FROM organisation
+      WHERE id = $1
+    `
+    try {
+      const result = await this.query({ text, values: [orgId] })
+      return result.rows[0].name
+    } catch (err) {
+      throw err
+    }
+  }
 
   // Used by triggers/actions -- please don't modify
   public getUserData = async (userId: number, orgId: number) => {
@@ -965,6 +1025,34 @@ class PostgresDB {
     }
   }
 
+  public getUserAdminStatus = async (
+    managementPrefName: string,
+    userId: number,
+    orgId: number | null
+  ) => {
+    const orgMatch = `"organisation_id" ${orgId ? '= $3' : 'IS NULL'}`
+    const text = `
+      SELECT name, user_id, organisation_id, permission_name_id
+      FROM permission_join pj JOIN permission_name pn
+      ON pj.permission_name_id = pn.id
+      WHERE user_id = $2
+      AND ${orgMatch}
+      AND (name = 'admin' OR name = $1)
+      AND is_active = true
+    `
+    const values = [managementPrefName, userId]
+    if (orgId) values.push(orgId)
+    try {
+      const result = await this.query({ text, values })
+      const isAdmin = result.rows.some((row) => row.name === 'admin')
+      const isManager = result.rows.some((row) => row.name === managementPrefName)
+      return { isAdmin, isManager }
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
   public getAllGeneratedRowPolicies = async () => {
     const text = `
       SELECT policyname, tablename 
@@ -1150,6 +1238,19 @@ class PostgresDB {
     }
   }
 
+  public getTemplateVersionIDs = async (templateCode: string) => {
+    const text = `
+      SELECT version_id FROM template WHERE code = $1;
+    `
+    try {
+      const result = await this.query({ text, values: [templateCode] })
+      return result.rows.map((row) => row.version_id)
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
   public getPermissionPolicies: GetPermissionPolicies = async () => {
     try {
       const result = await this.query({
@@ -1176,6 +1277,7 @@ class PostgresDB {
               OR cardinality(permission_names) = 0
             )
       ${dataViewCode ? 'AND code = $2' : ''}
+       AND enabled = TRUE;
     `
     const values = dataViewCode ? [userPermissions, dataViewCode] : [userPermissions]
     try {
@@ -1202,16 +1304,31 @@ class PostgresDB {
     }
   }
 
-  public getLatestSnapshotName = async () => {
+  public getSystemInfo = async (type: string) => {
     const text = `SELECT value
     FROM system_info
     WHERE timestamp =
       (SELECT MAX(timestamp) FROM system_info
-      WHERE name='snapshot')
+      WHERE name=$1)
      `
     try {
-      const result = await this.query({ text })
-      return result.rows[0]?.value ?? 'init'
+      const result = await this.query({ text, values: [type] })
+      return result.rows[0]?.value ?? null
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public setSystemInfo = async (type: string, value: string) => {
+    const text = `
+      INSERT INTO system_info (name, value)
+      VALUES($1, $2)
+      RETURNING name, value, timestamp
+     `
+    try {
+      const result = await this.query({ text, values: [type, JSON.stringify(value)] })
+      return result.rows[0]
     } catch (err) {
       console.log(err.message)
       throw err

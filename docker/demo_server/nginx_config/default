@@ -30,6 +30,7 @@ server {
 
 	location / {
      proxy_pass http://127.0.0.1:8001/;
+     proxy_set_header Host $http_host;
 	}
 }
 
@@ -47,6 +48,7 @@ server {
 
 	location / {
      proxy_pass http://127.0.0.1:8002/;
+     proxy_set_header Host $http_host;
 	}
 }
 
@@ -99,6 +101,7 @@ server {
 
 	location / {
      proxy_pass http://127.0.0.1:8005/;
+     proxy_set_header Host $http_host;
 	}
 }
 
@@ -133,6 +136,7 @@ server {
 
 	location / {
      proxy_pass http://127.0.0.1:8007/;
+     proxy_set_header Host $http_host;
 	}
 }
 
@@ -167,5 +171,6 @@ server {
 
 	location / {
      proxy_pass http://127.0.0.1:8009/;
-	}
+     proxy_set_header Host $http_host;
+     }
 }

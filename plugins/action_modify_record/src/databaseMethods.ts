@@ -20,20 +20,20 @@ const databaseMethods = (DBConnect: any) => {
   }
 
   return {
-    getRecordId: async (tableName: string, matchField: string, value: any) => {
+    getRecordIds: async (tableName: string, matchField: string, value: any) => {
       const text = `
       SELECT id FROM "${tableName}"
       WHERE "${matchField}" = $1
     `
       try {
         const result = await DBConnect.query({ text, values: [value] })
-        return result?.rows[0]?.id || 0
+        return result?.rows.map(({ id }: { id: number }) => id)
       } catch (err) {
         console.log(err.message)
         throw err
       }
     },
-    updateRecord: async (tableName: string, id: string, record: { [key: string]: any }) => {
+    updateRecord: async (tableName: string, id: number, record: { [key: string]: any }) => {
       const placeholders = DBConnect.getValuesPlaceholders(record)
       const matchValuePlaceholder = `$${placeholders.length + 1}`
 
@@ -43,6 +43,11 @@ const databaseMethods = (DBConnect: any) => {
       WHERE id = ${matchValuePlaceholder}
       RETURNING *
       `
+      // Adding extra diagnostic logs here due to odd server bug, where the
+      // serial wasn't being written on application create due to database
+      // duplicate foreign key error
+      console.log('Attempting query:', text)
+      console.log('With values:', [...Object.values(record), id])
       try {
         const result = await DBConnect.query({
           text,
@@ -67,6 +72,16 @@ const databaseMethods = (DBConnect: any) => {
         await DBConnect.query({
           text: `INSERT INTO data_table (table_name, display_name) VALUES($1, $2)`,
           values: [tableName.replace(DATA_TABLE_PREFIX, ''), tableNameOriginal],
+        })
+        // Enable any pre-existing data views for this table -- we're assuming
+        // they're disabled because the table didn't exist yet
+        await DBConnect.query({
+          text: `UPDATE data_view SET enabled = TRUE
+            WHERE table_name = $1
+            OR table_name = $2
+            OR table_name = $3;
+            `,
+          values: [tableName, tableNameOriginal, tableName.replace(DATA_TABLE_PREFIX, '')],
         })
       } catch (err) {
         console.log(err.message)
