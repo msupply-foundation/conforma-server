@@ -856,11 +856,14 @@ const migrateData = async () => {
 
   // A sneaky undocumented tool to let us reset all passwords on a testing
   // system -- USE WITH CAUTION!!!
-  const passwordOverride = process.env.USER_PASSWORD_OVERRIDE ?? process.argv[2] ?? null
+  const passwordOverride = process.env.USER_PASSWORD_OVERRIDE ?? null
   if (passwordOverride && passwordOverride.length > 30 && !config.isLiveServer) {
     console.log('WARNING: Resetting user passwords for testing purposes...')
-    DB.changeSchema(`
-      UPDATE "user" SET password_hash = '${await bcrypt.hash(passwordOverride, 10)}'
+    await DB.changeSchema(`
+      UPDATE public."user" SET password_hash = '${await bcrypt.hash(
+        passwordOverride,
+        10
+      )}' WHERE username != 'nonRegistered';
     `)
   }
 }
