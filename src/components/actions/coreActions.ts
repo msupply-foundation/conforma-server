@@ -297,7 +297,7 @@ const coreActions: CoreActions = {
     },
   ],
   [Trigger.OnReviewSubmit]: [
-    // Set review status to SUBMITTED when reviews submits review
+    // Set review status to SUBMITTED when reviewer submits review
     {
       code: 'changeStatus',
       path: '../plugins/action_change_status/src/index.ts',
