@@ -45,6 +45,7 @@ for instance in "${ARGS[@]}"; do
         break
     fi
     source $ENV_FILE
+    export BACKUPS_FOLDER=$BACKUPS_FOLDER
     export PORT_APP=$PORT #from .env file
     export PORT_DASH=$((PORT_APP + 1))
     export JWT_SECRET=$(openssl rand -hex 64)

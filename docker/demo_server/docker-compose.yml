@@ -19,7 +19,7 @@ services:
       - files:/usr/src/conforma-server/build/files
       - localisation:/usr/src/conforma-server/build/localisation
       - preferences:/usr/src/conforma-server/build/preferences
-      - ${BACKUPS_FOLDER:-backups}:/usr/src/conforma-server/build/backups
+      - backups:/usr/src/conforma-server/build/backups
       - logs:/var/log/conforma
     tty: true
   grafana:
@@ -36,5 +36,10 @@ volumes:
   localisation:
   preferences:
   backups:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${BACKUPS_FOLDER}
+      o: bind
   logs:
   grafana:
