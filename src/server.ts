@@ -50,6 +50,7 @@ import { extractJWTfromHeader, getTokenData } from './components/permissions/log
 import migrateData from '../database/migration/migrateData'
 import routeArchiveFiles from './components/files/routeArchiveFiles'
 import { Schedulers } from './components/scheduler'
+import { routeAccessExternalApi } from './components/external-apis/routes'
 require('dotenv').config()
 
 // Set the default locale and timezone for date-time display (in console)
@@ -171,6 +172,7 @@ const startServer = async () => {
     server.get('/check-triggers', routeTriggers)
     server.post('/preview-actions', routePreviewActions)
     server.post('/extend-application', routeExtendApplication)
+    server.post('/external-api', routeAccessExternalApi)
     // Lookup tables requires "systemManager" permission
     server.register(lookupTableRoutes, { prefix: '/lookup-table' })
 
