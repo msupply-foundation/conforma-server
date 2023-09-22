@@ -13,7 +13,7 @@ import {
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
-  routecheckUnique,
+  routeCheckUnique,
 } from './components/permissions'
 import { routeGetPrefs, routeGetAllPrefs, routeSetPrefs } from './components/preferences'
 import {
@@ -158,7 +158,7 @@ const startServer = async () => {
     )
 
     // Routes that require authentication but no special permissions
-    server.get('/check-unique', routecheckUnique)
+    server.get('/check-unique', routeCheckUnique)
     server.get('/user-info', routeUserInfo)
     server.get('/user-permissions', routeUserPermissions)
     server.post('/login-org', routeLoginOrg)

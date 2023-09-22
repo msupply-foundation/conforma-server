@@ -204,7 +204,7 @@ const routeVerification = async (request: any, reply: any) => {
 }
 
 // Unique name/email/organisation/other check
-const routecheckUnique = async (request: any, reply: any) => {
+const routeCheckUnique = async (request: any, reply: any) => {
   const { type, value, table, field, caseInsensitive } = request.query
   if (value === '' || value === undefined) {
     reply.send({
@@ -263,5 +263,5 @@ export {
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
-  routecheckUnique,
+  routeCheckUnique,
 }
