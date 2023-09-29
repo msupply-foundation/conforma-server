@@ -7,9 +7,9 @@ import {
   TriggerQueueStatus,
 } from './generated/graphql'
 import { EmailOperationMode } from './config'
-import { RecurrenceRule } from 'node-schedule'
 import { PoolConfig } from 'pg'
 import { Schedulers } from './components/scheduler'
+import { ExternalApiConfigs } from './components/external-apis/types'
 
 export interface ActionInTemplate {
   code: string
@@ -294,6 +294,7 @@ export interface ServerPreferences {
   testingEmail?: string
   locale?: string
   timezone?: string
+  externalApiConfigs?: ExternalApiConfigs
 }
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
@@ -316,6 +317,7 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'testingEmail',
   'locale',
   'timezone',
+  'externalApiConfigs',
 ]
 
 export interface WebAppPrefs {

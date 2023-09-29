@@ -82,7 +82,7 @@ export const routeEnableLanguage = async (request: any, reply: any) => {
     return reply.send({ success: true, data: languageOptions })
   } catch (err) {
     return reply.send({
-      sucess: false,
+      success: false,
       message: 'Problem saving language preferences' + err.message,
     })
   }

@@ -172,7 +172,7 @@ const startServer = async () => {
     server.get('/check-triggers', routeTriggers)
     server.post('/preview-actions', routePreviewActions)
     server.post('/extend-application', routeExtendApplication)
-    server.post('/external-api', routeAccessExternalApi)
+    server.post('/external-api/:name/:route', routeAccessExternalApi)
     // Lookup tables requires "systemManager" permission
     server.register(lookupTableRoutes, { prefix: '/lookup-table' })
 

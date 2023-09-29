@@ -132,3 +132,15 @@ export const getValidTableName = (inputName: string | undefined): string => {
 
   return namePattern.test(tableName) ? tableName : `${DATA_TABLE_PREFIX}${tableName}`
 }
+
+// Replace a string of the form "env.<KEY>" with environment variable <KEY>
+// - Used for references in configurations to sensitive data such as
+//   passwords/keys
+export const getEnvVariableReplacement = (input: string) => {
+  const match = input.match(/^env\.(\w+)$/)
+  if (!match) return input
+
+  const envKey = match[1]
+
+  return process.env[envKey] ?? input
+}
