@@ -6,6 +6,9 @@ import { getPermissionNamesFromJWT } from '../data_display/helpers'
 import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import { constructAuthHeader, constructQueryObject } from './helpers'
 import { ExternalApiConfigs, QueryParameters, PostRoute } from './types'
+import { getApplicationData } from '../actions'
+import { getUserInfo } from '../permissions/loginHelpers'
+import { ActionApplicationData } from '../../types'
 
 interface ExternalApiRequest {
   name: string
@@ -14,7 +17,10 @@ interface ExternalApiRequest {
 
 const apiConfigs: ExternalApiConfigs = config?.externalApiConfigs ?? {}
 
-export const routeAccessExternalApi = async (request: FastifyRequest, reply: FastifyReply) => {
+export const routeAccessExternalApi = async (
+  request: FastifyRequest & { auth?: { userId?: number; orgId?: number } },
+  reply: FastifyReply
+) => {
   const { name, route } = request.params as ExternalApiRequest
 
   const { baseUrl, routes, authentication } = apiConfigs?.[name]
@@ -32,7 +38,7 @@ export const routeAccessExternalApi = async (request: FastifyRequest, reply: Fas
     url,
     permissions,
     queryParams,
-    allowedQueries,
+    allowedClientQueries,
     returnProperty,
     additionalAxiosProperties,
   } = routeConfig
@@ -49,9 +55,15 @@ export const routeAccessExternalApi = async (request: FastifyRequest, reply: Fas
     }
   }
 
-  // Generate DATA object for evaluator, either:
-  // - full "applicationData" object, but we'd need applicationId somehow
-  // - a custom data object with just user/org info (ids in JWT)
+  // Construct data object for subsequent expression evaluator
+  const { userId, orgId } = request.auth as { userId?: number; orgId?: number }
+  const { user } = await getUserInfo({ userId, orgId })
+  const evaluatorData: { user: typeof user; applicationData?: ActionApplicationData } = { user }
+
+  // ApplicationData only available if an applicationId is provided as a query
+  // parameter
+  const { applicationId } = request.query as { applicationId?: number }
+  if (applicationId) evaluatorData.applicationData = await getApplicationData({ applicationId })
 
   const axiosRequest = {
     method,
@@ -62,16 +74,18 @@ export const routeAccessExternalApi = async (request: FastifyRequest, reply: Fas
   axiosRequest.params = await constructQueryObject(
     request.query as QueryParameters,
     queryParams,
-    allowedQueries
+    allowedClientQueries,
+    evaluatorData
   )
 
   if (method === 'post') {
-    const { bodyJson, allowedBodyFields } = routeConfig as PostRoute
+    const { bodyJson, allowedClientBodyFields } = routeConfig as PostRoute
     if (request.body || bodyJson) {
       axiosRequest.data = await constructQueryObject(
         request.body as QueryParameters,
         bodyJson,
-        allowedBodyFields
+        allowedClientBodyFields,
+        evaluatorData
       )
     }
   }

@@ -8,9 +8,9 @@ type QueryParameters = { [key: string]: EvaluatorNode }
 
 interface RouteCommon {
   url: string
-  queryParams?: QueryParameters
   permissions?: string[]
-  allowedQueries?: string[]
+  queryParams?: QueryParameters
+  allowedClientQueries?: string[]
   additionalAxiosProperties?: { [key: string]: any }
   returnProperty?: string
 }
@@ -22,7 +22,7 @@ interface GetRoute extends RouteCommon {
 interface PostRoute extends RouteCommon {
   method: 'post'
   bodyJson?: QueryParameters
-  allowedBodyFields?: string[]
+  allowedClientBodyFields?: string[]
 }
 
 type RouteConfig = GetRoute | PostRoute

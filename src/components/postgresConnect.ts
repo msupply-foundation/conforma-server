@@ -1076,7 +1076,7 @@ class PostgresDB {
     const userMatch = `("userId" = $1 ${orgId ? 'OR "userId" IS NULL' : ''})`
     const orgMatch = `"orgId" ${orgId ? '= $2' : 'IS NULL'}`
     const text = `
-      SELECT "permissionNameId" as id,
+      SELECT DISTINCT "permissionNameId" as id,
       "permissionName" FROM permissions_all
       WHERE ${userMatch}
       AND ${orgMatch}`

@@ -2,6 +2,7 @@ import evaluateExpression from '@openmsupply/expression-evaluator'
 import { AxiosRequestConfig } from 'axios'
 import { ApiAuthentication, QueryParameters } from './types'
 import { getEnvVariableReplacement } from '../utilityFunctions'
+import { ActionApplicationData } from '../../types'
 
 // Adds appropriate auth properties to Axios request object (modifies in-place)
 const constructAuthHeader = (
@@ -30,7 +31,8 @@ const constructAuthHeader = (
 const constructQueryObject = async (
   requestQuery: QueryParameters = {},
   configQuery: QueryParameters = {},
-  allowedFields?: string[]
+  allowedFields: string[] | undefined,
+  objects: { applicationData?: ActionApplicationData; user: { [key: string]: any } }
 ) => {
   const allowedRequestQueries = Object.fromEntries(
     Object.entries(requestQuery).filter(([key, _]) =>
@@ -42,7 +44,7 @@ const constructQueryObject = async (
   const routeConfigValues = Object.values(configQuery)
 
   const evaluatedValues = await Promise.all(
-    routeConfigValues.map((value) => evaluateExpression(value))
+    routeConfigValues.map((value) => evaluateExpression(value, { objects }))
   )
 
   const routeConfigData = Object.fromEntries(
