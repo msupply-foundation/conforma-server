@@ -3,6 +3,7 @@ import { AxiosRequestConfig } from 'axios'
 import { ApiAuthentication, QueryParameters } from './types'
 import { getEnvVariableReplacement } from '../utilityFunctions'
 import { ActionApplicationData } from '../../types'
+import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 
 // Adds appropriate auth properties to Axios request object (modifies in-place)
 const constructAuthHeader = (
@@ -54,4 +55,17 @@ const constructQueryObject = async (
   return { ...allowedRequestQueries, ...routeConfigData }
 }
 
-export { constructAuthHeader, constructQueryObject }
+const validateResult = async (
+  validationExpression: EvaluatorNode | undefined,
+  result: unknown,
+  query: QueryParameters,
+  evaluatorData: object
+) => {
+  if (!validationExpression) return true
+
+  return await evaluateExpression(validationExpression, {
+    objects: { ...evaluatorData, query, result },
+  })
+}
+
+export { constructAuthHeader, constructQueryObject, validateResult }

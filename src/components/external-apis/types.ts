@@ -13,6 +13,7 @@ interface RouteCommon {
   allowedClientQueries?: string[]
   additionalAxiosProperties?: { [key: string]: any }
   returnProperty?: string
+  validationExpression?: EvaluatorNode
 }
 
 interface GetRoute extends RouteCommon {

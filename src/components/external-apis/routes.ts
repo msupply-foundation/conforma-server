@@ -4,11 +4,12 @@ import config from '../../config'
 import { get as extractProperty } from 'lodash'
 import { getPermissionNamesFromJWT } from '../data_display/helpers'
 import axios, { AxiosError, AxiosRequestConfig } from 'axios'
-import { constructAuthHeader, constructQueryObject } from './helpers'
+import { constructAuthHeader, constructQueryObject, validateResult } from './helpers'
 import { ExternalApiConfigs, QueryParameters, PostRoute } from './types'
 import { getApplicationData } from '../actions'
 import { getUserInfo } from '../permissions/loginHelpers'
 import { ActionApplicationData } from '../../types'
+import functions from '../actions/evaluatorFunctions'
 
 interface ExternalApiRequest {
   name: string
@@ -41,6 +42,7 @@ export const routeAccessExternalApi = async (
     allowedClientQueries,
     returnProperty,
     additionalAxiosProperties,
+    validationExpression,
   } = routeConfig
 
   if (permissions) {
@@ -58,7 +60,11 @@ export const routeAccessExternalApi = async (
   // Construct data object for subsequent expression evaluator
   const { userId, orgId } = request.auth as { userId?: number; orgId?: number }
   const { user } = await getUserInfo({ userId, orgId })
-  const evaluatorData: { user: typeof user; applicationData?: ActionApplicationData } = { user }
+  const evaluatorData: {
+    user: typeof user
+    applicationData?: ActionApplicationData
+    functions: typeof functions
+  } = { user, functions }
 
   // ApplicationData only available if an applicationId is provided as a query
   // parameter
@@ -94,7 +100,21 @@ export const routeAccessExternalApi = async (
 
   try {
     const result = (await axios(axiosRequest)).data
-    return reply.send(returnProperty ? extractProperty(result, returnProperty, result) : result)
+    const returnValue = returnProperty ? extractProperty(result, returnProperty, result) : result
+
+    if (
+      await validateResult(
+        validationExpression,
+        returnValue,
+        request.query as QueryParameters,
+        evaluatorData
+      )
+    )
+      return reply.send(returnValue)
+    else {
+      reply.status(403)
+      return reply.send('Not authorized to view result')
+    }
   } catch (err) {
     if (err instanceof AxiosError) {
       reply.status(err.response?.status ?? 500)
