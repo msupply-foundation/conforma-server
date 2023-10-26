@@ -98,6 +98,7 @@ export const routeAccessExternalApi = async (
 
   constructAuthHeader(authentication, axiosRequest)
 
+  console.log(`Making ${method.toUpperCase()} request to: ${axiosRequest.url}`)
   try {
     const result = (await axios(axiosRequest)).data
     const returnValue = returnProperty ? extractProperty(result, returnProperty, result) : result
@@ -109,9 +110,11 @@ export const routeAccessExternalApi = async (
         request.query as QueryParameters,
         evaluatorData
       )
-    )
+    ) {
+      console.log('Request successful')
       return reply.send(returnValue)
-    else {
+    } else {
+      console.log('Request not authorized, not returning result')
       reply.status(403)
       return reply.send('Not authorized to view result')
     }
@@ -120,6 +123,7 @@ export const routeAccessExternalApi = async (
       reply.status(err.response?.status ?? 500)
       return reply.send(err.message)
     }
+    console.log('Request error', err.message)
     throw new Error('Error processing request')
   }
 }
