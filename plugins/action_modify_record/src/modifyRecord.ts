@@ -3,7 +3,11 @@ import { ActionPluginType } from '../../types'
 import databaseMethods, { DatabaseMethodsType } from './databaseMethods'
 import { DBConnectType } from '../../../src/components/databaseConnect'
 import { mapValues, get } from 'lodash'
-import { objectKeysToSnakeCase, getValidTableName } from '../../../src/components/utilityFunctions'
+import {
+  objectKeysToSnakeCase,
+  getValidTableName,
+  errorMessage,
+} from '../../../src/components/utilityFunctions'
 import { generateFilterDataFields } from '../../../src/components/data_display/generateFilterDataFields/generateFilterDataFields'
 import config from '../../../src/config'
 
@@ -90,10 +94,10 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
       output,
     }
   } catch (error) {
-    console.log(error.message)
+    console.log(errorMessage(error))
     return {
       status: ActionQueueStatus.Fail,
-      error_log: error.message,
+      error_log: errorMessage(error),
     }
   }
 }

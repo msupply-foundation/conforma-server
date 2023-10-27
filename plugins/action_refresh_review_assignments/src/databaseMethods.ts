@@ -1,3 +1,5 @@
+import { errorMessage } from '../../../src/components/utilityFunctions'
+
 const databaseMethods = (DBConnect: any) => ({
   getApplicationsWithExistingReviewAssignments: async (userIds: number[]) => {
     const text = `SELECT DISTINCT application_id
@@ -10,7 +12,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [userIds] })
       return result.rows.map(({ application_id }: { application_id: number }) => application_id)
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -29,7 +31,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [userIds] })
       return result.rows.map(({ application_id }: { application_id: number }) => application_id)
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -50,7 +52,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text })
       return result.rows.map(({ application_id }: { application_id: number }) => application_id)
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },

@@ -1,3 +1,5 @@
+import { errorMessage } from '../../../src/components/utilityFunctions'
+
 const databaseMethods = (DBConnect: any) => ({
   doesCounterExist: async (counterName: string) => {
     const text = `
@@ -11,7 +13,7 @@ const databaseMethods = (DBConnect: any) => ({
       })
       return Number(result?.rows[0].count) === 1
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -22,7 +24,7 @@ const databaseMethods = (DBConnect: any) => ({
     try {
       await DBConnect.query({ text, values: [name, counterInit] })
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },

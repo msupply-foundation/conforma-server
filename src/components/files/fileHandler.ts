@@ -4,7 +4,7 @@ import fsProm from 'fs/promises'
 import util from 'util'
 import { pipeline } from 'stream'
 import { nanoid } from 'nanoid'
-import { getAppEntryPointDir, makeFolder, filterObject } from '../utilityFunctions'
+import { getAppEntryPointDir, makeFolder, filterObject, errorMessage } from '../utilityFunctions'
 import config from '../../config'
 import DBConnect from '../databaseConnect'
 import createThumbnail from './createThumbnails'
@@ -86,7 +86,7 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
     // For updating file description without re-uploading file
   } catch (err) {
     // If no file provided, we'll get this 406 error, so we continue.
-    if (err?.statusCode !== 406) throw err
+    if (errorMessage(err, 'statusCode') !== 406) throw err
   }
   try {
     if (fileCount === 0) {

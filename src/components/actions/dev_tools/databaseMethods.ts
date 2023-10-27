@@ -1,5 +1,6 @@
 import { Decision } from '../../../generated/graphql'
 import DBConnect from '../../databaseConnect'
+import { errorMessage } from '../../utilityFunctions'
 
 const databaseMethods = {
   // Gets the application/template info of the "config" application associated
@@ -40,7 +41,7 @@ const databaseMethods = {
         )
       return result.rows[0] ?? {}
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -53,7 +54,7 @@ const databaseMethods = {
       const result = await DBConnect.query({ text, values: [applicationId] })
       return result.rows[0].serial
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -66,7 +67,7 @@ const databaseMethods = {
       const result = await DBConnect.query({ text, values: [serial] })
       return result.rows[0].id
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -79,7 +80,7 @@ const databaseMethods = {
       const result = await DBConnect.query({ text, values: [assignmentId] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -104,7 +105,7 @@ const databaseMethods = {
       const result = await DBConnect.query({ text, values: [applicationId] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -129,7 +130,7 @@ const databaseMethods = {
       const result = await DBConnect.query({ text, values: [applicationId] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -142,7 +143,7 @@ const databaseMethods = {
       const result = await DBConnect.query({ text, values: [allowedSections, id] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -155,7 +156,7 @@ const databaseMethods = {
       const result = await DBConnect.query({ text, values: [assignmentId] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -168,7 +169,7 @@ const databaseMethods = {
       const result = await DBConnect.query({ text, values: [reviewId] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -191,7 +192,7 @@ const databaseMethods = {
       const result = await DBConnect.query({ text, values: [applicationId] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -205,7 +206,7 @@ const databaseMethods = {
       const result = await DBConnect.query({ text, values: [decision, comment, reviewId] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -219,7 +220,7 @@ const databaseMethods = {
       const result = await DBConnect.query({ text, values: [applicationId, eventCode] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -241,7 +242,7 @@ const databaseMethods = {
       await DBConnect.query({ text })
       return
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },

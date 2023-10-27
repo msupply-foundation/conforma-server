@@ -1,3 +1,4 @@
+import { errorMessage } from '../../../src/components/utilityFunctions'
 import { Review } from './updateReviewStatuses'
 
 const databaseMethods = (DBConnect: any) => ({
@@ -24,7 +25,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [applicationId, stageId] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -40,7 +41,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [templateElements] })
       return result.rows.map(({ code }: { code: string }) => code)
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },

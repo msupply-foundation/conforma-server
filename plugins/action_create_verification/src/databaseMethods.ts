@@ -1,3 +1,5 @@
+import { errorMessage } from '../../../src/components/utilityFunctions'
+
 const databaseMethods = (DBConnect: any) => ({
   createVerification: async ({
     uniqueId,
@@ -19,7 +21,7 @@ const databaseMethods = (DBConnect: any) => ({
       })
       return result?.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },

@@ -4,6 +4,7 @@ import fsProm from 'fs/promises'
 import { camelCase, snakeCase, mapKeys } from 'lodash'
 import { singular } from 'pluralize'
 import config from '../config'
+import { type } from 'os'
 
 // Determines the folder of the main entry file, as opposed to the
 // project root. Needed for components that traverse the local directory
@@ -14,7 +15,7 @@ export function getAppEntryPointDir() {
 }
 
 // Returns true if input is a "proper" object (i.e. not an array or null)
-export const isObject = (element: unknown) =>
+export const isObject = (element: unknown): element is Object =>
   typeof element === 'object' && !Array.isArray(element) && element !== null
 
 // Convert object keys to camelCase
@@ -143,4 +144,16 @@ export const getEnvVariableReplacement = (input: string) => {
   const envKey = match[1]
 
   return process.env[envKey] ?? input
+}
+
+// Validates an Error object and returns its message (default) or requested property, if
+// available
+export const errorMessage = (err: unknown, property?: string) => {
+  if (!isObject(err)) return 'Unknown error'
+
+  if (!property && 'message' in err) return err.message as string
+
+  if (property && property in err) return (err as any)[property]
+
+  return 'Unknown error'
 }

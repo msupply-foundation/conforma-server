@@ -1,3 +1,4 @@
+import { errorMessage } from '../../../src/components/utilityFunctions'
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginInput } from '../../types'
 
@@ -24,10 +25,10 @@ const joinUserOrg = async function ({ parameters, DBConnect }: ActionPluginInput
         error_log: 'There was a problem adding user to organisation.',
       }
   } catch (error) {
-    console.log(error.message)
+    console.log(errorMessage(error))
     return {
       status: ActionQueueStatus.Fail,
-      error_log: error.message,
+      error_log: errorMessage(error),
     }
   }
 }
