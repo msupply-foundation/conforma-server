@@ -14,7 +14,7 @@ import DBConnect from '../databaseConnect'
 import { DateTime } from 'luxon'
 import fs from 'fs'
 import path from 'path'
-import { crawlFileSystem } from '../utilityFunctions'
+import { crawlFileSystem, errorMessage } from '../utilityFunctions'
 import { deleteFile } from '../files/deleteFiles'
 import { ARCHIVE_FOLDER, FILES_FOLDER, GENERIC_THUMBNAILS_FOLDER } from '../../constants'
 
@@ -69,7 +69,7 @@ export const cleanUpFiles = async () => {
     console.log(`File records removed due to missing files: ${recordsMissingFiles}`)
     console.log(`Additional files cleaned up (e.g. previews): ${filesCleanedUp}`)
   } catch (err) {
-    console.log('ERROR', err.message)
+    console.log('ERROR', errorMessage(err))
   }
 }
 

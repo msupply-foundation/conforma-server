@@ -3,6 +3,7 @@ import { promisify } from 'util'
 import rimraf from 'rimraf'
 import path from 'path'
 import { SNAPSHOT_ARCHIVES_FOLDER_NAME, SNAPSHOT_FOLDER } from '../../../constants'
+import { errorMessage } from '../../utilityFunctions'
 
 const asyncRimRaf = promisify(rimraf)
 
@@ -29,7 +30,7 @@ const routeDeleteSnapshot = async (request: FastifyRequest, reply: FastifyReply)
     reply.send({
       success: false,
       message: 'Problem deleting snapshot ' + snapshotName,
-      error: e.toString(),
+      error: errorMessage(e),
     })
   }
 }

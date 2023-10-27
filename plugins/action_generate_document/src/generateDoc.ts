@@ -2,6 +2,7 @@ import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import { generatePDF } from '../../../src/components/files/documentGenerate'
 import { mapValues, get } from 'lodash'
+import { errorMessage } from '../../../src/components/utilityFunctions'
 
 const generateDoc: ActionPluginType = async ({
   parameters,
@@ -44,10 +45,10 @@ const generateDoc: ActionPluginType = async ({
       output: { document: result },
     }
   } catch (error) {
-    console.log(error.message)
+    console.log(errorMessage(error))
     return {
       status: ActionQueueStatus.Fail,
-      error_log: error.message,
+      error_log: errorMessage(error),
     }
   }
 }

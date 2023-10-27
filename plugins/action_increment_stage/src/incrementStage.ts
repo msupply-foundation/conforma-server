@@ -1,3 +1,4 @@
+import { errorMessage } from '../../../src/components/utilityFunctions'
 import {
   ActionQueueStatus,
   ApplicationOutcome,
@@ -90,7 +91,7 @@ async function incrementStage({
     )
     return returnObject
   } catch (err) {
-    console.log(err.message)
+    console.log(errorMessage(err))
     returnObject.status = ActionQueueStatus.Fail
     returnObject.error_log = 'Unable to increment Stage'
     return returnObject

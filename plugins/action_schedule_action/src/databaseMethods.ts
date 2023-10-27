@@ -1,3 +1,5 @@
+import { errorMessage } from '../../../src/components/utilityFunctions'
+
 const databaseMethods = (DBConnect: any) => ({
   createOrUpdateTriggerSchedule: async ({
     applicationId,
@@ -20,7 +22,7 @@ const databaseMethods = (DBConnect: any) => ({
       })
       return result?.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -38,7 +40,7 @@ const databaseMethods = (DBConnect: any) => ({
       })
       return result?.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },

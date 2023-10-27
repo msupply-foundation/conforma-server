@@ -3,6 +3,7 @@ import { ActionPluginType } from '../../types'
 import databaseMethods from './databaseMethods'
 import { nanoid } from 'nanoid'
 import { DateTime } from 'luxon'
+import { errorMessage } from '../../../src/components/utilityFunctions'
 
 const createVerification: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
@@ -32,10 +33,10 @@ const createVerification: ActionPluginType = async ({ parameters, applicationDat
       output: { verification },
     }
   } catch (error) {
-    console.log(error.message)
+    console.log(errorMessage(error))
     return {
       status: ActionQueueStatus.Fail,
-      error_log: error.message,
+      error_log: errorMessage(error),
     }
   }
 }

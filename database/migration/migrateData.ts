@@ -6,7 +6,7 @@ import { execSync } from 'child_process'
 import path from 'path'
 import { readFileSync } from 'fs'
 import bcrypt from 'bcrypt'
-import { getAppEntryPointDir } from '../../src/components/utilityFunctions'
+import { errorMessage, getAppEntryPointDir } from '../../src/components/utilityFunctions'
 
 // CONSTANTS
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
@@ -91,7 +91,7 @@ const migrateData = async () => {
     } catch (err) {
       console.log(
         "Assigned sections couldn't be updated, presumably already done:",
-        err.message,
+        errorMessage(err),
         '\n'
       )
     }

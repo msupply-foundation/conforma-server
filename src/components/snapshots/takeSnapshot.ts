@@ -41,6 +41,7 @@ import config from '../../config'
 import { DateTime } from 'luxon'
 import { createDefaultDataFolders } from '../files/createDefaultFolders'
 import { getArchiveFolders } from '../files/helpers'
+import { errorMessage } from '../utilityFunctions'
 
 const TEMP_SNAPSHOT_FOLDER_NAME = '__tempSnapshot'
 const TEMP_ARCHIVE_FOLDER_NAME = '__tempArchive'
@@ -159,7 +160,7 @@ const takeSnapshot: SnapshotOperation = async ({
 
     return { success: true, message: `created snapshot ${snapshotName}`, snapshot: fullName }
   } catch (e) {
-    return { success: false, message: 'error while taking snapshot', error: e.toString() }
+    return { success: false, message: 'error while taking snapshot', error: errorMessage(e) }
   }
 }
 

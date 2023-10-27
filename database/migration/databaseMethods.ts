@@ -3,6 +3,7 @@ import DBConnect from '../../src/components/databaseConnect'
 import { getTemplateVersionId } from '../../src/components/exportAndImport/helpers'
 import { FILES_FOLDER } from '../../src/constants'
 import fs from 'fs/promises'
+import { errorMessage } from '../../src/components/utilityFunctions'
 
 type SchemaQueryOptions = {
   silent: boolean
@@ -15,7 +16,7 @@ const databaseMethods = {
     try {
       await DBConnect.query({ text: query })
     } catch (err) {
-      if (!options?.silent) console.log('Problem altering schema:', err.message, '\n')
+      if (!options?.silent) console.log('Problem altering schema:', errorMessage(err), '\n')
     }
   },
   getDatabaseVersion: async () => {
@@ -29,7 +30,7 @@ const databaseMethods = {
       const result = await DBConnect.query({ text })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -101,7 +102,7 @@ const databaseMethods = {
       return result.rows
     } catch (err) {
       // Lookup table probably already deleted
-      console.log(err.message)
+      console.log(errorMessage(err))
     }
   },
   insertDataTable: async (
@@ -119,7 +120,7 @@ const databaseMethods = {
       return result.rows[0]
     } catch (err) {
       // Table record already exists, probably
-      console.log(err.message)
+      console.log(errorMessage(err))
     }
   },
   populateQueueApplicationIds: async (tableName: 'trigger_queue' | 'action_queue') => {

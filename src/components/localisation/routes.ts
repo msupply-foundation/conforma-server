@@ -5,6 +5,7 @@ import {
   getAppEntryPointDir,
   combineRequestParams,
   makeFolder,
+  errorMessage,
 } from '../../components/utilityFunctions'
 import config from '../../config'
 import { DateTime } from 'luxon'
@@ -83,7 +84,7 @@ export const routeEnableLanguage = async (request: any, reply: any) => {
   } catch (err) {
     return reply.send({
       success: false,
-      message: 'Problem saving language preferences' + err.message,
+      message: 'Problem saving language preferences' + errorMessage(err),
     })
   }
 }
@@ -118,7 +119,10 @@ export const routeInstallLanguage = async (request: any, reply: any) => {
     )
     return reply.send({ success: true, message })
   } catch (err) {
-    return reply.send({ sucess: false, message: 'Problem installing language:' + err.message })
+    return reply.send({
+      success: false,
+      message: 'Problem installing language:' + errorMessage(err),
+    })
   }
 }
 
@@ -143,8 +147,8 @@ export const routeRemoveLanguage = async (request: any, reply: any) => {
     return reply.send({ success: true, data: newLanguageOptions })
   } catch (err) {
     return reply.send({
-      sucess: false,
-      message: 'Problem uninstalling language:' + err.message,
+      success: false,
+      message: 'Problem uninstalling language:' + errorMessage(err),
     })
   }
 }

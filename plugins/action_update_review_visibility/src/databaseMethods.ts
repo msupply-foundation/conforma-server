@@ -1,3 +1,5 @@
+import { errorMessage } from '../../../src/components/utilityFunctions'
+
 const databaseMethods = (DBConnect: any) => ({
   updateReviewResponseVisibility: async (reviewId: number) => {
     const text = `
@@ -15,7 +17,7 @@ const databaseMethods = (DBConnect: any) => ({
     try {
       return await DBConnect.query({ text, values: [reviewId] })
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },

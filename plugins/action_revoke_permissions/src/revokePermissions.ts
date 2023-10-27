@@ -2,6 +2,7 @@ import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginInput } from '../../types'
 import databaseMethods from './databaseMethods'
 import grantPermissionsDBMethods from '../../action_grant_permissions/src/databaseMethods'
+import { errorMessage } from '../../../src/components/utilityFunctions'
 
 const revokePermissions = async ({ applicationData, parameters, DBConnect }: ActionPluginInput) => {
   const db = databaseMethods(DBConnect)
@@ -64,7 +65,7 @@ const revokePermissions = async ({ applicationData, parameters, DBConnect }: Act
     console.log(error)
     return {
       status: ActionQueueStatus.Fail,
-      error_log: error.message,
+      error_log: errorMessage(error),
     }
   }
 }

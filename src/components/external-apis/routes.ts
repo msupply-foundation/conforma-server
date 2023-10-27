@@ -10,6 +10,7 @@ import { getApplicationData } from '../actions'
 import { getUserInfo } from '../permissions/loginHelpers'
 import { ActionApplicationData } from '../../types'
 import functions from '../actions/evaluatorFunctions'
+import { errorMessage } from '../utilityFunctions'
 
 interface ExternalApiRequest {
   name: string
@@ -123,7 +124,7 @@ export const routeAccessExternalApi = async (
       reply.status(err.response?.status ?? 500)
       return reply.send(err.message)
     }
-    console.log('Request error', err.message)
+    console.log('Request error', errorMessage(err))
     throw new Error('Error processing request')
   }
 }

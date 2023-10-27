@@ -1,6 +1,6 @@
 import { camelCase } from 'lodash'
 import config from '../../../config'
-import { capitaliseFirstLetter } from '../../utilityFunctions'
+import { capitaliseFirstLetter, errorMessage } from '../../utilityFunctions'
 
 const FILTER_TEXT_SUFFIX = capitaliseFirstLetter(camelCase(config.filterColumnSuffix))
 
@@ -15,7 +15,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, rowMode: 'array' })
       return result.rows.flat()
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -30,7 +30,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, rowMode: 'array' })
       return result.rows.flat()
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -62,7 +62,7 @@ const databaseMethods = (DBConnect: any) => ({
       })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -78,7 +78,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [tableName] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -92,7 +92,7 @@ const databaseMethods = (DBConnect: any) => ({
       await DBConnect.query({ text })
       return
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -105,7 +105,7 @@ const databaseMethods = (DBConnect: any) => ({
       await DBConnect.query({ text })
       return
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },

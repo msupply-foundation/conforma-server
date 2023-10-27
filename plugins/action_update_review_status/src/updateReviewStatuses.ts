@@ -6,6 +6,7 @@ import {
 import { ActionPluginOutput, ActionPluginType } from '../../types'
 import databaseMethods from './databaseMethods'
 import { action as changeStatus } from '../../action_change_status/src'
+import { errorMessage } from '../../../src/components/utilityFunctions'
 
 type TriggeredBy = 'REVIEW' | 'APPLICATION'
 export interface Review {
@@ -179,10 +180,10 @@ const updateReviewStatuses: ActionPluginType = async ({
       }
     }
   } catch (err) {
-    console.log(err.message)
+    console.log(errorMessage(err))
     return {
       status: ActionQueueStatus.Fail,
-      error_log: 'There was a problem updating review statuses: ' + err.message,
+      error_log: 'There was a problem updating review statuses: ' + errorMessage(err),
     }
   }
 }

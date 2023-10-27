@@ -6,6 +6,7 @@ import { nanoid } from 'nanoid'
 import { PermissionRow, TemplatePermissions } from './types'
 import { baseJWT, compileJWT } from './rowLevelPolicyHelpers'
 import { Organisation, UserOrg } from '../../types'
+import { errorMessage } from '../utilityFunctions'
 
 const verifyPromise: any = promisify(verify)
 const signPromise: any = promisify(sign)
@@ -19,7 +20,7 @@ const getTokenData = async (jwtToken: string) => {
     return data
   } catch (err) {
     console.log('Cannot parse JWT')
-    return { error: err.message }
+    return { error: errorMessage(err) }
   }
 }
 

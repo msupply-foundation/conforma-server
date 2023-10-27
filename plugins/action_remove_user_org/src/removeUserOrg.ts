@@ -2,6 +2,7 @@ import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginInput } from '../../types'
 import grantPermissionsDBMethods from '../../action_grant_permissions/src/databaseMethods'
 import { UserOrg } from '../../../src/types'
+import { errorMessage } from '../../../src/components/utilityFunctions'
 
 const removeUserOrg = async function ({ parameters, DBConnect }: ActionPluginInput) {
   const { username, orgName, deletePermissions = true } = parameters
@@ -46,7 +47,7 @@ const removeUserOrg = async function ({ parameters, DBConnect }: ActionPluginInp
         status: ActionQueueStatus.Success,
         error_log: '',
         output: {
-          removedUsers: removed.pairs
+          removedUsers: removed.pairs,
         },
       }
     } else {
@@ -56,10 +57,10 @@ const removeUserOrg = async function ({ parameters, DBConnect }: ActionPluginInp
       }
     }
   } catch (error) {
-    console.log(error.message)
+    console.log(errorMessage(error))
     return {
       status: ActionQueueStatus.Fail,
-      error_log: error.message,
+      error_log: errorMessage(error),
     }
   }
 }

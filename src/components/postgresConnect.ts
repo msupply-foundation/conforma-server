@@ -15,6 +15,7 @@ import {
   UserOrg,
 } from '../types'
 import { ApplicationOutcome, ApplicationStatus, ReviewStatus, Trigger } from '../generated/graphql'
+import { errorMessage } from './utilityFunctions'
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -64,7 +65,7 @@ class PostgresDB {
               trigger_payload?.data
             )
           } catch (err) {
-            console.log(err.message)
+            console.log(errorMessage(err))
           } finally {
             break
           }
@@ -834,7 +835,7 @@ class PostgresDB {
       await this.query({ text, values: [outcome, appId] })
       return true
     } catch (err) {
-      console.log(err.stack)
+      console.log(errorMessage(err))
       return false
     }
   }
@@ -845,7 +846,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [templateId] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -867,7 +868,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [applicationId] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -883,7 +884,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [templateId, currentStageNumber] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -896,7 +897,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [applicationId, stageId] })
       return result.rows[0].id
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -912,7 +913,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [stageHistoryId, status] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -925,7 +926,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [reviewId] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -941,7 +942,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [reviewId, status] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -954,7 +955,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [isSystemOrg] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -980,7 +981,7 @@ class PostgresDB {
       const result = await this.query({ text, values })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -995,7 +996,7 @@ class PostgresDB {
       const result = await this.query({ text, values })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1006,7 +1007,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1020,7 +1021,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [isSystemOrgPermission] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1048,7 +1049,7 @@ class PostgresDB {
       const isManager = result.rows.some((row) => row.name === managementPrefName)
       return { isAdmin, isManager }
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1066,7 +1067,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1086,7 +1087,7 @@ class PostgresDB {
       const result = await this.query({ text, values })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1100,7 +1101,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [stageId] })
       return result.rows[0].max
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1114,7 +1115,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [reviewId] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1128,7 +1129,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [applicationId] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1146,7 +1147,7 @@ class PostgresDB {
   //     })
   //     return result.rows[0].is_fully_assigned_level_1
   //   } catch (err) {
-  //     console.log(err.message)
+  //     console.log(errorMessage(err))
   //     throw err
   //   }
   // }
@@ -1164,7 +1165,7 @@ class PostgresDB {
       const responses = result.rows
       return responses
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1185,7 +1186,7 @@ class PostgresDB {
       const responses = result.rows
       return responses
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1201,7 +1202,7 @@ class PostgresDB {
       const responses = result.rows as SchemaColumn[]
       return responses
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw new Error('Problem getting database info')
     }
   }
@@ -1217,7 +1218,7 @@ class PostgresDB {
       const result = await this.query({ text, rowMode: 'array' })
       return result.rows.map((table) => table[0])
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1233,7 +1234,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [tableName] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1246,7 +1247,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [templateCode] })
       return result.rows.map((row) => row.version_id)
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1259,7 +1260,7 @@ class PostgresDB {
       const responses = result.rows as permissionPolicyColumns[]
       return responses
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw new Error('Problem getting permission policies')
     }
   }
@@ -1284,7 +1285,7 @@ class PostgresDB {
       const result = await this.query({ text, values })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1299,7 +1300,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [tableName, columnMatches] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1315,7 +1316,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [type] })
       return result.rows[0]?.value ?? null
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1330,7 +1331,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [type, JSON.stringify(value)] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1371,7 +1372,7 @@ class PostgresDB {
       }
       return 'TIMEOUT'
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }

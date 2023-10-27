@@ -33,6 +33,7 @@ import {
   ARCHIVE_SUBFOLDER_NAME,
 } from '../../constants'
 import { findArchiveSources } from '../files/helpers'
+import { errorMessage } from '../utilityFunctions'
 
 const useSnapshot: SnapshotOperation = async ({
   snapshotName = DEFAULT_SNAPSHOT_NAME,
@@ -192,7 +193,7 @@ const useSnapshot: SnapshotOperation = async ({
 
     return { success: true, message: `snapshot loaded ${snapshotName}` }
   } catch (e) {
-    return { success: false, message: 'error while loading snapshot', error: e.toString() }
+    return { success: false, message: 'error while loading snapshot', error: errorMessage(e) }
   }
 }
 

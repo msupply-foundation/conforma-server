@@ -15,6 +15,7 @@ import {
   ReviewAssignment,
   ReviewAssignmentStatus,
 } from '../../../src/generated/graphql'
+import { errorMessage } from '../../../src/components/utilityFunctions'
 
 async function generateReviewAssignments({
   parameters,
@@ -87,10 +88,10 @@ async function generateReviewAssignments({
         sectionCodes
       )
   } catch (error) {
-    console.log(error.message)
+    console.log(errorMessage(error))
     return {
       status: ActionQueueStatus.Fail,
-      error_log: 'Problem creating review_assignment records: ' + error.message,
+      error_log: 'Problem creating review_assignment records: ' + errorMessage(error),
     }
   }
 }
