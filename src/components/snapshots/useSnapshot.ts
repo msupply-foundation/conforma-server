@@ -61,7 +61,9 @@ const useSnapshot: SnapshotOperation = async ({
         ).version
       : '0.0.0'
     if (semverCompare(snapshotVersion, config.version) === 1) {
-      throw `Snapshot was created with version: ${snapshotVersion}\n You can't install a snapshot created with a version newer than the current application version: ${config.version}`
+      throw new Error(
+        `Snapshot was created with version: ${snapshotVersion}\n You can't install a snapshot created with a version newer than the current application version: ${config.version}`
+      )
     }
 
     // Check that we can find all the archives needed:
