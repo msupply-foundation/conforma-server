@@ -122,7 +122,7 @@ export const routeAccessExternalApi = async (
   } catch (err) {
     if (err instanceof AxiosError) {
       reply.status(err.response?.status ?? 500)
-      return reply.send(err.message)
+      return reply.send(`External API error: ${err.message}`)
     }
     console.log('Request error', errorMessage(err))
     throw new Error('Error processing request')
