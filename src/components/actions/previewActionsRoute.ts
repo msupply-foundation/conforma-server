@@ -57,6 +57,7 @@ export const createDisplayData = (actionsOutput: ActionResult[]): ActionResultDi
             result.output?.document?.filename ??
             'Generated Document',
           fileId: result.output?.document?.uniqueId,
+          filename: result.output?.document?.filename,
           errorLog: result.errorLog,
         }
       // We're only expecting preview results from sendNotification and generateDoc actions. Fallback for others:
