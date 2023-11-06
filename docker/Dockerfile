@@ -60,8 +60,8 @@ RUN apt-get install yarn -y
 ARG SERVER_BRANCH=main
 ARG WEB_APP_BRANCH=main
 WORKDIR /usr/src/
-RUN git clone -b ${SERVER_BRANCH} https://github.com/openmsupply/conforma-server.git
-RUN git clone -b ${WEB_APP_BRANCH} https://github.com/openmsupply/conforma-web-app.git
+RUN git clone -b ${SERVER_BRANCH} https://github.com/msupply-foundation/conforma-server.git
+RUN git clone -b ${WEB_APP_BRANCH} https://github.com/msupply-foundation/conforma-web-app.git
 
 # --- BUILD SERVER
 WORKDIR /usr/src/conforma-server
