@@ -693,16 +693,16 @@ Tree structure:
 
 # Installation
 
-The module is published as a Github package [here](https://github.com/openmsupply/conforma-server/packages/433685).
+The module is published as a Github package [here](https://github.com/msupply-foundation/conforma-server/packages/433685).
 
 In order to import packages from Github (rather than the default npm), the Github registry info needs to be added to an `.npmrc` config file in the project root, like so:
 
 ```
 registry=https://registry.npmjs.org
-@openmsupply:registry=https://npm.pkg.github.com
+@msupply-foundation:registry=https://npm.pkg.github.com
 ```
 
-This is telling npm/yarn to use the normal npm registry, except for packages scoped with `@openmsupply` which should use Github. This file is probably already present in the project.
+This is telling npm/yarn to use the normal npm registry, except for packages scoped with `@msupply-foundation` which should use Github. This file is probably already present in the project.
 
 You'll also need to authenticate once with Github npm registry in order to download the package.
 
@@ -711,13 +711,13 @@ You'll also need to authenticate once with Github npm registry in order to downl
 
 Then you can add the package to your project, if it's not already specified in `package.json`:
 
-`yarn add @openmsupply/expression-evaluator`
+`yarn add @msupply-foundation/expression-evaluator`
 
 It'll work exactly like a regular npm package after that.
 
 To update to the latest release of the package, run:
 
-`yarn upgrade @openmsupply/expression-evaluator`
+`yarn upgrade @msupply-foundation/expression-evaluator`
 
 <a name="development"></a>
 
