@@ -48,3 +48,10 @@ The available properties are as follows (almost  are optional, as the system has
 - **`siteHost`**: The canonical host domain that the live version of the site will be served from. This is how the system can determine if it is a "live" or "testing" site -- by comparing this value against the current url. If not specified, the system will be treated like a "live" system regardless of where it's actually running.
 - **`googleAnalyticsId`**: The web app has support for Google Analytics tracking. If you want to use it, enter your Analytics ID here. Note: this requires `siteHost` to be set correctly -- analytics will only work when the browser URL matches this value (so we don't enable tracking on test or dev systems).
 - **`showDocumentModal`**: If `true`, will display documents (when clicked to view) in a modal overlay rather than opening in a new tab. Will fallback to global system preference.
+- **`helpLinks`**: Any links that should appear in the "Help" menu (along with "help docs" defined in the database). Should be an array of these objects:  
+  ```
+  {
+    text: "Text to display in menu"
+    link: "https://link.to.visit"
+  }
+  ```
