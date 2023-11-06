@@ -5,7 +5,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openmsupply/conforma-server"
+    "url": "https://github.com/msupply-foundation/conforma-server"
   },
   "engines": {
     "node": ">=10.16.0"
@@ -72,7 +72,7 @@
   },
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^6.0.0",
-    "@openmsupply/expression-evaluator": "^1.11.2",
+    "@msupply-foundation/expression-evaluator": "^1.11.2",
     "adm-zip": "^0.5.5",
     "archiver": "^5.3.1",
     "archiver-zip-encrypted": "^1.0.11",

@@ -40,15 +40,15 @@ Sections of the application template that contain some [elements/questions](Elem
 
 ### template elements
 
-See [front-end docs](https://github.com/openmsupply/conforma-web-app/wiki/Element-Type-Specs) for this spec.
+See [front-end docs](https://github.com/msupply-foundation/conforma-web-app/wiki/Element-Type-Specs) for this spec.
 
 ### element type plugin
 
-See [front-end docs](https://github.com/openmsupply/conforma-web-app/wiki/Element-Type-Specs) for this spec.
+See [front-end docs](https://github.com/msupply-foundation/conforma-web-app/wiki/Element-Type-Specs) for this spec.
 
 The `display_component_name` references the UI component the applicant sees when filling in the form.
 
-The `config_component_name` refers to the UI component used to create the question/element in the [Template Builder](https://github.com/openmsupply/conforma-web-app/wiki/Template-Builder).
+The `config_component_name` refers to the UI component used to create the question/element in the [Template Builder](https://github.com/msupply-foundation/conforma-web-app/wiki/Template-Builder).
 
 ## Permission settings
 

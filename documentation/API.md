@@ -17,11 +17,6 @@ The back-end currently has two server instances which are launched to handle inc
 - [Fastify server API](#fastify-server-api)
   - [Authentication](#authentication)
   - [Public endpoints](#public-endpoints)
-    - [Login](#login)
-    - [Get preferences endpoint:](#get-preferences-endpoint)
-    - [Get language endpoint:](#get-language-endpoint)
-    - [Verification endpoint](#verification-endpoint)
-    - [File download endpoint:](#file-download-endpoint)
   - [Authenticated endpoints](#authenticated-endpoints)
     - [File upload endpoint:](#file-upload-endpoint)
     - [Check unique endpoint](#check-unique-endpoint)
@@ -480,7 +475,7 @@ It works by finding an event in the `trigger_schedule` table with matching `appl
 
 Require either "admin" or "systemManger" permissions.
 
-See [Lookup table documentation](https://github.com/openmsupply/conforma-web-app/wiki/Lookup-Tables) for more info
+See [Lookup table documentation](https://github.com/msupply-foundation/conforma-web-app/wiki/Lookup-Tables) for more info
 
 
 #### External API access
@@ -611,7 +606,7 @@ GET: `/all-languages`
 POST: `/remove-language?code=<languageCode>`
 - uninstalls the language from the server
 
-See [Localisation documentation](https://github.com/openmsupply/conforma-web-app/wiki/Localisation) for more info
+See [Localisation documentation](https://github.com/msupply-foundation/conforma-web-app/wiki/Localisation) for more info
 
 #### Snapshot endpoints
 

@@ -27,8 +27,8 @@ Please see [ReadMe](__README.md) for information about maintaining this document
 - [Triggers & Actions](Triggers-and-Actions.md)
   - [Action plugin spec](Action-plugin-specification.md)
   - [List of Action plugins](List-of-Action-plugins.md)
-  - [List of Core Actions](https://github.com/openmsupply/conforma-web-app/wiki/List-Core-Actions)
-- [Template Builder](https://github.com/openmsupply/conforma-web-app/wiki/Template-Builder)
+  - [List of Core Actions](https://github.com/msupply-foundation/conforma-web-app/wiki/List-Core-Actions)
+- [Template Builder](https://github.com/msupply-foundation/conforma-web-app/wiki/Template-Builder)
 - [Dynamic Expressions/Queries](Query-Syntax.md)
 - [Data Display/Views](Data-View.md)
 - [Snapshots](Snapshots.md)
@@ -41,4 +41,4 @@ Please see [ReadMe](__README.md) for information about maintaining this document
 
 **External**
 
-- [Front-end Docs](https://github.com/openmsupply/conforma-web-app/wiki)
+- [Front-end Docs](https://github.com/msupply-foundation/conforma-web-app/wiki)
