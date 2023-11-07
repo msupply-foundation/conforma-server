@@ -268,6 +268,7 @@ export interface ScheduleObject {
 }
 
 export interface ServerPreferences {
+  inactivityTimeout?: number // Minutes
   thumbnailMaxWidth?: number
   thumbnailMaxHeight?: number
   actionSchedule?: number[] | ScheduleObject
@@ -299,6 +300,7 @@ export interface ServerPreferences {
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
   // Must contain ALL keys of ServerPreferences -- please check
+  'inactivityTimeout',
   'thumbnailMaxHeight',
   'thumbnailMaxWidth',
   'actionSchedule',
