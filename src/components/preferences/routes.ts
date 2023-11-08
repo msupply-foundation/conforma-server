@@ -36,7 +36,7 @@ export const routeGetPrefs = async (request: any, reply: any) => {
   const logoutAfterInactivity = prefs.server.logoutAfterInactivity ?? DEFAULT_LOGOUT_TIME
 
   reply.send({
-    preferences: prefs.web,
+    preferences: { ...prefs.web, logoutAfterInactivity },
     languageOptions,
     latestSnapshot,
     allowedTableNames,
