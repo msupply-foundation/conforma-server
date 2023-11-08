@@ -107,7 +107,8 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
     },
     orgList,
     tokenExpiry:
-      parseInt(String(Date.now() / 1000)) + (config.inactivityTimeout ?? DEFAULT_LOGOUT_TIME) * 60,
+      parseInt(String(Date.now() / 1000)) +
+      (config.logoutAfterInactivity ?? DEFAULT_LOGOUT_TIME) * 60,
   }
 }
 

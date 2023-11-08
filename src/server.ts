@@ -106,7 +106,7 @@ const startServer = async () => {
 
       // Check if token is too old
       const timeLimit =
-        tokenData.iat * 1000 + (config.inactivityTimeout ?? DEFAULT_LOGOUT_TIME) * 60_000
+        tokenData.iat * 1000 + (config.logoutAfterInactivity ?? DEFAULT_LOGOUT_TIME) * 60_000
 
       if (Date.now() > timeLimit) {
         reply.statusCode = 401
