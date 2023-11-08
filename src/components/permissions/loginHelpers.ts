@@ -7,6 +7,7 @@ import { PermissionRow, TemplatePermissions } from './types'
 import { baseJWT, compileJWT } from './rowLevelPolicyHelpers'
 import { Organisation, UserOrg } from '../../types'
 import { errorMessage } from '../utilityFunctions'
+import { DEFAULT_LOGOUT_TIME } from '../../constants'
 
 const verifyPromise: any = promisify(verify)
 const signPromise: any = promisify(sign)
@@ -105,6 +106,8 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
       isManager,
     },
     orgList,
+    tokenExpiry:
+      parseInt(String(Date.now() / 1000)) + (config.inactivityTimeout ?? DEFAULT_LOGOUT_TIME) * 60,
   }
 }
 

@@ -108,9 +108,6 @@ const startServer = async () => {
       const timeLimit =
         tokenData.iat * 1000 + (config.inactivityTimeout ?? DEFAULT_LOGOUT_TIME) * 60_000
 
-      console.log('Date', Date.now())
-      console.log('timeLimit', timeLimit)
-
       if (Date.now() > timeLimit) {
         reply.statusCode = 401
         console.log('Expired token from:', tokenData.username)
