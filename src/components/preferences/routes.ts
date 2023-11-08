@@ -8,7 +8,7 @@ import {
   isObject,
 } from '../../components/utilityFunctions'
 import config, { refreshConfig } from '../../config'
-import { PREFERENCES_FILE } from '../../constants'
+import { DEFAULT_LOGOUT_TIME, PREFERENCES_FILE } from '../../constants'
 import { readLanguageOptions } from '../localisation/routes'
 
 const writeFilePromise = promisify(writeFile)
@@ -33,7 +33,15 @@ export const routeGetPrefs = async (request: any, reply: any) => {
   const languageOptions = readLanguageOptions()
   const latestSnapshot = await databaseConnect.getSystemInfo('snapshot')
   const allowedTableNames = config.allowedTableNames
-  reply.send({ preferences: prefs.web, languageOptions, latestSnapshot, allowedTableNames })
+  const logoutAfterInactivity = prefs.server.logoutAfterInactivity ?? DEFAULT_LOGOUT_TIME
+
+  reply.send({
+    preferences: prefs.web,
+    languageOptions,
+    latestSnapshot,
+    allowedTableNames,
+    logoutAfterInactivity,
+  })
 }
 
 // Return all prefs for editing (Admin only)
