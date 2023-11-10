@@ -51,6 +51,7 @@ import migrateData from '../database/migration/migrateData'
 import routeArchiveFiles from './components/files/routeArchiveFiles'
 import { Schedulers } from './components/scheduler'
 import { routeAccessExternalApi } from './components/external-apis/routes'
+import { DEFAULT_LOGOUT_TIME } from './constants'
 require('dotenv').config()
 
 // Set the default locale and timezone for date-time display (in console)
@@ -101,6 +102,18 @@ const startServer = async () => {
       if (error) {
         reply.statusCode = 401
         return reply.send({ success: false, message: error })
+      }
+
+      // Check if token is too old
+      if (config.logoutAfterInactivity !== 0) {
+        const expiryTime =
+          tokenData.iat * 1000 + (config.logoutAfterInactivity ?? DEFAULT_LOGOUT_TIME) * 60_000
+
+        if (Date.now() > expiryTime) {
+          reply.statusCode = 401
+          console.log('Expired token from:', tokenData.username)
+          return reply.send({ success: false, message: 'Expired token' })
+        }
       }
     })
 
