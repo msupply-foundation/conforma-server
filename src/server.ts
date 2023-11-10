@@ -105,13 +105,15 @@ const startServer = async () => {
       }
 
       // Check if token is too old
-      const expiryTime =
-        tokenData.iat * 1000 + (config.logoutAfterInactivity ?? DEFAULT_LOGOUT_TIME) * 60_000
+      if (config.logoutAfterInactivity !== 0) {
+        const expiryTime =
+          tokenData.iat * 1000 + (config.logoutAfterInactivity ?? DEFAULT_LOGOUT_TIME) * 60_000
 
-      if (Date.now() > expiryTime) {
-        reply.statusCode = 401
-        console.log('Expired token from:', tokenData.username)
-        return reply.send({ success: false, message: 'Expired token' })
+        if (Date.now() > expiryTime) {
+          reply.statusCode = 401
+          console.log('Expired token from:', tokenData.username)
+          return reply.send({ success: false, message: 'Expired token' })
+        }
       }
     })
 
