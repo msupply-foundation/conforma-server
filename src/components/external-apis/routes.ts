@@ -1,4 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
+import db from '../databaseConnect'
 import path from 'path'
 import config from '../../config'
 import { get as extractProperty } from 'lodash'
@@ -40,7 +41,7 @@ export const routeAccessExternalApi = async (
     url,
     permissions,
     queryParams,
-    allowedClientQueries,
+    allowedClientQueryParams,
     returnProperty,
     additionalAxiosProperties,
     validationExpression,
@@ -59,7 +60,7 @@ export const routeAccessExternalApi = async (
   }
 
   // Construct data object for subsequent expression evaluator
-  const { userId, orgId } = request.auth as { userId?: number; orgId?: number }
+  const { userId, orgId } = request.auth ?? {}
   const { user } = await getUserInfo({ userId, orgId })
   const evaluatorData: {
     user: typeof user
@@ -68,9 +69,17 @@ export const routeAccessExternalApi = async (
   } = { user, functions }
 
   // ApplicationData only available if an applicationId is provided as a query
-  // parameter
-  const { applicationId } = request.query as { applicationId?: number }
-  if (applicationId) evaluatorData.applicationData = await getApplicationData({ applicationId })
+  // parameter, and only if user has permission to view that application
+  const applicationId = Number((request?.query as { applicationId: string })?.applicationId)
+  if (applicationId) {
+    const { application } = await db.gqlQuery(
+      `query getApplication($applicationId: Int!) {
+      application(id: $applicationId) { id } }`,
+      { applicationId },
+      request?.headers?.authorization
+    )
+    if (application) evaluatorData.applicationData = await getApplicationData({ applicationId })
+  }
 
   const axiosRequest = {
     method,
@@ -81,7 +90,7 @@ export const routeAccessExternalApi = async (
   axiosRequest.params = await constructQueryObject(
     request.query as QueryParameters,
     queryParams,
-    allowedClientQueries,
+    allowedClientQueryParams,
     evaluatorData
   )
 

@@ -73,8 +73,8 @@ const startServer = async () => {
   createDefaultDataFolders()
   await cleanUpFiles() // Runs on schedule as well as startup
 
-  // Add schedulers to global "config" object so we can update them. There should
-  // only be a single global instance of Schedulers -- this one!
+  // Add schedulers to global "config" object so we can update them. There
+  // should only be a single global instance of Schedulers -- this one!
   config.scheduledJobs = new Schedulers()
 
   const server = fastify()
