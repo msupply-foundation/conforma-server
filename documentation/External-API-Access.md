@@ -56,10 +56,10 @@ Route definitions are defined as follows:
 Looking at these properties in more detail:
 
 - `queryParams`: these are a set of query parameters (`?key=value` in url) that will be inserted into every query to this route. The `value` of each can be an [Evaluator expression](Query-Syntax.md), so they can be generated dynamically for each request. Other query parameters can be supplied by the client request, although the ones defined here will take precedence in the event of the same key being used.
-- `allowedClientQueries`: if defined, the front-end client can only use these query keys. Any others will be ignored.
+- `allowedClientQueryParams`: if defined, the front-end client can only use these query keys. Any others will be ignored.
+- `allowedClientBodyFields`: similar to `allowedClientQueryParams`, but for the JSON fields allowed in a POST request body.
 - `permissions`: if defined, the client request must have one of these permissions (in its JWT token) in order to proceed. 
-- `returnProperty`: the name of the property from the data returned by the API to return to the client. If the API returns more data than we would like the client to have access to, we could restrict it here. and we only want, say, a last name, we could use `"name.lastName"` for example.
-- `returnProperty`: the name of the property from the data returned by the API to return to the client. If the API returns more data than we would like the client to have access to, we could restrict it here. (E.g. `name.lastName`)
+- `returnProperty`: the name of the property from the data returned by the API to return to the client. If the API returns more data than we would like the client to have access to, we could restrict it here. (E.g. `name.lastName`).
 - `validationExpression`: an additional [Evaluator expression](Query-Syntax.md) that can further restrict whether the client can receive the requested data. For example, you could use it to make sure their username matches the username of the returned data.
 
 

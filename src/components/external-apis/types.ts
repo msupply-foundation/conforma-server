@@ -10,7 +10,7 @@ interface RouteCommon {
   url: string
   permissions?: string[]
   queryParams?: QueryParameters
-  allowedClientQueries?: string[]
+  allowedClientQueryParams?: string[]
   additionalAxiosProperties?: { [key: string]: any }
   returnProperty?: string
   validationExpression?: EvaluatorNode
