@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:experimental
 #DOCKER_BUILDKIT=1 docker build --progress=plain -t allbuild --secret id=githubtoken,src=../../../githubtoken.txt .
 
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 RUN apt update
 RUN apt-get update
