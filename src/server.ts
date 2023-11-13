@@ -105,7 +105,7 @@ const startServer = async () => {
       }
 
       // Check if token is too old
-      if (config.logoutAfterInactivity !== 0) {
+      if (config.logoutAfterInactivity !== 0 && config.isProductionBuild) {
         const expiryTime =
           tokenData.iat * 1000 + (config.logoutAfterInactivity ?? DEFAULT_LOGOUT_TIME) * 60_000
 
