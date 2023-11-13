@@ -40,7 +40,7 @@ RUN npx -v
 # --- POSTGRES 
 ARG POSTGRES_VERSION=12
 # https://www.postgresql.org/download/linux/ubuntu/
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list.d/pgdg.list
+RUN echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list.d/pgdg.list
 RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add
 RUN apt-get update
 # make sure postgresql install is prompt free
@@ -86,8 +86,8 @@ COPY nginx_config/conforma.conf /etc/nginx/conf.d/
 
 # --- ADD POSTGRES CONFIG
 WORKDIR /etc/postgresql/${POSTGRES_VERSION}/main
-RUN echo "listen_addresses = '*'" >> postgresql.conf
 COPY postgres_config/postgresql.conf .
+RUN echo "listen_addresses = '*'" >> postgresql.conf
 COPY postgres_config/pg_hba.conf .
 
 # --- INITIALISE DATABASE (core templates)

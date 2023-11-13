@@ -33,7 +33,7 @@ The available properties are as follows (almost  are optional, as the system has
 - **`archiveSchedule`**: Schedule for [archiving system files](File-Archiving.md), as per the node-schedule syntax above. (Default: twice per week on Weds/Sun at 1:10am UTC)
 - **`archiveMinSize`**: Archive-able files much reach a total size of at least this value (in `MB`), otherwise archiving will be skipped. (Default: `100`)
 - **`archiveFileAgeMinimum`**: The number of days old a file needs to be before it is archived. (Default: 7)
-- **`locale`**: The BCP 47 locale string used for displaying date/times (in the console). See the [Luxon documentation](https://www.science.co.il/language/Locale-codes.php) for more explanation. (Default: "en-US" probably, may depend on host system)
+- **`locale`**: The BCP 47 locale string used for displaying date/times (in the console). See the [Luxon documentation](https://www.science.co.il/language/Locale-codes.php) for more explanation. (Default: "en-US" probably, may depend on host system.) Note that this is distinct from the "locale" value stored in localisations, which affects how dates, etc. appear in the front end.
 - **`timezone`**: The for displaying date/times as well as for the event schedulers (above). See [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) for a full list of available timezone codes. (Default: host system timezone)
 
 ### Web app
