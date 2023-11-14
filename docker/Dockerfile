@@ -91,9 +91,6 @@ COPY postgres_config/postgresql.conf .
 COPY postgres_config/pg_hba.conf .
 
 # --- INITIALISE DATABASE (core templates)
-WORKDIR /var/lib/
-# Fix ownership
-RUN chown -R postgres postgresql/
 WORKDIR /usr/src/initialise_database
 COPY database.sh .
 RUN ./database.sh
