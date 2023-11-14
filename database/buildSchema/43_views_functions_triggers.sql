@@ -1605,7 +1605,7 @@ CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
         END::reviewer_action,
         -- ASSIGNER ACTIONS
         CASE
-        -- Using MIN becuase number_of_assigned_sections is for each level (i.e. there are multiple levels grouped by stage_id)
+        -- Using MIN because number_of_assigned_sections is for each level (i.e. there are multiple levels grouped by stage_id)
         WHEN MIN(assigned_sections_by_stage_and_level.assigned_section_for_level) < COUNT(DISTINCT (assignable_sections.id)) THEN
             'ASSIGN'
         WHEN MIN(assigned_sections_by_stage_and_level.assigned_in_progress_sections) = COUNT(DISTINCT (assignable_sections.id)) THEN
