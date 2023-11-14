@@ -9,7 +9,7 @@ import { Attachment } from 'nodemailer/lib/mailer'
 import { getFilePath } from '../../../src/components/files/fileHandler'
 import { ActionApplicationData } from '../../../src/types'
 import config from '../../../src/config'
-import { errorMessage } from '../../../src/components/utilityFunctions'
+import { errorMessage, getEnvVariableReplacement } from '../../../src/components/utilityFunctions'
 
 const isValidEmail = (email: string) => /^[\w\-_+.]+@([\w\-]+\.)+[A-Za-z]{2,}$/gm.test(email)
 // Test this regex: https://regex101.com/r/ysGgNx/2
@@ -48,7 +48,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
               secure: SMTPConfig.secure,
               auth: {
                 user: SMTPConfig.user,
-                pass: process.env.SMTP_PASSWORD,
+                pass: getEnvVariableReplacement(SMTPConfig.password),
               },
             }
       )

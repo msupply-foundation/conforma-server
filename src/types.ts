@@ -140,14 +140,7 @@ export interface ActionApplicationData extends BaseApplicationData {
     appRootFolder: string
     filesFolder: string
     webHostUrl: string
-    SMTPConfig?: {
-      host: string
-      port: number
-      secure: boolean
-      user: string
-      defaultFromName: string
-      defaultFromEmail: string
-    }
+    SMTPConfig?: SMTPConfig
     emailMode: EmailOperationMode
     testingEmail: string | null
     productionHost: string | null
@@ -267,19 +260,22 @@ export interface ScheduleObject {
   tz?: string | null
 }
 
+interface SMTPConfig {
+  host: string
+  port: number
+  secure: boolean
+  user: string
+  password: string
+  defaultFromName: string
+  defaultFromEmail: string
+}
+
 export interface ServerPreferences {
   thumbnailMaxWidth?: number
   thumbnailMaxHeight?: number
   actionSchedule?: number[] | ScheduleObject
   hoursSchedule?: number[] // deprecated, please use actionSchedule
-  SMTPConfig?: {
-    host: string
-    port: number
-    secure: boolean
-    user: string
-    defaultFromName: string
-    defaultFromEmail: string
-  }
+  SMTPConfig?: SMTPConfig
   systemManagerPermissionName?: string
   managerCanEditLookupTables?: boolean
   previewDocsMinKeepTime?: string
