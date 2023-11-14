@@ -86,7 +86,7 @@ COPY nginx_config/conforma.conf /etc/nginx/conf.d/
 
 # --- ADD POSTGRES CONFIG
 WORKDIR /etc/postgresql/${POSTGRES_VERSION}/main
-COPY postgres_config/postgresql.conf .
+# COPY postgres_config/postgresql.conf .
 RUN echo "listen_addresses = '*'" >> postgresql.conf
 COPY postgres_config/pg_hba.conf .
 
