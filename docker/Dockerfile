@@ -30,7 +30,7 @@ RUN apt-get install nginx -y
 RUN apt install libreoffice -y
 
 # --- NODE and NPX
-ARG NODE_VERSION=14
+ARG NODE_VERSION=18
 # https://github.com/nodesource/distributions/blob/master/README.md -> Node.js LTS (v14.x): -> # Using Debian, as root
 RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash 
 RUN apt-get install -y nodejs
