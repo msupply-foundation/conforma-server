@@ -94,6 +94,10 @@ COPY postgres_config/pg_hba.conf .
 WORKDIR /usr/src/initialise_database
 COPY database.sh .
 RUN ./database.sh
+# Need to fix ownership and start the service
+WORKDIR /var/lib/
+RUN chown -R postgres postgresql/
+RUN service postgresql start
 
 # --- CREATE LOG DIR
 WORKDIR /var/log/conforma
