@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:experimental
 #DOCKER_BUILDKIT=1 docker build --progress=plain -t allbuild --secret id=githubtoken,src=../../../githubtoken.txt .
 
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 RUN apt update
 RUN apt-get update
@@ -87,10 +87,13 @@ COPY nginx_config/conforma.conf /etc/nginx/conf.d/
 # --- ADD POSTGRES CONFIG
 WORKDIR /etc/postgresql/${POSTGRES_VERSION}/main
 COPY postgres_config/postgresql.conf .
-RUN echo "listen_addresses = '*'" >> postgresql.conf
+# RUN echo "listen_addresses = '*'" >> postgresql.conf
 COPY postgres_config/pg_hba.conf .
 
 # --- INITIALISE DATABASE (core templates)
+WORKDIR /var/lib/
+# Fix ownership
+RUN chown -R postgres postgresql/
 WORKDIR /usr/src/initialise_database
 COPY database.sh .
 RUN ./database.sh
