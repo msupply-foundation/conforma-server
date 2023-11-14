@@ -86,18 +86,17 @@ COPY nginx_config/conforma.conf /etc/nginx/conf.d/
 
 # --- ADD POSTGRES CONFIG
 WORKDIR /etc/postgresql/${POSTGRES_VERSION}/main
-# COPY postgres_config/postgresql.conf .
-RUN echo "listen_addresses = '*'" >> postgresql.conf
+COPY postgres_config/postgresql.conf .
+# RUN echo "listen_addresses = '*'" >> postgresql.conf
 COPY postgres_config/pg_hba.conf .
 
 # --- INITIALISE DATABASE (core templates)
+WORKDIR /var/lib/
+# Fix ownership
+RUN chown -R postgres postgresql/
 WORKDIR /usr/src/initialise_database
 COPY database.sh .
 RUN ./database.sh
-# Need to fix ownership and start the service
-WORKDIR /var/lib/
-RUN chown -R postgres postgresql/
-RUN service postgresql start
 
 # --- CREATE LOG DIR
 WORKDIR /var/log/conforma
