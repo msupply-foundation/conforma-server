@@ -330,6 +330,11 @@ export interface WebAppPrefs {
   siteHost?: string
 }
 
+export interface Preferences {
+  server: ServerPreferences
+  web: WebAppPrefs
+}
+
 interface ConfigBase {
   pg_database_connection: PoolConfig
   version: string

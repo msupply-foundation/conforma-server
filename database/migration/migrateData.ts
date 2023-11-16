@@ -7,6 +7,11 @@ import path from 'path'
 import { readFileSync } from 'fs'
 import bcrypt from 'bcrypt'
 import { errorMessage, getAppEntryPointDir } from '../../src/components/utilityFunctions'
+import {
+  loadCurrentPrefs,
+  routeGetAllPrefs,
+  setPreferences,
+} from '../../src/components/preferences'
 
 // CONSTANTS
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
@@ -831,6 +836,22 @@ const migrateData = async () => {
 
     console.log(' - Updating file sizes for existing files')
     await DB.updateFileSizes()
+  }
+
+  // v0.7.0
+  if (databaseVersionLessThan('0.7.0')) {
+    console.log('Migrating to v0.7.0...')
+
+    console.log(' - Updating SMTP config in preferences with password field')
+    try {
+      const prefs = await loadCurrentPrefs()
+      if (prefs?.server?.SMTPConfig && !prefs.server.SMTPConfig.password) {
+        prefs.server.SMTPConfig.password = 'env.SMTP_PASSWORD'
+        await setPreferences(prefs)
+      }
+    } catch (err) {
+      console.log("Couldn't update preferences -- please fix manually")
+    }
   }
 
   // Other version migrations continue here...
