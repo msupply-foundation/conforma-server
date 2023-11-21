@@ -70,8 +70,8 @@ if (!web_host) {
 const startServer = async () => {
   await migrateData()
   await loadActionPlugins() // Connects to Database and listens for Triggers
-  createDefaultDataFolders()
-  await cleanUpFiles() // Runs on schedule as well as startup
+  // createDefaultDataFolders()
+  // await cleanUpFiles() // Runs on schedule as well as startup
 
   // Add schedulers to global "config" object so we can update them. There
   // should only be a single global instance of Schedulers -- this one!
