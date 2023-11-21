@@ -1,0 +1,13 @@
+{
+  "name": "generate_text_file_action",
+  "version": "0.1",
+  "description": "Generates a text file and exports it to a designated location",
+  "author": "The mSupplyFoundation",
+  "license": "MIT",
+  "scripts": {
+    "build": "node ../../utils/pluginScripts/buildPluginFromPluginFolder.js",
+    "test": "node ../../utils/pluginScripts/testPluginFromPluginFolder.js"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}

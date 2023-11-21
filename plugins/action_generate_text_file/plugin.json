@@ -1,0 +1,24 @@
+{
+  "type": "action_plugin",
+  "code": "generateTextFile",
+  "name": "Generate Text File",
+  "description": "Generates a text file and exports it to a designated location",
+  "required_parameters": ["filename", "outputPath"],
+  "optional_parameters": ["text", "data", "registerInDatabase", "fileData"],
+  "output_properties": ["outputText", "dbFile"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "insert"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2023-11-22"
+  }
+}
