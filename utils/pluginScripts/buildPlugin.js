@@ -17,8 +17,6 @@ const buildPlugin = async (pluginName) => {
     return
   }
 
-  return
-
   const temporaryPluginBuildFolder = rootDirectory + '/temporaryPluginBuild'
 
   const yarnInstallAndPrep = async () => {
