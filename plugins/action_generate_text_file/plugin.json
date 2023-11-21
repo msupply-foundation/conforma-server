@@ -3,8 +3,8 @@
   "code": "generateTextFile",
   "name": "Generate Text File",
   "description": "Generates a text file and exports it to a designated location",
-  "required_parameters": ["filename", "outputPath"],
-  "optional_parameters": ["text", "data", "registerInDatabase", "fileData"],
+  "required_parameters": ["filename"],
+  "optional_parameters": ["text", "outputPath", "data", "registerInDatabase", "fileData"],
   "output_properties": ["outputText", "dbFile"],
   "info": {
     "author": {

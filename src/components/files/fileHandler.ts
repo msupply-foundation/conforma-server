@@ -16,6 +16,7 @@ import DBConnect from '../databaseConnect'
 import createThumbnail from './createThumbnails'
 import { FilePayload } from '../../types'
 import { File } from '../../generated/graphql'
+import { FILES_FOLDER } from '../../constants'
 
 export const { filesFolder, imagesFolder, genericThumbnailsFolderName } = config
 export const filesPath = path.join(getAppEntryPointDir(), filesFolder)
@@ -116,12 +117,11 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
 
 // For registering a file that already exists on disk
 export const registerFileInDB = async (
-  fileData: Partial<File> & { folderPath: string; mimetype: string; filename: string }
+  fileData: Partial<File> & { filePath: string; mimetype: string }
 ) => {
   const normalisedFileData = objectKeysToSnakeCase(fileData)
-  const { unique_id, file_size, mimetype, folder_path, filename } = normalisedFileData
-  const file_path = path.join(folder_path, filename)
-  const fullFilePath = path.join(filesPath, file_path)
+  const { unique_id, file_size, mimetype, file_path } = normalisedFileData
+  const filename = path.basename(file_path)
 
   normalisedFileData.file_path = file_path
   normalisedFileData.original_filename = filename
@@ -129,12 +129,13 @@ export const registerFileInDB = async (
   normalisedFileData.thumbnail_path = await createThumbnail({
     unique_id: normalisedFileData.unique_id,
     filesPath,
-    basename: path.basename(filename),
+    basename: filename,
     ext: path.extname(filename),
-    subfolder: folder_path,
+    subfolder: path.dirname(file_path),
     mimetype,
   })
-  if (!file_size) normalisedFileData.file_size = (await fsProm.stat(fullFilePath)).size
+  if (!file_size)
+    normalisedFileData.file_size = (await fsProm.stat(path.join(FILES_FOLDER, file_path))).size
 
   await saveToDB(normalisedFileData)
 }

@@ -1,19 +1,21 @@
 import { ActionQueueStatus, File } from '../../../src/generated/graphql'
 import { ActionPluginOutput, ActionPluginInput } from '../../types'
 import fs from 'fs-extra'
+import os from 'os'
 import path from 'path'
 import { errorMessage } from '../../../src/components/utilityFunctions'
 import { registerFileInDB } from '../../../src/components/files/fileHandler'
 import { FILES_FOLDER } from '../../../src/constants'
 
-const DEFAULT_PATH = path.join('_textFiles')
+const DEFAULT_OUTPUT_PATH = '_textFiles'
+const HOME_FOLDER = os.homedir()
 
 async function generateTextFile({ parameters }: ActionPluginInput): Promise<ActionPluginOutput> {
   const {
     text,
     data,
     filename,
-    outputPath = DEFAULT_PATH,
+    outputPath = DEFAULT_OUTPUT_PATH,
     registerInDatabase = false,
     fileData = {},
   } = parameters as {
@@ -49,26 +51,34 @@ async function generateTextFile({ parameters }: ActionPluginInput): Promise<Acti
   try {
     console.log('Exporting text:', outputText)
 
-    // If the output file is to be registered in the database, then it must be
-    // placed in the "files" folder
-    const outputFolder = registerInDatabase ? path.join(FILES_FOLDER, outputPath) : outputPath
+    // Database files are placed relative Conforma "files" folder, other files
+    // relative to home folder (or as-is if absolute path)
+    const baseFolder = registerInDatabase
+      ? FILES_FOLDER
+      : path.isAbsolute(outputPath)
+      ? ''
+      : HOME_FOLDER
 
-    await fs.outputFile(path.join(outputFolder, filename), outputText)
+    const outputFolder = path.join(baseFolder, outputPath)
+    const fullFilePath = path.join(outputFolder, filename)
+
+    await fs.outputFile(fullFilePath, outputText)
+    console.log('File created:', fullFilePath)
 
     let dbFile
     if (registerInDatabase) {
       dbFile = await registerFileInDB({
         ...fileData,
-        folderPath: outputPath,
-        filename,
+        filePath: path.join(outputPath, filename),
         mimetype: 'text/plain',
       })
+      console.log('File registered in database')
     }
 
     return {
       status: ActionQueueStatus.Success,
       error_log: '',
-      output: { outputFilePath: path.join(outputFolder, filename), outputText, dbFile },
+      output: { outputFilePath: fullFilePath, outputText, dbFile },
     }
   } catch (error) {
     console.log(errorMessage(error))
