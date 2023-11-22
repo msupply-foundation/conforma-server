@@ -291,7 +291,7 @@ export interface ServerPreferences {
   locale?: string
   timezone?: string
   externalApiConfigs?: ExternalApiConfigs
-  environmentVarsInEvaluator?: string[]
+  envVars?: string[]
 }
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
@@ -315,7 +315,7 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'locale',
   'timezone',
   'externalApiConfigs',
-  'environmentVarsInEvaluator',
+  'envVars',
 ]
 
 export interface WebAppPrefs {

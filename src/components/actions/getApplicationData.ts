@@ -72,9 +72,7 @@ export const getApplicationData = async (input: {
     : {}
 
   const env = Object.fromEntries(
-    Object.entries(process.env).filter(([key, _]) =>
-      config.environmentVarsInEvaluator?.includes(key)
-    )
+    Object.entries(process.env).filter(([key, _]) => config.envVars?.includes(key))
   )
   const environmentData = {
     appRootFolder: getAppEntryPointDir(),

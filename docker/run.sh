@@ -2,8 +2,8 @@
 
 # To exit container, type 'exit'
 
-# Get SMTP password from .env file
-export $(grep -v '^#' ../.env | xargs)
+# Get SMTP password etc. from .env file
+source ../.env
 
 docker run \
     -ti \
