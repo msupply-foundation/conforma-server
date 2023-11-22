@@ -91,6 +91,7 @@ COPY postgres_config/postgresql.conf .
 COPY postgres_config/pg_hba.conf .
 
 # --- INITIALISE DATABASE (default: core templates)
+ARG INITIAL_SNAPSHOT=""
 WORKDIR /usr/src/conforma-server/database/_snapshots
 COPY snapshots/${INITIAL_SNAPSHOT}/ ./${INITIAL_SNAPSHOT}
 
