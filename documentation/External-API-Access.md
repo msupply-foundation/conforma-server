@@ -45,7 +45,7 @@ Route definitions are defined as follows:
             <key>: <value>,
             ...
         },
-        allowedClientQueries: [ ...<list-of-keys>],
+        allowedClientQueryParams: [ ...<list-of-keys>],
         permissions: [...<list-of-permissions>],
         returnProperty: string
         validationExpression?: <EvaluatorExpression>
@@ -90,12 +90,12 @@ Here is a full example configuration with a couple of routes. One is very simple
        "drugName": {
          "method": "get",
          "url": "drugs",
-         "allowedClientQueries": [ "name" ],
+         "allowedClientQueryParams": [ "name" ],
        },
        "person": {
          "method": "get",
          "url": "person/name",
-         "allowedClientQueries": [ "id" ],
+         "allowedClientQueryParams": [ "id" ],
          "queryParameters": {
             "format": "JSON"
          },

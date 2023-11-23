@@ -50,7 +50,7 @@ import { extractJWTfromHeader, getTokenData } from './components/permissions/log
 import migrateData from '../database/migration/migrateData'
 import routeArchiveFiles from './components/files/routeArchiveFiles'
 import { Schedulers } from './components/scheduler'
-import { routeAccessExternalApi } from './components/external-apis/routes'
+import { AccessExternalApiQuery, routeAccessExternalApi } from './components/external-apis/routes'
 import { DEFAULT_LOGOUT_TIME } from './constants'
 require('dotenv').config()
 
@@ -185,7 +185,7 @@ const startServer = async () => {
     server.get('/check-triggers', routeTriggers)
     server.post('/preview-actions', routePreviewActions)
     server.post('/extend-application', routeExtendApplication)
-    server.post('/external-api/:name/:route', routeAccessExternalApi)
+    server.post<AccessExternalApiQuery>('/external-api/:name/:route', routeAccessExternalApi)
     // Lookup tables requires "systemManager" permission
     server.register(lookupTableRoutes, { prefix: '/lookup-table' })
 

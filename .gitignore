@@ -70,3 +70,5 @@ database/snapshot_path_aliases.json
 #Other secrets
 testSecrets.json
 .vscode/settings.json
+
+docker/snapshots
