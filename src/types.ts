@@ -271,6 +271,7 @@ interface SMTPConfig {
 }
 
 export interface ServerPreferences {
+  logoutAfterInactivity?: number // Minutes
   thumbnailMaxWidth?: number
   thumbnailMaxHeight?: number
   actionSchedule?: number[] | ScheduleObject
@@ -296,6 +297,7 @@ export interface ServerPreferences {
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
   // Must contain ALL keys of ServerPreferences -- please check
+  'logoutAfterInactivity',
   'thumbnailMaxHeight',
   'thumbnailMaxWidth',
   'actionSchedule',

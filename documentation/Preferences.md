@@ -35,6 +35,8 @@ The available properties are as follows (almost  are optional, as the system has
 - **`archiveFileAgeMinimum`**: The number of days old a file needs to be before it is archived. (Default: 7)
 - **`locale`**: The BCP 47 locale string used for displaying date/times (in the console). See the [Luxon documentation](https://www.science.co.il/language/Locale-codes.php) for more explanation. (Default: "en-US" probably, may depend on host system.) Note that this is distinct from the "locale" value stored in localisations, which affects how dates, etc. appear in the front end.
 - **`timezone`**: The for displaying date/times as well as for the event schedulers (above). See [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) for a full list of available timezone codes. (Default: host system timezone)
+- **`logoutAfterInactivity`**: The front-end will be logged out automatically if user is idle for longer than this (in minutes). The server will also not accept any JWTs older than this. (Default: `60`)  
+If set to `0`, auto logout will be disabled.
 
 ### Web app
 
