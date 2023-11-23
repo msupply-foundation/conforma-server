@@ -13,18 +13,19 @@ import { ActionApplicationData } from '../../types'
 import functions from '../actions/evaluatorFunctions'
 import { errorMessage } from '../utilityFunctions'
 
-interface ExternalApiRequest {
-  name: string
-  route: string
+export type AccessExternalApiQuery = {
+  Querystring: { applicationId?: string }
+  Params: { name: string; route: string }
+  auth: { userId: number; orgId: number }
 }
 
 const apiConfigs: ExternalApiConfigs = config?.externalApiConfigs ?? {}
 
 export const routeAccessExternalApi = async (
-  request: FastifyRequest & { auth?: { userId?: number; orgId?: number } },
+  request: FastifyRequest<AccessExternalApiQuery>,
   reply: FastifyReply
 ) => {
-  const { name, route } = request.params as ExternalApiRequest
+  const { name, route } = request.params
 
   const { baseUrl, routes, authentication } = apiConfigs?.[name]
   if (!baseUrl) {
@@ -60,7 +61,12 @@ export const routeAccessExternalApi = async (
   }
 
   // Construct data object for subsequent expression evaluator
-  const { userId, orgId } = request.auth ?? {}
+  const { userId, orgId } =
+    (
+      request as FastifyRequest<AccessExternalApiQuery> & {
+        auth: { userId: number; orgId: number }
+      }
+    ).auth ?? {}
   const { user } = await getUserInfo({ userId, orgId })
   const evaluatorData: {
     user: typeof user
@@ -70,7 +76,7 @@ export const routeAccessExternalApi = async (
 
   // ApplicationData only available if an applicationId is provided as a query
   // parameter, and only if user has permission to view that application
-  const applicationId = Number((request?.query as { applicationId: string })?.applicationId)
+  const applicationId = Number(request.query?.applicationId)
   if (applicationId) {
     const { application } = await db.gqlQuery(
       `query getApplication($applicationId: Int!) {
@@ -95,7 +101,7 @@ export const routeAccessExternalApi = async (
   )
 
   if (method === 'post') {
-    const { bodyJson, allowedClientBodyFields } = routeConfig as PostRoute
+    const { bodyJson, allowedClientBodyFields } = routeConfig
     if (request.body || bodyJson) {
       axiosRequest.data = await constructQueryObject(
         request.body as QueryParameters,
