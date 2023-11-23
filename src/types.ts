@@ -327,6 +327,7 @@ export interface WebAppPrefs {
   brandLogoFileId?: string
   brandLogoOnDarkFileId?: string
   defaultListFilters?: string[]
+  userRegistrationCode?: string
   style?: { headerBgColor?: string }
   googleAnalyticsId?: string
   siteHost?: string
