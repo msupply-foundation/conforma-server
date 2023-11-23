@@ -18,7 +18,25 @@ The back-end currently has two server instances which are launched to handle inc
   - [Authentication](#authentication)
   - [Public endpoints](#public-endpoints)
   - [Authenticated endpoints](#authenticated-endpoints)
+    - [File upload endpoint:](#file-upload-endpoint)
+    - [Check unique endpoint](#check-unique-endpoint)
+    - [Create hash](#create-hash)
+    - [Login Organisation](#login-organisation)
+    - [User Info](#user-info)
+    - [User Permissions](#user-permissions)
+    - [Check Triggers](#check-triggers)
+    - [Generate PDF](#generate-pdf)
+    - [Data Views](#data-views)
+    - [Preview Actions](#preview-actions)
+    - [Extend application deadline](#extend-application-deadline)
+    - [Lookup table endpoints](#lookup-table-endpoints)
+    - [External API access](#external-api-access)
   - [Admin only endpoints](#admin-only-endpoints)
+    - [Update row level policies](#update-row-level-policies)
+    - [Run Action](#run-action)
+    - [Manage localisations](#manage-localisations)
+    - [Snapshot endpoints](#snapshot-endpoints)
+    - [Preference management endpoints](#preference-management-endpoints)
 
 <!-- /TOC -->
 
@@ -458,6 +476,15 @@ It works by finding an event in the `trigger_schedule` table with matching `appl
 Require either "admin" or "systemManger" permissions.
 
 See [Lookup table documentation](https://github.com/msupply-foundation/conforma-web-app/wiki/Lookup-Tables) for more info
+
+
+#### External API access
+
+POST: `/external-api/<name>/<route>`
+
+A "relay" endpoint for querying third-party APIs that require authentication or other restrictions that we don't want the front-end to have access to.
+
+See [External API Access](External-API-Access.md) for further detail.
 
 ---
 

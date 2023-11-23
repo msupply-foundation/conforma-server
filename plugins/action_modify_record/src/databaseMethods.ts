@@ -1,3 +1,4 @@
+import { errorMessage } from '../../../src/components/utilityFunctions'
 import config from '../../../src/config'
 
 const DATA_TABLE_PREFIX = config.dataTablePrefix
@@ -14,7 +15,7 @@ const databaseMethods = (DBConnect: any) => {
       const firstRow = result.rows[0]
       return { success: true, [tableName]: firstRow, recordId: firstRow.id }
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -29,7 +30,7 @@ const databaseMethods = (DBConnect: any) => {
         const result = await DBConnect.query({ text, values: [value] })
         return result?.rows.map(({ id }: { id: number }) => id)
       } catch (err) {
-        console.log(err.message)
+        console.log(errorMessage(err))
         throw err
       }
     },
@@ -55,7 +56,7 @@ const databaseMethods = (DBConnect: any) => {
         })
         return { success: true, [tableName]: result.rows[0] }
       } catch (err) {
-        console.log(err.message)
+        console.log(errorMessage(err))
         throw err
       }
     },
@@ -84,7 +85,7 @@ const databaseMethods = (DBConnect: any) => {
           values: [tableName, tableNameOriginal, tableName.replace(DATA_TABLE_PREFIX, '')],
         })
       } catch (err) {
-        console.log(err.message)
+        console.log(errorMessage(err))
         throw new Error(`Failed to create table: ${tableName}`)
       }
     },
@@ -104,7 +105,7 @@ const databaseMethods = (DBConnect: any) => {
       try {
         await DBConnect.query({ text })
       } catch (err) {
-        console.log(err.message)
+        console.log(errorMessage(err))
         throw new Error(`Failed to create join table: ${joinTableName}`)
       }
       // Create entry in the joiin table
@@ -126,7 +127,7 @@ const databaseMethods = (DBConnect: any) => {
           value: [tableName],
         })
       } catch (err) {
-        console.log(err.message)
+        console.log(errorMessage(err))
         throw new Error(
           `Failed to create fields in table table: ${tableName} ${JSON.stringify(
             fieldsToCreate,

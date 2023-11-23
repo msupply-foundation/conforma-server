@@ -7,9 +7,9 @@ import {
   TriggerQueueStatus,
 } from './generated/graphql'
 import { EmailOperationMode } from './config'
-import { RecurrenceRule } from 'node-schedule'
 import { PoolConfig } from 'pg'
 import { Schedulers } from './components/scheduler'
+import { ExternalApiConfigs } from './components/external-apis/types'
 
 export interface ActionInTemplate {
   code: string
@@ -140,14 +140,7 @@ export interface ActionApplicationData extends BaseApplicationData {
     appRootFolder: string
     filesFolder: string
     webHostUrl: string
-    SMTPConfig?: {
-      host: string
-      port: number
-      secure: boolean
-      user: string
-      defaultFromName: string
-      defaultFromEmail: string
-    }
+    SMTPConfig?: SMTPConfig
     emailMode: EmailOperationMode
     testingEmail: string | null
     productionHost: string | null
@@ -267,19 +260,22 @@ export interface ScheduleObject {
   tz?: string | null
 }
 
+interface SMTPConfig {
+  host: string
+  port: number
+  secure: boolean
+  user: string
+  password: string
+  defaultFromName: string
+  defaultFromEmail: string
+}
+
 export interface ServerPreferences {
   thumbnailMaxWidth?: number
   thumbnailMaxHeight?: number
   actionSchedule?: number[] | ScheduleObject
   hoursSchedule?: number[] // deprecated, please use actionSchedule
-  SMTPConfig?: {
-    host: string
-    port: number
-    secure: boolean
-    user: string
-    defaultFromName: string
-    defaultFromEmail: string
-  }
+  SMTPConfig?: SMTPConfig
   systemManagerPermissionName?: string
   managerCanEditLookupTables?: boolean
   previewDocsMinKeepTime?: string
@@ -294,6 +290,7 @@ export interface ServerPreferences {
   testingEmail?: string
   locale?: string
   timezone?: string
+  externalApiConfigs?: ExternalApiConfigs
 }
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
@@ -316,6 +313,7 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'testingEmail',
   'locale',
   'timezone',
+  'externalApiConfigs',
 ]
 
 export interface WebAppPrefs {
@@ -328,6 +326,11 @@ export interface WebAppPrefs {
   style?: { headerBgColor?: string }
   googleAnalyticsId?: string
   siteHost?: string
+}
+
+export interface Preferences {
+  server: ServerPreferences
+  web: WebAppPrefs
 }
 
 interface ConfigBase {

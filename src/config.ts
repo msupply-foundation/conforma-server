@@ -4,7 +4,7 @@ import preferences from '../preferences/preferences.json'
 import { readFileSync } from 'fs'
 import { version } from '../package.json'
 import { serverPrefKeys, ServerPreferences, WebAppPrefs, Config } from './types'
-const serverPrefs: ServerPreferences = preferences.server
+const serverPrefs: ServerPreferences = preferences.server as ServerPreferences
 const isProductionBuild = process.env.NODE_ENV === 'production'
 const siteHost = (preferences.web as WebAppPrefs)?.siteHost
 const webHostUrl = process.env.WEB_HOST

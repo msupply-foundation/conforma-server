@@ -1,6 +1,6 @@
 import { ActionLibrary } from '../../types'
 import DBConnect from '../databaseConnect'
-import { getAppEntryPointDir } from '../utilityFunctions'
+import { errorMessage, getAppEntryPointDir } from '../utilityFunctions'
 import path from 'path'
 
 // Load actions from Database at server startup
@@ -18,6 +18,6 @@ export const loadActions = async function (actionLibrary: ActionLibrary) {
 
     console.log('Actions loaded.')
   } catch (err) {
-    console.log(err.stack)
+    console.log(errorMessage(err))
   }
 }

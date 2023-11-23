@@ -1,3 +1,4 @@
+import { errorMessage } from '../../../src/components/utilityFunctions'
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import databaseMethods from './databaseMethods'
@@ -61,10 +62,10 @@ const scheduleAction: ActionPluginType = async ({
       },
     }
   } catch (error) {
-    console.log(error.message)
+    console.log(errorMessage(error))
     return {
       status: ActionQueueStatus.Fail,
-      error_log: error.message,
+      error_log: errorMessage(error),
     }
   }
 }

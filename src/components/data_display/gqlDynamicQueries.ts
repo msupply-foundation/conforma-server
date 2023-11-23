@@ -2,7 +2,7 @@ import DBConnect from '../databaseConnect'
 import { plural } from 'pluralize'
 import { camelCase, snakeCase, upperFirst } from 'lodash'
 import { LinkedApplication } from './types'
-import { capitaliseFirstLetter } from '../utilityFunctions'
+import { capitaliseFirstLetter, errorMessage } from '../utilityFunctions'
 
 export const queryDataTable = async (
   tableName: string,
@@ -26,7 +26,7 @@ export const queryDataTable = async (
     queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
   } catch (err) {
     return {
-      error: { error: true, message: 'Problem with Data Table query', detail: err.message },
+      error: { error: true, message: 'Problem with Data Table query', detail: errorMessage(err) },
     }
   }
   const fetchedRecords = queryResult?.[tableNamePlural]?.nodes
@@ -50,7 +50,7 @@ export const queryDataTableSingleItem = async (
   try {
     queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
   } catch (err) {
-    return { error: true, message: 'Problem with Data Item query', detail: err.message }
+    return { error: true, message: 'Problem with Data Item query', detail: errorMessage(err) }
   }
   const fetchedRecords = queryResult?.[tableNamePlural]?.nodes
   if (fetchedRecords === undefined)
@@ -78,7 +78,9 @@ export const queryLinkedApplications = async (id: number, tableName: string) => 
   try {
     queryResult = await DBConnect.gqlQuery(graphQLquery, { id })
   } catch (err) {
-    return [{ error: true, message: 'Problem with Linked Applications query', detail: err.message }]
+    return [
+      { error: true, message: 'Problem with Linked Applications query', detail: errorMessage(err) },
+    ]
   }
 
   const linkedApplications: LinkedApplication[] = queryResult?.[joinTableName]?.nodes.map(
@@ -116,7 +118,7 @@ export const queryFilterList = async (
     queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
   } catch (err) {
     return {
-      error: { error: true, message: 'Problem with Filter List query', detail: err.message },
+      error: { error: true, message: 'Problem with Filter List query', detail: errorMessage(err) },
     }
   }
 
@@ -141,7 +143,7 @@ export const updateRecord = async (
     queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
   } catch (err) {
     return {
-      error: { error: true, message: 'Problem with Filter List query', detail: err.message },
+      error: { error: true, message: 'Problem with Filter List query', detail: errorMessage(err) },
     }
   }
 }

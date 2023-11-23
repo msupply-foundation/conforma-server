@@ -1,3 +1,5 @@
+import { errorMessage } from '../../../src/components/utilityFunctions'
+
 const databaseMethods = (DBConnect: any) => ({
   revokePermissionFromUser: async (
     userId: number,
@@ -23,7 +25,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [userId, permissionIds] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -50,7 +52,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [userId, orgId, permissionIds] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -78,7 +80,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [orgId, permissionIds] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },

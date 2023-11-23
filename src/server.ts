@@ -50,6 +50,7 @@ import { extractJWTfromHeader, getTokenData } from './components/permissions/log
 import migrateData from '../database/migration/migrateData'
 import routeArchiveFiles from './components/files/routeArchiveFiles'
 import { Schedulers } from './components/scheduler'
+import { AccessExternalApiQuery, routeAccessExternalApi } from './components/external-apis/routes'
 require('dotenv').config()
 
 // Set the default locale and timezone for date-time display (in console)
@@ -72,8 +73,8 @@ const startServer = async () => {
   createDefaultDataFolders()
   await cleanUpFiles() // Runs on schedule as well as startup
 
-  // Add schedulers to global "config" object so we can update them. There should
-  // only be a single global instance of Schedulers -- this one!
+  // Add schedulers to global "config" object so we can update them. There
+  // should only be a single global instance of Schedulers -- this one!
   config.scheduledJobs = new Schedulers()
 
   const server = fastify()
@@ -171,6 +172,7 @@ const startServer = async () => {
     server.get('/check-triggers', routeTriggers)
     server.post('/preview-actions', routePreviewActions)
     server.post('/extend-application', routeExtendApplication)
+    server.post<AccessExternalApiQuery>('/external-api/:name/:route', routeAccessExternalApi)
     // Lookup tables requires "systemManager" permission
     server.register(lookupTableRoutes, { prefix: '/lookup-table' })
 

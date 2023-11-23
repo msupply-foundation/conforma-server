@@ -1,3 +1,5 @@
+import { errorMessage } from '../../../src/components/utilityFunctions'
+
 const databaseMethods = (DBConnect: any) => ({
   getUserIdFromUsername: async (username: string | null) => {
     if (username === null) return null
@@ -6,7 +8,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [username] })
       return result.rows[0]?.id
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -17,7 +19,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [orgname] })
       return result.rows[0]?.id
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -30,7 +32,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [permissionNames] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -49,7 +51,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [userId, orgId, permissionId] })
       return result.rows[0].id
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -67,7 +69,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [userId, permissionId] })
       return result.rows[0].id
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -85,7 +87,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [orgId, permissionId] })
       return result.rows[0].id
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },

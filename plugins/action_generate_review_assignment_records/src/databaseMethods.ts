@@ -1,5 +1,6 @@
 import { PermissionPolicyType, ReviewAssignment } from '../../../src/generated/graphql'
 import { DeleteReviewAssignment, ExistingReviewAssignment } from './types'
+import { errorMessage } from '../../../src/components/utilityFunctions'
 
 const databaseMethods = (DBConnect: any) => ({
   getLastStageNumber: async (applicationId: number) => {
@@ -14,7 +15,7 @@ const databaseMethods = (DBConnect: any) => ({
       const responses = result.rows[0].max
       return responses
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -34,7 +35,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [applicationId, stageNumber] })
       return result.rows[0]?.max ?? null
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -62,7 +63,7 @@ const databaseMethods = (DBConnect: any) => ({
       })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -89,7 +90,7 @@ const databaseMethods = (DBConnect: any) => ({
       })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -160,8 +161,8 @@ const databaseMethods = (DBConnect: any) => ({
         // TO-DO: What to do with existing records that don't match the
         // generated ones? Delete them? Set their status = "Not Available"?
       } catch (err) {
-        console.log(err.message)
-        reviewAssignmentIds.push(err.message)
+        console.log(errorMessage(err))
+        reviewAssignmentIds.push(errorMessage(err))
         throw err
       }
     }
@@ -199,8 +200,8 @@ const databaseMethods = (DBConnect: any) => ({
         // weren't updated? (i.e. they should no longer exist)
         // Delete them?
       } catch (err) {
-        console.log(err.message)
-        reviewAssignmentAssignerJoinIds.push(err.message)
+        console.log(errorMessage(err))
+        reviewAssignmentAssignerJoinIds.push(errorMessage(err))
         throw err
       }
     }
@@ -227,8 +228,8 @@ const databaseMethods = (DBConnect: any) => ({
         })
         reviewAssignmentIds.push(result.rows[0].id)
       } catch (err) {
-        console.log(err.message)
-        reviewAssignmentIds.push(err.message)
+        console.log(errorMessage(err))
+        reviewAssignmentIds.push(errorMessage(err))
         throw err
       }
     }
