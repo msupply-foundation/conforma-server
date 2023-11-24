@@ -606,7 +606,7 @@ The output object `document` provides the `uniqueId`, `filename`, and `filepath`
 
 ---
 
-### Generate Document
+### Generate Text/JSON file
 
 Generates a text file and saves it anywhere on the system. Can optionally register the file in the database for internal use as well.
 
