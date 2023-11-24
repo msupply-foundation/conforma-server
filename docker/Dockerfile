@@ -27,6 +27,7 @@ RUN apt-get install lsof -y
 RUN apt-get install nginx -y
 
 # --- LIBRE OFFICE
+RUN apt-get update
 RUN apt install libreoffice -y
 
 # --- NODE and NPX
