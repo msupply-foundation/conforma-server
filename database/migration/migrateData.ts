@@ -7,11 +7,13 @@ import path from 'path'
 import { readFileSync } from 'fs'
 import bcrypt from 'bcrypt'
 import { errorMessage, getAppEntryPointDir } from '../../src/components/utilityFunctions'
+import DBConnect from '../../src/components/databaseConnect'
 import {
   loadCurrentPrefs,
   routeGetAllPrefs,
   setPreferences,
 } from '../../src/components/preferences'
+import updateRowPolicies from '../updateRowPolicies'
 
 // CONSTANTS
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
@@ -854,6 +856,83 @@ const migrateData = async () => {
     }
   }
 
+  // v0.8.0
+  if (databaseVersionLessThan('0.8.0')) {
+    console.log('Migrating to v0.8.0...')
+
+    console.log(' - Creating permission_flattened view')
+    await DB.changeSchema(`
+        CREATE INDEX IF NOT EXISTS "i_review_status_history_status" ON review_status_history (status);
+        CREATE OR REPLACE view permission_flattened as
+        SELECT "user".id as user_id, permission_join.organisation_id as organisation_id, permission_policy.id as permission_policy_id, template_permission.template_id as template_id  
+        FROM "user" 
+        JOIN permission_join ON permission_join.user_id = "user".id
+        JOIN permission_name ON permission_name.id = permission_join.permission_name_id
+        JOIN permission_policy ON permission_policy.id = permission_name.permission_policy_id
+        JOIN template_permission ON template_permission.permission_name_id = permission_name.id
+      `)
+
+    console.log(
+      ' - Updating policies to replace jwtPermission_array_bigint_template_ids with query rathern then in statement matching arrays in JWT'
+    )
+    const policies = (
+      await DBConnect.query({
+        text: `SELECT id, rules FROM permission_policy`,
+      })
+    ).rows as { id: number; rules: object }[]
+
+    // This is added as an optimisation, rather then doing "in" clause with array values from JWT
+    // we "select" from permission_flattened table, pre populated with userId, organisationId, permissionPolicyId and templateIds
+    // from: template_id in any (string_to_array(COALESCE(current_setting('jwt.claims.pp6_templateIds, true), '0'), ',')::integer[])
+    // to: template_id in select template_id from permission_flattened
+    //         where user_id = COALESCE(current_setting('jwt.claims.userId, true),''),'0')::integer
+    //         and permission_policy_id = 6
+    //         and (orgainisation_id = COALESCE(current_setting('jwt.claims.orgId, true),''),'0')::integer or organisation_id is null)
+    for (const row of policies) {
+      const { id, rules } = row
+
+      const jsonAsString = JSON.stringify(rules)
+      const replacement = {
+        $in: {
+          $select: {
+            $from: 'permission_flattened',
+            $where: {
+              $and: [
+                {
+                  user_id: 'jwtUserDetails_bigint_userId',
+                },
+                { permission_policy_id: id },
+                {
+                  $or: [
+                    {
+                      organisation_id: 'jwtUserDetails_bigint_orgId',
+                    },
+                    {
+                      organisation_id: {
+                        $isNull: true,
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+            template_id: true,
+          },
+        },
+      }
+      const replacementAsString = JSON.stringify(replacement)
+      const replacementAsJson = JSON.parse(
+        jsonAsString.replace(/"jwtPermission_array_bigint_template_ids"/g, replacementAsString)
+      )
+
+      await DBConnect.query({
+        text: `UPDATE permission_policy set rules = $1 where id = $2`,
+        values: [replacementAsJson, id],
+      })
+    }
+    await updateRowPolicies()
+  }
+
   // Other version migrations continue here...
 
   // Update (almost all) Indexes, Views, Functions, Triggers regardless, since
@@ -892,10 +971,12 @@ const migrateData = async () => {
 // For running migrationScript.ts manually using `yarn migrate`
 if (isManualMigration) {
   console.log('Running migration script...')
-  migrateData().then(() => {
-    console.log('Done!\n')
-    process.exit(0)
-  })
+  migrateData()
+    .then(() => {
+      console.log('Done!\n')
+      process.exit(0)
+    })
+    .catch((e) => console.log('Error while migrating', e))
 }
 
 export default migrateData
