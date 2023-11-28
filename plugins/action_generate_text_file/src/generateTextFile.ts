@@ -51,8 +51,8 @@ async function generateTextFile({ parameters }: ActionPluginInput): Promise<Acti
   try {
     console.log('Exporting text:', outputText)
 
-    // Database files are placed relative Conforma "files" folder, other files
-    // relative to home folder (or as-is if absolute path)
+    // Database files are placed relative to Conforma "files" folder, other
+    // files relative to home folder (or as-is if absolute path)
     const baseFolder = registerInDatabase
       ? FILES_FOLDER
       : path.isAbsolute(outputPath)
