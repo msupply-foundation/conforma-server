@@ -2250,3 +2250,10 @@ CREATE TRIGGER permission_delete_activity_trigger
     FOR EACH ROW
     EXECUTE FUNCTION permission_activity_log ();
 
+CREATE OR REPLACE view permission_flattened as
+    SELECT "user".id as user_id, permission_join.organisation_id as organisation_id, permission_policy.id as permission_policy_id, template_permission.template_id as template_id  
+    FROM "user" 
+    JOIN permission_join ON permission_join.user_id = "user".id
+    JOIN permission_name ON permission_name.id = permission_join.permission_name_id
+    JOIN permission_policy ON permission_policy.id = permission_name.permission_policy_id
+    JOIN template_permission ON template_permission.permission_name_id = permission_name.id
