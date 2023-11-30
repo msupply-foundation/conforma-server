@@ -139,7 +139,9 @@ export const routeAccessExternalApi = async (
       reply.status(err.response?.status ?? 500)
       return reply.send(`External API error: ${err.message}`)
     }
-    console.log('Request error', errorMessage(err))
-    throw new Error('Error processing request')
+    const errMessage = errorMessage(err)
+    console.log('Request error', errMessage)
+    reply.status(500)
+    return reply.send(`Server error: ${errMessage}`)
   }
 }
