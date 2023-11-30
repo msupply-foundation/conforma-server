@@ -930,7 +930,6 @@ const migrateData = async () => {
         values: [replacementAsJson, id],
       })
     }
-    await updateRowPolicies()
   }
 
   // Other version migrations continue here...
