@@ -8,12 +8,7 @@ import { readFileSync } from 'fs'
 import bcrypt from 'bcrypt'
 import { errorMessage, getAppEntryPointDir } from '../../src/components/utilityFunctions'
 import DBConnect from '../../src/components/databaseConnect'
-import {
-  loadCurrentPrefs,
-  routeGetAllPrefs,
-  setPreferences,
-} from '../../src/components/preferences'
-import updateRowPolicies from '../updateRowPolicies'
+import { loadCurrentPrefs, setPreferences } from '../../src/components/preferences'
 
 // CONSTANTS
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'

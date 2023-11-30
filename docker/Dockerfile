@@ -27,6 +27,7 @@ RUN apt-get install lsof -y
 RUN apt-get install nginx -y
 
 # --- LIBRE OFFICE
+RUN apt-get update
 RUN apt install libreoffice -y
 
 # --- NODE and NPX
@@ -90,10 +91,15 @@ COPY postgres_config/postgresql.conf .
 # RUN echo "listen_addresses = '*'" >> postgresql.conf
 COPY postgres_config/pg_hba.conf .
 
-# --- INITIALISE DATABASE (core templates)
+# --- INITIALISE DATABASE (default: core templates)
+ARG INITIAL_SNAPSHOT=""
+WORKDIR /usr/src/conforma-server/database/_snapshots
+COPY snapshots/${INITIAL_SNAPSHOT}/ ./${INITIAL_SNAPSHOT}
+
 WORKDIR /usr/src/initialise_database
 COPY database.sh .
-RUN ./database.sh
+RUN ./database.sh ${INITIAL_SNAPSHOT}
+RUN rm -rf /usr/src/conforma-server/database/_snapshots/${INITIAL_SNAPSHOT}
 
 # --- CREATE LOG DIR
 WORKDIR /var/log/conforma

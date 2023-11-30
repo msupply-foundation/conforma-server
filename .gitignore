@@ -66,9 +66,8 @@ src/modules/expression-evaluator/expression-evaluate-gui/src/expression-evaluato
 #Snapshots working folder
 database/_snapshots
 database/snapshot_path_aliases.json
+.vscode/settings.json
+docker/snapshots
 
 #Other secrets
 testSecrets.json
-.vscode/settings.json
-
-docker/snapshots

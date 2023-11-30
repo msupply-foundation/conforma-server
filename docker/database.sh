@@ -24,7 +24,11 @@ echo '--- RUNNING POST INSTALL'
 echo '--- COPY CLEAN DATABASE TO BE USED IF NO VOLUMES ARE MOUNTED'
 cp -R /var/lib/postgresql/12/main/ ./fresh_db
 
-# We end up with extraneous file folders in the repo root, so delete them now
-rm -r files
-rm -r localisation
-rm -r preferences
+# Loading a snapshot from here puts these folders in the repo root rather than
+# the "build" folder so, need to move them in:
+rm -r build/files
+rm -r build/preferences
+rm -r build/localisation
+mv files build
+mv preferences build
+mv localisation build

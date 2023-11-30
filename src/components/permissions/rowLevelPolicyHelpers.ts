@@ -59,6 +59,7 @@ const compileJWT = (JWTelements: any) => {
 // Removes previously generated row level policies and reinstates them based on current permission settings
 // out: [ 'CREATE POLICY "view_pp3pn3" ON "application" FOR SELECT USING (jwt_get_boolean('pp3pn3') = true and user_id = jwt_get_text('currentUser') AND template_id = jwt_get_bigint('pp3pn3_templateId')' ]
 const updateRowPolicies = async () => {
+  console.log('Updating row level policies...')
   const permissionRows = await databaseConnect.getPermissionPolicies()
   // this will get all of the policies from pg_policies table that start with (view_ or update_ or delete_ or create_)
   const existingPolicies = await databaseConnect.getAllGeneratedRowPolicies()

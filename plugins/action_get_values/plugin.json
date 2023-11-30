@@ -1,0 +1,24 @@
+{
+  "type": "action_plugin",
+  "code": "getValues",
+  "name": "Get Values",
+  "description": "Exposes one or more values that can be used by other actions in sequence",
+  "required_parameters": [],
+  "optional_parameters": ["...values"],
+  "output_properties": ["...values"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "insert"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2023-11-22"
+  }
+}

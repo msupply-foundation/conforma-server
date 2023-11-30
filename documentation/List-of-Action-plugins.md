@@ -606,6 +606,33 @@ The output object `document` provides the `uniqueId`, `filename`, and `filepath`
 
 ---
 
+### Generate Text/JSON file
+
+Generates a text file and saves it anywhere on the system. Can optionally register the file in the database for internal use as well.
+
+- _Action Code:_ **`generateTextFile`**
+
+| Input parameters<br />(\*required) <br/> | Output properties            |
+| ---------------------------------------- | ---------------------------- |
+| `text`                                   | `outputFilePath, outputText` |
+| `data`                                   |                              |
+| `filename`\*                             |                              |
+| `outputPath`                             |                              |
+| `registerInDatabase`                     |                              |
+| `fileData`                               |                              |
+
+The file contents can be provided by *either* `text` (`string`), or `data` (`object`), with `text` taking precedence if both are present. The `data` object is serialised to JSON for text output.
+
+A `filename` is required.
+
+The `outputPath` can be either a relative path (e.g. `text/myFolder`) or an absolute one (e.g. `/Users/me/my/path`). If relative, then if the file is not to be registered in the database (i.e. it won't be referenced by Conforma in future), the path will be relative to the Home folder. If it *is* to be registered in the database, it will be placed relative to the system's "files" folder. If no `outputPath` is provided, it will default to `_textFiles`.
+
+Set `registerInDatabase` to `true` in order to record the file record in the database. Note that you cannot use an absolute path when registering in database, as all database files are referenced relative to the "files" folder.
+
+Do **not** put any files in the "files" folder if they are not registered in the database, as they'll be deleted in the next scheduled "file cleanup".
+
+---
+
 ### Send Notification
 
 Generates notifications and sends email. For now, there is no UI for notifications in the app, so emails are the primary means of notifying users. A notification record is stored in the database though ("notification" table).

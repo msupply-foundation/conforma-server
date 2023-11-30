@@ -73,7 +73,7 @@ const splitMimetype = (mimetype: string) => {
   return { type, subtype }
 }
 
-const getGenericThumbnailPath = (mimetype: string) => {
+export const getGenericThumbnailPath = (mimetype: string) => {
   const { type, subtype } = splitMimetype(mimetype)
   const filename =
     genericThumbnails?.[subtype] || genericThumbnails?.[type] || genericThumbnails.file
