@@ -7,6 +7,7 @@
 - [Modify Record](#modify-record)
 - [Modify Multiple Records](#modify-multiple-records)
 - [Generate Text String](#generate-text-string)
+- [Generate Text/JSON file](#generate-textjson-file)
 - [Join User to Organsation](#join-user-to-organsation)
 - [Remove User from Organsation](#remove-user-from-organsation)
 - [Grant Permissions](#grant-permissions)
@@ -20,6 +21,7 @@
 - [Send Notification](#send-notification)
 - [Schedule Action](#schedule-action)
 - [Clean Up Files](#clean-up-files)
+- [Get Values](#get-values)
 - [Aliasing existing template actions](#aliasing-existing-template-actions)
 - [Core Actions](#core-actions)
 <!-- tocstop -->
@@ -606,6 +608,33 @@ The output object `document` provides the `uniqueId`, `filename`, and `filepath`
 
 ---
 
+### Generate Text/JSON file
+
+Generates a text file and saves it anywhere on the system. Can optionally register the file in the database for internal use as well.
+
+- _Action Code:_ **`generateTextFile`**
+
+| Input parameters<br />(\*required) <br/> | Output properties            |
+| ---------------------------------------- | ---------------------------- |
+| `text`                                   | `outputFilePath, outputText` |
+| `data`                                   |                              |
+| `filename`\*                             |                              |
+| `outputPath`                             |                              |
+| `registerInDatabase`                     |                              |
+| `fileData`                               |                              |
+
+The file contents can be provided by *either* `text` (`string`), or `data` (`object`), with `text` taking precedence if both are present. The `data` object is serialised to JSON for text output.
+
+A `filename` is required.
+
+The `outputPath` can be either a relative path (e.g. `text/myFolder`) or an absolute one (e.g. `/Users/me/my/path`). If relative, then if the file is not to be registered in the database (i.e. it won't be referenced by Conforma in future), the path will be relative to the Home folder. If it *is* to be registered in the database, it will be placed relative to the system's "files" folder. If no `outputPath` is provided, it will default to `_textFiles`.
+
+Set `registerInDatabase` to `true` in order to record the file record in the database. Note that you cannot use an absolute path when registering in database, as all database files are referenced relative to the "files" folder.
+
+Do **not** put any files in the "files" folder if they are not registered in the database, as they'll be deleted in the next scheduled "file cleanup".
+
+---
+
 ### Send Notification
 
 Generates notifications and sends email. For now, there is no UI for notifications in the app, so emails are the primary means of notifying users. A notification record is stored in the database though ("notification" table).
@@ -702,6 +731,20 @@ Action to remove files no longer connected to application responses -- for examp
 Can supply *either* `applicationId` or `applicationSerial`, although this can be inferred from `applicationData` if neither is supplied.
 
 Note: There is a database trigger/postgres listener to automatically delete files when their database record is deleted, so we only need to delete the records, not the files themselves.
+
+---
+
+### Get Values
+
+Very simple action to simply retrieve a value (or values) and make them available in `outputCumulative` to subsequent actions. Useful when you have several actions in a sequence that all make the same query (e.g. fetching info from database) -- rather than putting the same complex query as a sub-expression in every action (which is tedious and error-prone), we can just fetch it once at the start of the sequence and make it available to the following actions.
+
+- _Action Code:_ **`getValues`**
+
+| Input parameters<br />(\*required) <br/> | Output properties |
+| ---------------------------------------- | ----------------- |
+| `{ ...values }`                          | `{ ...values }`   |
+
+The output is identical to the input. Presumably the input would be one or more evaluator queries to retrieve some data -- after evaluation these are passed to output unmodified.
 
 ### Aliasing existing template actions
 

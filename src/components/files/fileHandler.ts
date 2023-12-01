@@ -4,11 +4,19 @@ import fsProm from 'fs/promises'
 import util from 'util'
 import { pipeline } from 'stream'
 import { nanoid } from 'nanoid'
-import { getAppEntryPointDir, makeFolder, filterObject, errorMessage } from '../utilityFunctions'
+import {
+  getAppEntryPointDir,
+  makeFolder,
+  filterObject,
+  errorMessage,
+  objectKeysToSnakeCase,
+} from '../utilityFunctions'
 import config from '../../config'
 import DBConnect from '../databaseConnect'
 import createThumbnail from './createThumbnails'
 import { FilePayload } from '../../types'
+import { File } from '../../generated/graphql'
+import { FILES_FOLDER } from '../../constants'
 
 export const { filesFolder, imagesFolder, genericThumbnailsFolderName } = config
 export const filesPath = path.join(getAppEntryPointDir(), filesFolder)
@@ -66,7 +74,7 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
       })
 
       // Save file info to database
-      await registerFileInDB({
+      await saveToDB({
         unique_id,
         file,
         file_path,
@@ -107,7 +115,32 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
   return filesInfo
 }
 
-export async function registerFileInDB({
+// For registering a file that already exists on disk
+export const registerFileInDB = async (
+  fileData: Partial<File> & { filePath: string; mimetype: string }
+) => {
+  const normalisedFileData = objectKeysToSnakeCase(fileData)
+  const { unique_id, file_size, mimetype, file_path } = normalisedFileData
+  const filename = path.basename(file_path)
+
+  normalisedFileData.file_path = file_path
+  normalisedFileData.original_filename = filename
+  if (!unique_id) normalisedFileData.unique_id = nanoid()
+  normalisedFileData.thumbnail_path = await createThumbnail({
+    unique_id: normalisedFileData.unique_id,
+    filesPath,
+    basename: filename,
+    ext: path.extname(filename),
+    subfolder: path.dirname(file_path),
+    mimetype,
+  })
+  if (!file_size)
+    normalisedFileData.file_size = (await fsProm.stat(path.join(FILES_FOLDER, file_path))).size
+
+  await saveToDB(normalisedFileData)
+}
+
+export async function saveToDB({
   unique_id,
   original_filename,
   file,

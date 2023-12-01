@@ -9826,7 +9826,8 @@ export type File = Node & {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp: Scalars['Datetime'];
-  archived: Scalars['Boolean'];
+  archivePath?: Maybe<Scalars['String']>;
+  fileSize?: Maybe<Scalars['BigInt']>;
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
   /** Reads a single `Template` that is related to this `File`. */
@@ -9872,7 +9873,8 @@ export type FileApplicationNoteIdFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  archived?: Maybe<Scalars['Boolean']>;
+  archivePath?: Maybe<Scalars['String']>;
+  fileSize?: Maybe<Scalars['BigInt']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -9962,7 +9964,8 @@ export type FileApplicationResponseIdFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  archived?: Maybe<Scalars['Boolean']>;
+  archivePath?: Maybe<Scalars['String']>;
+  fileSize?: Maybe<Scalars['BigInt']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -10064,7 +10067,8 @@ export type FileApplicationSerialFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  archived?: Maybe<Scalars['Boolean']>;
+  archivePath?: Maybe<Scalars['String']>;
+  fileSize?: Maybe<Scalars['BigInt']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -10166,8 +10170,10 @@ export type FileCondition = {
   submitted?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `timestamp` field. */
   timestamp?: Maybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `archived` field. */
-  archived?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `archivePath` field. */
+  archivePath?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `fileSize` field. */
+  fileSize?: Maybe<Scalars['BigInt']>;
 };
 
 /** The fields on `file` to look up the row to connect. */
@@ -10228,8 +10234,10 @@ export type FileFilter = {
   submitted?: Maybe<BooleanFilter>;
   /** Filter by the object’s `timestamp` field. */
   timestamp?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `archived` field. */
-  archived?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `archivePath` field. */
+  archivePath?: Maybe<StringFilter>;
+  /** Filter by the object’s `fileSize` field. */
+  fileSize?: Maybe<BigIntFilter>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
@@ -10278,7 +10286,8 @@ export type FileInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  archived?: Maybe<Scalars['Boolean']>;
+  archivePath?: Maybe<Scalars['String']>;
+  fileSize?: Maybe<Scalars['BigInt']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -10428,7 +10437,8 @@ export type FilePatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  archived?: Maybe<Scalars['Boolean']>;
+  archivePath?: Maybe<Scalars['String']>;
+  fileSize?: Maybe<Scalars['BigInt']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -10497,8 +10507,10 @@ export enum FilesOrderBy {
   SubmittedDesc = 'SUBMITTED_DESC',
   TimestampAsc = 'TIMESTAMP_ASC',
   TimestampDesc = 'TIMESTAMP_DESC',
-  ArchivedAsc = 'ARCHIVED_ASC',
-  ArchivedDesc = 'ARCHIVED_DESC',
+  ArchivePathAsc = 'ARCHIVE_PATH_ASC',
+  ArchivePathDesc = 'ARCHIVE_PATH_DESC',
+  FileSizeAsc = 'FILE_SIZE_ASC',
+  FileSizeDesc = 'FILE_SIZE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -10522,7 +10534,8 @@ export type FileTemplateIdFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  archived?: Maybe<Scalars['Boolean']>;
+  archivePath?: Maybe<Scalars['String']>;
+  fileSize?: Maybe<Scalars['BigInt']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -10632,7 +10645,8 @@ export type FileUserIdFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  archived?: Maybe<Scalars['Boolean']>;
+  archivePath?: Maybe<Scalars['String']>;
+  fileSize?: Maybe<Scalars['BigInt']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -27607,7 +27621,8 @@ export type UpdateFileOnFileForFileApplicationNoteIdFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  archived?: Maybe<Scalars['Boolean']>;
+  archivePath?: Maybe<Scalars['String']>;
+  fileSize?: Maybe<Scalars['BigInt']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -27634,7 +27649,8 @@ export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  archived?: Maybe<Scalars['Boolean']>;
+  archivePath?: Maybe<Scalars['String']>;
+  fileSize?: Maybe<Scalars['BigInt']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -27661,7 +27677,8 @@ export type UpdateFileOnFileForFileApplicationSerialFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  archived?: Maybe<Scalars['Boolean']>;
+  archivePath?: Maybe<Scalars['String']>;
+  fileSize?: Maybe<Scalars['BigInt']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -27688,7 +27705,8 @@ export type UpdateFileOnFileForFileTemplateIdFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  archived?: Maybe<Scalars['Boolean']>;
+  archivePath?: Maybe<Scalars['String']>;
+  fileSize?: Maybe<Scalars['BigInt']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -27715,7 +27733,8 @@ export type UpdateFileOnFileForFileUserIdFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  archived?: Maybe<Scalars['Boolean']>;
+  archivePath?: Maybe<Scalars['String']>;
+  fileSize?: Maybe<Scalars['BigInt']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -32850,6 +32869,8 @@ export type ResolversTypes = {
   ApplicationNoteFilter: ApplicationNoteFilter;
   ApplicationNoteToManyFileFilter: ApplicationNoteToManyFileFilter;
   FileFilter: FileFilter;
+  BigIntFilter: BigIntFilter;
+  BigInt: ResolverTypeWrapper<Scalars['BigInt']>;
   TemplateFilter: TemplateFilter;
   TemplateStatusFilter: TemplateStatusFilter;
   TemplateStatus: TemplateStatus;
@@ -33116,9 +33137,7 @@ export type ResolversTypes = {
   ApplicationStageStatusLatestsEdge: ResolverTypeWrapper<ApplicationStageStatusLatestsEdge>;
   AssignedSectionsByStageAndLevelsOrderBy: AssignedSectionsByStageAndLevelsOrderBy;
   AssignedSectionsByStageAndLevelCondition: AssignedSectionsByStageAndLevelCondition;
-  BigInt: ResolverTypeWrapper<Scalars['BigInt']>;
   AssignedSectionsByStageAndLevelFilter: AssignedSectionsByStageAndLevelFilter;
-  BigIntFilter: BigIntFilter;
   AssignedSectionsByStageAndLevelsConnection: ResolverTypeWrapper<AssignedSectionsByStageAndLevelsConnection>;
   AssignedSectionsByStageAndLevel: ResolverTypeWrapper<AssignedSectionsByStageAndLevel>;
   AssignedSectionsByStageAndLevelsEdge: ResolverTypeWrapper<AssignedSectionsByStageAndLevelsEdge>;
@@ -34653,6 +34672,8 @@ export type ResolversParentTypes = {
   ApplicationNoteFilter: ApplicationNoteFilter;
   ApplicationNoteToManyFileFilter: ApplicationNoteToManyFileFilter;
   FileFilter: FileFilter;
+  BigIntFilter: BigIntFilter;
+  BigInt: Scalars['BigInt'];
   TemplateFilter: TemplateFilter;
   TemplateStatusFilter: TemplateStatusFilter;
   TemplateToManyApplicationFilter: TemplateToManyApplicationFilter;
@@ -34875,9 +34896,7 @@ export type ResolversParentTypes = {
   ApplicationStageStatusLatest: ApplicationStageStatusLatest;
   ApplicationStageStatusLatestsEdge: ApplicationStageStatusLatestsEdge;
   AssignedSectionsByStageAndLevelCondition: AssignedSectionsByStageAndLevelCondition;
-  BigInt: Scalars['BigInt'];
   AssignedSectionsByStageAndLevelFilter: AssignedSectionsByStageAndLevelFilter;
-  BigIntFilter: BigIntFilter;
   AssignedSectionsByStageAndLevelsConnection: AssignedSectionsByStageAndLevelsConnection;
   AssignedSectionsByStageAndLevel: AssignedSectionsByStageAndLevel;
   AssignedSectionsByStageAndLevelsEdge: AssignedSectionsByStageAndLevelsEdge;
@@ -37911,7 +37930,8 @@ export type FileResolvers<ContextType = any, ParentType extends ResolversParentT
   mimetype?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   submitted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   timestamp?: Resolver<ResolversTypes['Datetime'], ParentType, ContextType>;
-  archived?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  archivePath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  fileSize?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;

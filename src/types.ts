@@ -292,6 +292,7 @@ export interface ServerPreferences {
   locale?: string
   timezone?: string
   externalApiConfigs?: ExternalApiConfigs
+  envVars?: string[]
 }
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
@@ -316,6 +317,7 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'locale',
   'timezone',
   'externalApiConfigs',
+  'envVars',
 ]
 
 export interface WebAppPrefs {
@@ -325,6 +327,7 @@ export interface WebAppPrefs {
   brandLogoFileId?: string
   brandLogoOnDarkFileId?: string
   defaultListFilters?: string[]
+  userRegistrationCode?: string
   style?: { headerBgColor?: string }
   googleAnalyticsId?: string
   siteHost?: string

@@ -1,0 +1,13 @@
+{
+  "name": "get_values_action",
+  "version": "0.1",
+  "description": "Exposes one or more values that can be used by other actions in sequence",
+  "author": "The mSupplyFoundation",
+  "license": "MIT",
+  "scripts": {
+    "build": "node ../../utils/pluginScripts/buildPluginFromPluginFolder.js",
+    "test": "node ../../utils/pluginScripts/testPluginFromPluginFolder.js"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}
