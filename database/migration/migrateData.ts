@@ -848,6 +848,15 @@ const migrateData = async () => {
     } catch (err) {
       console.log("Couldn't update preferences -- please fix manually")
     }
+
+    console.log(
+      ' - Updating policies to replace jwtPermission_array_bigint_template_ids with query rather than in statement matching arrays in JWT'
+    )
+    try {
+      await DB.updatePermissionPolicyRules()
+    } catch (err) {
+      console.log('Unable to update permission policies')
+    }
   }
 
   // Other version migrations continue here...
@@ -888,10 +897,12 @@ const migrateData = async () => {
 // For running migrationScript.ts manually using `yarn migrate`
 if (isManualMigration) {
   console.log('Running migration script...')
-  migrateData().then(() => {
-    console.log('Done!\n')
-    process.exit(0)
-  })
+  migrateData()
+    .then(() => {
+      console.log('Done!\n')
+      process.exit(0)
+    })
+    .catch((e) => console.log('Error while migrating', e))
 }
 
 export default migrateData
