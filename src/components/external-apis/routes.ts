@@ -19,13 +19,13 @@ export type AccessExternalApiQuery = {
   auth: { userId: number; orgId: number }
 }
 
-const apiConfigs: ExternalApiConfigs = config?.externalApiConfigs ?? {}
-
 export const routeAccessExternalApi = async (
   request: FastifyRequest<AccessExternalApiQuery>,
   reply: FastifyReply
 ) => {
   const { name, route } = request.params
+
+  const apiConfigs: ExternalApiConfigs = config?.externalApiConfigs ?? {}
 
   const { baseUrl, routes, authentication } = apiConfigs?.[name]
   if (!baseUrl) {
