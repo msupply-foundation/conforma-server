@@ -849,14 +849,14 @@ const migrateData = async () => {
       console.log("Couldn't update preferences -- please fix manually")
     }
 
-    console.log(
-      ' - Updating policies to replace jwtPermission_array_bigint_template_ids with query rather than in statement matching arrays in JWT'
-    )
-    try {
-      await DB.updatePermissionPolicyRules()
-    } catch (err) {
-      console.log('Unable to update permission policies')
-    }
+    // console.log(
+    //   ' - Updating policies to replace jwtPermission_array_bigint_template_ids with query rather than in statement matching arrays in JWT'
+    // )
+    // try {
+    //   await DB.updatePermissionPolicyRules()
+    // } catch (err) {
+    //   console.log('Unable to update permission policies')
+    // }
   }
 
   // Other version migrations continue here...
