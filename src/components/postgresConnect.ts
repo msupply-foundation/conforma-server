@@ -57,7 +57,6 @@ class PostgresDB {
           // "data" is stored output from scheduled trigger or verification
           // "data" can sometimes exceed the byte limit for notification payload, so must be fetched separately
           const data = await this.getTriggerPayloadData(payloadObject.trigger_id)
-          console.log('payloadObject', payloadObject)
           const { trigger, table, record_id } = payloadObject
           Throttle.add({
             name: `Trigger ${trigger} on ${table}, id ${record_id}`,
