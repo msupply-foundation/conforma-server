@@ -14,7 +14,7 @@
 /**
  * Time between subsequent function calls when queued
  */
-const THROTTLE_SPACING = 2000 // ms
+const THROTTLE_SPACING = 1500 // ms
 
 /**
  * Only "add" events captured within this time since the last addition are
