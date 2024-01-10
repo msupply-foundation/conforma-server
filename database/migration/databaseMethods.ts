@@ -337,7 +337,7 @@ const databaseMethods = {
         : null,
     }))
 
-    // For each, get list of columns and filter for varchar
+    // For each data table, get list of varchar columns
     for (const table of dataTables) {
       let result
       try {
@@ -370,7 +370,7 @@ const databaseMethods = {
         }
       }
 
-      // Write field maps back to data table
+      // Write field maps back to data_table
       if (table.field_map) {
         try {
           await DBConnect.query({
