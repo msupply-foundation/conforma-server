@@ -123,7 +123,7 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
         label: header,
         fieldname: fieldName,
         gqlName,
-        dataType: 'varchar',
+        dataType: 'citext',
       }
 
       fieldMaps.push(fieldMap)
