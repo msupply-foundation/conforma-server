@@ -4,6 +4,7 @@ import { getTemplateVersionId } from '../../src/components/exportAndImport/helpe
 import { FILES_FOLDER } from '../../src/constants'
 import fs from 'fs/promises'
 import { errorMessage } from '../../src/components/utilityFunctions'
+import config from '../../src/config'
 
 type SchemaQueryOptions = {
   silent: boolean
@@ -310,6 +311,78 @@ const databaseMethods = {
         text: `UPDATE permission_policy set rules = $1 where id = $2`,
         values: [replacementAsJson, id],
       })
+    }
+  },
+  convertDataTablesToCaseInsensitive: async () => {
+    type FieldMap = { label: string; gqlName: string; dataType: string; fieldName: string }
+    // Get list of data tables from "data_table"
+    let result
+    try {
+      result = await DBConnect.query({
+        text: `SELECT id, table_name, field_map, is_lookup_table
+          FROM data_table;`,
+      })
+    } catch {
+      console.log('ERROR: Problem getting list of data tables')
+    }
+    if (!result) return
+    const dataTables = result.rows.map(({ id, table_name, field_map, is_lookup_table }) => ({
+      id,
+      table_name: `${config.dataTablePrefix}${table_name}`,
+      field_map: is_lookup_table
+        ? field_map.map(({ dataType, ...rest }: FieldMap) => ({
+            dataType: dataType === 'varchar' ? 'citext' : dataType,
+            ...rest,
+          }))
+        : null,
+    }))
+
+    // For each, get list of columns and filter for varchar
+    for (const table of dataTables) {
+      let result
+      try {
+        result = await DBConnect.query({
+          text: `SELECT column_name FROM information_schema.columns
+          WHERE table_name = $1
+          AND data_type = 'character varying';
+        `,
+          values: [table.table_name],
+          rowMode: 'array',
+        })
+      } catch {
+        console.log('Problem getting column data for table: ', table.table_name)
+      }
+      if (!result) continue
+      const columns = result.rows.flat()
+
+      // Iterate over each column, converting to citext
+      for (const col of columns) {
+        try {
+          await DBConnect.query({
+            text: `ALTER TABLE ${table.table_name}   
+            ALTER COLUMN ${col} TYPE citext;`,
+          })
+        } catch (err) {
+          console.log(
+            `ERROR: Problem converting column ${col} on table ${table.table_name} to case-insensitive`
+          )
+          console.log((err as any).message)
+        }
+      }
+
+      // Write field maps back to data table
+      if (table.field_map) {
+        try {
+          await DBConnect.query({
+            text: `UPDATE data_table SET field_map = $1
+              WHERE id = $2`,
+            values: [JSON.stringify(table.field_map), table.id],
+          })
+        } catch (err) {
+          console.log('Problem writing field map to data_table')
+          console.log((err as any).message)
+        }
+      }
     }
   },
 }

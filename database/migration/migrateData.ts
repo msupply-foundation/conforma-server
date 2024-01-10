@@ -859,6 +859,32 @@ const migrateData = async () => {
     // }
   }
 
+  // v0.8.0
+  if (databaseVersionLessThan('0.8.0')) {
+    console.log('Migrating to v0.8.0...')
+
+    console.log(' - Changing some text fields in user/org to case-insensitive')
+    await DB.changeSchema(`
+      ALTER TABLE public.user   
+        DROP COLUMN IF EXISTS full_name;
+      DROP VIEW IF EXISTS user_org_join;
+      ALTER TABLE public.user
+        ALTER COLUMN first_name TYPE citext;
+      ALTER TABLE public.user
+        ALTER COLUMN last_name TYPE citext;
+      ALTER TABLE public.user
+        ADD COLUMN IF NOT EXISTS full_name citext GENERATED ALWAYS AS (first_name || ' ' || last_name) STORED;
+    `)
+    await DB.changeSchema(`
+      DROP VIEW IF EXISTS permissions_all;    
+      ALTER TABLE public.organisation   
+        ALTER COLUMN name TYPE citext;
+    `)
+
+    console.log(' - Changing text fields in data tables to case-insensitive')
+    await DB.convertDataTablesToCaseInsensitive()
+  }
+
   // Other version migrations continue here...
 
   // Update (almost all) Indexes, Views, Functions, Triggers regardless, since
