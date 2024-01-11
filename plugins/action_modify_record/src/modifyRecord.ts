@@ -20,6 +20,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     shouldCreateJoinTable = true,
     regenerateDataTableFilters = false,
     data,
+    patch,
     ...record
   } = parameters
 
@@ -31,6 +32,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
 
   // Build full record
   const fullRecord = objectKeysToSnakeCase({
+    ...patch,
     ...record,
     ...mapValues(data, (property) => get(applicationData, property, null)),
   })
