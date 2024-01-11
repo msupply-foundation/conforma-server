@@ -48,7 +48,11 @@ const databaseMethods = (DBConnect: any) => {
     }
   }
 
-  const createRecord = async (tableName: string, record: { [key: string]: any }) => {
+  const createRecord = async (
+    tableName: string,
+    record: { [key: string]: any },
+    noChangeLog: boolean = false
+  ) => {
     const text = `
       INSERT INTO "${tableName}" ${getKeys(record)} 
       VALUES (${DBConnect.getValuesPlaceholders(record)})
@@ -57,7 +61,7 @@ const databaseMethods = (DBConnect: any) => {
     try {
       const result = await DBConnect.query({ text, values: Object.values(record) })
       const firstRow = result.rows[0]
-      await addToChangelog(tableName, firstRow.id, 'CREATE', null, record)
+      if (!noChangeLog) await addToChangelog(tableName, firstRow.id, 'CREATE', null, record)
       return { success: true, [tableName]: firstRow, recordId: firstRow.id }
     } catch (err) {
       console.log(errorMessage(err))
@@ -79,28 +83,45 @@ const databaseMethods = (DBConnect: any) => {
         throw err
       }
     },
-    updateRecord: async (tableName: string, id: number, record: { [key: string]: any }) => {
-      const placeholders = DBConnect.getValuesPlaceholders(record)
+    updateRecord: async (tableName: string, id: number, record: Record<string, any>) => {
+      let oldData: Record<string, any> = {}
+      const newData = { ...record }
+      try {
+        oldData = await getCurrentData(tableName, id, record)
+
+        // We only want to update data that has changed, so compare first
+        Object.keys(oldData).forEach((key) => {
+          if (key in newData && JSON.stringify(oldData[key]) === JSON.stringify(newData[key])) {
+            delete oldData[key]
+            delete newData[key]
+          }
+        })
+      } catch (err) {
+        console.log(errorMessage(err))
+        throw err
+      }
+
+      const placeholders = DBConnect.getValuesPlaceholders(newData)
       const matchValuePlaceholder = `$${placeholders.length + 1}`
 
       const text = `
-      UPDATE "${tableName}" SET ${getKeys(record, true)}
-      = (${placeholders})
-      WHERE id = ${matchValuePlaceholder}
-      RETURNING *
+        UPDATE "${tableName}" SET ${getKeys(newData, true)}
+        = (${placeholders})
+        WHERE id = ${matchValuePlaceholder}
+        RETURNING *
       `
+
       // Adding extra diagnostic logs here due to odd server bug, where the
       // serial wasn't being written on application create due to database
       // duplicate foreign key error
       console.log('Attempting query:', text)
-      console.log('With values:', [...Object.values(record), id])
+      console.log('With values:', [...Object.values(newData), id])
       try {
-        const oldData = await getCurrentData(tableName, id, record)
         const result = await DBConnect.query({
           text,
-          values: [...Object.values(record), id],
+          values: [...Object.values(newData), id],
         })
-        await addToChangelog(tableName, id, 'UPDATE', oldData, record)
+        await addToChangelog(tableName, id, 'UPDATE', oldData, newData)
         return { success: true, [tableName]: result.rows[0] }
       } catch (err) {
         console.log(errorMessage(err))
@@ -157,7 +178,7 @@ const databaseMethods = (DBConnect: any) => {
       }
       // Create entry in the joiin table
       const joinTableRecord = { application_id: applicationId, [`${tableName}_id`]: recordId }
-      await createRecord(joinTableName, joinTableRecord)
+      await createRecord(joinTableName, joinTableRecord, true)
     },
     createFields: async (
       tableName: string,

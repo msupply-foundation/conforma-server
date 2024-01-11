@@ -19,6 +19,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     matchValue,
     shouldCreateJoinTable = true,
     regenerateDataTableFilters = false,
+    ignoreNull = true,
     data,
     patch,
     ...record
@@ -38,8 +39,10 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
   })
 
   // Don't update fields with NULL
-  for (const key in fullRecord) {
-    if (fullRecord[key] === null || fullRecord[key] === undefined) delete fullRecord[key]
+  if (ignoreNull) {
+    for (const key in fullRecord) {
+      if (fullRecord[key] === null || fullRecord[key] === undefined) delete fullRecord[key]
+    }
   }
 
   try {
