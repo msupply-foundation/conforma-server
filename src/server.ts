@@ -53,6 +53,7 @@ import { Schedulers } from './components/scheduler'
 import { AccessExternalApiQuery, routeAccessExternalApi } from './components/external-apis/routes'
 import { DEFAULT_LOGOUT_TIME } from './constants'
 import { updateRowPolicies } from './components/permissions/rowLevelPolicyHelpers'
+import { routeRawData } from './components/other/routeRawData'
 require('dotenv').config()
 
 // Set the default locale and timezone for date-time display (in console)
@@ -92,7 +93,8 @@ const startServer = async () => {
   server.register(fastifyCors, { origin: '*' }) // Allow all origin (TODO change in PROD)
 
   const api: FastifyPluginCallback = (server, _, done) => {
-    // Here we parse JWT, and set it in request.auth, which is available for downstream routes
+    // Here we parse JWT, and set it in request.auth, which is available for
+    // downstream routes
     server.addHook('preValidation', async (request: any, reply: FastifyReply) => {
       if (request.url.startsWith('/api/public')) return
 
@@ -169,6 +171,7 @@ const startServer = async () => {
         server.post('/test-trigger', routeTestTrigger)
         server.post('/generate-filter-data-fields', routeGenerateFilterDataFields)
         done()
+        server.get('/raw-data/:dataTable/:id', routeRawData)
       },
       { prefix: '/admin' }
     )
