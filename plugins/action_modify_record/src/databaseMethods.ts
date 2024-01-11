@@ -4,6 +4,50 @@ import config from '../../../src/config'
 const DATA_TABLE_PREFIX = config.dataTablePrefix
 
 const databaseMethods = (DBConnect: any) => {
+  const getCurrentData = async (
+    tableName: string,
+    recordId: number,
+    newData: Record<string, any> | null
+  ) => {
+    const text = newData
+      ? `
+      SELECT ${Object.keys(newData).join(', ')} FROM ${tableName}
+      WHERE id = $1
+    `
+      : `
+      SELECT * FROM ${tableName}
+      WHERE id = $1
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [recordId] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  const addToChangelog = async (
+    tableName: string,
+    recordId: number,
+    type: 'CREATE' | 'UPDATE' | 'DELETE',
+    oldData: Record<string, any> | null,
+    newData: Record<string, any> | null
+  ) => {
+    const dataTable = tableName.replace(config.dataTablePrefix, '')
+    const text = `
+      INSERT INTO data_changelog
+        (data_table, record_id, update_type, old_data, new_data)
+      VALUES($1, $2, $3, $4, $5)
+    `
+    try {
+      await DBConnect.query({ text, values: [dataTable, recordId, type, oldData, newData] })
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
   const createRecord = async (tableName: string, record: { [key: string]: any }) => {
     const text = `
       INSERT INTO "${tableName}" ${getKeys(record)} 
@@ -13,6 +57,7 @@ const databaseMethods = (DBConnect: any) => {
     try {
       const result = await DBConnect.query({ text, values: Object.values(record) })
       const firstRow = result.rows[0]
+      await addToChangelog(tableName, firstRow.id, 'CREATE', null, record)
       return { success: true, [tableName]: firstRow, recordId: firstRow.id }
     } catch (err) {
       console.log(errorMessage(err))
@@ -50,10 +95,12 @@ const databaseMethods = (DBConnect: any) => {
       console.log('Attempting query:', text)
       console.log('With values:', [...Object.values(record), id])
       try {
+        const oldData = await getCurrentData(tableName, id, record)
         const result = await DBConnect.query({
           text,
           values: [...Object.values(record), id],
         })
+        await addToChangelog(tableName, id, 'UPDATE', oldData, record)
         return { success: true, [tableName]: result.rows[0] }
       } catch (err) {
         console.log(errorMessage(err))
