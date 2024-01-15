@@ -11,11 +11,11 @@
  */
 
 /**
- * Only "add" events captured within this time since the last addition are
- * queued -- all others are executed immediately. This way, a large in-progress
- * queue won't prevent additional actions being run, otherwise users would
- * experience trigger timeouts due to their event being put at the back of the
- * queue.
+ * "add" events captured within this time (since the last addition) are pushed
+ * to the end of the queue -- all others are bumped to the front of the queue.
+ * This way, a large in-progress queue won't prevent additional actions being
+ * run, otherwise users would experience trigger timeouts due to their event
+ * being put at the back of the queue.
  */
 const THROTTLE_QUEUE_THRESHOLD = 200 // ms
 
