@@ -24,16 +24,17 @@ type EventObject<T, U> = { name: string; data: T; action: (data: T) => Promise<U
 export class EventThrottle<T, U> {
   queue: EventObject<T, U>[]
   timerId: NodeJS.Timeout | undefined
-  lastAdded: number
   queueActive: boolean
 
   constructor() {
     this.queue = []
-    this.lastAdded = 0
     this.queueActive = false
   }
 
   handleQueue = async () => {
+    // The "queueActive" flag ensures that only one instance of "handleQueue"
+    // will be processing the queue, which ensures queued events will be
+    // executed sequentially by a single thread
     if (this.queueActive) return
 
     this.queueActive = true
@@ -50,7 +51,8 @@ export class EventThrottle<T, U> {
   }
 
   public add(event: EventObject<T, U>): void {
-    // Timer is used to determine whether to put new events at the front or end of the queue.
+    // Timer is used solely to determine whether to put new events at the front
+    // or end of the queue.
     const currentTimer = this.timerId
     this.timerId = setTimeout(() => (this.timerId = undefined), THROTTLE_QUEUE_THRESHOLD)
 
