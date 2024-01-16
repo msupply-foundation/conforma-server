@@ -7,13 +7,14 @@ const databaseMethods = {
     try {
       // Get table details
       const result = await DBConnect.query({
-        text: 'SELECT table_name FROM data_table WHERE id = $1',
+        text: 'SELECT table_name, field_map FROM data_table WHERE id = $1',
         values: [id],
       })
-      const table_name = `${config.dataTablePrefix}${result.rows[0].table_name}`
+      const tableName = `${config.dataTablePrefix}${result.rows[0].table_name}`
+      const fieldMap = result.rows[0].field_map
 
       // Get table
-      const data = await DBConnect.query({ text: `SELECT * FROM ${table_name}` })
+      const data = await DBConnect.query({ text: `SELECT * FROM ${tableName} ORDER BY id;` })
       return data.rows
     } catch (err) {
       console.log(errorMessage(err))
