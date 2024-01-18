@@ -85,6 +85,15 @@ const extractNumber = (input: string) => {
   return Number(numberMatch[0])
 }
 
+// Returns true if input date is before (or on) the current date
+// Also returns true if null
+const isExpired = (date: Date | string | null) => {
+  if (date === null) return true
+  const testDate = typeof date === 'string' ? new Date(date) : date
+
+  return testDate.getTime() <= Date.now()
+}
+
 // Remove diacritics (accented characters) from strings
 // See https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript
 const removeAccents = (input: string) => input.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
@@ -113,6 +122,7 @@ export default {
   getFormattedDate,
   getJSDate,
   getISODate,
+  isExpired,
   extractNumber,
   removeAccents,
   lowerCase,
