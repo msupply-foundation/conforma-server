@@ -3,6 +3,16 @@ import config from '../../../src/config'
 
 const DATA_TABLE_PREFIX = config.dataTablePrefix
 
+interface UserData {
+  userId?: number | null
+  orgId?: number | null
+  username?: string
+}
+
+interface ChangeLogOptions extends UserData {
+  noChangeLog: boolean
+}
+
 const databaseMethods = (DBConnect: any) => {
   const getCurrentData = async (
     tableName: string,
@@ -32,16 +42,23 @@ const databaseMethods = (DBConnect: any) => {
     recordId: number,
     type: 'CREATE' | 'UPDATE' | 'DELETE',
     oldData: Record<string, any> | null,
-    newData: Record<string, any> | null
+    newData: Record<string, any> | null,
+    userId: number | null | undefined,
+    orgId: number | null | undefined,
+    username: string | undefined
   ) => {
     const dataTable = tableName.replace(config.dataTablePrefix, '')
     const text = `
       INSERT INTO data_changelog
-        (data_table, record_id, update_type, old_data, new_data)
-      VALUES($1, $2, $3, $4, $5)
+        (data_table, record_id, update_type, old_data, new_data,
+          user_id, org_id, username)
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8)
     `
     try {
-      await DBConnect.query({ text, values: [dataTable, recordId, type, oldData, newData] })
+      await DBConnect.query({
+        text,
+        values: [dataTable, recordId, type, oldData, newData, userId, orgId, username],
+      })
     } catch (err) {
       console.log(errorMessage(err))
       throw err
@@ -51,17 +68,28 @@ const databaseMethods = (DBConnect: any) => {
   const createRecord = async (
     tableName: string,
     record: { [key: string]: any },
-    noChangeLog: boolean = false
+    changeLogOptions: ChangeLogOptions
   ) => {
     const text = `
       INSERT INTO "${tableName}" ${getKeys(record)} 
       VALUES (${DBConnect.getValuesPlaceholders(record)})
       RETURNING *
       `
+    const { userId, orgId, username, noChangeLog } = changeLogOptions
     try {
       const result = await DBConnect.query({ text, values: Object.values(record) })
       const firstRow = result.rows[0]
-      if (!noChangeLog) await addToChangelog(tableName, firstRow.id, 'CREATE', null, record)
+      if (!noChangeLog)
+        await addToChangelog(
+          tableName,
+          firstRow.id,
+          'CREATE',
+          null,
+          record,
+          userId,
+          orgId,
+          username
+        )
       return { success: true, [tableName]: firstRow, recordId: firstRow.id }
     } catch (err) {
       console.log(errorMessage(err))
@@ -83,7 +111,14 @@ const databaseMethods = (DBConnect: any) => {
         throw err
       }
     },
-    updateRecord: async (tableName: string, id: number, record: Record<string, any>) => {
+    updateRecord: async (
+      tableName: string,
+      id: number,
+      record: Record<string, any>,
+      changeLogOptions: ChangeLogOptions
+    ) => {
+      const { userId, orgId, username, noChangeLog } = changeLogOptions
+
       let oldData: Record<string, any> = {}
       const newData = { ...record }
       try {
@@ -104,11 +139,17 @@ const databaseMethods = (DBConnect: any) => {
       const placeholders = DBConnect.getValuesPlaceholders(newData)
       const matchValuePlaceholder = `$${placeholders.length + 1}`
 
-      const text = `
+      const anythingToUpdate = Object.keys(newData).length > 0
+      const text = anythingToUpdate
+        ? `
         UPDATE "${tableName}" SET ${getKeys(newData, true)}
         = (${placeholders})
         WHERE id = ${matchValuePlaceholder}
         RETURNING *
+      `
+        : `
+        SELECT * FROM "${tableName}"
+        WHERE id = ${matchValuePlaceholder}
       `
 
       // Adding extra diagnostic logs here due to odd server bug, where the
@@ -121,8 +162,13 @@ const databaseMethods = (DBConnect: any) => {
           text,
           values: [...Object.values(newData), id],
         })
-        await addToChangelog(tableName, id, 'UPDATE', oldData, newData)
-        return { success: true, [tableName]: result.rows[0] }
+        if (!noChangeLog && anythingToUpdate)
+          await addToChangelog(tableName, id, 'UPDATE', oldData, newData, userId, orgId, username)
+        return {
+          success: true,
+          [tableName]: result.rows[0],
+          log: !anythingToUpdate ? `WARNING: No data changed (${tableName} id: ${id})` : '',
+        }
       } catch (err) {
         console.log(errorMessage(err))
         throw err
@@ -176,9 +222,9 @@ const databaseMethods = (DBConnect: any) => {
         console.log(errorMessage(err))
         throw new Error(`Failed to create join table: ${joinTableName}`)
       }
-      // Create entry in the joiin table
+      // Create entry in the join table
       const joinTableRecord = { application_id: applicationId, [`${tableName}_id`]: recordId }
-      await createRecord(joinTableName, joinTableRecord, true)
+      await createRecord(joinTableName, joinTableRecord, { noChangeLog: true })
     },
     createFields: async (
       tableName: string,

@@ -891,7 +891,8 @@ const migrateData = async () => {
         'UPDATE',
         'DELETE'
           );
-
+    `)
+    await DB.changeSchema(`
       CREATE TABLE IF NOT EXISTS data_changelog (
         id serial PRIMARY KEY,
         data_table varchar NOT NULL,
@@ -899,8 +900,12 @@ const migrateData = async () => {
         update_type changelog_type NOT NULL,
         timestamp timestamptz DEFAULT NOW(),
         old_data jsonb,
-        new_data jsonb
-       );
+        new_data jsonb,
+        user_id integer REFERENCES public.user (id) ON DELETE CASCADE,
+        org_id integer REFERENCES public.organisation (id) ON DELETE CASCADE,
+        username citext REFERENCES public.user (username)
+          ON DELETE CASCADE ON UPDATE CASCADE
+      );
     `)
   }
 

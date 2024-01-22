@@ -20,6 +20,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     shouldCreateJoinTable = true,
     regenerateDataTableFilters = false,
     ignoreNull = true,
+    noChangeLog = false,
     data,
     patch,
     ...record
@@ -45,6 +46,16 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     }
   }
 
+  // Data for changelog
+  const changeLogOptions = noChangeLog
+    ? { noChangeLog: true }
+    : {
+        noChangeLog: false,
+        userId: applicationData?.userId,
+        orgId: applicationData?.orgId,
+        username: applicationData?.username,
+      }
+
   try {
     await createOrUpdateTable(DBConnect, db, tableNameProper, fullRecord, tableName)
 
@@ -58,12 +69,12 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
       // UPDATE
       for (const recordId of recordIds) {
         console.log(`Updating ${tableNameProper} record: ${JSON.stringify(fullRecord, null, 2)}`)
-        result.push(await db.updateRecord(tableNameProper, recordId, fullRecord))
+        result.push(await db.updateRecord(tableNameProper, recordId, fullRecord, changeLogOptions))
       }
     } else {
       // CREATE NEW
       console.log(`Creating ${tableNameProper} record: ${JSON.stringify(fullRecord, null, 2)}`)
-      const res = await db.createRecord(tableNameProper, fullRecord)
+      const res = await db.createRecord(tableNameProper, fullRecord, changeLogOptions)
       result.push(res)
       recordIds.push(res.recordId)
     }
@@ -85,6 +96,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
 
     const firstRecord = result[0][tableNameProper]
     const allRecords = result.map((res) => res[tableNameProper])
+    const error_log = result.map(({ log }) => log).join(', ')
 
     // Note: the structure of this output object is not ideal. We should really
     // just have a single array of results. However, this could break backwards
@@ -95,7 +107,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
 
     return {
       status: ActionQueueStatus.Success,
-      error_log: '',
+      error_log,
       output,
     }
   } catch (error) {

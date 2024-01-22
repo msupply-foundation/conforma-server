@@ -54,6 +54,7 @@ const coreActions: CoreActions = {
           children: ['applicationData.templateCode'],
         },
         updateRecord: true,
+        noChangeLog: true,
         // Provides functionality to support `<?year>` in pattern string.
         // Add more functionality here as required
         customFields: { year: 'year' },
@@ -98,6 +99,7 @@ const coreActions: CoreActions = {
           templateName: 'applicationData.templateName',
         },
         updateRecord: true,
+        noChangeLog: true,
       },
     },
   ],
