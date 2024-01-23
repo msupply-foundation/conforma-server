@@ -134,7 +134,7 @@ export default modifyRecord
 const getPostgresType = (value: any): string => {
   if (value instanceof Date) return 'timestamptz'
   if (Array.isArray(value)) {
-    const elementType = value.length > 0 ? getPostgresType(value[0]) : 'varchar'
+    const elementType = value.length > 0 ? getPostgresType(value[0]) : 'citext'
     return `${elementType}[]`
   }
   if (isDateString(value)) return 'date'
@@ -143,7 +143,7 @@ const getPostgresType = (value: any): string => {
   if (value instanceof Object) return 'jsonb'
   if (typeof value === 'boolean') return 'boolean'
   if (typeof value === 'number') return Number.isInteger(value) ? 'integer' : 'double precision'
-  return 'varchar'
+  return 'citext'
 }
 
 const isDateString = (value: any) => {
