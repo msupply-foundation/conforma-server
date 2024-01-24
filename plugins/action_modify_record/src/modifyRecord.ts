@@ -54,6 +54,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
         userId: applicationData?.userId,
         orgId: applicationData?.orgId,
         username: applicationData?.username,
+        applicationId: applicationData?.applicationId,
       }
 
   try {

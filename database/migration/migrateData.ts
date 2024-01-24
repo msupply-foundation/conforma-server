@@ -904,7 +904,8 @@ const migrateData = async () => {
         user_id integer REFERENCES public.user (id) ON DELETE CASCADE,
         org_id integer REFERENCES public.organisation (id) ON DELETE CASCADE,
         username citext REFERENCES public.user (username)
-          ON DELETE CASCADE ON UPDATE CASCADE
+          ON DELETE CASCADE ON UPDATE CASCADE,
+        application_id integer REFERENCES public.application (id) ON DELETE CASCADE
       );
     `)
   }

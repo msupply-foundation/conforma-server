@@ -7,6 +7,7 @@ interface UserData {
   userId?: number | null
   orgId?: number | null
   username?: string
+  applicationId?: number | null
 }
 
 interface ChangeLogOptions extends UserData {
@@ -45,19 +46,30 @@ const databaseMethods = (DBConnect: any) => {
     newData: Record<string, any> | null,
     userId: number | null | undefined,
     orgId: number | null | undefined,
-    username: string | undefined
+    username: string | undefined,
+    applicationId: number | null | undefined
   ) => {
     const dataTable = tableName.replace(config.dataTablePrefix, '')
     const text = `
       INSERT INTO data_changelog
         (data_table, record_id, update_type, old_data, new_data,
-          user_id, org_id, username)
-      VALUES($1, $2, $3, $4, $5, $6, $7, $8)
+          user_id, org_id, username, application_id)
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
     `
     try {
       await DBConnect.query({
         text,
-        values: [dataTable, recordId, type, oldData, newData, userId, orgId, username],
+        values: [
+          dataTable,
+          recordId,
+          type,
+          oldData,
+          newData,
+          userId,
+          orgId,
+          username,
+          applicationId,
+        ],
       })
     } catch (err) {
       console.log(errorMessage(err))
@@ -75,7 +87,7 @@ const databaseMethods = (DBConnect: any) => {
       VALUES (${DBConnect.getValuesPlaceholders(record)})
       RETURNING *
       `
-    const { userId, orgId, username, noChangeLog } = changeLogOptions
+    const { userId, orgId, username, applicationId, noChangeLog } = changeLogOptions
     try {
       const result = await DBConnect.query({ text, values: Object.values(record) })
       const firstRow = result.rows[0]
@@ -88,7 +100,8 @@ const databaseMethods = (DBConnect: any) => {
           record,
           userId,
           orgId,
-          username
+          username,
+          applicationId
         )
       return { success: true, [tableName]: firstRow, recordId: firstRow.id }
     } catch (err) {
@@ -117,7 +130,7 @@ const databaseMethods = (DBConnect: any) => {
       record: Record<string, any>,
       changeLogOptions: ChangeLogOptions
     ) => {
-      const { userId, orgId, username, noChangeLog } = changeLogOptions
+      const { userId, orgId, username, applicationId, noChangeLog } = changeLogOptions
 
       let oldData: Record<string, any> = {}
       const newData = { ...record }
@@ -163,7 +176,17 @@ const databaseMethods = (DBConnect: any) => {
           values: [...Object.values(newData), id],
         })
         if (!noChangeLog && anythingToUpdate)
-          await addToChangelog(tableName, id, 'UPDATE', oldData, newData, userId, orgId, username)
+          await addToChangelog(
+            tableName,
+            id,
+            'UPDATE',
+            oldData,
+            newData,
+            userId,
+            orgId,
+            username,
+            applicationId
+          )
         return {
           success: true,
           [tableName]: result.rows[0],
