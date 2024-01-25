@@ -10,8 +10,7 @@ import {
 } from '../../../src/components/utilityFunctions'
 import { generateFilterDataFields } from '../../../src/components/data_display/generateFilterDataFields/generateFilterDataFields'
 import config from '../../../src/config'
-
-export type DBOperationType = 'CREATE' | 'UPDATE' | 'DELETE'
+import { DBOperationType } from '../../../src/types'
 
 const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)

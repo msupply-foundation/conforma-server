@@ -15,6 +15,7 @@ import {
   UserOrg,
   ActionResult,
   TriggerPayload,
+  DBOperationType,
 } from '../types'
 import { ApplicationOutcome, ApplicationStatus, ReviewStatus, Trigger } from '../generated/graphql'
 import { errorMessage } from './utilityFunctions'
@@ -1315,6 +1316,46 @@ class PostgresDB {
     try {
       const result = await this.query({ text, values: [tableName, columnMatches] })
       return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  // Changelog
+  public addToChangelog = async (
+    tableName: string,
+    recordId: number,
+    type: DBOperationType,
+    oldData: Record<string, any> | null,
+    newData: Record<string, any> | null,
+    userId: number | null | undefined,
+    orgId: number | null | undefined,
+    username: string | undefined,
+    applicationId: number | null | undefined
+  ) => {
+    const dataTable = tableName.replace(config.dataTablePrefix, '')
+    const text = `
+      INSERT INTO data_changelog
+        (data_table, record_id, update_type, old_data, new_data,
+          user_id, org_id, username, application_id)
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
+    `
+    try {
+      await this.query({
+        text,
+        values: [
+          dataTable,
+          recordId,
+          type,
+          oldData,
+          newData,
+          userId,
+          orgId,
+          username,
+          applicationId,
+        ],
+      })
     } catch (err) {
       console.log(errorMessage(err))
       throw err

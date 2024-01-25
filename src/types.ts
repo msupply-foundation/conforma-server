@@ -223,6 +223,8 @@ export interface TriggerQueueUpdatePayload {
   status: TriggerQueueStatus
 }
 
+export type DBOperationType = 'CREATE' | 'UPDATE' | 'DELETE'
+
 export interface User {
   userId: number
   firstName: string

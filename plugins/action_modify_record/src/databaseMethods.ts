@@ -1,6 +1,6 @@
 import { errorMessage } from '../../../src/components/utilityFunctions'
 import config from '../../../src/config'
-import { DBOperationType } from './modifyRecord'
+import { DBOperationType } from '../../../src/types'
 
 const DATA_TABLE_PREFIX = config.dataTablePrefix
 
@@ -39,45 +39,6 @@ const databaseMethods = (DBConnect: any) => {
     }
   }
 
-  const addToChangelog = async (
-    tableName: string,
-    recordId: number,
-    type: DBOperationType,
-    oldData: Record<string, any> | null,
-    newData: Record<string, any> | null,
-    userId: number | null | undefined,
-    orgId: number | null | undefined,
-    username: string | undefined,
-    applicationId: number | null | undefined
-  ) => {
-    const dataTable = tableName.replace(config.dataTablePrefix, '')
-    const text = `
-      INSERT INTO data_changelog
-        (data_table, record_id, update_type, old_data, new_data,
-          user_id, org_id, username, application_id)
-      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
-    `
-    try {
-      await DBConnect.query({
-        text,
-        values: [
-          dataTable,
-          recordId,
-          type,
-          oldData,
-          newData,
-          userId,
-          orgId,
-          username,
-          applicationId,
-        ],
-      })
-    } catch (err) {
-      console.log(errorMessage(err))
-      throw err
-    }
-  }
-
   const createRecord = async (
     tableName: string,
     record: { [key: string]: any },
@@ -93,7 +54,7 @@ const databaseMethods = (DBConnect: any) => {
       const result = await DBConnect.query({ text, values: Object.values(record) })
       const firstRow = result.rows[0]
       if (!noChangeLog)
-        await addToChangelog(
+        await DBConnect.addToChangelog(
           tableName,
           firstRow.id,
           'CREATE',
@@ -177,7 +138,7 @@ const databaseMethods = (DBConnect: any) => {
           values: [...Object.values(newData), id],
         })
         if (!noChangeLog && anythingToUpdate)
-          await addToChangelog(
+          await DBConnect.addToChangelog(
             tableName,
             id,
             'UPDATE',
@@ -221,7 +182,7 @@ const databaseMethods = (DBConnect: any) => {
           values: [id],
         })
         if (!noChangeLog)
-          await addToChangelog(
+          await DBConnect.addToChangelog(
             tableName,
             id,
             'DELETE',
