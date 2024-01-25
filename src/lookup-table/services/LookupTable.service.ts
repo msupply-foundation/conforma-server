@@ -116,7 +116,6 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
     }
 
     return headers.map((header: string) => {
-      if (header === 'id') return
       const fieldName = toSnakeCase(header)
       const gqlName = toCamelCase(header)
 

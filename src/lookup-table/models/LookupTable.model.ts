@@ -118,7 +118,10 @@ const LookupTableModel = () => {
   ): Promise<{ id: string }[] | boolean> => {
     const table = `${dataTablePrefix}${tableName}`
     try {
-      const id = row.id ? Number(row.id) : null
+      if (!row.id) delete row.id
+      else row.id = Number(row.id)
+
+      const id = row.id ?? null
 
       const operation: 'CREATE' | 'UPDATE' = !id
         ? 'CREATE'
