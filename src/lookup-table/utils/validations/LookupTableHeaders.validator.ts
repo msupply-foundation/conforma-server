@@ -19,11 +19,6 @@ class LookupTableHeadersValidator extends BaseValidator {
   protected validate(): void {
     this.errorMessages = []
     const isIdPresent = isArrayContainsStringValid(this.headers, 'id')
-    if (isIdPresent && this.isImport) {
-      this.errorMessages.push(
-        `Import csv should not contian internal 'ID' header (can only exist when updating csv)`
-      )
-    }
 
     if (!isIdPresent && !this.isImport) this.errorMessages.push(`Column header 'ID' is required`)
 

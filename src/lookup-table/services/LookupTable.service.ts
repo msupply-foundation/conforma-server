@@ -214,12 +214,7 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
 
   const createUpdateRows = async () => {
     await rows.forEach(async (row: any) => {
-      if (!row.id) {
-        delete row.id
-        await lookupTableModel.createRow({ tableName, row })
-      } else {
-        await lookupTableModel.updateRow({ tableName, row })
-      }
+      await lookupTableModel.createOrUpdateRow(tableName, row)
     })
     await lookupTableModel.deleteRemovedRows({ tableName, rows })
   }

@@ -99,17 +99,49 @@ const LookupTableModel = () => {
     }
   }
 
-  const createRow = async ({
-    tableName,
-    row,
-  }: {
-    tableName: string
-    row: any
-  }): Promise<{ id: string }[]> => {
+  const doesIdExist = async (table: string, id: number) => {
     try {
-      const text = `INSERT INTO ${dataTablePrefix}${tableName}(${Object.keys(row)}) VALUES (
+      const text = `
+        SELECT id FROM ${table}
+        WHERE id = $1
+      `
+      const count = (await DBConnect.query({ text, values: [id] })).rows.length
+      return !!count
+    } catch (error) {
+      throw error
+    }
+  }
+
+  const createOrUpdateRow = async (
+    tableName: string,
+    row: Record<string, any>
+  ): Promise<{ id: string }[] | boolean> => {
+    const table = `${dataTablePrefix}${tableName}`
+    try {
+      const id = row.id ? Number(row.id) : null
+
+      const operation: 'CREATE' | 'UPDATE' = !id
+        ? 'CREATE'
+        : (await doesIdExist(table, id))
+        ? 'UPDATE'
+        : 'CREATE'
+
+      switch (operation) {
+        case 'CREATE':
+          return await createRow(table, row)
+        case 'UPDATE':
+          return await updateRow(tableName, row)
+      }
+    } catch (error) {
+      throw error
+    }
+  }
+
+  const createRow = async (table: string, row: Record<string, any>): Promise<{ id: string }[]> => {
+    try {
+      const text = `INSERT INTO ${table}(${Object.keys(row)}) VALUES (
           ${Object.keys(row)
-            .map((key, index) => {
+            .map((_, index) => {
               return '$' + String(index + 1)
             })
             .join(', ')}) RETURNING id`
@@ -125,13 +157,7 @@ const LookupTableModel = () => {
     }
   }
 
-  const updateRow = async ({
-    tableName,
-    row,
-  }: {
-    tableName: string
-    row: any
-  }): Promise<boolean> => {
+  const updateRow = async (table: string, row: Record<string, any>): Promise<boolean> => {
     try {
       let primaryKeyIndex = 0
       const setText = Object.keys(row)
@@ -147,7 +173,7 @@ const LookupTableModel = () => {
         .filter(Boolean)
         .join(', ')
 
-      const text = `UPDATE ${dataTablePrefix}${tableName} SET ${setText} WHERE id = $${primaryKeyIndex}`
+      const text = `UPDATE ${table} SET ${setText} WHERE id = $${primaryKeyIndex}`
       await DBConnect.query({ text, values: [...Object.values(row)] })
       return true
     } catch (error) {
@@ -204,8 +230,7 @@ const LookupTableModel = () => {
     getAllRowsForTable,
     countStructureRowsByTableName,
     createTable,
-    createRow,
-    updateRow,
+    createOrUpdateRow,
     deleteRemovedRows,
     updateStructureFieldMaps,
     addTableColumns,
