@@ -11,6 +11,8 @@ import {
 import { generateFilterDataFields } from '../../../src/components/data_display/generateFilterDataFields/generateFilterDataFields'
 import config from '../../../src/config'
 
+export type DBOperationType = 'CREATE' | 'UPDATE' | 'DELETE'
+
 const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
   const {
@@ -21,6 +23,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     regenerateDataTableFilters = false,
     ignoreNull = true,
     noChangeLog = false,
+    delete: deleteRecord = false,
     data,
     patch,
     ...record
@@ -31,6 +34,8 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
   const fieldToMatch = matchField ?? 'id'
   const valueToMatch = matchValue ?? record[fieldToMatch]
   const applicationId = applicationData?.applicationId || 0
+
+  if (deleteRecord && !matchValue) throw new Error('Unable to delete records without a matchValue')
 
   // Build full record
   const fullRecord = objectKeysToSnakeCase({
@@ -62,22 +67,36 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
 
     const recordIds: number[] = await db.getRecordIds(tableNameProper, fieldToMatch, valueToMatch)
 
-    const isUpdate = recordIds.length !== 0
-    const isMultiUpdate = recordIds.length > 1
+    const operationType: DBOperationType = deleteRecord
+      ? 'DELETE'
+      : recordIds.length !== 0
+      ? 'UPDATE'
+      : 'CREATE'
+
+    const isMultipleRecords = recordIds.length > 1
 
     let result: any[] = []
-    if (isUpdate) {
-      // UPDATE
-      for (const recordId of recordIds) {
-        console.log(`Updating ${tableNameProper} record: ${JSON.stringify(fullRecord, null, 2)}`)
-        result.push(await db.updateRecord(tableNameProper, recordId, fullRecord, changeLogOptions))
-      }
-    } else {
-      // CREATE NEW
-      console.log(`Creating ${tableNameProper} record: ${JSON.stringify(fullRecord, null, 2)}`)
-      const res = await db.createRecord(tableNameProper, fullRecord, changeLogOptions)
-      result.push(res)
-      recordIds.push(res.recordId)
+
+    switch (operationType) {
+      case 'CREATE':
+        console.log(`Creating ${tableNameProper} record: ${JSON.stringify(fullRecord, null, 2)}`)
+        const res = await db.createRecord(tableNameProper, fullRecord, changeLogOptions)
+        result.push(res)
+        recordIds.push(res.recordId)
+        break
+      case 'UPDATE':
+        for (const recordId of recordIds) {
+          console.log(`Updating ${tableNameProper} record: ${recordId}`)
+          result.push(
+            await db.updateRecord(tableNameProper, recordId, fullRecord, changeLogOptions)
+          )
+        }
+        break
+      case 'DELETE':
+        for (const recordId of recordIds) {
+          console.log(`Deleting ${tableNameProper} record: ${recordId}`)
+          result.push(await db.deleteRecord(tableNameProper, recordId, changeLogOptions))
+        }
     }
 
     for (const recordId of recordIds) {
@@ -92,7 +111,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
       throw new Error('Problem creating or updating record(s)')
 
     recordIds.forEach((recordId) =>
-      console.log(`${isUpdate ? 'Updated' : 'Created'} ${tableNameProper} record, ID: `, recordId)
+      console.log(`${operationType} ${tableNameProper} record, ID: `, recordId)
     )
 
     const firstRecord = result[0][tableNameProper]
@@ -103,8 +122,8 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     // just have a single array of results. However, this could break backwards
     // compatibility, hence separate fields for the "single" record and
     // "allRecords" (if there are more than one)
-    const output = { [tableNameProper]: firstRecord }
-    if (isMultiUpdate) output.allRecords = allRecords
+    const output = { [tableNameProper]: firstRecord, operation: operationType }
+    if (isMultipleRecords) output.allRecords = allRecords
 
     return {
       status: ActionQueueStatus.Success,

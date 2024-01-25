@@ -1,5 +1,6 @@
 import { errorMessage } from '../../../src/components/utilityFunctions'
 import config from '../../../src/config'
+import { DBOperationType } from './modifyRecord'
 
 const DATA_TABLE_PREFIX = config.dataTablePrefix
 
@@ -41,7 +42,7 @@ const databaseMethods = (DBConnect: any) => {
   const addToChangelog = async (
     tableName: string,
     recordId: number,
-    type: 'CREATE' | 'UPDATE' | 'DELETE',
+    type: DBOperationType,
     oldData: Record<string, any> | null,
     newData: Record<string, any> | null,
     userId: number | null | undefined,
@@ -191,6 +192,49 @@ const databaseMethods = (DBConnect: any) => {
           success: true,
           [tableName]: result.rows[0],
           log: !anythingToUpdate ? `WARNING: No data changed (${tableName} id: ${id})` : '',
+        }
+      } catch (err) {
+        console.log(errorMessage(err))
+        throw err
+      }
+    },
+    deleteRecord: async (tableName: string, id: number, changeLogOptions: ChangeLogOptions) => {
+      const { userId, orgId, username, applicationId, noChangeLog } = changeLogOptions
+
+      let oldData: Record<string, any> = {}
+
+      try {
+        oldData = await getCurrentData(tableName, id, null)
+      } catch (err) {
+        console.log(errorMessage(err))
+        throw err
+      }
+
+      const text = `
+      DELETE FROM "${tableName}"
+      WHERE id = $1
+      RETURNING *
+    `
+      try {
+        const result = await DBConnect.query({
+          text,
+          values: [id],
+        })
+        if (!noChangeLog)
+          await addToChangelog(
+            tableName,
+            id,
+            'DELETE',
+            oldData,
+            {},
+            userId,
+            orgId,
+            username,
+            applicationId
+          )
+        return {
+          success: true,
+          [tableName]: result.rows[0],
         }
       } catch (err) {
         console.log(errorMessage(err))
