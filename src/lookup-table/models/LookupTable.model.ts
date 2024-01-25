@@ -130,7 +130,7 @@ const LookupTableModel = () => {
         case 'CREATE':
           return await createRow(table, row)
         case 'UPDATE':
-          return await updateRow(tableName, row)
+          return await updateRow(table, row)
       }
     } catch (error) {
       throw error
@@ -150,6 +150,10 @@ const LookupTableModel = () => {
         text,
         values: [...Object.values(row)],
       })
+
+      // Add new id to row property so it doesn't get deleted immediately
+      const id = result.rows[0].id
+      row.id = id
 
       return result.rows.map((row: any) => row.id)
     } catch (error) {
@@ -181,13 +185,10 @@ const LookupTableModel = () => {
     }
   }
 
-  const deleteRemovedRows = async ({
-    tableName,
-    rows,
-  }: {
-    tableName: string
+  const deleteRemovedRows = async (
+    tableName: string,
     rows: { id?: number }[]
-  }): Promise<boolean> => {
+  ): Promise<boolean> => {
     try {
       const rowIds = rows.filter(({ id }) => !!id).map(({ id }) => Number(id))
       const text = `

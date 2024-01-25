@@ -116,6 +116,7 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
     }
 
     return headers.map((header: string) => {
+      if (header === 'id') return
       const fieldName = toSnakeCase(header)
       const gqlName = toCamelCase(header)
 
@@ -213,10 +214,10 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
   }
 
   const createUpdateRows = async () => {
-    await rows.forEach(async (row: any) => {
+    for (const row of rows) {
       await lookupTableModel.createOrUpdateRow(tableName, row)
-    })
-    await lookupTableModel.deleteRemovedRows({ tableName, rows })
+    }
+    await lookupTableModel.deleteRemovedRows(tableName, rows)
   }
 
   return {
