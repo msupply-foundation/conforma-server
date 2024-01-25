@@ -13,9 +13,14 @@ import {
   FilePayload,
   TriggerQueueUpdatePayload,
   UserOrg,
+  ActionResult,
+  TriggerPayload,
 } from '../types'
 import { ApplicationOutcome, ApplicationStatus, ReviewStatus, Trigger } from '../generated/graphql'
 import { errorMessage } from './utilityFunctions'
+import { EventThrottle } from './actions/throttle'
+
+const Throttle = new EventThrottle<TriggerPayload, ActionResult[]>()
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -52,7 +57,12 @@ class PostgresDB {
           // "data" is stored output from scheduled trigger or verification
           // "data" can sometimes exceed the byte limit for notification payload, so must be fetched separately
           const data = await this.getTriggerPayloadData(payloadObject.trigger_id)
-          processTrigger({ ...payloadObject, data })
+          const { trigger, table, record_id } = payloadObject
+          Throttle.add({
+            name: `Trigger ${trigger} on ${table}, id ${record_id}`,
+            data: { ...payloadObject, data },
+            action: processTrigger,
+          })
           break
         case 'action_notifications':
           // For Async Actions only
