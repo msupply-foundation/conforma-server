@@ -221,6 +221,7 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
         await lookupTableModel.updateRow({ tableName, row })
       }
     })
+    await lookupTableModel.deleteRemovedRows({ tableName, rows })
   }
 
   return {

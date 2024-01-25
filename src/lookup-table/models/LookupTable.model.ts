@@ -16,7 +16,7 @@ const LookupTableModel = () => {
   const getAllRowsForTable = async ({ tableName, fieldMap }: LookupTableStructureFull) => {
     const mappedField = ({ label, fieldname }: FieldMapType) => `"${fieldname}" as "${label}"`
     const fields = fieldMap.map(mappedField).join(',')
-    const text = `SELECT ${fields} FROM ${dataTablePrefix}${tableName}`
+    const text = `SELECT ${fields} FROM ${dataTablePrefix}${tableName} ORDER BY id`
     const result = await DBConnect.query({ text })
     return exportDataRows(fieldMap, result.rows)
   }
@@ -155,6 +155,26 @@ const LookupTableModel = () => {
     }
   }
 
+  const deleteRemovedRows = async ({
+    tableName,
+    rows,
+  }: {
+    tableName: string
+    rows: { id?: number }[]
+  }): Promise<boolean> => {
+    try {
+      const rowIds = rows.filter(({ id }) => !!id).map(({ id }) => Number(id))
+      const text = `
+        DELETE FROM ${dataTablePrefix}${tableName}
+        WHERE NOT (id = ANY($1));
+      `
+      await DBConnect.query({ text, values: [rowIds] })
+      return true
+    } catch (error) {
+      throw error
+    }
+  }
+
   const updateStructureFieldMaps = async (
     tableName: string,
     fieldMaps: FieldMapType[]
@@ -186,6 +206,7 @@ const LookupTableModel = () => {
     createTable,
     createRow,
     updateRow,
+    deleteRemovedRows,
     updateStructureFieldMaps,
     addTableColumns,
   }
