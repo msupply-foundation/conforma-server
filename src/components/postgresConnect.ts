@@ -1226,13 +1226,19 @@ class PostgresDB {
   public getDataTableColumns = async (tableName: string) => {
     const text = `
       SELECT column_name as name,
-      data_type as "dataType"
+      data_type as "dataType",
+      udt_name as "userType"
       FROM information_schema.columns
       WHERE table_name = $1;
     `
     try {
       const result = await this.query({ text, values: [tableName] })
-      return result.rows
+      return result.rows.map(({ name, dataType, userType }) => ({
+        name,
+        // So we can discriminate between citext and enums -- data type returns
+        // "USER-DEFINED" for both
+        dataType: dataType === 'USER-DEFINED' ? userType : dataType,
+      }))
     } catch (err) {
       console.log(errorMessage(err))
       throw err
