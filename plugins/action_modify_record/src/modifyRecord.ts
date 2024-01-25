@@ -114,9 +114,10 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
       console.log(`${operationType} ${tableNameProper} record, ID: `, recordId)
     )
 
-    const firstRecord = result[0][tableNameProper]
+    const firstRecord = result[0]?.[tableNameProper] ?? {}
     const allRecords = result.map((res) => res[tableNameProper])
-    const error_log = result.map(({ log }) => log).join(', ')
+    const error_log =
+      result.length === 0 ? 'WARNING: No matching records' : result.map(({ log }) => log).join(', ')
 
     // Note: the structure of this output object is not ideal. We should really
     // just have a single array of results. However, this could break backwards
