@@ -21,7 +21,8 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     shouldCreateJoinTable = true,
     regenerateDataTableFilters = false,
     ignoreNull = true,
-    noChangeLog = false,
+    noChangelog = false,
+    noChangeLog = noChangelog, // In case of common capitalisation typo
     delete: deleteRecord = false,
     data,
     patch,

@@ -18,25 +18,7 @@ The back-end currently has two server instances which are launched to handle inc
   - [Authentication](#authentication)
   - [Public endpoints](#public-endpoints)
   - [Authenticated endpoints](#authenticated-endpoints)
-    - [File upload endpoint:](#file-upload-endpoint)
-    - [Check unique endpoint](#check-unique-endpoint)
-    - [Create hash](#create-hash)
-    - [Login Organisation](#login-organisation)
-    - [User Info](#user-info)
-    - [User Permissions](#user-permissions)
-    - [Check Triggers](#check-triggers)
-    - [Generate PDF](#generate-pdf)
-    - [Data Views](#data-views)
-    - [Preview Actions](#preview-actions)
-    - [Extend application deadline](#extend-application-deadline)
-    - [Lookup table endpoints](#lookup-table-endpoints)
-    - [External API access](#external-api-access)
   - [Admin only endpoints](#admin-only-endpoints)
-    - [Update row level policies](#update-row-level-policies)
-    - [Run Action](#run-action)
-    - [Manage localisations](#manage-localisations)
-    - [Snapshot endpoints](#snapshot-endpoints)
-    - [Preference management endpoints](#preference-management-endpoints)
 
 <!-- /TOC -->
 
@@ -626,3 +608,9 @@ See [Snapshot documentation](Snapshots.md) for more info
 The difference between these and the [public `get-prefs` endpoint](#get-preferences-endpoint) is that these read and write both web app *and* server preferences, whereas the public `get-prefs` is just for the web app.
 
 See [Preferences documentation](Preferences.md) for more info
+
+#### Raw data access
+
+- GET: `/raw-data/<dataTable>/<id>`
+
+Normally, data table data is accessed from the front-end via [Data Views](Data-View.md). However, this data is structured and formatted for presentation. Occasionally, an Admin template may require access to the raw database data from a data table, so this endpoint provides such a mechanism.
