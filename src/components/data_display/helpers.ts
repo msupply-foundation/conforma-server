@@ -23,7 +23,7 @@ import {
   FilterDefinition,
 } from './types'
 import { DataView, DataViewColumnDefinition } from '../../generated/graphql'
-import dataTypeMap, { PostgresDataType } from './postGresToJSDataTypes'
+import dataTypeMap, { JSDataType, PostgresDataType } from './postGresToJSDataTypes'
 import config from '../../config'
 import { plural } from 'pluralize'
 
@@ -88,11 +88,12 @@ export const buildAllColumnDefinitions = async ({
   const showLinkedApplications = dataView.showLinkedApplications
 
   // Get all Fields on Data table (schema query)
-  const fields: { name: string; dataType: PostgresDataType }[] = (
+  const fields: { name: string; dataType: JSDataType }[] = (
     await DBConnect.getDataTableColumns(snakeCase(tableNameProper))
   ).map(({ name, dataType }) => ({
     name: camelCase(name),
-    dataType: dataTypeMap?.[dataType as PostgresDataType] ?? dataType,
+    // Assume non-identified types are user-defined Enums
+    dataType: dataTypeMap?.[dataType as PostgresDataType] ?? 'Enum',
   }))
   const fieldNames = fields.map((field) => field.name)
   const fieldDataTypes = fields.reduce((dataTypeIndex: { [key: string]: string }, field) => {
@@ -276,6 +277,7 @@ const dataTypeFilterListMap = {
   number: false,
   boolean: true,
   Date: false,
+  Enum: true,
 }
 
 const buildFilterDefinitions = (

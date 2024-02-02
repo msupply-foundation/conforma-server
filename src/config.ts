@@ -62,7 +62,7 @@ const config: Config = {
   // These are the only default tables in the system that we allow to be mutated
   // directly by modifyRecord or display as data views. All other names must
   // have "data_table_" prepended.
-  allowedTableNames: ['user', 'organisation', 'application', 'file'],
+  allowedTableNames: ['user', 'organisation', 'application', 'file', 'data_changelog'],
   // From the above allowed tables, these ones can be written to, but can't have
   // columns added (i.e. schema changes):
   allowedTablesNoColumns: ['application', 'file'],

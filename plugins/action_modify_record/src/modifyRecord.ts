@@ -10,6 +10,7 @@ import {
 } from '../../../src/components/utilityFunctions'
 import { generateFilterDataFields } from '../../../src/components/data_display/generateFilterDataFields/generateFilterDataFields'
 import config from '../../../src/config'
+import { DBOperationType } from '../../../src/types'
 
 const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
@@ -20,6 +21,9 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     shouldCreateJoinTable = true,
     regenerateDataTableFilters = false,
     ignoreNull = true,
+    noChangelog = false,
+    noChangeLog = noChangelog, // In case of common capitalisation typo
+    delete: deleteRecord = false,
     data,
     patch,
     ...record
@@ -30,6 +34,8 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
   const fieldToMatch = matchField ?? 'id'
   const valueToMatch = matchValue ?? record[fieldToMatch]
   const applicationId = applicationData?.applicationId || 0
+
+  if (deleteRecord && !matchValue) throw new Error('Unable to delete records without a matchValue')
 
   // Build full record
   const fullRecord = objectKeysToSnakeCase({
@@ -45,27 +51,52 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     }
   }
 
+  // Data for changelog
+  const changeLogOptions = noChangeLog
+    ? { noChangeLog: true }
+    : {
+        noChangeLog: false,
+        userId: applicationData?.userId,
+        orgId: applicationData?.orgId,
+        username: applicationData?.username,
+        applicationId: applicationData?.applicationId,
+      }
+
   try {
     await createOrUpdateTable(DBConnect, db, tableNameProper, fullRecord, tableName)
 
     const recordIds: number[] = await db.getRecordIds(tableNameProper, fieldToMatch, valueToMatch)
 
-    const isUpdate = recordIds.length !== 0
-    const isMultiUpdate = recordIds.length > 1
+    const operationType: DBOperationType = deleteRecord
+      ? 'DELETE'
+      : recordIds.length !== 0
+      ? 'UPDATE'
+      : 'CREATE'
+
+    const isMultipleRecords = recordIds.length > 1
 
     let result: any[] = []
-    if (isUpdate) {
-      // UPDATE
-      for (const recordId of recordIds) {
-        console.log(`Updating ${tableNameProper} record: ${JSON.stringify(fullRecord, null, 2)}`)
-        result.push(await db.updateRecord(tableNameProper, recordId, fullRecord))
-      }
-    } else {
-      // CREATE NEW
-      console.log(`Creating ${tableNameProper} record: ${JSON.stringify(fullRecord, null, 2)}`)
-      const res = await db.createRecord(tableNameProper, fullRecord)
-      result.push(res)
-      recordIds.push(res.recordId)
+
+    switch (operationType) {
+      case 'CREATE':
+        console.log(`Creating ${tableNameProper} record: ${JSON.stringify(fullRecord, null, 2)}`)
+        const res = await db.createRecord(tableNameProper, fullRecord, changeLogOptions)
+        result.push(res)
+        recordIds.push(res.recordId)
+        break
+      case 'UPDATE':
+        for (const recordId of recordIds) {
+          console.log(`Updating ${tableNameProper} record: ${recordId}`)
+          result.push(
+            await db.updateRecord(tableNameProper, recordId, fullRecord, changeLogOptions)
+          )
+        }
+        break
+      case 'DELETE':
+        for (const recordId of recordIds) {
+          console.log(`Deleting ${tableNameProper} record: ${recordId}`)
+          result.push(await db.deleteRecord(tableNameProper, recordId, changeLogOptions))
+        }
     }
 
     for (const recordId of recordIds) {
@@ -80,22 +111,24 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
       throw new Error('Problem creating or updating record(s)')
 
     recordIds.forEach((recordId) =>
-      console.log(`${isUpdate ? 'Updated' : 'Created'} ${tableNameProper} record, ID: `, recordId)
+      console.log(`${operationType} ${tableNameProper} record, ID: `, recordId)
     )
 
-    const firstRecord = result[0][tableNameProper]
+    const firstRecord = result[0]?.[tableNameProper] ?? {}
     const allRecords = result.map((res) => res[tableNameProper])
+    const error_log =
+      result.length === 0 ? 'WARNING: No matching records' : result.map(({ log }) => log).join(', ')
 
     // Note: the structure of this output object is not ideal. We should really
     // just have a single array of results. However, this could break backwards
     // compatibility, hence separate fields for the "single" record and
     // "allRecords" (if there are more than one)
-    const output = { [tableNameProper]: firstRecord }
-    if (isMultiUpdate) output.allRecords = allRecords
+    const output = { [tableNameProper]: firstRecord, operation: operationType }
+    if (isMultipleRecords) output.allRecords = allRecords
 
     return {
       status: ActionQueueStatus.Success,
-      error_log: '',
+      error_log,
       output,
     }
   } catch (error) {

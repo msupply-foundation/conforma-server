@@ -883,6 +883,31 @@ const migrateData = async () => {
 
     console.log(' - Changing text fields in data tables to case-insensitive')
     await DB.convertDataTablesToCaseInsensitive()
+
+    console.log(' - Adding data_changelog table')
+    await DB.changeSchema(`
+      CREATE TYPE public.changelog_type AS ENUM (
+        'CREATE',
+        'UPDATE',
+        'DELETE'
+          );
+    `)
+    await DB.changeSchema(`
+      CREATE TABLE IF NOT EXISTS data_changelog (
+        id serial PRIMARY KEY,
+        data_table varchar NOT NULL,
+        record_id INTEGER NOT NULL,
+        update_type changelog_type NOT NULL,
+        timestamp timestamptz DEFAULT NOW(),
+        old_data jsonb,
+        new_data jsonb,
+        user_id integer REFERENCES public.user (id) ON DELETE CASCADE,
+        org_id integer REFERENCES public.organisation (id) ON DELETE CASCADE,
+        username citext REFERENCES public.user (username)
+          ON DELETE CASCADE ON UPDATE CASCADE,
+        application_id integer REFERENCES public.application (id) ON DELETE CASCADE
+      );
+    `)
   }
 
   // Other version migrations continue here...

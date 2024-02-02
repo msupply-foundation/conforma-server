@@ -21,6 +21,7 @@ async function generateTextString({
     numberFormat,
     fallbackText = 'Missing_data_property',
     updateRecord = false,
+    noChangeLog = false,
     tableName,
     fieldName,
     matchField = 'id',
@@ -65,6 +66,7 @@ async function generateTextString({
           matchValue,
           [fieldName]: generatedText,
           shouldCreateJoinTable: false,
+          noChangeLog,
         },
         DBConnect,
       })
