@@ -1,0 +1,1 @@
+Please see [https://github.com/msupply-foundation/conforma-server/discussions/1059](https://github.com/msupply-foundation/conforma-server/discussions/1059) a detailed explanation of how file archives work.

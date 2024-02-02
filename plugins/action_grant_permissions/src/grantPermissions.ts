@@ -2,6 +2,7 @@ import { identity } from 'lodash'
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginInput } from '../../types'
 import databaseMethods from './databaseMethods'
+import { errorMessage } from '../../../src/components/utilityFunctions'
 
 const grantPermissions = async ({ applicationData, parameters, DBConnect }: ActionPluginInput) => {
   const db = databaseMethods(DBConnect)
@@ -80,10 +81,10 @@ const grantPermissions = async ({ applicationData, parameters, DBConnect }: Acti
     outputObject.output = { grantedPermissions }
     return outputObject
   } catch (error) {
-    console.log(error)
+    console.log(errorMessage(error))
     return {
       status: ActionQueueStatus.Fail,
-      error_log: error.message,
+      error_log: errorMessage(error),
     }
   }
 }

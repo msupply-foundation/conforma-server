@@ -4,6 +4,7 @@ import databaseMethods from './databaseMethods'
 import modifyRecord from '../../action_modify_record/src/modifyRecord'
 import { patternGen } from 'custom_string_patterns'
 import { get as extractObjectProperty } from 'lodash'
+import { errorMessage } from '../../../src/components/utilityFunctions'
 
 async function generateTextString({
   parameters,
@@ -20,6 +21,7 @@ async function generateTextString({
     numberFormat,
     fallbackText = 'Missing_data_property',
     updateRecord = false,
+    noChangeLog = false,
     tableName,
     fieldName,
     matchField = 'id',
@@ -64,6 +66,7 @@ async function generateTextString({
           matchValue,
           [fieldName]: generatedText,
           shouldCreateJoinTable: false,
+          noChangeLog,
         },
         DBConnect,
       })
@@ -85,10 +88,10 @@ async function generateTextString({
       output: { generatedText },
     }
   } catch (error) {
-    console.log(error.message)
+    console.log(errorMessage(error))
     return {
       status: ActionQueueStatus.Fail,
-      error_log: error.message,
+      error_log: errorMessage(error),
     }
   }
 }

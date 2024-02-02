@@ -13,8 +13,15 @@ import {
   FilePayload,
   TriggerQueueUpdatePayload,
   UserOrg,
+  ActionResult,
+  TriggerPayload,
+  DBOperationType,
 } from '../types'
 import { ApplicationOutcome, ApplicationStatus, ReviewStatus, Trigger } from '../generated/graphql'
+import { errorMessage } from './utilityFunctions'
+import { EventThrottle } from './actions/throttle'
+
+const Throttle = new EventThrottle<TriggerPayload, ActionResult[]>()
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -51,7 +58,12 @@ class PostgresDB {
           // "data" is stored output from scheduled trigger or verification
           // "data" can sometimes exceed the byte limit for notification payload, so must be fetched separately
           const data = await this.getTriggerPayloadData(payloadObject.trigger_id)
-          processTrigger({ ...payloadObject, data })
+          const { trigger, table, record_id } = payloadObject
+          Throttle.add({
+            name: `Trigger ${trigger} on ${table}, id ${record_id}`,
+            data: { ...payloadObject, data },
+            action: processTrigger,
+          })
           break
         case 'action_notifications':
           // For Async Actions only
@@ -64,7 +76,7 @@ class PostgresDB {
               trigger_payload?.data
             )
           } catch (err) {
-            console.log(err.message)
+            console.log(errorMessage(err))
           } finally {
             break
           }
@@ -335,12 +347,8 @@ class PostgresDB {
     }
   }
 
-  public getFileDownloadInfo = async (
-    uid: string,
-    thumbnail = false
-  ): Promise<FileDownloadInfo | undefined> => {
-    const path = thumbnail ? 'thumbnail_path' : 'file_path'
-    const text = `SELECT original_filename, ${path} FROM file WHERE unique_id = $1`
+  public getFileDownloadInfo = async (uid: string): Promise<FileDownloadInfo | undefined> => {
+    const text = `SELECT original_filename, file_path, thumbnail_path, archive_path FROM file WHERE unique_id = $1`
     try {
       const result = await this.query({ text, values: [uid] })
       return result.rows[0] as FileDownloadInfo
@@ -385,6 +393,39 @@ class PostgresDB {
     try {
       const result = await this.query({ text, values: [filePath] })
       return result.rows.length !== 0
+    } catch (err) {
+      throw err
+    }
+  }
+
+  // File archiving
+
+  public getFilesToArchive = async (days: number) => {
+    const duration = `${days} days`
+    const text = `
+      SELECT unique_id, file_path, thumbnail_path,
+        timestamp, file_size
+      FROM file
+      WHERE archive_path IS NULL
+      AND to_be_deleted = FALSE
+      AND timestamp < now() - interval '${duration}' 
+    `
+    try {
+      const result = await this.query({ text })
+      return result.rows
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public setFileArchived = async (file: { unique_id: string; archive_path: string }) => {
+    const { unique_id, archive_path } = file
+    const text = `
+      UPDATE file SET archive_path = $1 
+      WHERE unique_id = $2`
+    try {
+      const result = await this.query({ text, values: [archive_path, unique_id] })
+      return result.rows
     } catch (err) {
       throw err
     }
@@ -805,7 +846,7 @@ class PostgresDB {
       await this.query({ text, values: [outcome, appId] })
       return true
     } catch (err) {
-      console.log(err.stack)
+      console.log(errorMessage(err))
       return false
     }
   }
@@ -816,7 +857,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [templateId] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -838,7 +879,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [applicationId] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -854,7 +895,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [templateId, currentStageNumber] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -867,7 +908,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [applicationId, stageId] })
       return result.rows[0].id
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -883,7 +924,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [stageHistoryId, status] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -896,7 +937,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [reviewId] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -912,7 +953,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [reviewId, status] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -925,7 +966,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [isSystemOrg] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -951,7 +992,7 @@ class PostgresDB {
       const result = await this.query({ text, values })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -966,7 +1007,7 @@ class PostgresDB {
       const result = await this.query({ text, values })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -977,7 +1018,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -991,7 +1032,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [isSystemOrgPermission] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1019,7 +1060,7 @@ class PostgresDB {
       const isManager = result.rows.some((row) => row.name === managementPrefName)
       return { isAdmin, isManager }
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1037,7 +1078,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1047,7 +1088,7 @@ class PostgresDB {
     const userMatch = `("userId" = $1 ${orgId ? 'OR "userId" IS NULL' : ''})`
     const orgMatch = `"orgId" ${orgId ? '= $2' : 'IS NULL'}`
     const text = `
-      SELECT "permissionNameId" as id,
+      SELECT DISTINCT "permissionNameId" as id,
       "permissionName" FROM permissions_all
       WHERE ${userMatch}
       AND ${orgMatch}`
@@ -1057,7 +1098,7 @@ class PostgresDB {
       const result = await this.query({ text, values })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1071,7 +1112,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [stageId] })
       return result.rows[0].max
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1085,7 +1126,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [reviewId] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1099,7 +1140,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [applicationId] })
       return result.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1117,7 +1158,7 @@ class PostgresDB {
   //     })
   //     return result.rows[0].is_fully_assigned_level_1
   //   } catch (err) {
-  //     console.log(err.message)
+  //     console.log(errorMessage(err))
   //     throw err
   //   }
   // }
@@ -1135,7 +1176,7 @@ class PostgresDB {
       const responses = result.rows
       return responses
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1156,7 +1197,7 @@ class PostgresDB {
       const responses = result.rows
       return responses
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1172,7 +1213,7 @@ class PostgresDB {
       const responses = result.rows as SchemaColumn[]
       return responses
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw new Error('Problem getting database info')
     }
   }
@@ -1188,7 +1229,7 @@ class PostgresDB {
       const result = await this.query({ text, rowMode: 'array' })
       return result.rows.map((table) => table[0])
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1196,15 +1237,34 @@ class PostgresDB {
   public getDataTableColumns = async (tableName: string) => {
     const text = `
       SELECT column_name as name,
-      data_type as "dataType"
+      data_type as "dataType",
+      udt_name as "userType"
       FROM information_schema.columns
       WHERE table_name = $1;
     `
     try {
       const result = await this.query({ text, values: [tableName] })
-      return result.rows
+      return result.rows.map(({ name, dataType, userType }) => ({
+        name,
+        // So we can discriminate between citext and enums -- data type returns
+        // "USER-DEFINED" for both
+        dataType: dataType === 'USER-DEFINED' ? userType : dataType,
+      }))
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  public getTemplateVersionIDs = async (templateCode: string) => {
+    const text = `
+      SELECT version_id FROM template WHERE code = $1;
+    `
+    try {
+      const result = await this.query({ text, values: [templateCode] })
+      return result.rows.map((row) => row.version_id)
+    } catch (err) {
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1217,7 +1277,7 @@ class PostgresDB {
       const responses = result.rows as permissionPolicyColumns[]
       return responses
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw new Error('Problem getting permission policies')
     }
   }
@@ -1242,7 +1302,7 @@ class PostgresDB {
       const result = await this.query({ text, values })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1257,23 +1317,78 @@ class PostgresDB {
       const result = await this.query({ text, values: [tableName, columnMatches] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
 
-  public getLatestSnapshotName = async () => {
+  // Changelog
+  public addToChangelog = async (
+    tableName: string,
+    recordId: number,
+    type: DBOperationType,
+    oldData: Record<string, any> | null,
+    newData: Record<string, any> | null,
+    userId: number | null | undefined,
+    orgId: number | null | undefined,
+    username: string | undefined,
+    applicationId: number | null | undefined
+  ) => {
+    const dataTable = tableName.replace(config.dataTablePrefix, '')
+    const text = `
+      INSERT INTO data_changelog
+        (data_table, record_id, update_type, old_data, new_data,
+          user_id, org_id, username, application_id)
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
+    `
+    try {
+      await this.query({
+        text,
+        values: [
+          dataTable,
+          recordId,
+          type,
+          oldData,
+          newData,
+          userId,
+          orgId,
+          username,
+          applicationId,
+        ],
+      })
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  public getSystemInfo = async (type: string) => {
     const text = `SELECT value
     FROM system_info
     WHERE timestamp =
       (SELECT MAX(timestamp) FROM system_info
-      WHERE name='snapshot')
+      WHERE name=$1)
      `
     try {
-      const result = await this.query({ text })
-      return result.rows[0]?.value ?? 'init'
+      const result = await this.query({ text, values: [type] })
+      return result.rows[0]?.value ?? null
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  public setSystemInfo = async (type: string, value: string) => {
+    const text = `
+      INSERT INTO system_info (name, value)
+      VALUES($1, $2)
+      RETURNING name, value, timestamp
+     `
+    try {
+      const result = await this.query({ text, values: [type, JSON.stringify(value)] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -1314,7 +1429,7 @@ class PostgresDB {
       }
       return 'TIMEOUT'
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }

@@ -1,3 +1,5 @@
+import { errorMessage } from '../../../src/components/utilityFunctions'
+
 const databaseMethods = (DBConnect: any) => ({
   getApplicationResponseFiles: async (applicationSerial: string) => {
     const text = `
@@ -18,7 +20,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [applicationSerial] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -40,7 +42,7 @@ const databaseMethods = (DBConnect: any) => ({
       })
       return result.rows.map((row: any) => row.value)
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -57,7 +59,7 @@ const databaseMethods = (DBConnect: any) => ({
       })
       return result.rows[0].unique_id
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -75,7 +77,7 @@ const databaseMethods = (DBConnect: any) => ({
       })
       return result.rows[0].unique_id
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },

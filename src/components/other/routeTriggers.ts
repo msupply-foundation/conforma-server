@@ -1,5 +1,6 @@
 import databaseConnect from '../databaseConnect'
 import { Trigger } from '../../generated/graphql'
+import { errorMessage } from '../utilityFunctions'
 
 interface TriggerError {
   type: 'trigger' | 'timeout' | 'apollo'
@@ -37,7 +38,7 @@ export const routeTriggers = async (request: any, reply: any) => {
 
     return reply.send(triggerState)
   } catch (err) {
-    return reply.send({ success: false, message: err.message })
+    return reply.send({ success: false, message: errorMessage(err) })
   }
 }
 

@@ -1,5 +1,5 @@
 {
-  "name": "@openmsupply/expression-evaluator",
+  "name": "@msupply-foundation/expression-evaluator",
   "version": "1.11.2",
   "description": "Module to evaluate dynamic expressions for Conforma",
   "main": "lib/evaluateExpression.js",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@github.com/openmsupply/conforma-server.git",
+    "url": "ssh://git@github.com/msupply-foundation/conforma-server.git",
     "directory": "packages/expression-evaluator"
   },
   "devDependencies": {

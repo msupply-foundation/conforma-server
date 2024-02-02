@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt'
 import { UserOrg } from '../../types'
 import { PermissionDetails } from '../permissions/types'
 import { startCase } from 'lodash'
+import { errorMessage } from '../utilityFunctions'
 
 const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
 
@@ -45,7 +46,7 @@ const routeLogin = async (request: any, reply: any) => {
       ...(await getUserInfo({ userId, sessionId })),
     })
   } catch (err) {
-    return reply.send({ success: false, error: err.message })
+    return reply.send({ success: false, error: errorMessage(err) })
   }
 }
 
@@ -199,12 +200,12 @@ const routeVerification = async (request: any, reply: any) => {
     if (result) return reply.send({ success: true, message: verification.message })
     else reply.send({ success: false, message: 'Problem with verification' })
   } catch (err) {
-    return reply.send({ success: false, message: err.message })
+    return reply.send({ success: false, message: errorMessage(err) })
   }
 }
 
 // Unique name/email/organisation/other check
-const routecheckUnique = async (request: any, reply: any) => {
+const routeCheckUnique = async (request: any, reply: any) => {
   const { type, value, table, field, caseInsensitive } = request.query
   if (value === '' || value === undefined) {
     reply.send({
@@ -251,7 +252,7 @@ const routecheckUnique = async (request: any, reply: any) => {
       message: '',
     })
   } catch (err) {
-    reply.send({ unique: false, message: err.message })
+    reply.send({ unique: false, message: errorMessage(err) })
   }
 }
 
@@ -263,5 +264,5 @@ export {
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
-  routecheckUnique,
+  routeCheckUnique,
 }

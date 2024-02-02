@@ -28,6 +28,7 @@ docker build \
    --build-arg NODE_VERSION="$NODE_VERSION" \
    --build-arg POSTGRES_VERSION="$POSTGRES_VERSION" \
    --build-arg INITIAL_DATA_LOCALE="$INITIAL_DATA_LOCALE" \
+   --build-arg INITIAL_SNAPSHOT="$INITIAL_SNAPSHOT" \
    --secret id=githubtoken,src=../githubtoken.txt \
    --platform "linux/amd64" \
    .

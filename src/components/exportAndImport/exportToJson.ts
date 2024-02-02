@@ -3,11 +3,14 @@ import getDatabaseInfo from './getDatabaseInfo'
 import { DatabaseTable, ExportAndImportOptions, ObjectRecords } from './types'
 import pluralize from 'pluralize'
 import { filterByIncludeAndExclude, noQuoteKeyStringify } from './helpers'
+import { Template, TemplateStatus } from '../../generated/graphql'
+import { DateTime } from 'luxon'
 
 const getRecordsAsObject = async ({
   filters,
   includeTables,
   excludeTables,
+  templates,
 }: ExportAndImportOptions) => {
   const databaseTables = (await getDatabaseInfo()).filter(({ isView }) => !isView)
 
@@ -24,7 +27,7 @@ const getRecordsAsObject = async ({
     const { gql, getter, hasFilter } = constructGqlAndGetter(table, filteredReferences, baseFilter)
     const result = await databaseConnect.gqlQuery(gql)
     const rows = getter(result)
-    records[tableName] = rows
+    records[tableName] = tableName === 'template' ? updateTemplateData(rows, templates) : rows
     if (hasFilter) filteredRecords[tableName] = rows
   }
 
@@ -90,6 +93,51 @@ const constructGqlAndGetter = (
   const getter = (gqlResult: any) => gqlResult[pluralTableName].nodes
 
   return { gql, getter, hasFilter }
+}
+
+// Reset the version info for templates. Used when duplicating a NEW template
+// version using a snapshot export/import. This intercepts the template records
+// and sets the version data accordingly.
+const updateTemplateData = (
+  templates: Template[],
+  templateOptions?: { resetVersion?: boolean; newCode?: string }
+) => {
+  if (templateOptions?.newCode) {
+    // Change template code and erase version history
+    return templates.map((template) => ({
+      ...template,
+      code: templateOptions.newCode,
+      name: `New template based from: ${template.name}`,
+      namePlural: null,
+      status: TemplateStatus.Draft,
+      versionHistory: [],
+      parentVersionId: null,
+      versionId: '*',
+      versionComment: null,
+    }))
+  }
+
+  if (templateOptions?.resetVersion)
+    // Set version to "*" (editable) and update version history
+    return templates.map((template) => ({
+      ...template,
+      status: TemplateStatus.Draft,
+      versionHistory: [
+        ...template.versionHistory,
+        {
+          comment: template.versionComment,
+          timestamp: template.versionTimestamp,
+          versionId: template.versionId,
+          parentVersionId: template.parentVersionId,
+        },
+      ],
+      parentVersionId: template.versionId,
+      versionId: '*',
+      versionComment: null,
+      versionTimestamp: DateTime.now().toISO(),
+    }))
+
+  return templates
 }
 
 export default getRecordsAsObject

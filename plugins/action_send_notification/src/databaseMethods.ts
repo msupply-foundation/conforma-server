@@ -1,3 +1,5 @@
+import { errorMessage } from '../../../src/components/utilityFunctions'
+
 interface NotificationRecord {
   id?: number
   userId?: number | null
@@ -39,7 +41,7 @@ const databaseMethods = (DBConnect: any) => ({
       })
       return result?.rows[0]
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -53,7 +55,7 @@ const databaseMethods = (DBConnect: any) => ({
     try {
       await DBConnect.query({ text, values: [notificationId, serverLog] })
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -65,7 +67,7 @@ const databaseMethods = (DBConnect: any) => ({
     try {
       await DBConnect.query({ text, values: [notificationId, errorLog] })
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },

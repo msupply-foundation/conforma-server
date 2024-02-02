@@ -17,30 +17,8 @@ The back-end currently has two server instances which are launched to handle inc
 - [Fastify server API](#fastify-server-api)
   - [Authentication](#authentication)
   - [Public endpoints](#public-endpoints)
-    - [Login](#login)
-    - [Get preferences endpoint:](#get-preferences-endpoint)
-    - [Get language endpoint:](#get-language-endpoint)
-    - [Verification endpoint](#verification-endpoint)
-    - [File download endpoint:](#file-download-endpoint)
   - [Authenticated endpoints](#authenticated-endpoints)
-    - [File upload endpoint:](#file-upload-endpoint)
-    - [Check unique endpoint](#check-unique-endpoint)
-    - [Create hash](#create-hash)
-    - [Login Organisation](#login-organisation)
-    - [User Info](#user-info)
-    - [User Permissions](#user-permissions)
-    - [Check Triggers](#check-triggers)
-    - [Generate PDF](#generate-pdf)
-    - [Data Views](#data-views)
-    - [Preview Actions](#preview-actions)
-    - [Extend application deadline](#extend-application-deadline)
   - [Admin only endpoints](#admin-only-endpoints)
-    - [Update row level policies](#update-row-level-policies)
-    - [Run Action](#run-action)
-    - [Manage localisations](#manage-localisations)
-    - [Snapshot endpoints](#snapshot-endpoints)
-    - [Lookup table endpoints](#lookup-table-endpoints)
-    - [Preference management endpoints](#preference-management-endpoints)
 
 <!-- /TOC -->
 
@@ -479,7 +457,16 @@ It works by finding an event in the `trigger_schedule` table with matching `appl
 
 Require either "admin" or "systemManger" permissions.
 
-See [Lookup table documentation](https://github.com/openmsupply/conforma-web-app/wiki/Lookup-Tables) for more info
+See [Lookup table documentation](https://github.com/msupply-foundation/conforma-web-app/wiki/Lookup-Tables) for more info
+
+
+#### External API access
+
+POST: `/external-api/<name>/<route>`
+
+A "relay" endpoint for querying third-party APIs that require authentication or other restrictions that we don't want the front-end to have access to.
+
+See [External API Access](External-API-Access.md) for further detail.
 
 ---
 
@@ -601,7 +588,7 @@ GET: `/all-languages`
 POST: `/remove-language?code=<languageCode>`
 - uninstalls the language from the server
 
-See [Localisation documentation](https://github.com/openmsupply/conforma-web-app/wiki/Localisation) for more info
+See [Localisation documentation](https://github.com/msupply-foundation/conforma-web-app/wiki/Localisation) for more info
 
 #### Snapshot endpoints
 
@@ -621,3 +608,9 @@ See [Snapshot documentation](Snapshots.md) for more info
 The difference between these and the [public `get-prefs` endpoint](#get-preferences-endpoint) is that these read and write both web app *and* server preferences, whereas the public `get-prefs` is just for the web app.
 
 See [Preferences documentation](Preferences.md) for more info
+
+#### Raw data access
+
+- GET: `/raw-data/<dataTable>/<id>`
+
+Normally, data table data is accessed from the front-end via [Data Views](Data-View.md). However, this data is structured and formatted for presentation. Occasionally, an Admin template may require access to the raw database data from a data table, so this endpoint provides such a mechanism.

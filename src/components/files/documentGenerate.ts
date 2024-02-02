@@ -7,7 +7,7 @@ import {
   combineRequestParams,
   makeFolder,
 } from '../utilityFunctions'
-import { getFilePath, registerFileInDB } from '../../../src/components/files/fileHandler'
+import { getFilePath, saveToDB } from '../../../src/components/files/fileHandler'
 import { nanoid } from 'nanoid'
 import config from '../../config'
 import { render, RenderCallback, RenderOptions } from 'carbone'
@@ -61,9 +61,9 @@ export async function generatePDF({
 }: GeneratePDFInput) {
   // Existing Carbone Template properties
   const templateFileInfo = await getFilePath(fileId)
-  const templatePath = templateFileInfo?.file_path
+  const templatePath = templateFileInfo?.filePath
   const templateFullPath = path.join(appRootFolder, filesFolder, templatePath as string)
-  const templateName = path.parse(templateFileInfo?.original_filename).name
+  const templateName = path.parse(templateFileInfo?.originalFilename).name
 
   // Output file/folder properties
   const uniqueId = nanoid()
@@ -80,7 +80,7 @@ export async function generatePDF({
   try {
     const result = await carboneRender(templateFullPath, data, { convertTo: 'pdf', ...options })
     fs.writeFileSync(path.join(appRootFolder, filesFolder, outputFilePath), result)
-    await registerFileInDB(
+    await saveToDB(
       objectKeysToSnakeCase({
         uniqueId,
         originalFilename,

@@ -2,6 +2,7 @@ import fastify, { FastifyPluginCallback, FastifyReply } from 'fastify'
 import fastifyStatic from 'fastify-static'
 import fastifyMultipart from 'fastify-multipart'
 import fastifyCors from 'fastify-cors'
+import { DateTime, Settings } from 'luxon'
 import path from 'path'
 import { loadActionPlugins } from './components/pluginsConnect'
 import {
@@ -12,7 +13,7 @@ import {
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
-  routecheckUnique,
+  routeCheckUnique,
 } from './components/permissions'
 import { routeGetPrefs, routeGetAllPrefs, routeSetPrefs } from './components/preferences'
 import {
@@ -47,15 +48,38 @@ import {
 import { routeTriggers } from './components/other/routeTriggers'
 import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
 import migrateData from '../database/migration/migrateData'
+import routeArchiveFiles from './components/files/routeArchiveFiles'
+import { Schedulers } from './components/scheduler'
+import { AccessExternalApiQuery, routeAccessExternalApi } from './components/external-apis/routes'
+import { DEFAULT_LOGOUT_TIME } from './constants'
+import { updateRowPolicies } from './components/permissions/rowLevelPolicyHelpers'
+import { routeRawData } from './components/other/routeRawData'
 require('dotenv').config()
 
-// Fastify server
+// Set the default locale and timezone for date-time display (in console)
+Settings.defaultLocale = config.locale ?? Intl.DateTimeFormat().resolvedOptions().locale
+if (config.timezone) Settings.defaultZoneName = config.timezone
 
+// Don't start server if env variables not provided
+const web_host = process.env.WEB_HOST
+if (!web_host) {
+  console.error(
+    "ERROR!\nUnable to find the WEB_HOST environment variable (maybe others too). The server won't start without access without it.\n\nExiting now...\n"
+  )
+  process.exit(1)
+}
+
+// Fastify server
 const startServer = async () => {
   await migrateData()
   await loadActionPlugins() // Connects to Database and listens for Triggers
   createDefaultDataFolders()
   await cleanUpFiles() // Runs on schedule as well as startup
+  await updateRowPolicies()
+
+  // Add schedulers to global "config" object so we can update them. There
+  // should only be a single global instance of Schedulers -- this one!
+  config.scheduledJobs = new Schedulers()
 
   const server = fastify()
 
@@ -69,7 +93,8 @@ const startServer = async () => {
   server.register(fastifyCors, { origin: '*' }) // Allow all origin (TODO change in PROD)
 
   const api: FastifyPluginCallback = (server, _, done) => {
-    // Here we parse JWT, and set it in request.auth, which is available for downstream routes
+    // Here we parse JWT, and set it in request.auth, which is available for
+    // downstream routes
     server.addHook('preValidation', async (request: any, reply: FastifyReply) => {
       if (request.url.startsWith('/api/public')) return
 
@@ -82,6 +107,18 @@ const startServer = async () => {
         reply.statusCode = 401
         return reply.send({ success: false, message: error })
       }
+
+      // Check if token is too old
+      if (config.logoutAfterInactivity !== 0 && config.isProductionBuild) {
+        const expiryTime =
+          tokenData.iat * 1000 + (config.logoutAfterInactivity ?? DEFAULT_LOGOUT_TIME) * 60_000
+
+        if (Date.now() > expiryTime) {
+          reply.statusCode = 401
+          console.log('Expired token from:', tokenData.username)
+          return reply.send({ success: false, message: 'Expired token' })
+        }
+      }
     })
 
     // Routes to work without authentication check, behind /public route
@@ -93,15 +130,12 @@ const startServer = async () => {
         server.get('/verify', routeVerification)
         // File download endpoint (get by unique ID)
         server.get('/file', async function (request: any, reply: any) {
-          const { uid, thumbnail } = request.query
-          const { original_filename, file_path, thumbnail_path } = await getFilePath(
-            uid,
-            thumbnail === 'true'
-          )
+          const { uid, thumbnail = false } = request.query
+          const { originalFilename, filePath, thumbnailPath } = await getFilePath(uid, thumbnail)
           // TO-DO Check for permission to access file
           try {
             // TO-DO: Rename file back to original for download
-            return reply.sendFile(file_path ? file_path : thumbnail_path)
+            return reply.sendFile(thumbnail ? thumbnailPath : filePath)
           } catch {
             return reply.send({ success: false, message: 'Unable to retrieve file' })
           }
@@ -131,17 +165,19 @@ const startServer = async () => {
         server.get('/all-languages', routeGetAllLanguageFiles)
         server.get('/get-all-prefs', routeGetAllPrefs)
         server.post('/set-prefs', routeSetPrefs)
+        server.get('/archive-files', routeArchiveFiles)
         // Dev only actions -- never call from app
         server.post('/run-action', routeRunAction)
         server.post('/test-trigger', routeTestTrigger)
         server.post('/generate-filter-data-fields', routeGenerateFilterDataFields)
         done()
+        server.get('/raw-data/:dataTable/:id', routeRawData)
       },
       { prefix: '/admin' }
     )
 
     // Routes that require authentication but no special permissions
-    server.get('/check-unique', routecheckUnique)
+    server.get('/check-unique', routeCheckUnique)
     server.get('/user-info', routeUserInfo)
     server.get('/user-permissions', routeUserPermissions)
     server.post('/login-org', routeLoginOrg)
@@ -154,6 +190,7 @@ const startServer = async () => {
     server.get('/check-triggers', routeTriggers)
     server.post('/preview-actions', routePreviewActions)
     server.post('/extend-application', routeExtendApplication)
+    server.post<AccessExternalApiQuery>('/external-api/:name/:route', routeAccessExternalApi)
     // Lookup tables requires "systemManager" permission
     server.register(lookupTableRoutes, { prefix: '/lookup-table' })
 
@@ -166,9 +203,11 @@ const startServer = async () => {
     done()
   }
 
-  server.get('/', async (request, reply) => {
-    console.log('Request made')
-    return 'This is the response\n'
+  server.get('/', async () => {
+    console.log('API Request received')
+    return `Welcome to CONFORMA\n${DateTime.now().toLocaleString(
+      DateTime.DATETIME_HUGE_WITH_SECONDS
+    )}`
   })
 
   server.register(api, { prefix: '/api' })
@@ -179,6 +218,9 @@ const startServer = async () => {
       process.exit(1)
     }
     console.log(generateAsciiHeader(config.version))
+    console.log(DateTime.now().toLocaleString(DateTime.DATETIME_HUGE_WITH_SECONDS))
+    console.log('Locale:', Settings.defaultLocale)
+    console.log('Timezone:', Settings.defaultZoneName)
     console.log('Email mode:', config.emailMode)
     if (config.emailMode === 'TEST') console.log('All email will be sent to:', config.testingEmail)
     console.log(`\nServer listening at ${address}`)

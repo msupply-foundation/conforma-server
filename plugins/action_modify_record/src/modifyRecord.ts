@@ -3,9 +3,14 @@ import { ActionPluginType } from '../../types'
 import databaseMethods, { DatabaseMethodsType } from './databaseMethods'
 import { DBConnectType } from '../../../src/components/databaseConnect'
 import { mapValues, get } from 'lodash'
-import { objectKeysToSnakeCase, getValidTableName } from '../../../src/components/utilityFunctions'
+import {
+  objectKeysToSnakeCase,
+  getValidTableName,
+  errorMessage,
+} from '../../../src/components/utilityFunctions'
 import { generateFilterDataFields } from '../../../src/components/data_display/generateFilterDataFields/generateFilterDataFields'
 import config from '../../../src/config'
+import { DBOperationType } from '../../../src/types'
 
 const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
@@ -15,7 +20,12 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     matchValue,
     shouldCreateJoinTable = true,
     regenerateDataTableFilters = false,
+    ignoreNull = true,
+    noChangelog = false,
+    noChangeLog = noChangelog, // In case of common capitalisation typo
+    delete: deleteRecord = false,
     data,
+    patch,
     ...record
   } = parameters
 
@@ -25,54 +35,107 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
   const valueToMatch = matchValue ?? record[fieldToMatch]
   const applicationId = applicationData?.applicationId || 0
 
+  if (deleteRecord && !matchValue) throw new Error('Unable to delete records without a matchValue')
+
   // Build full record
   const fullRecord = objectKeysToSnakeCase({
+    ...patch,
     ...record,
     ...mapValues(data, (property) => get(applicationData, property, null)),
   })
 
   // Don't update fields with NULL
-  for (const key in fullRecord) {
-    if (fullRecord[key] === null || fullRecord[key] === undefined) delete fullRecord[key]
+  if (ignoreNull) {
+    for (const key in fullRecord) {
+      if (fullRecord[key] === null || fullRecord[key] === undefined) delete fullRecord[key]
+    }
   }
+
+  // Data for changelog
+  const changeLogOptions = noChangeLog
+    ? { noChangeLog: true }
+    : {
+        noChangeLog: false,
+        userId: applicationData?.userId,
+        orgId: applicationData?.orgId,
+        username: applicationData?.username,
+        applicationId: applicationData?.applicationId,
+      }
 
   try {
     await createOrUpdateTable(DBConnect, db, tableNameProper, fullRecord, tableName)
 
-    let recordId = await db.getRecordId(tableNameProper, fieldToMatch, valueToMatch)
-    const isUpdate = recordId !== 0
+    const recordIds: number[] = await db.getRecordIds(tableNameProper, fieldToMatch, valueToMatch)
 
-    let result: any = {}
-    if (isUpdate) {
-      // UPDATE
-      console.log(`Updating ${tableNameProper} record: ${JSON.stringify(fullRecord, null, 2)}`)
-      result = await db.updateRecord(tableNameProper, recordId, fullRecord)
-    } else {
-      // CREATE NEW
-      console.log(`Creating ${tableNameProper} record: ${JSON.stringify(fullRecord, null, 2)}`)
-      result = await db.createRecord(tableNameProper, fullRecord)
-      recordId = result.recordId
+    const operationType: DBOperationType = deleteRecord
+      ? 'DELETE'
+      : recordIds.length !== 0
+      ? 'UPDATE'
+      : 'CREATE'
+
+    const isMultipleRecords = recordIds.length > 1
+
+    let result: any[] = []
+
+    switch (operationType) {
+      case 'CREATE':
+        console.log(`Creating ${tableNameProper} record: ${JSON.stringify(fullRecord, null, 2)}`)
+        const res = await db.createRecord(tableNameProper, fullRecord, changeLogOptions)
+        result.push(res)
+        recordIds.push(res.recordId)
+        break
+      case 'UPDATE':
+        for (const recordId of recordIds) {
+          console.log(`Updating ${tableNameProper} record: ${recordId}`)
+          result.push(
+            await db.updateRecord(tableNameProper, recordId, fullRecord, changeLogOptions)
+          )
+        }
+        break
+      case 'DELETE':
+        for (const recordId of recordIds) {
+          console.log(`Deleting ${tableNameProper} record: ${recordId}`)
+          result.push(await db.deleteRecord(tableNameProper, recordId, changeLogOptions))
+        }
     }
 
-    if (shouldCreateJoinTable)
-      await db.createJoinTableAndRecord(tableNameProper, applicationId, recordId)
+    for (const recordId of recordIds) {
+      if (shouldCreateJoinTable)
+        await db.createJoinTableAndRecord(tableNameProper, applicationId, recordId)
+    }
 
     // Run this one async so we don't block action sequence
     if (regenerateDataTableFilters) generateFilterDataFields(tableName)
 
-    if (!result.success) throw new Error('Problem creating or updating record')
+    if (result.some((result) => !result.success))
+      throw new Error('Problem creating or updating record(s)')
 
-    console.log(`${isUpdate ? 'Updated' : 'Created'} ${tableNameProper} record, ID: `, recordId)
+    recordIds.forEach((recordId) =>
+      console.log(`${operationType} ${tableNameProper} record, ID: `, recordId)
+    )
+
+    const firstRecord = result[0]?.[tableNameProper] ?? {}
+    const allRecords = result.map((res) => res[tableNameProper])
+    const error_log =
+      result.length === 0 ? 'WARNING: No matching records' : result.map(({ log }) => log).join(', ')
+
+    // Note: the structure of this output object is not ideal. We should really
+    // just have a single array of results. However, this could break backwards
+    // compatibility, hence separate fields for the "single" record and
+    // "allRecords" (if there are more than one)
+    const output = { [tableNameProper]: firstRecord, operation: operationType }
+    if (isMultipleRecords) output.allRecords = allRecords
+
     return {
       status: ActionQueueStatus.Success,
-      error_log: '',
-      output: { [tableNameProper]: result[tableNameProper] },
+      error_log,
+      output,
     }
   } catch (error) {
-    console.log(error.message)
+    console.log(errorMessage(error))
     return {
       status: ActionQueueStatus.Fail,
-      error_log: error.message,
+      error_log: errorMessage(error),
     }
   }
 }
@@ -104,7 +167,7 @@ export default modifyRecord
 const getPostgresType = (value: any): string => {
   if (value instanceof Date) return 'timestamptz'
   if (Array.isArray(value)) {
-    const elementType = value.length > 0 ? getPostgresType(value[0]) : 'varchar'
+    const elementType = value.length > 0 ? getPostgresType(value[0]) : 'citext'
     return `${elementType}[]`
   }
   if (isDateString(value)) return 'date'
@@ -113,7 +176,7 @@ const getPostgresType = (value: any): string => {
   if (value instanceof Object) return 'jsonb'
   if (typeof value === 'boolean') return 'boolean'
   if (typeof value === 'number') return Number.isInteger(value) ? 'integer' : 'double precision'
-  return 'varchar'
+  return 'citext'
 }
 
 const isDateString = (value: any) => {

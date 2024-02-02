@@ -6,7 +6,8 @@ import { execSync } from 'child_process'
 import path from 'path'
 import { readFileSync } from 'fs'
 import bcrypt from 'bcrypt'
-import { getAppEntryPointDir } from '../../src/components/utilityFunctions'
+import { errorMessage, getAppEntryPointDir } from '../../src/components/utilityFunctions'
+import { loadCurrentPrefs, setPreferences } from '../../src/components/preferences'
 
 // CONSTANTS
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
@@ -91,7 +92,7 @@ const migrateData = async () => {
     } catch (err) {
       console.log(
         "Assigned sections couldn't be updated, presumably already done:",
-        err.message,
+        errorMessage(err),
         '\n'
       )
     }
@@ -795,6 +796,118 @@ const migrateData = async () => {
       ALTER TABLE public.template   
         ADD COLUMN IF NOT EXISTS dashboard_restrictions VARCHAR[];
     `)
+
+    console.log(' - Updating template versioning schema')
+    await DB.changeSchema(`
+      ALTER TABLE public.template   
+        ADD COLUMN IF NOT EXISTS version_id varchar;
+      ALTER TABLE public.template
+        ADD COLUMN IF NOT EXISTS parent_version_id varchar;
+      ALTER TABLE public.template   
+        ADD COLUMN IF NOT EXISTS version_comment varchar;
+      ALTER TABLE public.template   
+        ADD COLUMN IF NOT EXISTS version_history jsonb;
+    `)
+    // Migrate existing
+    await DB.migrateTemplateVersions()
+    // Add non-null constraint and remove old version after migrating
+    await DB.changeSchema(`
+    ALTER TABLE public.template   
+      ALTER COLUMN version_id SET NOT NULL;
+    ALTER TABLE public.template
+      DROP COLUMN IF EXISTS version;
+    `)
+
+    console.log(' - Creating archive_path field for files')
+    await DB.changeSchema(`
+    ALTER TABLE public.file  
+      ADD COLUMN IF NOT EXISTS archive_path varchar;
+    `)
+
+    console.log(' - Creating file_size field for files')
+    await DB.changeSchema(`
+    ALTER TABLE public.file  
+      ADD COLUMN IF NOT EXISTS file_size bigint;
+    `)
+
+    console.log(' - Updating file sizes for existing files')
+    await DB.updateFileSizes()
+  }
+
+  // v0.7.0
+  if (databaseVersionLessThan('0.7.0')) {
+    console.log('Migrating to v0.7.0...')
+
+    console.log(' - Updating SMTP config in preferences with password field')
+    try {
+      const prefs = await loadCurrentPrefs()
+      if (prefs?.server?.SMTPConfig && !prefs.server.SMTPConfig.password) {
+        prefs.server.SMTPConfig.password = 'env.SMTP_PASSWORD'
+        await setPreferences(prefs)
+      }
+    } catch (err) {
+      console.log("Couldn't update preferences -- please fix manually")
+    }
+
+    // console.log(
+    //   ' - Updating policies to replace jwtPermission_array_bigint_template_ids with query rather than in statement matching arrays in JWT'
+    // )
+    // try {
+    //   await DB.updatePermissionPolicyRules()
+    // } catch (err) {
+    //   console.log('Unable to update permission policies')
+    // }
+  }
+
+  // v0.8.0
+  if (databaseVersionLessThan('0.8.0')) {
+    console.log('Migrating to v0.8.0...')
+
+    console.log(' - Changing some text fields in user/org to case-insensitive')
+    await DB.changeSchema(`
+      ALTER TABLE public.user   
+        DROP COLUMN IF EXISTS full_name;
+      DROP VIEW IF EXISTS user_org_join;
+      ALTER TABLE public.user
+        ALTER COLUMN first_name TYPE citext;
+      ALTER TABLE public.user
+        ALTER COLUMN last_name TYPE citext;
+      ALTER TABLE public.user
+        ADD COLUMN IF NOT EXISTS full_name citext GENERATED ALWAYS AS (first_name || ' ' || last_name) STORED;
+    `)
+    await DB.changeSchema(`
+      DROP VIEW IF EXISTS permissions_all;    
+      ALTER TABLE public.organisation   
+        ALTER COLUMN name TYPE citext;
+    `)
+
+    console.log(' - Changing text fields in data tables to case-insensitive')
+    await DB.convertDataTablesToCaseInsensitive()
+
+    console.log(' - Adding data_changelog table')
+    await DB.changeSchema(`
+      CREATE TYPE public.changelog_type AS ENUM (
+        'CREATE',
+        'UPDATE',
+        'DELETE'
+          );
+    `)
+    await DB.changeSchema(`
+      CREATE TABLE IF NOT EXISTS data_changelog (
+        id serial PRIMARY KEY,
+        data_table varchar NOT NULL,
+        record_id INTEGER NOT NULL,
+        update_type changelog_type NOT NULL,
+        timestamp timestamptz DEFAULT NOW(),
+        old_data jsonb,
+        new_data jsonb,
+        user_id integer REFERENCES public.user (id) ON DELETE CASCADE,
+        org_id integer REFERENCES public.organisation (id) ON DELETE CASCADE,
+        username citext REFERENCES public.user (username)
+          ON DELETE CASCADE ON UPDATE CASCADE,
+        application_id integer REFERENCES public.application (id) ON DELETE CASCADE
+      );
+    `)
   }
 
   // Other version migrations continue here...
@@ -820,11 +933,14 @@ const migrateData = async () => {
 
   // A sneaky undocumented tool to let us reset all passwords on a testing
   // system -- USE WITH CAUTION!!!
-  const passwordOverride = process.env.USER_PASSWORD_OVERRIDE ?? process.argv[2] ?? null
+  const passwordOverride = process.env.USER_PASSWORD_OVERRIDE ?? null
   if (passwordOverride && passwordOverride.length > 30 && !config.isLiveServer) {
     console.log('WARNING: Resetting user passwords for testing purposes...')
-    DB.changeSchema(`
-      UPDATE "user" SET password_hash = '${await bcrypt.hash(passwordOverride, 10)}'
+    await DB.changeSchema(`
+      UPDATE public."user" SET password_hash = '${await bcrypt.hash(
+        passwordOverride,
+        10
+      )}' WHERE username != 'nonRegistered';
     `)
   }
 }
@@ -832,10 +948,12 @@ const migrateData = async () => {
 // For running migrationScript.ts manually using `yarn migrate`
 if (isManualMigration) {
   console.log('Running migration script...')
-  migrateData().then(() => {
-    console.log('Done!\n')
-    process.exit(0)
-  })
+  migrateData()
+    .then(() => {
+      console.log('Done!\n')
+      process.exit(0)
+    })
+    .catch((e) => console.log('Error while migrating', e))
 }
 
 export default migrateData

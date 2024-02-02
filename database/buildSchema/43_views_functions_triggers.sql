@@ -159,31 +159,12 @@ CREATE TRIGGER trigger_queue
     EXECUTE FUNCTION public.notify_trigger_queue ();
 
 -- TEMPLATES
--- FUNCTION to generate a new version of template (should run as a trigger)
-CREATE OR REPLACE FUNCTION public.set_template_verision ()
-    RETURNS TRIGGER
-    AS $template_event$
-BEGIN
-    IF (
-        SELECT
-            count(*)
-        FROM
-            public.template
-        WHERE
-            id != NEW.id AND code = NEW.code AND version = NEW.version) > 0 THEN
-        NEW.version = (
-            SELECT
-                max(version) + 1
-            FROM
-                public.template
-            WHERE
-                code = NEW.code);
-        NEW.version_timestamp = CURRENT_TIMESTAMP;
-    END IF;
-    RETURN NEW;
-END
-$template_event$
-LANGUAGE plpgsql;
+
+DROP FUNCTION IF EXISTS public.set_template_verision CASCADE; -- DEPRECATED
+
+-- Enforce unique versionId per template type
+ALTER TABLE public.template
+    ADD UNIQUE (code, version_id);
 
 -- FUNCTION to make sure duplicated templates have 'DRAFT' status
 --   but only if there is another version with 'AVAILABLE' status
@@ -238,14 +219,6 @@ END;
 $template_event$
 LANGUAGE plpgsql;
 
---TRIGGER to generate new version of template on insertion or update
-DROP TRIGGER IF EXISTS set_template_version_trigger ON public.template;
-
-CREATE TRIGGER set_template_version_trigger
-    BEFORE INSERT OR UPDATE ON public.template
-    FOR EACH ROW
-    EXECUTE FUNCTION public.set_template_verision ();
-
 --TRIGGER to make sure duplicates templates have 'DRAFT' status
 DROP TRIGGER IF EXISTS set_template_to_draft_trigger ON public.template;
 
@@ -256,7 +229,6 @@ CREATE TRIGGER set_template_to_draft_trigger
 
 -- TRIGGER to ensure only one template version can be 'AVAILABLE'
 DROP TRIGGER IF EXISTS template_status_update_trigger ON public.template;
-
 CREATE TRIGGER template_status_update_trigger
     AFTER UPDATE OF status ON public.template
     FOR EACH ROW
@@ -281,11 +253,12 @@ LANGUAGE SQL
 IMMUTABLE;
 
 -- FUNCTION to return template_version for current element/section
-CREATE OR REPLACE FUNCTION public.get_template_version (section_id int)
-    RETURNS integer
+DROP FUNCTION IF EXISTS public.get_template_version CASCADE;
+CREATE FUNCTION public.get_template_version (section_id int)
+    RETURNS varchar
     AS $$
     SELECT
-        template.version
+        template.version_id
     FROM
         public.template
         JOIN public.template_section ON template_id = template.id
@@ -318,10 +291,29 @@ ALTER TABLE public.template_element
 
 ALTER TABLE public.template_element
     DROP COLUMN IF EXISTS template_version,
-    ADD COLUMN IF NOT EXISTS template_version integer GENERATED ALWAYS AS (public.get_template_version (section_id)) STORED;
+    ADD COLUMN IF NOT EXISTS template_version varchar GENERATED ALWAYS AS (public.get_template_version (section_id)) STORED;
 
 ALTER TABLE public.template_element
     ADD UNIQUE (template_code, code, template_version);
+
+-- FUNCTION/TRIGGER to re-compute the above generated values whenever the versionId or code changes
+CREATE OR REPLACE FUNCTION public.recompute_template_element_code_version ()
+    RETURNS TRIGGER
+    AS $template_element_event$
+BEGIN
+    UPDATE public.template_element
+        SET code=code
+        WHERE template_code = OLD.code;
+        RETURN NULL;
+END;
+$template_element_event$
+LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS template_version_code_update ON public.template;
+CREATE TRIGGER template_version_code_update
+    AFTER UPDATE OF version_id, code ON public.template
+    FOR EACH ROW
+    EXECUTE FUNCTION public.recompute_template_element_code_version ();
 
 -- APPLICATION
 --FUNCTION to update `is_active` to false
@@ -1524,6 +1516,74 @@ GROUP BY
     3,
     4;
 
+CREATE TABLE IF NOT EXISTS allowed_self_assignable_sections_shape (
+    review_assignment_id int,
+    allowed_sections varchar[]
+);
+-- For each active review_assignment for user we need to know how many sections they are allowed to review
+-- this becomes less then trivial because when allowed_sections is null it means that all sections can be
+-- reviewed by the user, thus we need to deduce how many sections there are total in template and replace
+-- allowed sections with all sections in template (when allowed sections is null)
+CREATE OR REPLACE FUNCTION public.allowed_self_assignable_sections (userId int)
+      RETURNS SETOF allowed_self_assignable_sections_shape
+    AS $$
+   SELECT 
+    review_assignment.id as review_assignment_id,
+    CASE WHEN allowed_sections IS NULL THEN
+        array_agg(distinct(template_section.code))
+    ELSE
+        allowed_sections
+    END AS allowed_sections
+    FROM review_assignment
+        JOIN application ON review_assignment.application_id = application.id
+        JOIN template ON application.template_id = template.id
+        JOIN template_section ON template_section.template_id = template.id
+    WHERE review_assignment.status = 'AVAILABLE' 
+        AND review_assignment.is_self_assignable = TRUE
+        AND application.outcome = 'PENDING'
+        AND review_assignment.reviewer_id = userId
+    -- Need to group by allowed sections because it appears in 'from' clause 
+    -- (in CASE statement), there would be just one allowed_sections field
+    -- for reach group by, so it should be safe
+    GROUP BY 1, review_assignment.allowed_sections;
+$$
+LANGUAGE sql
+STABLE;
+
+CREATE TABLE IF NOT EXISTS review_assignment_assigned_sections_shape (
+    review_assignment_id int,
+    assigned_sections varchar[]
+);
+
+-- In order to deduce if there are any self assignable sections for we need to know which sections 
+-- are already assigned, which requires looking at all 'ASSIGNED' review assignments and concatinating
+-- array of all sections in those assignments, looks like unnesting and array_agg is the only way to do this ?
+CREATE OR REPLACE FUNCTION public.review_assignment_assigned_sections (userId int)
+      RETURNS SETOF review_assignment_assigned_sections_shape
+    -- This allows the function to be run as admin user, otherwise it'll only be
+    -- able to query rows the current user has access to.
+    SECURITY DEFINER
+    AS $$
+    SELECT
+        ra_outer.id AS review_assignment_id,
+        ARRAY_AGG(DISTINCT(ra_inner.section_code))
+    FROM review_assignment AS ra_outer
+    JOIN application on ra_outer.application_id = application.id
+    LEFT JOIN (select *, unnest(assigned_sections) AS section_code FROM review_assignment) AS ra_inner 
+        ON (ra_inner.application_id = ra_outer.application_id
+            AND ra_inner.stage_id = ra_outer.stage_id 
+            AND ra_inner.level_number = ra_outer.level_number
+            AND ra_inner.status = 'ASSIGNED')
+    WHERE ra_outer.status = 'AVAILABLE' 
+        AND ra_outer.is_self_assignable = TRUE
+        AND application.outcome = 'PENDING'
+        AND ra_outer.reviewer_id = userId
+    GROUP BY 1
+$$
+LANGUAGE sql
+STABLE;
+
+
 -- APPLICATION_LIST_VIEW
 -- Aggregated VIEW method of all data required for application list page
 -- Requires an empty table as setof return and smart comment to make orderBy work (https://github.com/graphile/graphile-engine/pull/378)
@@ -1595,9 +1655,12 @@ CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
         WHEN COUNT(*) FILTER (WHERE reviewer_assignment.status = 'ASSIGNED'
             AND action_review.id IS NULL) != 0 THEN
             'START_REVIEW'
-        WHEN COUNT(*) FILTER (WHERE reviewer_assignment.status = 'AVAILABLE'
-            AND reviewer_assignment.is_self_assignable = TRUE
-            AND review_assignment_available_sections (reviewer_assignment) != '{}'
+        -- anyarray <@ anyarray → boolean 
+        -- "Is the first array contained by the second?"
+        -- select (ARRAY[5,3,1] <@ ARRAY[2,3,5]) = false (results in true)
+        -- select (ARRAY[5,3] <@ ARRAY[2,3,5]) = false (results in false)
+        -- thus below should be true if allowed_section has a section that is not in assigned_sections
+        WHEN COUNT(*) FILTER (WHERE (allowed_self_assignable_sections.allowed_sections <@ review_assignment_assigned_sections.assigned_sections) = false
             AND action_review.id IS NULL) != 0 THEN
             'SELF_ASSIGN'
         WHEN COUNT(*) FILTER (WHERE (stage_status.status = 'CHANGES_REQUIRED'
@@ -1613,7 +1676,7 @@ CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
         END::reviewer_action,
         -- ASSIGNER ACTIONS
         CASE
-        -- Using MIN becuase number_of_assigned_sections is for each level (i.e. there are multiple levels grouped by stage_id)
+        -- Using MIN because number_of_assigned_sections is for each level (i.e. there are multiple levels grouped by stage_id)
         WHEN MIN(assigned_sections_by_stage_and_level.assigned_section_for_level) < COUNT(DISTINCT (assignable_sections.id)) THEN
             'ASSIGN'
         WHEN MIN(assigned_sections_by_stage_and_level.assigned_in_progress_sections) = COUNT(DISTINCT (assignable_sections.id)) THEN
@@ -1651,6 +1714,8 @@ CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
             AND app.outcome = 'PENDING'
             AND assigned_sections_by_stage_and_level.assigner_id = userId)
     LEFT JOIN template_section AS assignable_sections ON assignable_sections.template_id = template.id
+    LEFT JOIN allowed_self_assignable_sections(userId) AS allowed_self_assignable_sections ON allowed_self_assignable_sections.review_assignment_id = reviewer_assignment.id
+    LEFT JOIN review_assignment_assigned_sections(userId) as review_assignment_assigned_sections ON review_assignment_assigned_sections.review_assignment_id = reviewer_assignment.id
 WHERE
     app.is_config = FALSE
 GROUP BY
@@ -1668,6 +1733,7 @@ GROUP BY
     12,
     13,
     stage_status.stage_id
+
 $$
 LANGUAGE sql
 STABLE;
@@ -2184,3 +2250,10 @@ CREATE TRIGGER permission_delete_activity_trigger
     FOR EACH ROW
     EXECUTE FUNCTION permission_activity_log ();
 
+CREATE OR REPLACE view permission_flattened as
+    SELECT "user".id as user_id, permission_join.organisation_id as organisation_id, permission_policy.id as permission_policy_id, template_permission.template_id as template_id  
+    FROM "user" 
+    JOIN permission_join ON permission_join.user_id = "user".id
+    JOIN permission_name ON permission_name.id = permission_join.permission_name_id
+    JOIN permission_policy ON permission_policy.id = permission_name.permission_policy_id
+    JOIN template_permission ON template_permission.permission_name_id = permission_name.id

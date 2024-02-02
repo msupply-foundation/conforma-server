@@ -1,4 +1,4 @@
-import { combineRequestParams } from '../utilityFunctions'
+import { combineRequestParams, errorMessage } from '../utilityFunctions'
 import { PermissionPolicyType, Trigger, TriggerQueueStatus } from '../../generated/graphql'
 import { DateTime } from 'luxon'
 import DBConnect from '../databaseConnect'
@@ -78,6 +78,6 @@ export const routeExtendApplication = async (request: any, reply: any) => {
       actionsResult: triggerStatus,
     })
   } catch (err) {
-    return { success: false, message: err.message }
+    return { success: false, message: errorMessage(err) }
   }
 }

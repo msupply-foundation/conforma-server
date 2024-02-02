@@ -54,6 +54,7 @@ const coreActions: CoreActions = {
           children: ['applicationData.templateCode'],
         },
         updateRecord: true,
+        noChangeLog: true,
         // Provides functionality to support `<?year>` in pattern string.
         // Add more functionality here as required
         customFields: { year: 'year' },
@@ -98,6 +99,7 @@ const coreActions: CoreActions = {
           templateName: 'applicationData.templateName',
         },
         updateRecord: true,
+        noChangeLog: true,
       },
     },
   ],
@@ -297,7 +299,7 @@ const coreActions: CoreActions = {
     },
   ],
   [Trigger.OnReviewSubmit]: [
-    // Set review status to SUBMITTED when reviews submits review
+    // Set review status to SUBMITTED when reviewer submits review
     {
       code: 'changeStatus',
       path: '../plugins/action_change_status/src/index.ts',

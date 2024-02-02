@@ -7,6 +7,9 @@ import {
   TriggerQueueStatus,
 } from './generated/graphql'
 import { EmailOperationMode } from './config'
+import { PoolConfig } from 'pg'
+import { Schedulers } from './components/scheduler'
+import { ExternalApiConfigs } from './components/external-apis/types'
 
 export interface ActionInTemplate {
   code: string
@@ -137,14 +140,7 @@ export interface ActionApplicationData extends BaseApplicationData {
     appRootFolder: string
     filesFolder: string
     webHostUrl: string
-    SMTPConfig?: {
-      host: string
-      port: number
-      secure: boolean
-      user: string
-      defaultFromName: string
-      defaultFromEmail: string
-    }
+    SMTPConfig?: SMTPConfig
     emailMode: EmailOperationMode
     testingEmail: string | null
     productionHost: string | null
@@ -183,8 +179,9 @@ export interface ActionPluginPayload {
 
 export interface FileDownloadInfo {
   original_filename: string
-  file_path?: string
-  thumbnail_path?: string
+  file_path: string
+  thumbnail_path: string
+  archive_path: string | null
 }
 
 export interface FilePayload {
@@ -226,6 +223,8 @@ export interface TriggerQueueUpdatePayload {
   status: TriggerQueueStatus
 }
 
+export type DBOperationType = 'CREATE' | 'UPDATE' | 'DELETE'
+
 export interface User {
   userId: number
   firstName: string
@@ -251,44 +250,76 @@ export interface UserOrg extends User, Organisation {
   id: number
 }
 
+// node-scheduler recurrence rule format
+export interface ScheduleObject {
+  date?: number | number[] | null
+  dayOfWeek?: number | number[] | null
+  hour?: number | number[] | null
+  minute?: number | number[] | null
+  month?: number | number[] | null
+  second?: number | number[] | null
+  year?: number | number[] | null
+  tz?: string | null
+}
+
+interface SMTPConfig {
+  host: string
+  port: number
+  secure: boolean
+  user: string
+  password: string
+  defaultFromName: string
+  defaultFromEmail: string
+}
+
 export interface ServerPreferences {
+  logoutAfterInactivity?: number // Minutes
   thumbnailMaxWidth?: number
   thumbnailMaxHeight?: number
-  hoursSchedule?: number[]
-  SMTPConfig?: {
-    host: string
-    port: number
-    secure: boolean
-    user: string
-    defaultFromName: string
-    defaultFromEmail: string
-  }
+  actionSchedule?: number[] | ScheduleObject
+  hoursSchedule?: number[] // deprecated, please use actionSchedule
+  SMTPConfig?: SMTPConfig
   systemManagerPermissionName?: string
   managerCanEditLookupTables?: boolean
   previewDocsMinKeepTime?: string
-  previewDocsCleanupSchedule?: number[]
-  backupSchedule?: number[]
+  fileCleanupSchedule?: number[] | ScheduleObject
+  backupSchedule?: number[] | ScheduleObject
   backupFilePrefix?: string
   maxBackupDurationDays?: number
+  archiveSchedule?: number[] | ScheduleObject
+  archiveFileAgeMinimum?: number
+  archiveMinSize?: number // MB
   emailTestMode?: boolean
   testingEmail?: string
+  locale?: string
+  timezone?: string
+  externalApiConfigs?: ExternalApiConfigs
+  envVars?: string[]
 }
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
   // Must contain ALL keys of ServerPreferences -- please check
+  'logoutAfterInactivity',
   'thumbnailMaxHeight',
   'thumbnailMaxWidth',
-  'hoursSchedule',
+  'actionSchedule',
   'SMTPConfig',
   'systemManagerPermissionName',
   'managerCanEditLookupTables',
   'previewDocsMinKeepTime',
-  'previewDocsCleanupSchedule',
+  'fileCleanupSchedule',
   'backupSchedule',
   'backupFilePrefix',
   'maxBackupDurationDays',
+  'archiveSchedule',
+  'archiveFileAgeMinimum',
+  'archiveMinSize',
   'emailTestMode',
   'testingEmail',
+  'locale',
+  'timezone',
+  'externalApiConfigs',
+  'envVars',
 ]
 
 export interface WebAppPrefs {
@@ -298,7 +329,45 @@ export interface WebAppPrefs {
   brandLogoFileId?: string
   brandLogoOnDarkFileId?: string
   defaultListFilters?: string[]
+  userRegistrationCode?: string
   style?: { headerBgColor?: string }
   googleAnalyticsId?: string
   siteHost?: string
 }
+
+export interface Preferences {
+  server: ServerPreferences
+  web: WebAppPrefs
+}
+
+interface ConfigBase {
+  pg_database_connection: PoolConfig
+  version: string
+  graphQLendpoint: string
+  filesFolder: string
+  pluginsFolder: string
+  imagesFolder: string
+  databaseFolder: string
+  localisationsFolder: string
+  preferencesFolder: string
+  preferencesFileName: string
+  backupsFolder: string
+  genericThumbnailsFolderName: string
+  nodeModulesFolder: string
+  jwtSecret: string
+  RESTport: number
+  dataTablePrefix: string
+  allowedTableNames: string[]
+  allowedTablesNoColumns: string[]
+  filterListMaxLength: number
+  filterListBatchSize: number
+  filterColumnSuffix: string
+  isProductionBuild: boolean
+  defaultSystemManagerPermissionName: string
+  webHostUrl?: string
+  productionHost?: string
+  isLiveServer: boolean
+  emailMode: EmailOperationMode
+}
+
+export type Config = ConfigBase & ServerPreferences & { scheduledJobs?: Schedulers }

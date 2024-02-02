@@ -1,8 +1,10 @@
 import path from 'path'
 import fs from 'fs'
+import fsProm from 'fs/promises'
 import { camelCase, snakeCase, mapKeys } from 'lodash'
 import { singular } from 'pluralize'
 import config from '../config'
+import { type } from 'os'
 
 // Determines the folder of the main entry file, as opposed to the
 // project root. Needed for components that traverse the local directory
@@ -13,7 +15,7 @@ export function getAppEntryPointDir() {
 }
 
 // Returns true if input is a "proper" object (i.e. not an array or null)
-export const isObject = (element: unknown) =>
+export const isObject = (element: unknown): element is Object =>
   typeof element === 'object' && !Array.isArray(element) && element !== null
 
 // Convert object keys to camelCase
@@ -104,6 +106,17 @@ export const crawlFileSystem = async (
   }
 }
 
+// Recursively crawl a directory and remove any empty directories within
+export const clearEmptyDirectories = async (directory: string) => {
+  const directories = (await fsProm.readdir(directory)).filter((dir) =>
+    fs.statSync(path.join(directory, dir)).isDirectory()
+  )
+  for (const dir of directories) {
+    const files = await fsProm.readdir(path.join(directory, dir))
+    if (files.length === 0) await fsProm.rmdir(path.join(directory, dir))
+  }
+}
+
 export const capitaliseFirstLetter = (str: string) => str[0].toUpperCase() + str.slice(1)
 
 // The only tables in the system that we allow to be mutated directly by
@@ -114,9 +127,33 @@ const ALLOWED_TABLE_NAMES = config.allowedTableNames
 
 export const getValidTableName = (inputName: string | undefined): string => {
   if (!inputName) throw new Error('Missing table name')
-  if (ALLOWED_TABLE_NAMES.includes(inputName)) return inputName
   const tableName = snakeCase(singular(inputName))
+  if (ALLOWED_TABLE_NAMES.includes(tableName)) return tableName
   const namePattern = new RegExp(`^${DATA_TABLE_PREFIX}.+`)
 
   return namePattern.test(tableName) ? tableName : `${DATA_TABLE_PREFIX}${tableName}`
+}
+
+// Replace a string of the form "env.<KEY>" with environment variable <KEY>
+// - Used for references in configurations to sensitive data such as
+//   passwords/keys
+export const getEnvVariableReplacement = (input: string) => {
+  const match = input.match(/^env\.(\w+)$/)
+  if (!match) return input
+
+  const envKey = match[1]
+
+  return process.env[envKey] ?? input
+}
+
+// Validates an Error object and returns its message (default) or requested property, if
+// available
+export const errorMessage = (err: unknown, property?: string) => {
+  if (!isObject(err)) return 'Unknown error'
+
+  if (!property && 'message' in err) return err.message as string
+
+  if (property && property in err) return (err as any)[property]
+
+  return 'Unknown error'
 }

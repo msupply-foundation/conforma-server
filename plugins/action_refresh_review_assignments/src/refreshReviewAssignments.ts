@@ -3,6 +3,7 @@ import databaseMethods from './databaseMethods'
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { SingleApplicationResult, OutputObject } from './types'
 import generateReviewAssignments from '../../action_generate_review_assignment_records/src/generateReviewAssignments'
+import { errorMessage } from '../../../src/components/utilityFunctions'
 
 async function refreshReviewAssignments({
   parameters,
@@ -59,10 +60,10 @@ async function refreshReviewAssignments({
 
     return results
   } catch (error) {
-    console.log(error.message)
+    console.log(errorMessage(error))
     return {
       status: ActionQueueStatus.Fail,
-      error_log: 'Problem creating  some review_assignment records: ' + error.message,
+      error_log: 'Problem creating  some review_assignment records: ' + errorMessage(error),
     }
   }
 }

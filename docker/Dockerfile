@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:experimental
 #DOCKER_BUILDKIT=1 docker build --progress=plain -t allbuild --secret id=githubtoken,src=../../../githubtoken.txt .
 
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 RUN apt update
 RUN apt-get update
@@ -27,6 +27,7 @@ RUN apt-get install lsof -y
 RUN apt-get install nginx -y
 
 # --- LIBRE OFFICE
+RUN apt-get update
 RUN apt install libreoffice -y
 
 # --- NODE and NPX
@@ -40,7 +41,7 @@ RUN npx -v
 # --- POSTGRES 
 ARG POSTGRES_VERSION=12
 # https://www.postgresql.org/download/linux/ubuntu/
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list.d/pgdg.list
+RUN echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list.d/pgdg.list
 RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add
 RUN apt-get update
 # make sure postgresql install is prompt free
@@ -86,13 +87,19 @@ COPY nginx_config/conforma.conf /etc/nginx/conf.d/
 
 # --- ADD POSTGRES CONFIG
 WORKDIR /etc/postgresql/${POSTGRES_VERSION}/main
-RUN echo "listen_addresses = '*'" >> postgresql.conf
+COPY postgres_config/postgresql.conf .
+# RUN echo "listen_addresses = '*'" >> postgresql.conf
 COPY postgres_config/pg_hba.conf .
 
-# --- INITIALISE DATABASE (core templates)
+# --- INITIALISE DATABASE (default: core templates)
+ARG INITIAL_SNAPSHOT=""
+WORKDIR /usr/src/conforma-server/database/_snapshots
+COPY snapshots/${INITIAL_SNAPSHOT}/ ./${INITIAL_SNAPSHOT}
+
 WORKDIR /usr/src/initialise_database
 COPY database.sh .
-RUN ./database.sh
+RUN ./database.sh ${INITIAL_SNAPSHOT}
+RUN rm -rf /usr/src/conforma-server/database/_snapshots/${INITIAL_SNAPSHOT}
 
 # --- CREATE LOG DIR
 WORKDIR /var/log/conforma
