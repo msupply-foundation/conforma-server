@@ -353,6 +353,7 @@ interface ConfigBase {
   preferencesFileName: string
   backupsFolder: string
   genericThumbnailsFolderName: string
+  testScriptFolder: string
   nodeModulesFolder: string
   jwtSecret: string
   RESTport: number
