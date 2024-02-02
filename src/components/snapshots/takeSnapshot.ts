@@ -30,6 +30,7 @@ import {
   PREFERENCES_FILE,
   PG_DFF_JS_LOCATION,
   DATABASE_FOLDER,
+  TEST_SCRIPT_FOLDER,
   ARCHIVE_SUBFOLDER_NAME,
   GENERIC_THUMBNAILS_FOLDER,
   ARCHIVE_FOLDER,
@@ -140,6 +141,13 @@ const takeSnapshot: SnapshotOperation = async ({
       isArchiveSnapshot ? SNAPSHOT_ARCHIVES_FOLDER_NAME : '',
       newFolderName
     )
+
+    // Add a testing script file if one exists for this snapshotName
+    try {
+      execSync(`cp '${TEST_SCRIPT_FOLDER}/${snapshotName}.json' '${fullFolderPath}/tests.json'`)
+    } catch {
+      console.log('No test script...')
+    }
 
     if (!options.skipZip) await zipSnapshot(sourceFolder, fullName)
 

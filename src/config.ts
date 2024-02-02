@@ -53,6 +53,7 @@ const config: Config = {
   preferencesFileName: 'preferences.json',
   backupsFolder: '../backups',
   genericThumbnailsFolderName: '_generic_thumbnails',
+  testScriptFolder: '../snapshot_test_scripts',
   // In production postgraphile is started with -q and -i /postgraphile/...
   nodeModulesFolder:
     process.env.NODE_ENV === 'production' ? '../../node_modules' : '../node_modules',
