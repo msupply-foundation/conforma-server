@@ -10,7 +10,7 @@ import { pipeline } from 'stream'
 import { promisify } from 'util'
 import { timestampStringExpression } from './helpers'
 import { DateTime } from 'luxon'
-const StreamZip = require('node-stream-zip')
+import StreamZip = require('node-stream-zip')
 const pump = promisify(pipeline)
 
 const errorMessageBase = {
@@ -51,7 +51,7 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
       const zip = new StreamZip.async({ file: tempZipLocation })
 
       const zipEntries = Object.values(await zip.entries())
-      const files = zipEntries.map(({ name }: any) => name) // TODO Fixup naughty any
+      const files = zipEntries.map(({ name }) => name)
 
       if (!files.includes('info.json')) {
         return reply.send({
