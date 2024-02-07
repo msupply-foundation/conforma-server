@@ -31,7 +31,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
 
   const tableNameProper = getValidTableName(tableName)
 
-  const fieldToMatch = snakeCase(matchField) ?? 'id'
+  const fieldToMatch = matchField ? snakeCase(matchField) : 'id'
   const valueToMatch = matchValue ?? record[fieldToMatch]
   const applicationId = applicationData?.applicationId || 0
 
