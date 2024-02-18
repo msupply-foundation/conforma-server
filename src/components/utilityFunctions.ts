@@ -4,7 +4,6 @@ import fsProm from 'fs/promises'
 import { camelCase, snakeCase, mapKeys } from 'lodash'
 import { singular } from 'pluralize'
 import config from '../config'
-import { type } from 'os'
 
 // Determines the folder of the main entry file, as opposed to the
 // project root. Needed for components that traverse the local directory

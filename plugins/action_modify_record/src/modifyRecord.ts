@@ -2,7 +2,7 @@ import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import databaseMethods, { DatabaseMethodsType } from './databaseMethods'
 import { DBConnectType } from '../../../src/components/databaseConnect'
-import { mapValues, get } from 'lodash'
+import { mapValues, get, snakeCase } from 'lodash'
 import {
   objectKeysToSnakeCase,
   getValidTableName,
@@ -31,7 +31,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
 
   const tableNameProper = getValidTableName(tableName)
 
-  const fieldToMatch = matchField ?? 'id'
+  const fieldToMatch = matchField ? snakeCase(matchField) : 'id'
   const valueToMatch = matchValue ?? record[fieldToMatch]
   const applicationId = applicationData?.applicationId || 0
 

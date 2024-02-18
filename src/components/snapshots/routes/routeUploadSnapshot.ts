@@ -28,8 +28,6 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
   const data = await request.files()
   const isTemplate = (request.query as Query)?.template === 'true'
 
-  console.log('isTemplate', isTemplate)
-
   let snapshotName: string = ''
   try {
     // data is a Promise, so we await it before looping
