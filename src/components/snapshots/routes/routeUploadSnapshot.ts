@@ -10,7 +10,7 @@ import { pipeline } from 'stream'
 import { promisify } from 'util'
 import { timestampStringExpression } from './helpers'
 import { DateTime } from 'luxon'
-import StreamZip = require('node-stream-zip')
+import StreamZip from 'node-stream-zip'
 const pump = promisify(pipeline)
 
 const errorMessageBase = {
@@ -87,6 +87,9 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
           })
         }
       }
+
+      // zip.extract can't create destination dir on its own
+      fs.mkdirSync(destination);
       await zip.extract(null, destination)
 
       // Move/rename original zip if filename has changed, or if it's an archive
