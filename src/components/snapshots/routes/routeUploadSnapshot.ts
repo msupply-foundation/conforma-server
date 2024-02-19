@@ -88,9 +88,10 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
         }
       }
 
-      // zip.extract can't create destination dir on its own
+      // zip.extract can error if destination dir doesn't already exist
       fs.mkdirSync(destination);
       await zip.extract(null, destination)
+      await zip.close();
 
       // Move/rename original zip if filename has changed, or if it's an archive
       fs.rename(
