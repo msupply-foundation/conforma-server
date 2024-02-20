@@ -39,7 +39,7 @@ RUN node -v
 RUN npx -v
 
 # --- POSTGRES 
-ARG POSTGRES_VERSION=12
+ARG POSTGRES_VERSION=12.17  #12.18 breaks snapshot import, don't use
 # https://www.postgresql.org/download/linux/ubuntu/
 RUN echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list.d/pgdg.list
 RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add
