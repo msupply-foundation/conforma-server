@@ -5,7 +5,7 @@ They are divided into **web** and **server** blocks, which refer to the web app 
 The available properties are as follows (almost  are optional, as the system has fallback defaults for most of them, specified below):
 
 ### Server
-- `thumbnailMaxWidth`: the maximum width (in pixels) of thumbnails that are generated for images uploaded with the [File Upload](API.md/#file-upload-endpoint) endpoint. (Default `300`)
+- **`thumbnailMaxWidth`**: the maximum width (in pixels) of thumbnails that are generated for images uploaded with the [File Upload](API.md/#file-upload-endpoint) endpoint. (Default `300`)
 - **`thumbnailMaxHeight`**: Same as `thumbnailMaxWidth`, but for thumbnail height.
 - **`actionSchedule`**: A schedule for how often scheduled actions should run, expressed as a [node-schedule](https://www.npmjs.com/package/node-schedule#recurrence-rule-scheduling) recurrence rule. (Default: every hour on the hour)
 - **`SMTPConfig`**: Configuration options for sending emails from the system using the [sendNotification action](List-of-Action-plugins.md/#send-notification), with the following properties:  
