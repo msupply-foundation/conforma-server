@@ -23,11 +23,11 @@ const databaseMethods = (DBConnect: any) => {
   ) => {
     const text = newData
       ? `
-      SELECT ${Object.keys(newData).join(', ')} FROM ${tableName}
+      SELECT ${Object.keys(newData).join(', ')} FROM "${tableName}"
       WHERE id = $1
     `
       : `
-      SELECT * FROM ${tableName}
+      SELECT * FROM "${tableName}"
       WHERE id = $1
     `
     try {
