@@ -38,6 +38,8 @@ RUN apt-get install -y nodejs
 RUN node -v
 RUN npx -v
 
+ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
+
 # --- POSTGRES 
 ARG POSTGRES_VERSION=16
 # https://www.postgresql.org/download/linux/ubuntu/
