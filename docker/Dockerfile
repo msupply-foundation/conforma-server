@@ -31,17 +31,15 @@ RUN apt-get update
 RUN apt install libreoffice -y
 
 # --- NODE and NPX
-ARG NODE_VERSION=14
+ARG NODE_VERSION
 # https://github.com/nodesource/distributions/blob/master/README.md -> Node.js LTS (v14.x): -> # Using Debian, as root
 RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash 
 RUN apt-get install -y nodejs
 RUN node -v
 RUN npx -v
 
-ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
-
 # --- POSTGRES 
-ARG POSTGRES_VERSION=16
+ARG POSTGRES_VERSION
 # https://www.postgresql.org/download/linux/ubuntu/
 RUN echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list.d/pgdg.list
 RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add
@@ -57,7 +55,7 @@ RUN apt-get update
 RUN apt-get install yarn -y
 
 # Uncomment following line to force Docker to skip cache from here on:
-# ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
+ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
 
 # --- ADD REPOS
 ARG SERVER_BRANCH=main

@@ -24,7 +24,7 @@ docker run \
 
 # nginx config: /etc/nginx/conf.d/
 # nginx log: /var/log/nginx/
-# postgresql /etc/postgresql/12/main/
+# postgresql /etc/postgresql/14/main/
 # postgresql log: /var/log/postgresql/
 # back end snapshots: /usr/src/conforma_server/database/snapshots/
 # back end and postgraphile log: /var/log/conforma

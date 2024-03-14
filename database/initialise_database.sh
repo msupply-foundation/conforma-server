@@ -9,15 +9,15 @@ psql -U postgres -q -b -d $1 -f "./database/create_schema.sql" >&/dev/null #supp
 
 echo $2
 
-if [ "$2" != "" ]; then
-    echo "Building schema saved in snapshot..."
-    psql -v ON_ERROR_STOP=1 -U postgres -q -d $1 -f $2
-else
-    echo "Default schema"
-    for file in ./database/buildSchema/*; do
-        echo "  -- ${file##*/}"
-        psql -v ON_ERROR_STOP=1 -U postgres -q -d $1 -f $file
-    done
-fi
+# if [ "$2" != "" ]; then
+#     echo "Building schema saved in snapshot..."
+#     psql -v ON_ERROR_STOP=1 -U postgres -q -d $1 -f $2
+# else
+#     echo "Default schema"
+#     for file in ./database/buildSchema/*; do
+#         echo "  -- ${file##*/}"
+#         psql -v ON_ERROR_STOP=1 -U postgres -q -d $1 -f $file
+#     done
+# fi
 
 sleep 1
