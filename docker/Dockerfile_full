@@ -1,22 +1,61 @@
 # syntax = docker/dockerfile:experimental
 #DOCKER_BUILDKIT=1 docker build --progress=plain -t allbuild --secret id=githubtoken,src=../../../githubtoken.txt .
 
-# This is a shortened version of the Docker build script that uses a
-# previously-built image as a base for all the main Ubuntu installations. This
-# is due to a problem when it uses the latest minor versions (12.18) of
-# Postgres, as detailed in this issue:
+FROM ubuntu:22.04
 
-# https://github.com/msupply-foundation/conforma-server/issues/1090
+RUN apt update
+RUN apt-get update
+RUN apt upgrade -y
+RUN apt-get upgrade -y
 
-# Once that issue is resolved, we can remove this and continue to build with the
-# newer Postgres using the full build script.
+# --- CURL
+RUN apt-get install curl -y
 
-FROM msupplyfoundation/conforma:build-v0.7.9-5_2024-02-08_bb9bac
+# --- NANO
+RUN apt-get install nano -y
 
-# --- DELETE INSTALLATION FROM BASE IMAGE (above)
-WORKDIR /usr/src
-RUN rm -rf conforma-server
-RUN rm -rf conforma-web-app
+# --- GIT
+RUN apt-get install git -y
+
+# --- GOSU
+RUN apt-get install gosu -y
+
+# --- lsof
+RUN apt-get install lsof -y
+
+# --- NGINX
+RUN apt-get install nginx -y
+
+# --- LIBRE OFFICE
+RUN apt-get update
+RUN apt install libreoffice -y
+
+# --- NODE and NPX
+ARG NODE_VERSION
+# https://github.com/nodesource/distributions/blob/master/README.md -> Node.js LTS (v14.x): -> # Using Debian, as root
+RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash 
+RUN apt-get install -y nodejs
+RUN node -v
+RUN npx -v
+
+# --- POSTGRES 
+ARG POSTGRES_VERSION
+# https://www.postgresql.org/download/linux/ubuntu/
+RUN echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list.d/pgdg.list
+RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add
+RUN apt-get update
+# make sure postgresql install is prompt free
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get install -y postgresql-${POSTGRES_VERSION}
+
+# --- YARN
+RUN curl -fsSL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add 
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update
+RUN apt-get install yarn -y
+
+# Uncomment following line to force Docker to skip cache from here on:
+# ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
 
 # --- ADD REPOS
 ARG SERVER_BRANCH=main
