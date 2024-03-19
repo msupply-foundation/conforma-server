@@ -243,6 +243,7 @@ export type ActionQueueApplicationIdFkeyApplicationCreateInput = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `ActionQueueInput` mutation. */
@@ -818,6 +819,7 @@ export type ActivityLogApplicationIdFkeyApplicationCreateInput = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `ActivityLogInput` mutation. */
@@ -1021,6 +1023,74 @@ export enum ActivityLogsOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
+export type AllowedSelfAssignableSectionsShape = {
+  __typename?: 'AllowedSelfAssignableSectionsShape';
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+/**
+ * A condition to be used against `AllowedSelfAssignableSectionsShape` object
+ * types. All fields are tested for equality and combined with a logical ‘and.’
+ */
+export type AllowedSelfAssignableSectionsShapeCondition = {
+  /** Checks for equality with the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `allowedSections` field. */
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+/** A filter to be used against `AllowedSelfAssignableSectionsShape` object types. All fields are combined with a logical ‘and.’ */
+export type AllowedSelfAssignableSectionsShapeFilter = {
+  /** Filter by the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<IntFilter>;
+  /** Filter by the object’s `allowedSections` field. */
+  allowedSections?: Maybe<StringListFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<AllowedSelfAssignableSectionsShapeFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<AllowedSelfAssignableSectionsShapeFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<AllowedSelfAssignableSectionsShapeFilter>;
+};
+
+/** An input for mutations affecting `AllowedSelfAssignableSectionsShape` */
+export type AllowedSelfAssignableSectionsShapeInput = {
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+/** A connection to a list of `AllowedSelfAssignableSectionsShape` values. */
+export type AllowedSelfAssignableSectionsShapesConnection = {
+  __typename?: 'AllowedSelfAssignableSectionsShapesConnection';
+  /** A list of `AllowedSelfAssignableSectionsShape` objects. */
+  nodes: Array<Maybe<AllowedSelfAssignableSectionsShape>>;
+  /** A list of edges which contains the `AllowedSelfAssignableSectionsShape` and cursor to aid in pagination. */
+  edges: Array<AllowedSelfAssignableSectionsShapesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AllowedSelfAssignableSectionsShape` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `AllowedSelfAssignableSectionsShape` edge in the connection. */
+export type AllowedSelfAssignableSectionsShapesEdge = {
+  __typename?: 'AllowedSelfAssignableSectionsShapesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `AllowedSelfAssignableSectionsShape` at the end of the edge. */
+  node?: Maybe<AllowedSelfAssignableSectionsShape>;
+};
+
+/** Methods to use when ordering `AllowedSelfAssignableSectionsShape`. */
+export enum AllowedSelfAssignableSectionsShapesOrderBy {
+  Natural = 'NATURAL',
+  ReviewAssignmentIdAsc = 'REVIEW_ASSIGNMENT_ID_ASC',
+  ReviewAssignmentIdDesc = 'REVIEW_ASSIGNMENT_ID_DESC',
+  AllowedSectionsAsc = 'ALLOWED_SECTIONS_ASC',
+  AllowedSectionsDesc = 'ALLOWED_SECTIONS_DESC'
+}
+
 export type Application = Node & {
   __typename?: 'Application';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -1067,6 +1137,8 @@ export type Application = Node & {
   triggerSchedules: TriggerSchedulesConnection;
   /** Reads and enables pagination through a set of `Verification`. */
   verifications: VerificationsConnection;
+  /** Reads and enables pagination through a set of `DataChangelog`. */
+  dataChangelogs: DataChangelogsConnection;
   stage?: Maybe<Scalars['String']>;
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationStatus>;
@@ -1216,6 +1288,18 @@ export type ApplicationVerificationsArgs = {
   filter?: Maybe<VerificationFilter>;
 };
 
+
+export type ApplicationDataChangelogsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<DataChangelogsOrderBy>>;
+  condition?: Maybe<DataChangelogCondition>;
+  filter?: Maybe<DataChangelogFilter>;
+};
+
 /** The fields on `application` to look up the row to connect. */
 export type ApplicationApplicationOutcomeRegistrationKeyConnect = {
   outcomeRegistration: Scalars['String'];
@@ -1357,6 +1441,10 @@ export type ApplicationFilter = {
   verifications?: Maybe<ApplicationToManyVerificationFilter>;
   /** Some related `verifications` exist. */
   verificationsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `dataChangelogs` relation. */
+  dataChangelogs?: Maybe<ApplicationToManyDataChangelogFilter>;
+  /** Some related `dataChangelogs` exist. */
+  dataChangelogsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
   /** Filter by the object’s `user` relation. */
@@ -1404,6 +1492,7 @@ export type ApplicationInput = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `String` values. */
@@ -1767,6 +1856,7 @@ export type ApplicationNoteApplicationIdFkeyApplicationCreateInput = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** The `applicationNote` to be created by this mutation. */
@@ -2056,6 +2146,7 @@ export type ApplicationNoteOrgIdFkeyOrganisationCreateInput = {
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogOrgIdFkeyInverseInput>;
 };
 
 /** Represents an update to a `ApplicationNote`. Fields that are set will be updated. */
@@ -2185,11 +2276,11 @@ export type ApplicationNoteUserIdFkeyUserCreateInput = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -2201,6 +2292,8 @@ export type ApplicationNoteUserIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -2436,6 +2529,35 @@ export type ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplic
 };
 
 /** The globally unique `ID` look up for the row to update. */
+export type ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `dataChangelog` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `dataChangelog` being updated. */
+  patch: DataChangelogPatch;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnDataChangelogForDataChangelogApplicationIdFkeyPatch;
+  outcomeRegistration: Scalars['String'];
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingApplicationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnDataChangelogForDataChangelogApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnDataChangelogForDataChangelogApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
 export type ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `file` to be connected. */
   nodeId: Scalars['ID'];
@@ -2666,6 +2788,7 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `organisation` in the `ApplicationInput` mutation. */
@@ -2744,6 +2867,7 @@ export type ApplicationOrgIdFkeyOrganisationCreateInput = {
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogOrgIdFkeyInverseInput>;
 };
 
 export enum ApplicationOutcome {
@@ -2809,6 +2933,7 @@ export type ApplicationPatch = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 export type ApplicationResponse = Node & {
@@ -2889,6 +3014,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** The `applicationResponse` to be created by this mutation. */
@@ -3491,6 +3617,7 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** The `applicationStageHistory` to be created by this mutation. */
@@ -4432,6 +4559,7 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `template` in the `ApplicationInput` mutation. */
@@ -4573,6 +4701,16 @@ export type ApplicationToManyApplicationStageHistoryFilter = {
   none?: Maybe<ApplicationStageHistoryFilter>;
 };
 
+/** A filter to be used against many `DataChangelog` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationToManyDataChangelogFilter = {
+  /** Every related `DataChangelog` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<DataChangelogFilter>;
+  /** Some related `DataChangelog` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<DataChangelogFilter>;
+  /** No related `DataChangelog` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<DataChangelogFilter>;
+};
+
 /** A filter to be used against many `File` object types. All fields are combined with a logical ‘and.’ */
 export type ApplicationToManyFileFilter = {
   /** Every related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -4671,6 +4809,7 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `user` in the `ApplicationInput` mutation. */
@@ -4734,11 +4873,11 @@ export type ApplicationUserIdFkeyUserCreateInput = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -4750,6 +4889,8 @@ export type ApplicationUserIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /** A `AssignedQuestionsRecord` edge in the connection. */
@@ -5068,6 +5209,38 @@ export type BooleanFilter = {
   greaterThan?: Maybe<Scalars['Boolean']>;
   /** Greater than or equal to the specified value. */
   greaterThanOrEqualTo?: Maybe<Scalars['Boolean']>;
+};
+
+export enum ChangelogType {
+  Create = 'CREATE',
+  Update = 'UPDATE',
+  Delete = 'DELETE'
+}
+
+/** A filter to be used against ChangelogType fields. All fields are combined with a logical ‘and.’ */
+export type ChangelogTypeFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<ChangelogType>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<ChangelogType>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<ChangelogType>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<ChangelogType>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<ChangelogType>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<ChangelogType>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<ChangelogType>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<ChangelogType>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<ChangelogType>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<ChangelogType>;
 };
 
 
@@ -5437,6 +5610,39 @@ export type CreateActivityLogPayloadActivityLogEdgeArgs = {
   orderBy?: Maybe<Array<ActivityLogsOrderBy>>;
 };
 
+/** All input for the create `AllowedSelfAssignableSectionsShape` mutation. */
+export type CreateAllowedSelfAssignableSectionsShapeInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `AllowedSelfAssignableSectionsShape` to be created by this mutation. */
+  allowedSelfAssignableSectionsShape: AllowedSelfAssignableSectionsShapeInput;
+};
+
+/** The output of our create `AllowedSelfAssignableSectionsShape` mutation. */
+export type CreateAllowedSelfAssignableSectionsShapePayload = {
+  __typename?: 'CreateAllowedSelfAssignableSectionsShapePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `AllowedSelfAssignableSectionsShape` that was created by this mutation. */
+  allowedSelfAssignableSectionsShape?: Maybe<AllowedSelfAssignableSectionsShape>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `AllowedSelfAssignableSectionsShape`. May be used by Relay 1. */
+  allowedSelfAssignableSectionsShapeEdge?: Maybe<AllowedSelfAssignableSectionsShapesEdge>;
+};
+
+
+/** The output of our create `AllowedSelfAssignableSectionsShape` mutation. */
+export type CreateAllowedSelfAssignableSectionsShapePayloadAllowedSelfAssignableSectionsShapeEdgeArgs = {
+  orderBy?: Maybe<Array<AllowedSelfAssignableSectionsShapesOrderBy>>;
+};
+
 /** All input for the create `Application` mutation. */
 export type CreateApplicationInput = {
   /**
@@ -5688,6 +5894,47 @@ export type CreateCounterPayload = {
 /** The output of our create `Counter` mutation. */
 export type CreateCounterPayloadCounterEdgeArgs = {
   orderBy?: Maybe<Array<CountersOrderBy>>;
+};
+
+/** All input for the create `DataChangelog` mutation. */
+export type CreateDataChangelogInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataChangelog` to be created by this mutation. */
+  dataChangelog: DataChangelogInput;
+};
+
+/** The output of our create `DataChangelog` mutation. */
+export type CreateDataChangelogPayload = {
+  __typename?: 'CreateDataChangelogPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataChangelog` that was created by this mutation. */
+  dataChangelog?: Maybe<DataChangelog>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `DataChangelog`. */
+  user?: Maybe<User>;
+  /** Reads a single `Organisation` that is related to this `DataChangelog`. */
+  org?: Maybe<Organisation>;
+  /** Reads a single `User` that is related to this `DataChangelog`. */
+  userByUsername?: Maybe<User>;
+  /** Reads a single `Application` that is related to this `DataChangelog`. */
+  application?: Maybe<Application>;
+  /** An edge for our `DataChangelog`. May be used by Relay 1. */
+  dataChangelogEdge?: Maybe<DataChangelogsEdge>;
+};
+
+
+/** The output of our create `DataChangelog` mutation. */
+export type CreateDataChangelogPayloadDataChangelogEdgeArgs = {
+  orderBy?: Maybe<Array<DataChangelogsOrderBy>>;
 };
 
 /** All input for the create `DataTable` mutation. */
@@ -6075,6 +6322,39 @@ export type CreatePermissionPolicyPayload = {
 /** The output of our create `PermissionPolicy` mutation. */
 export type CreatePermissionPolicyPayloadPermissionPolicyEdgeArgs = {
   orderBy?: Maybe<Array<PermissionPoliciesOrderBy>>;
+};
+
+/** All input for the create `ReviewAssignmentAssignedSectionsShape` mutation. */
+export type CreateReviewAssignmentAssignedSectionsShapeInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ReviewAssignmentAssignedSectionsShape` to be created by this mutation. */
+  reviewAssignmentAssignedSectionsShape: ReviewAssignmentAssignedSectionsShapeInput;
+};
+
+/** The output of our create `ReviewAssignmentAssignedSectionsShape` mutation. */
+export type CreateReviewAssignmentAssignedSectionsShapePayload = {
+  __typename?: 'CreateReviewAssignmentAssignedSectionsShapePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ReviewAssignmentAssignedSectionsShape` that was created by this mutation. */
+  reviewAssignmentAssignedSectionsShape?: Maybe<ReviewAssignmentAssignedSectionsShape>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `ReviewAssignmentAssignedSectionsShape`. May be used by Relay 1. */
+  reviewAssignmentAssignedSectionsShapeEdge?: Maybe<ReviewAssignmentAssignedSectionsShapesEdge>;
+};
+
+
+/** The output of our create `ReviewAssignmentAssignedSectionsShape` mutation. */
+export type CreateReviewAssignmentAssignedSectionsShapePayloadReviewAssignmentAssignedSectionsShapeEdgeArgs = {
+  orderBy?: Maybe<Array<ReviewAssignmentAssignedSectionsShapesOrderBy>>;
 };
 
 /** All input for the create `ReviewAssignmentAssignerJoin` mutation. */
@@ -6844,6 +7124,637 @@ export type CreateVerificationPayloadVerificationEdgeArgs = {
   orderBy?: Maybe<Array<VerificationsOrderBy>>;
 };
 
+
+export type DataChangelog = Node & {
+  __typename?: 'DataChangelog';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  dataTable: Scalars['String'];
+  recordId: Scalars['Int'];
+  updateType: ChangelogType;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  oldData?: Maybe<Scalars['JSON']>;
+  newData?: Maybe<Scalars['JSON']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  username?: Maybe<Scalars['String']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Reads a single `User` that is related to this `DataChangelog`. */
+  user?: Maybe<User>;
+  /** Reads a single `Organisation` that is related to this `DataChangelog`. */
+  org?: Maybe<Organisation>;
+  /** Reads a single `User` that is related to this `DataChangelog`. */
+  userByUsername?: Maybe<User>;
+  /** Reads a single `Application` that is related to this `DataChangelog`. */
+  application?: Maybe<Application>;
+};
+
+/** The `application` to be created by this mutation. */
+export type DataChangelogApplicationIdFkeyApplicationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  outcomeRegistration?: Maybe<Scalars['String']>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+  triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
+};
+
+/** The `dataChangelog` to be created by this mutation. */
+export type DataChangelogApplicationIdFkeyDataChangelogCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  dataTable: Scalars['String'];
+  recordId: Scalars['Int'];
+  updateType: ChangelogType;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  oldData?: Maybe<Scalars['JSON']>;
+  newData?: Maybe<Scalars['JSON']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  username?: Maybe<Scalars['String']>;
+  userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
+  userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
+  applicationToApplicationId?: Maybe<DataChangelogApplicationIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `application` in the `DataChangelogInput` mutation. */
+export type DataChangelogApplicationIdFkeyInput = {
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByOutcomeRegistration?: Maybe<ApplicationApplicationOutcomeRegistrationKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByOutcomeRegistration?: Maybe<ApplicationApplicationOutcomeRegistrationKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateById?: Maybe<ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByOutcomeRegistration?: Maybe<ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByNodeId?: Maybe<DataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyNodeIdUpdate>;
+  /** A `ApplicationInput` object that will be created and connected to this object. */
+  create?: Maybe<DataChangelogApplicationIdFkeyApplicationCreateInput>;
+};
+
+/** Input for the nested mutation of `dataChangelog` in the `ApplicationInput` mutation. */
+export type DataChangelogApplicationIdFkeyInverseInput = {
+  /** Flag indicating whether all other `dataChangelog` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `dataChangelog` for the far side of the relationship. */
+  connectById?: Maybe<Array<DataChangelogDataChangelogPkeyConnect>>;
+  /** The primary key(s) for `dataChangelog` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<DataChangelogNodeIdConnect>>;
+  /** The primary key(s) for `dataChangelog` for the far side of the relationship. */
+  deleteById?: Maybe<Array<DataChangelogDataChangelogPkeyDelete>>;
+  /** The primary key(s) for `dataChangelog` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<DataChangelogNodeIdDelete>>;
+  /** The primary key(s) and patch data for `dataChangelog` for the far side of the relationship. */
+  updateById?: Maybe<Array<DataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyUsingDataChangelogPkeyUpdate>>;
+  /** The primary key(s) and patch data for `dataChangelog` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyNodeIdUpdate>>;
+  /** A `DataChangelogInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<DataChangelogApplicationIdFkeyDataChangelogCreateInput>>;
+};
+
+/**
+ * A condition to be used against `DataChangelog` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type DataChangelogCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `dataTable` field. */
+  dataTable?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `recordId` field. */
+  recordId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `updateType` field. */
+  updateType?: Maybe<ChangelogType>;
+  /** Checks for equality with the object’s `timestamp` field. */
+  timestamp?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `oldData` field. */
+  oldData?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `newData` field. */
+  newData?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `orgId` field. */
+  orgId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `username` field. */
+  username?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+};
+
+/** The fields on `dataChangelog` to look up the row to connect. */
+export type DataChangelogDataChangelogPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `dataChangelog` to look up the row to delete. */
+export type DataChangelogDataChangelogPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** A filter to be used against `DataChangelog` object types. All fields are combined with a logical ‘and.’ */
+export type DataChangelogFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `dataTable` field. */
+  dataTable?: Maybe<StringFilter>;
+  /** Filter by the object’s `recordId` field. */
+  recordId?: Maybe<IntFilter>;
+  /** Filter by the object’s `updateType` field. */
+  updateType?: Maybe<ChangelogTypeFilter>;
+  /** Filter by the object’s `timestamp` field. */
+  timestamp?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `oldData` field. */
+  oldData?: Maybe<JsonFilter>;
+  /** Filter by the object’s `newData` field. */
+  newData?: Maybe<JsonFilter>;
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `orgId` field. */
+  orgId?: Maybe<IntFilter>;
+  /** Filter by the object’s `username` field. */
+  username?: Maybe<StringFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `user` relation. */
+  user?: Maybe<UserFilter>;
+  /** A related `user` exists. */
+  userExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `org` relation. */
+  org?: Maybe<OrganisationFilter>;
+  /** A related `org` exists. */
+  orgExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `userByUsername` relation. */
+  userByUsername?: Maybe<UserFilter>;
+  /** A related `userByUsername` exists. */
+  userByUsernameExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** A related `application` exists. */
+  applicationExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<DataChangelogFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<DataChangelogFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<DataChangelogFilter>;
+};
+
+/** An input for mutations affecting `DataChangelog` */
+export type DataChangelogInput = {
+  id?: Maybe<Scalars['Int']>;
+  dataTable: Scalars['String'];
+  recordId: Scalars['Int'];
+  updateType: ChangelogType;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  oldData?: Maybe<Scalars['JSON']>;
+  newData?: Maybe<Scalars['JSON']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  username?: Maybe<Scalars['String']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
+  userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
+  applicationToApplicationId?: Maybe<DataChangelogApplicationIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type DataChangelogNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `dataChangelog` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type DataChangelogNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `dataChangelog` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type DataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `application` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: ApplicationPatch;
+};
+
+/** The fields on `dataChangelog` to look up the row to update. */
+export type DataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyUsingDataChangelogPkeyUpdate = {
+  /** An object where the defined keys will be set on the `dataChangelog` being updated. */
+  patch: UpdateDataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type DataChangelogOnDataChangelogForDataChangelogOrgIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `organisation` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `organisation` being updated. */
+  patch: OrganisationPatch;
+};
+
+/** The fields on `dataChangelog` to look up the row to update. */
+export type DataChangelogOnDataChangelogForDataChangelogOrgIdFkeyUsingDataChangelogPkeyUpdate = {
+  /** An object where the defined keys will be set on the `dataChangelog` being updated. */
+  patch: UpdateDataChangelogOnDataChangelogForDataChangelogOrgIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type DataChangelogOnDataChangelogForDataChangelogUserIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `user` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UserPatch;
+};
+
+/** The fields on `dataChangelog` to look up the row to update. */
+export type DataChangelogOnDataChangelogForDataChangelogUserIdFkeyUsingDataChangelogPkeyUpdate = {
+  /** An object where the defined keys will be set on the `dataChangelog` being updated. */
+  patch: UpdateDataChangelogOnDataChangelogForDataChangelogUserIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type DataChangelogOnDataChangelogForDataChangelogUsernameFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `user` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UserPatch;
+};
+
+/** The fields on `dataChangelog` to look up the row to update. */
+export type DataChangelogOnDataChangelogForDataChangelogUsernameFkeyUsingDataChangelogPkeyUpdate = {
+  /** An object where the defined keys will be set on the `dataChangelog` being updated. */
+  patch: UpdateDataChangelogOnDataChangelogForDataChangelogUsernameFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The `dataChangelog` to be created by this mutation. */
+export type DataChangelogOrgIdFkeyDataChangelogCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  dataTable: Scalars['String'];
+  recordId: Scalars['Int'];
+  updateType: ChangelogType;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  oldData?: Maybe<Scalars['JSON']>;
+  newData?: Maybe<Scalars['JSON']>;
+  userId?: Maybe<Scalars['Int']>;
+  username?: Maybe<Scalars['String']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
+  userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
+  applicationToApplicationId?: Maybe<DataChangelogApplicationIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `organisation` in the `DataChangelogInput` mutation. */
+export type DataChangelogOrgIdFkeyInput = {
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  connectById?: Maybe<OrganisationOrganisationPkeyConnect>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  connectByName?: Maybe<OrganisationOrganisationNameKeyConnect>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  connectByRegistration?: Maybe<OrganisationOrganisationRegistrationKeyConnect>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  connectByNodeId?: Maybe<OrganisationNodeIdConnect>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  deleteById?: Maybe<OrganisationOrganisationPkeyDelete>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  deleteByName?: Maybe<OrganisationOrganisationNameKeyDelete>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  deleteByRegistration?: Maybe<OrganisationOrganisationRegistrationKeyDelete>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<OrganisationNodeIdDelete>;
+  /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
+  updateById?: Maybe<OrganisationOnDataChangelogForDataChangelogOrgIdFkeyUsingOrganisationPkeyUpdate>;
+  /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
+  updateByName?: Maybe<OrganisationOnDataChangelogForDataChangelogOrgIdFkeyUsingOrganisationNameKeyUpdate>;
+  /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
+  updateByRegistration?: Maybe<OrganisationOnDataChangelogForDataChangelogOrgIdFkeyUsingOrganisationRegistrationKeyUpdate>;
+  /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
+  updateByNodeId?: Maybe<DataChangelogOnDataChangelogForDataChangelogOrgIdFkeyNodeIdUpdate>;
+  /** A `OrganisationInput` object that will be created and connected to this object. */
+  create?: Maybe<DataChangelogOrgIdFkeyOrganisationCreateInput>;
+};
+
+/** Input for the nested mutation of `dataChangelog` in the `OrganisationInput` mutation. */
+export type DataChangelogOrgIdFkeyInverseInput = {
+  /** Flag indicating whether all other `dataChangelog` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `dataChangelog` for the far side of the relationship. */
+  connectById?: Maybe<Array<DataChangelogDataChangelogPkeyConnect>>;
+  /** The primary key(s) for `dataChangelog` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<DataChangelogNodeIdConnect>>;
+  /** The primary key(s) for `dataChangelog` for the far side of the relationship. */
+  deleteById?: Maybe<Array<DataChangelogDataChangelogPkeyDelete>>;
+  /** The primary key(s) for `dataChangelog` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<DataChangelogNodeIdDelete>>;
+  /** The primary key(s) and patch data for `dataChangelog` for the far side of the relationship. */
+  updateById?: Maybe<Array<DataChangelogOnDataChangelogForDataChangelogOrgIdFkeyUsingDataChangelogPkeyUpdate>>;
+  /** The primary key(s) and patch data for `dataChangelog` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<OrganisationOnDataChangelogForDataChangelogOrgIdFkeyNodeIdUpdate>>;
+  /** A `DataChangelogInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<DataChangelogOrgIdFkeyDataChangelogCreateInput>>;
+};
+
+/** The `organisation` to be created by this mutation. */
+export type DataChangelogOrgIdFkeyOrganisationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  registration?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
+  applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
+  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogOrgIdFkeyInverseInput>;
+};
+
+/** Represents an update to a `DataChangelog`. Fields that are set will be updated. */
+export type DataChangelogPatch = {
+  id?: Maybe<Scalars['Int']>;
+  dataTable?: Maybe<Scalars['String']>;
+  recordId?: Maybe<Scalars['Int']>;
+  updateType?: Maybe<ChangelogType>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  oldData?: Maybe<Scalars['JSON']>;
+  newData?: Maybe<Scalars['JSON']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  username?: Maybe<Scalars['String']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
+  userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
+  applicationToApplicationId?: Maybe<DataChangelogApplicationIdFkeyInput>;
+};
+
+/** A connection to a list of `DataChangelog` values. */
+export type DataChangelogsConnection = {
+  __typename?: 'DataChangelogsConnection';
+  /** A list of `DataChangelog` objects. */
+  nodes: Array<Maybe<DataChangelog>>;
+  /** A list of edges which contains the `DataChangelog` and cursor to aid in pagination. */
+  edges: Array<DataChangelogsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `DataChangelog` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `DataChangelog` edge in the connection. */
+export type DataChangelogsEdge = {
+  __typename?: 'DataChangelogsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `DataChangelog` at the end of the edge. */
+  node?: Maybe<DataChangelog>;
+};
+
+/** Methods to use when ordering `DataChangelog`. */
+export enum DataChangelogsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  DataTableAsc = 'DATA_TABLE_ASC',
+  DataTableDesc = 'DATA_TABLE_DESC',
+  RecordIdAsc = 'RECORD_ID_ASC',
+  RecordIdDesc = 'RECORD_ID_DESC',
+  UpdateTypeAsc = 'UPDATE_TYPE_ASC',
+  UpdateTypeDesc = 'UPDATE_TYPE_DESC',
+  TimestampAsc = 'TIMESTAMP_ASC',
+  TimestampDesc = 'TIMESTAMP_DESC',
+  OldDataAsc = 'OLD_DATA_ASC',
+  OldDataDesc = 'OLD_DATA_DESC',
+  NewDataAsc = 'NEW_DATA_ASC',
+  NewDataDesc = 'NEW_DATA_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
+  OrgIdAsc = 'ORG_ID_ASC',
+  OrgIdDesc = 'ORG_ID_DESC',
+  UsernameAsc = 'USERNAME_ASC',
+  UsernameDesc = 'USERNAME_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** The `dataChangelog` to be created by this mutation. */
+export type DataChangelogUserIdFkeyDataChangelogCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  dataTable: Scalars['String'];
+  recordId: Scalars['Int'];
+  updateType: ChangelogType;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  oldData?: Maybe<Scalars['JSON']>;
+  newData?: Maybe<Scalars['JSON']>;
+  orgId?: Maybe<Scalars['Int']>;
+  username?: Maybe<Scalars['String']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
+  userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
+  applicationToApplicationId?: Maybe<DataChangelogApplicationIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `user` in the `DataChangelogInput` mutation. */
+export type DataChangelogUserIdFkeyInput = {
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectById?: Maybe<UserUserPkeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByNodeId?: Maybe<UserNodeIdConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteById?: Maybe<UserUserPkeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<UserNodeIdDelete>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateById?: Maybe<UserOnDataChangelogForDataChangelogUserIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnDataChangelogForDataChangelogUserIdFkeyUsingUserUsernameKeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByNodeId?: Maybe<DataChangelogOnDataChangelogForDataChangelogUserIdFkeyNodeIdUpdate>;
+  /** A `UserInput` object that will be created and connected to this object. */
+  create?: Maybe<DataChangelogUserIdFkeyUserCreateInput>;
+};
+
+/** Input for the nested mutation of `dataChangelog` in the `UserInput` mutation. */
+export type DataChangelogUserIdFkeyInverseInput = {
+  /** Flag indicating whether all other `dataChangelog` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `dataChangelog` for the far side of the relationship. */
+  connectById?: Maybe<Array<DataChangelogDataChangelogPkeyConnect>>;
+  /** The primary key(s) for `dataChangelog` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<DataChangelogNodeIdConnect>>;
+  /** The primary key(s) for `dataChangelog` for the far side of the relationship. */
+  deleteById?: Maybe<Array<DataChangelogDataChangelogPkeyDelete>>;
+  /** The primary key(s) for `dataChangelog` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<DataChangelogNodeIdDelete>>;
+  /** The primary key(s) and patch data for `dataChangelog` for the far side of the relationship. */
+  updateById?: Maybe<Array<DataChangelogOnDataChangelogForDataChangelogUserIdFkeyUsingDataChangelogPkeyUpdate>>;
+  /** The primary key(s) and patch data for `dataChangelog` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<UserOnDataChangelogForDataChangelogUserIdFkeyNodeIdUpdate>>;
+  /** A `DataChangelogInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<DataChangelogUserIdFkeyDataChangelogCreateInput>>;
+};
+
+/** The `user` to be created by this mutation. */
+export type DataChangelogUserIdFkeyUserCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
+  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
+};
+
+/** The `dataChangelog` to be created by this mutation. */
+export type DataChangelogUsernameFkeyDataChangelogCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  dataTable: Scalars['String'];
+  recordId: Scalars['Int'];
+  updateType: ChangelogType;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  oldData?: Maybe<Scalars['JSON']>;
+  newData?: Maybe<Scalars['JSON']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
+  userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
+  applicationToApplicationId?: Maybe<DataChangelogApplicationIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `user` in the `DataChangelogInput` mutation. */
+export type DataChangelogUsernameFkeyInput = {
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectById?: Maybe<UserUserPkeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByNodeId?: Maybe<UserNodeIdConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteById?: Maybe<UserUserPkeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<UserNodeIdDelete>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateById?: Maybe<UserOnDataChangelogForDataChangelogUsernameFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnDataChangelogForDataChangelogUsernameFkeyUsingUserUsernameKeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByNodeId?: Maybe<DataChangelogOnDataChangelogForDataChangelogUsernameFkeyNodeIdUpdate>;
+  /** A `UserInput` object that will be created and connected to this object. */
+  create?: Maybe<DataChangelogUsernameFkeyUserCreateInput>;
+};
+
+/** Input for the nested mutation of `dataChangelog` in the `UserInput` mutation. */
+export type DataChangelogUsernameFkeyInverseInput = {
+  /** Flag indicating whether all other `dataChangelog` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `dataChangelog` for the far side of the relationship. */
+  connectById?: Maybe<Array<DataChangelogDataChangelogPkeyConnect>>;
+  /** The primary key(s) for `dataChangelog` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<DataChangelogNodeIdConnect>>;
+  /** The primary key(s) for `dataChangelog` for the far side of the relationship. */
+  deleteById?: Maybe<Array<DataChangelogDataChangelogPkeyDelete>>;
+  /** The primary key(s) for `dataChangelog` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<DataChangelogNodeIdDelete>>;
+  /** The primary key(s) and patch data for `dataChangelog` for the far side of the relationship. */
+  updateById?: Maybe<Array<DataChangelogOnDataChangelogForDataChangelogUsernameFkeyUsingDataChangelogPkeyUpdate>>;
+  /** The primary key(s) and patch data for `dataChangelog` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<UserOnDataChangelogForDataChangelogUsernameFkeyNodeIdUpdate>>;
+  /** A `DataChangelogInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<DataChangelogUsernameFkeyDataChangelogCreateInput>>;
+};
+
+/** The `user` to be created by this mutation. */
+export type DataChangelogUsernameFkeyUserCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
+  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
+};
 
 export type DataTable = Node & {
   __typename?: 'DataTable';
@@ -7928,6 +8839,58 @@ export type DeleteCounterPayload = {
 /** The output of our delete `Counter` mutation. */
 export type DeleteCounterPayloadCounterEdgeArgs = {
   orderBy?: Maybe<Array<CountersOrderBy>>;
+};
+
+/** All input for the `deleteDataChangelogByNodeId` mutation. */
+export type DeleteDataChangelogByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataChangelog` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteDataChangelog` mutation. */
+export type DeleteDataChangelogInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `DataChangelog` mutation. */
+export type DeleteDataChangelogPayload = {
+  __typename?: 'DeleteDataChangelogPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataChangelog` that was deleted by this mutation. */
+  dataChangelog?: Maybe<DataChangelog>;
+  deletedDataChangelogNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `DataChangelog`. */
+  user?: Maybe<User>;
+  /** Reads a single `Organisation` that is related to this `DataChangelog`. */
+  org?: Maybe<Organisation>;
+  /** Reads a single `User` that is related to this `DataChangelog`. */
+  userByUsername?: Maybe<User>;
+  /** Reads a single `Application` that is related to this `DataChangelog`. */
+  application?: Maybe<Application>;
+  /** An edge for our `DataChangelog`. May be used by Relay 1. */
+  dataChangelogEdge?: Maybe<DataChangelogsEdge>;
+};
+
+
+/** The output of our delete `DataChangelog` mutation. */
+export type DeleteDataChangelogPayloadDataChangelogEdgeArgs = {
+  orderBy?: Maybe<Array<DataChangelogsOrderBy>>;
 };
 
 /** All input for the `deleteDataTableByNodeId` mutation. */
@@ -10046,6 +11009,7 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** The `file` to be created by this mutation. */
@@ -10709,11 +11673,11 @@ export type FileUserIdFkeyUserCreateInput = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -10725,6 +11689,8 @@ export type FileUserIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 export type Filter = Node & {
@@ -10985,6 +11951,8 @@ export type Mutation = {
   createActionQueue?: Maybe<CreateActionQueuePayload>;
   /** Creates a single `ActivityLog`. */
   createActivityLog?: Maybe<CreateActivityLogPayload>;
+  /** Creates a single `AllowedSelfAssignableSectionsShape`. */
+  createAllowedSelfAssignableSectionsShape?: Maybe<CreateAllowedSelfAssignableSectionsShapePayload>;
   /** Creates a single `Application`. */
   createApplication?: Maybe<CreateApplicationPayload>;
   /** Creates a single `ApplicationListShape`. */
@@ -10999,6 +11967,8 @@ export type Mutation = {
   createApplicationStatusHistory?: Maybe<CreateApplicationStatusHistoryPayload>;
   /** Creates a single `Counter`. */
   createCounter?: Maybe<CreateCounterPayload>;
+  /** Creates a single `DataChangelog`. */
+  createDataChangelog?: Maybe<CreateDataChangelogPayload>;
   /** Creates a single `DataTable`. */
   createDataTable?: Maybe<CreateDataTablePayload>;
   /** Creates a single `DataView`. */
@@ -11025,6 +11995,8 @@ export type Mutation = {
   createReview?: Maybe<CreateReviewPayload>;
   /** Creates a single `ReviewAssignment`. */
   createReviewAssignment?: Maybe<CreateReviewAssignmentPayload>;
+  /** Creates a single `ReviewAssignmentAssignedSectionsShape`. */
+  createReviewAssignmentAssignedSectionsShape?: Maybe<CreateReviewAssignmentAssignedSectionsShapePayload>;
   /** Creates a single `ReviewAssignmentAssignerJoin`. */
   createReviewAssignmentAssignerJoin?: Maybe<CreateReviewAssignmentAssignerJoinPayload>;
   /** Creates a single `ReviewDecision`. */
@@ -11107,6 +12079,10 @@ export type Mutation = {
   updateCounter?: Maybe<UpdateCounterPayload>;
   /** Updates a single `Counter` using a unique key and a patch. */
   updateCounterByName?: Maybe<UpdateCounterPayload>;
+  /** Updates a single `DataChangelog` using its globally unique id and a patch. */
+  updateDataChangelogByNodeId?: Maybe<UpdateDataChangelogPayload>;
+  /** Updates a single `DataChangelog` using a unique key and a patch. */
+  updateDataChangelog?: Maybe<UpdateDataChangelogPayload>;
   /** Updates a single `DataTable` using its globally unique id and a patch. */
   updateDataTableByNodeId?: Maybe<UpdateDataTablePayload>;
   /** Updates a single `DataTable` using a unique key and a patch. */
@@ -11313,6 +12289,10 @@ export type Mutation = {
   deleteCounter?: Maybe<DeleteCounterPayload>;
   /** Deletes a single `Counter` using a unique key. */
   deleteCounterByName?: Maybe<DeleteCounterPayload>;
+  /** Deletes a single `DataChangelog` using its globally unique id. */
+  deleteDataChangelogByNodeId?: Maybe<DeleteDataChangelogPayload>;
+  /** Deletes a single `DataChangelog` using a unique key. */
+  deleteDataChangelog?: Maybe<DeleteDataChangelogPayload>;
   /** Deletes a single `DataTable` using its globally unique id. */
   deleteDataTableByNodeId?: Maybe<DeleteDataTablePayload>;
   /** Deletes a single `DataTable` using a unique key. */
@@ -11498,6 +12478,12 @@ export type MutationCreateActivityLogArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateAllowedSelfAssignableSectionsShapeArgs = {
+  input: CreateAllowedSelfAssignableSectionsShapeInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateApplicationArgs = {
   input: CreateApplicationInput;
 };
@@ -11536,6 +12522,12 @@ export type MutationCreateApplicationStatusHistoryArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateCounterArgs = {
   input: CreateCounterInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDataChangelogArgs = {
+  input: CreateDataChangelogInput;
 };
 
 
@@ -11614,6 +12606,12 @@ export type MutationCreateReviewArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateReviewAssignmentArgs = {
   input: CreateReviewAssignmentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateReviewAssignmentAssignedSectionsShapeArgs = {
+  input: CreateReviewAssignmentAssignedSectionsShapeInput;
 };
 
 
@@ -11860,6 +12858,18 @@ export type MutationUpdateCounterArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateCounterByNameArgs = {
   input: UpdateCounterByNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataChangelogByNodeIdArgs = {
+  input: UpdateDataChangelogByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataChangelogArgs = {
+  input: UpdateDataChangelogInput;
 };
 
 
@@ -12482,6 +13492,18 @@ export type MutationDeleteCounterByNameArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataChangelogByNodeIdArgs = {
+  input: DeleteDataChangelogByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataChangelogArgs = {
+  input: DeleteDataChangelogInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteDataTableByNodeIdArgs = {
   input: DeleteDataTableByNodeIdInput;
 };
@@ -13031,6 +14053,7 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `NotificationInput` mutation. */
@@ -13487,11 +14510,11 @@ export type NotificationUserIdFkeyUserCreateInput = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -13503,6 +14526,8 @@ export type NotificationUserIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 export type Organisation = Node & {
@@ -13527,6 +14552,8 @@ export type Organisation = Node & {
   permissionJoins: PermissionJoinsConnection;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations: UserOrganisationsConnection;
+  /** Reads and enables pagination through a set of `DataChangelog`. */
+  dataChangelogsByOrgId: DataChangelogsConnection;
 };
 
 
@@ -13601,6 +14628,18 @@ export type OrganisationUserOrganisationsArgs = {
   filter?: Maybe<UserOrganisationFilter>;
 };
 
+
+export type OrganisationDataChangelogsByOrgIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<DataChangelogsOrderBy>>;
+  condition?: Maybe<DataChangelogCondition>;
+  filter?: Maybe<DataChangelogFilter>;
+};
+
 /**
  * A condition to be used against `Organisation` object types. All fields are
  * tested for equality and combined with a logical ‘and.’
@@ -13658,6 +14697,10 @@ export type OrganisationFilter = {
   userOrganisations?: Maybe<OrganisationToManyUserOrganisationFilter>;
   /** Some related `userOrganisations` exist. */
   userOrganisationsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `dataChangelogsByOrgId` relation. */
+  dataChangelogsByOrgId?: Maybe<OrganisationToManyDataChangelogFilter>;
+  /** Some related `dataChangelogsByOrgId` exist. */
+  dataChangelogsByOrgIdExist?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<OrganisationFilter>>;
   /** Checks for any expressions in this list. */
@@ -13680,6 +14723,7 @@ export type OrganisationInput = {
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogOrgIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -13749,6 +14793,35 @@ export type OrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyUsingOrganis
 export type OrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyUsingOrganisationRegistrationKeyUpdate = {
   /** An object where the defined keys will be set on the `organisation` being updated. */
   patch: UpdateOrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyPatch;
+  registration: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type OrganisationOnDataChangelogForDataChangelogOrgIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `dataChangelog` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `dataChangelog` being updated. */
+  patch: DataChangelogPatch;
+};
+
+/** The fields on `organisation` to look up the row to update. */
+export type OrganisationOnDataChangelogForDataChangelogOrgIdFkeyUsingOrganisationNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `organisation` being updated. */
+  patch: UpdateOrganisationOnDataChangelogForDataChangelogOrgIdFkeyPatch;
+  name: Scalars['String'];
+};
+
+/** The fields on `organisation` to look up the row to update. */
+export type OrganisationOnDataChangelogForDataChangelogOrgIdFkeyUsingOrganisationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `organisation` being updated. */
+  patch: UpdateOrganisationOnDataChangelogForDataChangelogOrgIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The fields on `organisation` to look up the row to update. */
+export type OrganisationOnDataChangelogForDataChangelogOrgIdFkeyUsingOrganisationRegistrationKeyUpdate = {
+  /** An object where the defined keys will be set on the `organisation` being updated. */
+  patch: UpdateOrganisationOnDataChangelogForDataChangelogOrgIdFkeyPatch;
   registration: Scalars['String'];
 };
 
@@ -13912,6 +14985,7 @@ export type OrganisationPatch = {
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogOrgIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `Organisation` values. */
@@ -13975,6 +15049,16 @@ export type OrganisationToManyApplicationNoteFilter = {
   none?: Maybe<ApplicationNoteFilter>;
 };
 
+/** A filter to be used against many `DataChangelog` object types. All fields are combined with a logical ‘and.’ */
+export type OrganisationToManyDataChangelogFilter = {
+  /** Every related `DataChangelog` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<DataChangelogFilter>;
+  /** Some related `DataChangelog` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<DataChangelogFilter>;
+  /** No related `DataChangelog` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<DataChangelogFilter>;
+};
+
 /** A filter to be used against many `PermissionJoin` object types. All fields are combined with a logical ‘and.’ */
 export type OrganisationToManyPermissionJoinFilter = {
   /** Every related `PermissionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -14027,6 +15111,82 @@ export type PageInfo = {
   /** When paginating forwards, the cursor to continue. */
   endCursor?: Maybe<Scalars['Cursor']>;
 };
+
+export type PermissionFlattened = {
+  __typename?: 'PermissionFlattened';
+  userId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
+  permissionPolicyId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+};
+
+/**
+ * A condition to be used against `PermissionFlattened` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type PermissionFlattenedCondition = {
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `organisationId` field. */
+  organisationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `permissionPolicyId` field. */
+  permissionPolicyId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateId` field. */
+  templateId?: Maybe<Scalars['Int']>;
+};
+
+/** A filter to be used against `PermissionFlattened` object types. All fields are combined with a logical ‘and.’ */
+export type PermissionFlattenedFilter = {
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `organisationId` field. */
+  organisationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `permissionPolicyId` field. */
+  permissionPolicyId?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: Maybe<IntFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<PermissionFlattenedFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<PermissionFlattenedFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<PermissionFlattenedFilter>;
+};
+
+/** A connection to a list of `PermissionFlattened` values. */
+export type PermissionFlattenedsConnection = {
+  __typename?: 'PermissionFlattenedsConnection';
+  /** A list of `PermissionFlattened` objects. */
+  nodes: Array<Maybe<PermissionFlattened>>;
+  /** A list of edges which contains the `PermissionFlattened` and cursor to aid in pagination. */
+  edges: Array<PermissionFlattenedsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PermissionFlattened` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `PermissionFlattened` edge in the connection. */
+export type PermissionFlattenedsEdge = {
+  __typename?: 'PermissionFlattenedsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `PermissionFlattened` at the end of the edge. */
+  node?: Maybe<PermissionFlattened>;
+};
+
+/** Methods to use when ordering `PermissionFlattened`. */
+export enum PermissionFlattenedsOrderBy {
+  Natural = 'NATURAL',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
+  OrganisationIdAsc = 'ORGANISATION_ID_ASC',
+  OrganisationIdDesc = 'ORGANISATION_ID_DESC',
+  PermissionPolicyIdAsc = 'PERMISSION_POLICY_ID_ASC',
+  PermissionPolicyIdDesc = 'PERMISSION_POLICY_ID_DESC',
+  TemplateIdAsc = 'TEMPLATE_ID_ASC',
+  TemplateIdDesc = 'TEMPLATE_ID_DESC'
+}
 
 export type PermissionJoin = Node & {
   __typename?: 'PermissionJoin';
@@ -14225,6 +15385,7 @@ export type PermissionJoinOrganisationIdFkeyOrganisationCreateInput = {
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogOrgIdFkeyInverseInput>;
 };
 
 /** The `permissionJoin` to be created by this mutation. */
@@ -14426,11 +15587,11 @@ export type PermissionJoinUserIdFkeyUserCreateInput = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -14442,6 +15603,8 @@ export type PermissionJoinUserIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 export type PermissionName = Node & {
@@ -15373,6 +16536,8 @@ export type Query = Node & {
   actionQueues?: Maybe<ActionQueuesConnection>;
   /** Reads and enables pagination through a set of `ActivityLog`. */
   activityLogs?: Maybe<ActivityLogsConnection>;
+  /** Reads and enables pagination through a set of `AllowedSelfAssignableSectionsShape`. */
+  allowedSelfAssignableSectionsShapes?: Maybe<AllowedSelfAssignableSectionsShapesConnection>;
   /** Reads and enables pagination through a set of `Application`. */
   applications?: Maybe<ApplicationsConnection>;
   /** Reads and enables pagination through a set of `ApplicationListShape`. */
@@ -15395,6 +16560,8 @@ export type Query = Node & {
   constraintsInfos?: Maybe<ConstraintsInfosConnection>;
   /** Reads and enables pagination through a set of `Counter`. */
   counters?: Maybe<CountersConnection>;
+  /** Reads and enables pagination through a set of `DataChangelog`. */
+  dataChangelogs?: Maybe<DataChangelogsConnection>;
   /** Reads and enables pagination through a set of `DataTable`. */
   dataTables?: Maybe<DataTablesConnection>;
   /** Reads and enables pagination through a set of `DataView`. */
@@ -15411,6 +16578,8 @@ export type Query = Node & {
   notifications?: Maybe<NotificationsConnection>;
   /** Reads and enables pagination through a set of `Organisation`. */
   organisations?: Maybe<OrganisationsConnection>;
+  /** Reads and enables pagination through a set of `PermissionFlattened`. */
+  permissionFlatteneds?: Maybe<PermissionFlattenedsConnection>;
   /** Reads and enables pagination through a set of `PermissionJoin`. */
   permissionJoins?: Maybe<PermissionJoinsConnection>;
   /** Reads and enables pagination through a set of `PermissionName`. */
@@ -15425,6 +16594,8 @@ export type Query = Node & {
   reviews?: Maybe<ReviewsConnection>;
   /** Reads and enables pagination through a set of `ReviewAssignment`. */
   reviewAssignments?: Maybe<ReviewAssignmentsConnection>;
+  /** Reads and enables pagination through a set of `ReviewAssignmentAssignedSectionsShape`. */
+  reviewAssignmentAssignedSectionsShapes?: Maybe<ReviewAssignmentAssignedSectionsShapesConnection>;
   /** Reads and enables pagination through a set of `ReviewAssignmentAssignerJoin`. */
   reviewAssignmentAssignerJoins?: Maybe<ReviewAssignmentAssignerJoinsConnection>;
   /** Reads and enables pagination through a set of `ReviewDecision`. */
@@ -15482,6 +16653,7 @@ export type Query = Node & {
   applicationStatusHistory?: Maybe<ApplicationStatusHistory>;
   counter?: Maybe<Counter>;
   counterByName?: Maybe<Counter>;
+  dataChangelog?: Maybe<DataChangelog>;
   dataTable?: Maybe<DataTable>;
   dataTableByTableName?: Maybe<DataTable>;
   dataView?: Maybe<DataView>;
@@ -15531,6 +16703,8 @@ export type Query = Node & {
   userOrganisationByUserIdAndOrganisationId?: Maybe<UserOrganisation>;
   verification?: Maybe<Verification>;
   verificationByUniqueId?: Maybe<Verification>;
+  /** Reads and enables pagination through a set of `AllowedSelfAssignableSectionsShape`. */
+  allowedSelfAssignableSections?: Maybe<AllowedSelfAssignableSectionsShapesConnection>;
   /** Reads and enables pagination through a set of `ApplicationListShape`. */
   applicationList?: Maybe<ApplicationListShapesConnection>;
   applicationListFilterApplicant?: Maybe<ApplicationListFilterApplicantConnection>;
@@ -15549,6 +16723,8 @@ export type Query = Node & {
   jwtGetBoolean?: Maybe<Scalars['Boolean']>;
   jwtGetText?: Maybe<Scalars['String']>;
   reviewApplicationId?: Maybe<Scalars['Int']>;
+  /** Reads and enables pagination through a set of `ReviewAssignmentAssignedSectionsShape`. */
+  reviewAssignmentAssignedSections?: Maybe<ReviewAssignmentAssignedSectionsShapesConnection>;
   reviewAssignmentTemplateId?: Maybe<Scalars['Int']>;
   reviewIsFinalDecision?: Maybe<Scalars['Boolean']>;
   reviewIsLastLevel?: Maybe<Scalars['Boolean']>;
@@ -15580,6 +16756,8 @@ export type Query = Node & {
   applicationStatusHistoryByNodeId?: Maybe<ApplicationStatusHistory>;
   /** Reads a single `Counter` using its globally unique `ID`. */
   counterByNodeId?: Maybe<Counter>;
+  /** Reads a single `DataChangelog` using its globally unique `ID`. */
+  dataChangelogByNodeId?: Maybe<DataChangelog>;
   /** Reads a single `DataTable` using its globally unique `ID`. */
   dataTableByNodeId?: Maybe<DataTable>;
   /** Reads a single `DataView` using its globally unique `ID`. */
@@ -15689,6 +16867,19 @@ export type QueryActivityLogsArgs = {
   orderBy?: Maybe<Array<ActivityLogsOrderBy>>;
   condition?: Maybe<ActivityLogCondition>;
   filter?: Maybe<ActivityLogFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllowedSelfAssignableSectionsShapesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<AllowedSelfAssignableSectionsShapesOrderBy>>;
+  condition?: Maybe<AllowedSelfAssignableSectionsShapeCondition>;
+  filter?: Maybe<AllowedSelfAssignableSectionsShapeFilter>;
 };
 
 
@@ -15836,6 +17027,19 @@ export type QueryCountersArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryDataChangelogsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<DataChangelogsOrderBy>>;
+  condition?: Maybe<DataChangelogCondition>;
+  filter?: Maybe<DataChangelogFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryDataTablesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -15940,6 +17144,19 @@ export type QueryOrganisationsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryPermissionFlattenedsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<PermissionFlattenedsOrderBy>>;
+  condition?: Maybe<PermissionFlattenedCondition>;
+  filter?: Maybe<PermissionFlattenedFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryPermissionJoinsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -16027,6 +17244,19 @@ export type QueryReviewAssignmentsArgs = {
   orderBy?: Maybe<Array<ReviewAssignmentsOrderBy>>;
   condition?: Maybe<ReviewAssignmentCondition>;
   filter?: Maybe<ReviewAssignmentFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryReviewAssignmentAssignedSectionsShapesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewAssignmentAssignedSectionsShapesOrderBy>>;
+  condition?: Maybe<ReviewAssignmentAssignedSectionsShapeCondition>;
+  filter?: Maybe<ReviewAssignmentAssignedSectionsShapeFilter>;
 };
 
 
@@ -16395,6 +17625,12 @@ export type QueryCounterByNameArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryDataChangelogArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryDataTableArgs = {
   id: Scalars['Int'];
 };
@@ -16695,6 +17931,18 @@ export type QueryVerificationByUniqueIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryAllowedSelfAssignableSectionsArgs = {
+  userid?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<AllowedSelfAssignableSectionsShapeFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryApplicationListArgs = {
   userid?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -16861,6 +18109,18 @@ export type QueryReviewApplicationIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryReviewAssignmentAssignedSectionsArgs = {
+  userid?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<ReviewAssignmentAssignedSectionsShapeFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryReviewAssignmentTemplateIdArgs = {
   applicationId?: Maybe<Scalars['Int']>;
 };
@@ -17004,6 +18264,12 @@ export type QueryApplicationStatusHistoryByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCounterByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataChangelogByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -17394,6 +18660,7 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `ReviewInput` mutation. */
@@ -17576,6 +18843,7 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `ReviewAssignmentInput` mutation. */
@@ -17660,6 +18928,77 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
 };
 
+export type ReviewAssignmentAssignedSectionsShape = {
+  __typename?: 'ReviewAssignmentAssignedSectionsShape';
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+/**
+ * A condition to be used against `ReviewAssignmentAssignedSectionsShape` object
+ * types. All fields are tested for equality and combined with a logical ‘and.’
+ */
+export type ReviewAssignmentAssignedSectionsShapeCondition = {
+  /** Checks for equality with the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `assignedSections` field. */
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+/**
+ * A filter to be used against `ReviewAssignmentAssignedSectionsShape` object
+ * types. All fields are combined with a logical ‘and.’
+ */
+export type ReviewAssignmentAssignedSectionsShapeFilter = {
+  /** Filter by the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<IntFilter>;
+  /** Filter by the object’s `assignedSections` field. */
+  assignedSections?: Maybe<StringListFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ReviewAssignmentAssignedSectionsShapeFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ReviewAssignmentAssignedSectionsShapeFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ReviewAssignmentAssignedSectionsShapeFilter>;
+};
+
+/** An input for mutations affecting `ReviewAssignmentAssignedSectionsShape` */
+export type ReviewAssignmentAssignedSectionsShapeInput = {
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+/** A connection to a list of `ReviewAssignmentAssignedSectionsShape` values. */
+export type ReviewAssignmentAssignedSectionsShapesConnection = {
+  __typename?: 'ReviewAssignmentAssignedSectionsShapesConnection';
+  /** A list of `ReviewAssignmentAssignedSectionsShape` objects. */
+  nodes: Array<Maybe<ReviewAssignmentAssignedSectionsShape>>;
+  /** A list of edges which contains the `ReviewAssignmentAssignedSectionsShape` and cursor to aid in pagination. */
+  edges: Array<ReviewAssignmentAssignedSectionsShapesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ReviewAssignmentAssignedSectionsShape` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `ReviewAssignmentAssignedSectionsShape` edge in the connection. */
+export type ReviewAssignmentAssignedSectionsShapesEdge = {
+  __typename?: 'ReviewAssignmentAssignedSectionsShapesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ReviewAssignmentAssignedSectionsShape` at the end of the edge. */
+  node?: Maybe<ReviewAssignmentAssignedSectionsShape>;
+};
+
+/** Methods to use when ordering `ReviewAssignmentAssignedSectionsShape`. */
+export enum ReviewAssignmentAssignedSectionsShapesOrderBy {
+  Natural = 'NATURAL',
+  ReviewAssignmentIdAsc = 'REVIEW_ASSIGNMENT_ID_ASC',
+  ReviewAssignmentIdDesc = 'REVIEW_ASSIGNMENT_ID_DESC',
+  AssignedSectionsAsc = 'ASSIGNED_SECTIONS_ASC',
+  AssignedSectionsDesc = 'ASSIGNED_SECTIONS_DESC'
+}
+
 /** Input for the nested mutation of `user` in the `ReviewAssignmentInput` mutation. */
 export type ReviewAssignmentAssignerIdFkeyInput = {
   /** The primary key(s) for `user` for the far side of the relationship. */
@@ -17741,11 +19080,11 @@ export type ReviewAssignmentAssignerIdFkeyUserCreateInput = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -17757,6 +19096,8 @@ export type ReviewAssignmentAssignerIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 export type ReviewAssignmentAssignerJoin = Node & {
@@ -17834,11 +19175,11 @@ export type ReviewAssignmentAssignerJoinAssignerIdFkeyUserCreateInput = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -17850,6 +19191,8 @@ export type ReviewAssignmentAssignerJoinAssignerIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /**
@@ -18027,6 +19370,7 @@ export type ReviewAssignmentAssignerJoinOrganisationIdFkeyOrganisationCreateInpu
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogOrgIdFkeyInverseInput>;
 };
 
 /** The `reviewAssignmentAssignerJoin` to be created by this mutation. */
@@ -18632,6 +19976,7 @@ export type ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput = {
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogOrgIdFkeyInverseInput>;
 };
 
 /** The `reviewAssignment` to be created by this mutation. */
@@ -18790,11 +20135,11 @@ export type ReviewAssignmentReviewerIdFkeyUserCreateInput = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -18806,6 +20151,8 @@ export type ReviewAssignmentReviewerIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /** A connection to a list of `ReviewAssignment` values. */
@@ -20721,11 +22068,11 @@ export type ReviewReviewerIdFkeyUserCreateInput = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -20737,6 +22084,8 @@ export type ReviewReviewerIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /** The fields on `review` to look up the row to connect. */
@@ -25213,6 +26562,7 @@ export type TriggerQueueApplicationIdFkeyApplicationCreateInput = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `TriggerQueueInput` mutation. */
@@ -25571,6 +26921,7 @@ export type TriggerScheduleApplicationIdFkeyApplicationCreateInput = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `TriggerScheduleInput` mutation. */
@@ -25727,11 +27078,11 @@ export type TriggerScheduleEditorUserIdFkeyUserCreateInput = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -25743,6 +27094,8 @@ export type TriggerScheduleEditorUserIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /** A filter to be used against `TriggerSchedule` object types. All fields are combined with a logical ‘and.’ */
@@ -26551,6 +27904,7 @@ export type UpdateApplicationOnActionQueueForActionQueueApplicationIdFkeyPatch =
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -26582,6 +27936,7 @@ export type UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch =
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -26612,6 +27967,7 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -26642,6 +27998,7 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -26672,6 +28029,7 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -26703,6 +28061,7 @@ export type UpdateApplicationOnApplicationNoteForApplicationNoteApplicationIdFke
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -26734,6 +28093,7 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -26765,6 +28125,39 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `application` being updated. */
+export type UpdateApplicationOnDataChangelogForDataChangelogApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  outcomeRegistration?: Maybe<Scalars['String']>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+  triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -26796,6 +28189,7 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -26827,6 +28221,7 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -26858,6 +28253,7 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -26889,6 +28285,7 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -26920,6 +28317,7 @@ export type UpdateApplicationOnTriggerQueueForTriggerQueueApplicationIdFkeyPatch
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -26951,6 +28349,7 @@ export type UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFke
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -26982,6 +28381,7 @@ export type UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** The output of our update `Application` mutation. */
@@ -27338,6 +28738,133 @@ export type UpdateCounterPayload = {
 /** The output of our update `Counter` mutation. */
 export type UpdateCounterPayloadCounterEdgeArgs = {
   orderBy?: Maybe<Array<CountersOrderBy>>;
+};
+
+/** All input for the `updateDataChangelogByNodeId` mutation. */
+export type UpdateDataChangelogByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataChangelog` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `DataChangelog` being updated. */
+  patch: DataChangelogPatch;
+};
+
+/** All input for the `updateDataChangelog` mutation. */
+export type UpdateDataChangelogInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `DataChangelog` being updated. */
+  patch: DataChangelogPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `dataChangelog` being updated. */
+export type UpdateDataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  dataTable?: Maybe<Scalars['String']>;
+  recordId?: Maybe<Scalars['Int']>;
+  updateType?: Maybe<ChangelogType>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  oldData?: Maybe<Scalars['JSON']>;
+  newData?: Maybe<Scalars['JSON']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  username?: Maybe<Scalars['String']>;
+  userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
+  userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
+  applicationToApplicationId?: Maybe<DataChangelogApplicationIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `dataChangelog` being updated. */
+export type UpdateDataChangelogOnDataChangelogForDataChangelogOrgIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  dataTable?: Maybe<Scalars['String']>;
+  recordId?: Maybe<Scalars['Int']>;
+  updateType?: Maybe<ChangelogType>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  oldData?: Maybe<Scalars['JSON']>;
+  newData?: Maybe<Scalars['JSON']>;
+  userId?: Maybe<Scalars['Int']>;
+  username?: Maybe<Scalars['String']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
+  userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
+  applicationToApplicationId?: Maybe<DataChangelogApplicationIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `dataChangelog` being updated. */
+export type UpdateDataChangelogOnDataChangelogForDataChangelogUserIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  dataTable?: Maybe<Scalars['String']>;
+  recordId?: Maybe<Scalars['Int']>;
+  updateType?: Maybe<ChangelogType>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  oldData?: Maybe<Scalars['JSON']>;
+  newData?: Maybe<Scalars['JSON']>;
+  orgId?: Maybe<Scalars['Int']>;
+  username?: Maybe<Scalars['String']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
+  userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
+  applicationToApplicationId?: Maybe<DataChangelogApplicationIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `dataChangelog` being updated. */
+export type UpdateDataChangelogOnDataChangelogForDataChangelogUsernameFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  dataTable?: Maybe<Scalars['String']>;
+  recordId?: Maybe<Scalars['Int']>;
+  updateType?: Maybe<ChangelogType>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  oldData?: Maybe<Scalars['JSON']>;
+  newData?: Maybe<Scalars['JSON']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
+  userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
+  applicationToApplicationId?: Maybe<DataChangelogApplicationIdFkeyInput>;
+};
+
+/** The output of our update `DataChangelog` mutation. */
+export type UpdateDataChangelogPayload = {
+  __typename?: 'UpdateDataChangelogPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataChangelog` that was updated by this mutation. */
+  dataChangelog?: Maybe<DataChangelog>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `DataChangelog`. */
+  user?: Maybe<User>;
+  /** Reads a single `Organisation` that is related to this `DataChangelog`. */
+  org?: Maybe<Organisation>;
+  /** Reads a single `User` that is related to this `DataChangelog`. */
+  userByUsername?: Maybe<User>;
+  /** Reads a single `Application` that is related to this `DataChangelog`. */
+  application?: Maybe<Application>;
+  /** An edge for our `DataChangelog`. May be used by Relay 1. */
+  dataChangelogEdge?: Maybe<DataChangelogsEdge>;
+};
+
+
+/** The output of our update `DataChangelog` mutation. */
+export type UpdateDataChangelogPayloadDataChangelogEdgeArgs = {
+  orderBy?: Maybe<Array<DataChangelogsOrderBy>>;
 };
 
 /** All input for the `updateDataTableByNodeId` mutation. */
@@ -28013,6 +29540,7 @@ export type UpdateOrganisationOnApplicationForApplicationOrgIdFkeyPatch = {
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogOrgIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -28029,6 +29557,24 @@ export type UpdateOrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyPatch 
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogOrgIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `organisation` being updated. */
+export type UpdateOrganisationOnDataChangelogForDataChangelogOrgIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  registration?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
+  applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
+  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogOrgIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -28045,6 +29591,7 @@ export type UpdateOrganisationOnPermissionJoinForPermissionJoinOrganisationIdFke
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogOrgIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -28061,6 +29608,7 @@ export type UpdateOrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentA
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogOrgIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -28077,6 +29625,7 @@ export type UpdateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationI
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogOrgIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -28093,6 +29642,7 @@ export type UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationI
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogOrgIdFkeyInverseInput>;
 };
 
 /** The output of our update `Organisation` mutation. */
@@ -30677,11 +32227,11 @@ export type UpdateUserOnApplicationForApplicationUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -30693,6 +32243,8 @@ export type UpdateUserOnApplicationForApplicationUserIdFkeyPatch = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `user` being updated. */
@@ -30700,11 +32252,11 @@ export type UpdateUserOnApplicationNoteForApplicationNoteUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -30716,6 +32268,57 @@ export type UpdateUserOnApplicationNoteForApplicationNoteUserIdFkeyPatch = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `user` being updated. */
+export type UpdateUserOnDataChangelogForDataChangelogUserIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
+  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `user` being updated. */
+export type UpdateUserOnDataChangelogForDataChangelogUsernameFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
+  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `user` being updated. */
@@ -30723,11 +32326,11 @@ export type UpdateUserOnFileForFileUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -30739,6 +32342,8 @@ export type UpdateUserOnFileForFileUserIdFkeyPatch = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `user` being updated. */
@@ -30746,11 +32351,11 @@ export type UpdateUserOnNotificationForNotificationUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -30762,6 +32367,8 @@ export type UpdateUserOnNotificationForNotificationUserIdFkeyPatch = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `user` being updated. */
@@ -30769,11 +32376,11 @@ export type UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -30785,6 +32392,8 @@ export type UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `user` being updated. */
@@ -30792,11 +32401,11 @@ export type UpdateUserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJ
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -30808,6 +32417,8 @@ export type UpdateUserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJ
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `user` being updated. */
@@ -30815,11 +32426,11 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch =
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -30831,6 +32442,8 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch =
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `user` being updated. */
@@ -30838,11 +32451,11 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch =
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -30854,6 +32467,8 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch =
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `user` being updated. */
@@ -30861,11 +32476,11 @@ export type UpdateUserOnReviewForReviewReviewerIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -30877,6 +32492,8 @@ export type UpdateUserOnReviewForReviewReviewerIdFkeyPatch = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `user` being updated. */
@@ -30884,11 +32501,11 @@ export type UpdateUserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch =
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -30900,6 +32517,8 @@ export type UpdateUserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch =
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `user` being updated. */
@@ -30907,11 +32526,11 @@ export type UpdateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -30923,6 +32542,8 @@ export type UpdateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /** All input for the `updateUserOrganisationByNodeId` mutation. */
@@ -31111,11 +32732,11 @@ export type User = Node & {
   id: Scalars['Int'];
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `Application`. */
   applications: ApplicationsConnection;
   /** Reads and enables pagination through a set of `ReviewAssignment`. */
@@ -31138,6 +32759,10 @@ export type User = Node & {
   triggerSchedulesByEditorUserId: TriggerSchedulesConnection;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations: UserOrganisationsConnection;
+  /** Reads and enables pagination through a set of `DataChangelog`. */
+  dataChangelogs: DataChangelogsConnection;
+  /** Reads and enables pagination through a set of `DataChangelog`. */
+  dataChangelogsByUsername: DataChangelogsConnection;
 };
 
 
@@ -31272,6 +32897,30 @@ export type UserUserOrganisationsArgs = {
   filter?: Maybe<UserOrganisationFilter>;
 };
 
+
+export type UserDataChangelogsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<DataChangelogsOrderBy>>;
+  condition?: Maybe<DataChangelogCondition>;
+  filter?: Maybe<DataChangelogFilter>;
+};
+
+
+export type UserDataChangelogsByUsernameArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<DataChangelogsOrderBy>>;
+  condition?: Maybe<DataChangelogCondition>;
+  filter?: Maybe<DataChangelogFilter>;
+};
+
 /** A condition to be used against `User` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type UserCondition = {
   /** Checks for equality with the object’s `id` field. */
@@ -31280,8 +32929,6 @@ export type UserCondition = {
   firstName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `lastName` field. */
   lastName?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `fullName` field. */
-  fullName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `username` field. */
   username?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `email` field. */
@@ -31290,6 +32937,8 @@ export type UserCondition = {
   dateOfBirth?: Maybe<Scalars['Date']>;
   /** Checks for equality with the object’s `passwordHash` field. */
   passwordHash?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `fullName` field. */
+  fullName?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `User` object types. All fields are combined with a logical ‘and.’ */
@@ -31300,8 +32949,6 @@ export type UserFilter = {
   firstName?: Maybe<StringFilter>;
   /** Filter by the object’s `lastName` field. */
   lastName?: Maybe<StringFilter>;
-  /** Filter by the object’s `fullName` field. */
-  fullName?: Maybe<StringFilter>;
   /** Filter by the object’s `username` field. */
   username?: Maybe<StringFilter>;
   /** Filter by the object’s `email` field. */
@@ -31310,6 +32957,8 @@ export type UserFilter = {
   dateOfBirth?: Maybe<DateFilter>;
   /** Filter by the object’s `passwordHash` field. */
   passwordHash?: Maybe<StringFilter>;
+  /** Filter by the object’s `fullName` field. */
+  fullName?: Maybe<StringFilter>;
   /** Filter by the object’s `applications` relation. */
   applications?: Maybe<UserToManyApplicationFilter>;
   /** Some related `applications` exist. */
@@ -31354,6 +33003,14 @@ export type UserFilter = {
   userOrganisations?: Maybe<UserToManyUserOrganisationFilter>;
   /** Some related `userOrganisations` exist. */
   userOrganisationsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `dataChangelogs` relation. */
+  dataChangelogs?: Maybe<UserToManyDataChangelogFilter>;
+  /** Some related `dataChangelogs` exist. */
+  dataChangelogsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `dataChangelogsByUsername` relation. */
+  dataChangelogsByUsername?: Maybe<UserToManyDataChangelogFilter>;
+  /** Some related `dataChangelogsByUsername` exist. */
+  dataChangelogsByUsernameExist?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<UserFilter>>;
   /** Checks for any expressions in this list. */
@@ -31367,11 +33024,11 @@ export type UserInput = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -31383,6 +33040,8 @@ export type UserInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -31438,6 +33097,50 @@ export type UserOnApplicationNoteForApplicationNoteUserIdFkeyUsingUserPkeyUpdate
 export type UserOnApplicationNoteForApplicationNoteUserIdFkeyUsingUserUsernameKeyUpdate = {
   /** An object where the defined keys will be set on the `user` being updated. */
   patch: UpdateUserOnApplicationNoteForApplicationNoteUserIdFkeyPatch;
+  username: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type UserOnDataChangelogForDataChangelogUserIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `dataChangelog` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `dataChangelog` being updated. */
+  patch: DataChangelogPatch;
+};
+
+/** The fields on `user` to look up the row to update. */
+export type UserOnDataChangelogForDataChangelogUserIdFkeyUsingUserPkeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnDataChangelogForDataChangelogUserIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The fields on `user` to look up the row to update. */
+export type UserOnDataChangelogForDataChangelogUserIdFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnDataChangelogForDataChangelogUserIdFkeyPatch;
+  username: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type UserOnDataChangelogForDataChangelogUsernameFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `dataChangelog` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `dataChangelog` being updated. */
+  patch: DataChangelogPatch;
+};
+
+/** The fields on `user` to look up the row to update. */
+export type UserOnDataChangelogForDataChangelogUsernameFkeyUsingUserPkeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnDataChangelogForDataChangelogUsernameFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The fields on `user` to look up the row to update. */
+export type UserOnDataChangelogForDataChangelogUsernameFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnDataChangelogForDataChangelogUsernameFkeyPatch;
   username: Scalars['String'];
 };
 
@@ -31828,6 +33531,7 @@ export type UserOrganisationOrganisationIdFkeyOrganisationCreateInput = {
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogOrgIdFkeyInverseInput>;
 };
 
 /** The `userOrganisation` to be created by this mutation. */
@@ -31941,11 +33645,11 @@ export type UserOrganisationUserIdFkeyUserCreateInput = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -31957,6 +33661,8 @@ export type UserOrganisationUserIdFkeyUserCreateInput = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /** The `userOrganisation` to be created by this mutation. */
@@ -32141,11 +33847,11 @@ export type UserPatch = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
   reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
   reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
@@ -32157,6 +33863,8 @@ export type UserPatch = {
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  dataChangelogsToUserIdUsingId?: Maybe<DataChangelogUserIdFkeyInverseInput>;
+  dataChangelogsToUsernameUsingUsername?: Maybe<DataChangelogUsernameFkeyInverseInput>;
 };
 
 /** A connection to a list of `User` values. */
@@ -32190,8 +33898,6 @@ export enum UsersOrderBy {
   FirstNameDesc = 'FIRST_NAME_DESC',
   LastNameAsc = 'LAST_NAME_ASC',
   LastNameDesc = 'LAST_NAME_DESC',
-  FullNameAsc = 'FULL_NAME_ASC',
-  FullNameDesc = 'FULL_NAME_DESC',
   UsernameAsc = 'USERNAME_ASC',
   UsernameDesc = 'USERNAME_DESC',
   EmailAsc = 'EMAIL_ASC',
@@ -32200,6 +33906,8 @@ export enum UsersOrderBy {
   DateOfBirthDesc = 'DATE_OF_BIRTH_DESC',
   PasswordHashAsc = 'PASSWORD_HASH_ASC',
   PasswordHashDesc = 'PASSWORD_HASH_DESC',
+  FullNameAsc = 'FULL_NAME_ASC',
+  FullNameDesc = 'FULL_NAME_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -32222,6 +33930,16 @@ export type UserToManyApplicationNoteFilter = {
   some?: Maybe<ApplicationNoteFilter>;
   /** No related `ApplicationNote` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<ApplicationNoteFilter>;
+};
+
+/** A filter to be used against many `DataChangelog` object types. All fields are combined with a logical ‘and.’ */
+export type UserToManyDataChangelogFilter = {
+  /** Every related `DataChangelog` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<DataChangelogFilter>;
+  /** Some related `DataChangelog` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<DataChangelogFilter>;
+  /** No related `DataChangelog` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<DataChangelogFilter>;
 };
 
 /** A filter to be used against many `File` object types. All fields are combined with a logical ‘and.’ */
@@ -32371,6 +34089,7 @@ export type VerificationApplicationIdFkeyApplicationCreateInput = {
   triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `VerificationInput` mutation. */
@@ -32807,7 +34526,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Application'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['User'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['TemplateElement'] | ResolversTypes['TemplateSection'] | ResolversTypes['File'] | ResolversTypes['ApplicationNote'] | ResolversTypes['Organisation'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['UserOrganisation'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['TemplateStage'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['TemplateAction'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['ActivityLog'] | ResolversTypes['Verification'] | ResolversTypes['Counter'] | ResolversTypes['DataTable'] | ResolversTypes['DataView'] | ResolversTypes['DataViewColumnDefinition'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['SystemInfo'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Application'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['User'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['TemplateElement'] | ResolversTypes['TemplateSection'] | ResolversTypes['File'] | ResolversTypes['ApplicationNote'] | ResolversTypes['Organisation'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['UserOrganisation'] | ResolversTypes['DataChangelog'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['TemplateStage'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['TemplateAction'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['ActivityLog'] | ResolversTypes['Verification'] | ResolversTypes['Counter'] | ResolversTypes['DataTable'] | ResolversTypes['DataView'] | ResolversTypes['DataViewColumnDefinition'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['SystemInfo'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -32904,6 +34623,10 @@ export type ResolversTypes = {
   OrganisationToManyPermissionJoinFilter: OrganisationToManyPermissionJoinFilter;
   OrganisationToManyUserOrganisationFilter: OrganisationToManyUserOrganisationFilter;
   UserOrganisationFilter: UserOrganisationFilter;
+  OrganisationToManyDataChangelogFilter: OrganisationToManyDataChangelogFilter;
+  DataChangelogFilter: DataChangelogFilter;
+  ChangelogTypeFilter: ChangelogTypeFilter;
+  ChangelogType: ChangelogType;
   PermissionNameToManyTemplatePermissionFilter: PermissionNameToManyTemplatePermissionFilter;
   PermissionPolicyFilter: PermissionPolicyFilter;
   PermissionPolicyTypeFilter: PermissionPolicyTypeFilter;
@@ -32948,6 +34671,7 @@ export type ResolversTypes = {
   UserToManyPermissionJoinFilter: UserToManyPermissionJoinFilter;
   UserToManyTriggerScheduleFilter: UserToManyTriggerScheduleFilter;
   UserToManyUserOrganisationFilter: UserToManyUserOrganisationFilter;
+  UserToManyDataChangelogFilter: UserToManyDataChangelogFilter;
   ReviewToManyReviewResponseFilter: ReviewToManyReviewResponseFilter;
   ReviewAssignmentToManyReviewAssignmentAssignerJoinFilter: ReviewAssignmentToManyReviewAssignmentAssignerJoinFilter;
   ApplicationToManyReviewFilter: ApplicationToManyReviewFilter;
@@ -32965,6 +34689,7 @@ export type ResolversTypes = {
   ApplicationToManyTriggerScheduleFilter: ApplicationToManyTriggerScheduleFilter;
   ApplicationToManyVerificationFilter: ApplicationToManyVerificationFilter;
   VerificationFilter: VerificationFilter;
+  ApplicationToManyDataChangelogFilter: ApplicationToManyDataChangelogFilter;
   ActionQueuesConnection: ResolverTypeWrapper<ActionQueuesConnection>;
   ActionQueue: ResolverTypeWrapper<ActionQueue>;
   TriggerQueue: ResolverTypeWrapper<TriggerQueue>;
@@ -33054,6 +34779,11 @@ export type ResolversTypes = {
   UserOrganisationsConnection: ResolverTypeWrapper<UserOrganisationsConnection>;
   UserOrganisation: ResolverTypeWrapper<UserOrganisation>;
   UserOrganisationsEdge: ResolverTypeWrapper<UserOrganisationsEdge>;
+  DataChangelogsOrderBy: DataChangelogsOrderBy;
+  DataChangelogCondition: DataChangelogCondition;
+  DataChangelogsConnection: ResolverTypeWrapper<DataChangelogsConnection>;
+  DataChangelog: ResolverTypeWrapper<DataChangelog>;
+  DataChangelogsEdge: ResolverTypeWrapper<DataChangelogsEdge>;
   FilesEdge: ResolverTypeWrapper<FilesEdge>;
   ReviewResponsesEdge: ResolverTypeWrapper<ReviewResponsesEdge>;
   ReviewsEdge: ResolverTypeWrapper<ReviewsEdge>;
@@ -33113,6 +34843,12 @@ export type ResolversTypes = {
   Verification: ResolverTypeWrapper<Verification>;
   VerificationsEdge: ResolverTypeWrapper<VerificationsEdge>;
   ActionQueuesEdge: ResolverTypeWrapper<ActionQueuesEdge>;
+  AllowedSelfAssignableSectionsShapesOrderBy: AllowedSelfAssignableSectionsShapesOrderBy;
+  AllowedSelfAssignableSectionsShapeCondition: AllowedSelfAssignableSectionsShapeCondition;
+  AllowedSelfAssignableSectionsShapeFilter: AllowedSelfAssignableSectionsShapeFilter;
+  AllowedSelfAssignableSectionsShapesConnection: ResolverTypeWrapper<AllowedSelfAssignableSectionsShapesConnection>;
+  AllowedSelfAssignableSectionsShape: ResolverTypeWrapper<AllowedSelfAssignableSectionsShape>;
+  AllowedSelfAssignableSectionsShapesEdge: ResolverTypeWrapper<AllowedSelfAssignableSectionsShapesEdge>;
   ApplicationListShapesOrderBy: ApplicationListShapesOrderBy;
   ApplicationListShapeCondition: ApplicationListShapeCondition;
   ReviewerAction: ReviewerAction;
@@ -33189,6 +34925,12 @@ export type ResolversTypes = {
   OrganisationCondition: OrganisationCondition;
   OrganisationsConnection: ResolverTypeWrapper<OrganisationsConnection>;
   OrganisationsEdge: ResolverTypeWrapper<OrganisationsEdge>;
+  PermissionFlattenedsOrderBy: PermissionFlattenedsOrderBy;
+  PermissionFlattenedCondition: PermissionFlattenedCondition;
+  PermissionFlattenedFilter: PermissionFlattenedFilter;
+  PermissionFlattenedsConnection: ResolverTypeWrapper<PermissionFlattenedsConnection>;
+  PermissionFlattened: ResolverTypeWrapper<PermissionFlattened>;
+  PermissionFlattenedsEdge: ResolverTypeWrapper<PermissionFlattenedsEdge>;
   PermissionPoliciesOrderBy: PermissionPoliciesOrderBy;
   PermissionPolicyCondition: PermissionPolicyCondition;
   PermissionPoliciesConnection: ResolverTypeWrapper<PermissionPoliciesConnection>;
@@ -33205,6 +34947,12 @@ export type ResolversTypes = {
   PostgresRowLevelsConnection: ResolverTypeWrapper<PostgresRowLevelsConnection>;
   PostgresRowLevel: ResolverTypeWrapper<PostgresRowLevel>;
   PostgresRowLevelsEdge: ResolverTypeWrapper<PostgresRowLevelsEdge>;
+  ReviewAssignmentAssignedSectionsShapesOrderBy: ReviewAssignmentAssignedSectionsShapesOrderBy;
+  ReviewAssignmentAssignedSectionsShapeCondition: ReviewAssignmentAssignedSectionsShapeCondition;
+  ReviewAssignmentAssignedSectionsShapeFilter: ReviewAssignmentAssignedSectionsShapeFilter;
+  ReviewAssignmentAssignedSectionsShapesConnection: ResolverTypeWrapper<ReviewAssignmentAssignedSectionsShapesConnection>;
+  ReviewAssignmentAssignedSectionsShape: ResolverTypeWrapper<ReviewAssignmentAssignedSectionsShape>;
+  ReviewAssignmentAssignedSectionsShapesEdge: ResolverTypeWrapper<ReviewAssignmentAssignedSectionsShapesEdge>;
   SchemaColumnsOrderBy: SchemaColumnsOrderBy;
   SchemaColumnCondition: SchemaColumnCondition;
   YesOrNo: ResolverTypeWrapper<Scalars['YesOrNo']>;
@@ -33703,19 +35451,19 @@ export type ResolversTypes = {
   VerificationApplicationIdFkeyInput: VerificationApplicationIdFkeyInput;
   ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnVerificationForVerificationApplicationIdFkeyPatch: UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch;
-  ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate;
-  VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate: VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate;
-  ApplicationPatch: ApplicationPatch;
-  VerificationApplicationIdFkeyApplicationCreateInput: VerificationApplicationIdFkeyApplicationCreateInput;
-  VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationUniqueIdKeyUpdate: VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationUniqueIdKeyUpdate;
-  ApplicationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate;
-  VerificationPatch: VerificationPatch;
-  VerificationApplicationIdFkeyVerificationCreateInput: VerificationApplicationIdFkeyVerificationCreateInput;
-  ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate: ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate;
-  TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate;
-  TriggerScheduleApplicationIdFkeyApplicationCreateInput: TriggerScheduleApplicationIdFkeyApplicationCreateInput;
+  DataChangelogApplicationIdFkeyInverseInput: DataChangelogApplicationIdFkeyInverseInput;
+  DataChangelogDataChangelogPkeyConnect: DataChangelogDataChangelogPkeyConnect;
+  DataChangelogNodeIdConnect: DataChangelogNodeIdConnect;
+  DataChangelogDataChangelogPkeyDelete: DataChangelogDataChangelogPkeyDelete;
+  DataChangelogNodeIdDelete: DataChangelogNodeIdDelete;
+  DataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyUsingDataChangelogPkeyUpdate: DataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyUsingDataChangelogPkeyUpdate;
+  updateDataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyPatch: UpdateDataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyPatch;
+  DataChangelogUserIdFkeyInput: DataChangelogUserIdFkeyInput;
+  UserOnDataChangelogForDataChangelogUserIdFkeyUsingUserPkeyUpdate: UserOnDataChangelogForDataChangelogUserIdFkeyUsingUserPkeyUpdate;
+  updateUserOnDataChangelogForDataChangelogUserIdFkeyPatch: UpdateUserOnDataChangelogForDataChangelogUserIdFkeyPatch;
+  TriggerScheduleEditorUserIdFkeyInverseInput: TriggerScheduleEditorUserIdFkeyInverseInput;
+  TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingTriggerSchedulePkeyUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingTriggerSchedulePkeyUpdate;
+  updateTriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch: UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch;
   TriggerScheduleTemplateIdFkeyInput: TriggerScheduleTemplateIdFkeyInput;
   TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTemplatePkeyUpdate;
   updateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch: UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch;
@@ -33725,12 +35473,6 @@ export type ResolversTypes = {
   TriggerScheduleEditorUserIdFkeyInput: TriggerScheduleEditorUserIdFkeyInput;
   UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingUserPkeyUpdate: UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch: UpdateUserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch;
-  TriggerScheduleEditorUserIdFkeyInverseInput: TriggerScheduleEditorUserIdFkeyInverseInput;
-  TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingTriggerSchedulePkeyUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingTriggerSchedulePkeyUpdate;
-  updateTriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch: UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch;
-  UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate: UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate;
-  TriggerSchedulePatch: TriggerSchedulePatch;
-  TriggerScheduleEditorUserIdFkeyTriggerScheduleCreateInput: TriggerScheduleEditorUserIdFkeyTriggerScheduleCreateInput;
   UserOrganisationUserIdFkeyInverseInput: UserOrganisationUserIdFkeyInverseInput;
   UserOrganisationUserOrganisationPkeyConnect: UserOrganisationUserOrganisationPkeyConnect;
   UserOrganisationUserOrganisationUserIdOrganisationIdKeyConnect: UserOrganisationUserOrganisationUserIdOrganisationIdKeyConnect;
@@ -33743,25 +35485,62 @@ export type ResolversTypes = {
   UserOrganisationUserIdFkeyInput: UserOrganisationUserIdFkeyInput;
   UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserPkeyUpdate: UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch: UpdateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch;
-  UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate;
-  UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate: UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate;
-  UserPatch: UserPatch;
-  UserOrganisationUserIdFkeyUserCreateInput: UserOrganisationUserIdFkeyUserCreateInput;
-  UserOrganisationOrganisationIdFkeyInput: UserOrganisationOrganisationIdFkeyInput;
-  OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate;
-  updateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch: UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch;
+  DataChangelogUserIdFkeyInverseInput: DataChangelogUserIdFkeyInverseInput;
+  DataChangelogOnDataChangelogForDataChangelogUserIdFkeyUsingDataChangelogPkeyUpdate: DataChangelogOnDataChangelogForDataChangelogUserIdFkeyUsingDataChangelogPkeyUpdate;
+  updateDataChangelogOnDataChangelogForDataChangelogUserIdFkeyPatch: UpdateDataChangelogOnDataChangelogForDataChangelogUserIdFkeyPatch;
+  DataChangelogOrgIdFkeyInput: DataChangelogOrgIdFkeyInput;
+  OrganisationOnDataChangelogForDataChangelogOrgIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnDataChangelogForDataChangelogOrgIdFkeyUsingOrganisationPkeyUpdate;
+  updateOrganisationOnDataChangelogForDataChangelogOrgIdFkeyPatch: UpdateOrganisationOnDataChangelogForDataChangelogOrgIdFkeyPatch;
   UserOrganisationOrganisationIdFkeyInverseInput: UserOrganisationOrganisationIdFkeyInverseInput;
   UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationPkeyUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationPkeyUpdate;
   updateUserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch: UpdateUserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch;
-  UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate;
-  OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate;
-  UserOrganisationPatch: UserOrganisationPatch;
-  UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput: UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput;
+  UserOrganisationOrganisationIdFkeyInput: UserOrganisationOrganisationIdFkeyInput;
+  OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate;
+  updateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch: UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch;
+  DataChangelogOrgIdFkeyInverseInput: DataChangelogOrgIdFkeyInverseInput;
+  DataChangelogOnDataChangelogForDataChangelogOrgIdFkeyUsingDataChangelogPkeyUpdate: DataChangelogOnDataChangelogForDataChangelogOrgIdFkeyUsingDataChangelogPkeyUpdate;
+  updateDataChangelogOnDataChangelogForDataChangelogOrgIdFkeyPatch: UpdateDataChangelogOnDataChangelogForDataChangelogOrgIdFkeyPatch;
+  DataChangelogUsernameFkeyInput: DataChangelogUsernameFkeyInput;
+  UserOnDataChangelogForDataChangelogUsernameFkeyUsingUserPkeyUpdate: UserOnDataChangelogForDataChangelogUsernameFkeyUsingUserPkeyUpdate;
+  updateUserOnDataChangelogForDataChangelogUsernameFkeyPatch: UpdateUserOnDataChangelogForDataChangelogUsernameFkeyPatch;
+  DataChangelogUsernameFkeyInverseInput: DataChangelogUsernameFkeyInverseInput;
+  DataChangelogOnDataChangelogForDataChangelogUsernameFkeyUsingDataChangelogPkeyUpdate: DataChangelogOnDataChangelogForDataChangelogUsernameFkeyUsingDataChangelogPkeyUpdate;
+  updateDataChangelogOnDataChangelogForDataChangelogUsernameFkeyPatch: UpdateDataChangelogOnDataChangelogForDataChangelogUsernameFkeyPatch;
+  DataChangelogApplicationIdFkeyInput: DataChangelogApplicationIdFkeyInput;
+  ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnDataChangelogForDataChangelogApplicationIdFkeyPatch: UpdateApplicationOnDataChangelogForDataChangelogApplicationIdFkeyPatch;
+  ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate: ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate;
+  DataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyNodeIdUpdate: DataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyNodeIdUpdate;
+  ApplicationPatch: ApplicationPatch;
+  DataChangelogApplicationIdFkeyApplicationCreateInput: DataChangelogApplicationIdFkeyApplicationCreateInput;
+  UserOnDataChangelogForDataChangelogUsernameFkeyNodeIdUpdate: UserOnDataChangelogForDataChangelogUsernameFkeyNodeIdUpdate;
+  DataChangelogPatch: DataChangelogPatch;
+  DataChangelogUsernameFkeyDataChangelogCreateInput: DataChangelogUsernameFkeyDataChangelogCreateInput;
+  UserOnDataChangelogForDataChangelogUsernameFkeyUsingUserUsernameKeyUpdate: UserOnDataChangelogForDataChangelogUsernameFkeyUsingUserUsernameKeyUpdate;
+  DataChangelogOnDataChangelogForDataChangelogUsernameFkeyNodeIdUpdate: DataChangelogOnDataChangelogForDataChangelogUsernameFkeyNodeIdUpdate;
+  UserPatch: UserPatch;
+  DataChangelogUsernameFkeyUserCreateInput: DataChangelogUsernameFkeyUserCreateInput;
+  OrganisationOnDataChangelogForDataChangelogOrgIdFkeyNodeIdUpdate: OrganisationOnDataChangelogForDataChangelogOrgIdFkeyNodeIdUpdate;
+  DataChangelogOrgIdFkeyDataChangelogCreateInput: DataChangelogOrgIdFkeyDataChangelogCreateInput;
   OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationNameKeyUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationNameKeyUpdate;
   OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate;
   UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate;
   OrganisationPatch: OrganisationPatch;
   UserOrganisationOrganisationIdFkeyOrganisationCreateInput: UserOrganisationOrganisationIdFkeyOrganisationCreateInput;
+  UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate;
+  OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate;
+  UserOrganisationPatch: UserOrganisationPatch;
+  UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput: UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput;
+  OrganisationOnDataChangelogForDataChangelogOrgIdFkeyUsingOrganisationNameKeyUpdate: OrganisationOnDataChangelogForDataChangelogOrgIdFkeyUsingOrganisationNameKeyUpdate;
+  OrganisationOnDataChangelogForDataChangelogOrgIdFkeyUsingOrganisationRegistrationKeyUpdate: OrganisationOnDataChangelogForDataChangelogOrgIdFkeyUsingOrganisationRegistrationKeyUpdate;
+  DataChangelogOnDataChangelogForDataChangelogOrgIdFkeyNodeIdUpdate: DataChangelogOnDataChangelogForDataChangelogOrgIdFkeyNodeIdUpdate;
+  DataChangelogOrgIdFkeyOrganisationCreateInput: DataChangelogOrgIdFkeyOrganisationCreateInput;
+  UserOnDataChangelogForDataChangelogUserIdFkeyNodeIdUpdate: UserOnDataChangelogForDataChangelogUserIdFkeyNodeIdUpdate;
+  DataChangelogUserIdFkeyDataChangelogCreateInput: DataChangelogUserIdFkeyDataChangelogCreateInput;
+  UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate;
+  UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate: UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate;
+  UserOrganisationUserIdFkeyUserCreateInput: UserOrganisationUserIdFkeyUserCreateInput;
   UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate: UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate;
   UserOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate: UserOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate;
   UserOrganisationUserIdFkeyUserOrganisationCreateInput: UserOrganisationUserIdFkeyUserOrganisationCreateInput;
@@ -33769,11 +35548,31 @@ export type ResolversTypes = {
   TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate;
   TriggerScheduleEditorUserIdFkeyUserCreateInput: TriggerScheduleEditorUserIdFkeyUserCreateInput;
   TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate: TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate;
+  TriggerSchedulePatch: TriggerSchedulePatch;
   TriggerScheduleTemplateIdFkeyTriggerScheduleCreateInput: TriggerScheduleTemplateIdFkeyTriggerScheduleCreateInput;
   TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTemplateCodeVersionIdKeyUpdate: TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTemplateCodeVersionIdKeyUpdate;
   TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate;
   TemplatePatch: TemplatePatch;
   TriggerScheduleTemplateIdFkeyTemplateCreateInput: TriggerScheduleTemplateIdFkeyTemplateCreateInput;
+  UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate: UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate;
+  TriggerScheduleEditorUserIdFkeyTriggerScheduleCreateInput: TriggerScheduleEditorUserIdFkeyTriggerScheduleCreateInput;
+  UserOnDataChangelogForDataChangelogUserIdFkeyUsingUserUsernameKeyUpdate: UserOnDataChangelogForDataChangelogUserIdFkeyUsingUserUsernameKeyUpdate;
+  DataChangelogOnDataChangelogForDataChangelogUserIdFkeyNodeIdUpdate: DataChangelogOnDataChangelogForDataChangelogUserIdFkeyNodeIdUpdate;
+  DataChangelogUserIdFkeyUserCreateInput: DataChangelogUserIdFkeyUserCreateInput;
+  ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyNodeIdUpdate: ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyNodeIdUpdate;
+  DataChangelogApplicationIdFkeyDataChangelogCreateInput: DataChangelogApplicationIdFkeyDataChangelogCreateInput;
+  ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate;
+  VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate: VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate;
+  VerificationApplicationIdFkeyApplicationCreateInput: VerificationApplicationIdFkeyApplicationCreateInput;
+  VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationUniqueIdKeyUpdate: VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationUniqueIdKeyUpdate;
+  ApplicationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate;
+  VerificationPatch: VerificationPatch;
+  VerificationApplicationIdFkeyVerificationCreateInput: VerificationApplicationIdFkeyVerificationCreateInput;
+  ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate: ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate;
+  TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate;
+  TriggerScheduleApplicationIdFkeyApplicationCreateInput: TriggerScheduleApplicationIdFkeyApplicationCreateInput;
   ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate: ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate;
   TriggerScheduleApplicationIdFkeyTriggerScheduleCreateInput: TriggerScheduleApplicationIdFkeyTriggerScheduleCreateInput;
   ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
@@ -34201,6 +36000,9 @@ export type ResolversTypes = {
   CreateActivityLogInput: CreateActivityLogInput;
   ActivityLogInput: ActivityLogInput;
   CreateActivityLogPayload: ResolverTypeWrapper<CreateActivityLogPayload>;
+  CreateAllowedSelfAssignableSectionsShapeInput: CreateAllowedSelfAssignableSectionsShapeInput;
+  AllowedSelfAssignableSectionsShapeInput: AllowedSelfAssignableSectionsShapeInput;
+  CreateAllowedSelfAssignableSectionsShapePayload: ResolverTypeWrapper<CreateAllowedSelfAssignableSectionsShapePayload>;
   CreateApplicationInput: CreateApplicationInput;
   ApplicationInput: ApplicationInput;
   CreateApplicationPayload: ResolverTypeWrapper<CreateApplicationPayload>;
@@ -34222,6 +36024,9 @@ export type ResolversTypes = {
   CreateCounterInput: CreateCounterInput;
   CounterInput: CounterInput;
   CreateCounterPayload: ResolverTypeWrapper<CreateCounterPayload>;
+  CreateDataChangelogInput: CreateDataChangelogInput;
+  DataChangelogInput: DataChangelogInput;
+  CreateDataChangelogPayload: ResolverTypeWrapper<CreateDataChangelogPayload>;
   CreateDataTableInput: CreateDataTableInput;
   DataTableInput: DataTableInput;
   CreateDataTablePayload: ResolverTypeWrapper<CreateDataTablePayload>;
@@ -34261,6 +36066,9 @@ export type ResolversTypes = {
   CreateReviewAssignmentInput: CreateReviewAssignmentInput;
   ReviewAssignmentInput: ReviewAssignmentInput;
   CreateReviewAssignmentPayload: ResolverTypeWrapper<CreateReviewAssignmentPayload>;
+  CreateReviewAssignmentAssignedSectionsShapeInput: CreateReviewAssignmentAssignedSectionsShapeInput;
+  ReviewAssignmentAssignedSectionsShapeInput: ReviewAssignmentAssignedSectionsShapeInput;
+  CreateReviewAssignmentAssignedSectionsShapePayload: ResolverTypeWrapper<CreateReviewAssignmentAssignedSectionsShapePayload>;
   CreateReviewAssignmentAssignerJoinInput: CreateReviewAssignmentAssignerJoinInput;
   ReviewAssignmentAssignerJoinInput: ReviewAssignmentAssignerJoinInput;
   CreateReviewAssignmentAssignerJoinPayload: ResolverTypeWrapper<CreateReviewAssignmentAssignerJoinPayload>;
@@ -34351,6 +36159,9 @@ export type ResolversTypes = {
   UpdateCounterPayload: ResolverTypeWrapper<UpdateCounterPayload>;
   UpdateCounterInput: UpdateCounterInput;
   UpdateCounterByNameInput: UpdateCounterByNameInput;
+  UpdateDataChangelogByNodeIdInput: UpdateDataChangelogByNodeIdInput;
+  UpdateDataChangelogPayload: ResolverTypeWrapper<UpdateDataChangelogPayload>;
+  UpdateDataChangelogInput: UpdateDataChangelogInput;
   UpdateDataTableByNodeIdInput: UpdateDataTableByNodeIdInput;
   DataTablePatch: DataTablePatch;
   UpdateDataTablePayload: ResolverTypeWrapper<UpdateDataTablePayload>;
@@ -34500,6 +36311,9 @@ export type ResolversTypes = {
   DeleteCounterPayload: ResolverTypeWrapper<DeleteCounterPayload>;
   DeleteCounterInput: DeleteCounterInput;
   DeleteCounterByNameInput: DeleteCounterByNameInput;
+  DeleteDataChangelogByNodeIdInput: DeleteDataChangelogByNodeIdInput;
+  DeleteDataChangelogPayload: ResolverTypeWrapper<DeleteDataChangelogPayload>;
+  DeleteDataChangelogInput: DeleteDataChangelogInput;
   DeleteDataTableByNodeIdInput: DeleteDataTableByNodeIdInput;
   DeleteDataTablePayload: ResolverTypeWrapper<DeleteDataTablePayload>;
   DeleteDataTableInput: DeleteDataTableInput;
@@ -34620,7 +36434,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Application'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['User'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationNote'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['ActivityLog'] | ResolversParentTypes['Verification'] | ResolversParentTypes['Counter'] | ResolversParentTypes['DataTable'] | ResolversParentTypes['DataView'] | ResolversParentTypes['DataViewColumnDefinition'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['SystemInfo'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Application'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['User'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationNote'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['DataChangelog'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['ActivityLog'] | ResolversParentTypes['Verification'] | ResolversParentTypes['Counter'] | ResolversParentTypes['DataTable'] | ResolversParentTypes['DataView'] | ResolversParentTypes['DataViewColumnDefinition'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['SystemInfo'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -34706,6 +36520,9 @@ export type ResolversParentTypes = {
   OrganisationToManyPermissionJoinFilter: OrganisationToManyPermissionJoinFilter;
   OrganisationToManyUserOrganisationFilter: OrganisationToManyUserOrganisationFilter;
   UserOrganisationFilter: UserOrganisationFilter;
+  OrganisationToManyDataChangelogFilter: OrganisationToManyDataChangelogFilter;
+  DataChangelogFilter: DataChangelogFilter;
+  ChangelogTypeFilter: ChangelogTypeFilter;
   PermissionNameToManyTemplatePermissionFilter: PermissionNameToManyTemplatePermissionFilter;
   PermissionPolicyFilter: PermissionPolicyFilter;
   PermissionPolicyTypeFilter: PermissionPolicyTypeFilter;
@@ -34742,6 +36559,7 @@ export type ResolversParentTypes = {
   UserToManyPermissionJoinFilter: UserToManyPermissionJoinFilter;
   UserToManyTriggerScheduleFilter: UserToManyTriggerScheduleFilter;
   UserToManyUserOrganisationFilter: UserToManyUserOrganisationFilter;
+  UserToManyDataChangelogFilter: UserToManyDataChangelogFilter;
   ReviewToManyReviewResponseFilter: ReviewToManyReviewResponseFilter;
   ReviewAssignmentToManyReviewAssignmentAssignerJoinFilter: ReviewAssignmentToManyReviewAssignmentAssignerJoinFilter;
   ApplicationToManyReviewFilter: ApplicationToManyReviewFilter;
@@ -34758,6 +36576,7 @@ export type ResolversParentTypes = {
   ApplicationToManyTriggerScheduleFilter: ApplicationToManyTriggerScheduleFilter;
   ApplicationToManyVerificationFilter: ApplicationToManyVerificationFilter;
   VerificationFilter: VerificationFilter;
+  ApplicationToManyDataChangelogFilter: ApplicationToManyDataChangelogFilter;
   ActionQueuesConnection: ActionQueuesConnection;
   ActionQueue: ActionQueue;
   TriggerQueue: TriggerQueue;
@@ -34830,6 +36649,10 @@ export type ResolversParentTypes = {
   UserOrganisationsConnection: UserOrganisationsConnection;
   UserOrganisation: UserOrganisation;
   UserOrganisationsEdge: UserOrganisationsEdge;
+  DataChangelogCondition: DataChangelogCondition;
+  DataChangelogsConnection: DataChangelogsConnection;
+  DataChangelog: DataChangelog;
+  DataChangelogsEdge: DataChangelogsEdge;
   FilesEdge: FilesEdge;
   ReviewResponsesEdge: ReviewResponsesEdge;
   ReviewsEdge: ReviewsEdge;
@@ -34878,6 +36701,11 @@ export type ResolversParentTypes = {
   Verification: Verification;
   VerificationsEdge: VerificationsEdge;
   ActionQueuesEdge: ActionQueuesEdge;
+  AllowedSelfAssignableSectionsShapeCondition: AllowedSelfAssignableSectionsShapeCondition;
+  AllowedSelfAssignableSectionsShapeFilter: AllowedSelfAssignableSectionsShapeFilter;
+  AllowedSelfAssignableSectionsShapesConnection: AllowedSelfAssignableSectionsShapesConnection;
+  AllowedSelfAssignableSectionsShape: AllowedSelfAssignableSectionsShape;
+  AllowedSelfAssignableSectionsShapesEdge: AllowedSelfAssignableSectionsShapesEdge;
   ApplicationListShapeCondition: ApplicationListShapeCondition;
   ApplicationListShapeFilter: ApplicationListShapeFilter;
   ReviewerActionFilter: ReviewerActionFilter;
@@ -34940,6 +36768,11 @@ export type ResolversParentTypes = {
   OrganisationCondition: OrganisationCondition;
   OrganisationsConnection: OrganisationsConnection;
   OrganisationsEdge: OrganisationsEdge;
+  PermissionFlattenedCondition: PermissionFlattenedCondition;
+  PermissionFlattenedFilter: PermissionFlattenedFilter;
+  PermissionFlattenedsConnection: PermissionFlattenedsConnection;
+  PermissionFlattened: PermissionFlattened;
+  PermissionFlattenedsEdge: PermissionFlattenedsEdge;
   PermissionPolicyCondition: PermissionPolicyCondition;
   PermissionPoliciesConnection: PermissionPoliciesConnection;
   PermissionPoliciesEdge: PermissionPoliciesEdge;
@@ -34953,6 +36786,11 @@ export type ResolversParentTypes = {
   PostgresRowLevelsConnection: PostgresRowLevelsConnection;
   PostgresRowLevel: PostgresRowLevel;
   PostgresRowLevelsEdge: PostgresRowLevelsEdge;
+  ReviewAssignmentAssignedSectionsShapeCondition: ReviewAssignmentAssignedSectionsShapeCondition;
+  ReviewAssignmentAssignedSectionsShapeFilter: ReviewAssignmentAssignedSectionsShapeFilter;
+  ReviewAssignmentAssignedSectionsShapesConnection: ReviewAssignmentAssignedSectionsShapesConnection;
+  ReviewAssignmentAssignedSectionsShape: ReviewAssignmentAssignedSectionsShape;
+  ReviewAssignmentAssignedSectionsShapesEdge: ReviewAssignmentAssignedSectionsShapesEdge;
   SchemaColumnCondition: SchemaColumnCondition;
   YesOrNo: Scalars['YesOrNo'];
   SchemaColumnFilter: SchemaColumnFilter;
@@ -35445,19 +37283,19 @@ export type ResolversParentTypes = {
   VerificationApplicationIdFkeyInput: VerificationApplicationIdFkeyInput;
   ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnVerificationForVerificationApplicationIdFkeyPatch: UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch;
-  ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate;
-  VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate: VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate;
-  ApplicationPatch: ApplicationPatch;
-  VerificationApplicationIdFkeyApplicationCreateInput: VerificationApplicationIdFkeyApplicationCreateInput;
-  VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationUniqueIdKeyUpdate: VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationUniqueIdKeyUpdate;
-  ApplicationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate;
-  VerificationPatch: VerificationPatch;
-  VerificationApplicationIdFkeyVerificationCreateInput: VerificationApplicationIdFkeyVerificationCreateInput;
-  ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate: ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate;
-  TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate;
-  TriggerScheduleApplicationIdFkeyApplicationCreateInput: TriggerScheduleApplicationIdFkeyApplicationCreateInput;
+  DataChangelogApplicationIdFkeyInverseInput: DataChangelogApplicationIdFkeyInverseInput;
+  DataChangelogDataChangelogPkeyConnect: DataChangelogDataChangelogPkeyConnect;
+  DataChangelogNodeIdConnect: DataChangelogNodeIdConnect;
+  DataChangelogDataChangelogPkeyDelete: DataChangelogDataChangelogPkeyDelete;
+  DataChangelogNodeIdDelete: DataChangelogNodeIdDelete;
+  DataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyUsingDataChangelogPkeyUpdate: DataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyUsingDataChangelogPkeyUpdate;
+  updateDataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyPatch: UpdateDataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyPatch;
+  DataChangelogUserIdFkeyInput: DataChangelogUserIdFkeyInput;
+  UserOnDataChangelogForDataChangelogUserIdFkeyUsingUserPkeyUpdate: UserOnDataChangelogForDataChangelogUserIdFkeyUsingUserPkeyUpdate;
+  updateUserOnDataChangelogForDataChangelogUserIdFkeyPatch: UpdateUserOnDataChangelogForDataChangelogUserIdFkeyPatch;
+  TriggerScheduleEditorUserIdFkeyInverseInput: TriggerScheduleEditorUserIdFkeyInverseInput;
+  TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingTriggerSchedulePkeyUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingTriggerSchedulePkeyUpdate;
+  updateTriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch: UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch;
   TriggerScheduleTemplateIdFkeyInput: TriggerScheduleTemplateIdFkeyInput;
   TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTemplatePkeyUpdate;
   updateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch: UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch;
@@ -35467,12 +37305,6 @@ export type ResolversParentTypes = {
   TriggerScheduleEditorUserIdFkeyInput: TriggerScheduleEditorUserIdFkeyInput;
   UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingUserPkeyUpdate: UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch: UpdateUserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch;
-  TriggerScheduleEditorUserIdFkeyInverseInput: TriggerScheduleEditorUserIdFkeyInverseInput;
-  TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingTriggerSchedulePkeyUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyUsingTriggerSchedulePkeyUpdate;
-  updateTriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch: UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch;
-  UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate: UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate;
-  TriggerSchedulePatch: TriggerSchedulePatch;
-  TriggerScheduleEditorUserIdFkeyTriggerScheduleCreateInput: TriggerScheduleEditorUserIdFkeyTriggerScheduleCreateInput;
   UserOrganisationUserIdFkeyInverseInput: UserOrganisationUserIdFkeyInverseInput;
   UserOrganisationUserOrganisationPkeyConnect: UserOrganisationUserOrganisationPkeyConnect;
   UserOrganisationUserOrganisationUserIdOrganisationIdKeyConnect: UserOrganisationUserOrganisationUserIdOrganisationIdKeyConnect;
@@ -35485,25 +37317,62 @@ export type ResolversParentTypes = {
   UserOrganisationUserIdFkeyInput: UserOrganisationUserIdFkeyInput;
   UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserPkeyUpdate: UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch: UpdateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch;
-  UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate;
-  UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate: UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate;
-  UserPatch: UserPatch;
-  UserOrganisationUserIdFkeyUserCreateInput: UserOrganisationUserIdFkeyUserCreateInput;
-  UserOrganisationOrganisationIdFkeyInput: UserOrganisationOrganisationIdFkeyInput;
-  OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate;
-  updateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch: UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch;
+  DataChangelogUserIdFkeyInverseInput: DataChangelogUserIdFkeyInverseInput;
+  DataChangelogOnDataChangelogForDataChangelogUserIdFkeyUsingDataChangelogPkeyUpdate: DataChangelogOnDataChangelogForDataChangelogUserIdFkeyUsingDataChangelogPkeyUpdate;
+  updateDataChangelogOnDataChangelogForDataChangelogUserIdFkeyPatch: UpdateDataChangelogOnDataChangelogForDataChangelogUserIdFkeyPatch;
+  DataChangelogOrgIdFkeyInput: DataChangelogOrgIdFkeyInput;
+  OrganisationOnDataChangelogForDataChangelogOrgIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnDataChangelogForDataChangelogOrgIdFkeyUsingOrganisationPkeyUpdate;
+  updateOrganisationOnDataChangelogForDataChangelogOrgIdFkeyPatch: UpdateOrganisationOnDataChangelogForDataChangelogOrgIdFkeyPatch;
   UserOrganisationOrganisationIdFkeyInverseInput: UserOrganisationOrganisationIdFkeyInverseInput;
   UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationPkeyUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationPkeyUpdate;
   updateUserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch: UpdateUserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch;
-  UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate;
-  OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate;
-  UserOrganisationPatch: UserOrganisationPatch;
-  UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput: UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput;
+  UserOrganisationOrganisationIdFkeyInput: UserOrganisationOrganisationIdFkeyInput;
+  OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate;
+  updateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch: UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch;
+  DataChangelogOrgIdFkeyInverseInput: DataChangelogOrgIdFkeyInverseInput;
+  DataChangelogOnDataChangelogForDataChangelogOrgIdFkeyUsingDataChangelogPkeyUpdate: DataChangelogOnDataChangelogForDataChangelogOrgIdFkeyUsingDataChangelogPkeyUpdate;
+  updateDataChangelogOnDataChangelogForDataChangelogOrgIdFkeyPatch: UpdateDataChangelogOnDataChangelogForDataChangelogOrgIdFkeyPatch;
+  DataChangelogUsernameFkeyInput: DataChangelogUsernameFkeyInput;
+  UserOnDataChangelogForDataChangelogUsernameFkeyUsingUserPkeyUpdate: UserOnDataChangelogForDataChangelogUsernameFkeyUsingUserPkeyUpdate;
+  updateUserOnDataChangelogForDataChangelogUsernameFkeyPatch: UpdateUserOnDataChangelogForDataChangelogUsernameFkeyPatch;
+  DataChangelogUsernameFkeyInverseInput: DataChangelogUsernameFkeyInverseInput;
+  DataChangelogOnDataChangelogForDataChangelogUsernameFkeyUsingDataChangelogPkeyUpdate: DataChangelogOnDataChangelogForDataChangelogUsernameFkeyUsingDataChangelogPkeyUpdate;
+  updateDataChangelogOnDataChangelogForDataChangelogUsernameFkeyPatch: UpdateDataChangelogOnDataChangelogForDataChangelogUsernameFkeyPatch;
+  DataChangelogApplicationIdFkeyInput: DataChangelogApplicationIdFkeyInput;
+  ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnDataChangelogForDataChangelogApplicationIdFkeyPatch: UpdateApplicationOnDataChangelogForDataChangelogApplicationIdFkeyPatch;
+  ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate: ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate;
+  DataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyNodeIdUpdate: DataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyNodeIdUpdate;
+  ApplicationPatch: ApplicationPatch;
+  DataChangelogApplicationIdFkeyApplicationCreateInput: DataChangelogApplicationIdFkeyApplicationCreateInput;
+  UserOnDataChangelogForDataChangelogUsernameFkeyNodeIdUpdate: UserOnDataChangelogForDataChangelogUsernameFkeyNodeIdUpdate;
+  DataChangelogPatch: DataChangelogPatch;
+  DataChangelogUsernameFkeyDataChangelogCreateInput: DataChangelogUsernameFkeyDataChangelogCreateInput;
+  UserOnDataChangelogForDataChangelogUsernameFkeyUsingUserUsernameKeyUpdate: UserOnDataChangelogForDataChangelogUsernameFkeyUsingUserUsernameKeyUpdate;
+  DataChangelogOnDataChangelogForDataChangelogUsernameFkeyNodeIdUpdate: DataChangelogOnDataChangelogForDataChangelogUsernameFkeyNodeIdUpdate;
+  UserPatch: UserPatch;
+  DataChangelogUsernameFkeyUserCreateInput: DataChangelogUsernameFkeyUserCreateInput;
+  OrganisationOnDataChangelogForDataChangelogOrgIdFkeyNodeIdUpdate: OrganisationOnDataChangelogForDataChangelogOrgIdFkeyNodeIdUpdate;
+  DataChangelogOrgIdFkeyDataChangelogCreateInput: DataChangelogOrgIdFkeyDataChangelogCreateInput;
   OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationNameKeyUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationNameKeyUpdate;
   OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate;
   UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate;
   OrganisationPatch: OrganisationPatch;
   UserOrganisationOrganisationIdFkeyOrganisationCreateInput: UserOrganisationOrganisationIdFkeyOrganisationCreateInput;
+  UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate;
+  OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate;
+  UserOrganisationPatch: UserOrganisationPatch;
+  UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput: UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput;
+  OrganisationOnDataChangelogForDataChangelogOrgIdFkeyUsingOrganisationNameKeyUpdate: OrganisationOnDataChangelogForDataChangelogOrgIdFkeyUsingOrganisationNameKeyUpdate;
+  OrganisationOnDataChangelogForDataChangelogOrgIdFkeyUsingOrganisationRegistrationKeyUpdate: OrganisationOnDataChangelogForDataChangelogOrgIdFkeyUsingOrganisationRegistrationKeyUpdate;
+  DataChangelogOnDataChangelogForDataChangelogOrgIdFkeyNodeIdUpdate: DataChangelogOnDataChangelogForDataChangelogOrgIdFkeyNodeIdUpdate;
+  DataChangelogOrgIdFkeyOrganisationCreateInput: DataChangelogOrgIdFkeyOrganisationCreateInput;
+  UserOnDataChangelogForDataChangelogUserIdFkeyNodeIdUpdate: UserOnDataChangelogForDataChangelogUserIdFkeyNodeIdUpdate;
+  DataChangelogUserIdFkeyDataChangelogCreateInput: DataChangelogUserIdFkeyDataChangelogCreateInput;
+  UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate;
+  UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate: UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate;
+  UserOrganisationUserIdFkeyUserCreateInput: UserOrganisationUserIdFkeyUserCreateInput;
   UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate: UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate;
   UserOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate: UserOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate;
   UserOrganisationUserIdFkeyUserOrganisationCreateInput: UserOrganisationUserIdFkeyUserOrganisationCreateInput;
@@ -35511,11 +37380,31 @@ export type ResolversParentTypes = {
   TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate;
   TriggerScheduleEditorUserIdFkeyUserCreateInput: TriggerScheduleEditorUserIdFkeyUserCreateInput;
   TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate: TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate;
+  TriggerSchedulePatch: TriggerSchedulePatch;
   TriggerScheduleTemplateIdFkeyTriggerScheduleCreateInput: TriggerScheduleTemplateIdFkeyTriggerScheduleCreateInput;
   TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTemplateCodeVersionIdKeyUpdate: TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTemplateCodeVersionIdKeyUpdate;
   TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate;
   TemplatePatch: TemplatePatch;
   TriggerScheduleTemplateIdFkeyTemplateCreateInput: TriggerScheduleTemplateIdFkeyTemplateCreateInput;
+  UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate: UserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyNodeIdUpdate;
+  TriggerScheduleEditorUserIdFkeyTriggerScheduleCreateInput: TriggerScheduleEditorUserIdFkeyTriggerScheduleCreateInput;
+  UserOnDataChangelogForDataChangelogUserIdFkeyUsingUserUsernameKeyUpdate: UserOnDataChangelogForDataChangelogUserIdFkeyUsingUserUsernameKeyUpdate;
+  DataChangelogOnDataChangelogForDataChangelogUserIdFkeyNodeIdUpdate: DataChangelogOnDataChangelogForDataChangelogUserIdFkeyNodeIdUpdate;
+  DataChangelogUserIdFkeyUserCreateInput: DataChangelogUserIdFkeyUserCreateInput;
+  ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyNodeIdUpdate: ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyNodeIdUpdate;
+  DataChangelogApplicationIdFkeyDataChangelogCreateInput: DataChangelogApplicationIdFkeyDataChangelogCreateInput;
+  ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate;
+  VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate: VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate;
+  VerificationApplicationIdFkeyApplicationCreateInput: VerificationApplicationIdFkeyApplicationCreateInput;
+  VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationUniqueIdKeyUpdate: VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationUniqueIdKeyUpdate;
+  ApplicationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate;
+  VerificationPatch: VerificationPatch;
+  VerificationApplicationIdFkeyVerificationCreateInput: VerificationApplicationIdFkeyVerificationCreateInput;
+  ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate: ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate;
+  TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate;
+  TriggerScheduleApplicationIdFkeyApplicationCreateInput: TriggerScheduleApplicationIdFkeyApplicationCreateInput;
   ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate: ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate;
   TriggerScheduleApplicationIdFkeyTriggerScheduleCreateInput: TriggerScheduleApplicationIdFkeyTriggerScheduleCreateInput;
   ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
@@ -35943,6 +37832,9 @@ export type ResolversParentTypes = {
   CreateActivityLogInput: CreateActivityLogInput;
   ActivityLogInput: ActivityLogInput;
   CreateActivityLogPayload: CreateActivityLogPayload;
+  CreateAllowedSelfAssignableSectionsShapeInput: CreateAllowedSelfAssignableSectionsShapeInput;
+  AllowedSelfAssignableSectionsShapeInput: AllowedSelfAssignableSectionsShapeInput;
+  CreateAllowedSelfAssignableSectionsShapePayload: CreateAllowedSelfAssignableSectionsShapePayload;
   CreateApplicationInput: CreateApplicationInput;
   ApplicationInput: ApplicationInput;
   CreateApplicationPayload: CreateApplicationPayload;
@@ -35964,6 +37856,9 @@ export type ResolversParentTypes = {
   CreateCounterInput: CreateCounterInput;
   CounterInput: CounterInput;
   CreateCounterPayload: CreateCounterPayload;
+  CreateDataChangelogInput: CreateDataChangelogInput;
+  DataChangelogInput: DataChangelogInput;
+  CreateDataChangelogPayload: CreateDataChangelogPayload;
   CreateDataTableInput: CreateDataTableInput;
   DataTableInput: DataTableInput;
   CreateDataTablePayload: CreateDataTablePayload;
@@ -36003,6 +37898,9 @@ export type ResolversParentTypes = {
   CreateReviewAssignmentInput: CreateReviewAssignmentInput;
   ReviewAssignmentInput: ReviewAssignmentInput;
   CreateReviewAssignmentPayload: CreateReviewAssignmentPayload;
+  CreateReviewAssignmentAssignedSectionsShapeInput: CreateReviewAssignmentAssignedSectionsShapeInput;
+  ReviewAssignmentAssignedSectionsShapeInput: ReviewAssignmentAssignedSectionsShapeInput;
+  CreateReviewAssignmentAssignedSectionsShapePayload: CreateReviewAssignmentAssignedSectionsShapePayload;
   CreateReviewAssignmentAssignerJoinInput: CreateReviewAssignmentAssignerJoinInput;
   ReviewAssignmentAssignerJoinInput: ReviewAssignmentAssignerJoinInput;
   CreateReviewAssignmentAssignerJoinPayload: CreateReviewAssignmentAssignerJoinPayload;
@@ -36093,6 +37991,9 @@ export type ResolversParentTypes = {
   UpdateCounterPayload: UpdateCounterPayload;
   UpdateCounterInput: UpdateCounterInput;
   UpdateCounterByNameInput: UpdateCounterByNameInput;
+  UpdateDataChangelogByNodeIdInput: UpdateDataChangelogByNodeIdInput;
+  UpdateDataChangelogPayload: UpdateDataChangelogPayload;
+  UpdateDataChangelogInput: UpdateDataChangelogInput;
   UpdateDataTableByNodeIdInput: UpdateDataTableByNodeIdInput;
   DataTablePatch: DataTablePatch;
   UpdateDataTablePayload: UpdateDataTablePayload;
@@ -36242,6 +38143,9 @@ export type ResolversParentTypes = {
   DeleteCounterPayload: DeleteCounterPayload;
   DeleteCounterInput: DeleteCounterInput;
   DeleteCounterByNameInput: DeleteCounterByNameInput;
+  DeleteDataChangelogByNodeIdInput: DeleteDataChangelogByNodeIdInput;
+  DeleteDataChangelogPayload: DeleteDataChangelogPayload;
+  DeleteDataChangelogInput: DeleteDataChangelogInput;
   DeleteDataTableByNodeIdInput: DeleteDataTableByNodeIdInput;
   DeleteDataTablePayload: DeleteDataTablePayload;
   DeleteDataTableInput: DeleteDataTableInput;
@@ -36451,6 +38355,26 @@ export type ActivityLogsEdgeResolvers<ContextType = any, ParentType extends Reso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type AllowedSelfAssignableSectionsShapeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AllowedSelfAssignableSectionsShape'] = ResolversParentTypes['AllowedSelfAssignableSectionsShape']> = {
+  reviewAssignmentId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  allowedSections?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AllowedSelfAssignableSectionsShapesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AllowedSelfAssignableSectionsShapesConnection'] = ResolversParentTypes['AllowedSelfAssignableSectionsShapesConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['AllowedSelfAssignableSectionsShape']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['AllowedSelfAssignableSectionsShapesEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AllowedSelfAssignableSectionsShapesEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AllowedSelfAssignableSectionsShapesEdge'] = ResolversParentTypes['AllowedSelfAssignableSectionsShapesEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['AllowedSelfAssignableSectionsShape']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ApplicationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Application'] = ResolversParentTypes['Application']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -36480,6 +38404,7 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   triggerQueues?: Resolver<ResolversTypes['TriggerQueuesConnection'], ParentType, ContextType, RequireFields<ApplicationTriggerQueuesArgs, 'orderBy'>>;
   triggerSchedules?: Resolver<ResolversTypes['TriggerSchedulesConnection'], ParentType, ContextType, RequireFields<ApplicationTriggerSchedulesArgs, 'orderBy'>>;
   verifications?: Resolver<ResolversTypes['VerificationsConnection'], ParentType, ContextType, RequireFields<ApplicationVerificationsArgs, 'orderBy'>>;
+  dataChangelogs?: Resolver<ResolversTypes['DataChangelogsConnection'], ParentType, ContextType, RequireFields<ApplicationDataChangelogsArgs, 'orderBy'>>;
   stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
@@ -36963,6 +38888,14 @@ export type CreateActivityLogPayloadResolvers<ContextType = any, ParentType exte
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateAllowedSelfAssignableSectionsShapePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateAllowedSelfAssignableSectionsShapePayload'] = ResolversParentTypes['CreateAllowedSelfAssignableSectionsShapePayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  allowedSelfAssignableSectionsShape?: Resolver<Maybe<ResolversTypes['AllowedSelfAssignableSectionsShape']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  allowedSelfAssignableSectionsShapeEdge?: Resolver<Maybe<ResolversTypes['AllowedSelfAssignableSectionsShapesEdge']>, ParentType, ContextType, RequireFields<CreateAllowedSelfAssignableSectionsShapePayloadAllowedSelfAssignableSectionsShapeEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateApplicationListShapePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateApplicationListShapePayload'] = ResolversParentTypes['CreateApplicationListShapePayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   applicationListShape?: Resolver<Maybe<ResolversTypes['ApplicationListShape']>, ParentType, ContextType>;
@@ -37027,6 +38960,18 @@ export type CreateCounterPayloadResolvers<ContextType = any, ParentType extends 
   counter?: Resolver<Maybe<ResolversTypes['Counter']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   counterEdge?: Resolver<Maybe<ResolversTypes['CountersEdge']>, ParentType, ContextType, RequireFields<CreateCounterPayloadCounterEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateDataChangelogPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateDataChangelogPayload'] = ResolversParentTypes['CreateDataChangelogPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataChangelog?: Resolver<Maybe<ResolversTypes['DataChangelog']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  org?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
+  userByUsername?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  dataChangelogEdge?: Resolver<Maybe<ResolversTypes['DataChangelogsEdge']>, ParentType, ContextType, RequireFields<CreateDataChangelogPayloadDataChangelogEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -37127,6 +39072,14 @@ export type CreatePermissionPolicyPayloadResolvers<ContextType = any, ParentType
   permissionPolicy?: Resolver<Maybe<ResolversTypes['PermissionPolicy']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   permissionPolicyEdge?: Resolver<Maybe<ResolversTypes['PermissionPoliciesEdge']>, ParentType, ContextType, RequireFields<CreatePermissionPolicyPayloadPermissionPolicyEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateReviewAssignmentAssignedSectionsShapePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateReviewAssignmentAssignedSectionsShapePayload'] = ResolversParentTypes['CreateReviewAssignmentAssignedSectionsShapePayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  reviewAssignmentAssignedSectionsShape?: Resolver<Maybe<ResolversTypes['ReviewAssignmentAssignedSectionsShape']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  reviewAssignmentAssignedSectionsShapeEdge?: Resolver<Maybe<ResolversTypes['ReviewAssignmentAssignedSectionsShapesEdge']>, ParentType, ContextType, RequireFields<CreateReviewAssignmentAssignedSectionsShapePayloadReviewAssignmentAssignedSectionsShapeEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -37339,6 +39292,40 @@ export interface CursorScalarConfig extends GraphQLScalarTypeConfig<ResolversTyp
   name: 'Cursor';
 }
 
+export type DataChangelogResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataChangelog'] = ResolversParentTypes['DataChangelog']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  dataTable?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  recordId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  updateType?: Resolver<ResolversTypes['ChangelogType'], ParentType, ContextType>;
+  timestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  oldData?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  newData?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  orgId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  org?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
+  userByUsername?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DataChangelogsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataChangelogsConnection'] = ResolversParentTypes['DataChangelogsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['DataChangelog']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['DataChangelogsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DataChangelogsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataChangelogsEdge'] = ResolversParentTypes['DataChangelogsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['DataChangelog']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DataTableResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTable'] = ResolversParentTypes['DataTable']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -37536,6 +39523,19 @@ export type DeleteCounterPayloadResolvers<ContextType = any, ParentType extends 
   deletedCounterNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   counterEdge?: Resolver<Maybe<ResolversTypes['CountersEdge']>, ParentType, ContextType, RequireFields<DeleteCounterPayloadCounterEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DeleteDataChangelogPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteDataChangelogPayload'] = ResolversParentTypes['DeleteDataChangelogPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataChangelog?: Resolver<Maybe<ResolversTypes['DataChangelog']>, ParentType, ContextType>;
+  deletedDataChangelogNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  org?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
+  userByUsername?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  dataChangelogEdge?: Resolver<Maybe<ResolversTypes['DataChangelogsEdge']>, ParentType, ContextType, RequireFields<DeleteDataChangelogPayloadDataChangelogEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -37987,6 +39987,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createActionPlugin?: Resolver<Maybe<ResolversTypes['CreateActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationCreateActionPluginArgs, 'input'>>;
   createActionQueue?: Resolver<Maybe<ResolversTypes['CreateActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationCreateActionQueueArgs, 'input'>>;
   createActivityLog?: Resolver<Maybe<ResolversTypes['CreateActivityLogPayload']>, ParentType, ContextType, RequireFields<MutationCreateActivityLogArgs, 'input'>>;
+  createAllowedSelfAssignableSectionsShape?: Resolver<Maybe<ResolversTypes['CreateAllowedSelfAssignableSectionsShapePayload']>, ParentType, ContextType, RequireFields<MutationCreateAllowedSelfAssignableSectionsShapeArgs, 'input'>>;
   createApplication?: Resolver<Maybe<ResolversTypes['CreateApplicationPayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationArgs, 'input'>>;
   createApplicationListShape?: Resolver<Maybe<ResolversTypes['CreateApplicationListShapePayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationListShapeArgs, 'input'>>;
   createApplicationNote?: Resolver<Maybe<ResolversTypes['CreateApplicationNotePayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationNoteArgs, 'input'>>;
@@ -37994,6 +39995,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createApplicationStageHistory?: Resolver<Maybe<ResolversTypes['CreateApplicationStageHistoryPayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationStageHistoryArgs, 'input'>>;
   createApplicationStatusHistory?: Resolver<Maybe<ResolversTypes['CreateApplicationStatusHistoryPayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationStatusHistoryArgs, 'input'>>;
   createCounter?: Resolver<Maybe<ResolversTypes['CreateCounterPayload']>, ParentType, ContextType, RequireFields<MutationCreateCounterArgs, 'input'>>;
+  createDataChangelog?: Resolver<Maybe<ResolversTypes['CreateDataChangelogPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataChangelogArgs, 'input'>>;
   createDataTable?: Resolver<Maybe<ResolversTypes['CreateDataTablePayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableArgs, 'input'>>;
   createDataView?: Resolver<Maybe<ResolversTypes['CreateDataViewPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataViewArgs, 'input'>>;
   createDataViewColumnDefinition?: Resolver<Maybe<ResolversTypes['CreateDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataViewColumnDefinitionArgs, 'input'>>;
@@ -38007,6 +40009,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createPermissionPolicy?: Resolver<Maybe<ResolversTypes['CreatePermissionPolicyPayload']>, ParentType, ContextType, RequireFields<MutationCreatePermissionPolicyArgs, 'input'>>;
   createReview?: Resolver<Maybe<ResolversTypes['CreateReviewPayload']>, ParentType, ContextType, RequireFields<MutationCreateReviewArgs, 'input'>>;
   createReviewAssignment?: Resolver<Maybe<ResolversTypes['CreateReviewAssignmentPayload']>, ParentType, ContextType, RequireFields<MutationCreateReviewAssignmentArgs, 'input'>>;
+  createReviewAssignmentAssignedSectionsShape?: Resolver<Maybe<ResolversTypes['CreateReviewAssignmentAssignedSectionsShapePayload']>, ParentType, ContextType, RequireFields<MutationCreateReviewAssignmentAssignedSectionsShapeArgs, 'input'>>;
   createReviewAssignmentAssignerJoin?: Resolver<Maybe<ResolversTypes['CreateReviewAssignmentAssignerJoinPayload']>, ParentType, ContextType, RequireFields<MutationCreateReviewAssignmentAssignerJoinArgs, 'input'>>;
   createReviewDecision?: Resolver<Maybe<ResolversTypes['CreateReviewDecisionPayload']>, ParentType, ContextType, RequireFields<MutationCreateReviewDecisionArgs, 'input'>>;
   createReviewResponse?: Resolver<Maybe<ResolversTypes['CreateReviewResponsePayload']>, ParentType, ContextType, RequireFields<MutationCreateReviewResponseArgs, 'input'>>;
@@ -38048,6 +40051,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateCounterByNodeId?: Resolver<Maybe<ResolversTypes['UpdateCounterPayload']>, ParentType, ContextType, RequireFields<MutationUpdateCounterByNodeIdArgs, 'input'>>;
   updateCounter?: Resolver<Maybe<ResolversTypes['UpdateCounterPayload']>, ParentType, ContextType, RequireFields<MutationUpdateCounterArgs, 'input'>>;
   updateCounterByName?: Resolver<Maybe<ResolversTypes['UpdateCounterPayload']>, ParentType, ContextType, RequireFields<MutationUpdateCounterByNameArgs, 'input'>>;
+  updateDataChangelogByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataChangelogPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataChangelogByNodeIdArgs, 'input'>>;
+  updateDataChangelog?: Resolver<Maybe<ResolversTypes['UpdateDataChangelogPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataChangelogArgs, 'input'>>;
   updateDataTableByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTablePayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableByNodeIdArgs, 'input'>>;
   updateDataTable?: Resolver<Maybe<ResolversTypes['UpdateDataTablePayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableArgs, 'input'>>;
   updateDataTableByTableName?: Resolver<Maybe<ResolversTypes['UpdateDataTablePayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableByTableNameArgs, 'input'>>;
@@ -38151,6 +40156,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteCounterByNodeId?: Resolver<Maybe<ResolversTypes['DeleteCounterPayload']>, ParentType, ContextType, RequireFields<MutationDeleteCounterByNodeIdArgs, 'input'>>;
   deleteCounter?: Resolver<Maybe<ResolversTypes['DeleteCounterPayload']>, ParentType, ContextType, RequireFields<MutationDeleteCounterArgs, 'input'>>;
   deleteCounterByName?: Resolver<Maybe<ResolversTypes['DeleteCounterPayload']>, ParentType, ContextType, RequireFields<MutationDeleteCounterByNameArgs, 'input'>>;
+  deleteDataChangelogByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataChangelogPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataChangelogByNodeIdArgs, 'input'>>;
+  deleteDataChangelog?: Resolver<Maybe<ResolversTypes['DeleteDataChangelogPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataChangelogArgs, 'input'>>;
   deleteDataTableByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTablePayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableByNodeIdArgs, 'input'>>;
   deleteDataTable?: Resolver<Maybe<ResolversTypes['DeleteDataTablePayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableArgs, 'input'>>;
   deleteDataTableByTableName?: Resolver<Maybe<ResolversTypes['DeleteDataTablePayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableByTableNameArgs, 'input'>>;
@@ -38236,7 +40243,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Application' | 'Template' | 'TemplateCategory' | 'ReviewAssignment' | 'User' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'ReviewResponse' | 'ApplicationResponse' | 'TemplateElement' | 'TemplateSection' | 'File' | 'ApplicationNote' | 'Organisation' | 'ReviewAssignmentAssignerJoin' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'UserOrganisation' | 'TriggerSchedule' | 'TemplateStage' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'TemplateStageReviewLevel' | 'TemplateAction' | 'TemplateFilterJoin' | 'Filter' | 'ActivityLog' | 'Verification' | 'Counter' | 'DataTable' | 'DataView' | 'DataViewColumnDefinition' | 'ElementTypePlugin' | 'SystemInfo', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Application' | 'Template' | 'TemplateCategory' | 'ReviewAssignment' | 'User' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'ReviewResponse' | 'ApplicationResponse' | 'TemplateElement' | 'TemplateSection' | 'File' | 'ApplicationNote' | 'Organisation' | 'ReviewAssignmentAssignerJoin' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'UserOrganisation' | 'DataChangelog' | 'TriggerSchedule' | 'TemplateStage' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'TemplateStageReviewLevel' | 'TemplateAction' | 'TemplateFilterJoin' | 'Filter' | 'ActivityLog' | 'Verification' | 'Counter' | 'DataTable' | 'DataView' | 'DataViewColumnDefinition' | 'ElementTypePlugin' | 'SystemInfo', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -38288,6 +40295,7 @@ export type OrganisationResolvers<ContextType = any, ParentType extends Resolver
   reviewAssignmentAssignerJoins?: Resolver<ResolversTypes['ReviewAssignmentAssignerJoinsConnection'], ParentType, ContextType, RequireFields<OrganisationReviewAssignmentAssignerJoinsArgs, 'orderBy'>>;
   permissionJoins?: Resolver<ResolversTypes['PermissionJoinsConnection'], ParentType, ContextType, RequireFields<OrganisationPermissionJoinsArgs, 'orderBy'>>;
   userOrganisations?: Resolver<ResolversTypes['UserOrganisationsConnection'], ParentType, ContextType, RequireFields<OrganisationUserOrganisationsArgs, 'orderBy'>>;
+  dataChangelogsByOrgId?: Resolver<ResolversTypes['DataChangelogsConnection'], ParentType, ContextType, RequireFields<OrganisationDataChangelogsByOrgIdArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -38310,6 +40318,28 @@ export type PageInfoResolvers<ContextType = any, ParentType extends ResolversPar
   hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   startCursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
   endCursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PermissionFlattenedResolvers<ContextType = any, ParentType extends ResolversParentTypes['PermissionFlattened'] = ResolversParentTypes['PermissionFlattened']> = {
+  userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  organisationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  permissionPolicyId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PermissionFlattenedsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['PermissionFlattenedsConnection'] = ResolversParentTypes['PermissionFlattenedsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['PermissionFlattened']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['PermissionFlattenedsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PermissionFlattenedsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['PermissionFlattenedsEdge'] = ResolversParentTypes['PermissionFlattenedsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['PermissionFlattened']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -38470,6 +40500,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   actionPlugins?: Resolver<Maybe<ResolversTypes['ActionPluginsConnection']>, ParentType, ContextType, RequireFields<QueryActionPluginsArgs, 'orderBy'>>;
   actionQueues?: Resolver<Maybe<ResolversTypes['ActionQueuesConnection']>, ParentType, ContextType, RequireFields<QueryActionQueuesArgs, 'orderBy'>>;
   activityLogs?: Resolver<Maybe<ResolversTypes['ActivityLogsConnection']>, ParentType, ContextType, RequireFields<QueryActivityLogsArgs, 'orderBy'>>;
+  allowedSelfAssignableSectionsShapes?: Resolver<Maybe<ResolversTypes['AllowedSelfAssignableSectionsShapesConnection']>, ParentType, ContextType, RequireFields<QueryAllowedSelfAssignableSectionsShapesArgs, 'orderBy'>>;
   applications?: Resolver<Maybe<ResolversTypes['ApplicationsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationsArgs, 'orderBy'>>;
   applicationListShapes?: Resolver<Maybe<ResolversTypes['ApplicationListShapesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListShapesArgs, 'orderBy'>>;
   applicationNotes?: Resolver<Maybe<ResolversTypes['ApplicationNotesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationNotesArgs, 'orderBy'>>;
@@ -38481,6 +40512,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   assignedSectionsByStageAndLevels?: Resolver<Maybe<ResolversTypes['AssignedSectionsByStageAndLevelsConnection']>, ParentType, ContextType, RequireFields<QueryAssignedSectionsByStageAndLevelsArgs, 'orderBy'>>;
   constraintsInfos?: Resolver<Maybe<ResolversTypes['ConstraintsInfosConnection']>, ParentType, ContextType, RequireFields<QueryConstraintsInfosArgs, 'orderBy'>>;
   counters?: Resolver<Maybe<ResolversTypes['CountersConnection']>, ParentType, ContextType, RequireFields<QueryCountersArgs, 'orderBy'>>;
+  dataChangelogs?: Resolver<Maybe<ResolversTypes['DataChangelogsConnection']>, ParentType, ContextType, RequireFields<QueryDataChangelogsArgs, 'orderBy'>>;
   dataTables?: Resolver<Maybe<ResolversTypes['DataTablesConnection']>, ParentType, ContextType, RequireFields<QueryDataTablesArgs, 'orderBy'>>;
   dataViews?: Resolver<Maybe<ResolversTypes['DataViewsConnection']>, ParentType, ContextType, RequireFields<QueryDataViewsArgs, 'orderBy'>>;
   dataViewColumnDefinitions?: Resolver<Maybe<ResolversTypes['DataViewColumnDefinitionsConnection']>, ParentType, ContextType, RequireFields<QueryDataViewColumnDefinitionsArgs, 'orderBy'>>;
@@ -38489,6 +40521,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   filters?: Resolver<Maybe<ResolversTypes['FiltersConnection']>, ParentType, ContextType, RequireFields<QueryFiltersArgs, 'orderBy'>>;
   notifications?: Resolver<Maybe<ResolversTypes['NotificationsConnection']>, ParentType, ContextType, RequireFields<QueryNotificationsArgs, 'orderBy'>>;
   organisations?: Resolver<Maybe<ResolversTypes['OrganisationsConnection']>, ParentType, ContextType, RequireFields<QueryOrganisationsArgs, 'orderBy'>>;
+  permissionFlatteneds?: Resolver<Maybe<ResolversTypes['PermissionFlattenedsConnection']>, ParentType, ContextType, RequireFields<QueryPermissionFlattenedsArgs, 'orderBy'>>;
   permissionJoins?: Resolver<Maybe<ResolversTypes['PermissionJoinsConnection']>, ParentType, ContextType, RequireFields<QueryPermissionJoinsArgs, 'orderBy'>>;
   permissionNames?: Resolver<Maybe<ResolversTypes['PermissionNamesConnection']>, ParentType, ContextType, RequireFields<QueryPermissionNamesArgs, 'orderBy'>>;
   permissionPolicies?: Resolver<Maybe<ResolversTypes['PermissionPoliciesConnection']>, ParentType, ContextType, RequireFields<QueryPermissionPoliciesArgs, 'orderBy'>>;
@@ -38496,6 +40529,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   postgresRowLevels?: Resolver<Maybe<ResolversTypes['PostgresRowLevelsConnection']>, ParentType, ContextType, RequireFields<QueryPostgresRowLevelsArgs, 'orderBy'>>;
   reviews?: Resolver<Maybe<ResolversTypes['ReviewsConnection']>, ParentType, ContextType, RequireFields<QueryReviewsArgs, 'orderBy'>>;
   reviewAssignments?: Resolver<Maybe<ResolversTypes['ReviewAssignmentsConnection']>, ParentType, ContextType, RequireFields<QueryReviewAssignmentsArgs, 'orderBy'>>;
+  reviewAssignmentAssignedSectionsShapes?: Resolver<Maybe<ResolversTypes['ReviewAssignmentAssignedSectionsShapesConnection']>, ParentType, ContextType, RequireFields<QueryReviewAssignmentAssignedSectionsShapesArgs, 'orderBy'>>;
   reviewAssignmentAssignerJoins?: Resolver<Maybe<ResolversTypes['ReviewAssignmentAssignerJoinsConnection']>, ParentType, ContextType, RequireFields<QueryReviewAssignmentAssignerJoinsArgs, 'orderBy'>>;
   reviewDecisions?: Resolver<Maybe<ResolversTypes['ReviewDecisionsConnection']>, ParentType, ContextType, RequireFields<QueryReviewDecisionsArgs, 'orderBy'>>;
   reviewResponses?: Resolver<Maybe<ResolversTypes['ReviewResponsesConnection']>, ParentType, ContextType, RequireFields<QueryReviewResponsesArgs, 'orderBy'>>;
@@ -38531,6 +40565,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationStatusHistory?: Resolver<Maybe<ResolversTypes['ApplicationStatusHistory']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryArgs, 'id'>>;
   counter?: Resolver<Maybe<ResolversTypes['Counter']>, ParentType, ContextType, RequireFields<QueryCounterArgs, 'id'>>;
   counterByName?: Resolver<Maybe<ResolversTypes['Counter']>, ParentType, ContextType, RequireFields<QueryCounterByNameArgs, 'name'>>;
+  dataChangelog?: Resolver<Maybe<ResolversTypes['DataChangelog']>, ParentType, ContextType, RequireFields<QueryDataChangelogArgs, 'id'>>;
   dataTable?: Resolver<Maybe<ResolversTypes['DataTable']>, ParentType, ContextType, RequireFields<QueryDataTableArgs, 'id'>>;
   dataTableByTableName?: Resolver<Maybe<ResolversTypes['DataTable']>, ParentType, ContextType, RequireFields<QueryDataTableByTableNameArgs, 'tableName'>>;
   dataView?: Resolver<Maybe<ResolversTypes['DataView']>, ParentType, ContextType, RequireFields<QueryDataViewArgs, 'id'>>;
@@ -38580,6 +40615,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   userOrganisationByUserIdAndOrganisationId?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType, RequireFields<QueryUserOrganisationByUserIdAndOrganisationIdArgs, 'userId' | 'organisationId'>>;
   verification?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType, RequireFields<QueryVerificationArgs, 'id'>>;
   verificationByUniqueId?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType, RequireFields<QueryVerificationByUniqueIdArgs, 'uniqueId'>>;
+  allowedSelfAssignableSections?: Resolver<Maybe<ResolversTypes['AllowedSelfAssignableSectionsShapesConnection']>, ParentType, ContextType, RequireFields<QueryAllowedSelfAssignableSectionsArgs, never>>;
   applicationList?: Resolver<Maybe<ResolversTypes['ApplicationListShapesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListArgs, never>>;
   applicationListFilterApplicant?: Resolver<Maybe<ResolversTypes['ApplicationListFilterApplicantConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListFilterApplicantArgs, never>>;
   applicationListFilterAssigner?: Resolver<Maybe<ResolversTypes['ApplicationListFilterAssignerConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListFilterAssignerArgs, never>>;
@@ -38597,6 +40633,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   jwtGetBoolean?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryJwtGetBooleanArgs, never>>;
   jwtGetText?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryJwtGetTextArgs, never>>;
   reviewApplicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewApplicationIdArgs, never>>;
+  reviewAssignmentAssignedSections?: Resolver<Maybe<ResolversTypes['ReviewAssignmentAssignedSectionsShapesConnection']>, ParentType, ContextType, RequireFields<QueryReviewAssignmentAssignedSectionsArgs, never>>;
   reviewAssignmentTemplateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewAssignmentTemplateIdArgs, never>>;
   reviewIsFinalDecision?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryReviewIsFinalDecisionArgs, never>>;
   reviewIsLastLevel?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryReviewIsLastLevelArgs, never>>;
@@ -38619,6 +40656,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationStageHistoryByNodeId?: Resolver<Maybe<ResolversTypes['ApplicationStageHistory']>, ParentType, ContextType, RequireFields<QueryApplicationStageHistoryByNodeIdArgs, 'nodeId'>>;
   applicationStatusHistoryByNodeId?: Resolver<Maybe<ResolversTypes['ApplicationStatusHistory']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryByNodeIdArgs, 'nodeId'>>;
   counterByNodeId?: Resolver<Maybe<ResolversTypes['Counter']>, ParentType, ContextType, RequireFields<QueryCounterByNodeIdArgs, 'nodeId'>>;
+  dataChangelogByNodeId?: Resolver<Maybe<ResolversTypes['DataChangelog']>, ParentType, ContextType, RequireFields<QueryDataChangelogByNodeIdArgs, 'nodeId'>>;
   dataTableByNodeId?: Resolver<Maybe<ResolversTypes['DataTable']>, ParentType, ContextType, RequireFields<QueryDataTableByNodeIdArgs, 'nodeId'>>;
   dataViewByNodeId?: Resolver<Maybe<ResolversTypes['DataView']>, ParentType, ContextType, RequireFields<QueryDataViewByNodeIdArgs, 'nodeId'>>;
   dataViewColumnDefinitionByNodeId?: Resolver<Maybe<ResolversTypes['DataViewColumnDefinition']>, ParentType, ContextType, RequireFields<QueryDataViewColumnDefinitionByNodeIdArgs, 'nodeId'>>;
@@ -38735,6 +40773,26 @@ export type ReviewAssignmentResolvers<ContextType = any, ParentType extends Reso
   reviews?: Resolver<ResolversTypes['ReviewsConnection'], ParentType, ContextType, RequireFields<ReviewAssignmentReviewsArgs, 'orderBy'>>;
   reviewAssignmentAssignerJoins?: Resolver<ResolversTypes['ReviewAssignmentAssignerJoinsConnection'], ParentType, ContextType, RequireFields<ReviewAssignmentReviewAssignmentAssignerJoinsArgs, 'orderBy'>>;
   availableSections?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReviewAssignmentAssignedSectionsShapeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewAssignmentAssignedSectionsShape'] = ResolversParentTypes['ReviewAssignmentAssignedSectionsShape']> = {
+  reviewAssignmentId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  assignedSections?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReviewAssignmentAssignedSectionsShapesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewAssignmentAssignedSectionsShapesConnection'] = ResolversParentTypes['ReviewAssignmentAssignedSectionsShapesConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['ReviewAssignmentAssignedSectionsShape']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['ReviewAssignmentAssignedSectionsShapesEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReviewAssignmentAssignedSectionsShapesEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewAssignmentAssignedSectionsShapesEdge'] = ResolversParentTypes['ReviewAssignmentAssignedSectionsShapesEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['ReviewAssignmentAssignedSectionsShape']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -39408,6 +41466,18 @@ export type UpdateCounterPayloadResolvers<ContextType = any, ParentType extends 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateDataChangelogPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateDataChangelogPayload'] = ResolversParentTypes['UpdateDataChangelogPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataChangelog?: Resolver<Maybe<ResolversTypes['DataChangelog']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  org?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
+  userByUsername?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  dataChangelogEdge?: Resolver<Maybe<ResolversTypes['DataChangelogsEdge']>, ParentType, ContextType, RequireFields<UpdateDataChangelogPayloadDataChangelogEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateDataTablePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateDataTablePayload'] = ResolversParentTypes['UpdateDataTablePayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   dataTable?: Resolver<Maybe<ResolversTypes['DataTable']>, ParentType, ContextType>;
@@ -39718,11 +41788,11 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  fullName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   dateOfBirth?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   passwordHash?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  fullName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   applications?: Resolver<ResolversTypes['ApplicationsConnection'], ParentType, ContextType, RequireFields<UserApplicationsArgs, 'orderBy'>>;
   reviewAssignmentsByAssignerId?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<UserReviewAssignmentsByAssignerIdArgs, 'orderBy'>>;
   reviewedReviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<UserReviewedReviewAssignmentsArgs, 'orderBy'>>;
@@ -39734,6 +41804,8 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   permissionJoins?: Resolver<ResolversTypes['PermissionJoinsConnection'], ParentType, ContextType, RequireFields<UserPermissionJoinsArgs, 'orderBy'>>;
   triggerSchedulesByEditorUserId?: Resolver<ResolversTypes['TriggerSchedulesConnection'], ParentType, ContextType, RequireFields<UserTriggerSchedulesByEditorUserIdArgs, 'orderBy'>>;
   userOrganisations?: Resolver<ResolversTypes['UserOrganisationsConnection'], ParentType, ContextType, RequireFields<UserUserOrganisationsArgs, 'orderBy'>>;
+  dataChangelogs?: Resolver<ResolversTypes['DataChangelogsConnection'], ParentType, ContextType, RequireFields<UserDataChangelogsArgs, 'orderBy'>>;
+  dataChangelogsByUsername?: Resolver<ResolversTypes['DataChangelogsConnection'], ParentType, ContextType, RequireFields<UserDataChangelogsByUsernameArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -39852,6 +41924,9 @@ export type Resolvers<ContextType = any> = {
   ActivityLog?: ActivityLogResolvers<ContextType>;
   ActivityLogsConnection?: ActivityLogsConnectionResolvers<ContextType>;
   ActivityLogsEdge?: ActivityLogsEdgeResolvers<ContextType>;
+  AllowedSelfAssignableSectionsShape?: AllowedSelfAssignableSectionsShapeResolvers<ContextType>;
+  AllowedSelfAssignableSectionsShapesConnection?: AllowedSelfAssignableSectionsShapesConnectionResolvers<ContextType>;
+  AllowedSelfAssignableSectionsShapesEdge?: AllowedSelfAssignableSectionsShapesEdgeResolvers<ContextType>;
   Application?: ApplicationResolvers<ContextType>;
   ApplicationListFilterApplicantConnection?: ApplicationListFilterApplicantConnectionResolvers<ContextType>;
   ApplicationListFilterApplicantEdge?: ApplicationListFilterApplicantEdgeResolvers<ContextType>;
@@ -39909,6 +41984,7 @@ export type Resolvers<ContextType = any> = {
   CreateActionPluginPayload?: CreateActionPluginPayloadResolvers<ContextType>;
   CreateActionQueuePayload?: CreateActionQueuePayloadResolvers<ContextType>;
   CreateActivityLogPayload?: CreateActivityLogPayloadResolvers<ContextType>;
+  CreateAllowedSelfAssignableSectionsShapePayload?: CreateAllowedSelfAssignableSectionsShapePayloadResolvers<ContextType>;
   CreateApplicationListShapePayload?: CreateApplicationListShapePayloadResolvers<ContextType>;
   CreateApplicationNotePayload?: CreateApplicationNotePayloadResolvers<ContextType>;
   CreateApplicationPayload?: CreateApplicationPayloadResolvers<ContextType>;
@@ -39916,6 +41992,7 @@ export type Resolvers<ContextType = any> = {
   CreateApplicationStageHistoryPayload?: CreateApplicationStageHistoryPayloadResolvers<ContextType>;
   CreateApplicationStatusHistoryPayload?: CreateApplicationStatusHistoryPayloadResolvers<ContextType>;
   CreateCounterPayload?: CreateCounterPayloadResolvers<ContextType>;
+  CreateDataChangelogPayload?: CreateDataChangelogPayloadResolvers<ContextType>;
   CreateDataTablePayload?: CreateDataTablePayloadResolvers<ContextType>;
   CreateDataViewColumnDefinitionPayload?: CreateDataViewColumnDefinitionPayloadResolvers<ContextType>;
   CreateDataViewPayload?: CreateDataViewPayloadResolvers<ContextType>;
@@ -39927,6 +42004,7 @@ export type Resolvers<ContextType = any> = {
   CreatePermissionJoinPayload?: CreatePermissionJoinPayloadResolvers<ContextType>;
   CreatePermissionNamePayload?: CreatePermissionNamePayloadResolvers<ContextType>;
   CreatePermissionPolicyPayload?: CreatePermissionPolicyPayloadResolvers<ContextType>;
+  CreateReviewAssignmentAssignedSectionsShapePayload?: CreateReviewAssignmentAssignedSectionsShapePayloadResolvers<ContextType>;
   CreateReviewAssignmentAssignerJoinPayload?: CreateReviewAssignmentAssignerJoinPayloadResolvers<ContextType>;
   CreateReviewAssignmentPayload?: CreateReviewAssignmentPayloadResolvers<ContextType>;
   CreateReviewDecisionPayload?: CreateReviewDecisionPayloadResolvers<ContextType>;
@@ -39949,6 +42027,9 @@ export type Resolvers<ContextType = any> = {
   CreateUserPayload?: CreateUserPayloadResolvers<ContextType>;
   CreateVerificationPayload?: CreateVerificationPayloadResolvers<ContextType>;
   Cursor?: GraphQLScalarType;
+  DataChangelog?: DataChangelogResolvers<ContextType>;
+  DataChangelogsConnection?: DataChangelogsConnectionResolvers<ContextType>;
+  DataChangelogsEdge?: DataChangelogsEdgeResolvers<ContextType>;
   DataTable?: DataTableResolvers<ContextType>;
   DataTablesConnection?: DataTablesConnectionResolvers<ContextType>;
   DataTablesEdge?: DataTablesEdgeResolvers<ContextType>;
@@ -39969,6 +42050,7 @@ export type Resolvers<ContextType = any> = {
   DeleteApplicationStageHistoryPayload?: DeleteApplicationStageHistoryPayloadResolvers<ContextType>;
   DeleteApplicationStatusHistoryPayload?: DeleteApplicationStatusHistoryPayloadResolvers<ContextType>;
   DeleteCounterPayload?: DeleteCounterPayloadResolvers<ContextType>;
+  DeleteDataChangelogPayload?: DeleteDataChangelogPayloadResolvers<ContextType>;
   DeleteDataTablePayload?: DeleteDataTablePayloadResolvers<ContextType>;
   DeleteDataViewColumnDefinitionPayload?: DeleteDataViewColumnDefinitionPayloadResolvers<ContextType>;
   DeleteDataViewPayload?: DeleteDataViewPayloadResolvers<ContextType>;
@@ -40021,6 +42103,9 @@ export type Resolvers<ContextType = any> = {
   OrganisationsConnection?: OrganisationsConnectionResolvers<ContextType>;
   OrganisationsEdge?: OrganisationsEdgeResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
+  PermissionFlattened?: PermissionFlattenedResolvers<ContextType>;
+  PermissionFlattenedsConnection?: PermissionFlattenedsConnectionResolvers<ContextType>;
+  PermissionFlattenedsEdge?: PermissionFlattenedsEdgeResolvers<ContextType>;
   PermissionJoin?: PermissionJoinResolvers<ContextType>;
   PermissionJoinsConnection?: PermissionJoinsConnectionResolvers<ContextType>;
   PermissionJoinsEdge?: PermissionJoinsEdgeResolvers<ContextType>;
@@ -40042,6 +42127,9 @@ export type Resolvers<ContextType = any> = {
   ReviewableQuestionsConnection?: ReviewableQuestionsConnectionResolvers<ContextType>;
   ReviewableQuestionsRecord?: ReviewableQuestionsRecordResolvers<ContextType>;
   ReviewAssignment?: ReviewAssignmentResolvers<ContextType>;
+  ReviewAssignmentAssignedSectionsShape?: ReviewAssignmentAssignedSectionsShapeResolvers<ContextType>;
+  ReviewAssignmentAssignedSectionsShapesConnection?: ReviewAssignmentAssignedSectionsShapesConnectionResolvers<ContextType>;
+  ReviewAssignmentAssignedSectionsShapesEdge?: ReviewAssignmentAssignedSectionsShapesEdgeResolvers<ContextType>;
   ReviewAssignmentAssignerJoin?: ReviewAssignmentAssignerJoinResolvers<ContextType>;
   ReviewAssignmentAssignerJoinsConnection?: ReviewAssignmentAssignerJoinsConnectionResolvers<ContextType>;
   ReviewAssignmentAssignerJoinsEdge?: ReviewAssignmentAssignerJoinsEdgeResolvers<ContextType>;
@@ -40113,6 +42201,7 @@ export type Resolvers<ContextType = any> = {
   UpdateApplicationStageHistoryPayload?: UpdateApplicationStageHistoryPayloadResolvers<ContextType>;
   UpdateApplicationStatusHistoryPayload?: UpdateApplicationStatusHistoryPayloadResolvers<ContextType>;
   UpdateCounterPayload?: UpdateCounterPayloadResolvers<ContextType>;
+  UpdateDataChangelogPayload?: UpdateDataChangelogPayloadResolvers<ContextType>;
   UpdateDataTablePayload?: UpdateDataTablePayloadResolvers<ContextType>;
   UpdateDataViewColumnDefinitionPayload?: UpdateDataViewColumnDefinitionPayloadResolvers<ContextType>;
   UpdateDataViewPayload?: UpdateDataViewPayloadResolvers<ContextType>;
