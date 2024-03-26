@@ -1,6 +1,6 @@
 {
   "name": "conforma-server",
-  "version": "0.7.9-15",
+  "version": "0.7.9-16",
   "main": "server.js",
   "license": "MIT",
   "repository": {
