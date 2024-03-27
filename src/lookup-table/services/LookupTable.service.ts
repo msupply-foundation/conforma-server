@@ -59,16 +59,21 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
       // types
       setDataTypes(fieldMaps, rows)
 
-      const newTableFieldMap = [idField, ...fieldMaps]
+      const newTableFieldMap = [
+        idField,
+        ...fieldMaps
+          // Ignore if incoming CSV already has "id" field
+          .filter((field) => field.label !== 'id'),
+      ]
+
+      await lookupTableModel.createTable({
+        tableName,
+        fieldMap: newTableFieldMap,
+      })
 
       tableId = await lookupTableModel.createStructure({
         tableName,
         displayName: name,
-        fieldMap: newTableFieldMap,
-      })
-
-      await lookupTableModel.createTable({
-        tableName,
         fieldMap: newTableFieldMap,
       })
 
