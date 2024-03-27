@@ -908,6 +908,14 @@ const migrateData = async () => {
         application_id integer REFERENCES public.application (id) ON DELETE CASCADE
       );
     `)
+
+    console.log(' - Adding priority fields to templates and template categories')
+    await DB.changeSchema(`
+      ALTER TABLE public.template   
+        ADD COLUMN IF NOT EXISTS priority INTEGER;
+      ALTER TABLE public.template_category   
+        ADD COLUMN IF NOT EXISTS priority INTEGER;
+    `)
   }
 
   // Other version migrations continue here...

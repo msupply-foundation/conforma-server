@@ -664,6 +664,7 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -4638,6 +4639,7 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -11577,6 +11579,7 @@ export type FileTemplateIdFkeyTemplateCreateInput = {
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -20435,6 +20438,7 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -22917,6 +22921,7 @@ export type Template = Node & {
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   /** Reads a single `TemplateCategory` that is related to this `Template`. */
   templateCategory?: Maybe<TemplateCategory>;
   /** Reads and enables pagination through a set of `Application`. */
@@ -23335,6 +23340,7 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -23385,6 +23391,8 @@ export enum TemplateCategoriesOrderBy {
   UiLocationDesc = 'UI_LOCATION_DESC',
   IsSubmenuAsc = 'IS_SUBMENU_ASC',
   IsSubmenuDesc = 'IS_SUBMENU_DESC',
+  PriorityAsc = 'PRIORITY_ASC',
+  PriorityDesc = 'PRIORITY_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -23399,6 +23407,7 @@ export type TemplateCategory = Node & {
   icon?: Maybe<Scalars['String']>;
   uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
   isSubmenu?: Maybe<Scalars['Boolean']>;
+  priority?: Maybe<Scalars['Int']>;
   /** Reads and enables pagination through a set of `Template`. */
   templates: TemplatesConnection;
 };
@@ -23432,6 +23441,8 @@ export type TemplateCategoryCondition = {
   uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
   /** Checks for equality with the object’s `isSubmenu` field. */
   isSubmenu?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `priority` field. */
+  priority?: Maybe<Scalars['Int']>;
 };
 
 /** A filter to be used against `TemplateCategory` object types. All fields are combined with a logical ‘and.’ */
@@ -23448,6 +23459,8 @@ export type TemplateCategoryFilter = {
   uiLocation?: Maybe<UiLocationListFilter>;
   /** Filter by the object’s `isSubmenu` field. */
   isSubmenu?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `priority` field. */
+  priority?: Maybe<IntFilter>;
   /** Filter by the object’s `templates` relation. */
   templates?: Maybe<TemplateCategoryToManyTemplateFilter>;
   /** Some related `templates` exist. */
@@ -23468,6 +23481,7 @@ export type TemplateCategoryInput = {
   icon?: Maybe<Scalars['String']>;
   uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
   isSubmenu?: Maybe<Scalars['Boolean']>;
+  priority?: Maybe<Scalars['Int']>;
   templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
 };
 
@@ -23513,6 +23527,7 @@ export type TemplateCategoryPatch = {
   icon?: Maybe<Scalars['String']>;
   uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
   isSubmenu?: Maybe<Scalars['Boolean']>;
+  priority?: Maybe<Scalars['Int']>;
   templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
 };
 
@@ -23587,6 +23602,8 @@ export type TemplateCondition = {
   versionComment?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `versionHistory` field. */
   versionHistory?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `priority` field. */
+  priority?: Maybe<Scalars['Int']>;
 };
 
 export type TemplateElement = Node & {
@@ -24142,6 +24159,8 @@ export type TemplateFilter = {
   versionComment?: Maybe<StringFilter>;
   /** Filter by the object’s `versionHistory` field. */
   versionHistory?: Maybe<JsonFilter>;
+  /** Filter by the object’s `priority` field. */
+  priority?: Maybe<IntFilter>;
   /** Filter by the object’s `applications` relation. */
   applications?: Maybe<TemplateToManyApplicationFilter>;
   /** Some related `applications` exist. */
@@ -24471,6 +24490,7 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -24512,6 +24532,7 @@ export type TemplateInput = {
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -24810,6 +24831,7 @@ export type TemplatePatch = {
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -25154,6 +25176,7 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -25463,6 +25486,7 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -25566,6 +25590,8 @@ export enum TemplatesOrderBy {
   VersionCommentDesc = 'VERSION_COMMENT_DESC',
   VersionHistoryAsc = 'VERSION_HISTORY_ASC',
   VersionHistoryDesc = 'VERSION_HISTORY_DESC',
+  PriorityAsc = 'PRIORITY_ASC',
+  PriorityDesc = 'PRIORITY_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -26141,6 +26167,7 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -26297,6 +26324,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCategoryCreateInput = {
   icon?: Maybe<Scalars['String']>;
   uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
   isSubmenu?: Maybe<Scalars['Boolean']>;
+  priority?: Maybe<Scalars['Int']>;
   templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
 };
 
@@ -26319,6 +26347,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -27336,6 +27365,7 @@ export type TriggerScheduleTemplateIdFkeyTemplateCreateInput = {
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -31044,6 +31074,7 @@ export type UpdateTemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyPat
   icon?: Maybe<Scalars['String']>;
   uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
   isSubmenu?: Maybe<Scalars['Boolean']>;
+  priority?: Maybe<Scalars['Int']>;
   templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
 };
 
@@ -31305,6 +31336,7 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -31338,6 +31370,7 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -31371,6 +31404,7 @@ export type UpdateTemplateOnFileForFileTemplateIdFkeyPatch = {
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -31404,6 +31438,7 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -31437,6 +31472,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -31470,6 +31506,7 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -31502,6 +31539,7 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -31535,6 +31573,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -31568,6 +31607,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -31601,6 +31641,7 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -31634,6 +31675,7 @@ export type UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch
   parentVersionId?: Maybe<Scalars['String']>;
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
+  priority?: Maybe<Scalars['Int']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -41036,6 +41078,7 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
   parentVersionId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   versionComment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   versionHistory?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  priority?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   templateCategory?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType>;
   applications?: Resolver<ResolversTypes['ApplicationsConnection'], ParentType, ContextType, RequireFields<TemplateApplicationsArgs, 'orderBy'>>;
   reviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<TemplateReviewAssignmentsArgs, 'orderBy'>>;
@@ -41103,6 +41146,7 @@ export type TemplateCategoryResolvers<ContextType = any, ParentType extends Reso
   icon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   uiLocation?: Resolver<Maybe<Array<Maybe<ResolversTypes['UiLocation']>>>, ParentType, ContextType>;
   isSubmenu?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  priority?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   templates?: Resolver<ResolversTypes['TemplatesConnection'], ParentType, ContextType, RequireFields<TemplateCategoryTemplatesArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
