@@ -21,7 +21,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     shouldCreateJoinTable = true,
     regenerateDataTableFilters = false,
     ignoreNull = true,
-    noChangelog = false,
+    noChangelog,
     noChangeLog = noChangelog, // In case of common capitalisation typo
     delete: deleteRecord = false,
     data,
@@ -51,17 +51,6 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     }
   }
 
-  // Data for changelog
-  const changeLogOptions = noChangeLog
-    ? { noChangeLog: true }
-    : {
-        noChangeLog: false,
-        userId: applicationData?.userId,
-        orgId: applicationData?.orgId,
-        username: applicationData?.username,
-        applicationId: applicationData?.applicationId,
-      }
-
   try {
     await createOrUpdateTable(DBConnect, db, tableNameProper, fullRecord, tableName)
 
@@ -74,6 +63,19 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
       : 'CREATE'
 
     const isMultipleRecords = recordIds.length > 1
+
+    // Data for changelog -- Default is NO change log for CREATE operations, but
+    // there is for UPDATE and DELETE
+    const changeLogOptions =
+      (noChangeLog === undefined && operationType === 'CREATE') || noChangeLog == true
+        ? { noChangeLog: true }
+        : {
+            noChangeLog: false,
+            userId: applicationData?.userId,
+            orgId: applicationData?.orgId,
+            username: applicationData?.username,
+            applicationId: applicationData?.applicationId,
+          }
 
     let result: any[] = []
 
@@ -100,7 +102,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     }
 
     for (const recordId of recordIds) {
-      if (shouldCreateJoinTable)
+      if (shouldCreateJoinTable && operationType === 'CREATE')
         await db.createJoinTableAndRecord(tableNameProper, applicationId, recordId)
     }
 
