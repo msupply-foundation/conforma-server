@@ -916,6 +916,12 @@ const migrateData = async () => {
       ALTER TABLE public.template_category   
         ADD COLUMN IF NOT EXISTS priority INTEGER;
     `)
+
+    console.log(' - Adding hide-if-empty option to data view column definitions')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_view_column_definition   
+        ADD COLUMN IF NOT EXISTS hide_if_null BOOLEAN DEFAULT false;
+    `)
   }
 
   // Other version migrations continue here...

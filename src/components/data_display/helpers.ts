@@ -447,8 +447,13 @@ export const constructDetailsResponse = async (
         displayDef: { [key: string]: DisplayDefinition },
         { columnName, isBasicField, dataType, columnDefinition = {} }
       ) => {
-        const { title, elementTypePluginCode, elementParameters, additionalFormatting } =
-          columnDefinition
+        const {
+          title,
+          elementTypePluginCode,
+          elementParameters,
+          additionalFormatting,
+          hideIfNull,
+        } = columnDefinition
         displayDef[columnName] = {
           title: title ?? startCase(columnName),
           isBasicField,
@@ -458,6 +463,7 @@ export const constructDetailsResponse = async (
             elementParameters: elementParameters || undefined,
             ...additionalFormatting,
           },
+          hideIfNull: hideIfNull ?? false,
         }
         return displayDef
       },

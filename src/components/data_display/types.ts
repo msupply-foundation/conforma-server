@@ -23,6 +23,7 @@ export interface DisplayDefinition {
   isBasicField: boolean
   dataType?: string
   formatting: FormatOptions
+  hideIfNull?: boolean
 }
 interface HeaderRow extends DisplayDefinition {
   columnName: string
