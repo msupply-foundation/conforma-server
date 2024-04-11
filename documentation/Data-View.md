@@ -270,6 +270,7 @@ The input fields are as follows:
 }
 ```  
 `firstName` and `lastName` are native fields on the "user" table, and are at the root level of the passed-in object here. Note that this object contains *all* fields, not just the ones being returned, so you can extract values from fields not being returned, such as in this case (where you wouldn't want to return `firstName` and `lastName` fields as well as a `fullName` column.)
+- `hideIfNull`: if `true`, then this field will be hidden completely when its value is `null`. This only affects the single-item "Details" view, which displays each value in its own row.
 
 (Again, columns relating to sorting or filtering (`sort_column`, `filter_parameters`, `filter_expression`, `filter_data_type`) are explained in [Data View Filters](Data-View-Filters.md))
 
