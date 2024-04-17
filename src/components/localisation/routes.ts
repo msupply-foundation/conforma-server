@@ -1,3 +1,4 @@
+import { FastifyPluginCallback, FastifyReply } from 'fastify'
 import path from 'path'
 import { rmdirSync, readFileSync, writeFile } from 'fs'
 import { promisify } from 'util'
@@ -13,6 +14,30 @@ import { DateTime } from 'luxon'
 const { localisationsFolder } = config
 
 const writeFilePromise = promisify(writeFile)
+
+export const localisationRoutes: FastifyPluginCallback<{ prefix: string }> = (server, _, done) => {
+  server.addHook('preValidation', async (request: any, reply: FastifyReply) => {
+    const { managerCanEditLocalisation = true } = config
+    const { isAdmin = false, isManager = false } = request.auth
+
+    if (managerCanEditLocalisation) {
+      if (!(isAdmin || isManager)) {
+        reply.statusCode = 401
+        return reply.send({ sucess: false, message: 'Unauthorized: not admin or manager' })
+      }
+    }
+
+    if (!managerCanEditLocalisation && !isAdmin) {
+      reply.statusCode = 401
+      return reply.send({ sucess: false, message: 'Unauthorized: not admin' })
+    }
+  })
+  server.post('/enable', routeEnableLanguage)
+  server.post('/install', routeInstallLanguage)
+  server.post('/remove', routeRemoveLanguage)
+  server.get('/get-all', routeGetAllLanguageFiles)
+  done()
+}
 
 export type LanguageOption = {
   languageName: string
