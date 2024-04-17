@@ -188,13 +188,9 @@ const startServer = async () => {
     server.post('/preview-actions', routePreviewActions)
     server.post('/extend-application', routeExtendApplication)
     server.post<AccessExternalApiQuery>('/external-api/:name/:route', routeAccessExternalApi)
-    // Lookup tables && Localisation require "systemManager" permission
+    // Lookup tables & Localisation require "systemManager" permission
     server.register(lookupTableRoutes, { prefix: '/lookup-table' })
     server.register(localisationRoutes, { prefix: '/localisation' })
-    server.post('/enable-language', routeEnableLanguage)
-    server.post('/install-language', routeInstallLanguage)
-    server.post('/remove-language', routeRemoveLanguage)
-    server.get('/all-languages', routeGetAllLanguageFiles)
 
     // File upload endpoint
     server.post('/upload', async function (request: any, reply) {

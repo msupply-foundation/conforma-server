@@ -141,7 +141,7 @@ POST: `/upload`
 Usage: `POST` request with file(s) in the request `body` form-data:  
 `key: "file" value: <File(s)>`
 
-URL query paramter fields (all optional):
+URL query parameter fields (all optional):
 
 - `user_id`
 - `application_serial` (for associating files with their applications)
@@ -459,6 +459,52 @@ Require either "admin" or "systemManger" permissions.
 
 See [Lookup table documentation](https://github.com/msupply-foundation/conforma-web-app/wiki/Lookup-Tables) for more info
 
+#### Manage localisations
+
+Require either "admin" or "systemManger" permissions.
+
+Used by the front-end `/admin/localisations` page
+
+POST: `/localisation/enable?code=<languageCode>&enabled=<true/false>`
+- To enable or disable a language that is already installed. If parameter `enabled` is omitted, the current setting will be toggled.
+
+POST: `/localisation/install`
+- To install a a new language into the system.
+
+GET: `/localisation/get-all`
+- Fetches all languages in a single bundle. Used by the "Export as CSV" feature.
+
+**Input parameters** (as body JSON) example:
+```
+{
+    "language": {
+        "languageName": "Portuguese",
+        "description": "Portuguese translation",
+        "code": "pt_br",
+        "flag": "🇧🇷",
+        "enabled": true
+    },
+    "strings": {
+        "ACTION_ASSIGN": "Atribuir",
+        "ACTION_CONTINUE": "Continuar"
+        ...
+    }
+}
+```
+
+**Returns**:
+```
+{
+    "success": true,
+    "message": "Language installed: Portuguese / pt_br"
+}
+```
+
+POST: `/localisation/remove?code=<languageCode>`
+- uninstalls the language from the server
+
+See [Localisation documentation](https://github.com/msupply-foundation/conforma-web-app/wiki/Localisation) for more info
+
 
 #### External API access
 
@@ -545,50 +591,6 @@ returns:
     }
 }
 ```
-
-#### Manage localisations
-
-Used by the front-end `/admin/localisations` page
-
-POST: `/enable-language?code=<languageCode>&enabled=<true/false>`
-- To enable or disable a language that is already installed. If parameter `enabled` is omitted, the current setting will be toggled.
-
-POST: `/install-language`
-- To install a a new language into the system.
-
-GET: `/all-languages`
-- Fetches all languages in a single bundle. Used by the "Export as CSV" feature.
-
-**Input parameters** (as body JSON) example:
-```
-{
-    "language": {
-        "languageName": "Portuguese",
-        "description": "Portuguese translation",
-        "code": "pt_br",
-        "flag": "🇧🇷",
-        "enabled": true
-    },
-    "strings": {
-        "ACTION_ASSIGN": "Atribuir",
-        "ACTION_CONTINUE": "Continuar"
-        ...
-    }
-}
-```
-
-**Returns**:
-```
-{
-    "success": true,
-    "message": "Language installed: Portuguese / pt_br"
-}
-```
-
-POST: `/remove-language?code=<languageCode>`
-- uninstalls the language from the server
-
-See [Localisation documentation](https://github.com/msupply-foundation/conforma-web-app/wiki/Localisation) for more info
 
 #### Snapshot endpoints
 
