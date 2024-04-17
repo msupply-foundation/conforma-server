@@ -281,6 +281,7 @@ export interface ServerPreferences {
   SMTPConfig?: SMTPConfig
   systemManagerPermissionName?: string
   managerCanEditLookupTables?: boolean
+  managerCanEditLocalisation?: boolean
   previewDocsMinKeepTime?: string
   fileCleanupSchedule?: number[] | ScheduleObject
   backupSchedule?: number[] | ScheduleObject

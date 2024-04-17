@@ -44,6 +44,7 @@ import {
   routeInstallLanguage,
   routeRemoveLanguage,
   routeGetAllLanguageFiles,
+  localisationRoutes,
 } from './components/localisation/routes'
 import { routeTriggers } from './components/other/routeTriggers'
 import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
@@ -159,10 +160,6 @@ const startServer = async () => {
         server.register(snapshotRoutes, { prefix: '/snapshot' })
         server.get('/updateRowPolicies', routeUpdateRowPolicies)
         server.get('/get-application-data', routeGetApplicationData)
-        server.post('/enable-language', routeEnableLanguage)
-        server.post('/install-language', routeInstallLanguage)
-        server.post('/remove-language', routeRemoveLanguage)
-        server.get('/all-languages', routeGetAllLanguageFiles)
         server.get('/get-all-prefs', routeGetAllPrefs)
         server.post('/set-prefs', routeSetPrefs)
         server.get('/archive-files', routeArchiveFiles)
@@ -191,8 +188,9 @@ const startServer = async () => {
     server.post('/preview-actions', routePreviewActions)
     server.post('/extend-application', routeExtendApplication)
     server.post<AccessExternalApiQuery>('/external-api/:name/:route', routeAccessExternalApi)
-    // Lookup tables requires "systemManager" permission
+    // Lookup tables & Localisation require "systemManager" permission
     server.register(lookupTableRoutes, { prefix: '/lookup-table' })
+    server.register(localisationRoutes, { prefix: '/localisation' })
 
     // File upload endpoint
     server.post('/upload', async function (request: any, reply) {
