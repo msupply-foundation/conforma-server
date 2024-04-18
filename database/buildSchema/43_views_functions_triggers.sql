@@ -12,7 +12,7 @@ SELECT
     organisation_id AS org_id,
     name AS org_name,
     user_role,
-    registration,
+    organisation.registration,
     organisation.address,
     logo_url,
     is_system_org
