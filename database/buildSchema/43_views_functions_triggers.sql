@@ -885,24 +885,29 @@ CREATE TRIGGER review_trigger
     EXECUTE FUNCTION public.add_event_to_trigger_queue ();
 
 -- REVIEW_RESPONSE
--- FUNCTION to auto-add stage_number to review_response
-CREATE OR REPLACE FUNCTION public.review_response_stage_number (review_id int)
-    RETURNS int
-    AS $$
-    SELECT
-        stage_number
-    FROM
-        public.review
-    WHERE
-        id = $1;
+-- FUNCTION/TRIGGER to auto-add stage_number to review_response
+DROP FUNCTION review_response_stage_number CASCADE;
+CREATE FUNCTION public.review_response_stage_number ()
+    RETURNS TRIGGER
+    AS $review_response_event$
+    BEGIN
+    NEW.stage_number = (
+          SELECT stage_number FROM review
+          WHERE id = NEW.review_id
+        );
+    RETURN NEW;
+    END;
+$review_response_event$
+LANGUAGE plpgsql;
 
-$$
-LANGUAGE SQL
-IMMUTABLE;
+DROP TRIGGER IF EXISTS review_response_stage_number_set
+    ON public.review_response;
+CREATE TRIGGER review_response_stage_number_set
+    BEFORE INSERT ON public.review_response
+    FOR EACH ROW
+    EXECUTE FUNCTION public.review_response_stage_number ();
 
-ALTER TABLE public.review_response
-    DROP COLUMN IF EXISTS stage_number,
-    ADD COLUMN IF NOT EXISTS stage_number integer GENERATED ALWAYS AS (public.review_response_stage_number (review_id)) STORED;
+
 
 -- Function to automatically set previous review_responses
 -- (for same review & templateElement) as is_latest_review = false

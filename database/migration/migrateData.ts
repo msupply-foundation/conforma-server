@@ -945,13 +945,11 @@ const migrateData = async () => {
     // https://github.com/msupply-foundation/conforma-server/issues/1090#issuecomment-2005558735
     await DB.changeSchema(`
       ALTER TABLE public.template_element
-        DROP COLUMN IF EXISTS template_code;
-      ALTER TABLE public.template_element
+        DROP COLUMN IF EXISTS template_code,
         DROP COLUMN IF EXISTS template_version;
       ALTER TABLE public.template_element   
-        ADD COLUMN IF NOT EXISTS template_code VARCHAR;
-      ALTER TABLE public.template_element   
-          ADD COLUMN IF NOT EXISTS template_version VARCHAR;
+        ADD COLUMN IF NOT EXISTS template_code VARCHAR,  
+        ADD COLUMN IF NOT EXISTS template_version VARCHAR;
     `)
     await DB.changeSchema(`
       UPDATE public.template_element
@@ -974,11 +972,8 @@ const migrateData = async () => {
       ALTER TABLE public.template_element
         ADD UNIQUE (template_code, code, template_version);
       ALTER TABLE public.template_element
-        ALTER COLUMN template_code
-        SET NOT NULL;
-      ALTER TABLE public.template_element
-        ALTER COLUMN template_version
-        SET NOT NULL;
+        ALTER COLUMN template_code SET NOT NULL,
+        ALTER COLUMN template_version SET NOT NULL;
     `)
 
     await DB.changeSchema(`
@@ -1057,17 +1052,20 @@ const migrateData = async () => {
           WHERE id = review_assignment_id
         );
     `)
-    //   await DB.changeSchema(`
-    //     ALTER TABLE public.review
-    //       ALTER COLUMN application_id SET NOT NULL,
-    //       ALTER COLUMN reviewer_id SET NOT NULL,
-    //       ALTER COLUMN level_number SET NOT NULL,
-    //       ALTER COLUMN stage_number SET NOT NULL,
-    //       ALTER COLUMN time_stage_created SET NOT NULL,
-    //       ALTER COLUMN is_last_level SET NOT NULL,
-    //       ALTER COLUMN is_last_stage SET NOT NULL,
-    //       ALTER COLUMN is_final_decision SET NOT NULL;
-    //  `)
+
+    await DB.changeSchema(`
+      ALTER TABLE public.review_response
+        DROP COLUMN IF EXISTS stage_number;
+      ALTER TABLE public.review_response
+        ADD COLUMN IF NOT EXISTS stage_number INTEGER;
+    `)
+    await DB.changeSchema(`
+      UPDATE public.review_response
+        SET stage_number = (
+          SELECT stage_number FROM review
+          WHERE id = review_id
+        );
+    `)
   }
 
   // Other version migrations continue here...
