@@ -17,7 +17,9 @@ export const queryDataTable = async (
   const tableNamePlural = plural(tableName)
   const filterType = upperFirst(camelCase(tableName)) + 'Filter'
   const fieldNameString = fieldNames.join(', ')
-  const orderByType = `${snakeCase(orderBy).toUpperCase()}_${ascending ? 'ASC' : 'DESC'}`
+  const orderByType = orderBy.endsWith('_DESC')
+    ? snakeCase(orderBy).toUpperCase()
+    : `${snakeCase(orderBy).toUpperCase()}_${ascending ? 'ASC' : 'DESC'}`
   const variables = { first, offset, filter: gqlFilters }
   const graphQLquery = `query getDataRecords($first: Int!, $offset: Int!, $filter: ${filterType}) { ${tableNamePlural}(first: $first, offset: $offset, orderBy: ${orderByType}, filter: $filter) { nodes { ${fieldNameString} }, totalCount}}`
 

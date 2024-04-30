@@ -12,7 +12,7 @@ SELECT
     organisation_id AS org_id,
     name AS org_name,
     user_role,
-    registration,
+    organisation.registration,
     organisation.address,
     logo_url,
     is_system_org
@@ -667,7 +667,8 @@ DROP FUNCTION IF EXISTS public.empty_assigned_sections ();
 -- If status is now AVAILABLE assigned sections should be empty
 -- Also check that assigned sections aren't already assigned and remove if so
 -- This all happens *BEFORE* the record is inserted
-CREATE OR REPLACE FUNCTION public.enforce_asssigned_section_validity ()
+DROP FUNCTION IF EXISTS public.enforce_asssigned_section_validity CASCADE; -- Old misspelled version
+CREATE OR REPLACE FUNCTION public.enforce_assigned_section_validity ()
     RETURNS TRIGGER
     AS $trigger_queue$
 BEGIN
@@ -711,7 +712,35 @@ CREATE TRIGGER review_assignment_validate_section_trigger
     BEFORE UPDATE ON public.review_assignment
     FOR EACH ROW
     -- WHEN (NEW.trigger IS NOT NULL AND OLD.trigger IS NULL)
-    EXECUTE FUNCTION public.enforce_asssigned_section_validity ();
+    EXECUTE FUNCTION public.enforce_assigned_section_validity ();
+    
+-- FUNCTION to insert correct level_id on review_assignments when inserted
+CREATE OR REPLACE FUNCTION public.insert_review_level_id ()
+    RETURNS TRIGGER
+    AS $trigger_queue$
+BEGIN
+    UPDATE public.review_assignment
+    SET level_id = 
+        (
+            SELECT id FROM template_stage_review_level
+            WHERE stage_id = (
+                SELECT id FROM template_stage
+                WHERE id = NEW.stage_id
+            )
+            AND number = NEW.level_number
+        )
+    WHERE id = NEW.id;
+    RETURN NEW;
+END;
+$trigger_queue$
+LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS review_assignment_insert ON public.review_assignment;
+
+CREATE TRIGGER review_assignment_insert
+    AFTER INSERT ON public.review_assignment
+    FOR EACH ROW
+    EXECUTE FUNCTION public.insert_review_level_id ();
 
 -- FUNCTION to return `available_sections` for a given review_assignment based
 -- on other assignments and allowed sections

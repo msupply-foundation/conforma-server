@@ -18,25 +18,7 @@ The back-end currently has two server instances which are launched to handle inc
   - [Authentication](#authentication)
   - [Public endpoints](#public-endpoints)
   - [Authenticated endpoints](#authenticated-endpoints)
-    - [File upload endpoint:](#file-upload-endpoint)
-    - [Check unique endpoint](#check-unique-endpoint)
-    - [Create hash](#create-hash)
-    - [Login Organisation](#login-organisation)
-    - [User Info](#user-info)
-    - [User Permissions](#user-permissions)
-    - [Check Triggers](#check-triggers)
-    - [Generate PDF](#generate-pdf)
-    - [Data Views](#data-views)
-    - [Preview Actions](#preview-actions)
-    - [Extend application deadline](#extend-application-deadline)
-    - [Lookup table endpoints](#lookup-table-endpoints)
-    - [External API access](#external-api-access)
   - [Admin only endpoints](#admin-only-endpoints)
-    - [Update row level policies](#update-row-level-policies)
-    - [Run Action](#run-action)
-    - [Manage localisations](#manage-localisations)
-    - [Snapshot endpoints](#snapshot-endpoints)
-    - [Preference management endpoints](#preference-management-endpoints)
 
 <!-- /TOC -->
 
@@ -159,7 +141,7 @@ POST: `/upload`
 Usage: `POST` request with file(s) in the request `body` form-data:  
 `key: "file" value: <File(s)>`
 
-URL query paramter fields (all optional):
+URL query parameter fields (all optional):
 
 - `user_id`
 - `application_serial` (for associating files with their applications)
@@ -477,6 +459,52 @@ Require either "admin" or "systemManger" permissions.
 
 See [Lookup table documentation](https://github.com/msupply-foundation/conforma-web-app/wiki/Lookup-Tables) for more info
 
+#### Manage localisations
+
+Require either "admin" or "systemManger" permissions.
+
+Used by the front-end `/admin/localisations` page
+
+POST: `/localisation/enable?code=<languageCode>&enabled=<true/false>`
+- To enable or disable a language that is already installed. If parameter `enabled` is omitted, the current setting will be toggled.
+
+POST: `/localisation/install`
+- To install a a new language into the system.
+
+GET: `/localisation/get-all`
+- Fetches all languages in a single bundle. Used by the "Export as CSV" feature.
+
+**Input parameters** (as body JSON) example:
+```
+{
+    "language": {
+        "languageName": "Portuguese",
+        "description": "Portuguese translation",
+        "code": "pt_br",
+        "flag": "🇧🇷",
+        "enabled": true
+    },
+    "strings": {
+        "ACTION_ASSIGN": "Atribuir",
+        "ACTION_CONTINUE": "Continuar"
+        ...
+    }
+}
+```
+
+**Returns**:
+```
+{
+    "success": true,
+    "message": "Language installed: Portuguese / pt_br"
+}
+```
+
+POST: `/localisation/remove?code=<languageCode>`
+- uninstalls the language from the server
+
+See [Localisation documentation](https://github.com/msupply-foundation/conforma-web-app/wiki/Localisation) for more info
+
 
 #### External API access
 
@@ -564,50 +592,6 @@ returns:
 }
 ```
 
-#### Manage localisations
-
-Used by the front-end `/admin/localisations` page
-
-POST: `/enable-language?code=<languageCode>&enabled=<true/false>`
-- To enable or disable a language that is already installed. If parameter `enabled` is omitted, the current setting will be toggled.
-
-POST: `/install-language`
-- To install a a new language into the system.
-
-GET: `/all-languages`
-- Fetches all languages in a single bundle. Used by the "Export as CSV" feature.
-
-**Input parameters** (as body JSON) example:
-```
-{
-    "language": {
-        "languageName": "Portuguese",
-        "description": "Portuguese translation",
-        "code": "pt_br",
-        "flag": "🇧🇷",
-        "enabled": true
-    },
-    "strings": {
-        "ACTION_ASSIGN": "Atribuir",
-        "ACTION_CONTINUE": "Continuar"
-        ...
-    }
-}
-```
-
-**Returns**:
-```
-{
-    "success": true,
-    "message": "Language installed: Portuguese / pt_br"
-}
-```
-
-POST: `/remove-language?code=<languageCode>`
-- uninstalls the language from the server
-
-See [Localisation documentation](https://github.com/msupply-foundation/conforma-web-app/wiki/Localisation) for more info
-
 #### Snapshot endpoints
 
 - GET: `/snapshot/list`
@@ -626,3 +610,9 @@ See [Snapshot documentation](Snapshots.md) for more info
 The difference between these and the [public `get-prefs` endpoint](#get-preferences-endpoint) is that these read and write both web app *and* server preferences, whereas the public `get-prefs` is just for the web app.
 
 See [Preferences documentation](Preferences.md) for more info
+
+#### Raw data access
+
+- GET: `/raw-data/<dataTable>/<id>`
+
+Normally, data table data is accessed from the front-end via [Data Views](Data-View.md). However, this data is structured and formatted for presentation. Occasionally, an Admin template may require access to the raw database data from a data table, so this endpoint provides such a mechanism.

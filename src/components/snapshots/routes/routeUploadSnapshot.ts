@@ -8,9 +8,9 @@ import {
 import fs from 'fs'
 import { pipeline } from 'stream'
 import { promisify } from 'util'
-import zipper from 'adm-zip'
 import { timestampStringExpression } from './helpers'
 import { DateTime } from 'luxon'
+import StreamZip from 'node-stream-zip'
 const pump = promisify(pipeline)
 
 const errorMessageBase = {
@@ -27,8 +27,6 @@ type Query = {
 const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply) => {
   const data = await request.files()
   const isTemplate = (request.query as Query)?.template === 'true'
-
-  console.log('isTemplate', isTemplate)
 
   let snapshotName: string = ''
   try {
@@ -48,10 +46,10 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
 
       await pump(file.file, fs.createWriteStream(tempZipLocation))
 
-      // Below synchronous operations are probably ok for snapshot routes
-      const zip = new zipper(tempZipLocation)
+      const zip = new StreamZip.async({ file: tempZipLocation })
 
-      const files = zip.getEntries().map(({ entryName }) => entryName)
+      const zipEntries = Object.values(await zip.entries())
+      const files = zipEntries.map(({ name }) => name)
 
       if (!files.includes('info.json')) {
         return reply.send({
@@ -60,7 +58,8 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
         })
       }
 
-      const info = JSON.parse(zip.readFile('info.json')?.toString() || '{}')
+      const zipEntryData = await zip.entryData('info.json')
+      const info = JSON.parse(zipEntryData?.toString() || '{}')
 
       // Add timestamp suffix to upload name if it doesn't already have it. But
       // we don't want this on template uploads as the front-end needs to refer
@@ -88,7 +87,11 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
           })
         }
       }
-      zip.extractAllTo(destination, true)
+
+      // zip.extract can error if destination dir doesn't already exist
+      fs.mkdirSync(destination);
+      await zip.extract(null, destination)
+      await zip.close();
 
       // Move/rename original zip if filename has changed, or if it's an archive
       fs.rename(

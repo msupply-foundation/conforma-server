@@ -13,9 +13,15 @@ import {
   FilePayload,
   TriggerQueueUpdatePayload,
   UserOrg,
+  ActionResult,
+  TriggerPayload,
+  DBOperationType,
 } from '../types'
 import { ApplicationOutcome, ApplicationStatus, ReviewStatus, Trigger } from '../generated/graphql'
 import { errorMessage } from './utilityFunctions'
+import { EventThrottle } from './actions/throttle'
+
+const Throttle = new EventThrottle<TriggerPayload, ActionResult[]>()
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -52,7 +58,12 @@ class PostgresDB {
           // "data" is stored output from scheduled trigger or verification
           // "data" can sometimes exceed the byte limit for notification payload, so must be fetched separately
           const data = await this.getTriggerPayloadData(payloadObject.trigger_id)
-          processTrigger({ ...payloadObject, data })
+          const { trigger, table, record_id } = payloadObject
+          Throttle.add({
+            name: `Trigger ${trigger} on ${table}, id ${record_id}`,
+            data: { ...payloadObject, data },
+            action: processTrigger,
+          })
           break
         case 'action_notifications':
           // For Async Actions only
@@ -1226,13 +1237,19 @@ class PostgresDB {
   public getDataTableColumns = async (tableName: string) => {
     const text = `
       SELECT column_name as name,
-      data_type as "dataType"
+      data_type as "dataType",
+      udt_name as "userType"
       FROM information_schema.columns
       WHERE table_name = $1;
     `
     try {
       const result = await this.query({ text, values: [tableName] })
-      return result.rows
+      return result.rows.map(({ name, dataType, userType }) => ({
+        name,
+        // So we can discriminate between citext and enums -- data type returns
+        // "USER-DEFINED" for both
+        dataType: dataType === 'USER-DEFINED' ? userType : dataType,
+      }))
     } catch (err) {
       console.log(errorMessage(err))
       throw err
@@ -1299,6 +1316,48 @@ class PostgresDB {
     try {
       const result = await this.query({ text, values: [tableName, columnMatches] })
       return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  // Changelog
+  public addToChangelog = async (
+    tableName: string,
+    recordId: number,
+    type: DBOperationType,
+    oldData: Record<string, any> | null,
+    newData: Record<string, any> | null,
+    userId: number | null | undefined,
+    orgId: number | null | undefined,
+    username: string | undefined,
+    applicationId: number | null | undefined,
+    comment: string | null | undefined
+  ) => {
+    const dataTable = tableName.replace(config.dataTablePrefix, '')
+    const text = `
+      INSERT INTO data_changelog
+        (data_table, record_id, update_type, old_data, new_data,
+          user_id, org_id, username, application_id, comment)
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+    `
+    try {
+      await this.query({
+        text,
+        values: [
+          dataTable,
+          recordId,
+          type,
+          oldData,
+          newData,
+          userId,
+          orgId,
+          username,
+          applicationId,
+          comment,
+        ],
+      })
     } catch (err) {
       console.log(errorMessage(err))
       throw err

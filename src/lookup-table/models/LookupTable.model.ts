@@ -16,7 +16,7 @@ const LookupTableModel = () => {
   const getAllRowsForTable = async ({ tableName, fieldMap }: LookupTableStructureFull) => {
     const mappedField = ({ label, fieldname }: FieldMapType) => `"${fieldname}" as "${label}"`
     const fields = fieldMap.map(mappedField).join(',')
-    const text = `SELECT ${fields} FROM ${dataTablePrefix}${tableName}`
+    const text = `SELECT ${fields} FROM ${dataTablePrefix}${tableName} ORDER BY id`
     const result = await DBConnect.query({ text })
     return exportDataRows(fieldMap, result.rows)
   }
@@ -99,17 +99,52 @@ const LookupTableModel = () => {
     }
   }
 
-  const createRow = async ({
-    tableName,
-    row,
-  }: {
-    tableName: string
-    row: any
-  }): Promise<{ id: string }[]> => {
+  const doesIdExist = async (table: string, id: number) => {
     try {
-      const text = `INSERT INTO ${dataTablePrefix}${tableName}(${Object.keys(row)}) VALUES (
+      const text = `
+        SELECT id FROM ${table}
+        WHERE id = $1
+      `
+      const count = (await DBConnect.query({ text, values: [id] })).rows.length
+      return !!count
+    } catch (error) {
+      throw error
+    }
+  }
+
+  const createOrUpdateRow = async (
+    tableName: string,
+    row: Record<string, any>
+  ): Promise<{ id: string }[] | boolean> => {
+    const table = `${dataTablePrefix}${tableName}`
+    try {
+      if (!row.id) delete row.id
+      else row.id = Number(row.id)
+
+      const id = row.id ?? null
+
+      const operation: 'CREATE' | 'UPDATE' = !id
+        ? 'CREATE'
+        : (await doesIdExist(table, id))
+        ? 'UPDATE'
+        : 'CREATE'
+
+      switch (operation) {
+        case 'CREATE':
+          return await createRow(table, row)
+        case 'UPDATE':
+          return await updateRow(table, row)
+      }
+    } catch (error) {
+      throw error
+    }
+  }
+
+  const createRow = async (table: string, row: Record<string, any>): Promise<{ id: string }[]> => {
+    try {
+      const text = `INSERT INTO ${table}(${Object.keys(row)}) VALUES (
           ${Object.keys(row)
-            .map((key, index) => {
+            .map((_, index) => {
               return '$' + String(index + 1)
             })
             .join(', ')}) RETURNING id`
@@ -119,19 +154,17 @@ const LookupTableModel = () => {
         values: [...Object.values(row)],
       })
 
+      // Add new id to row property so it doesn't get deleted immediately
+      const id = result.rows[0].id
+      row.id = id
+
       return result.rows.map((row: any) => row.id)
     } catch (error) {
       throw error
     }
   }
 
-  const updateRow = async ({
-    tableName,
-    row,
-  }: {
-    tableName: string
-    row: any
-  }): Promise<boolean> => {
+  const updateRow = async (table: string, row: Record<string, any>): Promise<boolean> => {
     try {
       let primaryKeyIndex = 0
       const setText = Object.keys(row)
@@ -147,8 +180,25 @@ const LookupTableModel = () => {
         .filter(Boolean)
         .join(', ')
 
-      const text = `UPDATE ${dataTablePrefix}${tableName} SET ${setText} WHERE id = $${primaryKeyIndex}`
+      const text = `UPDATE ${table} SET ${setText} WHERE id = $${primaryKeyIndex}`
       await DBConnect.query({ text, values: [...Object.values(row)] })
+      return true
+    } catch (error) {
+      throw error
+    }
+  }
+
+  const deleteRemovedRows = async (
+    tableName: string,
+    rows: { id?: number }[]
+  ): Promise<boolean> => {
+    try {
+      const rowIds = rows.filter(({ id }) => !!id).map(({ id }) => Number(id))
+      const text = `
+        DELETE FROM ${dataTablePrefix}${tableName}
+        WHERE NOT (id = ANY($1));
+      `
+      await DBConnect.query({ text, values: [rowIds] })
       return true
     } catch (error) {
       throw error
@@ -184,8 +234,8 @@ const LookupTableModel = () => {
     getAllRowsForTable,
     countStructureRowsByTableName,
     createTable,
-    createRow,
-    updateRow,
+    createOrUpdateRow,
+    deleteRemovedRows,
     updateStructureFieldMaps,
     addTableColumns,
   }

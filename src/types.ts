@@ -223,6 +223,8 @@ export interface TriggerQueueUpdatePayload {
   status: TriggerQueueStatus
 }
 
+export type DBOperationType = 'CREATE' | 'UPDATE' | 'DELETE'
+
 export interface User {
   userId: number
   firstName: string
@@ -279,6 +281,7 @@ export interface ServerPreferences {
   SMTPConfig?: SMTPConfig
   systemManagerPermissionName?: string
   managerCanEditLookupTables?: boolean
+  managerCanEditLocalisation?: boolean
   previewDocsMinKeepTime?: string
   fileCleanupSchedule?: number[] | ScheduleObject
   backupSchedule?: number[] | ScheduleObject

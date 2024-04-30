@@ -5,7 +5,7 @@ They are divided into **web** and **server** blocks, which refer to the web app 
 The available properties are as follows (almost  are optional, as the system has fallback defaults for most of them, specified below):
 
 ### Server
-- `thumbnailMaxWidth`: the maximum width (in pixels) of thumbnails that are generated for images uploaded with the [File Upload](API.md/#file-upload-endpoint) endpoint. (Default `300`)
+- **`thumbnailMaxWidth`**: the maximum width (in pixels) of thumbnails that are generated for images uploaded with the [File Upload](API.md/#file-upload-endpoint) endpoint. (Default `300`)
 - **`thumbnailMaxHeight`**: Same as `thumbnailMaxWidth`, but for thumbnail height.
 - **`actionSchedule`**: A schedule for how often scheduled actions should run, expressed as a [node-schedule](https://www.npmjs.com/package/node-schedule#recurrence-rule-scheduling) recurrence rule. (Default: every hour on the hour)
 - **`SMTPConfig`**: Configuration options for sending emails from the system using the [sendNotification action](List-of-Action-plugins.md/#send-notification), with the following properties:  
@@ -23,6 +23,7 @@ The available properties are as follows (almost  are optional, as the system has
   Note: the **password** is not stored here, for security reasons. It must be passed in to the server as and environment variable: `SMTP_PASSWORD`. This should be in an `.env` file for development, or as part of the server start-up command for a live server.
 - **`systemManagerPermissionName`**: The "system manager" is a special permission that has certain system management rights (but not as extensive as "Admin"). Any existing permission name can be used for this special permission, in which case it should be specified here. (Default: `systemManager`)
 - **`managerCanEditLookupTables`**: If `true`, then users with the above management permission are also allowed to view/edit lookup tables. (Default: `true`)
+- **`managerCanEditLocalisation`**: Same as `managerCanEditLookupTables` but for managing [localisation configuration](https://github.com/msupply-foundation/conforma-web-app/wiki/Localisation).
 - **`previewDocsMinKeepTime`**: Documents generated as part of the Preview functionality will be periodically cleaned up, as they have no lasting use. It should be a Postgres duration string. (Default: "2 hours").
 - **`fileCleanupSchedule`**: The schedule for cleaning up (deleting) and missing files, orphan file database records, and files marked as "to be deleted" (e.g Preview docs), as per the node-schedule syntax above. (Default: daily at 1:05am UTC)
 - **`backupSchedule`**: How often system backups should run, as per the node-schedule syntax above. (Default: daily at 1:15am UTC)

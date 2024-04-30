@@ -859,6 +859,88 @@ const migrateData = async () => {
     // }
   }
 
+  // v0.8.0
+  if (databaseVersionLessThan('0.8.0')) {
+    console.log('Migrating to v0.8.0...')
+
+    console.log(' - Changing some text fields in user/org to case-insensitive')
+    await DB.changeSchema(`
+      ALTER TABLE public.user   
+        DROP COLUMN IF EXISTS full_name;
+      DROP VIEW IF EXISTS user_org_join;
+      ALTER TABLE public.user
+        ALTER COLUMN first_name TYPE citext;
+      ALTER TABLE public.user
+        ALTER COLUMN last_name TYPE citext;
+      ALTER TABLE public.user
+        ADD COLUMN IF NOT EXISTS full_name citext GENERATED ALWAYS AS (first_name || ' ' || last_name) STORED;
+    `)
+    await DB.changeSchema(`
+      DROP VIEW IF EXISTS permissions_all;    
+      ALTER TABLE public.organisation   
+        ALTER COLUMN name TYPE citext;
+    `)
+
+    console.log(' - Changing text fields in data tables to case-insensitive')
+    await DB.convertDataTablesToCaseInsensitive()
+
+    console.log(' - Adding data_changelog table')
+    await DB.changeSchema(`
+      CREATE TYPE public.changelog_type AS ENUM (
+        'CREATE',
+        'UPDATE',
+        'DELETE'
+          );
+    `)
+    await DB.changeSchema(`
+      CREATE TABLE IF NOT EXISTS data_changelog (
+        id serial PRIMARY KEY,
+        data_table varchar NOT NULL,
+        record_id INTEGER NOT NULL,
+        update_type changelog_type NOT NULL,
+        timestamp timestamptz DEFAULT NOW(),
+        old_data jsonb,
+        new_data jsonb,
+        user_id integer REFERENCES public.user (id) ON DELETE CASCADE,
+        org_id integer REFERENCES public.organisation (id) ON DELETE CASCADE,
+        username citext REFERENCES public.user (username)
+          ON DELETE CASCADE ON UPDATE CASCADE,
+        application_id integer REFERENCES public.application (id) ON DELETE CASCADE
+      );
+    `)
+
+    console.log(' - Adding priority fields to templates and template categories')
+    await DB.changeSchema(`
+      ALTER TABLE public.template   
+        ADD COLUMN IF NOT EXISTS priority INTEGER;
+      ALTER TABLE public.template_category   
+        ADD COLUMN IF NOT EXISTS priority INTEGER;
+    `)
+
+    console.log(' - Adding hide-if-empty option to data view column definitions')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_view_column_definition   
+        ADD COLUMN IF NOT EXISTS hide_if_null BOOLEAN DEFAULT false;
+    `)
+
+    console.log(' - Adding single-reviewer option to stage review level')
+    await DB.changeSchema(`
+      ALTER TABLE public.template_stage_review_level   
+        ADD COLUMN IF NOT EXISTS single_reviewer_all_sections BOOLEAN
+        NOT NULL DEFAULT false;
+    `)
+    console.log(
+      ' - Update existing review_assignments with correct review_level_id, and make (stageId, number) unique'
+    )
+    await DB.updateLevelIdInReviewAssignments()
+
+    console.log(' - Adding "comment" field to data_changelog')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_changelog   
+        ADD COLUMN IF NOT EXISTS comment VARCHAR;
+    `)
+  }
+
   // Other version migrations continue here...
 
   // Update (almost all) Indexes, Views, Functions, Triggers regardless, since

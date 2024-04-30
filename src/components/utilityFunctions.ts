@@ -4,7 +4,6 @@ import fsProm from 'fs/promises'
 import { camelCase, snakeCase, mapKeys } from 'lodash'
 import { singular } from 'pluralize'
 import config from '../config'
-import { type } from 'os'
 
 // Determines the folder of the main entry file, as opposed to the
 // project root. Needed for components that traverse the local directory
@@ -127,8 +126,8 @@ const ALLOWED_TABLE_NAMES = config.allowedTableNames
 
 export const getValidTableName = (inputName: string | undefined): string => {
   if (!inputName) throw new Error('Missing table name')
-  if (ALLOWED_TABLE_NAMES.includes(inputName)) return inputName
   const tableName = snakeCase(singular(inputName))
+  if (ALLOWED_TABLE_NAMES.includes(tableName)) return tableName
   const namePattern = new RegExp(`^${DATA_TABLE_PREFIX}.+`)
 
   return namePattern.test(tableName) ? tableName : `${DATA_TABLE_PREFIX}${tableName}`

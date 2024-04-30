@@ -44,6 +44,7 @@ import {
   routeInstallLanguage,
   routeRemoveLanguage,
   routeGetAllLanguageFiles,
+  localisationRoutes,
 } from './components/localisation/routes'
 import { routeTriggers } from './components/other/routeTriggers'
 import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
@@ -53,6 +54,7 @@ import { Schedulers } from './components/scheduler'
 import { AccessExternalApiQuery, routeAccessExternalApi } from './components/external-apis/routes'
 import { DEFAULT_LOGOUT_TIME } from './constants'
 import { updateRowPolicies } from './components/permissions/rowLevelPolicyHelpers'
+import { routeRawData } from './components/other/routeRawData'
 require('dotenv').config()
 
 // Set the default locale and timezone for date-time display (in console)
@@ -63,7 +65,7 @@ if (config.timezone) Settings.defaultZoneName = config.timezone
 const web_host = process.env.WEB_HOST
 if (!web_host) {
   console.error(
-    "ERROR!\nUnable to find the WEB_URL environment variable (maybe others too). The server won't start without access without it.\n\nExiting now...\n"
+    "ERROR!\nUnable to find the WEB_HOST environment variable (maybe others too). The server won't start without access without it.\n\nExiting now...\n"
   )
   process.exit(1)
 }
@@ -92,7 +94,8 @@ const startServer = async () => {
   server.register(fastifyCors, { origin: '*' }) // Allow all origin (TODO change in PROD)
 
   const api: FastifyPluginCallback = (server, _, done) => {
-    // Here we parse JWT, and set it in request.auth, which is available for downstream routes
+    // Here we parse JWT, and set it in request.auth, which is available for
+    // downstream routes
     server.addHook('preValidation', async (request: any, reply: FastifyReply) => {
       if (request.url.startsWith('/api/public')) return
 
@@ -157,10 +160,6 @@ const startServer = async () => {
         server.register(snapshotRoutes, { prefix: '/snapshot' })
         server.get('/updateRowPolicies', routeUpdateRowPolicies)
         server.get('/get-application-data', routeGetApplicationData)
-        server.post('/enable-language', routeEnableLanguage)
-        server.post('/install-language', routeInstallLanguage)
-        server.post('/remove-language', routeRemoveLanguage)
-        server.get('/all-languages', routeGetAllLanguageFiles)
         server.get('/get-all-prefs', routeGetAllPrefs)
         server.post('/set-prefs', routeSetPrefs)
         server.get('/archive-files', routeArchiveFiles)
@@ -169,6 +168,7 @@ const startServer = async () => {
         server.post('/test-trigger', routeTestTrigger)
         server.post('/generate-filter-data-fields', routeGenerateFilterDataFields)
         done()
+        server.get('/raw-data/:dataTable/:id', routeRawData)
       },
       { prefix: '/admin' }
     )
@@ -188,8 +188,9 @@ const startServer = async () => {
     server.post('/preview-actions', routePreviewActions)
     server.post('/extend-application', routeExtendApplication)
     server.post<AccessExternalApiQuery>('/external-api/:name/:route', routeAccessExternalApi)
-    // Lookup tables requires "systemManager" permission
+    // Lookup tables & Localisation require "systemManager" permission
     server.register(lookupTableRoutes, { prefix: '/lookup-table' })
+    server.register(localisationRoutes, { prefix: '/localisation' })
 
     // File upload endpoint
     server.post('/upload', async function (request: any, reply) {
