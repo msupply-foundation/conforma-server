@@ -22,7 +22,6 @@ const lookupTableRoutes: FastifyPluginCallback<{ prefix: string }> = (server, _,
   })
   server.post('/import', ImportCsvController)
   server.get('/export/:id', routeExportLookupTable)
-  // server.get('/export/:lookupTableId', ExportCsvController)
   server.post('/import/:lookupTableId', ImportCsvUpdateController)
   done()
 }
