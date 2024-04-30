@@ -3750,8 +3750,8 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
-  templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['String']>;
+  templateCode: Scalars['String'];
+  templateVersion: Scalars['String'];
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -4679,7 +4679,7 @@ export type ApplicationStatusHistory = Node & {
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationId: Scalars['Int'];
   /** Reads a single `ApplicationStageHistory` that is related to this `ApplicationStatusHistory`. */
   applicationStageHistory?: Maybe<ApplicationStageHistory>;
 };
@@ -4702,7 +4702,7 @@ export type ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStat
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationId: Scalars['Int'];
   applicationStageHistoryToApplicationStageHistoryId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput>;
 };
 
@@ -4804,7 +4804,7 @@ export type ApplicationStatusHistoryInput = {
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationId: Scalars['Int'];
   applicationStageHistoryToApplicationStageHistoryId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput>;
 };
 
@@ -8407,6 +8407,7 @@ export type DataChangelog = Node & {
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   /** Reads a single `User` that is related to this `DataChangelog`. */
   user?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `DataChangelog`. */
@@ -8466,6 +8467,7 @@ export type DataChangelogApplicationIdFkeyDataChangelogCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -8549,6 +8551,8 @@ export type DataChangelogCondition = {
   username?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `comment` field. */
+  comment?: Maybe<Scalars['String']>;
 };
 
 /** The fields on `dataChangelog` to look up the row to connect. */
@@ -8585,6 +8589,8 @@ export type DataChangelogFilter = {
   username?: Maybe<StringFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `comment` field. */
+  comment?: Maybe<StringFilter>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
@@ -8622,6 +8628,7 @@ export type DataChangelogInput = {
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -8712,6 +8719,7 @@ export type DataChangelogOrgIdFkeyDataChangelogCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -8813,6 +8821,7 @@ export type DataChangelogPatch = {
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -8866,6 +8875,8 @@ export enum DataChangelogsOrderBy {
   UsernameDesc = 'USERNAME_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  CommentAsc = 'COMMENT_ASC',
+  CommentDesc = 'COMMENT_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -8882,6 +8893,7 @@ export type DataChangelogUserIdFkeyDataChangelogCreateInput = {
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -8978,6 +8990,7 @@ export type DataChangelogUsernameFkeyDataChangelogCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -23801,30 +23814,19 @@ export type Query = Node & {
   applicationListFilterOrganisation?: Maybe<ApplicationListFilterOrganisationConnection>;
   applicationListFilterReviewer?: Maybe<ApplicationListFilterReviewerConnection>;
   applicationListFilterStage?: Maybe<ApplicationListFilterStageConnection>;
-  applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
   assignableQuestionsCount?: Maybe<Scalars['BigInt']>;
   assignedQuestions?: Maybe<AssignedQuestionsConnection>;
   assignedQuestionsCount?: Maybe<Scalars['BigInt']>;
   assignerList?: Maybe<AssignerListConnection>;
   assignmentList?: Maybe<AssignmentListConnection>;
-  getTemplateCode?: Maybe<Scalars['String']>;
-  getTemplateVersion?: Maybe<Scalars['String']>;
   jwtGetBigint?: Maybe<Scalars['BigInt']>;
   jwtGetBoolean?: Maybe<Scalars['Boolean']>;
   jwtGetText?: Maybe<Scalars['String']>;
-  reviewApplicationId?: Maybe<Scalars['Int']>;
   /** Reads and enables pagination through a set of `ReviewAssignmentAssignedSectionsShape`. */
   reviewAssignmentAssignedSections?: Maybe<ReviewAssignmentAssignedSectionsShapesConnection>;
   reviewAssignmentTemplateId?: Maybe<Scalars['Int']>;
-  reviewIsFinalDecision?: Maybe<Scalars['Boolean']>;
-  reviewIsLastLevel?: Maybe<Scalars['Boolean']>;
-  reviewIsLastStage?: Maybe<Scalars['Boolean']>;
-  reviewLevel?: Maybe<Scalars['Int']>;
   reviewList?: Maybe<ReviewListConnection>;
   reviewResponseStageNumber?: Maybe<Scalars['Int']>;
-  reviewReviewerId?: Maybe<Scalars['Int']>;
-  reviewStage?: Maybe<Scalars['Int']>;
-  reviewTimeStageCreated?: Maybe<Scalars['Datetime']>;
   reviewableQuestions?: Maybe<ReviewableQuestionsConnection>;
   reviewableQuestionsCount?: Maybe<Scalars['BigInt']>;
   submittedAssignedQuestionsCount?: Maybe<Scalars['BigInt']>;
@@ -25656,12 +25658,6 @@ export type QueryApplicationListFilterStageArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryApplicationStatusHistoryApplicationIdArgs = {
-  applicationStageHistoryId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryAssignableQuestionsCountArgs = {
   appId?: Maybe<Scalars['Int']>;
 };
@@ -25715,18 +25711,6 @@ export type QueryAssignmentListArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryGetTemplateCodeArgs = {
-  sectionId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryGetTemplateVersionArgs = {
-  sectionId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryJwtGetBigintArgs = {
   jwtKey?: Maybe<Scalars['String']>;
 };
@@ -25741,12 +25725,6 @@ export type QueryJwtGetBooleanArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryJwtGetTextArgs = {
   jwtKey?: Maybe<Scalars['String']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewApplicationIdArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
 };
 
 
@@ -25769,30 +25747,6 @@ export type QueryReviewAssignmentTemplateIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryReviewIsFinalDecisionArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewIsLastLevelArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewIsLastStageArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewLevelArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryReviewListArgs = {
   stageid?: Maybe<Scalars['Int']>;
   reviewerid?: Maybe<Scalars['Int']>;
@@ -25809,24 +25763,6 @@ export type QueryReviewListArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryReviewResponseStageNumberArgs = {
   reviewId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewReviewerIdArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewStageArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewTimeStageCreatedArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
 };
 
 
@@ -29744,8 +29680,8 @@ export type ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput = {
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
-  templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['String']>;
+  templateCode: Scalars['String'];
+  templateVersion: Scalars['String'];
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -31498,8 +31434,8 @@ export type TemplateElement = Node & {
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   reviewability: Reviewability;
-  templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['String']>;
+  templateCode: Scalars['String'];
+  templateVersion: Scalars['String'];
   /** Reads a single `TemplateSection` that is related to this `TemplateElement`. */
   section?: Maybe<TemplateSection>;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
@@ -31683,8 +31619,8 @@ export type TemplateElementInput = {
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
-  templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['String']>;
+  templateCode: Scalars['String'];
+  templateVersion: Scalars['String'];
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -31879,8 +31815,8 @@ export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
-  templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['String']>;
+  templateCode: Scalars['String'];
+  templateVersion: Scalars['String'];
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -36973,6 +36909,7 @@ export type UpdateDataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyP
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -36991,6 +36928,7 @@ export type UpdateDataChangelogOnDataChangelogForDataChangelogOrgIdFkeyPatch = {
   userId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -37009,6 +36947,7 @@ export type UpdateDataChangelogOnDataChangelogForDataChangelogUserIdFkeyPatch = 
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -37027,6 +36966,7 @@ export type UpdateDataChangelogOnDataChangelogForDataChangelogUsernameFkeyPatch 
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -50516,7 +50456,7 @@ export type ApplicationStatusHistoryResolvers<ContextType = any, ParentType exte
   status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
   timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   isCurrent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  applicationId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   applicationStageHistory?: Resolver<Maybe<ResolversTypes['ApplicationStageHistory']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -51324,6 +51264,7 @@ export type DataChangelogResolvers<ContextType = any, ParentType extends Resolve
   orgId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  comment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   org?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
   userByUsername?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
@@ -53667,29 +53608,18 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationListFilterOrganisation?: Resolver<Maybe<ResolversTypes['ApplicationListFilterOrganisationConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListFilterOrganisationArgs, never>>;
   applicationListFilterReviewer?: Resolver<Maybe<ResolversTypes['ApplicationListFilterReviewerConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListFilterReviewerArgs, never>>;
   applicationListFilterStage?: Resolver<Maybe<ResolversTypes['ApplicationListFilterStageConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListFilterStageArgs, never>>;
-  applicationStatusHistoryApplicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryApplicationIdArgs, never>>;
   assignableQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryAssignableQuestionsCountArgs, never>>;
   assignedQuestions?: Resolver<Maybe<ResolversTypes['AssignedQuestionsConnection']>, ParentType, ContextType, RequireFields<QueryAssignedQuestionsArgs, never>>;
   assignedQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryAssignedQuestionsCountArgs, never>>;
   assignerList?: Resolver<Maybe<ResolversTypes['AssignerListConnection']>, ParentType, ContextType, RequireFields<QueryAssignerListArgs, never>>;
   assignmentList?: Resolver<Maybe<ResolversTypes['AssignmentListConnection']>, ParentType, ContextType, RequireFields<QueryAssignmentListArgs, never>>;
-  getTemplateCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetTemplateCodeArgs, never>>;
-  getTemplateVersion?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetTemplateVersionArgs, never>>;
   jwtGetBigint?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryJwtGetBigintArgs, never>>;
   jwtGetBoolean?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryJwtGetBooleanArgs, never>>;
   jwtGetText?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryJwtGetTextArgs, never>>;
-  reviewApplicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewApplicationIdArgs, never>>;
   reviewAssignmentAssignedSections?: Resolver<Maybe<ResolversTypes['ReviewAssignmentAssignedSectionsShapesConnection']>, ParentType, ContextType, RequireFields<QueryReviewAssignmentAssignedSectionsArgs, never>>;
   reviewAssignmentTemplateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewAssignmentTemplateIdArgs, never>>;
-  reviewIsFinalDecision?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryReviewIsFinalDecisionArgs, never>>;
-  reviewIsLastLevel?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryReviewIsLastLevelArgs, never>>;
-  reviewIsLastStage?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryReviewIsLastStageArgs, never>>;
-  reviewLevel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewLevelArgs, never>>;
   reviewList?: Resolver<Maybe<ResolversTypes['ReviewListConnection']>, ParentType, ContextType, RequireFields<QueryReviewListArgs, never>>;
   reviewResponseStageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewResponseStageNumberArgs, never>>;
-  reviewReviewerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewReviewerIdArgs, never>>;
-  reviewStage?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewStageArgs, never>>;
-  reviewTimeStageCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType, RequireFields<QueryReviewTimeStageCreatedArgs, never>>;
   reviewableQuestions?: Resolver<Maybe<ResolversTypes['ReviewableQuestionsConnection']>, ParentType, ContextType, RequireFields<QueryReviewableQuestionsArgs, never>>;
   reviewableQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryReviewableQuestionsCountArgs, never>>;
   submittedAssignedQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QuerySubmittedAssignedQuestionsCountArgs, never>>;
@@ -54199,8 +54129,8 @@ export type TemplateElementResolvers<ContextType = any, ParentType extends Resol
   helpText?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   parameters?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   reviewability?: Resolver<ResolversTypes['Reviewability'], ParentType, ContextType>;
-  templateCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  templateVersion?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  templateCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  templateVersion?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   section?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType>;
   applicationResponses?: Resolver<ResolversTypes['ApplicationResponsesConnection'], ParentType, ContextType, RequireFields<TemplateElementApplicationResponsesArgs, 'orderBy'>>;
   reviewResponses?: Resolver<ResolversTypes['ReviewResponsesConnection'], ParentType, ContextType, RequireFields<TemplateElementReviewResponsesArgs, 'orderBy'>>;

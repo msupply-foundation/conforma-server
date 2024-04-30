@@ -939,6 +939,135 @@ const migrateData = async () => {
       ALTER TABLE public.data_changelog   
         ADD COLUMN IF NOT EXISTS comment VARCHAR;
     `)
+
+    console.log(' - Removing all illegal generated columns and replacing with standard columns')
+    // See
+    // https://github.com/msupply-foundation/conforma-server/issues/1090#issuecomment-2005558735
+    await DB.changeSchema(`
+      ALTER TABLE public.template_element
+        DROP COLUMN IF EXISTS template_code;
+      ALTER TABLE public.template_element
+        DROP COLUMN IF EXISTS template_version;
+      ALTER TABLE public.template_element   
+        ADD COLUMN IF NOT EXISTS template_code VARCHAR;
+      ALTER TABLE public.template_element   
+          ADD COLUMN IF NOT EXISTS template_version VARCHAR;
+    `)
+    await DB.changeSchema(`
+      UPDATE public.template_element
+        SET template_code = (
+          SELECT code FROM template
+          WHERE id = (
+            SELECT template_id FROM template_section
+            WHERE id = section_id
+          )
+        ),
+        template_version = (
+          SELECT version_id FROM template
+          WHERE id = (
+            SELECT template_id FROM template_section
+            WHERE id = section_id
+          )
+        );    
+    `)
+    await DB.changeSchema(`
+      ALTER TABLE public.template_element
+        ADD UNIQUE (template_code, code, template_version);
+      ALTER TABLE public.template_element
+        ALTER COLUMN template_code
+        SET NOT NULL;
+      ALTER TABLE public.template_element
+        ALTER COLUMN template_version
+        SET NOT NULL;
+    `)
+
+    await DB.changeSchema(`
+      ALTER TABLE public.application_status_history
+        DROP COLUMN IF EXISTS application_id;
+      ALTER TABLE public.application_status_history
+        ADD COLUMN IF NOT EXISTS application_id INTEGER;
+    `)
+    await DB.changeSchema(`
+      UPDATE public.application_status_history
+        SET application_id = (
+          SELECT application_id FROM application_stage_history
+          WHERE id = application_stage_history_id
+        );
+    `)
+    await DB.changeSchema(`
+      ALTER TABLE public.application_status_history
+        ALTER COLUMN application_id
+        SET NOT NULL;
+   `)
+
+    await DB.changeSchema(`
+      ALTER TABLE public.review
+        DROP COLUMN IF EXISTS application_id CASCADE,
+        DROP COLUMN IF EXISTS reviewer_id CASCADE,
+        DROP COLUMN IF EXISTS level_number CASCADE,
+        DROP COLUMN IF EXISTS stage_number CASCADE,
+        DROP COLUMN IF EXISTS time_stage_created CASCADE,
+        DROP COLUMN IF EXISTS is_last_level CASCADE,
+        DROP COLUMN IF EXISTS is_last_stage CASCADE,
+        DROP COLUMN IF EXISTS is_final_decision CASCADE;
+      ALTER TABLE public.review
+        ADD COLUMN IF NOT EXISTS application_id INTEGER
+          REFERENCES public.application (id) ON DELETE CASCADE,
+        ADD COLUMN IF NOT EXISTS reviewer_id INTEGER
+          REFERENCES public.user (id) ON DELETE CASCADE,
+        ADD COLUMN IF NOT EXISTS level_number INTEGER,
+        ADD COLUMN IF NOT EXISTS stage_number INTEGER,
+        ADD COLUMN IF NOT EXISTS time_stage_created timestamptz,
+        ADD COLUMN IF NOT EXISTS is_last_level BOOLEAN,
+        ADD COLUMN IF NOT EXISTS is_last_stage BOOLEAN,
+        ADD COLUMN IF NOT EXISTS is_final_decision BOOLEAN;
+    `)
+    await DB.changeSchema(`
+      UPDATE public.review
+        SET application_id = (
+          SELECT application_id FROM review_assignment
+          WHERE id = review_assignment_id
+        ),
+        reviewer_id = (
+          SELECT reviewer_id FROM review_assignment
+          WHERE id = review_assignment_id
+        ),
+        level_number = (
+          SELECT level_number FROM review_assignment
+          WHERE id = review_assignment_id
+        ),
+        stage_number = (
+          SELECT stage_number FROM review_assignment
+          WHERE id = review_assignment_id
+        ),
+        time_stage_created = (
+          SELECT time_stage_created FROM review_assignment
+          WHERE id = review_assignment_id
+        ),
+        is_last_level = (
+          SELECT is_last_level FROM review_assignment
+          WHERE id = review_assignment_id
+        ),
+        is_last_stage = (
+          SELECT is_last_stage FROM review_assignment
+          WHERE id = review_assignment_id
+        ),
+        is_final_decision = (
+          SELECT is_final_decision FROM review_assignment
+          WHERE id = review_assignment_id
+        );
+    `)
+    //   await DB.changeSchema(`
+    //     ALTER TABLE public.review
+    //       ALTER COLUMN application_id SET NOT NULL,
+    //       ALTER COLUMN reviewer_id SET NOT NULL,
+    //       ALTER COLUMN level_number SET NOT NULL,
+    //       ALTER COLUMN stage_number SET NOT NULL,
+    //       ALTER COLUMN time_stage_created SET NOT NULL,
+    //       ALTER COLUMN is_last_level SET NOT NULL,
+    //       ALTER COLUMN is_last_stage SET NOT NULL,
+    //       ALTER COLUMN is_final_decision SET NOT NULL;
+    //  `)
   }
 
   // Other version migrations continue here...
