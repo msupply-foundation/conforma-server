@@ -1066,6 +1066,26 @@ const migrateData = async () => {
           WHERE id = review_id
         );
     `)
+
+    await DB.changeSchema(`
+      ALTER TABLE public.review_assignment
+        DROP COLUMN IF EXISTS template_id CASCADE;
+      ALTER TABLE public.review_assignment
+        ADD COLUMN IF NOT EXISTS template_id INTEGER
+        REFERENCES public.template (id) ON DELETE CASCADE;
+    `)
+    await DB.changeSchema(`
+      UPDATE public.review_assignment
+        SET template_id = (
+          SELECT template_id FROM application
+          WHERE id = application_id
+        );
+    `)
+    await DB.changeSchema(`
+      ALTER TABLE public.review_assignment
+        ALTER COLUMN template_id
+        SET NOT NULL;
+    `)
   }
 
   // Other version migrations continue here...

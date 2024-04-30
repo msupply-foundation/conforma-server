@@ -241,6 +241,7 @@ DROP FUNCTION IF EXISTS public.get_template_code CASCADE;
 DROP FUNCTION IF EXISTS public.get_template_version CASCADE;
 
 -- FUNCTION/TRIGGER to re-compute the above generated values whenever the versionId or code changes
+DROP FUNCTION IF EXISTS public.recompute_template_element_code_version CASCADE;
 CREATE OR REPLACE FUNCTION public.recompute_template_element_code_version ()
     RETURNS TRIGGER
     AS $template_element_event$
@@ -422,6 +423,8 @@ CREATE TRIGGER application_stage_history_trigger
 
 -- APPLICATION_STATUS_HISTORY
 -- FUNCTION to auto-add application_id to application_status_history table
+DROP FUNCTION IF EXISTS
+    public.application_status_history_application_id CASCADE;
 CREATE OR REPLACE FUNCTION public.application_status_history_application_id ()
     RETURNS TRIGGER
     AS $application_status_history_event$
@@ -637,27 +640,31 @@ CREATE TRIGGER trigger_schedule_trigger
     EXECUTE FUNCTION public.add_event_to_trigger_queue ();
 
 -- REVIEW_ASSIGNMENT
--- FUNCTION to auto-add template_id to review_assignment
-CREATE OR REPLACE FUNCTION public.review_assignment_template_id (application_id int)
-    RETURNS int
-    AS $$
-    SELECT
-        template_id
-    FROM
-        public.application
-    WHERE
-        id = $1;
+-- FUNCTION/TRIGGER to auto-add template_id to review_assignment
+DROP FUNCTION IF EXISTS public.review_assignment_template_id CASCADE;
+CREATE OR REPLACE FUNCTION public.review_assignment_template_id ()
+    RETURNS TRIGGER
+    AS $review_assignment_event$
+    BEGIN
+    NEW.template_id = (
+          SELECT template_id FROM application
+          WHERE id = NEW.application_id
+        );
+    RETURN NEW;
+    END;
+$review_assignment_event$
+LANGUAGE plpgsql;
 
-$$
-LANGUAGE SQL
-IMMUTABLE;
+DROP TRIGGER IF EXISTS set_review_assignment_template_id
+    ON public.review_assignment;
+CREATE TRIGGER set_review_assignment_template_id
+    BEFORE INSERT ON public.review_assignment
+    FOR EACH ROW
+    EXECUTE FUNCTION public.review_assignment_template_id ();
 
-ALTER TABLE review_assignment
-    ADD COLUMN IF NOT EXISTS template_id INT GENERATED ALWAYS AS (review_assignment_template_id (application_id)) STORED;
 
 -- These no longer used as combined into (below) validation function
 DROP TRIGGER IF EXISTS review_assignment_trigger2 ON public.review_assignment;
-
 DROP FUNCTION IF EXISTS public.empty_assigned_sections ();
 
 -- Enforce validity of assigned sections:
