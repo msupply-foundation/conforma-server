@@ -1332,14 +1332,15 @@ class PostgresDB {
     userId: number | null | undefined,
     orgId: number | null | undefined,
     username: string | undefined,
-    applicationId: number | null | undefined
+    applicationId: number | null | undefined,
+    comment: string | null | undefined
   ) => {
     const dataTable = tableName.replace(config.dataTablePrefix, '')
     const text = `
       INSERT INTO data_changelog
         (data_table, record_id, update_type, old_data, new_data,
-          user_id, org_id, username, application_id)
-      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
+          user_id, org_id, username, application_id, comment)
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
     `
     try {
       await this.query({
@@ -1354,6 +1355,7 @@ class PostgresDB {
           orgId,
           username,
           applicationId,
+          comment,
         ],
       })
     } catch (err) {

@@ -232,6 +232,8 @@ It is recommended to use the `data` parameter object, or `patch` when possible. 
 
 `noChangeLog`: The `modifyRecord` action causes an entry to be added to the `data_changelog` database table so we have a record of all data modifications (after record's initial creation) done in the system. This can be over-ridden by setting `noChangeLog: true` (or `noChangeLog: false` if you need to add a log for new record creation). It is not recommended to change the default in most cases -- we want an audit trail. It is mostly used by a few core actions so we don't clutter up the changelog table with common application table changes, etc. 
 
+`changeLogComment`: When an entry is added to the `data_changelog`, this value will be added to the `comment` field.
+
 **Notes:**
 
 - fields with a value of `null` will be omitted from the database update, so any current values will remain unchanged.

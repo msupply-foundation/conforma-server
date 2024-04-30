@@ -23,6 +23,8 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     ignoreNull = true,
     noChangelog,
     noChangeLog = noChangelog, // In case of common capitalisation typo
+    changelogComment,
+    changeLogComment = changelogComment,
     delete: deleteRecord = false,
     data,
     patch,
@@ -75,6 +77,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
             orgId: applicationData?.orgId,
             username: applicationData?.username,
             applicationId: applicationData?.applicationId,
+            comment: changeLogComment,
           }
 
     let result: any[] = []

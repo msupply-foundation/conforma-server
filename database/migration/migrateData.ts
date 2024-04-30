@@ -933,6 +933,12 @@ const migrateData = async () => {
       ' - Update existing review_assignments with correct review_level_id, and make (stageId, number) unique'
     )
     await DB.updateLevelIdInReviewAssignments()
+
+    console.log(' - Adding "comment" field to data_changelog')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_changelog   
+        ADD COLUMN IF NOT EXISTS comment VARCHAR;
+    `)
   }
 
   // Other version migrations continue here...

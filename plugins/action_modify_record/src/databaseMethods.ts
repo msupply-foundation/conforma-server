@@ -1,6 +1,5 @@
 import { errorMessage } from '../../../src/components/utilityFunctions'
 import config from '../../../src/config'
-import { DBOperationType } from '../../../src/types'
 
 const DATA_TABLE_PREFIX = config.dataTablePrefix
 
@@ -13,6 +12,7 @@ interface UserData {
 
 interface ChangeLogOptions extends UserData {
   noChangeLog: boolean
+  comment?: string
 }
 
 const databaseMethods = (DBConnect: any) => {
@@ -49,7 +49,7 @@ const databaseMethods = (DBConnect: any) => {
       VALUES (${DBConnect.getValuesPlaceholders(record)})
       RETURNING *
       `
-    const { userId, orgId, username, applicationId, noChangeLog } = changeLogOptions
+    const { userId, orgId, username, applicationId, noChangeLog, comment } = changeLogOptions
     try {
       const result = await DBConnect.query({ text, values: Object.values(record) })
       const firstRow = result.rows[0]
@@ -63,7 +63,8 @@ const databaseMethods = (DBConnect: any) => {
           userId,
           orgId,
           username,
-          applicationId
+          applicationId,
+          comment
         )
       return { success: true, [tableName]: firstRow, recordId: firstRow.id }
     } catch (err) {
@@ -92,7 +93,7 @@ const databaseMethods = (DBConnect: any) => {
       record: Record<string, any>,
       changeLogOptions: ChangeLogOptions
     ) => {
-      const { userId, orgId, username, applicationId, noChangeLog } = changeLogOptions
+      const { userId, orgId, username, applicationId, noChangeLog, comment } = changeLogOptions
 
       let oldData: Record<string, any> = {}
       const newData = { ...record }
@@ -147,7 +148,8 @@ const databaseMethods = (DBConnect: any) => {
             userId,
             orgId,
             username,
-            applicationId
+            applicationId,
+            comment
           )
         return {
           success: true,
@@ -160,7 +162,7 @@ const databaseMethods = (DBConnect: any) => {
       }
     },
     deleteRecord: async (tableName: string, id: number, changeLogOptions: ChangeLogOptions) => {
-      const { userId, orgId, username, applicationId, noChangeLog } = changeLogOptions
+      const { userId, orgId, username, applicationId, noChangeLog, comment } = changeLogOptions
 
       let oldData: Record<string, any> = {}
 
@@ -191,7 +193,8 @@ const databaseMethods = (DBConnect: any) => {
             userId,
             orgId,
             username,
-            applicationId
+            applicationId,
+            comment
           )
         return {
           success: true,
