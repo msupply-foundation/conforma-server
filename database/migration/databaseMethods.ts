@@ -385,6 +385,66 @@ const databaseMethods = {
       }
     }
   },
+  updateLevelIdInReviewAssignments: async () => {
+    // Remove duplicate (same stage_id, number) review levels -- it's unclear
+    // how these got created, but they should be unique
+    const duplicates = await DBConnect.query({
+      text: `
+        SELECT t1.id, t1.stage_id, t1.name, t2.number,
+        t1.description, t1.single_reviewer_all_sections
+        FROM template_stage_review_level t1
+        JOIN template_stage_review_level t2
+        ON t1.stage_id = t2.stage_id AND t1.number = t2.number
+        WHERE t1.id <> t2.id
+        ORDER BY stage_id, number, id;
+      `,
+    })
+    let current = { id: 0, stage_id: 0, number: 0 }
+    const idsToDelete = [] as any
+    duplicates.rows.forEach((row) => {
+      if (row.stage_id === current.stage_id && row.number === current.number)
+        idsToDelete.push(current.id)
+      current = row
+    })
+    await DBConnect.query({
+      text: `
+        DELETE FROM template_stage_review_level
+        WHERE id = ANY($1)
+      `,
+      values: [idsToDelete],
+    })
+
+    // Update existing review assignments with correct level_ids
+    await DBConnect.query({
+      text: `
+        UPDATE review_assignment ra
+        SET level_id = (
+          SELECT id FROM template_stage_review_level
+          WHERE stage_id = (
+            SELECT id FROM template_stage
+            WHERE id = (
+              SELECT stage_id FROM review_assignment
+              WHERE id = ra.id
+            )
+          )
+          AND number = (
+            SELECT level_number FROM review_assignment
+            WHERE id = ra.id
+          )
+        )
+        WHERE level_id IS null;
+      `,
+    })
+
+    // Make stage_id/number unique for review_levels to prevent above duplicates
+    // problem in future
+    await DBConnect.query({
+      text: `
+        CREATE UNIQUE INDEX IF NOT EXISTS unique_review_level_stage_id_number
+        ON template_stage_review_level (stage_id, number)
+      `,
+    })
+  },
 }
 
 export default databaseMethods

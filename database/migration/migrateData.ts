@@ -922,6 +922,17 @@ const migrateData = async () => {
       ALTER TABLE public.data_view_column_definition   
         ADD COLUMN IF NOT EXISTS hide_if_null BOOLEAN DEFAULT false;
     `)
+
+    console.log(' - Adding single-reviewer option to stage review level')
+    await DB.changeSchema(`
+      ALTER TABLE public.template_stage_review_level   
+        ADD COLUMN IF NOT EXISTS single_reviewer_all_sections BOOLEAN
+        NOT NULL DEFAULT false;
+    `)
+    console.log(
+      ' - Update existing review_assignments with correct review_level_id, and make (stageId, number) unique'
+    )
+    await DB.updateLevelIdInReviewAssignments()
   }
 
   // Other version migrations continue here...
