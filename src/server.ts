@@ -38,14 +38,7 @@ import cleanUpFiles from './components/files/cleanup'
 import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
 import snapshotRoutes from './components/snapshots/routes'
-import {
-  routeGetLanguageFile,
-  routeEnableLanguage,
-  routeInstallLanguage,
-  routeRemoveLanguage,
-  routeGetAllLanguageFiles,
-  localisationRoutes,
-} from './components/localisation/routes'
+import { routeGetLanguageFile, localisationRoutes } from './components/localisation/routes'
 import { routeTriggers } from './components/other/routeTriggers'
 import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
 import migrateData from '../database/migration/migrateData'
