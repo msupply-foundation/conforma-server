@@ -12,7 +12,6 @@ import config, { refreshConfig } from '../../config'
 import { DEFAULT_LOGOUT_TIME, PREFERENCES_FILE } from '../../constants'
 import { readLanguageOptions } from '../localisation/routes'
 import { Preferences } from '../../types'
-import { FastifyInstance } from 'fastify'
 
 const writeFilePromise = promisify(writeFile)
 

@@ -1,9 +1,4 @@
-import fastify, {
-  FastifyInstance,
-  FastifyPluginCallback,
-  FastifyReply,
-  FastifyRequest,
-} from 'fastify'
+import fastify, { FastifyPluginCallback, FastifyReply, FastifyRequest } from 'fastify'
 import fastifyStatic from 'fastify-static'
 import fastifyMultipart from 'fastify-multipart'
 import fastifyCors from 'fastify-cors'
@@ -54,7 +49,6 @@ import { AccessExternalApiQuery, routeAccessExternalApi } from './components/ext
 import { DEFAULT_LOGOUT_TIME } from './constants'
 import { updateRowPolicies } from './components/permissions/rowLevelPolicyHelpers'
 import { routeRawData } from './components/other/routeRawData'
-import { RouteGenericInterface } from 'fastify/types/route'
 require('dotenv').config()
 
 // Set the default locale and timezone for date-time display (in console)
@@ -188,7 +182,12 @@ const startServer = async () => {
 
             MAINTENANCE_MODE = enabled
             reply.send({ success: true, enabled })
-            notifyClients(JSON.stringify({ maintenanceMode: MAINTENANCE_MODE }))
+            notifyClients(
+              JSON.stringify({
+                maintenanceMode: MAINTENANCE_MODE,
+                redirect: MAINTENANCE_MODE ? config.maintenanceSite : undefined,
+              })
+            )
           }
         )
       },
@@ -230,21 +229,18 @@ const startServer = async () => {
     )}`
   })
   server.get('/server-status', { websocket: true }, (connection, _) => {
-    // Client connect
-    console.log('Client connected')
-    connection.socket.on('open', (x: any) => {
-      console.log('New client')
-    })
+    console.log(`New client connected, ${server.websocketServer.clients.size} current connections`)
+    connection.socket.send(
+      JSON.stringify({
+        maintenanceMode: MAINTENANCE_MODE,
+        redirect: MAINTENANCE_MODE ? config.maintenanceSite : undefined,
+      })
+    )
 
-    // Client message
-    connection.socket.on('message', (message) => {
-      console.log(`Client message: ${message}`)
-      connection.socket.send('Thank you :)')
-      connection.socket.send(message)
-    })
-    // Client disconnect
     connection.socket.on('close', () => {
-      console.log('Client disconnected')
+      console.log(
+        `Client disconnected, ${server.websocketServer.clients.size} connections remaining`
+      )
     })
   })
 

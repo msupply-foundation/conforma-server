@@ -97,7 +97,6 @@ export const refreshConfig = (config: Config, prefsFilePath: string) => {
 
   config.isLiveServer = getIsLiveServer(webHostUrl, webAppPrefs.siteHost)
   config.emailMode = getEmailOperationMode(serverPrefs.emailTestMode, serverPrefs.testingEmail)
-  config.maintenanceMode = serverPrefs.maintenanceMode ?? false
 
   // Update locale and timezone if changed
   const newLocale = serverPrefs.locale ?? Intl.DateTimeFormat().resolvedOptions().locale
