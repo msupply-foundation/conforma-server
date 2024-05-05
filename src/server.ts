@@ -1,7 +1,13 @@
-import fastify, { FastifyPluginCallback, FastifyReply } from 'fastify'
+import fastify, {
+  FastifyInstance,
+  FastifyPluginCallback,
+  FastifyReply,
+  FastifyRequest,
+} from 'fastify'
 import fastifyStatic from 'fastify-static'
 import fastifyMultipart from 'fastify-multipart'
 import fastifyCors from 'fastify-cors'
+import fastifyWebsocket from '@fastify/websocket'
 import { DateTime, Settings } from 'luxon'
 import path from 'path'
 import { loadActionPlugins } from './components/pluginsConnect'
@@ -48,6 +54,7 @@ import { AccessExternalApiQuery, routeAccessExternalApi } from './components/ext
 import { DEFAULT_LOGOUT_TIME } from './constants'
 import { updateRowPolicies } from './components/permissions/rowLevelPolicyHelpers'
 import { routeRawData } from './components/other/routeRawData'
+import { RouteGenericInterface } from 'fastify/types/route'
 require('dotenv').config()
 
 // Set the default locale and timezone for date-time display (in console)
@@ -62,6 +69,8 @@ if (!web_host) {
   )
   process.exit(1)
 }
+
+let MAINTENANCE_MODE = false
 
 // Fastify server
 const startServer = async () => {
@@ -85,6 +94,12 @@ const startServer = async () => {
   server.register(fastifyMultipart)
 
   server.register(fastifyCors, { origin: '*' }) // Allow all origin (TODO change in PROD)
+
+  server.register(fastifyWebsocket)
+
+  const notifyClients = async (message: string) => {
+    server.websocketServer.clients.forEach((client) => client.send(message))
+  }
 
   const api: FastifyPluginCallback = (server, _, done) => {
     // Here we parse JWT, and set it in request.auth, which is available for
@@ -146,7 +161,7 @@ const startServer = async () => {
         server.addHook('preValidation', async (request: any, reply: FastifyReply) => {
           if (!request.auth.isAdmin) {
             reply.statusCode = 401
-            return reply.send({ sucess: false, message: 'Not admin user' })
+            return reply.send({ success: false, message: 'Not admin user' })
           }
         })
 
@@ -162,6 +177,20 @@ const startServer = async () => {
         server.post('/generate-filter-data-fields', routeGenerateFilterDataFields)
         done()
         server.get('/raw-data/:dataTable/:id', routeRawData)
+        server.post(
+          '/set-maintenance-mode',
+          (request: FastifyRequest<{ Body: { enabled: boolean } }>, reply: FastifyReply) => {
+            const { enabled } = request.body
+            if (typeof enabled !== 'boolean') {
+              reply.send({ success: false, message: 'Invalid parameter' })
+              return
+            }
+
+            MAINTENANCE_MODE = enabled
+            reply.send({ success: true, enabled })
+            notifyClients(JSON.stringify({ maintenanceMode: MAINTENANCE_MODE }))
+          }
+        )
       },
       { prefix: '/admin' }
     )
@@ -199,6 +228,24 @@ const startServer = async () => {
     return `Welcome to CONFORMA\n${DateTime.now().toLocaleString(
       DateTime.DATETIME_HUGE_WITH_SECONDS
     )}`
+  })
+  server.get('/server-status', { websocket: true }, (connection, _) => {
+    // Client connect
+    console.log('Client connected')
+    connection.socket.on('open', (x: any) => {
+      console.log('New client')
+    })
+
+    // Client message
+    connection.socket.on('message', (message) => {
+      console.log(`Client message: ${message}`)
+      connection.socket.send('Thank you :)')
+      connection.socket.send(message)
+    })
+    // Client disconnect
+    connection.socket.on('close', () => {
+      console.log('Client disconnected')
+    })
   })
 
   server.register(api, { prefix: '/api' })

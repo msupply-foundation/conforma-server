@@ -296,6 +296,7 @@ export interface ServerPreferences {
   timezone?: string
   externalApiConfigs?: ExternalApiConfigs
   envVars?: string[]
+  maintenanceMode?: boolean
 }
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
