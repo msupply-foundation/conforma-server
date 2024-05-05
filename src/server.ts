@@ -64,8 +64,6 @@ if (!web_host) {
   process.exit(1)
 }
 
-let MAINTENANCE_MODE = false
-
 // Fastify server
 const startServer = async () => {
   await migrateData()
@@ -180,12 +178,14 @@ const startServer = async () => {
               return
             }
 
-            MAINTENANCE_MODE = enabled
+            config.maintenanceMode = enabled
             reply.send({ success: true, enabled })
             notifyClients(
               JSON.stringify({
-                maintenanceMode: MAINTENANCE_MODE,
-                redirect: MAINTENANCE_MODE ? config.maintenanceSite : undefined,
+                maintenanceMode: config.maintenanceMode,
+                redirect: enabled
+                  ? config.maintenanceSite ?? config.defaultUnderMaintenanceSite
+                  : undefined,
               })
             )
           }
@@ -232,8 +232,10 @@ const startServer = async () => {
     console.log(`New client connected, ${server.websocketServer.clients.size} current connections`)
     connection.socket.send(
       JSON.stringify({
-        maintenanceMode: MAINTENANCE_MODE,
-        redirect: MAINTENANCE_MODE ? config.maintenanceSite : undefined,
+        maintenanceMode: config.maintenanceMode,
+        redirect: config.maintenanceMode
+          ? config.maintenanceSite ?? config.defaultUnderMaintenanceSite
+          : undefined,
       })
     )
 

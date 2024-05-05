@@ -355,6 +355,7 @@ interface ConfigBase {
   preferencesFileName: string
   backupsFolder: string
   genericThumbnailsFolderName: string
+  defaultUnderMaintenanceSite: string
   nodeModulesFolder: string
   jwtSecret: string
   RESTport: number
@@ -370,6 +371,7 @@ interface ConfigBase {
   productionHost?: string
   isLiveServer: boolean
   emailMode: EmailOperationMode
+  maintenanceMode: boolean
 }
 
 export type Config = ConfigBase & ServerPreferences & { scheduledJobs?: Schedulers }
