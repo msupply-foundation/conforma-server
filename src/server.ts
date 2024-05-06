@@ -115,11 +115,19 @@ const startServer = async () => {
         const expiryTime =
           tokenData.iat * 1000 + (config.logoutAfterInactivity ?? DEFAULT_LOGOUT_TIME) * 60_000
 
-        if (Date.now() > expiryTime) {
+        if (Date.now() > expiryTime && !config.maintenanceMode) {
           reply.statusCode = 401
           console.log('Expired token from:', tokenData.username)
           return reply.send({ success: false, message: 'Expired token' })
         }
+      }
+
+      console.log(request.url)
+
+      // All endpoints become admin-only in Maintenance mode
+      if (config.maintenanceMode && !request.auth.isAdmin && request.url !== '/api/login-org') {
+        reply.statusCode = 401
+        return reply.send({ success: false, message: 'Must be admin user in Maintenance mode' })
       }
     })
 
