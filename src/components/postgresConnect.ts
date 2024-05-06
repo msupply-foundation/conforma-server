@@ -1380,7 +1380,7 @@ class PostgresDB {
     }
   }
 
-  public setSystemInfo = async (type: string, value: string) => {
+  public setSystemInfo = async (type: string, value: unknown) => {
     const text = `
       INSERT INTO system_info (name, value)
       VALUES($1, $2)

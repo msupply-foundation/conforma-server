@@ -49,6 +49,11 @@ import { AccessExternalApiQuery, routeAccessExternalApi } from './components/ext
 import { DEFAULT_LOGOUT_TIME } from './constants'
 import { updateRowPolicies } from './components/permissions/rowLevelPolicyHelpers'
 import { routeRawData } from './components/other/routeRawData'
+import {
+  routeServerStatusWebsocket,
+  routeSetMaintenanceMode,
+  updateMaintenanceModeInConfig,
+} from './components/other/routeServerStatus'
 require('dotenv').config()
 
 // Set the default locale and timezone for date-time display (in console)
@@ -88,10 +93,6 @@ const startServer = async () => {
   server.register(fastifyCors, { origin: '*' }) // Allow all origin (TODO change in PROD)
 
   server.register(fastifyWebsocket)
-
-  const notifyClients = async (message: string) => {
-    server.websocketServer.clients.forEach((client) => client.send(message))
-  }
 
   const api: FastifyPluginCallback = (server, _, done) => {
     // Here we parse JWT, and set it in request.auth, which is available for
@@ -171,24 +172,8 @@ const startServer = async () => {
         server.get('/raw-data/:dataTable/:id', routeRawData)
         server.post(
           '/set-maintenance-mode',
-          (request: FastifyRequest<{ Body: { enabled: boolean } }>, reply: FastifyReply) => {
-            const { enabled } = request.body
-            if (typeof enabled !== 'boolean') {
-              reply.send({ success: false, message: 'Invalid parameter' })
-              return
-            }
-
-            config.maintenanceMode = enabled
-            reply.send({ success: true, enabled })
-            notifyClients(
-              JSON.stringify({
-                maintenanceMode: config.maintenanceMode,
-                redirect: enabled
-                  ? config.maintenanceSite ?? config.defaultUnderMaintenanceSite
-                  : undefined,
-              })
-            )
-          }
+          (request: FastifyRequest<{ Body: { enabled: boolean } }>, reply: FastifyReply) =>
+            routeSetMaintenanceMode(request, reply, server)
         )
       },
       { prefix: '/admin' }
@@ -228,25 +213,15 @@ const startServer = async () => {
       DateTime.DATETIME_HUGE_WITH_SECONDS
     )}`
   })
-  server.get('/server-status', { websocket: true }, (connection, _) => {
-    console.log(`New client connected, ${server.websocketServer.clients.size} current connections`)
-    connection.socket.send(
-      JSON.stringify({
-        maintenanceMode: config.maintenanceMode,
-        redirect: config.maintenanceMode
-          ? config.maintenanceSite ?? config.defaultUnderMaintenanceSite
-          : undefined,
-      })
-    )
 
-    connection.socket.on('close', () => {
-      console.log(
-        `Client disconnected, ${server.websocketServer.clients.size} connections remaining`
-      )
-    })
-  })
+  server.get('/server-status', { websocket: true }, (connection, _) =>
+    routeServerStatusWebsocket(connection, server)
+  )
 
   server.register(api, { prefix: '/api' })
+
+  // Set maintenanceMode from previously saved setting
+  await updateMaintenanceModeInConfig(config)
 
   server.listen(config.RESTport, (err, address) => {
     if (err) {
@@ -259,6 +234,7 @@ const startServer = async () => {
     console.log('Timezone:', Settings.defaultZoneName)
     console.log('Email mode:', config.emailMode)
     if (config.emailMode === 'TEST') console.log('All email will be sent to:', config.testingEmail)
+    if (config.maintenanceMode) console.log(`-- Server in Maintenance mode`)
     console.log(`\nServer listening at ${address}`)
   })
 

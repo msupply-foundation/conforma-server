@@ -47,6 +47,12 @@ export const routeGetPrefs = async (request: any, reply: any) => {
     latestSnapshot,
     allowedTableNames,
     logoutAfterInactivity,
+    maintenanceMode: {
+      enabled: config.maintenanceMode,
+      redirect: config.maintenanceMode
+        ? config.maintenanceSite ?? config.defaultUnderMaintenanceSite
+        : undefined,
+    },
   })
 }
 
