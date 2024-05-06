@@ -122,10 +122,13 @@ const startServer = async () => {
         }
       }
 
-      console.log(request.url)
-
       // All endpoints become admin-only in Maintenance mode
-      if (config.maintenanceMode && !request.auth.isAdmin && request.url !== '/api/login-org') {
+      if (
+        config.maintenanceMode &&
+        !request.auth.isAdmin &&
+        request.url !== '/api/login-org' &&
+        request.url !== '/api/user-info'
+      ) {
         reply.statusCode = 401
         return reply.send({ success: false, message: 'Must be admin user in Maintenance mode' })
       }
