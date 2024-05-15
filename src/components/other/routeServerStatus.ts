@@ -10,7 +10,7 @@ const notifyClients = async (message: string, server: FastifyInstance) => {
 
 export const updateMaintenanceModeInConfig = async (config: Config) => {
   const storedValue = await databaseConnect.getSystemInfo('maintenanceMode')
-  config.maintenanceMode = storedValue.enabled
+  config.maintenanceMode = storedValue?.enabled ?? false
 }
 
 export const routeSetMaintenanceMode = (
