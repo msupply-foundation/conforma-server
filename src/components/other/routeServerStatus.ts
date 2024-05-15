@@ -41,12 +41,14 @@ export const routeSetMaintenanceMode = (
 
 export const routeServerStatusWebsocket = (connection: SocketStream, server: FastifyInstance) => {
   console.log(`New client connected, ${server.websocketServer.clients.size} current connections`)
-  connection.socket.send(
-    JSON.stringify({
-      maintenanceMode: config.maintenanceMode,
-      redirect: config.maintenanceSite ?? config.defaultUnderMaintenanceSite,
-    })
-  )
+  if (config.maintenanceMode)
+    connection.socket.send(
+      JSON.stringify({
+        maintenanceMode: config.maintenanceMode,
+        force: true,
+        redirect: config.maintenanceSite ?? config.defaultUnderMaintenanceSite,
+      })
+    )
 
   connection.socket.on('close', () => {
     console.log(`Client disconnected, ${server.websocketServer.clients.size} connections remaining`)

@@ -49,9 +49,7 @@ export const routeGetPrefs = async (request: any, reply: any) => {
     logoutAfterInactivity,
     maintenanceMode: {
       enabled: config.maintenanceMode,
-      redirect: config.maintenanceMode
-        ? config.maintenanceSite ?? config.defaultUnderMaintenanceSite
-        : undefined,
+      redirect: config.maintenanceSite ?? config.defaultUnderMaintenanceSite,
     },
   })
 }
