@@ -32,6 +32,11 @@ services:
 volumes:
   postgres:
   snapshots:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${SNAPSHOTS_FOLDER}
+      o: bind
   files:
   localisation:
   preferences:
