@@ -50,7 +50,19 @@ export const routeServerStatusWebsocket = (connection: SocketStream, server: Fas
       })
     )
 
+  const messageTimer = setInterval(() => {
+    console.log('Sending message')
+    connection.socket.send('Every 2 mins...')
+  }, 120_000)
+
+  const timerId = setInterval(() => {
+    console.log('Pinging client')
+    connection.socket.ping('WTF?')
+  }, 45_000)
+
   connection.socket.on('close', () => {
     console.log(`Client disconnected, ${server.websocketServer.clients.size} connections remaining`)
+    clearInterval(timerId)
+    clearInterval(messageTimer)
   })
 }
