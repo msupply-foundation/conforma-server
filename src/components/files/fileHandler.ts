@@ -182,7 +182,8 @@ export async function saveToDB({
 
 // If any of these characters are in a filename, they should be replaced with
 // percent-encoded chars in the "filePath" parameter to Fastify `sendFile`
-// method
+// method.
+// Reference: https://developer.mozilla.org/en-US/docs/Glossary/Percent-encoding
 const encodedCharMap = {
   ':': '%3A',
   // '/': '%2F', -- don't want slash in paths at all, asking for trouble!
