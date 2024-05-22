@@ -1,3 +1,5 @@
+#DELETE THIS AFTER 0.9 RELEASE
+
 # syntax = docker/dockerfile:experimental
 #DOCKER_BUILDKIT=1 docker build --progress=plain -t allbuild --secret id=githubtoken,src=../../../githubtoken.txt .
 
