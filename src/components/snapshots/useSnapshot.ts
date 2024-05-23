@@ -65,7 +65,7 @@ const useSnapshot: SnapshotOperation = async ({
         `Snapshot was created with Conforma version: ${snapshotVersion}\n You can't install a snapshot created with a version newer than the current application version: ${config.version}`
       )
     }
-    if (semverCompare(snapshotVersion, '0.8.0') === -1) {
+    if (semverCompare(snapshotVersion, '0.8.0') === -1 && options.usePgDump) {
       throw new Error(
         `Snapshot was created with a Conforma version prior to 0.8.0, so its database is incompatible with current versions of Postgres. Please use the v.0.8.0 Docker build, or v0.8.0 git tag (with PG12.17) to import and re-export this snapshot to make it compatible with this version of Conforma.`
       )
