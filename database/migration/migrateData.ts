@@ -1112,6 +1112,10 @@ const migrateData = async () => {
         UNIQUE (user_id, application_id)
       );
     `)
+
+    console.log(' - Updating reviewer/assigner lists for ALL applications')
+    console.log(' - Creating application_reviewer_action records (This may take a while)')
+    await DB.createApplicationReviewerActionRecords()
   }
 
   // Other version migrations continue here...

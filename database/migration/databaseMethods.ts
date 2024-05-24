@@ -445,6 +445,76 @@ const databaseMethods = {
       `,
     })
   },
+  createApplicationReviewerActionRecords: async () => {
+    const totalActionCount = (
+      await DBConnect.query({
+        text: 'SELECT COUNT(*) FROM application_reviewer_action;',
+      })
+    ).rows[0].count
+
+    // Most migrations are fine to re-run over and over before the app version
+    // is officially updated. However, this one can't be, as it needs the
+    // *previous* version of the `application_list` database function. After the
+    // initial migration, that function is replaced with a simpler (faster)
+    // version, so attempting to run the following migration again will not
+    // work. So we do an initial check -- if any `application_reviewer_action`
+    // records exist, this migration must have already taken place.
+    if (totalActionCount > 0) {
+      console.log('  ...already done, skipping...')
+      return
+    }
+
+    // Create lists of reviewers/assigners on application table
+    await DBConnect.query({
+      text: `
+        WITH lists AS (
+          SELECT * FROM application_list(0)
+        )
+        UPDATE public.application
+          SET (reviewer_list, assigner_list)
+          = (
+              SELECT reviewers, assigners FROM lists WHERE lists.id = application.id
+          );
+      `,
+    })
+
+    // Get ids of internal users
+    const intUsers = (
+      await DBConnect.query({
+        text: `
+        SELECT DISTINCT(permissions_all."userId") FROM permissions_all
+        WHERE "isSystemOrgPermission" = true;
+      `,
+        rowMode: 'array',
+      })
+    ).rows.flat()
+
+    for (const userId of intUsers) {
+      const applications = (
+        await DBConnect.query({
+          text: `
+          SELECT id, reviewer_action, assigner_action
+            FROM application_list($1);
+        `,
+          values: [userId],
+        })
+      ).rows
+      for (const app of applications) {
+        const { id, reviewer_action, assigner_action } = app
+        if (reviewer_action === null && assigner_action === null) continue
+
+        await DBConnect.query({
+          text: `
+            INSERT INTO public.application_reviewer_action
+            (user_id, application_id, reviewer_action, assigner_action)
+            VALUES ($1, $2, $3, $4);
+          `,
+          values: [userId, id, reviewer_action, assigner_action],
+        })
+      }
+      console.log(`   - Records created for user ${userId}`)
+    }
+  },
 }
 
 export default databaseMethods
