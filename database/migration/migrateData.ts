@@ -1088,6 +1088,32 @@ const migrateData = async () => {
     `)
   }
 
+  // v1.0.0
+  if (databaseVersionLessThan('1.0.0')) {
+    console.log('Migrating to v1.0.0...')
+
+    console.log(' - Adding reviewer/assigner lists to applications')
+    await DB.changeSchema(`
+      ALTER TABLE public.application   
+        ADD COLUMN IF NOT EXISTS reviewer_list VARCHAR[],
+        ADD COLUMN IF NOT EXISTS assigner_list VARCHAR[];
+    `)
+
+    console.log(' - Adding application_reviewer_action table')
+    await DB.changeSchema(`
+      CREATE TABLE IF NOT EXISTS public.application_reviewer_action (
+        id serial PRIMARY KEY,
+        user_id integer REFERENCES public.user(id)
+          ON DELETE CASCADE NOT NULL,
+        application_id integer REFERENCES public.application(id)
+          ON DELETE CASCADE NOT NULL,
+        reviewer_action public.reviewer_action,
+        assigner_action public.assigner_action,
+        UNIQUE (user_id, application_id)
+      );
+    `)
+  }
+
   // Other version migrations continue here...
 
   // Update (almost all) Indexes, Views, Functions, Triggers regardless, since
