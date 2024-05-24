@@ -361,38 +361,84 @@ CREATE TRIGGER update_reviewer_stats_from_status
     FOR EACH ROW
     EXECUTE FUNCTION public.update_reviewer_stats_from_status ();
 
+DROP FUNCTION IF EXISTS application_list CASCADE;
+CREATE OR REPLACE FUNCTION application_list(userId int DEFAULT 0)
+    RETURNS SETOF application_list_shape
+    AS $$
+    SELECT 
+        app.id,
+        app.serial,
+        app.name,
+        stage_status.template_code, 
+        stage_status.template_name,
+        "user".full_name as applicant,
+        organisation.name as org_name,
+        stage_status.stage,
+        stage_status.stage_colour,
+        stage_status.status,
+        app.outcome,
+        status_history_time_created AS last_active_date,
+        ts.time_scheduled AS applicant_deadline,
+        app.reviewer_list AS reviewers,
+        app.assigner_list AS assigners,
+        reviewer_action,
+        assigner_action
+        FROM application app
+            LEFT JOIN application_stage_status_latest as stage_status
+                ON app.id = stage_status.application_id
+            LEFT JOIN "user" 
+                ON app.user_id = "user".id
+            LEFT JOIN organisation
+                ON app.org_id = organisation.id
+            LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
+                    AND ts.is_active = TRUE
+                    AND ts.event_code = 'applicantDeadline'
+            LEFT JOIN (
+                SELECT application_id, reviewer_action, assigner_action
+                FROM application_reviewer_action
+                WHERE user_id = userId
+            ) actions
+                ON app.id = actions.application_id
+    $$
+    LANGUAGE sql
+    STABLE;
+
+-- (https://github.com/graphile/graphile-engine/pull/378)
+-- Required to make 'orderBy' work in application_list
+COMMENT ON FUNCTION application_list (userId int) IS E'@sortable';
+
 -- VIEW to return all required application list data
-DROP VIEW IF EXISTS application_list;
-CREATE OR REPLACE VIEW application_list AS (
-	SELECT
-	 app.id,
-	 app.serial,
-	 app.name,
-	 stage_status.template_code, 
-	 stage_status.template_name,
-	 "user".full_name as applicant_name,
-	 organisation.name as org_name,
-	 stage_status.stage,
-	 stage_status.stage_colour,
-	 stage_status.status,
-	 app.outcome,
-	 status_history_time_created AS last_active_date,
-	 ts.time_scheduled AS applicant_deadline,
-	 app.reviewer_list AS reviewers,
-	 app.assigner_list AS assigners,
-	 actions.user_id AS reviewer_id,
-	 reviewer_action,
-	 assigner_action
-	FROM application app
-		LEFT JOIN application_stage_status_latest as stage_status
-			ON app.id = stage_status.application_id
-		LEFT JOIN "user" 
-			ON app.user_id = "user".id
-		LEFT JOIN organisation
-			ON app.org_id = organisation.id
-		LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
-	            AND ts.is_active = TRUE
-	            AND ts.event_code = 'applicantDeadline'
-		LEFT JOIN application_reviewer_action actions
-			ON app.id = actions.application_id
-)
+-- DROP VIEW IF EXISTS application_list;
+-- CREATE OR REPLACE VIEW application_list AS (
+-- 	SELECT
+-- 	 app.id,
+-- 	 app.serial,
+-- 	 app.name,
+-- 	 stage_status.template_code, 
+-- 	 stage_status.template_name,
+-- 	 "user".full_name as applicant,
+-- 	 organisation.name as org_name,
+-- 	 stage_status.stage,
+-- 	 stage_status.stage_colour,
+-- 	 stage_status.status,
+-- 	 app.outcome,
+-- 	 status_history_time_created AS last_active_date,
+-- 	 ts.time_scheduled AS applicant_deadline,
+-- 	 app.reviewer_list AS reviewers,
+-- 	 app.assigner_list AS assigners,
+-- 	 actions.user_id AS reviewer_id,
+-- 	 reviewer_action,
+-- 	 assigner_action
+-- 	FROM application app
+-- 		LEFT JOIN application_stage_status_latest as stage_status
+-- 			ON app.id = stage_status.application_id
+-- 		LEFT JOIN "user" 
+-- 			ON app.user_id = "user".id
+-- 		LEFT JOIN organisation
+-- 			ON app.org_id = organisation.id
+-- 		LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
+-- 	            AND ts.is_active = TRUE
+-- 	            AND ts.event_code = 'applicantDeadline'
+-- 		LEFT JOIN application_reviewer_action actions
+-- 			ON app.id = actions.application_id
+-- )
