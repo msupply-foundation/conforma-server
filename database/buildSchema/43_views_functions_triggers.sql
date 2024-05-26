@@ -1780,12 +1780,12 @@ LANGUAGE plpgsql;
 -- Trigger for the above on review_assignment
 DROP TRIGGER IF EXISTS update_application_reviewer_stats ON public.review_assignment;
 CREATE TRIGGER update_application_reviewer_stats
-    AFTER INSERT OR UPDATE OR DELETE ON public.review_assignment
+    AFTER INSERT OR UPDATE ON public.review_assignment
     FOR EACH ROW
     EXECUTE FUNCTION public.update_application_reviewer_stats ();
 
 -- Function to update insert/update reviewer/assigner actions on
--- application_reviewer_action when status are updated
+-- application_reviewer_action when review_status is updated
 DROP FUNCTION IF EXISTS public.update_reviewer_stats_from_status CASCADE;
 CREATE OR REPLACE FUNCTION public.update_reviewer_stats_from_status ()
     RETURNS TRIGGER
@@ -1860,7 +1860,7 @@ BEGIN
 
     -- Clean up NULL records
     DELETE FROM public.application_reviewer_action
-    WHERE application_id = NEW.application_id
+    WHERE application_id = app_id
     AND reviewer_action IS NULL
     AND assigner_action IS NULL;
 
@@ -1871,7 +1871,7 @@ $$
 LANGUAGE plpgsql;
 
 
--- Trigger for the above on review_stage_history
+-- Trigger for the above on review_status_history
 DROP TRIGGER IF EXISTS update_reviewer_stats_from_status ON public.review_status_history;
 CREATE TRIGGER update_reviewer_stats_from_status
     AFTER INSERT ON public.review_status_history
@@ -1906,21 +1906,22 @@ CREATE OR REPLACE FUNCTION application_list(userId int DEFAULT 0)
         reviewer_action,
         assigner_action
         FROM application app
-            LEFT JOIN application_stage_status_latest as stage_status
-                ON app.id = stage_status.application_id
-            LEFT JOIN "user" 
-                ON app.user_id = "user".id
-            LEFT JOIN organisation
-                ON app.org_id = organisation.id
-            LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
-                    AND ts.is_active = TRUE
-                    AND ts.event_code = 'applicantDeadline'
-            LEFT JOIN (
-                SELECT application_id, reviewer_action, assigner_action
-                FROM application_reviewer_action
-                WHERE user_id = userId
-            ) actions
-                ON app.id = actions.application_id
+        LEFT JOIN application_stage_status_latest as stage_status
+            ON app.id = stage_status.application_id
+        LEFT JOIN "user" 
+            ON app.user_id = "user".id
+        LEFT JOIN organisation
+            ON app.org_id = organisation.id
+        LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
+                AND ts.is_active = TRUE
+                AND ts.event_code = 'applicantDeadline'
+        LEFT JOIN (
+            SELECT application_id, reviewer_action, assigner_action
+            FROM application_reviewer_action
+            WHERE user_id = userId
+        ) actions
+            ON app.id = actions.application_id
+        ORDER BY app.id
     $$
     LANGUAGE sql
     STABLE;
