@@ -1685,7 +1685,7 @@ BEGIN
     END IF;
 
     FOREACH rev_id IN ARRAY reviewer_ids LOOP
-        -- Delete previous
+        -- Remove existing
         UPDATE public.application_reviewer_action
             SET reviewer_action = NULL
             WHERE application_id = NEW.application_id
@@ -1725,7 +1725,7 @@ BEGIN
     END IF;
 
     FOREACH ass_id IN ARRAY assigner_ids LOOP
-        -- Delete previous
+        -- Remove existing
         UPDATE public.application_reviewer_action
             SET assigner_action = NULL
             WHERE application_id = NEW.application_id
@@ -1747,22 +1747,6 @@ BEGIN
          DO UPDATE
             SET assigner_action = (SELECT assigner_action FROM assigner_action);
     END LOOP;
-
-    -- Deleting review assignment records shouldn't happen in the normal course
-    -- of the app, but it can happen when we manually manipulate the database.
-    -- In this case, we would want to clean up the application_reviewer_action
-    -- too.
-    IF TG_OP = 'DELETE' THEN
-        INSERT INTO public.application_reviewer_action
-            (user_id, application_id, reviewer_action)
-        VALUES(NEW.reviewer_id, NEW.application_id, NULL);
-        
-        IF NEW.assigner_id IS NOT NULL THEN
-            INSERT INTO public.application_reviewer_action
-                (user_id, application_id, assigner_action)
-            VALUES(NEW.assigner_id, NEW.application_id, NULL);
-        END IF;
-    END IF;
 
     -- Clean up NULL records
     DELETE FROM public.application_reviewer_action
