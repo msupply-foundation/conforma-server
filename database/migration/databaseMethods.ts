@@ -452,13 +452,14 @@ const databaseMethods = {
       })
     ).rows[0].count
 
-    // Most migrations are fine to re-run over and over before the app version
+    // Most migrations are OK to re-execute over and over before the app version
     // is officially updated. However, this one can't be, as it needs the
     // *previous* version of the `application_list` database function. After the
     // initial migration, that function is replaced with a simpler (faster)
     // version, so attempting to run the following migration again will not
     // work. So we do an initial check -- if any `application_reviewer_action`
-    // records exist, this migration must have already taken place.
+    // records exist, we assume this migration must have already taken place,
+    // and so skip it.
     if (totalActionCount > 0) {
       console.log('  ...already done, skipping...')
       return
