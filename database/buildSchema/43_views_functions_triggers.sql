@@ -1646,7 +1646,9 @@ LANGUAGE sql
 STABLE;
 
 -- Function to update assigner/reviewer lists on applications and insert/update
--- reviewer/assigner actions on application_reviewer_action
+-- reviewer/assigner actions on application_reviewer_action, by making calls to
+-- the above `single_application_detail` function for the appropriate
+-- user/application combo(s)
 DROP FUNCTION IF EXISTS public.update_application_reviewer_stats CASCADE;
 CREATE OR REPLACE FUNCTION public.update_application_reviewer_stats ()
     RETURNS TRIGGER
@@ -1769,7 +1771,9 @@ CREATE TRIGGER update_application_reviewer_stats
     EXECUTE FUNCTION public.update_application_reviewer_stats ();
 
 -- Function to update insert/update reviewer/assigner actions on
--- application_reviewer_action when review_status is updated
+-- application_reviewer_action when review_status is updated, by making calls to
+-- the above `single_application_detail` function for the appropriate
+-- user/application combo(s)
 DROP FUNCTION IF EXISTS public.update_reviewer_stats_from_status CASCADE;
 CREATE OR REPLACE FUNCTION public.update_reviewer_stats_from_status ()
     RETURNS TRIGGER
