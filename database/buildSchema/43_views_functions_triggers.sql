@@ -249,7 +249,8 @@ BEGIN
     UPDATE public.template_element
         SET template_code=NEW.code,
             template_version=NEW.version_id
-        WHERE template_code = OLD.code;
+        WHERE template_code = OLD.code
+            AND template_version=OLD.version_id;
         RETURN NULL;
 END;
 $template_element_event$

@@ -10,7 +10,7 @@ INITIAL_DATA_LOCALE=''
 PUSH=${2:-nopush} # Default won't push to Docker hub
 
 NODE_VERSION='14'
-POSTGRES_VERSION='12'
+POSTGRES_VERSION='16'
 
 # Generate a random ID so Images built on same day with same branch
 # have a unique name
