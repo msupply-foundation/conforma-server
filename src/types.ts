@@ -322,6 +322,7 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'timezone',
   'externalApiConfigs',
   'envVars',
+  'maintenanceSite',
 ]
 
 export interface WebAppPrefs {
