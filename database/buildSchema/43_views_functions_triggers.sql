@@ -424,6 +424,9 @@ CREATE TRIGGER application_stage_history_trigger
 
 -- APPLICATION_STATUS_HISTORY
 -- FUNCTION to auto-add application_id to application_status_history table
+-- (Somehow some older snapshots ended up with two variants of this function)
+DROP FUNCTION IF EXISTS
+    public.application_status_history_application_id (application_stage_history_id integer) CASCADE;
 DROP FUNCTION IF EXISTS
     public.application_status_history_application_id CASCADE;
 CREATE OR REPLACE FUNCTION public.application_status_history_application_id ()
@@ -642,7 +645,9 @@ CREATE TRIGGER trigger_schedule_trigger
 
 -- REVIEW_ASSIGNMENT
 -- FUNCTION/TRIGGER to auto-add template_id to review_assignment
-DROP FUNCTION IF EXISTS public.review_assignment_template_id CASCADE;
+-- (Some older versions have variant with different signature)
+DROP FUNCTION IF EXISTS public.review_assignment_template_id(assignment review_assignment) CASCADE;
+DROP FUNCTION IF EXISTS public.review_assignment_template_id() CASCADE;
 CREATE OR REPLACE FUNCTION public.review_assignment_template_id ()
     RETURNS TRIGGER
     AS $review_assignment_event$
@@ -894,7 +899,9 @@ CREATE TRIGGER review_trigger
 
 -- REVIEW_RESPONSE
 -- FUNCTION/TRIGGER to auto-add stage_number to review_response
-DROP FUNCTION review_response_stage_number CASCADE;
+-- (Some older versions have variant with different signature)
+DROP FUNCTION IF EXISTS review_response_stage_number(review_id integer) CASCADE;
+DROP FUNCTION IF EXISTS review_response_stage_number() CASCADE;
 CREATE FUNCTION public.review_response_stage_number ()
     RETURNS TRIGGER
     AS $review_response_event$
