@@ -255,64 +255,6 @@ const databaseMethods = {
       }
     }
   },
-  updatePermissionPolicyRules: async () => {
-    const policies = (
-      await DBConnect.query({
-        text: `SELECT id, rules FROM permission_policy`,
-      })
-    ).rows as { id: number; rules: object }[]
-
-    // This is added as an optimisation, rather then doing "in" clause with
-    // array values from JWT we "select" from permission_flattened table, pre
-    // populated with userId, organisationId, permissionPolicyId and templateIds
-    // from: template_id in any (string_to_array(COALESCE(current_setting('jwt.claims.pp6_templateIds, true), '0'), ',')::integer[])
-    // to: template_id in select template_id from permission_flattened
-    //         where user_id = COALESCE(current_setting('jwt.claims.userId, true),''),'0')::integer
-    //         and permission_policy_id = 6
-    //         and (organisation_id = COALESCE(current_setting('jwt.claims.orgId, true),''),'0')::integer or organisation_id is null)
-    for (const row of policies) {
-      const { id, rules } = row
-
-      const jsonAsString = JSON.stringify(rules)
-      const replacement = {
-        $in: {
-          $select: {
-            $from: 'permission_flattened',
-            $where: {
-              $and: [
-                {
-                  user_id: 'jwtUserDetails_bigint_userId',
-                },
-                { permission_policy_id: id },
-                {
-                  $or: [
-                    {
-                      organisation_id: 'jwtUserDetails_bigint_orgId',
-                    },
-                    {
-                      organisation_id: {
-                        $isNull: true,
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-            template_id: true,
-          },
-        },
-      }
-      const replacementAsString = JSON.stringify(replacement)
-      const replacementAsJson = JSON.parse(
-        jsonAsString.replace(/"jwtPermission_array_bigint_template_ids"/g, replacementAsString)
-      )
-
-      await DBConnect.query({
-        text: `UPDATE permission_policy set rules = $1 where id = $2`,
-        values: [replacementAsJson, id],
-      })
-    }
-  },
   convertDataTablesToCaseInsensitive: async () => {
     type FieldMap = { label: string; gqlName: string; dataType: string; fieldName: string }
     // Get list of data tables from "data_table"
