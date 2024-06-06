@@ -8,26 +8,18 @@ import { permissionPolicyColumns } from '../postgresConnect'
 export const baseJWT = { aud: 'postgraphile' }
 
 /* Compiles JWT from userInfo and PermissionRows
-  in { userId: 1, ... }, [
-  {
-    templatePermissionRestrictions: {
-      restrictOne: 1,
-      restrictTwo: 2,
-    },
-    templateId: 1,
-    permissionPolicyId: 2,
-    permissionNameId: 3,
-    templatePermissionId: 4,
-  }]
+  in { 
+    userId: 1, ..., 
+    templatePermissionRows: [
+     { permissionPolicyId: 2 },
+     { permissionPolicyId: 6 } ] 
+  }
   out {
     aud: 'postgraphile',
     userId: 1,
     orgId: 2, (if supplied)
-    pp2pn3: true,
-    pp2pn3tp4: true,
-    pp2pn3tp4_templateId: "1",
-    pp2pn3tp4_restrictOne: "1",
-    pp2pn3tp4_restrictTwo: "2"
+    pp1: 't',
+    pp2: 't'
   }
 */
 const compileJWT = (JWTelements: any) => {
@@ -35,25 +27,23 @@ const compileJWT = (JWTelements: any) => {
     JWTelements
 
   let JWT: any = { ...baseJWT, userId, orgId, username, sessionId, isAdmin, isManager }
-  const templateIdsForPolicy: { [policyAbbreviation: string]: number[] } = {}
-
-  templatePermissionRows.forEach((permissionRow: PermissionRow) => {
-    const { templateId, permissionPolicyId } = permissionRow
-
-    const permissionPolicyAbbreviation = `pp${permissionPolicyId}`
-
-    const templateIdsKey = `${permissionPolicyAbbreviation}_template_ids`
-    if (!templateIdsForPolicy[templateIdsKey]) templateIdsForPolicy[templateIdsKey] = []
-    if (!templateIdsForPolicy[templateIdsKey].includes(templateId || 0))
-      templateIdsForPolicy[templateIdsKey].push(templateId || 0)
-
+  templatePermissionRows.forEach(({ permissionPolicyId }: PermissionRow) => {
     JWT = {
       ...JWT,
-      [permissionPolicyAbbreviation]: 't',
-      [templateIdsKey]: templateIdsForPolicy[templateIdsKey].join(','),
+      [`pp${permissionPolicyId}`]: 't',
     }
   })
   return JWT
+}
+
+const refreshAllUserOrgPolicyTemplates = async () => {
+  console.log('Refreshing org policy templates for all users...')
+  const userAndOrg = await databaseConnect.getAllUserOrgCombos()
+  await Promise.all(
+    userAndOrg.map(({ userId, orgId }) =>
+      databaseConnect.updateUserOrgPolicyTemplate(userId, orgId)
+    )
+  )
 }
 
 // Removes previously generated row level policies and reinstates them based on current permission settings
@@ -119,6 +109,7 @@ const generateRowLevelPolicies = (permissionRows: permissionPolicyColumns[]) => 
   return policies
 }
 
+// See tests in sqlFromJson.test.ts
 export const compileRowLevelPolicies = (
   permissionAbbreviation: string,
   permissionPolicyRules: object
@@ -221,11 +212,6 @@ const replacePlaceholders = (sql: string, permissionAbbreviation: string) => {
       prefixReplacement: `COALESCE(nullif(current_setting('jwt.claims.${permissionAbbreviation}_`,
       postfix: `', true),''),'0')::integer`,
     },
-    {
-      prefix: 'jwtPermission_array_bigint_',
-      prefixReplacement: `any (string_to_array(COALESCE(current_setting('jwt.claims.${permissionAbbreviation}_`,
-      postfix: `', true), '0'), ',')::integer[])`,
-    },
   ]
 
   replacements.forEach(({ prefix, prefixReplacement, postfix }) => {
@@ -240,4 +226,4 @@ const replacePlaceholders = (sql: string, permissionAbbreviation: string) => {
   return resultSql
 }
 
-export { compileJWT, updateRowPolicies, generateRowLevelPolicies }
+export { compileJWT, updateRowPolicies, generateRowLevelPolicies, refreshAllUserOrgPolicyTemplates }
