@@ -26,7 +26,7 @@ const remapObjectKeysWithPrefix = (prefix: string, object: Object) => {
 
   return remappedObject
 }
-
+// See tests in sqlFromJson.test.ts
 // Creates SQL from JSON, as per https://github.com/planetarydev/json-sql-builder2, but only for WHERE clause content
 // in { job_title: { $in: ['Sales Manager', 'Account Manager'] }, country_code: 'RU' }
 // out `job_title IN ('Sales Manager', 'Account Manager') AND country_code = 'RU'`

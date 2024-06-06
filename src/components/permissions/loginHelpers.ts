@@ -56,6 +56,11 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
       return { orgId, orgName, userRole, registration, address, logoUrl, isSystemOrg }
     })
 
+  // The logic for template permissions for the user is as follows
+  // templates allowed for user and org based on permission policy joins (flattened via permissions_all view)
+  // where logged in user and organisation matched permissions
+  // where logged in user matches permission and template is user category
+  // where logged in organisation matches permissions and permission does not specify user (org wide permission)
   const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(
     newUsername,
     orgId || null,
