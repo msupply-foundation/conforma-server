@@ -71,7 +71,7 @@ WORKDIR /usr/src/conforma-server
 # RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
 RUN yarn install
 RUN yarn build
-RUN rm .npmrc && mv .npmrc_backup .npmrc
+# RUN rm .npmrc && mv .npmrc_backup .npmrc
 
 # --- BUILD WEB APP
 WORKDIR /usr/src/conforma-web-app
@@ -80,7 +80,7 @@ WORKDIR /usr/src/conforma-web-app
 # RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
 RUN yarn install
 RUN yarn build
-RUN rm .npmrc && mv .npmrc_backup .npmrc
+# RUN rm .npmrc && mv .npmrc_backup .npmrc
 
 # --- ADD NGINX CONFIG
 COPY nginx_config/conforma.conf /etc/nginx/conf.d/
