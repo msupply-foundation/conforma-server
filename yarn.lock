@@ -3515,10 +3515,10 @@ fd-slicer@~1.1.0:
   dependencies:
     pend "~1.2.0"
 
-fig-tree-evaluator@^2.15.0:
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/fig-tree-evaluator/-/fig-tree-evaluator-2.15.0.tgz#12b186c55640ff66bb3b21059e93873adee2da61"
-  integrity sha512-+fr2mrroXdwG+codzZWXjFMWzD2q0/SZbSaxDLDtvkODgeZ+ZZVivhAhgTYWZ7bMPeghzt1VdbGn7lvT2w+NdQ==
+fig-tree-evaluator@^2.15.2:
+  version "2.15.2"
+  resolved "https://registry.yarnpkg.com/fig-tree-evaluator/-/fig-tree-evaluator-2.15.2.tgz#889ae107ed2280c4065c45a67dc793738997715d"
+  integrity sha512-XNevZf0n/oPPWRPQUSOy39R1gBubRXcFT7VJpVPmsn7h1BaBkB2gtRO9BDa82X5FVXmHBmrSI9xwX/VvnhizlQ==
   dependencies:
     change-case "^4.1.2"
     dequal "^2.0.3"

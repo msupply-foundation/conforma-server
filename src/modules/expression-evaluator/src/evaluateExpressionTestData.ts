@@ -691,6 +691,8 @@ testData.stringSubstitutionRepeatedParameters = {
 
 testData.APIisUnique = {
   operator: 'GET',
+  // url: 'http://localhost:8080/api/check-unique',
+  // parameters: { type: 'username', value: 'druglord' },
   children: ['http://localhost:8080/api/check-unique', ['type', 'value'], 'username', 'druglord'],
 }
 

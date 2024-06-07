@@ -21,6 +21,7 @@ const fig = new FigTreeEvaluator({
   httpClient: fetch,
   sqlConnection: SQLNodePostgres(pgConnect),
   supportDeprecatedValueNodes: true,
+  nullEqualsUndefined: true,
 })
 
 const evaluateExpression = (expression: any, options?: any) => fig.evaluate(expression, options)
@@ -434,6 +435,7 @@ test('GET: Check username is unique using custom query authentication', () => {
   return evaluateExpression(testData.APIisUniqueWithHeaders, {
     objects: { secrets },
     APIfetch: fetch,
+    supportDeprecatedValueNodes: false,
   }).then((result: any) => {
     expect(result).toEqual({ unique: false, message: '' })
   })
@@ -713,6 +715,7 @@ test('Test email validation -- email is unique and is valid email', () => {
     headers: {
       Authorization: secrets.nonRegisteredAuth,
     },
+    supportDeprecatedValueNodes: false,
   }).then((result: any) => {
     expect(result).toBe(true)
   })
@@ -905,7 +908,7 @@ test('Try and access non-indexable object', async () => {
       }
     )
   } catch (e: any) {
-    expect(e.message).toMatch('Object not index-able')
+    expect(e.message).toMatch('Unable to extract object property')
   }
 })
 
@@ -918,7 +921,7 @@ test('Throw error -- bad API call', async () => {
       children: [],
     })
   } catch (e: any) {
-    expect(e.message).toMatch('Invalid API query')
+    expect(e.message).toMatch('Invalid url')
   }
 })
 
@@ -928,7 +931,7 @@ test('Error bubbles up from child -- unresolved object property', async () => {
       objects: { responses: testData.responses },
     })
   } catch (e: any) {
-    expect(e.message).toMatch('Object property not found')
+    expect(e.message).toMatch('Unable to extract object property')
   }
 })
 
