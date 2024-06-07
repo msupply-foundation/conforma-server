@@ -1,6 +1,7 @@
 // Test suite for the evaluateExpression() function
 
-import evaluateExpression from './evaluateExpression'
+// import evaluateExpression from './evaluateExpression'
+import { FigTreeEvaluator, FigTreeOptions, SQLNodePostgres } from 'fig-tree-evaluator'
 import { testData } from './evaluateExpressionTestData'
 import config from './config.json'
 import secrets from './testSecrets.json'
@@ -15,6 +16,14 @@ pgConnect.connect()
 // CONFIG -- GraphQL SETUP
 const fetch = require('node-fetch')
 const graphQLendpoint = 'http://localhost:5000/graphql'
+
+const fig = new FigTreeEvaluator({
+  httpClient: fetch,
+  sqlConnection: SQLNodePostgres(pgConnect),
+  supportDeprecatedValueNodes: true,
+})
+
+const evaluateExpression = (expression: any, options?: any) => fig.evaluate(expression, options)
 
 // Basic (single level literals)
 
@@ -305,7 +314,7 @@ test('Test unresolved object', async () => {
       objects: { application: testData.application },
     })
   } catch (e: any) {
-    expect(e.message).toMatch('Object property not found')
+    expect(e.message).toMatch(/Unable to extract object property/)
   }
 })
 
@@ -415,6 +424,7 @@ test('GET: Check username is unique', () => {
     headers: {
       Authorization: secrets.nonRegisteredAuth,
     },
+    supportDeprecatedValueNodes: false,
   }).then((result: any) => {
     expect(result).toEqual({ unique: true, message: '' })
   })
