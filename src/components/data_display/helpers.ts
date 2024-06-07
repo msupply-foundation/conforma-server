@@ -4,7 +4,7 @@ import {
   getValidTableName,
   capitaliseFirstLetter,
 } from '../utilityFunctions'
-import evaluateExpression from '@openmsupply/expression-evaluator'
+import evaluateExpression from '../../modules/expression-evaluator'
 import functions from '../actions/evaluatorFunctions'
 import fetch from 'node-fetch'
 import { camelCase, snakeCase, startCase } from 'lodash'
