@@ -1,6 +1,6 @@
 -- ACTIVITY LOG
 -- This script contains "DROP" and "IF EXISTS" statements as it is called as a whole from the migration script
-CREATE TYPE public.event_type AS ENUM (
+CREATE TYPE public.event_type IF NOT EXISTS AS ENUM (
     'STAGE',
     'STATUS',
     'OUTCOME',

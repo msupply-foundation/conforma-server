@@ -43,7 +43,7 @@ const migrateData = async () => {
     console.log(' - Add system_info TABLE')
 
     await DB.changeSchema(`
-      CREATE TABLE public.system_info (
+      CREATE TABLE IF NOT EXISTS public.system_info (
         id serial PRIMARY KEY,
         name varchar NOT NULL,
         value jsonb DEFAULT '{}',
@@ -61,7 +61,7 @@ const migrateData = async () => {
     console.log(' - Add review_assignment TABLE field: assigned_sections')
 
     await DB.changeSchema(`ALTER TABLE review_assignment
-        ADD COLUMN assigned_sections varchar[] DEFAULT array[]::varchar[];`)
+        ADD COLUMN IF NOT EXISTS assigned_sections varchar[] DEFAULT array[]::varchar[];`)
 
     // Update or create review_assignment assigned_sections Trigger/Function
     console.log(' - Add review_assignment_trigger2 TRIGGER field: assigned_sections')
@@ -98,9 +98,9 @@ const migrateData = async () => {
     }
 
     // DROP review_question_assignment and related views/fields
-    console.log(' - Remove column in review_reponse TABLE: review_question_assignment_id')
+    console.log(' - Remove column in review_response TABLE: review_question_assignment_id')
     await DB.changeSchema(`ALTER TABLE review_response
-        DROP COLUMN review_question_assignment_id;`)
+        DROP COLUMN IF EXISTS review_question_assignment_id;`)
 
     console.log(' - Remove review_question_assignment_section VIEW')
     await DB.changeSchema(`DROP VIEW IF EXISTS
@@ -1067,11 +1067,15 @@ const migrateData = async () => {
         REFERENCES public.template (id) ON DELETE CASCADE;
     `)
     await DB.changeSchema(`
+      ALTER TABLE review_assignment DISABLE TRIGGER 
+        update_application_reviewer_stats;
       UPDATE public.review_assignment
         SET template_id = (
           SELECT template_id FROM application
           WHERE id = application_id
         );
+      ALTER TABLE review_assignment ENABLE TRIGGER               
+        update_application_reviewer_stats;
     `)
     await DB.changeSchema(`
       ALTER TABLE public.review_assignment
