@@ -22,6 +22,8 @@ export const DEFAULT_LOGOUT_TIME = 60 // Minutes
 export const DEFAULT_THUMBNAIL_MAX_WIDTH = 300
 export const DEFAULT_THUMBNAIL_MAX_HEIGHT = 300
 
+export const MAX_32_BIT_INT = 2_147_483_647
+
 export const ROOT_FOLDER = path.join(getAppEntryPointDir(), '../')
 export const DATABASE_FOLDER = path.join(getAppEntryPointDir(), config.databaseFolder)
 export const SNAPSHOT_FOLDER = path.join(DATABASE_FOLDER, SNAPSHOT_SUBFOLDER)

@@ -18,6 +18,7 @@ import { ColumnDefinition, LinkedApplication, DataViewDetail } from './types'
 import { DataView } from '../../generated/graphql'
 import config from '../../config'
 import { FastifyReply, FastifyRequest } from 'fastify'
+import { MAX_32_BIT_INT } from '../../constants'
 
 // CONSTANTS
 const LOOKUP_TABLE_PERMISSION_NAME = 'lookupTables'
@@ -47,8 +48,13 @@ const routeDataViewTable = async (request: any, reply: any) => {
   const query = objectKeysToCamelCase(request.query)
   const filter = request.body ?? {}
 
+  // The `returnRawData` option is used in application form queries, where we
+  // want the data in a simplified structure and no column/filter definition
+  // metaData
+  const returnRawData = query?.raw === 'true' ?? false
+
   // GraphQL pagination parameters
-  const first = query?.first ? Number(query.first) : 20
+  const first = query?.first ? Number(query.first) : returnRawData ? MAX_32_BIT_INT : 20
   const offset = query?.offset ? Number(query.offset) : 0
   const orderBy = query?.orderBy
   const ascending = query?.ascending ? query?.ascending === 'true' : true
@@ -98,6 +104,8 @@ const routeDataViewTable = async (request: any, reply: any) => {
     defaultFilterString
   )
 
+  if (returnRawData) return reply.send(response.tableRows.map(({ id, item }) => ({ id, ...item })))
+
   return reply.send(response)
 }
 
@@ -107,6 +115,8 @@ const routeDataViewDetail = async (request: any, reply: any) => {
   const recordId = Number(request.params.id)
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
   if (request.auth.isAdmin) permissionNames.push(LOOKUP_TABLE_PERMISSION_NAME)
+
+  const returnRawData = request.query?.raw === 'true' ?? false
 
   const {
     tableName,
@@ -148,6 +158,8 @@ const routeDataViewDetail = async (request: any, reply: any) => {
     fetchedRecord,
     linkedApplications as LinkedApplication[]
   )
+
+  if (returnRawData) return reply.send(response.item)
 
   return reply.send(response)
 }
