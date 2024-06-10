@@ -459,6 +459,8 @@ const databaseMethods = {
     }
   },
   removeDuplicateIndexes: async (tableName?: string) => {
+    // Matches any indexes that end in "keyXX" where XX is one or more numeric
+    // characters
     const text = `
       SELECT tablename, indexname FROM pg_indexes
         WHERE indexname SIMILAR TO '%key\\d+'
