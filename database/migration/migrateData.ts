@@ -575,7 +575,8 @@ const migrateData = async () => {
     `)
 
     console.log(' - Add case-insensitive unique constraint to usernames')
-    //drop views relating to username temporarily so column can be changed
+    // Drop views relating to username temporarily so column can be changed --
+    // will re-created in 43_views_functions_indexes
     await DB.changeSchema(`
       DROP VIEW IF EXISTS permissions_all;
       DROP VIEW IF EXISTS user_org_join`)
@@ -1137,6 +1138,19 @@ const migrateData = async () => {
                 '"jwtPermission_array_bigint_template_ids"', 
       '{ "$": { "__": "= ANY (SELECT template_id FROM user_org_policy_template WHERE user_org_policy = jwtUserDetails_text_userId || ''.'' || jwtUserDetails_text_orgId || ''.' || id || ''')"}}')::json;
     `)
+
+    // The previous statement we had to create this unique constraint resulted
+    // in a new index being created each time it was invoked. So now we ensure
+    // the one index we actually want is correctly defined (then we delete all
+    // duplicates with 'removeDuplicateIndexes()' later on).
+    console.log(' - Fixing unique constraint for template_version/code on template table')
+
+    await DB.changeSchema(`
+      ALTER TABLE public.template
+        DROP CONSTRAINT IF EXISTS template_code_version_id_key;
+      ALTER TABLE public.template
+        ADD CONSTRAINT template_code_version_id_key UNIQUE (code, version_id);
+      `)
   }
 
   // Other version migrations continue here...
@@ -1156,6 +1170,10 @@ const migrateData = async () => {
   )
   console.log(' - Updating indexes...')
   await DB.changeSchema(createIndexesScript)
+  // This shouldn't be necessary after v1.0 migration, but can't hurt in case
+  // duplicate indexes creep in at some point, or if loading a snapshot that has
+  // additional duplicates we haven't yet discovered
+  await DB.removeDuplicateIndexes()
 
   // Finally, set the database version to the current version
   if (databaseVersionLessThan(version)) await DB.setDatabaseVersion(version)

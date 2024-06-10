@@ -458,6 +458,25 @@ const databaseMethods = {
       console.log(`   - Records created for user ${userId}`)
     }
   },
+  removeDuplicateIndexes: async (tableName?: string) => {
+    const text = `
+      SELECT tablename, indexname FROM pg_indexes
+        WHERE indexname SIMILAR TO '%key\\d+'
+        ${tableName ? ' AND tablename = $1' : ''};
+      `
+    const values = tableName ? [tableName] : []
+
+    // Get indexes
+    const indexes = (await DBConnect.query({ text, values })).rows
+
+    for (const index of indexes) {
+      const { tablename, indexname } = index
+      await DBConnect.query({
+        text: `
+        ALTER TABLE ${tablename} DROP CONSTRAINT IF EXISTS ${indexname};`,
+      })
+    }
+  },
 }
 
 export default databaseMethods
