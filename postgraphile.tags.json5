@@ -1,0 +1,53 @@
+{
+  version: 1,
+  config: {
+    class: {
+      application: {
+        tags: {
+          foreignKey: '(user_id) references user_list(id)',
+        },
+      },
+      review_assignment: {
+        tags: {
+          foreignKey: [
+            '(reviewer_id) references user_list(id)',
+            '(assigner_id) references user_list(id)',
+          ],
+        },
+      },
+      review: {
+        tags: {
+          foreignKey: '(reviewer_id) references user_list(id)',
+        },
+      },
+      review_assignment_assigner_join: {
+        tags: {
+          foreignKey: '(assigner_id) references user_list(id)',
+        },
+      },
+      application_note: {
+        tags: {
+          foreignKey: '(user_id) references user_list(id)',
+        },
+      },
+      permission_join: {
+        tags: {
+          foreignKey: '(user_id) references user_list(id)',
+        },
+      },
+      user: {
+        tags: { omit: 'read,update,create,delete,all,many', name: 'hiddenUser' },
+      },
+      user_list_admin: {
+        tags: {
+          name: 'user',
+        },
+      },
+      user_organisation: {
+        tags: {
+          foreignKey: '(user_id) references user_list_admin(id)|@foreignFieldName userOrganisations',
+        },
+      },
+    },
+  },
+}
