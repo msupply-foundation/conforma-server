@@ -11,8 +11,7 @@ export const queryDataTable = async (
   first: number,
   offset: number,
   orderBy: string,
-  ascending: boolean,
-  authHeaders: string
+  ascending: boolean
 ) => {
   const tableNamePlural = plural(tableName)
   const filterType = upperFirst(camelCase(tableName)) + 'Filter'
@@ -25,7 +24,7 @@ export const queryDataTable = async (
 
   let queryResult
   try {
-    queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
+    queryResult = await DBConnect.gqlQuery(graphQLquery, variables)
   } catch (err) {
     return {
       error: { error: true, message: 'Problem with Data Table query', detail: errorMessage(err) },
@@ -40,8 +39,7 @@ export const queryDataTableSingleItem = async (
   tableName: string,
   fieldNames: string[],
   gqlFilters: object,
-  id: number,
-  authHeaders: string
+  id: number
 ) => {
   const tableNamePlural = plural(tableName)
   const filterType = upperFirst(camelCase(tableName)) + 'Filter'
@@ -50,7 +48,7 @@ export const queryDataTableSingleItem = async (
   const graphQLquery = `query getDataRecord($id:Int!, $filter:${filterType}){ ${tableNamePlural}(condition: {id: $id}, filter: $filter) { nodes {${fieldNameString}}}}`
   let queryResult
   try {
-    queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
+    queryResult = await DBConnect.gqlQuery(graphQLquery, variables)
   } catch (err) {
     return { error: true, message: 'Problem with Data Item query', detail: errorMessage(err) }
   }
@@ -105,8 +103,7 @@ export const queryFilterList = async (
   columns: string[],
   gqlFilters: object,
   first: number,
-  offset: number,
-  authHeaders: string
+  offset: number
 ) => {
   const tableNamePlural = plural(tableName)
   const filterType = upperFirst(camelCase(tableName)) + 'Filter'
@@ -117,7 +114,7 @@ export const queryFilterList = async (
 
   let queryResult
   try {
-    queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
+    queryResult = await DBConnect.gqlQuery(graphQLquery, variables)
   } catch (err) {
     return {
       error: { error: true, message: 'Problem with Filter List query', detail: errorMessage(err) },

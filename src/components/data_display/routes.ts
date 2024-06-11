@@ -41,7 +41,6 @@ const routeDataViews = async (request: FastifyRequest, reply: FastifyReply) => {
 }
 
 const routeDataViewTable = async (request: any, reply: any) => {
-  const authHeaders = request?.headers?.authorization
   const dataViewCode = camelCase(request.params.dataViewCode)
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
   if (request.auth.isAdmin) permissionNames.push(LOOKUP_TABLE_PERMISSION_NAME)
@@ -87,8 +86,7 @@ const routeDataViewTable = async (request: any, reply: any) => {
     first,
     offset,
     orderBy ?? defaultSortColumn ?? 'id',
-    ascending,
-    authHeaders
+    ascending
   )
   if (error) return error
 
@@ -110,7 +108,6 @@ const routeDataViewTable = async (request: any, reply: any) => {
 }
 
 const routeDataViewDetail = async (request: any, reply: any) => {
-  const authHeaders = request?.headers?.authorization
   const dataViewCode = camelCase(request.params.dataViewCode)
   const recordId = Number(request.params.id)
   const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
@@ -135,13 +132,7 @@ const routeDataViewDetail = async (request: any, reply: any) => {
   })
 
   // GraphQL query -- get ALL fields (passing JWT), with pagination
-  const fetchedRecord = await queryDataTableSingleItem(
-    tableName,
-    fieldNames,
-    gqlFilters,
-    recordId,
-    authHeaders
-  )
+  const fetchedRecord = await queryDataTableSingleItem(tableName, fieldNames, gqlFilters, recordId)
 
   if (fetchedRecord?.error) return fetchedRecord
 
@@ -165,7 +156,6 @@ const routeDataViewDetail = async (request: any, reply: any) => {
 }
 
 const routeDataViewFilterList = async (request: any, reply: any) => {
-  const authHeaders = request?.headers?.authorization
   const dataViewCode = camelCase(request.params.dataViewCode)
   const columnName = request.params.column
   const {
@@ -218,8 +208,7 @@ const routeDataViewFilterList = async (request: any, reply: any) => {
       searchFields,
       gqlFilters,
       filterListBatchSize,
-      offset,
-      authHeaders
+      offset
     )
 
     if (error) return reply.send(error)
