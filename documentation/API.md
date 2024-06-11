@@ -452,6 +452,7 @@ It works by finding an event in the `trigger_schedule` table with matching `appl
 
 #### Lookup table endpoints
 
+- GET: `/lookup-table/list`
 - POST: `/lookup-table/import`
 - GET: `/lookup-table/export`
 

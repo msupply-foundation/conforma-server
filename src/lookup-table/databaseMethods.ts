@@ -21,6 +21,12 @@ const databaseMethods = {
       throw err
     }
   },
+  listLookupTables: async () => {
+    const result = await DBConnect.gqlQuery(
+      `query getAllLookupTableStructures {  dataTables(condition: {isLookupTable: true}) {    nodes {      id      tableName      displayName      fieldMap      __typename    }    __typename  }}`
+    )
+    return result?.dataTables?.nodes
+  },
 }
 
 export default databaseMethods

@@ -479,6 +479,21 @@ const databaseMethods = {
       })
     }
   },
+  secureDataTables: async () => {
+    const dataTables = (
+      await DBConnect.query({ text: `SELECT table_name FROM data_table;`, rowMode: 'array' })
+    ).rows.flat()
+
+    for (const table of dataTables) {
+      try {
+        await DBConnect.query({
+          text: `ALTER TABLE ${config.dataTablePrefix}${table} ENABLE ROW LEVEL SECURITY;`,
+        })
+      } catch {
+        console.log(`ERROR: Problem securing data table "${table}"`)
+      }
+    }
+  },
 }
 
 export default databaseMethods

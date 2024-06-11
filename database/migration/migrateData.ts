@@ -1156,6 +1156,9 @@ const migrateData = async () => {
       ALTER TABLE public.template
         ADD CONSTRAINT template_code_version_id_key UNIQUE (code, version_id);
       `)
+
+    console.log('Adding row-level security to all existing data tables')
+    await DB.secureDataTables()
   }
 
   // Other version migrations continue here...
