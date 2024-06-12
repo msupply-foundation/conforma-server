@@ -9,6 +9,7 @@ import { ILookupTableNameValidator, IValidator } from '../utils/validations/type
 type LookupTableServiceProps = {
   tableId?: number
   name?: string
+  dataViewCode: string
 }
 
 const LookupTableService = async (props: LookupTableServiceProps) => {
@@ -17,6 +18,7 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
   let fieldMaps: FieldMapType[] = []
   let rows: object[] = []
   let dbFieldMap: any = []
+  let dataViewCode = props.dataViewCode
   let structure: LookupTableStructureFull
 
   // Initialisation
@@ -75,9 +77,12 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
         tableName,
         displayName: name,
         fieldMap: newTableFieldMap,
+        dataViewCode,
       })
 
       await createUpdateRows()
+
+      await createOrUpdateDataView()
 
       return buildSuccessMessage(results)
     } catch (err) {
@@ -102,7 +107,10 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
       setDataTypes(fieldMaps, rows)
 
       await createNewColumns()
+
       await createUpdateRows()
+
+      await createOrUpdateDataView()
 
       return buildSuccessMessage(results)
     } catch (err) {
@@ -183,7 +191,7 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
       (obj: any) => dbFieldMap.filter((otherObj: any) => otherObj.label == obj.label).length === 0
     )
 
-    await lookupTableModel.updateStructureFieldMaps(tableName, fieldMaps)
+    await lookupTableModel.updateStructureFieldMaps(tableName, fieldMaps, dataViewCode)
     for (let fieldMap of fieldsToAdd) {
       await lookupTableModel.addTableColumns(tableName, fieldMap)
     }
@@ -204,6 +212,21 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
         fieldMaps.filter((csvMap: any) => csvMap.label === current.label)
       ),
       finalFieldMap: fieldMaps,
+    }
+  }
+
+  const createOrUpdateDataView = async () => {
+    const existingDataViews = await lookupTableModel.getDataViews(
+      tableName,
+      structure?.dataViewCode ?? dataViewCode
+    )
+
+    if (existingDataViews.length > 0) {
+      for (const dataView of existingDataViews) {
+        await lookupTableModel.updateDataView(dataView.id, dataViewCode)
+      }
+    } else {
+      await lookupTableModel.createDataView(name, tableName, dataViewCode)
     }
   }
 

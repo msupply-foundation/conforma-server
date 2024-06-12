@@ -9,6 +9,8 @@ import {
 } from '../types'
 import config from '../../config'
 import { exportDataRows } from '../utils/dataTypeUtils'
+import { DataView } from '../../generated/graphql'
+import { nanoid } from 'nanoid'
 
 const { dataTablePrefix } = config
 
@@ -21,13 +23,18 @@ const LookupTableModel = () => {
     return exportDataRows(fieldMap, result.rows)
   }
 
-  const createStructure = async ({ tableName, displayName, fieldMap }: LookupTableStructure) => {
+  const createStructure = async ({
+    tableName,
+    displayName,
+    fieldMap,
+    dataViewCode,
+  }: LookupTableStructure) => {
     try {
-      const text = `INSERT INTO data_table (table_name, display_name, field_map, is_lookup_table) VALUES ($1,$2,$3, true) RETURNING id`
+      const text = `INSERT INTO data_table (table_name, display_name, field_map, is_lookup_table, data_view_code) VALUES ($1,$2,$3, true, $4) RETURNING id`
 
       const result: QueryResult<{ id: number }> = await DBConnect.query({
         text,
-        values: [tableName, displayName, JSON.stringify(fieldMap)],
+        values: [tableName, displayName, JSON.stringify(fieldMap), dataViewCode],
       })
 
       if (result.rows[0].id) return result.rows[0].id
@@ -48,6 +55,7 @@ const LookupTableModel = () => {
               tableName
               displayName
               fieldMap
+              dataViewCode
             }
           }
         `,
@@ -207,11 +215,15 @@ const LookupTableModel = () => {
 
   const updateStructureFieldMaps = async (
     tableName: string,
-    fieldMaps: FieldMapType[]
+    fieldMaps: FieldMapType[],
+    dataViewCode: string
   ): Promise<boolean> => {
-    const text = `UPDATE data_table SET field_map = $1 WHERE table_name = $2`
+    const text = `UPDATE data_table SET
+      field_map = $1,
+      data_view_code = $2
+      WHERE table_name = $3`
     try {
-      await DBConnect.query({ text, values: [JSON.stringify(fieldMaps), tableName] })
+      await DBConnect.query({ text, values: [JSON.stringify(fieldMaps), dataViewCode, tableName] })
       return true
     } catch (err) {
       throw err
@@ -228,6 +240,39 @@ const LookupTableModel = () => {
     }
   }
 
+  const getDataViews = async (tableName: string, dataViewCode: string): Promise<DataView[]> => {
+    const text = `
+      SELECT id FROM public.data_view
+      WHERE table_name = $1 AND code = $2;`
+    const result = await DBConnect.query({ text, values: [tableName, dataViewCode] })
+    return result.rows
+  }
+
+  const updateDataView = async (id: number, dataViewCode: string) => {
+    const text = `
+      UPDATE public.data_view
+      SET code = $1
+      WHERE id = $2;`
+    await DBConnect.query({ text, values: [dataViewCode, id] })
+  }
+
+  const createDataView = async (name: string, tableName: string, dataViewCode: string) => {
+    const text = `
+      INSERT into public.data_view
+       (table_name, title, code, permission_names, detail_view_header_column, show_linked_applications, identifier)
+       VALUES($1, $2, $3, $4, $5, $6, $7);`
+    const values = [
+      tableName,
+      name, // title
+      dataViewCode, // code
+      ['admin', config.systemManagerPermissionName ?? config.defaultSystemManagerPermissionName], // admin and manage permissions
+      'id', // header columns, id is the only one we can guarantee exists
+      false, // no linked applications
+      `${tableName}_${nanoid(8)}`, // unique id
+    ]
+    await DBConnect.query({ text, values })
+  }
+
   return {
     createStructure,
     getStructureById,
@@ -238,6 +283,9 @@ const LookupTableModel = () => {
     deleteRemovedRows,
     updateStructureFieldMaps,
     addTableColumns,
+    getDataViews,
+    updateDataView,
+    createDataView,
   }
 }
 export default LookupTableModel
