@@ -20,7 +20,7 @@ const databaseMethods = {
       throw err
     }
   },
-  listLookupTables: async () => {
+  getAllLookupTableStructures: async () => {
     const result = await DBConnect.gqlQuery(
       `query getAllLookupTableStructures {
         dataTables(condition: {isLookupTable: true}) {
@@ -38,6 +38,22 @@ const databaseMethods = {
     `
     )
     return result?.dataTables?.nodes
+  },
+  getLookupTableStructure: async (id: number) => {
+    const result = await DBConnect.gqlQuery(
+      `query getTableStructure($id: Int!) {
+        dataTable(id: $id) {
+          dataViewCode
+          displayName
+          fieldMap
+          id
+          tableName
+        }
+      }
+    `,
+      { id }
+    )
+    return result?.dataTable
   },
 }
 
