@@ -264,7 +264,7 @@ const LookupTableModel = () => {
 
   const createDataView = async (name: string, tableName: string, dataViewCode: string) => {
     const text = `
-      INSERT into public.data_view
+      INSERT INTO public.data_view
        (table_name, title, code, permission_names, detail_view_header_column, show_linked_applications, identifier)
        VALUES($1, $2, $3, $4, $5, $6, $7);`
     const values = [

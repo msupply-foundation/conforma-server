@@ -5,6 +5,7 @@ import { FILES_FOLDER } from '../../src/constants'
 import fs from 'fs/promises'
 import { errorMessage } from '../../src/components/utilityFunctions'
 import config from '../../src/config'
+import { customAlphabet, nanoid } from 'nanoid'
 
 type SchemaQueryOptions = {
   silent: boolean
@@ -491,6 +492,88 @@ const databaseMethods = {
         })
       } catch {
         console.log(`ERROR: Problem securing data table "${table}"`)
+      }
+    }
+  },
+  addDataViewsForLookupTables: async () => {
+    try {
+      await DBConnect.query({ text: `SELECT menu_name FROM data_view` })
+      console.log('  ...already done, skipping...')
+      // If this column exists, then we've done this before, so don't re-run the
+      // migration in the `catch` block (otherwise it'll add menu names to
+      // existing lookup table views)
+    } catch {
+      // Add new column to data views
+      await DBConnect.query({
+        text: `ALTER TABLE data_view
+        ADD COLUMN IF NOT EXISTS menu_name varchar;`,
+      })
+
+      // Fill this column with default "title" value for existing
+      await DBConnect.query({
+        text: `UPDATE data_view
+          SET menu_name = title;`,
+      })
+    }
+    // Add dataView codes for lookup tables that don't have one
+    const lookupTablesWithoutDataView = (
+      await DBConnect.query({
+        text: `
+      SELECT id FROM data_table
+        WHERE data_view_code IS NULL
+        AND is_lookup_table = true;`,
+        rowMode: 'array',
+      })
+    ).rows.flat()
+    const randomId = customAlphabet('1234567890', 4)
+    for (const id of lookupTablesWithoutDataView) {
+      await DBConnect.query({
+        text: `UPDATE data_table
+          SET data_view_code = CONCAT(LEFT(table_name, 3), ${randomId()})
+          WHERE id = $1;`,
+        values: [id],
+      })
+    }
+    // Then create data views for all lookup tables (if they don't have one)
+    const lookupTables = (
+      await DBConnect.query({
+        text: `
+      SELECT table_name, display_name,
+      data_view_code FROM data_table
+        WHERE is_lookup_table = true`,
+      })
+    ).rows
+    for (const table of lookupTables) {
+      const existingCount = (
+        await DBConnect.query({
+          text: `
+        SELECT COUNT(*) FROM data_view
+          WHERE table_name = $1
+          AND code = $2
+        `,
+          values: [table.table_name, table.data_view_code],
+        })
+      ).rows[0]
+      if (existingCount.count === '0') {
+        // Make a new one
+        await DBConnect.query({
+          text: `
+          INSERT INTO data_view
+            (table_name, title, code, permission_names,
+            detail_view_header_column,
+            show_linked_applications, identifier)
+            VALUES($1, $2, $3, $4, 'id', false, $5);`,
+          values: [
+            table.table_name,
+            table.display_name,
+            table.data_view_code,
+            [
+              'admin',
+              config.systemManagerPermissionName ?? config.defaultSystemManagerPermissionName,
+            ],
+            `${table.table_name}_${nanoid(6)}`,
+          ],
+        })
       }
     }
   },
