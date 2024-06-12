@@ -1,4 +1,4 @@
-import { FastifyRequest, FastifyReply, RequestGenericInterface } from 'fastify'
+import { FastifyRequest, FastifyReply } from 'fastify'
 import { parseStream } from 'fast-csv'
 import { LookupTableService } from '../services'
 

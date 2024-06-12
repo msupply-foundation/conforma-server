@@ -224,7 +224,7 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
 
     if (existingDataViews.length > 0) {
       for (const dataView of existingDataViews) {
-        await lookupTableModel.updateDataView(dataView.id, dataViewCode)
+        await lookupTableModel.updateDataView(dataView.id, name, dataViewCode)
       }
     } else {
       await lookupTableModel.createDataView(name, tableName, dataViewCode)

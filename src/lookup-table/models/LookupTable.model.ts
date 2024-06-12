@@ -253,12 +253,13 @@ const LookupTableModel = () => {
     return result.rows
   }
 
-  const updateDataView = async (id: number, dataViewCode: string) => {
+  const updateDataView = async (id: number, name: string, dataViewCode: string) => {
     const text = `
       UPDATE public.data_view
-      SET code = $1
-      WHERE id = $2;`
-    await DBConnect.query({ text, values: [dataViewCode, id] })
+      SET title = $1,
+      code = $2
+      WHERE id = $3;`
+    await DBConnect.query({ text, values: [name, dataViewCode, id] })
   }
 
   const createDataView = async (name: string, tableName: string, dataViewCode: string) => {
