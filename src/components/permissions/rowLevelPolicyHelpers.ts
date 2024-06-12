@@ -158,7 +158,16 @@ export const compileRowLevelPolicies = (
 /* Compiles single row level permission
   in "application", "pp2pn2tp2", "view", "true", 
       "user_id = jwt_get_bigint('userId') AND template_id = jwt_get_bigint('pp2pn2tp2_templateId')" 
-  out `CREATE POLICY "view_pp2pn2tp2" ON "application" FOR SELECT USING (jwt_get_boolean('pp2pn2tp2') = true and user_id = jwt_get_bigint('userId') AND template_id = jwt_get_bigint('pp2pn2tp2_templateId'))`
+  out `
+  CREATE OR REPLACE FUNCTION private.policy_pp2pn2tp2_check_application ()
+      RETURNS SETOF application
+      SECURITY DEFINER
+      AS $$
+        SELECT * FROM application WHERE user_id = jwt_get_bigint('userId') AND template_id = jwt_get_bigint('pp2pn2tp2_templateId')
+  $$
+  LANGUAGE sql
+  STABLE;
+  CREATE POLICY "view_pp2pn2tp2" ON "application" FOR SELECT USING (jwt_get_boolean('pp2pn2tp2') = true and ID in (SELECT ID from private.policy_pp2pn2tp2_check_application ())`
 */
 const compileRowLevelPolicy = (
   tableName: string,
@@ -167,18 +176,33 @@ const compileRowLevelPolicy = (
   usingCondition: string,
   condition: string
 ) => {
+  // Create function for permission so that row level policies are checked independently
+  // SECURITY DEFINER is used to make sure permission check does not take into account existing permissions
+  // i.e. without this function, if we have something like this "restrict review by review_assignment where user is reviewer"
+  // and then we have another restriction of "review_assignment where user is assigner" in the former policy check the latter check will also run
+  const functionName = `private.policy_check_${permissionAbbreviation}_${tableName}`
+  const permissionFunction = `
+    CREATE OR REPLACE FUNCTION ${functionName} ()
+      RETURNS SETOF ${tableName}
+      SECURITY DEFINER
+      AS $$
+        SELECT * FROM ${tableName} WHERE ${usingCondition}
+  $$
+  LANGUAGE sql
+  STABLE;
+  `
+
   // We want to first check if the permission exists in JWT token (to make sure we only do the full query if it exists),
   // so we add a check for "policy": true, i.e. jwt_get_boolean('pp2pn2tp2') = true
   // this will become first condition in both USING and WITH CHECK of every row level rule
   const addBracketsAndPermissionCheck = (condition: string) =>
-    `(COALESCE(current_setting('jwt.claims.${permissionAbbreviation}', true),'') != '' and ${condition})`
+    `(COALESCE(current_setting('jwt.claims.${permissionAbbreviation}', true),'') != '' AND ${condition})`
 
-  // If using clause is not used return nothing
-  // otherwise return USING from usingCondition (view rule, see compileRowLevelPolicies) or condition (current rule condition)
+  // If USING clause is not used return nothing
+  // otherwise return USING from usingCondition (which comes from the defined 'view' rule))
   const getUsingClause = () => {
     if (!ruleSettings.using) return ''
-    const conditionToUse = ruleSettings.withCheck ? usingCondition : condition
-    return `USING ${addBracketsAndPermissionCheck(conditionToUse)}`
+    return `USING ${addBracketsAndPermissionCheck(`id IN (SELECT id FROM ${functionName}())`)}`
   }
 
   const ruleSettings = compileRowLevelPolicyRuleTypes[ruleType] // { for: 'CREATE'|'DELETE'|'UPDATE'|'SELECT', using: true|false, withCheck: true|false }
@@ -196,7 +220,7 @@ const compileRowLevelPolicy = (
     : ''
 
   // Combine them all
-  return `${create} ${onFor} ${getUsingClause()} ${withCheck}`
+  return `${permissionFunction} ${create} ${onFor} ${getUsingClause()} ${withCheck}`
 }
 
 // Replaces 'placeholder' templated values in a string

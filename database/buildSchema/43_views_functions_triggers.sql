@@ -1,3 +1,5 @@
+-- SCHEMA to hide internal functionality from postgraphile
+CREATE SCHEMA IF NOT EXISTS private;
 -- VIEWS
 -- VIEW table to show users with their organisations
 CREATE OR REPLACE VIEW user_org_join AS
