@@ -82,7 +82,6 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
       })
 
       await createUpdateRows()
-
       await createOrUpdateDataView()
 
       return buildSuccessMessage(results)
@@ -108,9 +107,7 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
       setDataTypes(fieldMaps, rows)
 
       await createNewColumns()
-
       await createUpdateRows()
-
       await createOrUpdateDataView()
 
       return buildSuccessMessage(results)

@@ -5,7 +5,7 @@ type LookupTableBase = {
 
 interface LookupTableStructure extends LookupTableBase {
   displayName: string
-  dataViewCode: string | null
+  dataViewCode: string
 }
 
 interface LookupTableStructureFull extends LookupTableStructure {
