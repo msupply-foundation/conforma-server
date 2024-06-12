@@ -28,11 +28,12 @@ const routeDataViews = async (request: FastifyRequest, reply: FastifyReply) => {
   const dataViews = await DBConnect.getAllowedDataViews(permissionNames)
   const distinctDataViews = getDistinctObjects(dataViews, 'code', 'priority')
   const dataViewResponse: DataViewDetail[] = distinctDataViews.map(
-    ({ table_name, title, code, submenu, default_filter_string }) => ({
+    ({ table_name, title, code, submenu, menu_name, default_filter_string }) => ({
       tableName: camelCase(table_name),
       title,
       code,
       urlSlug: kebabCase(code),
+      menuName: menu_name,
       submenu,
       defaultFilter: default_filter_string,
     })
