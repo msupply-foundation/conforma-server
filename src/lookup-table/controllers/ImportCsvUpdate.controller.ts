@@ -4,7 +4,7 @@ import { LookupTableService } from '../services'
 
 interface ImportCsvUpdateRequest {
   Params: { lookupTableId: string }
-  Querystring: { code: string }
+  Querystring: { name: string; code: string }
 }
 
 const ImportCsvUpdateController = async (
@@ -12,11 +12,12 @@ const ImportCsvUpdateController = async (
   reply: FastifyReply
 ) => {
   const { lookupTableId } = request.params
-  const { code } = request.query
+  const { name, code } = request.query
   const data = await request.files()
 
   const lookupTableService = await LookupTableService({
     tableId: Number(lookupTableId),
+    name,
     dataViewCode: code,
   })
 

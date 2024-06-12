@@ -26,7 +26,8 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
   if (props.tableId) {
     tableId = props.tableId
     structure = await lookupTableModel.getStructureById(tableId)
-  } else if (props.name) {
+  }
+  if (props.name) {
     name = props.name
   }
 
@@ -191,7 +192,7 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
       (obj: any) => dbFieldMap.filter((otherObj: any) => otherObj.label == obj.label).length === 0
     )
 
-    await lookupTableModel.updateStructureFieldMaps(tableName, fieldMaps, dataViewCode)
+    await lookupTableModel.updateStructureFieldMaps(tableName, name, fieldMaps, dataViewCode)
     for (let fieldMap of fieldsToAdd) {
       await lookupTableModel.addTableColumns(tableName, fieldMap)
     }

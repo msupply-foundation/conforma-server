@@ -7,7 +7,7 @@ const ImportCsvController = async (
   reply: FastifyReply
 ) => {
   const data = await request.files()
-  const { name, code } = request.query as any
+  const { name, code } = request.query
 
   const lookupTableService = await LookupTableService({ name, dataViewCode: code })
 

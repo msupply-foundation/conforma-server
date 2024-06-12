@@ -215,15 +215,20 @@ const LookupTableModel = () => {
 
   const updateStructureFieldMaps = async (
     tableName: string,
+    name: string,
     fieldMaps: FieldMapType[],
     dataViewCode: string
   ): Promise<boolean> => {
     const text = `UPDATE data_table SET
-      field_map = $1,
-      data_view_code = $2
-      WHERE table_name = $3`
+      display_name = $1,
+      field_map = $2,
+      data_view_code = $3
+      WHERE table_name = $4`
     try {
-      await DBConnect.query({ text, values: [JSON.stringify(fieldMaps), dataViewCode, tableName] })
+      await DBConnect.query({
+        text,
+        values: [name, JSON.stringify(fieldMaps), dataViewCode, tableName],
+      })
       return true
     } catch (err) {
       throw err
