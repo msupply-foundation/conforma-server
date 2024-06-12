@@ -1,9 +1,9 @@
 ## Contents  <!-- omit in toc -->
 <!-- toc -->
 - [API](#api)
-  - [`/data-views`](#data-views)
-  - [`/data-views/<dataViewCode>?<queries>`](#data-viewsdataviewcodequeries)
-  - [`/data-views/<dataViewCode>/<itemId>`](#data-viewsdataviewcodeitemid)
+  - [`/data-views` (GET)](#data-views-get)
+  - [`/data-views/<dataViewCode>?<queries>` (POST)](#data-viewsdataviewcodequeries-post)
+  - [`/data-views/<dataViewCode>/<itemId>` (GET)](#data-viewsdataviewcodeitemid-get)
 - [Configuration](#configuration)
   - [`data_view` table](#data_view-table)
   - [`data_view_column_definition` table](#data_view_column_definition-table)
@@ -31,7 +31,7 @@ Configuration of the data views can be done in the UI by an Admin, using url `/a
 
 Custom data is available at the following endpoints:
 
-### `/data-views`
+### `/data-views` (GET)
 
 Returns an array of data table views the user is allowed to see (based on JWT header), formatted as follows:
 
@@ -50,7 +50,7 @@ Returns an array of data table views the user is allowed to see (based on JWT he
 
 This endpoint is called in order to populate the Database menu in the UI.
 
-### `/data-views/<dataViewCode>?<queries>`
+### `/data-views/<dataViewCode>?<queries>` (POST)
 
 For querying a specific table. Data is returned in the following structure:
 
@@ -112,10 +112,11 @@ Query parameters are (currently) as follows:
 - `offset` -- start from record number (default: 0) (used in conjunction with `first` to control pagination)
 - `order-by` -- field to sort by (default: `id`),
 - `ascending` -- whether to sort ascending or descending (default: `true`)
+- `raw` -- set to `true` and the table data will be returned as just a single array of objects, i.e. no column or data definitions. This is useful when making queries to a table in an application form (e.g. a list of countries in a drop-down) -- you just want simple access to the data, not its display definitions.
 
-Eventually, there will be additional parameters for searching and filtering -- not yet implemented
+Additional filtering is done via JSON in the request body. The JSON object is a GraphQL filter object.
 
-### `/data-views/<dataViewCode>/<itemId>`
+### `/data-views/<dataViewCode>/<itemId>` (GET)
 
 Fetches data about a single item, for display in data "Details" view. Data is returned in the following format:
 
@@ -199,6 +200,8 @@ Fetches data about a single item, for display in data "Details" view. Data is re
 ```
 
 Note the different types of data returned and the formatting instructions. Also, the "orgs" field has a complex value and is not just a simple field from the "user" table (hence `isBasicField: false`). More on this below.
+
+As with the [Table](#data-viewsdataviewcodequeries-post) request, the query parameter `raw=true` can be added and the returned value will just contain the single data entity with no display definitions.
 
 ## Configuration
 
