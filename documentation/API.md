@@ -452,9 +452,11 @@ It works by finding an event in the `trigger_schedule` table with matching `appl
 
 #### Lookup table endpoints
 
-- GET: `/lookup-table/list`
-- POST: `/lookup-table/import`
-- GET: `/lookup-table/export`
+- GET: `/lookup-table/list` - get structure of all lookup tables
+- GET: `/lookup-table/table/:id` - get structure of single table
+- POST: `/lookup-table/import` - import a table (from CSV file)
+- POST: `/lookup-table/import/:id` - update existing table (from CSV)
+- GET: `/lookup-table/export` - download table (as CSV)
 
 Require either "admin" or "systemManger" permissions.
 
