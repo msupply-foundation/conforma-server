@@ -1,4 +1,11 @@
 {
+  /**
+   * Smart tag definitions to manipulate the exposed GraphQL schema from
+   * Postgraphile.
+   * See documentation:
+   * - https://www.graphile.org/postgraphile/smart-tags/
+   * - https://www.graphile.org/postgraphile/smart-tags-file/
+   */
   version: 1,
   config: {
     class: {
