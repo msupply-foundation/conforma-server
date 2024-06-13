@@ -160,4 +160,3 @@ CREATE INDEX IF NOT EXISTS "i_application_response_value_is_null" ON application
 
 CREATE INDEX IF NOT EXISTS "i_application_response_value_is_not_null" ON application_response ((value IS NOT NULL));
 
-
