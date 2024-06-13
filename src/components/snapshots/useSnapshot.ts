@@ -175,12 +175,6 @@ const useSnapshot: SnapshotOperation = async ({
     // Regenerate row level policies
     await updateRowPolicies()
 
-    if (options.shouldReInitialise) {
-      console.log('enable row level policies ... ')
-      execSync('./database/turn_on_row_level_security.sh', { cwd: ROOT_FOLDER })
-      console.log('enable row level policies ... done')
-    }
-
     // To ensure generic thumbnails are not wiped out, even if server doesn't restart
     createDefaultDataFolders()
 
