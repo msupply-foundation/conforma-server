@@ -1,22 +1,34 @@
 #!/bin/bash
 
+# Updated 14/06/2024
+
 # Script to stop a docker-compose container.
 # Pass the instances (corresponding to .env files) as args e.g
-# ./stop.sh 50000 50002
-
-DEFAULT_INSTANCE=50000 #Set this for specific server, or leave blank
+# ./stop.sh demo3 demo4
 
 cd "$(dirname "$0")"
 
+# Prefer $SITE from command args, but if not provided, look in `default.env`
 if [ "$#" -eq 0 ]; then
-    if [ -z "$DEFAULT_INSTANCE" ]; then
-        echo -e "No instances specified and no default instance...exiting."
-        exit 0
+    source default.env
+    if [ -z "$SITE" ]; then
+        echo -e "No sites specified in command or default set in default.env\n Please enter a site corresponding to an .env file in \"env_files\" (or Enter to exit)"
+    else
+        echo -e "No sites specified\nPlease enter an instance corresponding to an .env file in \"env_files\", or press Enter to accept the default: $SITE"
     fi
-    echo "No instances specified, will attempt to stop default: $DEFAULT_INSTANCE"
-    ARGS=($DEFAULT_INSTANCE)
+    read value
+    if [ -z "$value" ]; then
+        ARGS=($SITE)
+    else
+        ARGS=($value)
+    fi
 else
     ARGS=("$@")
+fi
+
+if [ ${#ARGS[@]} -eq 0 ]; then
+    echo -e "No site specified...exiting"
+    exit 0
 fi
 
 for instance in "${ARGS[@]}"; do
