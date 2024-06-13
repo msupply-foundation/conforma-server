@@ -94,7 +94,7 @@ for instance in "${ARGS[@]}"; do
     # If no JWT_SECRET specified, use a random one
     export JWT_SECRET=${JWT_SECRET:-$(openssl rand -hex 64)}
 
-    NAME=conforma-$instance-on-port-$PORT_APP
+    NAME=conforma-$instance-on-port-$PORT
 
     # Uncomment following line to test inputs without launching Conforma:
     # echo $JWT_SECRET
