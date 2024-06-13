@@ -1,37 +1,39 @@
 #!/bin/bash
 
-# Updated 30/05/2024
+# Updated 14/06/2024
 
 # Script to start (or restart) one or more containers using docker-compose
 # - Provide the instances you want to launch as arguments -- each must
 #   correspond to an .env file in "/env_files". Will prompt for a single
 #   instance if not provided
 
-# DEFAULT_INSTANCE=demo1 #Set this for specific server, or leave blank
-
 cd "$(dirname "$0")"
 
+# Prefer $TAG from current environment vars. But if not found, look in
+# `default.env`
 if [ -z "$TAG" ]; then
-	source tag.env
-	if [ -z "$TAG" ]; then
-		echo -e "The \$TAG environment variable has not been set.\nPlease enter the build tag now (or leave blank to exit):"
-		read tag
-		if [ -z "$tag" ]; then
-			exit 0
-		fi
-    	export TAG=$tag
+    source default.env
+    if [ -z "$TAG" ]; then
+        echo -e "The \$TAG environment variable has not been set.\nPlease enter the build tag now (or leave blank to exit):"
+        read tag
+        if [ -z "$tag" ]; then
+            exit 0
+        fi
+        export TAG=$tag
     fi
 fi
 
+# Prefer $SITE from command args, but if not provided, look in `default.env`
 if [ "$#" -eq 0 ]; then
-    if [ -z "$DEFAULT_INSTANCE" ]; then
-        echo -e "No instances specified and no default instance...exiting."
-        exit 0
+    source default.env
+    if [ -z "$SITE" ]; then
+        echo -e "No sites specified in command or default set in default.env\n Please enter a site corresponding to an .env file in \"env_files\" (or Enter to exit)"
+    else
+        echo -e "No sites specified\nPlease enter an instance corresponding to an .env file in \"env_files\", or press Enter to accept the default: $SITE"
     fi
-    echo -e "No instances specified.\nPlease enter an instance corresponding to an .env file in \"env_files\", or press enter to accept the default: $DEFAULT_INSTANCE"
     read value
     if [ -z "$value" ]; then
-        ARGS=($DEFAULT_INSTANCE)
+        ARGS=($SITE)
     else
         ARGS=($value)
     fi
@@ -39,7 +41,12 @@ else
     ARGS=("$@")
 fi
 
-echo -e "Launching Conforma build: $TAG"
+if [ ${#ARGS[@]} -eq 0 ]; then
+    echo -e "No site specified...exiting"
+    exit 0
+fi
+
+echo -e "Launching Conforma image: $TAG"
 
 for instance in "${ARGS[@]}"; do
     export ENV_FILE=env_files/$instance.env
@@ -48,32 +55,50 @@ for instance in "${ARGS[@]}"; do
         break
     fi
     source $ENV_FILE
-    
-    
-	# Need to re-export these vars so they're available to the scope of the docker compose
-	# command we're about to launch
-	export TAG=$TAG
-    export BACKUPS_FOLDER=$BACKUPS_FOLDER
-    echo -e " - Backups folder: $BACKUPS_FOLDER"
-    export SNAPSHOTS_FOLDER=$SNAPSHOTS_FOLDER
-    echo -e " - Snapshots folder: $SNAPSHOTS_FOLDER"  
-    export PORT_APP=$PORT #from .env file
-    echo -e " - Conforma exposed on Port: $PORT_APP" 
-    export PORT_DASH=$((PORT_APP + 1))
-    echo -e " - Dashboard exposed on Port: $PORT_DASH" 
-    export JWT_SECRET=${JWT_SECRET:-$(openssl rand -hex 64)}
-    
-	# Enable to test env values without launching
-    # echo $JWT_SECRET
-    # exit 0
 
-    if [ -z "$PORT_APP" ]; then
-        echo "Can't find \$PORT value... skipping $instance"
+    # Need to re-export these vars so they're available to the scope of the
+    # docker compose command we're about to launch
+    export TAG=$TAG
+
+    if [ -z "$BACKUPS_FOLDER" ]; then
+        echo "No BACKUPS_FOLDER specified... skipping $instance"
         break
     fi
+    export BACKUPS_FOLDER=$BACKUPS_FOLDER
+    echo -e " - Backups folder: $BACKUPS_FOLDER"
 
-    NAME=conforma-on-$PORT_APP
-    
+    export SNAPSHOTS_FOLDER=$SNAPSHOTS_FOLDER
+    if [ -z "$SNAPSHOTS_FOLDER" ]; then
+        echo "No SNAPSHOTS_FOLDER specified... skipping $instance"
+        break
+    fi
+    echo -e " - Snapshots folder: $SNAPSHOTS_FOLDER"
+
+    export PORT_APP=$PORT
+    if [ -z "$PORT" ]; then
+        echo "No PORT specified... skipping $instance"
+        break
+    fi
+    echo -e " - Conforma exposed on Port: $PORT_APP"
+
+    export PORT_DASH=$((PORT_APP + 1))
+    echo -e " - Dashboard exposed on Port: $PORT_DASH"
+
+    export WEB_HOST=$WEB_HOST
+    if [ -z "$WEB_HOST" ]; then
+        echo "No WEB_HOST specified... skipping $instance"
+        break
+    fi
+    echo -e " - Website host: $WEB_HOST"
+
+    # If no JWT_SECRET specified, use a random one
+    export JWT_SECRET=${JWT_SECRET:-$(openssl rand -hex 64)}
+
+    NAME=conforma-$instance-on-port-$PORT_APP
+
+    # Uncomment following line to test inputs without launching Conforma:
+    echo $JWT_SECRET
+    exit 0
 
     # Stop current instance (if running)
     echo -e "\n(Re-)starting $NAME..."
