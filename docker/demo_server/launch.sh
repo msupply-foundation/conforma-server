@@ -97,8 +97,8 @@ for instance in "${ARGS[@]}"; do
     NAME=conforma-$instance-on-port-$PORT_APP
 
     # Uncomment following line to test inputs without launching Conforma:
-    echo $JWT_SECRET
-    exit 0
+    # echo $JWT_SECRET
+    # exit 0
 
     # Stop current instance (if running)
     echo -e "\n(Re-)starting $NAME..."
