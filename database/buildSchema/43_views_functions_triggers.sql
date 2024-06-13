@@ -1,3 +1,5 @@
+-- SCHEMA to hide internal functionality from postgraphile
+CREATE SCHEMA IF NOT EXISTS private;
 -- VIEWS
 -- VIEW table to show users with their organisations
 CREATE OR REPLACE VIEW user_org_join AS
@@ -643,6 +645,7 @@ CREATE TRIGGER trigger_schedule_trigger
 -- FUNCTION/TRIGGER to auto-add template_id to review_assignment
 -- (Some older versions have variant with different signature)
 DROP FUNCTION IF EXISTS public.review_assignment_template_id(assignment review_assignment) CASCADE;
+DROP FUNCTION IF EXISTS public.review_assignment_template_id(application_id integer) CASCADE;
 DROP FUNCTION IF EXISTS public.review_assignment_template_id() CASCADE;
 CREATE OR REPLACE FUNCTION public.review_assignment_template_id ()
     RETURNS TRIGGER
