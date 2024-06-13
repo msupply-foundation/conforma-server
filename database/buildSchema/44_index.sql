@@ -160,9 +160,4 @@ CREATE INDEX IF NOT EXISTS "i_application_response_value_is_null" ON application
 
 CREATE INDEX IF NOT EXISTS "i_application_response_value_is_not_null" ON application_response ((value IS NOT NULL));
 
-CREATE INDEX IF NOT EXISTS user_org_policy_template_user_org_policy ON user_org_policy_template(user_org_policy);
-
-CREATE INDEX IF NOT EXISTS user_org_policy_template_template_id ON user_org_policy_template(template_id);
-
-CREATE INDEX IF NOT EXISTS user_org_policy_template_joined ON user_org_policy_template(template_id, user_org_policy);
 

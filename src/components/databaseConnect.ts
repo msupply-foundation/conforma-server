@@ -142,10 +142,6 @@ class DBConnect {
 
   public getOrgTemplatePermissions = PostgresDB.getOrgTemplatePermissions
 
-  public updateUserOrgPolicyTemplate = PostgresDB.updateUserOrgPolicyTemplate
-
-  public getAllUserOrgCombos = PostgresDB.getAllUserOrgCombos
-
   public getAllPermissions = PostgresDB.getAllPermissions
 
   public getTemplatePermissions = PostgresDB.getTemplatePermissions

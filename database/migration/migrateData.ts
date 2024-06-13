@@ -1116,33 +1116,6 @@ const migrateData = async () => {
     console.log(' - Creating application_reviewer_action records (This may take a while)')
     await DB.createApplicationReviewerActionRecords()
 
-    console.log(
-      ' - Create user_org_policy_template table and updating policies for faster filtering for row-level permissions'
-    )
-    await DB.changeSchema(`
-      CREATE TABLE IF NOT EXISTS user_org_policy_template (
-        user_org_policy TEXT,
-        template_id INTEGER 
-      );
-    `)
-
-    // Update row level policy configs replacing : "jwtPermission_array_bigint_template_ids" with
-    // = ANY (SELECT template_id FROM user_org_policy_template WHERE user_org_policy = jwtUserDetails_text_userId || '.' || jwtUserDetails_text_orgId || '.${permissionPolicyId}'))
-    // see sqlFromJson.test.ts for example of final query
-    // Perviously jwtPermission_array_bigint_template_ids was translated to
-    // any (string_to_array(COALESCE(current_setting('jwt.claims.pp${permissionPolicyId}_template_ids', true), '0'), ',')::integer[])
-    // and JWT had all templateId under jwt.claims.pp${permissionPolicyId}_template_ids that are applicable to the user
-    // And now we populate user_org_policy_template on login (for user and org) and on server restart (for all user org combos) so that templateIds can come from table rather then array of values
-    // this improves performance by up to 3 times (in some cases)
-
-    // Noticed that postgres would turn ""= ANY" to "IN" when they are saved in row level policies
-    await DB.changeSchema(`
-      UPDATE permission_policy 
-        SET rules = REPLACE(rules::text,  
-                '"jwtPermission_array_bigint_template_ids"', 
-      '{ "$": { "__": "= ANY (SELECT template_id FROM user_org_policy_template WHERE user_org_policy = jwtUserDetails_text_userId || ''.'' || jwtUserDetails_text_orgId || ''.' || id || ''')"}}')::json;
-    `)
-
     // The previous statement we had to create this unique constraint resulted
     // in a new index being created each time it was invoked. So now we ensure
     // the one index we actually want is correctly defined (then we delete all
