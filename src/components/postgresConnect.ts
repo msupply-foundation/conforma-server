@@ -1012,54 +1012,6 @@ class PostgresDB {
     }
   }
 
-  // Permissions policies rely on a entries for user and org in user_org_policy_template table
-  // in the format {userId}.{orgId || 0}.{permissionPolicyId}, templateId
-  // see description in loginHelpers.ts -> getUserInfo (todo add link once comment is added) for more details
-  public updateUserOrgPolicyTemplate = async (userId: number, orgId: number | null) => {
-    const userOrg = `${userId}.${orgId || 0}`
-    const orgMatch = `"orgId" ${orgId === null ? 'IS NULL' : '= $2'}`
-
-    const deleteEntries = `
-      DELETE FROM user_org_policy_template WHERE user_org_policy LIKE '${userOrg}%'; `
-
-    const insertEntries = `
-      INSERT INTO user_org_policy_template
-        SELECT '${userOrg}.' || COALESCE("permissionPolicyId"::text, ''), "templateId"
-        FROM permissions_all
-        WHERE 
-          (
-            "userId" = $1 AND 
-            (${orgMatch} OR "isUserCategory" = TRUE)
-          ) 
-          OR (${orgMatch} AND "userId" IS NULL)
-          AND "templateId" is NOT NULL
-      `
-
-    const values: (string | number)[] = [userId]
-    if (orgId) values.push(orgId)
-    try {
-      await this.query({ text: deleteEntries })
-      await this.query({ text: insertEntries, values })
-    } catch (err) {
-      console.log(errorMessage(err))
-      throw err
-    }
-  }
-
-  public getAllUserOrgCombos = async () => {
-    const text = `
-        SELECT DISTINCT "userId", "orgId" FROM permissions_all
-        WHERE "userId" IS NOT NULL
-      `
-    try {
-      let result = await this.query({ text })
-      return result.rows as { userId: number; orgId: number | null }[]
-    } catch (err) {
-      console.log(errorMessage(err))
-      throw err
-    }
-  }
-
   public getAllPermissions = async () => {
     const text = 'select * from permissions_all'
     try {

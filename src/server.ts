@@ -46,10 +46,7 @@ import routeArchiveFiles from './components/files/routeArchiveFiles'
 import { Schedulers } from './components/scheduler'
 import { AccessExternalApiQuery, routeAccessExternalApi } from './components/external-apis/routes'
 import { DEFAULT_LOGOUT_TIME } from './constants'
-import {
-  refreshAllUserOrgPolicyTemplates,
-  updateRowPolicies,
-} from './components/permissions/rowLevelPolicyHelpers'
+import { updateRowPolicies } from './components/permissions/rowLevelPolicyHelpers'
 import { routeRawData } from './components/other/routeRawData'
 require('dotenv').config()
 
@@ -73,7 +70,6 @@ const startServer = async () => {
   createDefaultDataFolders()
   await cleanUpFiles() // Runs on schedule as well as startup
   await updateRowPolicies()
-  await refreshAllUserOrgPolicyTemplates()
 
   // Add schedulers to global "config" object so we can update them. There
   // should only be a single global instance of Schedulers -- this one!

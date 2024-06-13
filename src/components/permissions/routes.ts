@@ -40,7 +40,6 @@ const routeLogin = async (request: any, reply: any) => {
     if (!(await bcrypt.compare(password, passwordHash as string)))
       return reply.send({ success: false })
 
-    await databaseConnect.updateUserOrgPolicyTemplate(userId, null)
     // Login successful
     reply.send({
       success: true,
@@ -64,8 +63,6 @@ const routeLoginOrg = async (request: any, reply: any) => {
   if (error) return reply.send({ success: false, message: error })
 
   const userInfo = await getUserInfo({ userId, orgId, sessionId })
-
-  await databaseConnect.updateUserOrgPolicyTemplate(userId, orgId)
 
   reply.send({ success: true, ...userInfo })
 }
