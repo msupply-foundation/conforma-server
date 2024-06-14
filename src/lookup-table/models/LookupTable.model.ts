@@ -11,6 +11,7 @@ import config from '../../config'
 import { exportDataRows } from '../utils/dataTypeUtils'
 import { DataView } from '../../generated/graphql'
 import { nanoid } from 'nanoid'
+import { camelCase } from 'lodash'
 
 const { dataTablePrefix } = config
 
@@ -268,7 +269,7 @@ const LookupTableModel = () => {
        (table_name, title, code, permission_names, detail_view_header_column, show_linked_applications, identifier)
        VALUES($1, $2, $3, $4, $5, $6, $7);`
     const values = [
-      tableName,
+      camelCase(tableName),
       name, // title
       dataViewCode, // code
       ['admin', config.systemManagerPermissionName ?? config.defaultSystemManagerPermissionName], // admin and manage permissions

@@ -6,6 +6,7 @@ import fs from 'fs/promises'
 import { errorMessage } from '../../src/components/utilityFunctions'
 import config from '../../src/config'
 import { customAlphabet, nanoid } from 'nanoid'
+import { camelCase } from 'lodash'
 
 type SchemaQueryOptions = {
   silent: boolean
@@ -564,7 +565,7 @@ const databaseMethods = {
             show_linked_applications, identifier)
             VALUES($1, $2, $3, $4, 'id', false, $5);`,
           values: [
-            table.table_name,
+            camelCase(table.table_name),
             table.display_name,
             table.data_view_code,
             [
