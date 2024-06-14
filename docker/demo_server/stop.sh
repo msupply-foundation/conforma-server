@@ -38,7 +38,7 @@ for instance in "${ARGS[@]}"; do
         break
     fi
     source $ENV_FILE
-    NAME=conforma-$instance-on-port-$PORT #from .env file
+    NAME=conforma-$instance-on-$PORT #from .env file
 
     # Stop specific instance
     echo -e "\nStopping $NAME..."
