@@ -119,11 +119,55 @@ const generateRowLevelPolicies = (permissionRows: permissionPolicyColumns[]) => 
   return policies
 }
 
+export const modifyValueInObject = (
+  obj: object,
+  matchFn: (key: string, value: object) => boolean,
+  modifyFn: (value: object) => string
+): object => {
+  if (typeof obj != 'object') {
+    return obj
+  }
+  if (Array.isArray(obj)) {
+    console.warn('Arrays are not supported')
+    return obj
+  }
+
+  return Object.entries(obj).reduce(
+    (acc, [key, value]) => ({
+      ...acc,
+      [key]: matchFn(key, value) ? modifyFn(value) : modifyValueInObject(value, matchFn, modifyFn),
+    }),
+    {} as object
+  )
+}
+
+const updateRulesUseViewsInsteadOfTables = (rules: object) => {
+  const tablesToTurnIntoViews: { [key: string]: boolean } = {}
+
+  return {
+    rules: modifyValueInObject(
+      rules,
+      (key, value) => key == '$from' && typeof value == 'string',
+      (value) => {
+        tablesToTurnIntoViews[String(value)] = true
+        return `private.${value}`
+      }
+    ),
+    tablesToTurnIntoViews,
+  }
+}
+
 export const compileRowLevelPolicies = (
   permissionAbbreviation: string,
   permissionPolicyRules: object
 ) => {
   const policies: Array<string> = []
+  let tablesToTurnIntoViews: { [key: string]: boolean } = {}
+  const updateRulesAndAddTablesToViews = (rules: object) => {
+    const result = updateRulesUseViewsInsteadOfTables(rules)
+    tablesToTurnIntoViews = { ...tablesToTurnIntoViews, ...result.tablesToTurnIntoViews }
+    return result.rules
+  }
 
   Object.entries(permissionPolicyRules).forEach(([tableName, rulesByType]) => {
     let usingCondition = 'true'
@@ -132,13 +176,16 @@ export const compileRowLevelPolicies = (
     // So the UPDATE policy will use USING clause from view (select) rules
     if (viewRules)
       usingCondition = replacePlaceholders(
-        getSqlConditionFromJSON(viewRules),
+        getSqlConditionFromJSON(updateRulesAndAddTablesToViews(viewRules)),
         permissionAbbreviation
       )
 
     Object.entries(rulesByType).forEach(([ruleType, rules]) => {
       // replacePlaceholders would replace `jwtUserDetails_bigint_${something}` with `jwt_get_bigint_${something}` etc..
-      const condition = replacePlaceholders(getSqlConditionFromJSON(rules), permissionAbbreviation)
+      const condition = replacePlaceholders(
+        getSqlConditionFromJSON(updateRulesAndAddTablesToViews(rules as object)),
+        permissionAbbreviation
+      )
 
       policies.push(
         compileRowLevelPolicy(
@@ -152,22 +199,24 @@ export const compileRowLevelPolicies = (
     })
   })
 
-  return policies
+  const views = Object.keys(tablesToTurnIntoViews).map(
+    // In private schema to hide from graphql schema
+    // security_invoker = false to allow postgres user (owner) to run query without permission policies
+    // to avoid compounding policy checks
+    (tableName) => `
+      CREATE OR REPLACE VIEW private.${tableName} WITH 
+      (security_invoker = false)
+      AS select * from ${tableName}
+      `
+  )
+
+  return [...views, ...policies]
 }
 
 /* Compiles single row level permission
   in "application", "pp2pn2tp2", "view", "true", 
       "user_id = jwt_get_bigint('userId') AND template_id = jwt_get_bigint('pp2pn2tp2_templateId')" 
-  out `
-  CREATE OR REPLACE FUNCTION private.policy_pp2pn2tp2_check_application ()
-      RETURNS SETOF application
-      SECURITY DEFINER
-      AS $$
-        SELECT * FROM application WHERE user_id = jwt_get_bigint('userId') AND template_id = jwt_get_bigint('pp2pn2tp2_templateId')
-  $$
-  LANGUAGE sql
-  STABLE;
-  CREATE POLICY "view_pp2pn2tp2" ON "application" FOR SELECT USING (jwt_get_boolean('pp2pn2tp2') = true and ID in (SELECT ID from private.policy_pp2pn2tp2_check_application ())`
+  out `CREATE POLICY "view_pp2pn2tp2" ON "application" FOR SELECT USING (jwt_get_boolean('pp2pn2tp2') = true and user_id = jwt_get_bigint('userId') AND template_id = jwt_get_bigint('pp2pn2tp2_templateId'))`
 */
 const compileRowLevelPolicy = (
   tableName: string,
@@ -176,33 +225,18 @@ const compileRowLevelPolicy = (
   usingCondition: string,
   condition: string
 ) => {
-  // Create function for permission so that row level policies are checked independently
-  // SECURITY DEFINER is used to make sure permission check does not take into account existing permissions
-  // i.e. without this function, if we have something like this "restrict review by review_assignment where user is reviewer"
-  // and then we have another restriction of "review_assignment where user is assigner" in the former policy check the latter check will also run
-  const functionName = `private.policy_check_${permissionAbbreviation}_${tableName}`
-  const permissionFunction = `
-    CREATE OR REPLACE FUNCTION ${functionName} ()
-      RETURNS SETOF ${tableName}
-      SECURITY DEFINER
-      AS $$
-        SELECT * FROM ${tableName} WHERE ${usingCondition}
-  $$
-  LANGUAGE sql
-  STABLE;
-  `
-
   // We want to first check if the permission exists in JWT token (to make sure we only do the full query if it exists),
   // so we add a check for "policy": true, i.e. jwt_get_boolean('pp2pn2tp2') = true
   // this will become first condition in both USING and WITH CHECK of every row level rule
   const addBracketsAndPermissionCheck = (condition: string) =>
     `(COALESCE(current_setting('jwt.claims.${permissionAbbreviation}', true),'') != '' AND ${condition})`
 
-  // If USING clause is not used return nothing
-  // otherwise return USING from usingCondition (which comes from the defined 'view' rule))
+  // If using clause is not used return nothing
+  // otherwise return USING from usingCondition (view rule, see compileRowLevelPolicies) or condition (current rule condition)
   const getUsingClause = () => {
     if (!ruleSettings.using) return ''
-    return `USING ${addBracketsAndPermissionCheck(`id IN (SELECT id FROM ${functionName}())`)}`
+    const conditionToUse = ruleSettings.withCheck ? usingCondition : condition
+    return `USING ${addBracketsAndPermissionCheck(conditionToUse)}`
   }
 
   const ruleSettings = compileRowLevelPolicyRuleTypes[ruleType] // { for: 'CREATE'|'DELETE'|'UPDATE'|'SELECT', using: true|false, withCheck: true|false }
@@ -220,7 +254,7 @@ const compileRowLevelPolicy = (
     : ''
 
   // Combine them all
-  return `${permissionFunction} ${create} ${onFor} ${getUsingClause()} ${withCheck}`
+  return `${create} ${onFor} ${getUsingClause()} ${withCheck}`
 }
 
 // Replaces 'placeholder' templated values in a string

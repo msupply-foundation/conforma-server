@@ -1,5 +1,6 @@
--- SCHEMA to hide internal functionality from postgraphile
+-- SCHEMA to hide internal functionality from postgraphile graphql schema
 CREATE SCHEMA IF NOT EXISTS private;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA private TO graphile_user;
 -- VIEWS
 -- VIEW table to show users with their organisations
 CREATE OR REPLACE VIEW user_org_join AS
