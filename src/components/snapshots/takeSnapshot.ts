@@ -158,6 +158,8 @@ const takeSnapshot: SnapshotOperation = async ({
       await DBConnect.setSystemInfo('snapshot', fullName)
     }
 
+    console.log('Taking snapshot...complete!')
+
     return { success: true, message: `created snapshot ${snapshotName}`, snapshot: fullName }
   } catch (e) {
     return { success: false, message: 'error while taking snapshot', error: errorMessage(e) }

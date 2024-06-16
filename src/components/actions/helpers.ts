@@ -1,7 +1,6 @@
 import { merge } from 'lodash'
 import { ActionInTemplate } from '../../types'
-import evaluateExpression from '@openmsupply/expression-evaluator'
-import { BasicObject, IParameters } from '@openmsupply/expression-evaluator/lib/types'
+import evaluateExpression, { BasicObject, IParameters } from '../../modules/expression-evaluator'
 import DBConnect from '../databaseConnect'
 
 export async function evaluateParameters(
