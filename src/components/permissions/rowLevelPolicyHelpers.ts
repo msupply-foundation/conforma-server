@@ -130,11 +130,55 @@ const generateRowLevelPolicies = (permissionRows: permissionPolicyColumns[]) => 
   return policies
 }
 
+export const modifyValueInObject = (
+  obj: object,
+  matchFn: (key: string, value: object) => boolean,
+  modifyFn: (value: object) => string
+): object => {
+  if (typeof obj != 'object') {
+    return obj
+  }
+  if (Array.isArray(obj)) {
+    console.warn('Arrays are not supported')
+    return obj
+  }
+
+  return Object.entries(obj).reduce(
+    (acc, [key, value]) => ({
+      ...acc,
+      [key]: matchFn(key, value) ? modifyFn(value) : modifyValueInObject(value, matchFn, modifyFn),
+    }),
+    {} as object
+  )
+}
+
+const updateRulesUseViewsInsteadOfTables = (rules: object) => {
+  const tablesToTurnIntoViews: { [key: string]: boolean } = {}
+
+  return {
+    rules: modifyValueInObject(
+      rules,
+      (key, value) => key == '$from' && typeof value == 'string',
+      (value) => {
+        tablesToTurnIntoViews[String(value)] = true
+        return `private.${value}`
+      }
+    ),
+    tablesToTurnIntoViews,
+  }
+}
+
 export const compileRowLevelPolicies = (
   permissionAbbreviation: string,
   permissionPolicyRules: object
 ) => {
   const policies: Array<string> = []
+  let tablesToTurnIntoViews: { [key: string]: boolean } = {}
+  const updateRulesAndAddTablesToViews = (rules: object) => {
+    const result = updateRulesUseViewsInsteadOfTables(rules)
+    tablesToTurnIntoViews = { ...tablesToTurnIntoViews, ...result.tablesToTurnIntoViews }
+    return result.rules
+  }
 
   Object.entries(permissionPolicyRules).forEach(([tableName, rulesByType]) => {
     let usingCondition = 'true'
@@ -143,13 +187,16 @@ export const compileRowLevelPolicies = (
     // So the UPDATE policy will use USING clause from view (select) rules
     if (viewRules)
       usingCondition = replacePlaceholders(
-        getSqlConditionFromJSON(viewRules),
+        getSqlConditionFromJSON(updateRulesAndAddTablesToViews(viewRules)),
         permissionAbbreviation
       )
 
     Object.entries(rulesByType).forEach(([ruleType, rules]) => {
       // replacePlaceholders would replace `jwtUserDetails_bigint_${something}` with `jwt_get_bigint_${something}` etc..
-      const condition = replacePlaceholders(getSqlConditionFromJSON(rules), permissionAbbreviation)
+      const condition = replacePlaceholders(
+        getSqlConditionFromJSON(updateRulesAndAddTablesToViews(rules as object)),
+        permissionAbbreviation
+      )
 
       policies.push(
         compileRowLevelPolicy(
@@ -163,7 +210,18 @@ export const compileRowLevelPolicies = (
     })
   })
 
-  return policies
+  const views = Object.keys(tablesToTurnIntoViews).map(
+    // In private schema to hide from graphql schema
+    // security_invoker = false to allow postgres user (owner) to run query without permission policies
+    // to avoid compounding policy checks
+    (tableName) => `
+      CREATE OR REPLACE VIEW private.${tableName} WITH 
+      (security_invoker = false)
+      AS select * from ${tableName}
+      `
+  )
+
+  return [...views, ...policies]
 }
 
 /* Compiles single row level permission
@@ -182,7 +240,7 @@ const compileRowLevelPolicy = (
   // so we add a check for "policy": true, i.e. jwt_get_boolean('pp2pn2tp2') = true
   // this will become first condition in both USING and WITH CHECK of every row level rule
   const addBracketsAndPermissionCheck = (condition: string) =>
-    `(COALESCE(current_setting('jwt.claims.${permissionAbbreviation}', true),'') != '' and ${condition})`
+    `(COALESCE(current_setting('jwt.claims.${permissionAbbreviation}', true),'') != '' AND ${condition})`
 
   // If using clause is not used return nothing
   // otherwise return USING from usingCondition (view rule, see compileRowLevelPolicies) or condition (current rule condition)
