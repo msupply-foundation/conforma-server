@@ -72,7 +72,9 @@ const useSnapshot: SnapshotOperation = async ({
     }
 
     // Check that we can find all the archives needed:
+    console.log('Collecting archives...')
     await collectArchives(snapshotFolder)
+    console.log('Collecting archives...done')
 
     if (options.resetFiles || options.usePgDump) {
       execSync(`rm -rf ${FILES_FOLDER}/*`)

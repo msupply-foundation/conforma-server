@@ -1,6 +1,6 @@
 import databaseMethods from './databaseMethods'
 import DBConnect from '../../databaseConnect'
-import evaluateExpression from '@openmsupply/expression-evaluator'
+import evaluateExpression from '../../../modules/expression-evaluator'
 import functions from '../../actions/evaluatorFunctions'
 import { queryDataTable, updateRecord } from '../gqlDynamicQueries'
 import config from '../../../config'
