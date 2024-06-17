@@ -160,3 +160,7 @@ CREATE INDEX IF NOT EXISTS "i_application_response_value_is_null" ON application
 
 CREATE INDEX IF NOT EXISTS "i_application_response_value_is_not_null" ON application_response ((value IS NOT NULL));
 
+-- Additional indexes for application_reviewer_action
+CREATE INDEX IF NOT EXISTS "i_application_reviewer_action_user_id" ON application_reviewer_action (user_id);
+
+CREATE INDEX IF NOT EXISTS "i_application_reviewer_action_application_id" ON application_reviewer_action (application_id);
