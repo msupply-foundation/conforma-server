@@ -1933,12 +1933,9 @@ CREATE OR REPLACE FUNCTION application_list(userId int DEFAULT 0)
         LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
                 AND ts.is_active = TRUE
                 AND ts.event_code = 'applicantDeadline'
-        LEFT JOIN (
-            SELECT application_id, reviewer_action, assigner_action
-            FROM application_reviewer_action
-            WHERE user_id = userId
-        ) actions
-            ON app.id = actions.application_id
+        LEFT JOIN application_reviewer_action AS actions
+            ON actions.user_id = userId
+            AND actions.application_id = app.id
         ORDER BY app.id
     $$
     LANGUAGE sql
@@ -2462,4 +2459,4 @@ CREATE OR REPLACE view permission_flattened as
     JOIN permission_join ON permission_join.user_id = "user".id
     JOIN permission_name ON permission_name.id = permission_join.permission_name_id
     JOIN permission_policy ON permission_policy.id = permission_name.permission_policy_id
-    JOIN template_permission ON template_permission.permission_name_id = permission_name.id
+    JOIN template_permission ON template_permission.permission_name_id = permission_name.id;
