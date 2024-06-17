@@ -58,6 +58,7 @@ const routeDataViewTable = async (request: any, reply: any) => {
   const offset = query?.offset ? Number(query.offset) : 0
   const orderBy = query?.orderBy
   const ascending = query?.ascending ? query?.ascending === 'true' : true
+  const search = query?.search
 
   const {
     tableName,
@@ -78,6 +79,27 @@ const routeDataViewTable = async (request: any, reply: any) => {
     userId,
     orgId,
   })
+
+  if (search !== '' && searchFields.length > 0) {
+    // The "search" term may come in as a plain string rather than being
+    // pre-baked into the "filter" object (this would normally be the case when
+    // rawData is requested from application queries). In this case, we need to
+    // build a filter and merge it with the existing filter.
+    const additionalSearchFilter =
+      searchFields.length === 1
+        ? { [searchFields[0]]: { includesInsensitive: search } }
+        : { or: searchFields.map((field) => ({ [field]: { includesInsensitive: search } })) }
+
+    const newFilterKey = Object.keys(
+      additionalSearchFilter
+    )[0] as keyof typeof additionalSearchFilter
+
+    if (newFilterKey === 'or') {
+      gqlFilters.or = [...(gqlFilters.or ?? []), ...(additionalSearchFilter.or ?? [])]
+    } else {
+      gqlFilters[newFilterKey] = additionalSearchFilter[newFilterKey]
+    }
+  }
 
   // GraphQL query -- get ALL fields (passing JWT), with pagination
   const { fetchedRecords, totalCount, error } = await queryDataTable(

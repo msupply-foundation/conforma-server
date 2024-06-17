@@ -21,6 +21,7 @@ import {
   DataViewsDetailResponse,
   DataViewsTableResponse,
   FilterDefinition,
+  GraphQLFilter,
 } from './types'
 import { DataView, DataViewColumnDefinition } from '../../generated/graphql'
 import dataTypeMap, { JSDataType, PostgresDataType } from './postGresToJSDataTypes'
@@ -81,7 +82,7 @@ export const buildAllColumnDefinitions = async ({
   const tableNameProper = camelCase(getValidTableName(tableName))
 
   // Generate graphQL filter object
-  const gqlFilters = { ...filter, ...getFilters(dataView, userId, orgId) }
+  const gqlFilters: GraphQLFilter = { ...filter, ...getFilters(dataView, userId, orgId) }
 
   // Only for details view
   const headerColumnName = dataView.detailViewHeaderColumn ?? ''

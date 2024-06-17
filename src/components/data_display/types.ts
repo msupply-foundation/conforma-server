@@ -67,7 +67,7 @@ export interface ColumnDetailOutput {
   title: string
   code: string
   columnDefinitionMasterList: ColumnDefinitionMasterList
-  gqlFilters: object
+  gqlFilters: GraphQLFilter
   fieldNames: string[]
   searchFields: string[]
   filterDefinitions: FilterDefinition[]
@@ -121,3 +121,13 @@ export interface GraphQLQueryError {
   message: string
   detail: string
 }
+
+// The 'postgraphile-plugin-connection-filter' package doesn't include types.
+// This is far from a complete definition of the Filter object, but covers our
+// current use cases -- can be extended as required.
+export type GraphQLFilter = Omit<Record<string, Filters>, 'or' | 'and'> & {
+  or?: GraphQLFilter[]
+  and?: GraphQLFilter[]
+}
+
+type Filters = { equalTo?: unknown; includesInsensitive?: string }
