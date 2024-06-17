@@ -74,7 +74,7 @@ const routeDataViewTable = async (request: any, reply: any) => {
   } = await buildAllColumnDefinitions({
     permissionNames,
     dataViewCode,
-    type: 'TABLE',
+    type: returnRawData ? 'RAW' : 'TABLE',
     filter,
     userId,
     orgId,

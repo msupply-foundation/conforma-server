@@ -1135,6 +1135,12 @@ const migrateData = async () => {
 
     console.log(' - Making all lookup tables visible via data views')
     await DB.addDataViewsForLookupTables()
+
+    console.log(' - Adding "rawData" columns to data views')
+    await DB.changeSchema(`
+      ALTER TABLE data_view
+        ADD COLUMN IF NOT EXISTS raw_data_include_columns varchar[],
+        ADD COLUMN IF NOT EXISTS raw_data_exclude_columns varchar[]`)
   }
 
   // Other version migrations continue here...

@@ -56,7 +56,7 @@ export const buildAllColumnDefinitions = async ({
 }: {
   permissionNames: string[]
   dataViewCode: string
-  type: 'TABLE' | 'DETAIL'
+  type: 'TABLE' | 'DETAIL' | 'RAW'
   filter?: object
   userId: number
   orgId: number | undefined
@@ -203,13 +203,15 @@ const getSortColumn = (
 const buildColumnList = (
   dataView: DataView,
   allColumns: string[],
-  type: 'TABLE' | 'DETAIL' | 'FILTER'
+  type: 'TABLE' | 'DETAIL' | 'FILTER' | 'RAW'
 ): string[] => {
   const includeField =
     type === 'TABLE'
       ? 'tableViewIncludeColumns'
       : type === 'DETAIL'
       ? 'detailViewIncludeColumns'
+      : type === 'RAW'
+      ? `rawDataIncludeColumns` ?? `tableViewIncludeColumns`
       : dataView.filterIncludeColumns === null
       ? // If there are no specific filter columns defined, take the
         // full set of table columns
@@ -221,6 +223,8 @@ const buildColumnList = (
       ? 'tableViewExcludeColumns'
       : type === 'DETAIL'
       ? 'detailViewExcludeColumns'
+      : type === 'RAW'
+      ? `rawDataExcludeColumns` ?? `tableViewIncludeColumns`
       : dataView.filterIncludeColumns === null && dataView.filterExcludeColumns === null
       ? 'tableViewExcludeColumns'
       : 'filterExcludeColumns'
@@ -240,7 +244,11 @@ const buildColumnList = (
 }
 
 const getIncludeColumns = (
-  includeField: 'tableViewIncludeColumns' | 'detailViewIncludeColumns' | 'filterIncludeColumns',
+  includeField:
+    | 'tableViewIncludeColumns'
+    | 'detailViewIncludeColumns'
+    | 'filterIncludeColumns'
+    | `rawDataIncludeColumns`,
   dataView: DataView,
   allColumns: string[]
 ): string[] =>
