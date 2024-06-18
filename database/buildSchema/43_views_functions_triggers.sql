@@ -1750,6 +1750,83 @@ CREATE TRIGGER update_application_reviewer_stats
     FOR EACH ROW
     EXECUTE FUNCTION public.update_application_reviewer_stats ();
 
+    
+-- Function to update assigner/reviewer lists on applications and insert/update
+-- assigner actions on application_reviewer_action when records are inserted
+-- into review_assignment_assigner_join
+-- This function ONLY runs on INSERT -- UPDATEs are handled by the above
+-- update_application_reviewer_stats function
+DROP FUNCTION IF EXISTS public.update_application_new_assigner_stats CASCADE;
+CREATE OR REPLACE FUNCTION public.update_application_new_assigner_stats ()
+    RETURNS TRIGGER
+     -- This allows the function to be run as admin user, otherwise it'll only
+     -- be able to query rows the current user has access to.
+    SECURITY DEFINER
+    AS $$
+
+DECLARE
+    userId integer;
+    applicationId integer;
+
+BEGIN
+-- Get application_id from review_assignment
+
+    applicationId = (SELECT application_id FROM review_assignment
+        WHERE id = NEW.review_assignment_id);
+    userId = NEW.assigner_id;
+
+-- reviewer and assigner lists
+    WITH lists AS (
+        SELECT assigners
+        FROM single_application_detail(applicationId)
+    ) 
+    UPDATE public.application
+        SET assigner_list = (SELECT assigners FROM lists)
+        WHERE id = applicationId;
+
+    -- ASSIGNER action
+    
+    -- Remove existing
+    UPDATE public.application_reviewer_action
+        SET assigner_action = NULL
+        WHERE application_id = applicationId
+        AND user_id = userId;
+
+    -- Insert new
+    WITH actions AS (
+        SELECT assigner_action
+            FROM single_application_detail(applicationId, userId)
+        ) 
+    INSERT INTO public.application_reviewer_action
+        (user_id, application_id, assigner_action)  
+    VALUES(
+        userid,
+        applicationId,
+        (SELECT assigner_action FROM actions)
+        )
+        ON CONFLICT (user_id, application_id)
+        DO UPDATE
+        SET assigner_action = (SELECT assigner_action FROM actions);
+
+    -- Clean up NULL records
+    DELETE FROM public.application_reviewer_action
+    WHERE application_id = applicationId
+    AND reviewer_action IS NULL
+    AND assigner_action IS NULL;
+
+RETURN NULL;
+
+END;
+$$
+LANGUAGE plpgsql;
+
+-- Trigger for the above on review_assignment_assigner_join
+DROP TRIGGER IF EXISTS update_application_new_assigner_stats ON public.review_assignment_assigner_join;
+CREATE TRIGGER update_application_new_assigner_stats
+    AFTER INSERT ON public.review_assignment_assigner_join
+    FOR EACH ROW
+    EXECUTE FUNCTION public.update_application_new_assigner_stats ();
+
 -- Function to update insert/update reviewer/assigner actions on
 -- application_reviewer_action when review_status is updated, by making calls to
 -- the above `single_application_detail` function for the appropriate
