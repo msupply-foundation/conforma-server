@@ -1665,10 +1665,8 @@ CREATE OR REPLACE FUNCTION public.update_application_reviewer_stats ()
     AS $$
 
 DECLARE
-    reviewer_ids integer[];
-    rev_id integer;
-    assigner_ids integer[];
-    ass_id integer;
+    user_ids integer[];
+    userid integer;
 
 BEGIN
 -- reviewer and assigner lists
@@ -1683,78 +1681,48 @@ BEGIN
             WHERE id = NEW.application_id;
     END IF;
 
-    -- Get list of reviewer_ids to update for 
+    -- REVIEWER/ASSIGNER actions
+    -- When updating review_assignments, we re-calculate for every
+    -- reviewer/assigner associated with this application.
     IF TG_OP = 'UPDATE' THEN
-        reviewer_ids = ARRAY(
-            SELECT reviewer_id FROM review_assignment
-            WHERE application_id = NEW.application_id
-        );
+        user_ids = ARRAY(
+            -- Creates an array of distinct user ids for all assigners/reviewers
+            -- who can interact with this application
+            SELECT DISTINCT UNNEST(ARRAY[reviewer_id, raaj.assigner_id])
+            FROM review_assignment ra
+            LEFT JOIN review_assignment_assigner_join raaj
+            ON ra.id = raaj.review_assignment_id
+            WHERE application_id = NEW.application_id);
     ELSE
-        reviewer_ids = ARRAY[NEW.reviewer_id];
+    -- But when inserting, just update for the new reviewer
+        user_ids = ARRAY[NEW.reviewer_id];
     END IF;
 
-    FOREACH rev_id IN ARRAY reviewer_ids LOOP
+    FOREACH userid IN ARRAY user_ids LOOP
         -- Remove existing
         UPDATE public.application_reviewer_action
-            SET reviewer_action = NULL
+            SET reviewer_action = NULL,
+            assigner_action = NULL
             WHERE application_id = NEW.application_id
-            AND user_id = rev_id;
+            AND user_id = userid;
 
         -- Insert new
-        WITH reviewer_action AS (
-            SELECT reviewer_action
-                FROM single_application_detail(NEW.application_id, rev_id)
+        WITH actions AS (
+            SELECT reviewer_action, assigner_action
+                FROM single_application_detail(NEW.application_id, userid)
             ) 
         INSERT INTO public.application_reviewer_action
-            (user_id, application_id, reviewer_action)  
+            (user_id, application_id, reviewer_action, assigner_action)  
         VALUES(
-            rev_id,
+            userid,
             NEW.application_id,
-            (SELECT reviewer_action FROM reviewer_action)
+            (SELECT reviewer_action FROM actions),
+            (SELECT assigner_action FROM actions)
          )
          ON CONFLICT (user_id, application_id)
          DO UPDATE
-            SET reviewer_action = (SELECT reviewer_action FROM reviewer_action);
-    END LOOP;
-    
-    
-    -- ASSIGNERS
-    IF TG_OP = 'UPDATE' THEN
-        assigner_ids = ARRAY(
-            SELECT assigner_id FROM review_assignment
-            WHERE application_id = NEW.application_id
-            AND assigner_id IS NOT NULL
-        );
-    ELSE
-        CASE WHEN NEW.assigner_id IS NULL THEN
-                assigner_ids = ARRAY[];
-            ELSE
-                assigner_ids = ARRAY[NEW.assigner_id];
-            END CASE;
-    END IF;
-
-    FOREACH ass_id IN ARRAY assigner_ids LOOP
-        -- Remove existing
-        UPDATE public.application_reviewer_action
-            SET assigner_action = NULL
-            WHERE application_id = NEW.application_id
-            AND user_id = ass_id;
-
-        -- Insert new
-        WITH assigner_action AS (
-            SELECT assigner_action
-                FROM single_application_detail(NEW.application_id, ass_id)
-            ) 
-        INSERT INTO public.application_reviewer_action
-            (user_id, application_id, assigner_action)  
-        VALUES(
-            ass_id,
-            NEW.application_id,
-            (SELECT assigner_action FROM assigner_action)
-         )
-         ON CONFLICT (user_id, application_id)
-         DO UPDATE
-            SET assigner_action = (SELECT assigner_action FROM assigner_action);
+            SET reviewer_action = (SELECT reviewer_action FROM actions),
+            assigner_action = (SELECT assigner_action FROM actions);
     END LOOP;
 
     -- Clean up NULL records
