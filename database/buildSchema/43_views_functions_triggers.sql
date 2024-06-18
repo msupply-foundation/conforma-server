@@ -1699,6 +1699,11 @@ BEGIN
     END IF;
 
     FOREACH userid IN ARRAY user_ids LOOP
+
+        -- Sometimes NULL is included in above array of IDs, which breaks the
+        -- function
+        CONTINUE WHEN userid IS NULL;
+        
         -- Remove existing
         UPDATE public.application_reviewer_action
             SET reviewer_action = NULL,
