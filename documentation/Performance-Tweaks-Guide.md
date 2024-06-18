@@ -1,6 +1,6 @@
 ## Performance Tweaks Guid
 
-During the latest round of performance improvements we had to do quite a lot of performance related test, which were best done on the actual demo server.
+During the latest (start of June 2024) round of performance improvements we had to do quite a lot of performance related test, which were best done on the actual demo server.
 In that time I accumulated quite a few CLI commands that can be helpful in the future.
 
 ## Getting inside the docker container
