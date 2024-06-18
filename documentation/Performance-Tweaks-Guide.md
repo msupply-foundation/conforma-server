@@ -113,6 +113,8 @@ Example result
 
 <details>
 <summary>Example result</summary>
+
+```
 transaction type: bench.sql
 scaling factor: 1
 query mode: simple
@@ -125,6 +127,8 @@ number of failed transactions: 0 (0.000%)
 latency average = 10.976 ms
 initial connection time = 4.228 ms
 tps = 91.110639 (without initial connection time)
+```
+
 </details>
 
 ## Benching via graphql
