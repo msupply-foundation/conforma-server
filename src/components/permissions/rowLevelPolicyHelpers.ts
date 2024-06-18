@@ -4,6 +4,7 @@ import { getSqlConditionFromJSON } from './helpersUtilities'
 
 import { compileRowLevelPolicyRuleTypes } from './helpersConstants'
 import { permissionPolicyColumns } from '../postgresConnect'
+import { modifyValueInObject } from '../utilityFunctions'
 
 export const baseJWT = { aud: 'postgraphile' }
 
@@ -119,32 +120,11 @@ const generateRowLevelPolicies = (permissionRows: permissionPolicyColumns[]) => 
   return policies
 }
 
-export const modifyValueInObject = (
-  obj: object,
-  matchFn: (key: string, value: object) => boolean,
-  modifyFn: (value: object) => string
-): object => {
-  if (typeof obj != 'object') {
-    return obj
-  }
-  if (Array.isArray(obj)) {
-    console.warn('Arrays are not supported')
-    return obj
-  }
-
-  return Object.entries(obj).reduce(
-    (acc, [key, value]) => ({
-      ...acc,
-      [key]: matchFn(key, value) ? modifyFn(value) : modifyValueInObject(value, matchFn, modifyFn),
-    }),
-    {} as object
-  )
-}
-
 const updateRulesUseViewsInsteadOfTables = (rules: object) => {
   const tablesToTurnIntoViews: { [key: string]: boolean } = {}
 
   return {
+    // See test for modifyValueInObject in utilityFunctions.test.ts
     rules: modifyValueInObject(
       rules,
       (key, value) => key == '$from' && typeof value == 'string',
