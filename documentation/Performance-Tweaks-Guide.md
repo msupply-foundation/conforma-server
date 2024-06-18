@@ -96,10 +96,10 @@ Paste you command, i.e.
 
 ```SQL
 BEGIN;
-set local jwt.check to '0,9,87,91,94,95,96,98,99,100,105,106,107,108,109,111,112,114,116,122,123,124,125,126,128,129,130,131,132,133,136,138,139,140,141,142,143,145,146,147,148,149,150,151,152,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194';
+set local "jwt.check" to '0,9,87,91,94,95,96,98,99,100,105,106,107,108,109,111,112,114,116,122,123,124,125,126,128,129,130,131,132,133,136,138,139,140,141,142,143,145,146,147,148,149,150,151,152,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194';
 
 select * from application where template_id = any
-(string_to_array(COALESCE(current_setting('jwt.check', true), '0'), ',')::integer[])
+(string_to_array(COALESCE(current_setting('jwt.check', true), '0'), ',')::integer[]);
 COMMIT;
 ```
 
@@ -108,6 +108,24 @@ Then `ctrl + x, y`
 ```bash
 pgbench -f bench.sql --log --transactions=30 tmf_app_manager
 ```
+
+Example result
+
+<details>
+<summary>Example result</summary>
+transaction type: bench.sql
+scaling factor: 1
+query mode: simple
+number of clients: 1
+number of threads: 1
+maximum number of tries: 1
+number of transactions per client: 30
+number of transactions actually processed: 30/30
+number of failed transactions: 0 (0.000%)
+latency average = 10.976 ms
+initial connection time = 4.228 ms
+tps = 91.110639 (without initial connection time)
+</details>
 
 ## Benching via graphql
 
