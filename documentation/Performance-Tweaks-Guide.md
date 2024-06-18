@@ -56,7 +56,7 @@ Copy newly built files from local computer
 scp -i {key} {repo_root}/conforma-server/build/src/components/permissions/rowLevelPolicyHelpers.js ubuntu@d{demo server}:/home/ubuntu
 ```
 
-Then from demo server
+Then from demo server (from server running the container)
 
 ```bash
 docker cp rowLevelPolicyHelpers.js {container id}:/usr/src/conforma-server/build/src/components/permissions/
