@@ -127,7 +127,8 @@ const updateRulesUseViewsInsteadOfTables = (rules: object) => {
     // See test for modifyValueInObject in utilityFunctions.test.ts
     rules: modifyValueInObject(
       rules,
-      (key, value) => key == '$from' && typeof value == 'string',
+      (key, value) =>
+        key == '$from' && typeof value == 'string' && !String(value).startsWith('private.'),
       (value) => {
         tablesToTurnIntoViews[String(value)] = true
         return `private.${value}`
