@@ -36,8 +36,8 @@ use `exit` command (twice) to go back to the root user
 From within docker container
 
 ```bash
-lsof -i tcp:5000
-kill -9 {process id}
+lsof -i tcp:5000 #lists id of running process 
+kill -9 {process id} #replace {process id} with the node process from prev cmd
 ```
 
 Then run postgraphile start as per: entry.sh, but remove -r graphile_user
@@ -92,7 +92,7 @@ cd ~/
 nano bench.sql
 ```
 
-Paste you command, i.e.
+Paste your command, i.e.
 
 ```SQL
 BEGIN;
