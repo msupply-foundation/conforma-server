@@ -11,11 +11,7 @@ After ssh to the demo server.
 docker container ls
 ```
 
-This would list container and ids and the port mappings, you can find which port is mapped to which demo instance, check out NGINX config
-
-```bash
-cat /etc/nginx/sites-enabled/default
-```
+If container name is not indicative of the url it is exposed in, then you can find more information via, `cat /etc/nginx/sites-enabled/default` for NGINX or `~/demo_server/env_files` for Caddy
 
 Now you can enter container via
 
