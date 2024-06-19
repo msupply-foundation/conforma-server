@@ -3,8 +3,6 @@
 -- These ones will be Admin-only access
 ALTER TABLE public.action_plugin ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.action_queue ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.action_queue ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.action_queue ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.counter ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.data_changelog ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.data_table ENABLE ROW LEVEL SECURITY;
