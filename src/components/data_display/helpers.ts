@@ -224,7 +224,7 @@ const buildColumnList = (
       : type === 'DETAIL'
       ? 'detailViewExcludeColumns'
       : type === 'RAW'
-      ? `rawDataExcludeColumns` ?? `tableViewIncludeColumns`
+      ? `rawDataExcludeColumns` ?? `tableViewExcludeColumns`
       : dataView.filterIncludeColumns === null && dataView.filterExcludeColumns === null
       ? 'tableViewExcludeColumns'
       : 'filterExcludeColumns'
