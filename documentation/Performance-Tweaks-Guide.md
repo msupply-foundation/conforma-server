@@ -11,7 +11,7 @@ After ssh to the demo server.
 docker container ls
 ```
 
-If container name is not indicative of the url it is exposed in, then you can find more information via, `cat /etc/nginx/sites-enabled/default` for NGINX or `~/demo_server/env_files` for Caddy
+Container id and server mapping should be indicated by the container name
 
 Now you can enter container via
 
