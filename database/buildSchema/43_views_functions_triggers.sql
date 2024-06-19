@@ -1549,12 +1549,382 @@ $$
 LANGUAGE sql
 STABLE;
 
+-- Does the "heavy lifting" to deduce the assigners/reviewers list for a single
+-- application as well as the available actions for a particular
+-- reviewer/assigner for that application. Used to populate the
+-- `application_reviewer_action` table and the reviewer/assigner lists on each
+-- application whenever an event occurs that would change these values
+CREATE OR REPLACE FUNCTION single_application_detail (applicationId int, userId int DEFAULT 0)
+    RETURNS TABLE (
+        assigners varchar[],
+        reviewers varchar[],
+        reviewer_action public.reviewer_action,
+        assigner_action public.assigner_action 
+    )
+    AS $$
+        SELECT
+            -- REVIEWERS and ASSIGNERS
+            CASE WHEN count(assigner_user.id) = 0 THEN
+                NULL
+            ELSE
+                ARRAY_AGG(DISTINCT (CONCAT(assigner_user.first_name, ' ', assigner_user.last_name)::varchar))
+            END AS assigners,
+            CASE WHEN count(reviewer_user.id) = 0 THEN
+                NULL
+            ELSE
+                ARRAY_AGG(DISTINCT (CONCAT(reviewer_user.first_name, ' ', reviewer_user.last_name)::varchar))
+            END AS reviewers,
+            -- REVIEWER ACTIONS
+            CASE WHEN COUNT(*) FILTER (WHERE action_review_status_history.status = 'CHANGES_REQUESTED') != 0 THEN
+                'UPDATE_REVIEW'
+            WHEN COUNT(*) FILTER (WHERE action_review_status_history.status = 'PENDING') != 0 THEN
+                'RESTART_REVIEW'
+            WHEN COUNT(*) FILTER (WHERE action_review_status_history.status = 'DRAFT'
+                AND review_is_locked (action_review) = FALSE) != 0 THEN
+                'CONTINUE_REVIEW'
+            WHEN COUNT(*) FILTER (WHERE reviewer_assignment.status = 'ASSIGNED'
+                AND reviewer_assignment.is_final_decision = TRUE
+                AND reviewer_assignment.is_last_stage = TRUE
+                AND action_review = NULL) != 0 THEN
+                'MAKE_DECISION'
+            WHEN COUNT(*) FILTER (WHERE reviewer_assignment.status = 'ASSIGNED'
+                AND action_review.id IS NULL) != 0 THEN
+                'START_REVIEW'
+            -- anyarray <@ anyarray → boolean 
+            -- "Is the first array contained by the second?"
+            -- select (ARRAY[5,3,1] <@ ARRAY[2,3,5]) = false (results in true)
+            -- select (ARRAY[5,3] <@ ARRAY[2,3,5]) = false (results in false)
+            -- thus below should be true if allowed_section has a section that is not in assigned_sections
+            WHEN COUNT(*) FILTER (WHERE (allowed_self_assignable_sections.allowed_sections <@ review_assignment_assigned_sections.assigned_sections) = false
+                AND action_review.id IS NULL) != 0 THEN
+                'SELF_ASSIGN'
+            WHEN COUNT(*) FILTER (WHERE (stage_status.status = 'CHANGES_REQUIRED'
+                OR stage_status.status = 'DRAFT')
+                AND reviewer_assignment.status = 'ASSIGNED'
+                AND action_review_status_history.status = 'SUBMITTED') != 0 THEN
+                'AWAITING_RESPONSE'
+            WHEN COUNT(*) FILTER (WHERE reviewer_assignment.status = 'ASSIGNED'
+                OR action_review_status_history.status = 'SUBMITTED') != 0 THEN
+                'VIEW_REVIEW'
+            ELSE
+                NULL
+            END::reviewer_action,
+            -- ASSIGNER ACTIONS
+            CASE
+            -- Using MIN because number_of_assigned_sections is for each level (i.e. there are multiple levels grouped by stage_id)
+            WHEN MIN(assigned_sections_by_stage_and_level.assigned_section_for_level) < COUNT(DISTINCT (assignable_sections.id)) THEN
+                'ASSIGN'
+            WHEN MIN(assigned_sections_by_stage_and_level.assigned_in_progress_sections) = COUNT(DISTINCT (assignable_sections.id)) THEN
+                'RE_ASSIGN'
+            ELSE
+                NULL
+            END::assigner_action
+        FROM
+            public.application app
+            JOIN public.template ON app.template_id = template.id
+            LEFT JOIN public.application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
+            -- REVIEWERS and ASSIGNERS
+        LEFT JOIN review_assignment AS assigned_assignment ON (assigned_assignment.application_id = app.id
+                AND assigned_assignment.stage_id = stage_status.stage_id
+                AND assigned_assignment.status = 'ASSIGNED')
+        LEFT JOIN public."user" AS assigner_user ON assigned_assignment.assigner_id = assigner_user.id
+        LEFT JOIN public."user" AS reviewer_user ON assigned_assignment.reviewer_id = reviewer_user.id
+        -- REVIEWER ACTIONS
+        LEFT JOIN review_assignment AS reviewer_assignment ON (reviewer_assignment.application_id = app.id
+                AND reviewer_assignment.stage_id = stage_status.stage_id
+                AND app.outcome = 'PENDING'
+                AND reviewer_assignment.reviewer_id = userId)
+        LEFT JOIN review AS action_review ON action_review.review_assignment_id = reviewer_assignment.id
+        LEFT JOIN review_status_history AS action_review_status_history ON (action_review_status_history.review_id = action_review.id
+                AND action_review_status_history.is_current = TRUE)
+            -- ASSIGNER ACTIONS
+        LEFT JOIN assigned_sections_by_stage_and_level ON (assigned_sections_by_stage_and_level.application_id = app.id
+                AND assigned_sections_by_stage_and_level.stage_id = stage_status.stage_id
+                AND app.outcome = 'PENDING'
+                AND assigned_sections_by_stage_and_level.assigner_id = userId)
+        LEFT JOIN template_section AS assignable_sections ON assignable_sections.template_id = template.id
+        LEFT JOIN allowed_self_assignable_sections(userId) AS allowed_self_assignable_sections ON allowed_self_assignable_sections.review_assignment_id = reviewer_assignment.id
+        LEFT JOIN review_assignment_assigned_sections(userId) as review_assignment_assigned_sections ON review_assignment_assigned_sections.review_assignment_id = reviewer_assignment.id
+    WHERE
+        app.id = applicationId
+    GROUP BY stage_status.stage_id;
+$$
+LANGUAGE sql
+STABLE;
 
--- APPLICATION_LIST_VIEW
--- Aggregated VIEW method of all data required for application list page
--- Requires an empty table as setof return and smart comment to make orderBy work (https://github.com/graphile/graphile-engine/pull/378)
-DROP TABLE IF EXISTS application_list_shape CASCADE;
+-- Function to update assigner/reviewer lists on applications and insert/update
+-- reviewer/assigner actions on application_reviewer_action, by making calls to
+-- the above `single_application_detail` function for the appropriate
+-- user/application combo(s)
+DROP FUNCTION IF EXISTS public.update_application_reviewer_stats CASCADE;
+CREATE OR REPLACE FUNCTION public.update_application_reviewer_stats ()
+    RETURNS TRIGGER
+     -- This allows the function to be run as admin user, otherwise it'll only
+     -- be able to query rows the current user has access to.
+    SECURITY DEFINER
+    AS $$
 
+DECLARE
+    user_ids integer[];
+    userid integer;
+
+BEGIN
+-- reviewer and assigner lists
+    IF TG_OP != 'INSERT' THEN
+        WITH lists AS (
+                SELECT reviewers, assigners
+                FROM single_application_detail(NEW.application_id)
+            ) 
+        UPDATE public.application
+            SET reviewer_list = (SELECT reviewers FROM lists),
+            assigner_list = (SELECT assigners FROM lists)
+            WHERE id = NEW.application_id;
+    END IF;
+
+    -- REVIEWER/ASSIGNER actions
+    -- When updating review_assignments, we re-calculate for every
+    -- reviewer/assigner associated with this application.
+    IF TG_OP = 'UPDATE' THEN
+        user_ids = ARRAY(
+            -- Creates an array of distinct user ids for all assigners/reviewers
+            -- who can interact with this application
+            SELECT DISTINCT UNNEST(ARRAY[reviewer_id, raaj.assigner_id])
+            FROM review_assignment ra
+            LEFT JOIN review_assignment_assigner_join raaj
+            ON ra.id = raaj.review_assignment_id
+            WHERE application_id = NEW.application_id);
+    ELSE
+    -- But when inserting, just update for the new reviewer
+        user_ids = ARRAY[NEW.reviewer_id];
+    END IF;
+
+    FOREACH userid IN ARRAY user_ids LOOP
+
+        -- Sometimes NULL is included in above array of IDs, which breaks the
+        -- function
+        CONTINUE WHEN userid IS NULL;
+        
+        -- Remove existing
+        UPDATE public.application_reviewer_action
+            SET reviewer_action = NULL,
+            assigner_action = NULL
+            WHERE application_id = NEW.application_id
+            AND user_id = userid;
+
+        -- Insert new
+        WITH actions AS (
+            SELECT reviewer_action, assigner_action
+                FROM single_application_detail(NEW.application_id, userid)
+            ) 
+        INSERT INTO public.application_reviewer_action
+            (user_id, application_id, reviewer_action, assigner_action)  
+        VALUES(
+            userid,
+            NEW.application_id,
+            (SELECT reviewer_action FROM actions),
+            (SELECT assigner_action FROM actions)
+         )
+         ON CONFLICT (user_id, application_id)
+         DO UPDATE
+            SET reviewer_action = (SELECT reviewer_action FROM actions),
+            assigner_action = (SELECT assigner_action FROM actions);
+    END LOOP;
+
+    -- Clean up NULL records
+    DELETE FROM public.application_reviewer_action
+    WHERE application_id = NEW.application_id
+    AND reviewer_action IS NULL
+    AND assigner_action IS NULL;
+
+RETURN NULL;
+
+END;
+$$
+LANGUAGE plpgsql;
+
+
+-- Trigger for the above on review_assignment
+DROP TRIGGER IF EXISTS update_application_reviewer_stats ON public.review_assignment;
+CREATE TRIGGER update_application_reviewer_stats
+    AFTER INSERT OR UPDATE ON public.review_assignment
+    FOR EACH ROW
+    EXECUTE FUNCTION public.update_application_reviewer_stats ();
+
+    
+-- Function to update assigner/reviewer lists on applications and insert/update
+-- assigner actions on application_reviewer_action when records are inserted
+-- into review_assignment_assigner_join
+-- This function ONLY runs on INSERT -- UPDATEs are handled by the above
+-- update_application_reviewer_stats function
+DROP FUNCTION IF EXISTS public.update_application_new_assigner_stats CASCADE;
+CREATE OR REPLACE FUNCTION public.update_application_new_assigner_stats ()
+    RETURNS TRIGGER
+     -- This allows the function to be run as admin user, otherwise it'll only
+     -- be able to query rows the current user has access to.
+    SECURITY DEFINER
+    AS $$
+
+DECLARE
+    userId integer;
+    applicationId integer;
+
+BEGIN
+-- Get application_id from review_assignment
+
+    applicationId = (SELECT application_id FROM review_assignment
+        WHERE id = NEW.review_assignment_id);
+    userId = NEW.assigner_id;
+
+-- reviewer and assigner lists
+    WITH lists AS (
+        SELECT assigners
+        FROM single_application_detail(applicationId)
+    ) 
+    UPDATE public.application
+        SET assigner_list = (SELECT assigners FROM lists)
+        WHERE id = applicationId;
+
+    -- ASSIGNER action
+    
+    -- Remove existing
+    UPDATE public.application_reviewer_action
+        SET assigner_action = NULL
+        WHERE application_id = applicationId
+        AND user_id = userId;
+
+    -- Insert new
+    WITH actions AS (
+        SELECT assigner_action
+            FROM single_application_detail(applicationId, userId)
+        ) 
+    INSERT INTO public.application_reviewer_action
+        (user_id, application_id, assigner_action)  
+    VALUES(
+        userid,
+        applicationId,
+        (SELECT assigner_action FROM actions)
+        )
+        ON CONFLICT (user_id, application_id)
+        DO UPDATE
+        SET assigner_action = (SELECT assigner_action FROM actions);
+
+    -- Clean up NULL records
+    DELETE FROM public.application_reviewer_action
+    WHERE application_id = applicationId
+    AND reviewer_action IS NULL
+    AND assigner_action IS NULL;
+
+RETURN NULL;
+
+END;
+$$
+LANGUAGE plpgsql;
+
+-- Trigger for the above on review_assignment_assigner_join
+DROP TRIGGER IF EXISTS update_application_new_assigner_stats ON public.review_assignment_assigner_join;
+CREATE TRIGGER update_application_new_assigner_stats
+    AFTER INSERT ON public.review_assignment_assigner_join
+    FOR EACH ROW
+    EXECUTE FUNCTION public.update_application_new_assigner_stats ();
+
+-- Function to update insert/update reviewer/assigner actions on
+-- application_reviewer_action when review_status is updated, by making calls to
+-- the above `single_application_detail` function for the appropriate
+-- user/application combo(s)
+DROP FUNCTION IF EXISTS public.update_reviewer_stats_from_status CASCADE;
+CREATE OR REPLACE FUNCTION public.update_reviewer_stats_from_status ()
+    RETURNS TRIGGER
+     -- This allows the function to be run as admin user, otherwise it'll only
+     -- be able to query rows the current user has access to.
+    SECURITY DEFINER
+    AS $$
+
+DECLARE
+    app_id integer;
+    rev_id integer;
+    ass_id integer;
+
+BEGIN
+    -- Get application id
+    app_id = (
+        SELECT r.application_id FROM review r
+        WHERE id = NEW.review_id
+    );
+
+    -- Get reviewer_id and assigner_id
+    SELECT ra.reviewer_id, ra.assigner_id
+        INTO rev_id, ass_id
+        FROM review_assignment ra
+        WHERE id = (
+            SELECT review_assignment_id FROM review
+            WHERE id = NEW.review_id
+        );
+        
+    -- Update reviewer
+    UPDATE public.application_reviewer_action
+            SET reviewer_action = NULL
+            WHERE application_id = app_id
+            AND user_id = rev_id;
+
+    WITH reviewer_action AS (
+            SELECT reviewer_action
+                FROM single_application_detail(app_id, rev_id)
+            ) 
+        INSERT INTO public.application_reviewer_action
+            (user_id, application_id, reviewer_action)  
+        VALUES(
+            rev_id,
+            app_id,
+            (SELECT reviewer_action FROM reviewer_action)
+         )
+         ON CONFLICT (user_id, application_id)
+         DO UPDATE
+            SET reviewer_action = (SELECT reviewer_action FROM reviewer_action);
+
+    -- Update assigner
+    UPDATE public.application_reviewer_action
+            SET assigner_action = NULL
+            WHERE application_id = app_id
+            AND user_id = ass_id;
+
+    WITH assigner_action AS (
+            SELECT assigner_action
+                FROM single_application_detail(app_id, ass_id)
+            ) 
+        INSERT INTO public.application_reviewer_action
+            (user_id, application_id, assigner_action)  
+        VALUES(
+            ass_id,
+            app_id,
+            (SELECT assigner_action FROM assigner_action)
+         )
+         ON CONFLICT (user_id, application_id)
+         DO UPDATE
+            SET assigner_action = (SELECT assigner_action FROM assigner_action);
+
+
+    -- Clean up NULL records
+    DELETE FROM public.application_reviewer_action
+    WHERE application_id = app_id
+    AND reviewer_action IS NULL
+    AND assigner_action IS NULL;
+
+RETURN NULL;
+
+END;
+$$
+LANGUAGE plpgsql;
+
+
+-- Trigger for the above on review_status_history
+DROP TRIGGER IF EXISTS update_reviewer_stats_from_status ON public.review_status_history;
+CREATE TRIGGER update_reviewer_stats_from_status
+    AFTER INSERT ON public.review_status_history
+    FOR EACH ROW
+    EXECUTE FUNCTION public.update_reviewer_stats_from_status ();
+
+-- This is a dummy table for the application list. Needs to be defined so that
+-- GraphQL types for the list get exposed by Postgraphile
 CREATE TABLE IF NOT EXISTS application_list_shape (
     id int,
     "serial" varchar,
@@ -1576,137 +1946,54 @@ CREATE TABLE IF NOT EXISTS application_list_shape (
     assigner_action public.assigner_action
 );
 
-CREATE OR REPLACE FUNCTION application_list (userid int DEFAULT 0)
+-- APPLICATION_LIST_VIEW
+-- Aggregated VIEW method of all data required for application list page
+-- Requires an empty table as setof return and smart comment to make orderBy work (https://github.com/graphile/graphile-engine/pull/378)
+-- Utilises the pre-computing done by the previous functions/triggers for quick
+-- access to the required values for a particular reviewer/assigner
+DROP FUNCTION IF EXISTS application_list CASCADE;
+CREATE OR REPLACE FUNCTION application_list(userId int DEFAULT 0)
     RETURNS SETOF application_list_shape
     AS $$
-    SELECT
-        -- BASE
+    SELECT 
         app.id,
         app.serial,
         app.name,
-        template.code AS template_code,
-        template.name AS template_name,
-        CONCAT(applicant.first_name, ' ', applicant.last_name) AS applicant_name,
-        org.name AS org_name,
+        stage_status.template_code, 
+        stage_status.template_name,
+        "user".full_name as applicant,
+        organisation.name as org_name,
         stage_status.stage,
         stage_status.stage_colour,
         stage_status.status,
         app.outcome,
         status_history_time_created AS last_active_date,
         ts.time_scheduled AS applicant_deadline,
-        -- REVIEWERS and ASSIGNERS
-        CASE WHEN count(assigner_user.id) = 0 THEN
-            NULL
-        ELSE
-            ARRAY_AGG(DISTINCT (CONCAT(assigner_user.first_name, ' ', assigner_user.last_name)::varchar))
-        END AS assigners,
-        CASE WHEN count(reviewer_user.id) = 0 THEN
-            NULL
-        ELSE
-            ARRAY_AGG(DISTINCT (CONCAT(reviewer_user.first_name, ' ', reviewer_user.last_name)::varchar))
-        END AS reviewers,
-        -- REVIEWER ACTIONS
-        CASE WHEN COUNT(*) FILTER (WHERE action_review_status_history.status = 'CHANGES_REQUESTED') != 0 THEN
-            'UPDATE_REVIEW'
-        WHEN COUNT(*) FILTER (WHERE action_review_status_history.status = 'PENDING') != 0 THEN
-            'RESTART_REVIEW'
-        WHEN COUNT(*) FILTER (WHERE action_review_status_history.status = 'DRAFT'
-            AND review_is_locked (action_review) = FALSE) != 0 THEN
-            'CONTINUE_REVIEW'
-        WHEN COUNT(*) FILTER (WHERE reviewer_assignment.status = 'ASSIGNED'
-            AND reviewer_assignment.is_final_decision = TRUE
-            AND reviewer_assignment.is_last_stage = TRUE
-            AND action_review = NULL) != 0 THEN
-            'MAKE_DECISION'
-        WHEN COUNT(*) FILTER (WHERE reviewer_assignment.status = 'ASSIGNED'
-            AND action_review.id IS NULL) != 0 THEN
-            'START_REVIEW'
-        -- anyarray <@ anyarray → boolean 
-        -- "Is the first array contained by the second?"
-        -- select (ARRAY[5,3,1] <@ ARRAY[2,3,5]) = false (results in true)
-        -- select (ARRAY[5,3] <@ ARRAY[2,3,5]) = false (results in false)
-        -- thus below should be true if allowed_section has a section that is not in assigned_sections
-        WHEN COUNT(*) FILTER (WHERE (allowed_self_assignable_sections.allowed_sections <@ review_assignment_assigned_sections.assigned_sections) = false
-            AND action_review.id IS NULL) != 0 THEN
-            'SELF_ASSIGN'
-        WHEN COUNT(*) FILTER (WHERE (stage_status.status = 'CHANGES_REQUIRED'
-            OR stage_status.status = 'DRAFT')
-            AND reviewer_assignment.status = 'ASSIGNED'
-            AND action_review_status_history.status = 'SUBMITTED') != 0 THEN
-            'AWAITING_RESPONSE'
-        WHEN COUNT(*) FILTER (WHERE reviewer_assignment.status = 'ASSIGNED'
-            OR action_review_status_history.status = 'SUBMITTED') != 0 THEN
-            'VIEW_REVIEW'
-        ELSE
-            NULL
-        END::reviewer_action,
-        -- ASSIGNER ACTIONS
-        CASE
-        -- Using MIN because number_of_assigned_sections is for each level (i.e. there are multiple levels grouped by stage_id)
-        WHEN MIN(assigned_sections_by_stage_and_level.assigned_section_for_level) < COUNT(DISTINCT (assignable_sections.id)) THEN
-            'ASSIGN'
-        WHEN MIN(assigned_sections_by_stage_and_level.assigned_in_progress_sections) = COUNT(DISTINCT (assignable_sections.id)) THEN
-            'RE_ASSIGN'
-        ELSE
-            NULL
-        END::assigner_action
-    FROM
-        -- BASE
-        public.application app
-        JOIN public.template ON app.template_id = template.id
-        JOIN public."user" AS applicant ON app.user_id = applicant.id
-        LEFT JOIN public.application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
-        LEFT JOIN public.organisation org ON app.org_id = org.id
+        app.reviewer_list AS reviewers,
+        app.assigner_list AS assigners,
+        reviewer_action,
+        assigner_action
+        FROM application app
+        LEFT JOIN application_stage_status_latest as stage_status
+            ON app.id = stage_status.application_id
+        LEFT JOIN "user" 
+            ON app.user_id = "user".id
+        LEFT JOIN organisation
+            ON app.org_id = organisation.id
         LEFT JOIN trigger_schedule ts ON app.id = ts.application_id
-            AND ts.is_active = TRUE
-            AND ts.event_code = 'applicantDeadline'
-            -- REVIEWERS and ASSIGNERS
-    LEFT JOIN review_assignment AS assigned_assignment ON (assigned_assignment.application_id = app.id
-            AND assigned_assignment.stage_id = stage_status.stage_id
-            AND assigned_assignment.status = 'ASSIGNED')
-    LEFT JOIN public."user" AS assigner_user ON assigned_assignment.assigner_id = assigner_user.id
-    LEFT JOIN public."user" AS reviewer_user ON assigned_assignment.reviewer_id = reviewer_user.id
-    -- REVIEWER ACTIONS
-    LEFT JOIN review_assignment AS reviewer_assignment ON (reviewer_assignment.application_id = app.id
-            AND reviewer_assignment.stage_id = stage_status.stage_id
-            AND app.outcome = 'PENDING'
-            AND reviewer_assignment.reviewer_id = userId)
-    LEFT JOIN review AS action_review ON action_review.review_assignment_id = reviewer_assignment.id
-    LEFT JOIN review_status_history AS action_review_status_history ON (action_review_status_history.review_id = action_review.id
-            AND action_review_status_history.is_current = TRUE)
-        -- ASSIGNER ACTIONS
-    LEFT JOIN assigned_sections_by_stage_and_level ON (assigned_sections_by_stage_and_level.application_id = app.id
-            AND assigned_sections_by_stage_and_level.stage_id = stage_status.stage_id
-            AND app.outcome = 'PENDING'
-            AND assigned_sections_by_stage_and_level.assigner_id = userId)
-    LEFT JOIN template_section AS assignable_sections ON assignable_sections.template_id = template.id
-    LEFT JOIN allowed_self_assignable_sections(userId) AS allowed_self_assignable_sections ON allowed_self_assignable_sections.review_assignment_id = reviewer_assignment.id
-    LEFT JOIN review_assignment_assigned_sections(userId) as review_assignment_assigned_sections ON review_assignment_assigned_sections.review_assignment_id = reviewer_assignment.id
-WHERE
-    app.is_config = FALSE
-GROUP BY
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    stage_status.stage_id
-
-$$
-LANGUAGE sql
-STABLE;
+                AND ts.is_active = TRUE
+                AND ts.event_code = 'applicantDeadline'
+        LEFT JOIN application_reviewer_action AS actions
+            ON actions.user_id = userId
+            AND actions.application_id = app.id
+        ORDER BY app.id
+    $$
+    LANGUAGE sql
+    STABLE;
 
 -- (https://github.com/graphile/graphile-engine/pull/378)
 -- Required to make 'orderBy' work in application_list
-COMMENT ON FUNCTION application_list (userid int) IS E'@sortable';
+COMMENT ON FUNCTION application_list (userId int) IS E'@sortable';
 
 -- APPLICATION_LIST_FILTERS
 CREATE OR REPLACE FUNCTION application_list_filter_applicant (applicant varchar, template_code varchar)
@@ -2222,4 +2509,4 @@ CREATE OR REPLACE view permission_flattened as
     JOIN permission_join ON permission_join.user_id = "user".id
     JOIN permission_name ON permission_name.id = permission_join.permission_name_id
     JOIN permission_policy ON permission_policy.id = permission_name.permission_policy_id
-    JOIN template_permission ON template_permission.permission_name_id = permission_name.id
+    JOIN template_permission ON template_permission.permission_name_id = permission_name.id;
