@@ -1,4 +1,4 @@
-import { BasicObject, EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
+import { BasicObject, EvaluatorNode } from './modules/expression-evaluator'
 import {
   ActionQueueStatus,
   ApplicationOutcome,

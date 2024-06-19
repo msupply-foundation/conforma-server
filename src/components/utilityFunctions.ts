@@ -145,8 +145,8 @@ export const getEnvVariableReplacement = (input: string) => {
   return process.env[envKey] ?? input
 }
 
-// Validates an Error object and returns its message (default) or requested property, if
-// available
+// Validates an Error object and returns its message (default) or requested
+// property, if available
 export const errorMessage = (err: unknown, property?: string) => {
   if (!isObject(err)) return 'Unknown error'
 
@@ -155,4 +155,25 @@ export const errorMessage = (err: unknown, property?: string) => {
   if (property && property in err) return (err as any)[property]
 
   return 'Unknown error'
+}
+
+// Recursively searches an object for criteria defined in `matchFn`, and
+// modifies matching values according to `modifyFn`
+export const modifyValueInObject = (
+export const modifyValueInObject = (
+  obj: object,
+  matchFn: (key: string, value: object) => boolean,
+  modifyFn: (value: object) => string
+): object => {
+  if (!isObject(obj)) {
+    return obj
+  }
+
+  return Object.entries(obj).reduce(
+    (acc, [key, value]) => ({
+      ...acc,
+      [key]: matchFn(key, value) ? modifyFn(value) : modifyValueInObject(value, matchFn, modifyFn),
+    }),
+    {} as object
+  )
 }

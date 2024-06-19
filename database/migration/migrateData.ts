@@ -12,6 +12,7 @@ import { loadCurrentPrefs, setPreferences } from '../../src/components/preferenc
 // CONSTANTS
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
 const INDEX_FILENAME = '44_index.sql'
+const RLS_FILENAME = '45_row_level_security.sql'
 
 const { version } = config
 const isManualMigration: Boolean = process.argv[2] === '--migrate'
@@ -43,7 +44,7 @@ const migrateData = async () => {
     console.log(' - Add system_info TABLE')
 
     await DB.changeSchema(`
-      CREATE TABLE public.system_info (
+      CREATE TABLE IF NOT EXISTS public.system_info (
         id serial PRIMARY KEY,
         name varchar NOT NULL,
         value jsonb DEFAULT '{}',
@@ -61,7 +62,7 @@ const migrateData = async () => {
     console.log(' - Add review_assignment TABLE field: assigned_sections')
 
     await DB.changeSchema(`ALTER TABLE review_assignment
-        ADD COLUMN assigned_sections varchar[] DEFAULT array[]::varchar[];`)
+        ADD COLUMN IF NOT EXISTS assigned_sections varchar[] DEFAULT array[]::varchar[];`)
 
     // Update or create review_assignment assigned_sections Trigger/Function
     console.log(' - Add review_assignment_trigger2 TRIGGER field: assigned_sections')
@@ -98,9 +99,9 @@ const migrateData = async () => {
     }
 
     // DROP review_question_assignment and related views/fields
-    console.log(' - Remove column in review_reponse TABLE: review_question_assignment_id')
+    console.log(' - Remove column in review_response TABLE: review_question_assignment_id')
     await DB.changeSchema(`ALTER TABLE review_response
-        DROP COLUMN review_question_assignment_id;`)
+        DROP COLUMN IF EXISTS review_question_assignment_id;`)
 
     console.log(' - Remove review_question_assignment_section VIEW')
     await DB.changeSchema(`DROP VIEW IF EXISTS
@@ -575,7 +576,8 @@ const migrateData = async () => {
     `)
 
     console.log(' - Add case-insensitive unique constraint to usernames')
-    //drop views relating to username temporarily so column can be changed
+    // Drop views relating to username temporarily so column can be changed --
+    // will re-created in 43_views_functions_indexes
     await DB.changeSchema(`
       DROP VIEW IF EXISTS permissions_all;
       DROP VIEW IF EXISTS user_org_join`)
@@ -848,15 +850,6 @@ const migrateData = async () => {
     } catch (err) {
       console.log("Couldn't update preferences -- please fix manually")
     }
-
-    // console.log(
-    //   ' - Updating policies to replace jwtPermission_array_bigint_template_ids with query rather than in statement matching arrays in JWT'
-    // )
-    // try {
-    //   await DB.updatePermissionPolicyRules()
-    // } catch (err) {
-    //   console.log('Unable to update permission policies')
-    // }
   }
 
   // v0.8.0
@@ -1075,17 +1068,79 @@ const migrateData = async () => {
         REFERENCES public.template (id) ON DELETE CASCADE;
     `)
     await DB.changeSchema(`
+      ALTER TABLE review_assignment DISABLE TRIGGER 
+        update_application_reviewer_stats;
       UPDATE public.review_assignment
         SET template_id = (
           SELECT template_id FROM application
           WHERE id = application_id
         );
+      ALTER TABLE review_assignment ENABLE TRIGGER               
+        update_application_reviewer_stats;
     `)
     await DB.changeSchema(`
       ALTER TABLE public.review_assignment
         ALTER COLUMN template_id
         SET NOT NULL;
     `)
+  }
+
+  // v0.9.0 was used for the first version that must be used with databases that
+  // have been migrated using the above (0.8) fix.
+
+  // v1.0.0
+  if (databaseVersionLessThan('1.0.0')) {
+    console.log('Migrating to v1.0.0...')
+
+    console.log(' - Adding reviewer/assigner lists to applications')
+    await DB.changeSchema(`
+      ALTER TABLE public.application   
+        ADD COLUMN IF NOT EXISTS reviewer_list VARCHAR[],
+        ADD COLUMN IF NOT EXISTS assigner_list VARCHAR[];
+    `)
+
+    console.log(' - Adding application_reviewer_action table')
+    await DB.changeSchema(`
+      CREATE TABLE IF NOT EXISTS public.application_reviewer_action (
+        id serial PRIMARY KEY,
+        user_id integer REFERENCES public.user(id)
+          ON DELETE CASCADE NOT NULL,
+        application_id integer REFERENCES public.application(id)
+          ON DELETE CASCADE NOT NULL,
+        reviewer_action public.reviewer_action,
+        assigner_action public.assigner_action,
+        UNIQUE (user_id, application_id)
+      );
+    `)
+
+    console.log(' - Updating reviewer/assigner lists for ALL applications')
+    console.log(' - Creating application_reviewer_action records (This may take a while)')
+    await DB.createApplicationReviewerActionRecords()
+
+    // The previous statement we had to create this unique constraint resulted
+    // in a new index being created each time it was invoked. So now we ensure
+    // the one index we actually want is correctly defined (then we delete all
+    // duplicates with 'removeDuplicateIndexes()' later on).
+    console.log(' - Fixing unique constraint for template_version/code on template table')
+
+    await DB.changeSchema(`
+      ALTER TABLE public.template
+        DROP CONSTRAINT IF EXISTS template_code_version_id_key;
+      ALTER TABLE public.template
+        ADD CONSTRAINT template_code_version_id_key UNIQUE (code, version_id);
+      `)
+
+    console.log(' - Adding row-level security to all existing data tables')
+    await DB.secureDataTables()
+
+    console.log(' - Making all lookup tables visible via data views')
+    await DB.addDataViewsForLookupTables()
+
+    console.log(' - Adding "rawData" columns to data views')
+    await DB.changeSchema(`
+      ALTER TABLE data_view
+        ADD COLUMN IF NOT EXISTS raw_data_include_columns varchar[],
+        ADD COLUMN IF NOT EXISTS raw_data_exclude_columns varchar[]`)
   }
 
   // Other version migrations continue here...
@@ -1105,6 +1160,18 @@ const migrateData = async () => {
   )
   console.log(' - Updating indexes...')
   await DB.changeSchema(createIndexesScript)
+  // This shouldn't be necessary after v1.0 migration, but can't hurt in case
+  // duplicate indexes creep in at some point, or if loading a snapshot that has
+  // additional duplicates we haven't yet discovered
+  await DB.removeDuplicateIndexes()
+
+  const rlsScript = readFileSync(
+    path.join(getAppEntryPointDir(), '../database/buildSchema/', RLS_FILENAME),
+    'utf-8'
+  )
+
+  console.log(' - Updating row-level security...')
+  await DB.changeSchema(rlsScript)
 
   // Finally, set the database version to the current version
   if (databaseVersionLessThan(version)) await DB.setDatabaseVersion(version)

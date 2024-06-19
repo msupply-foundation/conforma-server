@@ -18,7 +18,6 @@ echo '--- ADDING DATA'
 ./database/insert_data.sh $1
 
 echo '--- RUNNING POST INSTALL'
-./database/turn_on_row_level_security.sh
 ./database/post_data_insert.sh
 
 echo '--- COPY CLEAN DATABASE TO BE USED IF NO VOLUMES ARE MOUNTED'

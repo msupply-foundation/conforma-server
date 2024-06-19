@@ -11,7 +11,6 @@ const databaseMethods = {
         values: [id],
       })
       const tableName = `${config.dataTablePrefix}${result.rows[0].table_name}`
-      const fieldMap = result.rows[0].field_map
 
       // Get table
       const data = await DBConnect.query({ text: `SELECT * FROM ${tableName} ORDER BY id;` })
@@ -20,6 +19,41 @@ const databaseMethods = {
       console.log(errorMessage(err))
       throw err
     }
+  },
+  getAllLookupTableStructures: async () => {
+    const result = await DBConnect.gqlQuery(
+      `query getAllLookupTableStructures {
+        dataTables(condition: {isLookupTable: true}) {
+          nodes {
+            id
+            tableName
+            displayName
+            fieldMap
+            __typename
+            dataViewCode
+          }
+          __typename
+        }
+      }
+    `
+    )
+    return result?.dataTables?.nodes
+  },
+  getLookupTableStructure: async (id: number) => {
+    const result = await DBConnect.gqlQuery(
+      `query getTableStructure($id: Int!) {
+        dataTable(id: $id) {
+          dataViewCode
+          displayName
+          fieldMap
+          id
+          tableName
+        }
+      }
+    `,
+      { id }
+    )
+    return result?.dataTable
   },
 }
 

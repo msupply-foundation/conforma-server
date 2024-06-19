@@ -66,21 +66,21 @@ RUN git clone -b ${WEB_APP_BRANCH} https://github.com/openmsupply/conforma-web-a
 
 # --- BUILD SERVER
 WORKDIR /usr/src/conforma-server
-RUN cp .npmrc .npmrc_backup
-RUN echo "" >> .npmrc
-RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
+# RUN cp .npmrc .npmrc_backup
+# RUN echo "" >> .npmrc
+# RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
 RUN yarn install
 RUN yarn build
-RUN rm .npmrc && mv .npmrc_backup .npmrc
+# RUN rm .npmrc && mv .npmrc_backup .npmrc
 
 # --- BUILD WEB APP
 WORKDIR /usr/src/conforma-web-app
-RUN cp .npmrc .npmrc_backup
-RUN echo "" >> .npmrc
-RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
+# RUN cp .npmrc .npmrc_backup
+# RUN echo "" >> .npmrc
+# RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
 RUN yarn install
 RUN yarn build
-RUN rm .npmrc && mv .npmrc_backup .npmrc
+# RUN rm .npmrc && mv .npmrc_backup .npmrc
 
 # --- ADD NGINX CONFIG
 COPY nginx_config/conforma.conf /etc/nginx/conf.d/
