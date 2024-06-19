@@ -1,3 +1,10 @@
+-- SCHEMA to hide internal functionality from postgraphile graphql schema
+-- for example, views that expose tables used in row level policies (to avoid
+-- compounding permission queries) will be in private schema and not accessible
+-- via graphql
+DROP SCHEMA private CASCADE;
+CREATE SCHEMA private;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA private TO graphile_user;
 -- VIEWS
 -- VIEW table to show users with their organisations
 CREATE OR REPLACE VIEW user_org_join AS
