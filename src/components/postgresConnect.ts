@@ -1300,7 +1300,6 @@ class PostgresDB {
     const values = dataViewCode ? [userPermissions, dataViewCode] : [userPermissions]
     try {
       const result = await this.query({ text, values })
-      console.log(result.rows)
       return result.rows
     } catch (err) {
       console.log(errorMessage(err))
