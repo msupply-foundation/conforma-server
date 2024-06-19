@@ -1295,12 +1295,12 @@ class PostgresDB {
               OR cardinality(permission_names) = 0
             )
       ${dataViewCode ? 'AND code = $2' : ''}
-       AND enabled = TRUE
-       AND menu_name IS NOT NULL;
+       AND enabled = TRUE;
     `
     const values = dataViewCode ? [userPermissions, dataViewCode] : [userPermissions]
     try {
       const result = await this.query({ text, values })
+      console.log(result.rows)
       return result.rows
     } catch (err) {
       console.log(errorMessage(err))
