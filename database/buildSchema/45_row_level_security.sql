@@ -31,8 +31,6 @@ ALTER TABLE public."user" ENABLE ROW LEVEL SECURITY;
 -- DEV -- uncomment and run to quickly disable
 -- ALTER TABLE public.action_plugin DISABLE ROW LEVEL SECURITY;
 -- ALTER TABLE public.action_queue DISABLE ROW LEVEL SECURITY;
--- ALTER TABLE public.action_queue DISABLE ROW LEVEL SECURITY;
--- ALTER TABLE public.action_queue DISABLE ROW LEVEL SECURITY;
 -- ALTER TABLE public.counter DISABLE ROW LEVEL SECURITY;
 -- ALTER TABLE public.data_changelog DISABLE ROW LEVEL SECURITY;
 -- ALTER TABLE public.data_table DISABLE ROW LEVEL SECURITY;

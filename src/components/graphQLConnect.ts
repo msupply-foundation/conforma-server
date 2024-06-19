@@ -98,7 +98,6 @@ class GraphQLdb {
   }
 
   public getReviewDataFromAssignment = async (reviewAssignmentId: number) => {
-    console.log('reviewAssignmentId', reviewAssignmentId)
     const data = await this.gqlQuery(
       `
       query getReview($reviewAssignmentId: Int!) {

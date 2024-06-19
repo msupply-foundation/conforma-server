@@ -87,6 +87,13 @@ const routeDataViewTable = async (request: any, reply: any) => {
     // pre-baked into the "filter" object (this would normally be the case when
     // rawData is requested from application queries). In this case, we need to
     // build a filter and merge it with the existing filter.
+    //
+    // GQL Filter properties are all "AND" clauses. The additional filter is
+    // applied as another "AND" clause (so just added to properties). If the
+    // additional filter targets multiple (search) fields, they'll be added as
+    // an "OR" array. And if the existing filter already has an "OR" clause,
+    // this will be merged with it. In all other cases, the additional filter
+    // will over-ride the existing filter if their properties conflict.
     const additionalSearchFilter =
       searchFields.length === 1
         ? { [searchFields[0]]: { includesInsensitive: search } }
