@@ -35,7 +35,18 @@ const compileJWT = (JWTelements: any) => {
   const { userId, orgId, username, templatePermissionRows, sessionId, isAdmin, isManager } =
     JWTelements
 
-  let JWT: any = { ...baseJWT, userId, orgId, username, sessionId, isAdmin, isManager }
+  let JWT: any = {
+    ...baseJWT,
+    userId,
+    orgId,
+    username,
+    sessionId,
+    isAdmin,
+    // Setting role = 'postgres' allows Admin token to bypass ALL
+    // row-level-security
+    role: isAdmin ? 'postgres' : undefined,
+    isManager,
+  }
   const templateIdsForPolicy: { [policyAbbreviation: string]: number[] } = {}
 
   templatePermissionRows.forEach((permissionRow: PermissionRow) => {

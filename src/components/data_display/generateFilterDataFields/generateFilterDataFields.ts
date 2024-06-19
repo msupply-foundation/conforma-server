@@ -127,8 +127,7 @@ export const generateFilterDataFields = async (table: string, fullUpdate: boolea
         blockSize,
         fetchedCount,
         'id',
-        true,
-        ''
+        true
       )
 
       if (error) return error

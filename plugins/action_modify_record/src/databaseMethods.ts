@@ -208,11 +208,13 @@ const databaseMethods = (DBConnect: any) => {
     createRecord,
     createTable: async (tableName: string, tableNameOriginal: string) => {
       const text = `CREATE TABLE "${tableName}" ( id serial PRIMARY KEY)`
-      console.log('creating table with statement: ', text)
+      console.log('Creating table with statement: ', text)
       try {
+        await DBConnect.query({ text })
+        // Enable row-level security for table so its only accessible through
+        // data-view endpoints
         await DBConnect.query({
-          text,
-          value: [tableName],
+          text: `ALTER TABLE "${tableName}" ENABLE ROW LEVEL SECURITY;`,
         })
         // Also register new table in "data" table
         await DBConnect.query({

@@ -117,6 +117,7 @@ AND (status_is_current = TRUE
 -- Add triggers to trigger queue
 CREATE OR REPLACE FUNCTION public.add_event_to_trigger_queue ()
     RETURNS TRIGGER
+    SECURITY DEFINER
     AS $trigger_queue$
 BEGIN
     -- Prevent triggers being added to queue if another one for the same event
@@ -1949,6 +1950,22 @@ CREATE TABLE IF NOT EXISTS application_list_shape (
     assigner_action public.assigner_action
 );
 
+-- Special VIEW to list users using no security restrictions, which we join to
+-- the application list to yield associated applicants
+CREATE OR REPLACE VIEW public.user_list
+WITH (security_invoker = false)
+AS
+ SELECT id, first_name, last_name, full_name, username FROM "user";
+ 
+-- Since regular "user" table is hidden in GraphQL schema, we use this view to
+-- make a user list available to back-end data view queries, and we manipulate
+-- its name and foreign key references to be consistent with the standard "user"
+-- table, using smart tags (see postgraphile.tags.json5)
+CREATE OR REPLACE VIEW public.user_list_admin
+WITH (security_invoker = true)
+AS
+ SELECT * FROM "user";
+
 -- APPLICATION_LIST_VIEW
 -- Aggregated VIEW method of all data required for application list page
 -- Requires an empty table as setof return and smart comment to make orderBy work (https://github.com/graphile/graphile-engine/pull/378)
@@ -1964,7 +1981,7 @@ CREATE OR REPLACE FUNCTION application_list(userId int DEFAULT 0)
         app.name,
         stage_status.template_code, 
         stage_status.template_name,
-        "user".full_name as applicant,
+        user_list.full_name as applicant,
         organisation.name as org_name,
         stage_status.stage,
         stage_status.stage_colour,
@@ -1979,8 +1996,8 @@ CREATE OR REPLACE FUNCTION application_list(userId int DEFAULT 0)
         FROM application app
         LEFT JOIN application_stage_status_latest as stage_status
             ON app.id = stage_status.application_id
-        LEFT JOIN "user" 
-            ON app.user_id = "user".id
+        LEFT JOIN user_list 
+            ON app.user_id = user_list.id
         LEFT JOIN organisation
             ON app.org_id = organisation.id
         LEFT JOIN trigger_schedule ts ON app.id = ts.application_id

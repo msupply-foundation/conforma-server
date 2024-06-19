@@ -145,8 +145,8 @@ export const getEnvVariableReplacement = (input: string) => {
   return process.env[envKey] ?? input
 }
 
-// Validates an Error object and returns its message (default) or requested property, if
-// available
+// Validates an Error object and returns its message (default) or requested
+// property, if available
 export const errorMessage = (err: unknown, property?: string) => {
   if (!isObject(err)) return 'Unknown error'
 

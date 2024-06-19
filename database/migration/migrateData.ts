@@ -12,6 +12,7 @@ import { loadCurrentPrefs, setPreferences } from '../../src/components/preferenc
 // CONSTANTS
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
 const INDEX_FILENAME = '44_index.sql'
+const RLS_FILENAME = '45_row_level_security.sql'
 
 const { version } = config
 const isManualMigration: Boolean = process.argv[2] === '--migrate'
@@ -1128,6 +1129,18 @@ const migrateData = async () => {
       ALTER TABLE public.template
         ADD CONSTRAINT template_code_version_id_key UNIQUE (code, version_id);
       `)
+
+    console.log(' - Adding row-level security to all existing data tables')
+    await DB.secureDataTables()
+
+    console.log(' - Making all lookup tables visible via data views')
+    await DB.addDataViewsForLookupTables()
+
+    console.log(' - Adding "rawData" columns to data views')
+    await DB.changeSchema(`
+      ALTER TABLE data_view
+        ADD COLUMN IF NOT EXISTS raw_data_include_columns varchar[],
+        ADD COLUMN IF NOT EXISTS raw_data_exclude_columns varchar[]`)
   }
 
   // Other version migrations continue here...
@@ -1151,6 +1164,14 @@ const migrateData = async () => {
   // duplicate indexes creep in at some point, or if loading a snapshot that has
   // additional duplicates we haven't yet discovered
   await DB.removeDuplicateIndexes()
+
+  const rlsScript = readFileSync(
+    path.join(getAppEntryPointDir(), '../database/buildSchema/', RLS_FILENAME),
+    'utf-8'
+  )
+
+  console.log(' - Updating row-level security...')
+  await DB.changeSchema(rlsScript)
 
   // Finally, set the database version to the current version
   if (databaseVersionLessThan(version)) await DB.setDatabaseVersion(version)

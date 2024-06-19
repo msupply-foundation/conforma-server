@@ -55,7 +55,7 @@
     "dev_pg": "concurrently --kill-others-on-fail \"yarn dev\"  \"yarn pg\"",
     "dev_pg_permissions": "concurrently --kill-others-on-fail \"yarn dev\"  \"yarn pg_permissions\"",
     "database_init": "yarn snapshot use",
-    "postdatabase_init": "./database/turn_on_row_level_security.sh && ./database/post_data_insert.sh",
+    "postdatabase_init": "./database/post_data_insert.sh",
     "build_plugins": "node ./utils/pluginScripts/buildPlugins.js",
     "push_docs": "exec ./utils/push_docs_to_wiki.sh",
     "gui": "cd ./src/modules/expression-evaluator && yarn gui",
@@ -99,7 +99,7 @@
     "pg": "^8.11.1",
     "pg-diff-cli": "^2.4.0",
     "pluralize": "^8.0.0",
-    "postgraphile": "^4.8.0",
+    "postgraphile": "^4.13.0",
     "postgraphile-plugin-connection-filter": "^2.0.0",
     "semver": "^7.3.5",
     "sharp": "^0.29.3"
