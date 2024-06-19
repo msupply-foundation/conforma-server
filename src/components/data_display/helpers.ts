@@ -22,6 +22,7 @@ import {
   DataViewsTableResponse,
   FilterDefinition,
   GraphQLFilter,
+  SingleItemDetailResponse,
 } from './types'
 import { DataView, DataViewColumnDefinition } from '../../generated/graphql'
 import dataTypeMap, { JSDataType, PostgresDataType } from './postGresToJSDataTypes'
@@ -224,7 +225,9 @@ const buildColumnList = (
       : type === 'DETAIL'
       ? 'detailViewExcludeColumns'
       : type === 'RAW'
-      ? `rawDataExcludeColumns` ?? `tableViewExcludeColumns`
+      ? `rawDataExcludeColumns` ?? `rawDataIncludeColumns`
+        ? `tableViewExcludeColumns`
+        : `rawDataExcludeColumns`
       : dataView.filterIncludeColumns === null && dataView.filterExcludeColumns === null
       ? 'tableViewExcludeColumns'
       : 'filterExcludeColumns'
@@ -445,7 +448,7 @@ export const constructDetailsResponse = async (
   headerDefinition: ColumnDefinition,
   fetchedRecord: { id: number; [key: string]: any },
   linkedApplications: LinkedApplication[] | undefined
-): Promise<DataViewsDetailResponse> => {
+): Promise<DataViewsDetailResponse | SingleItemDetailResponse> => {
   const id = fetchedRecord.id
   const columns = columnDefinitionMasterList.map(({ columnName }) => columnName)
 
@@ -504,6 +507,10 @@ export const constructDetailsResponse = async (
     },
     {}
   )
+
+  // Don't need anything else for raw data item return
+  if (!headerDefinition) return { item }
+
   // Build header
   const header: DetailsHeader = {
     value: null,

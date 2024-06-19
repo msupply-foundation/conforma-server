@@ -116,6 +116,10 @@ export interface DataViewsDetailResponse {
   linkedApplications?: LinkedApplication[] | GraphQLQueryError
 }
 
+export interface SingleItemDetailResponse {
+  item: { [key: string]: any }
+}
+
 export interface GraphQLQueryError {
   error: true
   message: string

@@ -158,7 +158,7 @@ const routeDataViewDetail = async (request: any, reply: any) => {
   } = await buildAllColumnDefinitions({
     permissionNames,
     dataViewCode,
-    type: 'DETAIL',
+    type: returnRawData ? 'RAW' : 'DETAIL',
     userId,
     orgId,
   })
