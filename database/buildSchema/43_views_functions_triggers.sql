@@ -162,10 +162,6 @@ CREATE TRIGGER trigger_queue
 
 DROP FUNCTION IF EXISTS public.set_template_verision CASCADE; -- DEPRECATED
 
--- Enforce unique versionId per template type
-ALTER TABLE public.template
-    ADD UNIQUE (code, version_id);
-
 -- FUNCTION to make sure duplicated templates have 'DRAFT' status
 --   but only if there is another version with 'AVAILABLE' status
 CREATE OR REPLACE FUNCTION public.set_template_to_draft ()

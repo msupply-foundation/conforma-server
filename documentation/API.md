@@ -309,7 +309,7 @@ Returns (on success):
 
 GET: `/check-trigger?serial=<applicationSerial>`
 
-This endpoint is used by the front-end application loader to ensure that ALL triggers associated with an application (i.e. review assignments, reviews, verifications) are not runninng before the application data is fetched. This is so any mutations that cause Actions to run are all finished before any subsequent data is re-fetched, so the front-end shows all the changes.
+This endpoint is used by the front-end application loader to ensure that ALL triggers associated with an application (i.e. review assignments, reviews, verifications) are not running before the application data is fetched. This is so any mutations that cause Actions to run are all finished before any subsequent data is re-fetched, so the front-end shows all the changes.
 
 The front-end processes this data in the `useTriggers` hook.
 
