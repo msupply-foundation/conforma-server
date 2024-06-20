@@ -212,7 +212,9 @@ const buildColumnList = (
       : type === 'DETAIL'
       ? 'detailViewIncludeColumns'
       : type === 'RAW'
-      ? `rawDataIncludeColumns` ?? `tableViewIncludeColumns`
+      ? dataView.rawDataIncludeColumns
+        ? `rawDataIncludeColumns`
+        : `tableViewIncludeColumns`
       : dataView.filterIncludeColumns === null
       ? // If there are no specific filter columns defined, take the
         // full set of table columns
@@ -225,9 +227,11 @@ const buildColumnList = (
       : type === 'DETAIL'
       ? 'detailViewExcludeColumns'
       : type === 'RAW'
-      ? `rawDataExcludeColumns` ?? `rawDataIncludeColumns`
-        ? `tableViewExcludeColumns`
-        : `rawDataExcludeColumns`
+      ? dataView.rawDataExcludeColumns
+        ? `rawDataExcludeColumns`
+        : dataView.rawDataIncludeColumns
+        ? `rawDataExcludeColumns`
+        : `tableViewExcludeColumns`
       : dataView.filterIncludeColumns === null && dataView.filterExcludeColumns === null
       ? 'tableViewExcludeColumns'
       : 'filterExcludeColumns'
