@@ -31,6 +31,7 @@ export const baseJWT = { aud: 'postgraphile' }
     pp2pn3tp4_restrictTwo: "2"
   }
 */
+
 const compileJWT = (JWTelements: any) => {
   const { userId, orgId, username, templatePermissionRows, sessionId, isAdmin, isManager } =
     JWTelements
