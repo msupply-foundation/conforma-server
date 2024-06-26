@@ -97,6 +97,16 @@ export interface ReviewData {
     decision: string
     comment: string | null
   }
+  reviewAssignment?: {
+    id: number
+    reviewer?: {
+      id: number
+      username: string
+      firstName: string
+      lastName: string
+      email: string
+    }
+  }
 }
 
 // Comes from database query "getApplicationData"
