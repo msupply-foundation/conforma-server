@@ -1,7 +1,7 @@
 # DO NOT LAUNCH DOCKER-COMPOSE DIRECTLY. PLEASE USE THE `launch.sh` SCRIPT WHICH
 # WILL ENSURE ALL REQUIRED ENV VARIABLES ARE PRESENT
 
-# Last updated: 20/06/2024
+# Last updated: 27/06/2024
 
 version: '3.9'
 services:
@@ -30,6 +30,8 @@ services:
     tty: true
   grafana:
     image: 'grafana/grafana'
+    env_file:
+      - ${ENV_FILE}
     ports:
       - '${PORT_DASH}:3000'
     restart: always
