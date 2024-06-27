@@ -1,7 +1,7 @@
 # DO NOT LAUNCH DOCKER-COMPOSE DIRECTLY. PLEASE USE THE `launch.sh` SCRIPT WHICH
 # WILL ENSURE ALL REQUIRED ENV VARIABLES ARE PRESENT
 
-# Last updated: 14/06/2024
+# Last updated: 27/06/2024
 
 version: '3.9'
 services:
@@ -18,6 +18,7 @@ services:
       # passwords override will be ignored if <30 chars
       # REMOVE THIS LINE ON LIVE SERVERS!
       USER_PASSWORD_OVERRIDE: '${USER_PASSWORD_OVERRIDE:-"ignore"}'
+    restart: always
     volumes:
       - postgres:/var/lib/postgresql/16/main/
       - snapshots:/usr/src/conforma-server/build/database/_snapshots
@@ -29,8 +30,11 @@ services:
     tty: true
   grafana:
     image: 'grafana/grafana'
+    env_file:
+      - ${ENV_FILE}
     ports:
       - '${PORT_DASH}:3000'
+    restart: always
     volumes:
       - grafana:/var/lib/grafana
 

@@ -516,6 +516,7 @@ const databaseMethods = {
           SET menu_name = title;`,
       })
     }
+
     // Add dataView codes for lookup tables that don't have one
     const lookupTablesWithoutDataView = (
       await DBConnect.query({
@@ -552,7 +553,7 @@ const databaseMethods = {
           WHERE table_name = $1
           AND code = $2
         `,
-          values: [table.table_name, table.data_view_code],
+          values: [camelCase(table.table_name), table.data_view_code],
         })
       ).rows[0]
       if (existingCount.count === '0') {

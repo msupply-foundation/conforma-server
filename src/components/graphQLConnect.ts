@@ -121,16 +121,31 @@ class GraphQLdb {
             }
           }
         }
+        reviewAssignment(id: $reviewAssignmentId) {
+            id
+            reviewer {
+              id
+              username
+              firstName
+              lastName
+            }
+        }
       }
       `,
       { reviewAssignmentId }
     )
+    const review = data?.reviews?.nodes[0] || {}
+    const reviewAssignment = data?.reviewAssignment
     // User email not exposed on reviewer node, so must be queried separately
-    const reviewerId = data?.reviews?.nodes?.[0]?.reviewer?.id
+    const reviewerId = reviewAssignment?.reviewer?.id
     if (reviewerId) {
-      data.reviews.nodes[0].reviewer.email = (await this.getAdditionalUserData(reviewerId)).email
+      const additionalData = await this.getAdditionalUserData(reviewerId)
+      if (review && review?.reviewer) {
+        review.reviewer.email = additionalData.email
+      }
+      reviewAssignment.reviewer.email = additionalData.email
     }
-    return data?.reviews?.nodes[0] || null
+    return { ...review, reviewAssignment }
   }
 
   public isInternalOrg = async (orgId: number): Promise<boolean> => {

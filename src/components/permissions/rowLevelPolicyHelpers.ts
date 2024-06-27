@@ -31,6 +31,7 @@ export const baseJWT = { aud: 'postgraphile' }
     pp2pn3tp4_restrictTwo: "2"
   }
 */
+
 const compileJWT = (JWTelements: any) => {
   const { userId, orgId, username, templatePermissionRows, sessionId, isAdmin, isManager } =
     JWTelements
@@ -106,6 +107,10 @@ const updateRowPolicies = async () => {
     CREATE POLICY "create_all_review_assignment" ON review_assignment FOR INSERT WITH CHECK (true);
     CREATE POLICY "update_all_review_assignment" ON review_assignment FOR UPDATE USING(true) WITH CHECK (true);
     CREATE POLICY "delete_all_review_assignment" ON review_assignment FOR DELETE USING(true);
+
+    -- Need to add this here as graphile_user can be dropped earlier
+    GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA private TO graphile_user;
+    GRANT ALL PRIVILEGES ON SCHEMA private TO graphile_user;
     `,
   })
 

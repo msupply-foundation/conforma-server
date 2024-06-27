@@ -160,7 +160,6 @@ export const errorMessage = (err: unknown, property?: string) => {
 // Recursively searches an object for criteria defined in `matchFn`, and
 // modifies matching values according to `modifyFn`
 export const modifyValueInObject = (
-export const modifyValueInObject = (
   obj: object,
   matchFn: (key: string, value: object) => boolean,
   modifyFn: (value: object) => string
