@@ -1,4 +1,4 @@
-import { BasicObject, EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
+import { BasicObject, EvaluatorNode } from './modules/expression-evaluator'
 import {
   ActionQueueStatus,
   ApplicationOutcome,
@@ -7,9 +7,9 @@ import {
   TriggerQueueStatus,
 } from './generated/graphql'
 import { EmailOperationMode } from './config'
-import { RecurrenceRule } from 'node-schedule'
 import { PoolConfig } from 'pg'
 import { Schedulers } from './components/scheduler'
+import { ExternalApiConfigs } from './components/external-apis/types'
 
 export interface ActionInTemplate {
   code: string
@@ -97,6 +97,16 @@ export interface ReviewData {
     decision: string
     comment: string | null
   }
+  reviewAssignment?: {
+    id: number
+    reviewer?: {
+      id: number
+      username: string
+      firstName: string
+      lastName: string
+      email: string
+    }
+  }
 }
 
 // Comes from database query "getApplicationData"
@@ -140,14 +150,7 @@ export interface ActionApplicationData extends BaseApplicationData {
     appRootFolder: string
     filesFolder: string
     webHostUrl: string
-    SMTPConfig?: {
-      host: string
-      port: number
-      secure: boolean
-      user: string
-      defaultFromName: string
-      defaultFromEmail: string
-    }
+    SMTPConfig?: SMTPConfig
     emailMode: EmailOperationMode
     testingEmail: string | null
     productionHost: string | null
@@ -230,6 +233,8 @@ export interface TriggerQueueUpdatePayload {
   status: TriggerQueueStatus
 }
 
+export type DBOperationType = 'CREATE' | 'UPDATE' | 'DELETE'
+
 export interface User {
   userId: number
   firstName: string
@@ -267,21 +272,26 @@ export interface ScheduleObject {
   tz?: string | null
 }
 
+interface SMTPConfig {
+  host: string
+  port: number
+  secure: boolean
+  user: string
+  password: string
+  defaultFromName: string
+  defaultFromEmail: string
+}
+
 export interface ServerPreferences {
+  logoutAfterInactivity?: number // Minutes
   thumbnailMaxWidth?: number
   thumbnailMaxHeight?: number
   actionSchedule?: number[] | ScheduleObject
   hoursSchedule?: number[] // deprecated, please use actionSchedule
-  SMTPConfig?: {
-    host: string
-    port: number
-    secure: boolean
-    user: string
-    defaultFromName: string
-    defaultFromEmail: string
-  }
+  SMTPConfig?: SMTPConfig
   systemManagerPermissionName?: string
   managerCanEditLookupTables?: boolean
+  managerCanEditLocalisation?: boolean
   previewDocsMinKeepTime?: string
   fileCleanupSchedule?: number[] | ScheduleObject
   backupSchedule?: number[] | ScheduleObject
@@ -294,10 +304,13 @@ export interface ServerPreferences {
   testingEmail?: string
   locale?: string
   timezone?: string
+  externalApiConfigs?: ExternalApiConfigs
+  envVars?: string[]
 }
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
   // Must contain ALL keys of ServerPreferences -- please check
+  'logoutAfterInactivity',
   'thumbnailMaxHeight',
   'thumbnailMaxWidth',
   'actionSchedule',
@@ -316,6 +329,8 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'testingEmail',
   'locale',
   'timezone',
+  'externalApiConfigs',
+  'envVars',
 ]
 
 export interface WebAppPrefs {
@@ -325,9 +340,15 @@ export interface WebAppPrefs {
   brandLogoFileId?: string
   brandLogoOnDarkFileId?: string
   defaultListFilters?: string[]
+  userRegistrationCode?: string
   style?: { headerBgColor?: string }
   googleAnalyticsId?: string
   siteHost?: string
+}
+
+export interface Preferences {
+  server: ServerPreferences
+  web: WebAppPrefs
 }
 
 interface ConfigBase {

@@ -49,7 +49,7 @@ export const exportDataRows = (fieldMaps: FieldMapType[], rows: { [key: string]:
 }
 
 type PostgresDataType =
-  | 'varchar'
+  | 'citext'
   | 'boolean'
   | 'integer'
   | 'double precision'
@@ -83,14 +83,14 @@ const getType = (value: string): PostgresDataType | null => {
     return 'jsonb'
   } catch {}
 
-  // Default to string
-  return 'varchar'
+  // Default to string (case insensitive)
+  return 'citext'
 }
 
 const convertType = (value: string, type: PostgresDataType) => {
   if (value === '') return null
   switch (type) {
-    case 'varchar':
+    case 'citext':
       return value
     case 'boolean':
       return value.toLowerCase() === 'true'

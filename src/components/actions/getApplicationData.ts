@@ -1,6 +1,6 @@
 import { ActionApplicationData, ActionPayload, BaseApplicationData, ReviewData } from '../../types'
 import DBConnect from '../databaseConnect'
-import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
+import { BasicObject } from '../../modules/expression-evaluator'
 import { getAppEntryPointDir } from '../utilityFunctions'
 import config from '../../config'
 import { getUserInfo } from '../permissions/loginHelpers'
@@ -71,6 +71,9 @@ export const getApplicationData = async (input: {
       }
     : {}
 
+  const env = Object.fromEntries(
+    Object.entries(process.env).filter(([key, _]) => config.envVars?.includes(key))
+  )
   const environmentData = {
     appRootFolder: getAppEntryPointDir(),
     filesFolder: config.filesFolder,
@@ -80,6 +83,7 @@ export const getApplicationData = async (input: {
     isLiveServer: config.isLiveServer,
     emailMode: config?.emailMode,
     testingEmail: config?.testingEmail ?? null,
+    env,
   }
 
   const sectionCodes = (await DBConnect.getApplicationSections(applicationId)).map(

@@ -41,6 +41,29 @@ class GraphQLdb {
     return data.data
   }
 
+  public getAdditionalUserData = async (userId: number) => {
+    const data = await this.gqlQuery(
+      `
+      query getUser($userId: Int!) {
+        users(condition: { id: $userId }) {
+          nodes { 
+            firstName
+            lastName
+            fullName
+            username
+            email
+            address
+            country
+            dateOfBirth
+            phone
+          }
+        }
+      }`,
+      { userId }
+    )
+    return data.users.nodes[0]
+  }
+
   public getReviewData = async (reviewId: number) => {
     const data = await this.gqlQuery(
       `
@@ -56,7 +79,6 @@ class GraphQLdb {
             username
             firstName
             lastName
-            email
           }
           latestDecision {
               decision
@@ -67,6 +89,11 @@ class GraphQLdb {
       `,
       { id: reviewId }
     )
+    // User email not exposed on reviewer node, so must be queried separately
+    const reviewerId = data?.review?.reviewer?.id
+    if (reviewerId) {
+      data.review.reviewer.email = (await this.getAdditionalUserData(reviewerId)).email
+    }
     return data.review
   }
 
@@ -87,7 +114,6 @@ class GraphQLdb {
               username
               firstName
               lastName
-              email
             }
             latestDecision {
                 decision
@@ -95,11 +121,31 @@ class GraphQLdb {
             }
           }
         }
+        reviewAssignment(id: $reviewAssignmentId) {
+            id
+            reviewer {
+              id
+              username
+              firstName
+              lastName
+            }
+        }
       }
       `,
       { reviewAssignmentId }
     )
-    return data?.reviews?.nodes[0] || null
+    const review = data?.reviews?.nodes[0] || {}
+    const reviewAssignment = data?.reviewAssignment
+    // User email not exposed on reviewer node, so must be queried separately
+    const reviewerId = reviewAssignment?.reviewer?.id
+    if (reviewerId) {
+      const additionalData = await this.getAdditionalUserData(reviewerId)
+      if (review && review?.reviewer) {
+        review.reviewer.email = additionalData.email
+      }
+      reviewAssignment.reviewer.email = additionalData.email
+    }
+    return { ...review, reviewAssignment }
   }
 
   public isInternalOrg = async (orgId: number): Promise<boolean> => {

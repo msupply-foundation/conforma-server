@@ -1,6 +1,7 @@
 import databaseMethods from './databaseMethods'
 import { ActionPluginType } from '../../types'
 import { ActionQueueStatus, Reviewability } from '../../../src/generated/graphql'
+import { errorMessage } from '../../../src/components/utilityFunctions'
 const isEqual = require('deep-equal')
 interface Response {
   id: number
@@ -54,7 +55,7 @@ const trimResponses: ActionPluginType = async ({ parameters, applicationData, DB
       if (
         (previousResponse !== null && isEqual(latestResponse.value, previousResponse?.value)) ||
         // Application Responses
-        (latestResponse.value === null && latestResponse.is_reviewable !== Reviewability.Always) ||
+        (latestResponse.value === null && latestResponse.reviewability !== Reviewability.Always) ||
         // Review responses
         latestResponse.value?.decision === null
       )
@@ -95,7 +96,7 @@ const trimResponses: ActionPluginType = async ({ parameters, applicationData, DB
       },
     }
   } catch (error) {
-    console.log(error.message)
+    console.log(errorMessage(error))
     return {
       status: ActionQueueStatus.Fail,
       error_log: 'There was a problem trimming duplicated responses.',

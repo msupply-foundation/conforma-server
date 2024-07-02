@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:experimental
 #DOCKER_BUILDKIT=1 docker build --progress=plain -t allbuild --secret id=githubtoken,src=../../../githubtoken.txt .
 
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 RUN apt update
 RUN apt-get update
@@ -27,10 +27,11 @@ RUN apt-get install lsof -y
 RUN apt-get install nginx -y
 
 # --- LIBRE OFFICE
+RUN apt-get update
 RUN apt install libreoffice -y
 
 # --- NODE and NPX
-ARG NODE_VERSION=14
+ARG NODE_VERSION
 # https://github.com/nodesource/distributions/blob/master/README.md -> Node.js LTS (v14.x): -> # Using Debian, as root
 RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash 
 RUN apt-get install -y nodejs
@@ -38,9 +39,9 @@ RUN node -v
 RUN npx -v
 
 # --- POSTGRES 
-ARG POSTGRES_VERSION=12
+ARG POSTGRES_VERSION
 # https://www.postgresql.org/download/linux/ubuntu/
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list.d/pgdg.list
+RUN echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list.d/pgdg.list
 RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add
 RUN apt-get update
 # make sure postgresql install is prompt free
@@ -65,34 +66,40 @@ RUN git clone -b ${WEB_APP_BRANCH} https://github.com/openmsupply/conforma-web-a
 
 # --- BUILD SERVER
 WORKDIR /usr/src/conforma-server
-RUN cp .npmrc .npmrc_backup
-RUN echo "" >> .npmrc
-RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
+# RUN cp .npmrc .npmrc_backup
+# RUN echo "" >> .npmrc
+# RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
 RUN yarn install
 RUN yarn build
-RUN rm .npmrc && mv .npmrc_backup .npmrc
+# RUN rm .npmrc && mv .npmrc_backup .npmrc
 
 # --- BUILD WEB APP
 WORKDIR /usr/src/conforma-web-app
-RUN cp .npmrc .npmrc_backup
-RUN echo "" >> .npmrc
-RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
+# RUN cp .npmrc .npmrc_backup
+# RUN echo "" >> .npmrc
+# RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
 RUN yarn install
 RUN yarn build
-RUN rm .npmrc && mv .npmrc_backup .npmrc
+# RUN rm .npmrc && mv .npmrc_backup .npmrc
 
 # --- ADD NGINX CONFIG
 COPY nginx_config/conforma.conf /etc/nginx/conf.d/
 
 # --- ADD POSTGRES CONFIG
 WORKDIR /etc/postgresql/${POSTGRES_VERSION}/main
-RUN echo "listen_addresses = '*'" >> postgresql.conf
+COPY postgres_config/postgresql.conf .
+# RUN echo "listen_addresses = '*'" >> postgresql.conf
 COPY postgres_config/pg_hba.conf .
 
-# --- INITIALISE DATABASE (core templates)
+# --- INITIALISE DATABASE (default: core templates)
+ARG INITIAL_SNAPSHOT=""
+WORKDIR /usr/src/conforma-server/database/_snapshots
+COPY snapshots/${INITIAL_SNAPSHOT}/ ./${INITIAL_SNAPSHOT}
+
 WORKDIR /usr/src/initialise_database
 COPY database.sh .
-RUN ./database.sh
+RUN ./database.sh ${INITIAL_SNAPSHOT}
+RUN rm -rf /usr/src/conforma-server/database/_snapshots/${INITIAL_SNAPSHOT}
 
 # --- CREATE LOG DIR
 WORKDIR /var/log/conforma

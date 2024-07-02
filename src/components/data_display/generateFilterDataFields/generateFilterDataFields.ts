@@ -1,10 +1,10 @@
 import databaseMethods from './databaseMethods'
 import DBConnect from '../../databaseConnect'
-import evaluateExpression from '@openmsupply/expression-evaluator'
+import evaluateExpression from '../../../modules/expression-evaluator'
 import functions from '../../actions/evaluatorFunctions'
 import { queryDataTable, updateRecord } from '../gqlDynamicQueries'
 import config from '../../../config'
-import { getValidTableName } from '../../utilityFunctions'
+import { errorMessage, getValidTableName } from '../../utilityFunctions'
 import fetch from 'node-fetch'
 import { camelCase, snakeCase } from 'lodash'
 // @ts-ignore
@@ -127,8 +127,7 @@ export const generateFilterDataFields = async (table: string, fullUpdate: boolea
         blockSize,
         fetchedCount,
         'id',
-        true,
-        ''
+        true
       )
 
       if (error) return error
@@ -168,6 +167,6 @@ export const generateFilterDataFields = async (table: string, fullUpdate: boolea
       recordsProcessed: fetchedCount,
     }
   } catch (err) {
-    return { success: false, error: err.message }
+    return { success: false, error: errorMessage(err) }
   }
 }

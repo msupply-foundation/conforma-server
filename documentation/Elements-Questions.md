@@ -1,1 +1,1 @@
-See [front-end docs](https://github.com/openmsupply/conforma-web-app/wiki/Element-Type-Specs) for Form element specifications.
+See [front-end docs](https://github.com/msupply-foundation/conforma-web-app/wiki/Element-Type-Specs) for Form element specifications.

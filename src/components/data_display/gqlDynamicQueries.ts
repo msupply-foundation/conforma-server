@@ -2,7 +2,7 @@ import DBConnect from '../databaseConnect'
 import { plural } from 'pluralize'
 import { camelCase, snakeCase, upperFirst } from 'lodash'
 import { LinkedApplication } from './types'
-import { capitaliseFirstLetter } from '../utilityFunctions'
+import { capitaliseFirstLetter, errorMessage } from '../utilityFunctions'
 
 export const queryDataTable = async (
   tableName: string,
@@ -11,22 +11,23 @@ export const queryDataTable = async (
   first: number,
   offset: number,
   orderBy: string,
-  ascending: boolean,
-  authHeaders: string
+  ascending: boolean
 ) => {
   const tableNamePlural = plural(tableName)
   const filterType = upperFirst(camelCase(tableName)) + 'Filter'
   const fieldNameString = fieldNames.join(', ')
-  const orderByType = `${snakeCase(orderBy).toUpperCase()}_${ascending ? 'ASC' : 'DESC'}`
+  const orderByType = orderBy.endsWith('_DESC')
+    ? snakeCase(orderBy).toUpperCase()
+    : `${snakeCase(orderBy).toUpperCase()}_${ascending ? 'ASC' : 'DESC'}`
   const variables = { first, offset, filter: gqlFilters }
   const graphQLquery = `query getDataRecords($first: Int!, $offset: Int!, $filter: ${filterType}) { ${tableNamePlural}(first: $first, offset: $offset, orderBy: ${orderByType}, filter: $filter) { nodes { ${fieldNameString} }, totalCount}}`
 
   let queryResult
   try {
-    queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
+    queryResult = await DBConnect.gqlQuery(graphQLquery, variables)
   } catch (err) {
     return {
-      error: { error: true, message: 'Problem with Data Table query', detail: err.message },
+      error: { error: true, message: 'Problem with Data Table query', detail: errorMessage(err) },
     }
   }
   const fetchedRecords = queryResult?.[tableNamePlural]?.nodes
@@ -38,8 +39,7 @@ export const queryDataTableSingleItem = async (
   tableName: string,
   fieldNames: string[],
   gqlFilters: object,
-  id: number,
-  authHeaders: string
+  id: number
 ) => {
   const tableNamePlural = plural(tableName)
   const filterType = upperFirst(camelCase(tableName)) + 'Filter'
@@ -48,9 +48,9 @@ export const queryDataTableSingleItem = async (
   const graphQLquery = `query getDataRecord($id:Int!, $filter:${filterType}){ ${tableNamePlural}(condition: {id: $id}, filter: $filter) { nodes {${fieldNameString}}}}`
   let queryResult
   try {
-    queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
+    queryResult = await DBConnect.gqlQuery(graphQLquery, variables)
   } catch (err) {
-    return { error: true, message: 'Problem with Data Item query', detail: err.message }
+    return { error: true, message: 'Problem with Data Item query', detail: errorMessage(err) }
   }
   const fetchedRecords = queryResult?.[tableNamePlural]?.nodes
   if (fetchedRecords === undefined)
@@ -78,7 +78,9 @@ export const queryLinkedApplications = async (id: number, tableName: string) => 
   try {
     queryResult = await DBConnect.gqlQuery(graphQLquery, { id })
   } catch (err) {
-    return [{ error: true, message: 'Problem with Linked Applications query', detail: err.message }]
+    return [
+      { error: true, message: 'Problem with Linked Applications query', detail: errorMessage(err) },
+    ]
   }
 
   const linkedApplications: LinkedApplication[] = queryResult?.[joinTableName]?.nodes.map(
@@ -101,8 +103,7 @@ export const queryFilterList = async (
   columns: string[],
   gqlFilters: object,
   first: number,
-  offset: number,
-  authHeaders: string
+  offset: number
 ) => {
   const tableNamePlural = plural(tableName)
   const filterType = upperFirst(camelCase(tableName)) + 'Filter'
@@ -113,10 +114,10 @@ export const queryFilterList = async (
 
   let queryResult
   try {
-    queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
+    queryResult = await DBConnect.gqlQuery(graphQLquery, variables)
   } catch (err) {
     return {
-      error: { error: true, message: 'Problem with Filter List query', detail: err.message },
+      error: { error: true, message: 'Problem with Filter List query', detail: errorMessage(err) },
     }
   }
 
@@ -141,7 +142,7 @@ export const updateRecord = async (
     queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
   } catch (err) {
     return {
-      error: { error: true, message: 'Problem with Filter List query', detail: err.message },
+      error: { error: true, message: 'Problem with Filter List query', detail: errorMessage(err) },
     }
   }
 }

@@ -1,11 +1,12 @@
 import { TriggerPayload, ActionResult } from '../../types'
 import DBConnect from '../databaseConnect'
 import { actionLibrary } from '../pluginsConnect'
-import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
+import { EvaluatorNode } from '../../modules/expression-evaluator'
 import { getCoreActions } from './coreActions'
 import { executeAction } from './executeAction'
 import { ActionQueueStatus, TriggerQueueStatus } from '../../generated/graphql'
 import { swapOutAliasedAction } from './helpers'
+import { errorMessage } from '../utilityFunctions'
 
 // Dev config
 const showActionOutcomeLog = false
@@ -122,7 +123,7 @@ export async function processTrigger(payload: TriggerPayload): Promise<ActionRes
         action: action.action_code,
         status: ActionQueueStatus.Fail,
         output: null,
-        errorLog: err.message,
+        errorLog: errorMessage(err),
       })
       actionFailed = action.action_code
     }

@@ -1,20 +1,74 @@
+import { errorMessage } from '../../../src/components/utilityFunctions'
 import config from '../../../src/config'
 
 const DATA_TABLE_PREFIX = config.dataTablePrefix
 
+interface UserData {
+  userId?: number | null
+  orgId?: number | null
+  username?: string
+  applicationId?: number | null
+}
+
+interface ChangeLogOptions extends UserData {
+  noChangeLog: boolean
+  comment?: string
+}
+
 const databaseMethods = (DBConnect: any) => {
-  const createRecord = async (tableName: string, record: { [key: string]: any }) => {
+  const getCurrentData = async (
+    tableName: string,
+    recordId: number,
+    newData: Record<string, any> | null
+  ) => {
+    const text = newData
+      ? `
+      SELECT ${Object.keys(newData).join(', ')} FROM "${tableName}"
+      WHERE id = $1
+    `
+      : `
+      SELECT * FROM "${tableName}"
+      WHERE id = $1
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [recordId] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  const createRecord = async (
+    tableName: string,
+    record: { [key: string]: any },
+    changeLogOptions: ChangeLogOptions
+  ) => {
     const text = `
       INSERT INTO "${tableName}" ${getKeys(record)} 
       VALUES (${DBConnect.getValuesPlaceholders(record)})
       RETURNING *
       `
+    const { userId, orgId, username, applicationId, noChangeLog, comment } = changeLogOptions
     try {
       const result = await DBConnect.query({ text, values: Object.values(record) })
       const firstRow = result.rows[0]
+      if (!noChangeLog)
+        await DBConnect.addToChangelog(
+          tableName,
+          firstRow.id,
+          'CREATE',
+          null,
+          record,
+          userId,
+          orgId,
+          username,
+          applicationId,
+          comment
+        )
       return { success: true, [tableName]: firstRow, recordId: firstRow.id }
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   }
@@ -29,44 +83,138 @@ const databaseMethods = (DBConnect: any) => {
         const result = await DBConnect.query({ text, values: [value] })
         return result?.rows.map(({ id }: { id: number }) => id)
       } catch (err) {
-        console.log(err.message)
+        console.log(errorMessage(err))
         throw err
       }
     },
-    updateRecord: async (tableName: string, id: number, record: { [key: string]: any }) => {
-      const placeholders = DBConnect.getValuesPlaceholders(record)
+    updateRecord: async (
+      tableName: string,
+      id: number,
+      record: Record<string, any>,
+      changeLogOptions: ChangeLogOptions
+    ) => {
+      const { userId, orgId, username, applicationId, noChangeLog, comment } = changeLogOptions
+
+      let oldData: Record<string, any> = {}
+      const newData = { ...record }
+      try {
+        oldData = await getCurrentData(tableName, id, record)
+
+        // We only want to update data that has changed, so compare first
+        Object.keys(oldData).forEach((key) => {
+          if (key in newData && JSON.stringify(oldData[key]) === JSON.stringify(newData[key])) {
+            delete oldData[key]
+            delete newData[key]
+          }
+        })
+      } catch (err) {
+        console.log(errorMessage(err))
+        throw err
+      }
+
+      const placeholders = DBConnect.getValuesPlaceholders(newData)
       const matchValuePlaceholder = `$${placeholders.length + 1}`
 
-      const text = `
-      UPDATE "${tableName}" SET ${getKeys(record, true)}
-      = (${placeholders})
-      WHERE id = ${matchValuePlaceholder}
-      RETURNING *
+      const anythingToUpdate = Object.keys(newData).length > 0
+      const text = anythingToUpdate
+        ? `
+        UPDATE "${tableName}" SET ${getKeys(newData, true)}
+        = (${placeholders})
+        WHERE id = ${matchValuePlaceholder}
+        RETURNING *
       `
+        : `
+        SELECT * FROM "${tableName}"
+        WHERE id = ${matchValuePlaceholder}
+      `
+
       // Adding extra diagnostic logs here due to odd server bug, where the
       // serial wasn't being written on application create due to database
       // duplicate foreign key error
       console.log('Attempting query:', text)
-      console.log('With values:', [...Object.values(record), id])
+      console.log('With values:', [...Object.values(newData), id])
       try {
         const result = await DBConnect.query({
           text,
-          values: [...Object.values(record), id],
+          values: [...Object.values(newData), id],
         })
-        return { success: true, [tableName]: result.rows[0] }
+        if (!noChangeLog && anythingToUpdate)
+          await DBConnect.addToChangelog(
+            tableName,
+            id,
+            'UPDATE',
+            oldData,
+            newData,
+            userId,
+            orgId,
+            username,
+            applicationId,
+            comment
+          )
+        return {
+          success: true,
+          [tableName]: result.rows[0],
+          log: !anythingToUpdate ? `WARNING: No data changed (${tableName} id: ${id})` : '',
+        }
       } catch (err) {
-        console.log(err.message)
+        console.log(errorMessage(err))
+        throw err
+      }
+    },
+    deleteRecord: async (tableName: string, id: number, changeLogOptions: ChangeLogOptions) => {
+      const { userId, orgId, username, applicationId, noChangeLog, comment } = changeLogOptions
+
+      let oldData: Record<string, any> = {}
+
+      try {
+        oldData = await getCurrentData(tableName, id, null)
+      } catch (err) {
+        console.log(errorMessage(err))
+        throw err
+      }
+
+      const text = `
+      DELETE FROM "${tableName}"
+      WHERE id = $1
+      RETURNING *
+    `
+      try {
+        const result = await DBConnect.query({
+          text,
+          values: [id],
+        })
+        if (!noChangeLog)
+          await DBConnect.addToChangelog(
+            tableName,
+            id,
+            'DELETE',
+            oldData,
+            {},
+            userId,
+            orgId,
+            username,
+            applicationId,
+            comment
+          )
+        return {
+          success: true,
+          [tableName]: result.rows[0],
+        }
+      } catch (err) {
+        console.log(errorMessage(err))
         throw err
       }
     },
     createRecord,
     createTable: async (tableName: string, tableNameOriginal: string) => {
       const text = `CREATE TABLE "${tableName}" ( id serial PRIMARY KEY)`
-      console.log('creating table with statement: ', text)
+      console.log('Creating table with statement: ', text)
       try {
+        await DBConnect.query({ text })
+        // Enable row-level security for table so its only accessible through
+        // data-view endpoints
         await DBConnect.query({
-          text,
-          value: [tableName],
+          text: `ALTER TABLE "${tableName}" ENABLE ROW LEVEL SECURITY;`,
         })
         // Also register new table in "data" table
         await DBConnect.query({
@@ -84,7 +232,7 @@ const databaseMethods = (DBConnect: any) => {
           values: [tableName, tableNameOriginal, tableName.replace(DATA_TABLE_PREFIX, '')],
         })
       } catch (err) {
-        console.log(err.message)
+        console.log(errorMessage(err))
         throw new Error(`Failed to create table: ${tableName}`)
       }
     },
@@ -104,12 +252,12 @@ const databaseMethods = (DBConnect: any) => {
       try {
         await DBConnect.query({ text })
       } catch (err) {
-        console.log(err.message)
+        console.log(errorMessage(err))
         throw new Error(`Failed to create join table: ${joinTableName}`)
       }
-      // Create entry in the joiin table
+      // Create entry in the join table
       const joinTableRecord = { application_id: applicationId, [`${tableName}_id`]: recordId }
-      await createRecord(joinTableName, joinTableRecord)
+      await createRecord(joinTableName, joinTableRecord, { noChangeLog: true })
     },
     createFields: async (
       tableName: string,
@@ -126,7 +274,7 @@ const databaseMethods = (DBConnect: any) => {
           value: [tableName],
         })
       } catch (err) {
-        console.log(err.message)
+        console.log(errorMessage(err))
         throw new Error(
           `Failed to create fields in table table: ${tableName} ${JSON.stringify(
             fieldsToCreate,

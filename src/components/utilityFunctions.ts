@@ -14,7 +14,7 @@ export function getAppEntryPointDir() {
 }
 
 // Returns true if input is a "proper" object (i.e. not an array or null)
-export const isObject = (element: unknown) =>
+export const isObject = (element: unknown): element is Object =>
   typeof element === 'object' && !Array.isArray(element) && element !== null
 
 // Convert object keys to camelCase
@@ -126,9 +126,53 @@ const ALLOWED_TABLE_NAMES = config.allowedTableNames
 
 export const getValidTableName = (inputName: string | undefined): string => {
   if (!inputName) throw new Error('Missing table name')
-  if (ALLOWED_TABLE_NAMES.includes(inputName)) return inputName
   const tableName = snakeCase(singular(inputName))
+  if (ALLOWED_TABLE_NAMES.includes(tableName)) return tableName
   const namePattern = new RegExp(`^${DATA_TABLE_PREFIX}.+`)
 
   return namePattern.test(tableName) ? tableName : `${DATA_TABLE_PREFIX}${tableName}`
+}
+
+// Replace a string of the form "env.<KEY>" with environment variable <KEY>
+// - Used for references in configurations to sensitive data such as
+//   passwords/keys
+export const getEnvVariableReplacement = (input: string) => {
+  const match = input.match(/^env\.(\w+)$/)
+  if (!match) return input
+
+  const envKey = match[1]
+
+  return process.env[envKey] ?? input
+}
+
+// Validates an Error object and returns its message (default) or requested
+// property, if available
+export const errorMessage = (err: unknown, property?: string) => {
+  if (!isObject(err)) return 'Unknown error'
+
+  if (!property && 'message' in err) return err.message as string
+
+  if (property && property in err) return (err as any)[property]
+
+  return 'Unknown error'
+}
+
+// Recursively searches an object for criteria defined in `matchFn`, and
+// modifies matching values according to `modifyFn`
+export const modifyValueInObject = (
+  obj: object,
+  matchFn: (key: string, value: object) => boolean,
+  modifyFn: (value: object) => string
+): object => {
+  if (!isObject(obj)) {
+    return obj
+  }
+
+  return Object.entries(obj).reduce(
+    (acc, [key, value]) => ({
+      ...acc,
+      [key]: matchFn(key, value) ? modifyFn(value) : modifyValueInObject(value, matchFn, modifyFn),
+    }),
+    {} as object
+  )
 }

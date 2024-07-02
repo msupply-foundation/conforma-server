@@ -74,13 +74,15 @@ CREATE INDEX IF NOT EXISTS "i_review_response_application_response_id_fkey" ON r
 
 CREATE INDEX IF NOT EXISTS "i_review_response_original_review_response_id_fkey" ON review_response (original_review_response_id);
 
-CREATE INDEX IF NOT EXISTS "i_review_response_review_id_fkey" ON "review_response" (review_id);
+CREATE INDEX IF NOT EXISTS "i_review_response_review_id_fkey" ON review_response (review_id);
 
 CREATE INDEX IF NOT EXISTS "i_review_response_review_response_link_id_fkey" ON review_response (review_response_link_id);
 
 CREATE INDEX IF NOT EXISTS "i_review_response_template_element_id_fkey" ON review_response (template_element_id);
 
 CREATE INDEX IF NOT EXISTS "i_review_status_history_review_id_fkey" ON review_status_history (review_id);
+
+CREATE INDEX IF NOT EXISTS "i_review_status_history_status" ON review_status_history (status);
 
 CREATE INDEX IF NOT EXISTS "i_template_template_category_id_fkey" ON TEMPLATE (template_category_id);
 
@@ -158,3 +160,7 @@ CREATE INDEX IF NOT EXISTS "i_application_response_value_is_null" ON application
 
 CREATE INDEX IF NOT EXISTS "i_application_response_value_is_not_null" ON application_response ((value IS NOT NULL));
 
+-- Additional indexes for application_reviewer_action
+CREATE INDEX IF NOT EXISTS "i_application_reviewer_action_user_id" ON application_reviewer_action (user_id);
+
+CREATE INDEX IF NOT EXISTS "i_application_reviewer_action_application_id" ON application_reviewer_action (application_id);

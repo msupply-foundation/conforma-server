@@ -1,3 +1,5 @@
+import { errorMessage } from '../../../src/components/utilityFunctions'
+
 const databaseMethods = (DBConnect: any) => ({
   deleteApplicationResponses: async (responsesToDelete: number[]) => {
     const text = `DELETE from application_response
@@ -9,7 +11,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [responsesToDelete] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -23,7 +25,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [responsesToDelete] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -42,7 +44,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [applicationId, responsesToUpdate] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },
@@ -63,7 +65,7 @@ const databaseMethods = (DBConnect: any) => ({
       const result = await DBConnect.query({ text, values: [reviewId, responsesToUpdate] })
       return result.rows
     } catch (err) {
-      console.log(err.message)
+      console.log(errorMessage(err))
       throw err
     }
   },

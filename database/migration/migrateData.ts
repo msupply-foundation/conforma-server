@@ -6,11 +6,13 @@ import { execSync } from 'child_process'
 import path from 'path'
 import { readFileSync } from 'fs'
 import bcrypt from 'bcrypt'
-import { getAppEntryPointDir } from '../../src/components/utilityFunctions'
+import { errorMessage, getAppEntryPointDir } from '../../src/components/utilityFunctions'
+import { loadCurrentPrefs, setPreferences } from '../../src/components/preferences'
 
 // CONSTANTS
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
 const INDEX_FILENAME = '44_index.sql'
+const RLS_FILENAME = '45_row_level_security.sql'
 
 const { version } = config
 const isManualMigration: Boolean = process.argv[2] === '--migrate'
@@ -42,7 +44,7 @@ const migrateData = async () => {
     console.log(' - Add system_info TABLE')
 
     await DB.changeSchema(`
-      CREATE TABLE public.system_info (
+      CREATE TABLE IF NOT EXISTS public.system_info (
         id serial PRIMARY KEY,
         name varchar NOT NULL,
         value jsonb DEFAULT '{}',
@@ -60,7 +62,7 @@ const migrateData = async () => {
     console.log(' - Add review_assignment TABLE field: assigned_sections')
 
     await DB.changeSchema(`ALTER TABLE review_assignment
-        ADD COLUMN assigned_sections varchar[] DEFAULT array[]::varchar[];`)
+        ADD COLUMN IF NOT EXISTS assigned_sections varchar[] DEFAULT array[]::varchar[];`)
 
     // Update or create review_assignment assigned_sections Trigger/Function
     console.log(' - Add review_assignment_trigger2 TRIGGER field: assigned_sections')
@@ -91,15 +93,15 @@ const migrateData = async () => {
     } catch (err) {
       console.log(
         "Assigned sections couldn't be updated, presumably already done:",
-        err.message,
+        errorMessage(err),
         '\n'
       )
     }
 
     // DROP review_question_assignment and related views/fields
-    console.log(' - Remove column in review_reponse TABLE: review_question_assignment_id')
+    console.log(' - Remove column in review_response TABLE: review_question_assignment_id')
     await DB.changeSchema(`ALTER TABLE review_response
-        DROP COLUMN review_question_assignment_id;`)
+        DROP COLUMN IF EXISTS review_question_assignment_id;`)
 
     console.log(' - Remove review_question_assignment_section VIEW')
     await DB.changeSchema(`DROP VIEW IF EXISTS
@@ -574,7 +576,8 @@ const migrateData = async () => {
     `)
 
     console.log(' - Add case-insensitive unique constraint to usernames')
-    //drop views relating to username temporarily so column can be changed
+    // Drop views relating to username temporarily so column can be changed --
+    // will re-created in 43_views_functions_indexes
     await DB.changeSchema(`
       DROP VIEW IF EXISTS permissions_all;
       DROP VIEW IF EXISTS user_org_join`)
@@ -833,6 +836,313 @@ const migrateData = async () => {
     await DB.updateFileSizes()
   }
 
+  // v0.7.0
+  if (databaseVersionLessThan('0.7.0')) {
+    console.log('Migrating to v0.7.0...')
+
+    console.log(' - Updating SMTP config in preferences with password field')
+    try {
+      const prefs = await loadCurrentPrefs()
+      if (prefs?.server?.SMTPConfig && !prefs.server.SMTPConfig.password) {
+        prefs.server.SMTPConfig.password = 'env.SMTP_PASSWORD'
+        await setPreferences(prefs)
+      }
+    } catch (err) {
+      console.log("Couldn't update preferences -- please fix manually")
+    }
+  }
+
+  // v0.8.0
+  if (databaseVersionLessThan('0.8.0')) {
+    console.log('Migrating to v0.8.0...')
+
+    console.log(' - Changing some text fields in user/org to case-insensitive')
+    await DB.changeSchema(`
+      ALTER TABLE public.user   
+        DROP COLUMN IF EXISTS full_name;
+      DROP VIEW IF EXISTS user_org_join;
+      ALTER TABLE public.user
+        ALTER COLUMN first_name TYPE citext;
+      ALTER TABLE public.user
+        ALTER COLUMN last_name TYPE citext;
+      ALTER TABLE public.user
+        ADD COLUMN IF NOT EXISTS full_name citext GENERATED ALWAYS AS (first_name || ' ' || last_name) STORED;
+    `)
+    await DB.changeSchema(`
+      DROP VIEW IF EXISTS permissions_all;    
+      ALTER TABLE public.organisation   
+        ALTER COLUMN name TYPE citext;
+    `)
+
+    console.log(' - Changing text fields in data tables to case-insensitive')
+    await DB.convertDataTablesToCaseInsensitive()
+
+    console.log(' - Adding data_changelog table')
+    await DB.changeSchema(`
+      CREATE TYPE public.changelog_type AS ENUM (
+        'CREATE',
+        'UPDATE',
+        'DELETE'
+          );
+    `)
+    await DB.changeSchema(`
+      CREATE TABLE IF NOT EXISTS data_changelog (
+        id serial PRIMARY KEY,
+        data_table varchar NOT NULL,
+        record_id INTEGER NOT NULL,
+        update_type changelog_type NOT NULL,
+        timestamp timestamptz DEFAULT NOW(),
+        old_data jsonb,
+        new_data jsonb,
+        user_id integer REFERENCES public.user (id) ON DELETE CASCADE,
+        org_id integer REFERENCES public.organisation (id) ON DELETE CASCADE,
+        username citext REFERENCES public.user (username)
+          ON DELETE CASCADE ON UPDATE CASCADE,
+        application_id integer REFERENCES public.application (id) ON DELETE CASCADE
+      );
+    `)
+
+    console.log(' - Adding priority fields to templates and template categories')
+    await DB.changeSchema(`
+      ALTER TABLE public.template   
+        ADD COLUMN IF NOT EXISTS priority INTEGER;
+      ALTER TABLE public.template_category   
+        ADD COLUMN IF NOT EXISTS priority INTEGER;
+    `)
+
+    console.log(' - Adding hide-if-empty option to data view column definitions')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_view_column_definition   
+        ADD COLUMN IF NOT EXISTS hide_if_null BOOLEAN DEFAULT false;
+    `)
+
+    console.log(' - Adding single-reviewer option to stage review level')
+    await DB.changeSchema(`
+      ALTER TABLE public.template_stage_review_level   
+        ADD COLUMN IF NOT EXISTS single_reviewer_all_sections BOOLEAN
+        NOT NULL DEFAULT false;
+    `)
+    console.log(
+      ' - Update existing review_assignments with correct review_level_id, and make (stageId, number) unique'
+    )
+    await DB.updateLevelIdInReviewAssignments()
+
+    console.log(' - Adding "comment" field to data_changelog')
+    await DB.changeSchema(`
+      ALTER TABLE public.data_changelog   
+        ADD COLUMN IF NOT EXISTS comment VARCHAR;
+    `)
+
+    console.log(' - Removing all illegal generated columns and replacing with standard columns')
+    // See
+    // https://github.com/msupply-foundation/conforma-server/issues/1090#issuecomment-2005558735
+    await DB.changeSchema(`
+      ALTER TABLE public.template_element
+        DROP COLUMN IF EXISTS template_code,
+        DROP COLUMN IF EXISTS template_version;
+      ALTER TABLE public.template_element   
+        ADD COLUMN IF NOT EXISTS template_code VARCHAR,  
+        ADD COLUMN IF NOT EXISTS template_version VARCHAR;
+    `)
+    await DB.changeSchema(`
+      UPDATE public.template_element
+        SET template_code = (
+          SELECT code FROM template
+          WHERE id = (
+            SELECT template_id FROM template_section
+            WHERE id = section_id
+          )
+        ),
+        template_version = (
+          SELECT version_id FROM template
+          WHERE id = (
+            SELECT template_id FROM template_section
+            WHERE id = section_id
+          )
+        );    
+    `)
+    await DB.changeSchema(`
+      ALTER TABLE public.template_element
+        ADD UNIQUE (template_code, code, template_version);
+      ALTER TABLE public.template_element
+        ALTER COLUMN template_code SET NOT NULL,
+        ALTER COLUMN template_version SET NOT NULL;
+    `)
+
+    await DB.changeSchema(`
+      ALTER TABLE public.application_status_history
+        DROP COLUMN IF EXISTS application_id;
+      ALTER TABLE public.application_status_history
+        ADD COLUMN IF NOT EXISTS application_id INTEGER;
+    `)
+    await DB.changeSchema(`
+      UPDATE public.application_status_history
+        SET application_id = (
+          SELECT application_id FROM application_stage_history
+          WHERE id = application_stage_history_id
+        );
+    `)
+    await DB.changeSchema(`
+      ALTER TABLE public.application_status_history
+        ALTER COLUMN application_id
+        SET NOT NULL;
+   `)
+
+    await DB.changeSchema(`
+      ALTER TABLE public.review
+        DROP COLUMN IF EXISTS application_id CASCADE,
+        DROP COLUMN IF EXISTS reviewer_id CASCADE,
+        DROP COLUMN IF EXISTS level_number CASCADE,
+        DROP COLUMN IF EXISTS stage_number CASCADE,
+        DROP COLUMN IF EXISTS time_stage_created CASCADE,
+        DROP COLUMN IF EXISTS is_last_level CASCADE,
+        DROP COLUMN IF EXISTS is_last_stage CASCADE,
+        DROP COLUMN IF EXISTS is_final_decision CASCADE;
+      ALTER TABLE public.review
+        ADD COLUMN IF NOT EXISTS application_id INTEGER
+          REFERENCES public.application (id) ON DELETE CASCADE,
+        ADD COLUMN IF NOT EXISTS reviewer_id INTEGER
+          REFERENCES public.user (id) ON DELETE CASCADE,
+        ADD COLUMN IF NOT EXISTS level_number INTEGER,
+        ADD COLUMN IF NOT EXISTS stage_number INTEGER,
+        ADD COLUMN IF NOT EXISTS time_stage_created timestamptz,
+        ADD COLUMN IF NOT EXISTS is_last_level BOOLEAN,
+        ADD COLUMN IF NOT EXISTS is_last_stage BOOLEAN,
+        ADD COLUMN IF NOT EXISTS is_final_decision BOOLEAN;
+    `)
+    await DB.changeSchema(`
+      UPDATE public.review
+        SET application_id = (
+          SELECT application_id FROM review_assignment
+          WHERE id = review_assignment_id
+        ),
+        reviewer_id = (
+          SELECT reviewer_id FROM review_assignment
+          WHERE id = review_assignment_id
+        ),
+        level_number = (
+          SELECT level_number FROM review_assignment
+          WHERE id = review_assignment_id
+        ),
+        stage_number = (
+          SELECT stage_number FROM review_assignment
+          WHERE id = review_assignment_id
+        ),
+        time_stage_created = (
+          SELECT time_stage_created FROM review_assignment
+          WHERE id = review_assignment_id
+        ),
+        is_last_level = (
+          SELECT is_last_level FROM review_assignment
+          WHERE id = review_assignment_id
+        ),
+        is_last_stage = (
+          SELECT is_last_stage FROM review_assignment
+          WHERE id = review_assignment_id
+        ),
+        is_final_decision = (
+          SELECT is_final_decision FROM review_assignment
+          WHERE id = review_assignment_id
+        );
+    `)
+
+    await DB.changeSchema(`
+      ALTER TABLE public.review_response
+        DROP COLUMN IF EXISTS stage_number;
+      ALTER TABLE public.review_response
+        ADD COLUMN IF NOT EXISTS stage_number INTEGER;
+    `)
+    await DB.changeSchema(`
+      UPDATE public.review_response
+        SET stage_number = (
+          SELECT stage_number FROM review
+          WHERE id = review_id
+        );
+    `)
+
+    await DB.changeSchema(`
+      ALTER TABLE public.review_assignment
+        DROP COLUMN IF EXISTS template_id CASCADE;
+      ALTER TABLE public.review_assignment
+        ADD COLUMN IF NOT EXISTS template_id INTEGER
+        REFERENCES public.template (id) ON DELETE CASCADE;
+    `)
+    await DB.changeSchema(`
+      ALTER TABLE review_assignment DISABLE TRIGGER 
+        update_application_reviewer_stats;
+      UPDATE public.review_assignment
+        SET template_id = (
+          SELECT template_id FROM application
+          WHERE id = application_id
+        );
+      ALTER TABLE review_assignment ENABLE TRIGGER               
+        update_application_reviewer_stats;
+    `)
+    await DB.changeSchema(`
+      ALTER TABLE public.review_assignment
+        ALTER COLUMN template_id
+        SET NOT NULL;
+    `)
+  }
+
+  // v0.9.0 was used for the first version that must be used with databases that
+  // have been migrated using the above (0.8) fix.
+
+  // v1.0.0
+  if (databaseVersionLessThan('1.0.0')) {
+    console.log('Migrating to v1.0.0...')
+
+    console.log(' - Adding reviewer/assigner lists to applications')
+    await DB.changeSchema(`
+      ALTER TABLE public.application   
+        ADD COLUMN IF NOT EXISTS reviewer_list VARCHAR[],
+        ADD COLUMN IF NOT EXISTS assigner_list VARCHAR[];
+    `)
+
+    console.log(' - Adding application_reviewer_action table')
+    await DB.changeSchema(`
+      CREATE TABLE IF NOT EXISTS public.application_reviewer_action (
+        id serial PRIMARY KEY,
+        user_id integer REFERENCES public.user(id)
+          ON DELETE CASCADE NOT NULL,
+        application_id integer REFERENCES public.application(id)
+          ON DELETE CASCADE NOT NULL,
+        reviewer_action public.reviewer_action,
+        assigner_action public.assigner_action,
+        UNIQUE (user_id, application_id)
+      );
+    `)
+
+    console.log(' - Updating reviewer/assigner lists for ALL applications')
+    console.log(' - Creating application_reviewer_action records (This may take a while)')
+    await DB.createApplicationReviewerActionRecords()
+
+    // The previous statement we had to create this unique constraint resulted
+    // in a new index being created each time it was invoked. So now we ensure
+    // the one index we actually want is correctly defined (then we delete all
+    // duplicates with 'removeDuplicateIndexes()' later on).
+    console.log(' - Fixing unique constraint for template_version/code on template table')
+
+    await DB.changeSchema(`
+      ALTER TABLE public.template
+        DROP CONSTRAINT IF EXISTS template_code_version_id_key;
+      ALTER TABLE public.template
+        ADD CONSTRAINT template_code_version_id_key UNIQUE (code, version_id);
+      `)
+
+    console.log(' - Adding row-level security to all existing data tables')
+    await DB.secureDataTables()
+
+    console.log(' - Making all lookup tables visible via data views')
+    await DB.addDataViewsForLookupTables()
+
+    console.log(' - Adding "rawData" columns to data views')
+    await DB.changeSchema(`
+      ALTER TABLE data_view
+        ADD COLUMN IF NOT EXISTS raw_data_include_columns varchar[],
+        ADD COLUMN IF NOT EXISTS raw_data_exclude_columns varchar[]`)
+  }
+
   // Other version migrations continue here...
 
   // Update (almost all) Indexes, Views, Functions, Triggers regardless, since
@@ -850,6 +1160,18 @@ const migrateData = async () => {
   )
   console.log(' - Updating indexes...')
   await DB.changeSchema(createIndexesScript)
+  // This shouldn't be necessary after v1.0 migration, but can't hurt in case
+  // duplicate indexes creep in at some point, or if loading a snapshot that has
+  // additional duplicates we haven't yet discovered
+  await DB.removeDuplicateIndexes()
+
+  const rlsScript = readFileSync(
+    path.join(getAppEntryPointDir(), '../database/buildSchema/', RLS_FILENAME),
+    'utf-8'
+  )
+
+  console.log(' - Updating row-level security...')
+  await DB.changeSchema(rlsScript)
 
   // Finally, set the database version to the current version
   if (databaseVersionLessThan(version)) await DB.setDatabaseVersion(version)
@@ -871,10 +1193,12 @@ const migrateData = async () => {
 // For running migrationScript.ts manually using `yarn migrate`
 if (isManualMigration) {
   console.log('Running migration script...')
-  migrateData().then(() => {
-    console.log('Done!\n')
-    process.exit(0)
-  })
+  migrateData()
+    .then(() => {
+      console.log('Done!\n')
+      process.exit(0)
+    })
+    .catch((e) => console.log('Error while migrating', e))
 }
 
 export default migrateData

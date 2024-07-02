@@ -4,17 +4,17 @@ import {
   ActionPayload,
   ActionQueueExecutePayload,
 } from '../../types'
-import evaluateExpression from '@openmsupply/expression-evaluator'
+import evaluateExpression, { EvaluatorNode } from '../../modules/expression-evaluator'
 import { merge } from 'lodash'
 import functions from './evaluatorFunctions'
 import DBConnect from '../databaseConnect'
 import fetch from 'node-fetch'
-import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import { getApplicationData } from './getApplicationData'
 import { ActionQueueStatus } from '../../generated/graphql'
 import config from '../../config'
 import { evaluateParameters } from './helpers'
 import { getAdminJWT } from '../permissions/loginHelpers'
+import { errorMessage } from '../utilityFunctions'
 
 // Dev config
 const showApplicationDataLog = false
@@ -100,7 +100,7 @@ export async function executeAction(
     console.error('>> Error executing action:', payload.code)
     await DBConnect.executedActionStatusUpdate({
       status: ActionQueueStatus.Fail,
-      error_log: "Couldn't execute Action: " + err.message,
+      error_log: "Couldn't execute Action: " + errorMessage(err),
       parameters_evaluated: null,
       output: null,
       id: payload.id,

@@ -41,8 +41,9 @@ export type PostgresDataType =
   | 'txid_snapshot'
   | 'uuid'
   | 'xml'
+  | 'citext'
 
-type JSDataType = 'number' | 'string' | 'boolean' | 'array' | 'object' | 'Date'
+export type JSDataType = 'number' | 'string' | 'boolean' | 'array' | 'object' | 'Date' | 'Enum'
 
 export type TypeMap = {
   [key in PostgresDataType]?: JSDataType
@@ -65,5 +66,6 @@ const postgresToJSDataTypes: TypeMap = {
   'time without time zone': 'Date',
   'timestamp with time zone': 'Date',
   'timestamp without time zone': 'Date',
+  citext: 'string',
 }
 export default postgresToJSDataTypes

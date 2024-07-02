@@ -4,11 +4,19 @@ import fsProm from 'fs/promises'
 import util from 'util'
 import { pipeline } from 'stream'
 import { nanoid } from 'nanoid'
-import { getAppEntryPointDir, makeFolder, filterObject } from '../utilityFunctions'
+import {
+  getAppEntryPointDir,
+  makeFolder,
+  filterObject,
+  errorMessage,
+  objectKeysToSnakeCase,
+} from '../utilityFunctions'
 import config from '../../config'
 import DBConnect from '../databaseConnect'
 import createThumbnail from './createThumbnails'
 import { FilePayload } from '../../types'
+import { File } from '../../generated/graphql'
+import { FILES_FOLDER } from '../../constants'
 
 export const { filesFolder, imagesFolder, genericThumbnailsFolderName } = config
 export const filesPath = path.join(getAppEntryPointDir(), filesFolder)
@@ -24,10 +32,9 @@ export async function getFilePath(uid: string, thumbnail = false) {
   const isGenericThumbnail =
     thumbnail && fileData.thumbnail_path.startsWith(config.genericThumbnailsFolderName)
 
-  const filePath = path.join(fileData.archive_path ?? '', fileData.file_path)
-  const thumbnailPath = path.join(
-    !isGenericThumbnail ? fileData.archive_path ?? '' : '',
-    fileData.thumbnail_path
+  const filePath = percentEncodeFilePath(path.join(fileData.archive_path ?? '', fileData.file_path))
+  const thumbnailPath = percentEncodeFilePath(
+    path.join(!isGenericThumbnail ? fileData.archive_path ?? '' : '', fileData.thumbnail_path)
   )
   return { filePath, thumbnailPath, originalFilename: fileData.original_filename }
 }
@@ -66,7 +73,7 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
       })
 
       // Save file info to database
-      await registerFileInDB({
+      await saveToDB({
         unique_id,
         file,
         file_path,
@@ -86,7 +93,7 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
     // For updating file description without re-uploading file
   } catch (err) {
     // If no file provided, we'll get this 406 error, so we continue.
-    if (err?.statusCode !== 406) throw err
+    if (errorMessage(err, 'statusCode') !== 406) throw err
   }
   try {
     if (fileCount === 0) {
@@ -107,7 +114,32 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
   return filesInfo
 }
 
-export async function registerFileInDB({
+// For registering a file that already exists on disk
+export const registerFileInDB = async (
+  fileData: Partial<File> & { filePath: string; mimetype: string }
+) => {
+  const normalisedFileData = objectKeysToSnakeCase(fileData)
+  const { unique_id, file_size, mimetype, file_path } = normalisedFileData
+  const filename = path.basename(file_path)
+
+  normalisedFileData.file_path = file_path
+  normalisedFileData.original_filename = filename
+  if (!unique_id) normalisedFileData.unique_id = nanoid()
+  normalisedFileData.thumbnail_path = await createThumbnail({
+    unique_id: normalisedFileData.unique_id,
+    filesPath,
+    basename: filename,
+    ext: path.extname(filename),
+    subfolder: path.dirname(file_path),
+    mimetype,
+  })
+  if (!file_size)
+    normalisedFileData.file_size = (await fsProm.stat(path.join(FILES_FOLDER, file_path))).size
+
+  await saveToDB(normalisedFileData)
+}
+
+export async function saveToDB({
   unique_id,
   original_filename,
   file,
@@ -147,3 +179,34 @@ export async function registerFileInDB({
     throw err
   }
 }
+
+// If any of these characters are in a filename, they should be replaced with
+// percent-encoded chars in the "filePath" parameter to Fastify `sendFile`
+// method.
+// Reference: https://developer.mozilla.org/en-US/docs/Glossary/Percent-encoding
+const encodedCharMap = {
+  ':': '%3A',
+  // '/': '%2F', -- don't want slash in paths at all, asking for trouble!
+  '?': '%3F',
+  '#': '%23',
+  '[': '%5B',
+  ']': '%5D',
+  '@': '%40',
+  '!': '%21',
+  $: '%24',
+  '&': '%26',
+  "'": '%27',
+  '(': '%28',
+  ')': '%29',
+  '*': '%2A',
+  '+': '%2B',
+  ',': '%2C',
+  ';': '%3B',
+  '=': '%3D',
+  '%': '%25',
+  // ' ': '+',
+} as Record<string, string>
+
+const illegalCharacterDetect = /[:?#\[\]@!$&'()*+,;=%]/g
+const percentEncodeFilePath = (path: string) =>
+  path.replace(illegalCharacterDetect, (m) => encodedCharMap[m])

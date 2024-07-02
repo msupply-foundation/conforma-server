@@ -4,7 +4,7 @@ import preferences from '../preferences/preferences.json'
 import { readFileSync } from 'fs'
 import { version } from '../package.json'
 import { serverPrefKeys, ServerPreferences, WebAppPrefs, Config } from './types'
-const serverPrefs: ServerPreferences = preferences.server
+const serverPrefs: ServerPreferences = preferences.server as ServerPreferences
 const isProductionBuild = process.env.NODE_ENV === 'production'
 const siteHost = (preferences.web as WebAppPrefs)?.siteHost
 const webHostUrl = process.env.WEB_HOST
@@ -62,7 +62,7 @@ const config: Config = {
   // These are the only default tables in the system that we allow to be mutated
   // directly by modifyRecord or display as data views. All other names must
   // have "data_table_" prepended.
-  allowedTableNames: ['user', 'organisation', 'application', 'file'],
+  allowedTableNames: ['user', 'organisation', 'application', 'file', 'data_changelog'],
   // From the above allowed tables, these ones can be written to, but can't have
   // columns added (i.e. schema changes):
   allowedTablesNoColumns: ['application', 'file'],

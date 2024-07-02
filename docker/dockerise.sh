@@ -10,7 +10,7 @@ INITIAL_DATA_LOCALE=''
 PUSH=${2:-nopush} # Default won't push to Docker hub
 
 NODE_VERSION='14'
-POSTGRES_VERSION='12'
+POSTGRES_VERSION='16'
 
 # Generate a random ID so Images built on same day with same branch
 # have a unique name
@@ -28,6 +28,7 @@ docker build \
    --build-arg NODE_VERSION="$NODE_VERSION" \
    --build-arg POSTGRES_VERSION="$POSTGRES_VERSION" \
    --build-arg INITIAL_DATA_LOCALE="$INITIAL_DATA_LOCALE" \
+   --build-arg INITIAL_SNAPSHOT="$INITIAL_SNAPSHOT" \
    --secret id=githubtoken,src=../githubtoken.txt \
    --platform "linux/amd64" \
    .

@@ -5,7 +5,7 @@ import path from 'path'
 import { execSync } from 'child_process'
 import insertData from '../../../database/insertData'
 import DBConnect from '../../../src/components/databaseConnect'
-import updateRowPolicies from '../../../database/updateRowPolicies'
+import { updateRowPolicies } from '../permissions/rowLevelPolicyHelpers'
 import { SnapshotOperation, ExportAndImportOptions, ObjectRecord } from '../exportAndImport/types'
 import importFromJson from '../exportAndImport/importFromJson'
 import { triggerTables } from './triggerTables'
@@ -33,6 +33,7 @@ import {
   ARCHIVE_SUBFOLDER_NAME,
 } from '../../constants'
 import { findArchiveSources } from '../files/helpers'
+import { errorMessage } from '../utilityFunctions'
 
 const useSnapshot: SnapshotOperation = async ({
   snapshotName = DEFAULT_SNAPSHOT_NAME,
@@ -61,12 +62,19 @@ const useSnapshot: SnapshotOperation = async ({
       : '0.0.0'
     if (semverCompare(snapshotVersion, config.version) === 1) {
       throw new Error(
-        `Snapshot was created with version: ${snapshotVersion}\n You can't install a snapshot created with a version newer than the current application version: ${config.version}`
+        `Snapshot was created with Conforma version: ${snapshotVersion}\n You can't install a snapshot created with a version newer than the current application version: ${config.version}`
+      )
+    }
+    if (semverCompare(snapshotVersion, '0.8.0') === -1 && options.usePgDump) {
+      throw new Error(
+        `Snapshot was created with a Conforma version prior to 0.8.0, so its database is incompatible with current versions of Postgres. Please use the v.0.8.0 Docker build, or v0.8.0 git tag (with PG12.17) to import and re-export this snapshot to make it compatible with this version of Conforma.`
       )
     }
 
     // Check that we can find all the archives needed:
+    console.log('Collecting archives...')
     await collectArchives(snapshotFolder)
+    console.log('Collecting archives...done')
 
     if (options.resetFiles || options.usePgDump) {
       execSync(`rm -rf ${FILES_FOLDER}/*`)
@@ -169,12 +177,6 @@ const useSnapshot: SnapshotOperation = async ({
     // Regenerate row level policies
     await updateRowPolicies()
 
-    if (options.shouldReInitialise) {
-      console.log('enable row level policies ... ')
-      execSync('./database/turn_on_row_level_security.sh', { cwd: ROOT_FOLDER })
-      console.log('enable row level policies ... done')
-    }
-
     // To ensure generic thumbnails are not wiped out, even if server doesn't restart
     createDefaultDataFolders()
 
@@ -194,7 +196,7 @@ const useSnapshot: SnapshotOperation = async ({
 
     return { success: true, message: `snapshot loaded ${snapshotName}` }
   } catch (e) {
-    return { success: false, message: 'error while loading snapshot', error: e.toString() }
+    return { success: false, message: 'error while loading snapshot', error: errorMessage(e) }
   }
 }
 

@@ -9,6 +9,7 @@ import { Attachment } from 'nodemailer/lib/mailer'
 import { getFilePath } from '../../../src/components/files/fileHandler'
 import { ActionApplicationData } from '../../../src/types'
 import config from '../../../src/config'
+import { errorMessage, getEnvVariableReplacement } from '../../../src/components/utilityFunctions'
 
 const isValidEmail = (email: string) => /^[\w\-_+.]+@([\w\-]+\.)+[A-Za-z]{2,}$/gm.test(email)
 // Test this regex: https://regex101.com/r/ysGgNx/2
@@ -47,7 +48,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
               secure: SMTPConfig.secure,
               auth: {
                 user: SMTPConfig.user,
-                pass: process.env.SMTP_PASSWORD,
+                pass: getEnvVariableReplacement(SMTPConfig.password),
               },
             }
       )
@@ -154,10 +155,10 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
       output: { notification: notificationResult },
     }
   } catch (error) {
-    console.log('Problem sending email:', error.message)
+    console.log('Problem sending email:', errorMessage(error))
     return {
       status: ActionQueueStatus.Fail,
-      error_log: error.message,
+      error_log: errorMessage(error),
     }
   }
 }
@@ -190,11 +191,13 @@ Input elements must be one of:
 - TO-DO: Handle more types of input format (e.g. raw path/url strings)
 */
 const prepareAttachments = async (
-  attachments: string[] | Attachment[] | string | Attachment,
+  attachments: string[] | Attachment[] | string | Attachment | null,
   appRootFolder: string,
   filesFolder: string
 ): Promise<Attachment[]> => {
-  const attachmentInput = Array.isArray(attachments) ? attachments : [attachments]
+  const attachmentInput = (Array.isArray(attachments) ? attachments : [attachments]).filter(
+    (a) => a !== null
+  )
   const attachmentObjects: Attachment[] = []
   for (const file of attachmentInput) {
     if (typeof file === 'object') {

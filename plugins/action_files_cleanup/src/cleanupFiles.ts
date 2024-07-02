@@ -2,6 +2,7 @@ import databaseMethods from './databaseMethods'
 
 import { ActionPluginInput } from '../../types'
 import { ActionQueueStatus } from '../../../src/generated/graphql'
+import { errorMessage } from '../../../src/components/utilityFunctions'
 
 const fileUploadPluginCode = 'fileUpload'
 
@@ -67,10 +68,10 @@ async function cleanupFiles({ parameters, applicationData, DBConnect }: ActionPl
       },
     }
   } catch (error) {
-    console.log(error.message)
+    console.log(errorMessage(error))
     return {
       status: ActionQueueStatus.Fail,
-      error_log: 'Problem cleaning up files: ' + error.message,
+      error_log: 'Problem cleaning up files: ' + errorMessage(error),
     }
   }
 

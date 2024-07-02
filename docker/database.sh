@@ -18,13 +18,16 @@ echo '--- ADDING DATA'
 ./database/insert_data.sh $1
 
 echo '--- RUNNING POST INSTALL'
-./database/turn_on_row_level_security.sh
 ./database/post_data_insert.sh
 
 echo '--- COPY CLEAN DATABASE TO BE USED IF NO VOLUMES ARE MOUNTED'
 cp -R /var/lib/postgresql/12/main/ ./fresh_db
 
-# We end up with extraneous file folders in the repo root, so delete them now
-rm -r files
-rm -r localisation
-rm -r preferences
+# Loading a snapshot from here puts these folders in the repo root rather than
+# the "build" folder so, need to move them in:
+rm -r build/files
+rm -r build/preferences
+rm -r build/localisation
+mv files build
+mv preferences build
+mv localisation build
