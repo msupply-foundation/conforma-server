@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Updated 14/06/2024
+# Updated 03/07/2024
 
 # Script to start (or restart) one or more containers using docker-compose
 # - Provide the instances you want to launch as arguments -- each must
@@ -9,19 +9,8 @@
 
 cd "$(dirname "$0")"
 
-# Prefer $TAG from current environment vars. But if not found, look in
-# `default.env`
-if [ -z "$TAG" ]; then
-    source default.env
-    if [ -z "$TAG" ]; then
-        echo -e "The \$TAG environment variable has not been set.\nPlease enter the build tag now (or leave blank to exit):"
-        read tag
-        if [ -z "$tag" ]; then
-            exit 0
-        fi
-        export TAG=$tag
-    fi
-fi
+# Put this in new variable so we can preserve it between instances
+ENV_TAG=$TAG
 
 # Prefer $SITE from command args, but if not provided, look in `default.env`
 if [ "$#" -eq 0 ]; then
@@ -49,6 +38,8 @@ fi
 echo -e "Launching Conforma image: $TAG"
 
 for instance in "${ARGS[@]}"; do
+    source default.env
+    TAG=${ENV_TAG:-$TAG}
     export ENV_FILE=env_files/$instance.env
     if ! [[ -f $ENV_FILE ]]; then
         echo "Can't find $ENV_FILE... skipping $instance"
@@ -56,9 +47,24 @@ for instance in "${ARGS[@]}"; do
     fi
     source $ENV_FILE
 
+    # Get $TAG from either (in priority order):
+    # - .env file
+    # - Current envinronment vars
+    # - default.env
+    if [ -z "$TAG" ]; then
+        echo -e "The \$TAG environment variable has not been set.\nPlease enter the build tag now (or leave blank to skip instance $instance):"
+        read tag
+        if [ -z "$tag" ]; then
+            echo "No TAG specified... skipping $instance"
+            break
+        fi
+        TAG=$tag
+    fi
+
     # Need to re-export these vars so they're available to the scope of the
     # docker compose command we're about to launch
     export TAG=$TAG
+    echo -e " - Tag: $TAG"
 
     if [ -z "$BACKUPS_FOLDER" ]; then
         echo "No BACKUPS_FOLDER specified... skipping $instance"
@@ -97,13 +103,19 @@ for instance in "${ARGS[@]}"; do
     NAME=conforma-$instance-on-$PORT
 
     # Uncomment following line to test inputs without launching Conforma:
-    # echo $JWT_SECRET
+    echo $JWT_SECRET
     # exit 0
 
     # Stop current instance (if running)
     echo -e "\n(Re-)starting $NAME..."
-    sudo -E docker compose --project-name $NAME down
+    # sudo -E docker compose --project-name $NAME down
 
     # Restart using new image tag
-    sudo -E docker compose -f docker-compose.yml --project-name $NAME up -d
+    # sudo -E docker compose -f docker-compose.yml --project-name $NAME up -d
+
+    unset TAG
+    unset BACKUPS_FOLDER
+    unset SNAPSHOTS_FOLDER
+    unset PORT
+    unset WEB_HOST
 done
