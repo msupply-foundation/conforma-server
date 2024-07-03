@@ -39,6 +39,7 @@ The available properties are as follows (almost  are optional, as the system has
 - **`logoutAfterInactivity`**: The front-end will be logged out automatically if user is idle for longer than this (in minutes). The server will also not accept any JWTs older than this. (Default: `60`)  
 If set to `0`, auto logout will be disabled.
 - **`envVars`**: System environment variables can be made available to `applicationData` (so can be used in actions). However, we don't want to expose the entire environment state in this way, so only environment variables that are explicitly listed here (as an array of strings) will be passed through. These will be accessible at `environmentData.env` within the `applicationData` object.
+- **`maintenanceSite`**: When the server is put into "Maintenance" mode (by an Admin), users will be re-directed to this site. (Default: `https://msupply.foundation/projects/conforma`)
 
 ### Web app
 
