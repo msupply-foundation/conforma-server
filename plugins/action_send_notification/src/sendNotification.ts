@@ -110,7 +110,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
             rejected || ''
           }\nPending: ${pending || ''}`
           if (
-            response.match(/250 OK*/) &&
+            response.match(/250*/) &&
             (!rejected || rejected.length === 0) &&
             (!pending || pending.length === 0)
           ) {
