@@ -103,15 +103,15 @@ for instance in "${ARGS[@]}"; do
     NAME=conforma-$instance-on-$PORT
 
     # Uncomment following line to test inputs without launching Conforma:
-    echo $JWT_SECRET
+    # echo $JWT_SECRET
     # exit 0
 
     # Stop current instance (if running)
     echo -e "\n(Re-)starting $NAME..."
-    # sudo -E docker compose --project-name $NAME down
+    sudo -E docker compose --project-name $NAME down
 
     # Restart using new image tag
-    # sudo -E docker compose -f docker-compose.yml --project-name $NAME up -d
+    sudo -E docker compose -f docker-compose.yml --project-name $NAME up -d
 
     unset TAG
     unset BACKUPS_FOLDER
