@@ -252,6 +252,61 @@ class GraphQLdb {
       })) || []
     )
   }
+
+  public getApplicationFiles = async (applicationId: number, auth: string) => {
+    const data = await this.gqlQuery(
+      `
+     query getApplicationFiles($applicationId: Int!) {
+      application(id: $applicationId) {
+        filesByApplicationSerial(orderBy: TIMESTAMP_ASC) {
+          nodes {
+            uniqueId
+            description
+            filePath
+            originalFilename
+            thumbnailPath
+            timestamp
+            isExternalReferenceDoc
+            isInternalReferenceDoc
+            isOutputDoc
+          }
+        }
+      }
+    }`,
+      { applicationId },
+      auth
+    )
+    return data?.application ? data.application.filesByApplicationSerial.nodes : []
+  }
+
+  public getReferenceDocs = async () => {
+    const data = await this.gqlQuery(
+      `
+     query getReferenceFiles {
+      files(
+        filter: {
+          or: [
+            { isExternalReferenceDoc: { equalTo: true } }
+            { isInternalReferenceDoc: { equalTo: true } }
+          ]
+        }
+      ) {
+        nodes {
+          uniqueId
+          description
+          filePath
+          originalFilename
+          thumbnailPath
+          timestamp
+          isExternalReferenceDoc
+          isInternalReferenceDoc
+          isOutputDoc
+        }
+      }
+    }`
+    )
+    return data?.files?.nodes ?? []
+  }
 }
 
 const graphqlDBInstance = GraphQLdb.Instance

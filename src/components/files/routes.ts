@@ -8,35 +8,57 @@
 // correct file ID via the public /file endpoint
 
 import DBConnect from '../databaseConnect'
-import { getDistinctObjects, getValidTableName, objectKeysToCamelCase } from '../utilityFunctions'
-
-import { camelCase, kebabCase } from 'lodash'
 import { File } from '../../generated/graphql'
-import config from '../../config'
 import { FastifyReply, FastifyRequest } from 'fastify'
+import { getUserInfo } from '../permissions/loginHelpers'
 
 type FileData = Pick<
   File,
-  'uniqueId' | 'description' | 'filePath' | 'originalFilename' | 'thumbnailPath' | 'timestamp'
+  | 'uniqueId'
+  | 'description'
+  | 'filePath'
+  | 'originalFilename'
+  | 'thumbnailPath'
+  | 'timestamp'
+  | 'isExternalReferenceDoc'
+  | 'isInternalReferenceDoc'
+  | 'isOutputDoc'
 >
 
-export const routeFileLists = async (request: FastifyRequest, reply: FastifyReply) => {
-  const files: FileData[] = []
+export type FilesRequest = {
+  Querystring: { applicationId?: string; outputOnly?: 'true'; external?: 'true'; internal?: 'true' }
+}
 
-  // if applicationId:
-  // - request application using user JWT
-  // - if result, get files for application
-  // - if not get nothing
-  // - push to files array
+export const routeFileLists = async (
+  request: FastifyRequest<FilesRequest>,
+  reply: FastifyReply
+) => {
+  let files: Set<FileData> = new Set()
 
-  // if external = true:
-  // - get external docs
-  // - push to files array
+  const { applicationId, outputOnly, external, internal } = request.query
 
-  // if internal = true
-  // - check user JWT for system org
-  // - if so get internal docs
-  // - push to files array
+  if (!isNaN(Number(applicationId))) {
+    const userAuth = request?.headers?.authorization ?? ''
+    const allFiles: File[] = await DBConnect.getApplicationFiles(Number(applicationId), userAuth)
+    if (outputOnly === 'true') {
+      files = new Set(allFiles.filter((file) => file.isOutputDoc))
+    } else files = new Set(allFiles)
+  }
 
-  return reply.send(files)
+  if (external === 'true' || internal === 'true') {
+    const refDocs: File[] = await DBConnect.getReferenceDocs()
+    if (external === 'true')
+      files = new Set([...files, ...refDocs.filter((file) => file.isExternalReferenceDoc)])
+
+    if (internal === 'true') {
+      const { userId, orgId } = (
+        request as FastifyRequest & { auth: { userId: number; orgId: number } }
+      ).auth
+      const userInfo = await getUserInfo({ userId, orgId })
+      if (userInfo.user.organisation?.isSystemOrg)
+        files = new Set([...files, ...refDocs.filter((file) => file.isInternalReferenceDoc)])
+    }
+  }
+
+  return reply.send(Array.from(files))
 }
