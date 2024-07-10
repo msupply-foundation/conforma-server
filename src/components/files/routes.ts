@@ -35,14 +35,29 @@ export const routeFileLists = async (
 ) => {
   let files: Set<FileData> = new Set()
 
-  const { applicationId, outputOnly, external, internal } = request.query
+  const { applicationId: applicationIdString, outputOnly, external, internal } = request.query
 
-  if (!isNaN(Number(applicationId))) {
+  const applicationId = Number(applicationIdString)
+
+  if (!isNaN(applicationId)) {
     const userAuth = request?.headers?.authorization ?? ''
-    const allFiles: File[] = await DBConnect.getApplicationFiles(Number(applicationId), userAuth)
-    if (outputOnly === 'true') {
-      files = new Set(allFiles.filter((file) => file.isOutputDoc))
-    } else files = new Set(allFiles)
+    const appData = await DBConnect.gqlQuery(
+      `
+        query getApplicationSerial($applicationId: Int!) {
+            application(id: $applicationId) { serial }}`,
+      { applicationId },
+      userAuth
+    )
+    const applicationSerial = appData?.application?.serial
+    if (applicationSerial) {
+      // If there's an application returned, then user is allowed to see the
+      // files
+    }
+    const applicationFiles: File[] = await DBConnect.getApplicationFiles(
+      applicationSerial,
+      outputOnly === 'true' ? true : undefined
+    )
+    files = new Set(applicationFiles)
   }
 
   if (external === 'true' || internal === 'true') {

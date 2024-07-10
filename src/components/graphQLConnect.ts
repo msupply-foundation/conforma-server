@@ -253,30 +253,27 @@ class GraphQLdb {
     )
   }
 
-  public getApplicationFiles = async (applicationId: number, auth: string) => {
+  public getApplicationFiles = async (serial: string, outputOnly?: boolean) => {
     const data = await this.gqlQuery(
       `
-     query getApplicationFiles($applicationId: Int!) {
-      application(id: $applicationId) {
-        filesByApplicationSerial(orderBy: TIMESTAMP_ASC) {
-          nodes {
-            uniqueId
-            description
-            filePath
-            originalFilename
-            thumbnailPath
-            timestamp
-            isExternalReferenceDoc
-            isInternalReferenceDoc
-            isOutputDoc
-          }
+    query getApplicationFiles($serial: String!, $outputOnly: Boolean) {
+      files(condition: { isOutputDoc: $outputOnly, applicationSerial: $serial }) {
+        nodes {
+          uniqueId
+          description
+          filePath
+          originalFilename
+          thumbnailPath
+          timestamp
+          isExternalReferenceDoc
+          isInternalReferenceDoc
+          isOutputDoc
         }
       }
     }`,
-      { applicationId },
-      auth
+      { serial, outputOnly }
     )
-    return data?.application ? data.application.filesByApplicationSerial.nodes : []
+    return data?.files?.nodes ?? []
   }
 
   public getReferenceDocs = async () => {
