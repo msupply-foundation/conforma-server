@@ -105,7 +105,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     }
 
     for (const recordId of recordIds) {
-      if (shouldCreateJoinTable && operationType === 'CREATE')
+      if (shouldCreateJoinTable && operationType !== 'DELETE')
         await db.createJoinTableAndRecord(tableNameProper, applicationId, recordId)
     }
 
