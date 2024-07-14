@@ -306,6 +306,7 @@ export interface ServerPreferences {
   timezone?: string
   externalApiConfigs?: ExternalApiConfigs
   envVars?: string[]
+  maintenanceSite?: string
 }
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
@@ -331,6 +332,7 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'timezone',
   'externalApiConfigs',
   'envVars',
+  'maintenanceSite',
 ]
 
 export interface WebAppPrefs {
@@ -364,6 +366,7 @@ interface ConfigBase {
   preferencesFileName: string
   backupsFolder: string
   genericThumbnailsFolderName: string
+  defaultUnderMaintenanceSite: string
   nodeModulesFolder: string
   jwtSecret: string
   RESTport: number
@@ -379,6 +382,7 @@ interface ConfigBase {
   productionHost?: string
   isLiveServer: boolean
   emailMode: EmailOperationMode
+  maintenanceMode: boolean
 }
 
 export type Config = ConfigBase & ServerPreferences & { scheduledJobs?: Schedulers }

@@ -53,6 +53,7 @@ const config: Config = {
   preferencesFileName: 'preferences.json',
   backupsFolder: '../backups',
   genericThumbnailsFolderName: '_generic_thumbnails',
+  defaultUnderMaintenanceSite: 'https://msupply.foundation/projects/conforma',
   // In production postgraphile is started with -q and -i /postgraphile/...
   nodeModulesFolder:
     process.env.NODE_ENV === 'production' ? '../../node_modules' : '../node_modules',
@@ -76,6 +77,7 @@ const config: Config = {
   productionHost: siteHost,
   isLiveServer,
   emailMode: getEmailOperationMode(serverPrefs.emailTestMode, serverPrefs.testingEmail),
+  maintenanceMode: false,
 }
 
 // Mutate the global config object to inject new preferences

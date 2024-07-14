@@ -1,6 +1,6 @@
 {
   "name": "conforma-server",
-  "version": "1.0.2",
+  "version": "1.1.0-10",
   "main": "server.js",
   "license": "MIT",
   "repository": {
@@ -34,6 +34,7 @@
     "@types/rimraf": "^3.0.0",
     "@types/semver": "^7.3.9",
     "@types/sharp": "^0.27.1",
+    "@types/ws": "^8.5.10",
     "jest": "^26.4.0",
     "markdown-toc": "^1.2.0",
     "node-fetch": "^2.6.1",
@@ -71,6 +72,7 @@
     "archive": "ts-node ./src/components/files/archive.ts --archive"
   },
   "dependencies": {
+    "@fastify/websocket": "^5.0.1",
     "@graphile-contrib/pg-simplify-inflector": "^6.0.0",
     "archiver": "^5.3.1",
     "archiver-zip-encrypted": "^1.0.11",
