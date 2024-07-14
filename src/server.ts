@@ -54,6 +54,7 @@ import {
   routeSetMaintenanceMode,
   updateMaintenanceModeInConfig,
 } from './components/other/routeServerStatus'
+import { routeFileLists } from './components/files/routes'
 require('dotenv').config()
 
 // Set the default locale and timezone for date-time display (in console)
@@ -201,6 +202,7 @@ const startServer = async () => {
     server.post('/data-views/:dataViewCode', routeDataViewTable)
     server.get('/data-views/:dataViewCode/:id', routeDataViewDetail)
     server.post('/data-views/:dataViewCode/filterList/:column', routeDataViewFilterList)
+    server.get('/files', routeFileLists)
     server.get('/check-triggers', routeTriggers)
     server.post('/preview-actions', routePreviewActions)
     server.post('/extend-application', routeExtendApplication)
