@@ -15,7 +15,7 @@
     "bcc": "carl@msupply.foundation"
   },
   "commandList": {
-    "docker_start": "source demo.env && sudo docker container rm conforma_demo_${port} -f ; sudo -E docker run -dti -p $port:3000 -e WEB_HOST=https://${subdomain}.conforma.nz -e SMTP_PASSWORD=${SMTP_PASSWORD} -e DEMO_PW=${demo_password_hash} -e DEMO_EMAIL=${demo_email} --name conforma_demo_${port} msupplyfoundation/conforma:$TAG",
+    "docker_start": "source demo.env && sudo docker container rm conforma_demo_${port} -f ; sudo -E docker run -dti -p $port:3000 -e WEB_HOST=https://${subdomain}.conforma.nz -e SMTP_PASSWORD=${SMTP_PASSWORD} -e DEMO_PW=${demo_password_hash} -e DEMO_EMAIL=${demo_email} -e SKIP_RLS=true --name conforma_demo_${port} msupplyfoundation/conforma:$TAG",
     "docker_stop": "sudo docker rm conforma_demo_${port} -f",
     "test": "source demo.env && echo $text $SMTP_PASSWORD"
   }
