@@ -1185,6 +1185,7 @@ const migrateData = async () => {
   } else {
     console.log(' - Updating row-level security...')
     await DB.changeSchema(rlsScript)
+    await DB.secureDataTables()
   }
 
   // Finally, set the database version to the current version
