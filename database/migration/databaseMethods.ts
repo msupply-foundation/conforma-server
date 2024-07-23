@@ -496,6 +496,21 @@ const databaseMethods = {
       }
     }
   },
+  disableDataTableSecurity: async () => {
+    const dataTables = (
+      await DBConnect.query({ text: `SELECT table_name FROM data_table;`, rowMode: 'array' })
+    ).rows.flat()
+
+    for (const table of dataTables) {
+      try {
+        await DBConnect.query({
+          text: `ALTER TABLE ${config.dataTablePrefix}${table} DISABLE ROW LEVEL SECURITY;`,
+        })
+      } catch {
+        console.log(`ERROR: Problem changing data table security: "${table}"`)
+      }
+    }
+  },
   addDataViewsForLookupTables: async () => {
     try {
       await DBConnect.query({ text: `SELECT menu_name FROM data_view` })

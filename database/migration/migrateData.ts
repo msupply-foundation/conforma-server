@@ -13,6 +13,7 @@ import { loadCurrentPrefs, setPreferences } from '../../src/components/preferenc
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
 const INDEX_FILENAME = '44_index.sql'
 const RLS_FILENAME = '45_row_level_security.sql'
+const DISABLE_RLS_FILENAME = '46_disable_row_level_security.sql'
 
 const { version } = config
 const isManualMigration: Boolean = process.argv[2] === '--migrate'
@@ -1169,9 +1170,22 @@ const migrateData = async () => {
     path.join(getAppEntryPointDir(), '../database/buildSchema/', RLS_FILENAME),
     'utf-8'
   )
+  const disableRlsScript = readFileSync(
+    path.join(getAppEntryPointDir(), '../database/buildSchema/', DISABLE_RLS_FILENAME),
+    'utf-8'
+  )
 
-  console.log(' - Updating row-level security...')
-  await DB.changeSchema(rlsScript)
+  if (process.env.SKIP_RLS === 'true') {
+    // This is an "escape-hatch" for when we quickly want to use the system
+    // without having to migrate old templates that don't work with the new
+    // restrictions.
+    console.log('WARNING! - Disabling row-level security...')
+    await DB.changeSchema(disableRlsScript)
+    await DB.disableDataTableSecurity()
+  } else {
+    console.log(' - Updating row-level security...')
+    await DB.changeSchema(rlsScript)
+  }
 
   // Finally, set the database version to the current version
   if (databaseVersionLessThan(version)) await DB.setDatabaseVersion(version)
