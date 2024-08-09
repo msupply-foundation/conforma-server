@@ -2009,6 +2009,7 @@ CREATE OR REPLACE FUNCTION application_list(userId int DEFAULT 0)
         LEFT JOIN application_reviewer_action AS actions
             ON actions.user_id = userId
             AND actions.application_id = app.id
+        WHERE app.is_config = false
         ORDER BY app.id
     $$
     LANGUAGE sql
