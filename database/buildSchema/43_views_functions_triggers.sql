@@ -2106,6 +2106,7 @@ STABLE;
 -- STAGE changes
 CREATE OR REPLACE FUNCTION public.stage_activity_log ()
     RETURNS TRIGGER
+    SECURITY DEFINER
     AS $application_event$
 DECLARE
     stage_num integer;
@@ -2139,6 +2140,7 @@ CREATE TRIGGER stage_activity_trigger
 -- STATUS changes
 CREATE OR REPLACE FUNCTION public.status_activity_log ()
     RETURNS TRIGGER
+    SECURITY DEFINER
     AS $application_event$
 DECLARE
     app_id integer;
@@ -2178,6 +2180,7 @@ CREATE TRIGGER status_activity_trigger
 -- OUTCOME changes
 CREATE OR REPLACE FUNCTION public.outcome_activity_log ()
     RETURNS TRIGGER
+    SECURITY DEFINER
     AS $application_event$
 BEGIN
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
@@ -2205,6 +2208,7 @@ CREATE TRIGGER outcome_update_activity_trigger
 -- SCHEDULED EVENT (Deadline) changes
 CREATE OR REPLACE FUNCTION public.deadline_extension_activity_log ()
     RETURNS TRIGGER
+    SECURITY DEFINER
     AS $application_event$
 BEGIN
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
@@ -2230,6 +2234,7 @@ CREATE TRIGGER deadline_extension_activity_trigger
 -- ASSIGNMENT changes
 CREATE OR REPLACE FUNCTION public.assignment_activity_log ()
     RETURNS TRIGGER
+    SECURITY DEFINER
     AS $application_event$
 BEGIN
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
@@ -2308,6 +2313,7 @@ CREATE TRIGGER assignment_activity_trigger
 -- REVIEW STATUS CHANGES
 CREATE OR REPLACE FUNCTION public.review_status_activity_log ()
     RETURNS TRIGGER
+    SECURITY DEFINER
     AS $application_event$
 DECLARE
     app_id integer;
@@ -2399,6 +2405,7 @@ CREATE TRIGGER review_status_activity_trigger
 -- REVIEW_DECISION changes
 CREATE OR REPLACE FUNCTION public.review_decision_activity_log ()
     RETURNS TRIGGER
+    SECURITY DEFINER
     AS $application_event$
 DECLARE
     app_id integer;
@@ -2461,6 +2468,7 @@ CREATE TRIGGER review_decision_activity_trigger
 -- PERMISSION CHANGES
 CREATE OR REPLACE FUNCTION public.permission_activity_log ()
     RETURNS TRIGGER
+    SECURITY DEFINER
     AS $application_event$
 DECLARE
     user_id integer;
