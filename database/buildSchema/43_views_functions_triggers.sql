@@ -1968,9 +1968,9 @@ CREATE OR REPLACE FUNCTION public.update_application_reviewer_stats_for_applicat
         reviewer_ids = ARRAY(
         SELECT DISTINCT reviewer_id FROM review_assignment
             where application_id = NEW.id UNION 
-            SELECT DISTINCT assigner_id from review_assignment_assigner_join
+            SELECT DISTINCT assigner_id from public.review_assignment_assigner_join
             WHERE review_assignment_id IN (
-                SELECT id FROM review_assignment
+                SELECT id FROM public.review_assignment
                 where application_id = NEW.id
             ) 
         );
