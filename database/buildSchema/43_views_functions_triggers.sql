@@ -1953,6 +1953,72 @@ CREATE TABLE IF NOT EXISTS application_list_shape (
     assigner_action public.assigner_action
 );
 
+-- Function to update ALL reviewer actions for a given application whenever the
+-- application OUTCOME changes
+DROP FUNCTION IF EXISTS public.update_application_reviewer_stats_for_application CASCADE;
+CREATE OR REPLACE FUNCTION public.update_application_reviewer_stats_for_application ()
+	RETURNS TRIGGER
+	SECURITY DEFINER
+	AS $$
+	
+    DECLARE reviewer_ids integer[];
+    DECLARE rev_id integer;
+
+    BEGIN
+        reviewer_ids = ARRAY(
+        SELECT DISTINCT reviewer_id FROM review_assignment
+            where application_id = NEW.id UNION 
+            SELECT DISTINCT assigner_id from review_assignment_assigner_join
+            WHERE review_assignment_id IN (
+                SELECT id FROM review_assignment
+                where application_id = NEW.id
+            ) 
+        );
+
+        FOREACH rev_id IN ARRAY reviewer_ids LOOP
+        -- Remove existing
+            UPDATE public.application_reviewer_action
+                SET reviewer_action = NULL,
+                assigner_action = NULL
+                WHERE application_id = NEW.id
+                AND user_id = rev_id;
+        -- Insert new
+            WITH actions AS (
+                SELECT reviewer_action, assigner_action
+                    FROM single_application_detail(NEW.id, rev_id)
+                ) 
+            INSERT INTO public.application_reviewer_action
+                (user_id, application_id, reviewer_action, assigner_action)  
+            VALUES(
+                rev_id,
+                NEW.id,
+                (SELECT reviewer_action FROM actions),
+                (SELECT assigner_action FROM actions)
+            )
+            ON CONFLICT (user_id, application_id)
+            DO UPDATE
+                SET reviewer_action = (SELECT reviewer_action FROM actions),
+                assigner_action = (SELECT assigner_action FROM actions);
+        END LOOP;
+
+        -- Clean up NULL records
+        DELETE FROM public.application_reviewer_action
+        WHERE application_id = NEW.id
+        AND reviewer_action IS NULL
+        AND assigner_action IS NULL;
+
+        RETURN NULL;
+    END;
+    $$
+    LANGUAGE plpgsql;
+
+-- Trigger to run above function when outcome changes on application
+DROP TRIGGER IF EXISTS update_application_reviewer_stats_for_application ON public.application;
+CREATE TRIGGER update_application_reviewer_stats_for_application
+    AFTER UPDATE OF outcome ON public.application
+    FOR EACH ROW
+    EXECUTE FUNCTION public.update_application_reviewer_stats_for_application ();
+
 -- Special VIEW to list users using no security restrictions, which we join to
 -- the application list to yield associated applicants
 CREATE OR REPLACE VIEW public.user_list
