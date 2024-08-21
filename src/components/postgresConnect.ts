@@ -958,19 +958,6 @@ class PostgresDB {
     }
   }
 
-  public getSystemOrgTemplatePermissions = async (isSystemOrg: boolean) => {
-    const text = `SELECT * FROM permissions_all
-      WHERE "isSystemOrgPermission" = $1
-      `
-    try {
-      const result = await this.query({ text, values: [isSystemOrg] })
-      return result.rows
-    } catch (err) {
-      console.log(errorMessage(err))
-      throw err
-    }
-  }
-
   public getUserTemplatePermissions = async (
     username: string,
     orgId: number | null,
