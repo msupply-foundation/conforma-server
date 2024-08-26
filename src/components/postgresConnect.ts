@@ -55,6 +55,8 @@ class PostgresDB {
       const payloadObject = JSON.parse(payload)
       switch (channel) {
         case 'trigger_notifications':
+          // Temporary diagnostic:
+          console.log(new Date().toLocaleString(), 'TRIGGER', payloadObject.trigger)
           // "data" is stored output from scheduled trigger or verification
           // "data" can sometimes exceed the byte limit for notification payload, so must be fetched separately
           const data = await this.getTriggerPayloadData(payloadObject.trigger_id)
