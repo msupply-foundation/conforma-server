@@ -1752,7 +1752,8 @@ LANGUAGE plpgsql;
 -- Trigger for the above on review_assignment
 DROP TRIGGER IF EXISTS update_application_reviewer_stats ON public.review_assignment;
 CREATE TRIGGER update_application_reviewer_stats
-    AFTER INSERT OR UPDATE ON public.review_assignment
+    AFTER INSERT OR UPDATE OF status, allowed_sections, assigned_sections
+     ON public.review_assignment
     FOR EACH ROW
     EXECUTE FUNCTION public.update_application_reviewer_stats ();
 
