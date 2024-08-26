@@ -1,7 +1,7 @@
-import { processTrigger, executeAction } from './actions'
-import { actionLibrary } from './pluginsConnect'
-import { deleteFile } from './files/deleteFiles'
-import config from '../config'
+import { processTrigger, executeAction } from '../actions'
+import { actionLibrary } from '../pluginsConnect'
+import { deleteFile } from '../files/deleteFiles'
+import config from '../../config'
 import { Client, Pool, QueryResult } from 'pg'
 import {
   ActionInTemplate,
@@ -16,10 +16,15 @@ import {
   ActionResult,
   TriggerPayload,
   DBOperationType,
-} from '../types'
-import { ApplicationOutcome, ApplicationStatus, ReviewStatus, Trigger } from '../generated/graphql'
-import { errorMessage } from './utilityFunctions'
-import { EventThrottle } from './actions/throttle'
+} from '../../types'
+import {
+  ApplicationOutcome,
+  ApplicationStatus,
+  ReviewStatus,
+  Trigger,
+} from '../../generated/graphql'
+import { errorMessage } from '../utilityFunctions'
+import { EventThrottle } from '../actions/throttle'
 
 const Throttle = new EventThrottle<TriggerPayload, ActionResult[]>()
 

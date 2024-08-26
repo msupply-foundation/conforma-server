@@ -10,7 +10,7 @@ Script to handle overall system file clean up:
 
 const BATCH_SIZE = 100 // How many file records to scan at a time
 
-import DBConnect from '../databaseConnect'
+import DBConnect from '../database/databaseConnect'
 import { DateTime } from 'luxon'
 import fs from 'fs'
 import path from 'path'

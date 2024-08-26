@@ -1,4 +1,4 @@
-import DBConnect from '../databaseConnect'
+import DBConnect from '../database/databaseConnect'
 import {
   objectKeysToCamelCase,
   getValidTableName,

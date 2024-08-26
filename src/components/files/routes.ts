@@ -7,7 +7,7 @@
 // The actual files themselves can still be accessed by anyone who has the
 // correct file ID via the public /file endpoint
 
-import DBConnect from '../databaseConnect'
+import DBConnect from '../database/databaseConnect'
 import { File } from '../../generated/graphql'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { getUserInfo } from '../permissions/loginHelpers'

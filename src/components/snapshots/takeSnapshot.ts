@@ -36,7 +36,7 @@ import {
   SNAPSHOT_ARCHIVES_FOLDER_NAME,
 } from '../../constants'
 import { getDirectoryFromPath } from './useSnapshot'
-import DBConnect from '../../../src/components/databaseConnect'
+import DBConnect from '../../../src/components/database/databaseConnect'
 import config from '../../config'
 import { DateTime } from 'luxon'
 import { createDefaultDataFolders } from '../files/createDefaultFolders'

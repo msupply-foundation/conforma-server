@@ -1,7 +1,7 @@
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import databaseMethods, { DatabaseMethodsType } from './databaseMethods'
-import { DBConnectType } from '../../../src/components/databaseConnect'
+import { DBConnectType } from '../../../src/components/database/databaseConnect'
 import { mapValues, get, snakeCase } from 'lodash'
 import {
   objectKeysToSnakeCase,

@@ -1,4 +1,4 @@
-import DBConnect from '../databaseConnect'
+import DBConnect from '../database/databaseConnect'
 import { errorMessage, objectKeysToCamelCase } from '../utilityFunctions'
 import { snakeCase } from 'lodash'
 import config from '../../config'

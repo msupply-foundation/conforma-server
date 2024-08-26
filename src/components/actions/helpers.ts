@@ -1,7 +1,7 @@
 import { merge } from 'lodash'
 import { ActionInTemplate } from '../../types'
 import evaluateExpression, { BasicObject, IParameters } from '../../modules/expression-evaluator'
-import DBConnect from '../databaseConnect'
+import DBConnect from '../database/databaseConnect'
 
 export async function evaluateParameters(
   parameterQueries: BasicObject,

@@ -1,9 +1,9 @@
-import databaseConnect from '../databaseConnect'
+import databaseConnect from '../database/databaseConnect'
 import { PermissionRow } from './types'
 import { getSqlConditionFromJSON } from './helpersUtilities'
 
 import { compileRowLevelPolicyRuleTypes } from './helpersConstants'
-import { permissionPolicyColumns } from '../postgresConnect'
+import { permissionPolicyColumns } from '../database/postgresConnect'
 import { modifyValueInObject } from '../utilityFunctions'
 
 export const baseJWT = { aud: 'postgraphile' }
