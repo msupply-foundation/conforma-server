@@ -13,9 +13,9 @@ import {
   FilePayload,
   TriggerQueueUpdatePayload,
   UserOrg,
-  ActionResult,
-  TriggerPayload,
   DBOperationType,
+  TriggerPayload,
+  ActionResult,
 } from '../../types'
 import {
   ApplicationOutcome,
@@ -24,10 +24,7 @@ import {
   Trigger,
 } from '../../generated/graphql'
 import { errorMessage } from '../utilityFunctions'
-import { EventThrottle } from '../actions/throttle'
 import { updateReviewerStatsFromDBEvent } from './updateReviewerStats'
-
-const Throttle = new EventThrottle<TriggerPayload, ActionResult[]>()
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -68,16 +65,17 @@ class PostgresDB {
           // "data" can sometimes exceed the byte limit for notification payload, so must be fetched separately
           const data = await this.getTriggerPayloadData(payloadObject.trigger_id)
           const { trigger, table, record_id } = payloadObject
-          Throttle.add({
+          config.Throttle.add({
             name: `Trigger ${trigger} on ${table}, id ${record_id}`,
             data: { ...payloadObject, data },
-            action: processTrigger,
+            action: processTrigger as (input: TriggerPayload) => Promise<ActionResult[]>,
           })
           break
         case 'action_notifications':
           // For Async Actions only
           try {
-            // Trigger payload fetched separately to avoid over-size payload error
+            // Trigger payload fetched separately to avoid over-size payload
+            // error
             const trigger_payload = await this.getTriggerPayload(payloadObject.id)
             await executeAction(
               { ...payloadObject, trigger_payload },
@@ -94,7 +92,12 @@ class PostgresDB {
         case 'update_reviewer_stats_notification':
           // Time delay so this aggregation process doesn't slow down Action
           // execution
-          setTimeout(() => updateReviewerStatsFromDBEvent(payloadObject), 5000)
+          config.Throttle.add({
+            name: `Reviewer Action update from DB trigger on table ${payloadObject?.tableName}`,
+            data: payloadObject,
+            action: updateReviewerStatsFromDBEvent,
+          })
+        // setTimeout(() => updateReviewerStatsFromDBEvent(payloadObject), 5000)
       }
     })
   }

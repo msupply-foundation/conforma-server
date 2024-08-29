@@ -1683,15 +1683,8 @@ LANGUAGE plpgsql;
     -- for review_assignment
 DROP TRIGGER IF EXISTS update_application_reviewer_stats ON public.review_assignment;
 CREATE TRIGGER update_application_reviewer_stats
-    AFTER INSERT OR UPDATE OF status, allowed_sections, assigned_sections
+    AFTER UPDATE OF status, allowed_sections, assigned_sections
      ON public.review_assignment
-    FOR EACH ROW
-    EXECUTE FUNCTION public.notify_server_to_update_reviewer_stats ();
-
-    -- for review_assignment_assigner_join
-DROP TRIGGER IF EXISTS update_application_new_assigner_stats ON public.review_assignment_assigner_join;
-CREATE TRIGGER update_application_new_assigner_stats
-    AFTER INSERT ON public.review_assignment_assigner_join
     FOR EACH ROW
     EXECUTE FUNCTION public.notify_server_to_update_reviewer_stats ();
 
@@ -1708,6 +1701,10 @@ CREATE TRIGGER update_application_reviewer_stats_for_application
     AFTER UPDATE OF outcome ON public.application
     FOR EACH ROW
     EXECUTE FUNCTION public.notify_server_to_update_reviewer_stats ();
+
+    -- for review_assignment_assigner_join (no longer required, updated by
+    -- generateReviewAssignments Action instead)
+DROP TRIGGER IF EXISTS update_application_new_assigner_stats ON public.review_assignment_assigner_join;
 
 -- This is a dummy table for the application list. Needs to be defined so that
 -- GraphQL types for the list get exposed by Postgraphile

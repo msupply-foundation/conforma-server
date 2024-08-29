@@ -5,11 +5,11 @@
  *   reviewer's possible actions (Assign, Review, Re-assign, etc) for every
  *   application they could be interacting with
  *
- * It is called by a notification listener (in postgresConnect), which notified
- * by triggers on various tables (see the cases below). Putting it here rather
- * than as a database PG function allows it to be run asynchronously and not
- * block other updates (as this process can be somewhat slow when there are a
- * lot of applications and reviewers in the system).
+ * It is called by either:
+ * - a notification listener (in postgresConnect), which is notified by triggers
+ *   on various tables (see the cases in `updateReviewerStatsFromDBEvent`
+ *   below).
+ * - the "generateReviewAssignments" Action
  */
 
 import DBConnect from '../../components/database/databaseConnect'
@@ -44,6 +44,10 @@ export const updateReviewerStats = async (applicationId: number, userIds?: numbe
   await db.cleanupNullReviewerActions(applicationId)
 }
 
+// When triggered by a Database event, this preliminary function gets the
+// applicationId and the list of reviewers to update. It is different for each
+// trigger case, so this function can standardise the input required by
+// `updateReviewerStats`, which does the actual updates
 export const updateReviewerStatsFromDBEvent = async ({
   tableName,
   data,
@@ -61,16 +65,7 @@ export const updateReviewerStatsFromDBEvent = async ({
   switch (tableName) {
     case 'review_assignment':
       applicationId = data.application_id as number
-      if (operation === 'INSERT') {
-        reviewerIds.push(data.reviewer_id as number)
-      }
-      // For "UPDATE" we let it update ALL staff by leaving reviewerIds empty
-      break
-    case 'review_assignment_assigner_join':
-      applicationId = await db.getApplicationIdFromReviewAssignment(
-        data.review_assignment_id as number
-      )
-      reviewerIds.push(data.assigner_id as number)
+      // Update ALL staff by leaving reviewerIds empty
       break
     case 'review_status_history':
       const { application_id, reviewer_id, assigner_id } = await db.getApplicationDataFromReview(
@@ -129,23 +124,6 @@ const databaseMethods = {
       return result.rows.flat()
     } catch (err) {
       console.log('ERROR getting staff lists for application', appId)
-      console.log(errorMessage(err))
-      throw err
-    }
-  },
-  getApplicationIdFromReviewAssignment: async (assignmentId: number) => {
-    try {
-      const text = `
-        SELECT application_id FROM review_assignment
-            WHERE id = $1;
-        `
-      const result = await DBConnect.query({
-        text,
-        values: [assignmentId],
-      })
-      return result.rows[0].application_id
-    } catch (err) {
-      console.log('ERROR getting applicationId for reviewAssignment', assignmentId)
       console.log(errorMessage(err))
       throw err
     }
