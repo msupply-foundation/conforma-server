@@ -22,6 +22,8 @@ const databaseMethods = {
       if (!options?.silent) console.log('Problem altering schema:', errorMessage(err), '\n')
     }
   },
+  // Make base "query" method available unmodified
+  query: DBConnect.query,
   getDatabaseVersion: async () => {
     const text = `SELECT name, value, timestamp
       FROM system_info

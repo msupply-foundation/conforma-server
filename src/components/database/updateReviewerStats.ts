@@ -14,7 +14,8 @@
 
 import DBConnect from '../../components/database/databaseConnect'
 import { errorMessage } from '../utilityFunctions'
-import config from '../../config'
+
+const isManualUpdate: Boolean = process.argv[2] === '--update-reviewer-stats'
 
 interface NotificationPayload {
   tableName: string
@@ -22,36 +23,10 @@ interface NotificationPayload {
   operation: 'UPDATE' | 'INSERT'
 }
 
-export const updateReviewerStats = async ({ tableName, data, operation }: NotificationPayload) => {
-  let applicationId: number = 0
-  let reviewerIds: number[] = []
-
+export const updateReviewerStats = async (applicationId: number, userIds?: number[]) => {
   const db = databaseMethods
 
-  console.log({ tableName, data, operation })
-  console.log(`Updating reviewer action stats due to ${operation} trigger on table: ${tableName} `)
-
-  switch (tableName) {
-    case 'review_assignment':
-      applicationId = data.application_id as number
-      if (operation === 'INSERT') {
-        reviewerIds.push(data.reviewer_id as number)
-      }
-      if (operation === 'UPDATE') {
-        reviewerIds = await db.getAllStaffForApplication(applicationId)
-      }
-      break
-    case 'review_assignment_assigner_join':
-      applicationId = await db.getApplicationIdFromReviewAssignment(
-        data.review_assignment_id as number
-      )
-      reviewerIds.push(data.assigner_id as number)
-      break
-    case 'review_status_history':
-      break
-    case 'application':
-      break
-  }
+  let reviewerIds = userIds ?? (await db.getAllStaffForApplication(applicationId))
 
   // Update reviewer/assigner lists on application table
   console.log('Updating reviewer/assigner lists for application:', applicationId)
@@ -67,6 +42,49 @@ export const updateReviewerStats = async ({ tableName, data, operation }: Notifi
 
   // Clean up NULL records
   await db.cleanupNullReviewerActions(applicationId)
+}
+
+export const updateReviewerStatsFromDBEvent = async ({
+  tableName,
+  data,
+  operation,
+}: NotificationPayload) => {
+  let applicationId: number = 0
+  let reviewerIds: number[] = []
+
+  const db = databaseMethods
+
+  console.log(
+    `\nUpdating reviewer action stats due to ${operation} trigger on table: ${tableName} `
+  )
+
+  switch (tableName) {
+    case 'review_assignment':
+      applicationId = data.application_id as number
+      if (operation === 'INSERT') {
+        reviewerIds.push(data.reviewer_id as number)
+      }
+      // For "UPDATE" we let it update ALL staff by leaving reviewerIds empty
+      break
+    case 'review_assignment_assigner_join':
+      applicationId = await db.getApplicationIdFromReviewAssignment(
+        data.review_assignment_id as number
+      )
+      reviewerIds.push(data.assigner_id as number)
+      break
+    case 'review_status_history':
+      const { application_id, reviewer_id, assigner_id } = await db.getApplicationDataFromReview(
+        data.review_id as number
+      )
+      applicationId = application_id
+      reviewerIds.push(...new Set([reviewer_id, assigner_id]))
+      break
+    case 'application':
+      applicationId = data.id as number
+      // Update ALL staff by leaving reviewerIds empty
+      break
+  }
+  updateReviewerStats(applicationId, reviewerIds.length === 0 ? undefined : reviewerIds)
 }
 
 const databaseMethods = {
@@ -94,11 +112,14 @@ const databaseMethods = {
   getAllStaffForApplication: async (appId: number) => {
     try {
       const text = `
-        SELECT DISTINCT UNNEST(ARRAY[reviewer_id, raaj.assigner_id])
-        FROM review_assignment ra
-        LEFT JOIN review_assignment_assigner_join raaj
-        ON ra.id = raaj.review_assignment_id
-        WHERE application_id = $1;
+        SELECT DISTINCT reviewer_id FROM review_assignment
+            WHERE application_id = $1
+        UNION 
+        SELECT DISTINCT assigner_id from public.review_assignment_assigner_join
+            WHERE review_assignment_id IN (
+                SELECT id FROM public.review_assignment
+                WHERE application_id = $1
+            );
         `
       const result = await DBConnect.query({
         text,
@@ -121,11 +142,33 @@ const databaseMethods = {
       const result = await DBConnect.query({
         text,
         values: [assignmentId],
-        rowMode: 'array',
       })
       return result.rows[0].application_id
     } catch (err) {
       console.log('ERROR getting applicationId for reviewAssignment', assignmentId)
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
+  getApplicationDataFromReview: async (reviewId: number) => {
+    try {
+      const text = `
+        SELECT application_id, reviewer_id, assigner_id
+            FROM public.review_assignment
+            WHERE id = (
+                SELECT review_assignment_id
+                FROM public.review
+                WHERE id = $1
+            );
+        `
+      const result = await DBConnect.query({
+        text,
+        values: [reviewId],
+      })
+      const { application_id, reviewer_id, assigner_id } = result.rows[0]
+      return { application_id, reviewer_id, assigner_id }
+    } catch (err) {
+      console.log('ERROR getting application data from review', reviewId)
       console.log(errorMessage(err))
       throw err
     }
@@ -176,4 +219,35 @@ const databaseMethods = {
       throw err
     }
   },
+  getAllApplicationIds: async () => {
+    try {
+      const text = `SELECT id FROM application;`
+      const result = await DBConnect.query({
+        text,
+        values: [],
+        rowMode: 'array',
+      })
+      return result.rows.flat()
+    } catch (err) {
+      console.log('ERROR getting applicationIds ')
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
+}
+
+const updateAllApplications = async () => {
+  const appIds = await databaseMethods.getAllApplicationIds()
+  console.log(`Updating reviewer actions for ${appIds.length} applications...`)
+  for (const id of appIds) {
+    await updateReviewerStats(id)
+  }
+  console.log('DONE')
+}
+
+// Manually launch update with command `yarn update-reviewer-stats`
+if (isManualUpdate) {
+  updateAllApplications().then(() => {
+    process.exit(0)
+  })
 }

@@ -1660,99 +1660,14 @@ $$
 LANGUAGE sql
 STABLE;
 
--- Function to update assigner/reviewer lists on applications and insert/update
--- reviewer/assigner actions on application_reviewer_action, by making calls to
--- the above `single_application_detail` function for the appropriate
--- user/application combo(s)
+-- These functions now performed by server in 'updateReviewerStats.ts':
 DROP FUNCTION IF EXISTS public.update_application_reviewer_stats CASCADE;
--- CREATE OR REPLACE FUNCTION public.update_application_reviewer_stats ()
---     RETURNS TRIGGER
---      -- This allows the function to be run as admin user, otherwise it'll only
---      -- be able to query rows the current user has access to.
---     SECURITY DEFINER
---     AS $$
+DROP FUNCTION IF EXISTS public.update_application_new_assigner_stats CASCADE;
+DROP FUNCTION IF EXISTS public.update_reviewer_stats_from_status CASCADE;
+DROP FUNCTION IF EXISTS public.update_application_reviewer_stats_for_application CASCADE;
 
--- DECLARE
---     user_ids integer[];
---     userid integer;
-
--- BEGIN
--- -- reviewer and assigner lists
---     IF TG_OP != 'INSERT' THEN
---         WITH lists AS (
---                 SELECT reviewers, assigners
---                 FROM single_application_detail(NEW.application_id)
---             ) 
---         UPDATE public.application
---             SET reviewer_list = (SELECT reviewers FROM lists),
---             assigner_list = (SELECT assigners FROM lists)
---             WHERE id = NEW.application_id;
---     END IF;
-
---     -- REVIEWER/ASSIGNER actions
---     -- When updating review_assignments, we re-calculate for every
---     -- reviewer/assigner associated with this application.
---     IF TG_OP = 'UPDATE' THEN
---         user_ids = ARRAY(
---             -- Creates an array of distinct user ids for all assigners/reviewers
---             -- who can interact with this application
---             SELECT DISTINCT UNNEST(ARRAY[reviewer_id, raaj.assigner_id])
---             FROM review_assignment ra
---             LEFT JOIN review_assignment_assigner_join raaj
---             ON ra.id = raaj.review_assignment_id
---             WHERE application_id = NEW.application_id);
---     ELSE
---     -- But when inserting, just update for the new reviewer
---         user_ids = ARRAY[NEW.reviewer_id];
---     END IF;
-
---     FOREACH userid IN ARRAY user_ids LOOP
-
---         -- Sometimes NULL is included in above array of IDs, which breaks the
---         -- function
---         CONTINUE WHEN userid IS NULL;
-        
---         -- Remove existing
---         UPDATE public.application_reviewer_action
---             SET reviewer_action = NULL,
---             assigner_action = NULL
---             WHERE application_id = NEW.application_id
---             AND user_id = userid;
-
---         -- Insert new
---         WITH actions AS (
---             SELECT reviewer_action, assigner_action
---                 FROM single_application_detail(NEW.application_id, userid)
---             ) 
---         INSERT INTO public.application_reviewer_action
---             (user_id, application_id, reviewer_action, assigner_action)  
---         VALUES(
---             userid,
---             NEW.application_id,
---             (SELECT reviewer_action FROM actions),
---             (SELECT assigner_action FROM actions)
---          )
---          ON CONFLICT (user_id, application_id)
---          DO UPDATE
---             SET reviewer_action = (SELECT reviewer_action FROM actions),
---             assigner_action = (SELECT assigner_action FROM actions);
---     END LOOP;
-
---     -- Clean up NULL records
---     DELETE FROM public.application_reviewer_action
---     WHERE application_id = NEW.application_id
---     AND reviewer_action IS NULL
---     AND assigner_action IS NULL;
-
--- RETURN NULL;
-
--- END;
--- $$
--- LANGUAGE plpgsql;
-
-
--- Trigger for the above on review_assignment
-
+-- Function to notify server on updates to tables that will require updating of
+-- available reviewer actions. This replaces the above 4 functions.
 CREATE OR REPLACE FUNCTION public.notify_server_to_update_reviewer_stats ()
     RETURNS TRIGGER
     AS $trigger_event$
@@ -1764,6 +1679,8 @@ END;
 $trigger_event$
 LANGUAGE plpgsql;
 
+-- Triggers to trigger the above function
+    -- for review_assignment
 DROP TRIGGER IF EXISTS update_application_reviewer_stats ON public.review_assignment;
 CREATE TRIGGER update_application_reviewer_stats
     AFTER INSERT OR UPDATE OF status, allowed_sections, assigned_sections
@@ -1771,182 +1688,26 @@ CREATE TRIGGER update_application_reviewer_stats
     FOR EACH ROW
     EXECUTE FUNCTION public.notify_server_to_update_reviewer_stats ();
 
-    
--- Function to update assigner/reviewer lists on applications and insert/update
--- assigner actions on application_reviewer_action when records are inserted
--- into review_assignment_assigner_join
--- This function ONLY runs on INSERT -- UPDATEs are handled by the above
--- update_application_reviewer_stats function
-DROP FUNCTION IF EXISTS public.update_application_new_assigner_stats CASCADE;
--- CREATE OR REPLACE FUNCTION public.update_application_new_assigner_stats ()
---     RETURNS TRIGGER
---      -- This allows the function to be run as admin user, otherwise it'll only
---      -- be able to query rows the current user has access to.
---     SECURITY DEFINER
---     AS $$
-
--- DECLARE
---     userId integer;
---     applicationId integer;
-
--- BEGIN
--- -- Get application_id from review_assignment
-
---     applicationId = (SELECT application_id FROM review_assignment
---         WHERE id = NEW.review_assignment_id);
---     userId = NEW.assigner_id;
-
--- -- reviewer and assigner lists
---     WITH lists AS (
---         SELECT assigners
---         FROM single_application_detail(applicationId)
---     ) 
---     UPDATE public.application
---         SET assigner_list = (SELECT assigners FROM lists)
---         WHERE id = applicationId;
-
---     -- ASSIGNER action
-    
---     -- Remove existing
---     UPDATE public.application_reviewer_action
---         SET assigner_action = NULL
---         WHERE application_id = applicationId
---         AND user_id = userId;
-
---     -- Insert new
---     WITH actions AS (
---         SELECT assigner_action
---             FROM single_application_detail(applicationId, userId)
---         ) 
---     INSERT INTO public.application_reviewer_action
---         (user_id, application_id, assigner_action)  
---     VALUES(
---         userid,
---         applicationId,
---         (SELECT assigner_action FROM actions)
---         )
---         ON CONFLICT (user_id, application_id)
---         DO UPDATE
---         SET assigner_action = (SELECT assigner_action FROM actions);
-
---     -- Clean up NULL records
---     DELETE FROM public.application_reviewer_action
---     WHERE application_id = applicationId
---     AND reviewer_action IS NULL
---     AND assigner_action IS NULL;
-
--- RETURN NULL;
-
--- END;
--- $$
--- LANGUAGE plpgsql;
-
-
- 
-DROP TRIGGER IF EXISTS update_application_new_assigner_stats ON public.review_assignment;
+    -- for review_assignment_assigner_join
+DROP TRIGGER IF EXISTS update_application_new_assigner_stats ON public.review_assignment_assigner_join;
 CREATE TRIGGER update_application_new_assigner_stats
     AFTER INSERT ON public.review_assignment_assigner_join
     FOR EACH ROW
     EXECUTE FUNCTION public.notify_server_to_update_reviewer_stats ();
 
--- Trigger for the above on review_assignment_assigner_join
-
-
--- Function to update insert/update reviewer/assigner actions on
--- application_reviewer_action when review_status is updated, by making calls to
--- the above `single_application_detail` function for the appropriate
--- user/application combo(s)
-DROP FUNCTION IF EXISTS public.update_reviewer_stats_from_status CASCADE;
-CREATE OR REPLACE FUNCTION public.update_reviewer_stats_from_status ()
-    RETURNS TRIGGER
-     -- This allows the function to be run as admin user, otherwise it'll only
-     -- be able to query rows the current user has access to.
-    SECURITY DEFINER
-    AS $$
-
-DECLARE
-    app_id integer;
-    rev_id integer;
-    ass_id integer;
-
-BEGIN
-    -- Get application id
-    app_id = (
-        SELECT r.application_id FROM review r
-        WHERE id = NEW.review_id
-    );
-
-    -- Get reviewer_id and assigner_id
-    SELECT ra.reviewer_id, ra.assigner_id
-        INTO rev_id, ass_id
-        FROM review_assignment ra
-        WHERE id = (
-            SELECT review_assignment_id FROM review
-            WHERE id = NEW.review_id
-        );
-        
-    -- Update reviewer
-    UPDATE public.application_reviewer_action
-            SET reviewer_action = NULL
-            WHERE application_id = app_id
-            AND user_id = rev_id;
-
-    WITH reviewer_action AS (
-            SELECT reviewer_action
-                FROM single_application_detail(app_id, rev_id)
-            ) 
-        INSERT INTO public.application_reviewer_action
-            (user_id, application_id, reviewer_action)  
-        VALUES(
-            rev_id,
-            app_id,
-            (SELECT reviewer_action FROM reviewer_action)
-         )
-         ON CONFLICT (user_id, application_id)
-         DO UPDATE
-            SET reviewer_action = (SELECT reviewer_action FROM reviewer_action);
-
-    -- Update assigner
-    UPDATE public.application_reviewer_action
-            SET assigner_action = NULL
-            WHERE application_id = app_id
-            AND user_id = ass_id;
-
-    WITH assigner_action AS (
-            SELECT assigner_action
-                FROM single_application_detail(app_id, ass_id)
-            ) 
-        INSERT INTO public.application_reviewer_action
-            (user_id, application_id, assigner_action)  
-        VALUES(
-            ass_id,
-            app_id,
-            (SELECT assigner_action FROM assigner_action)
-         )
-         ON CONFLICT (user_id, application_id)
-         DO UPDATE
-            SET assigner_action = (SELECT assigner_action FROM assigner_action);
-
-
-    -- Clean up NULL records
-    DELETE FROM public.application_reviewer_action
-    WHERE application_id = app_id
-    AND reviewer_action IS NULL
-    AND assigner_action IS NULL;
-
-RETURN NULL;
-
-END;
-$$
-LANGUAGE plpgsql;
-
-
--- Trigger for the above on review_status_history
+    -- for review_status_history
 DROP TRIGGER IF EXISTS update_reviewer_stats_from_status ON public.review_status_history;
 CREATE TRIGGER update_reviewer_stats_from_status
     AFTER INSERT ON public.review_status_history
     FOR EACH ROW
-    EXECUTE FUNCTION public.update_reviewer_stats_from_status ();
+    EXECUTE FUNCTION public.notify_server_to_update_reviewer_stats ();
+
+    -- for application
+DROP TRIGGER IF EXISTS update_application_reviewer_stats_for_application ON public.application;
+CREATE TRIGGER update_application_reviewer_stats_for_application
+    AFTER UPDATE OF outcome ON public.application
+    FOR EACH ROW
+    EXECUTE FUNCTION public.notify_server_to_update_reviewer_stats ();
 
 -- This is a dummy table for the application list. Needs to be defined so that
 -- GraphQL types for the list get exposed by Postgraphile
@@ -1972,71 +1733,6 @@ CREATE TABLE IF NOT EXISTS application_list_shape (
     assigner_action public.assigner_action
 );
 
--- Function to update ALL reviewer actions for a given application whenever the
--- application OUTCOME changes
-DROP FUNCTION IF EXISTS public.update_application_reviewer_stats_for_application CASCADE;
-CREATE OR REPLACE FUNCTION public.update_application_reviewer_stats_for_application ()
-	RETURNS TRIGGER
-	SECURITY DEFINER
-	AS $$
-	
-    DECLARE reviewer_ids integer[];
-    DECLARE rev_id integer;
-
-    BEGIN
-        reviewer_ids = ARRAY(
-        SELECT DISTINCT reviewer_id FROM review_assignment
-            where application_id = NEW.id UNION 
-            SELECT DISTINCT assigner_id from public.review_assignment_assigner_join
-            WHERE review_assignment_id IN (
-                SELECT id FROM public.review_assignment
-                where application_id = NEW.id
-            ) 
-        );
-
-        FOREACH rev_id IN ARRAY reviewer_ids LOOP
-        -- Remove existing
-            UPDATE public.application_reviewer_action
-                SET reviewer_action = NULL,
-                assigner_action = NULL
-                WHERE application_id = NEW.id
-                AND user_id = rev_id;
-        -- Insert new
-            WITH actions AS (
-                SELECT reviewer_action, assigner_action
-                    FROM single_application_detail(NEW.id, rev_id)
-                ) 
-            INSERT INTO public.application_reviewer_action
-                (user_id, application_id, reviewer_action, assigner_action)  
-            VALUES(
-                rev_id,
-                NEW.id,
-                (SELECT reviewer_action FROM actions),
-                (SELECT assigner_action FROM actions)
-            )
-            ON CONFLICT (user_id, application_id)
-            DO UPDATE
-                SET reviewer_action = (SELECT reviewer_action FROM actions),
-                assigner_action = (SELECT assigner_action FROM actions);
-        END LOOP;
-
-        -- Clean up NULL records
-        DELETE FROM public.application_reviewer_action
-        WHERE application_id = NEW.id
-        AND reviewer_action IS NULL
-        AND assigner_action IS NULL;
-
-        RETURN NULL;
-    END;
-    $$
-    LANGUAGE plpgsql;
-
--- Trigger to run above function when outcome changes on application
-DROP TRIGGER IF EXISTS update_application_reviewer_stats_for_application ON public.application;
-CREATE TRIGGER update_application_reviewer_stats_for_application
-    AFTER UPDATE OF outcome ON public.application
-    FOR EACH ROW
-    EXECUTE FUNCTION public.update_application_reviewer_stats_for_application ();
 
 -- Special VIEW to list users using no security restrictions, which we join to
 -- the application list to yield associated applicants

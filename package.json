@@ -69,7 +69,8 @@
     "migrate": "ts-node ./database/migration/migrateData.ts --migrate",
     "cleanup": "ts-node ./src/components/files/cleanup.ts --cleanup",
     "backup": "ts-node ./src/components/exportAndImport/backup.ts --backup",
-    "archive": "ts-node ./src/components/files/archive.ts --archive"
+    "archive": "ts-node ./src/components/files/archive.ts --archive",
+    "update-reviewer-stats": "ts-node ./src/components/database/updateReviewerStats.ts --update-reviewer-stats"
   },
   "dependencies": {
     "@fastify/websocket": "^5.0.1",

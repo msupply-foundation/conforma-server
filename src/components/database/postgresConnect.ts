@@ -25,7 +25,7 @@ import {
 } from '../../generated/graphql'
 import { errorMessage } from '../utilityFunctions'
 import { EventThrottle } from '../actions/throttle'
-import { updateReviewerStats } from './updateReviewerStats'
+import { updateReviewerStatsFromDBEvent } from './updateReviewerStats'
 
 const Throttle = new EventThrottle<TriggerPayload, ActionResult[]>()
 
@@ -92,7 +92,9 @@ class PostgresDB {
         case 'file_notifications':
           deleteFile(payloadObject)
         case 'update_reviewer_stats_notification':
-          updateReviewerStats(payloadObject)
+          // Time delay so this aggregation process doesn't slow down Action
+          // execution
+          setTimeout(() => updateReviewerStatsFromDBEvent(payloadObject), 5000)
       }
     })
   }

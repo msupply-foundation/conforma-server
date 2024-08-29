@@ -8,6 +8,7 @@ import { readFileSync } from 'fs'
 import bcrypt from 'bcrypt'
 import { errorMessage, getAppEntryPointDir } from '../../src/components/utilityFunctions'
 import { loadCurrentPrefs, setPreferences } from '../../src/components/preferences'
+import { updateReviewerStats } from '../../src/components/database/updateReviewerStats'
 
 // CONSTANTS
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
@@ -1142,6 +1143,29 @@ const migrateData = async () => {
       ALTER TABLE data_view
         ADD COLUMN IF NOT EXISTS raw_data_include_columns varchar[],
         ADD COLUMN IF NOT EXISTS raw_data_exclude_columns varchar[]`)
+  }
+
+  if (databaseVersionLessThan('1.2.0')) {
+    console.log('Migrating to v1.2.0...')
+
+    console.log(' - Regenerating all reviewer actions (This may take a while)')
+    try {
+      const applicationIds = (
+        await DB.query({
+          text: `
+        SELECT DISTINCT(application_id)
+        FROM public.application_reviewer_action
+        ORDER BY application_id;
+        `,
+          rowMode: 'array',
+        })
+      ).rows.flat()
+      for (const id of applicationIds) {
+        await updateReviewerStats(id)
+      }
+    } catch (err) {
+      console.log('ERROR regenerating reviewer actions')
+    }
   }
 
   // Other version migrations continue here...
