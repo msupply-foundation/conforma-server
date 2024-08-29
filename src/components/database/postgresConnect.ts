@@ -13,9 +13,9 @@ import {
   FilePayload,
   TriggerQueueUpdatePayload,
   UserOrg,
-  DBOperationType,
-  TriggerPayload,
   ActionResult,
+  TriggerPayload,
+  DBOperationType,
 } from '../../types'
 import {
   ApplicationOutcome,
@@ -68,7 +68,7 @@ class PostgresDB {
           config.Throttle.add({
             name: `Trigger ${trigger} on ${table}, id ${record_id}`,
             data: { ...payloadObject, data },
-            action: processTrigger as (input: TriggerPayload) => Promise<ActionResult[]>,
+            action: processTrigger,
           })
           break
         case 'action_notifications':
@@ -97,7 +97,6 @@ class PostgresDB {
             data: payloadObject,
             action: updateReviewerStatsFromDBEvent,
           })
-        // setTimeout(() => updateReviewerStatsFromDBEvent(payloadObject), 5000)
       }
     })
   }
