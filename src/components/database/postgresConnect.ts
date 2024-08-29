@@ -25,6 +25,7 @@ import {
 } from '../../generated/graphql'
 import { errorMessage } from '../utilityFunctions'
 import { EventThrottle } from '../actions/throttle'
+import { updateReviewerStats } from './updateReviewerStats'
 
 const Throttle = new EventThrottle<TriggerPayload, ActionResult[]>()
 
@@ -52,6 +53,7 @@ class PostgresDB {
     listener.query('LISTEN trigger_notifications')
     listener.query('LISTEN action_notifications')
     listener.query('LISTEN file_notifications')
+    listener.query('LISTEN update_reviewer_stats_notification')
     listener.on('notification', async ({ channel, payload }) => {
       if (!payload) {
         console.log(`Notification ${channel} received with no payload!`)
@@ -89,6 +91,8 @@ class PostgresDB {
           }
         case 'file_notifications':
           deleteFile(payloadObject)
+        case 'update_reviewer_stats_notification':
+          updateReviewerStats(payloadObject)
       }
     })
   }
