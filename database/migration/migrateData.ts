@@ -1163,7 +1163,7 @@ const migrateData = async () => {
   }
 
   if (databaseVersionLessThan('1.2.1')) {
-    console.log('Migrating to v1.2.0...')
+    console.log('Migrating to v1.2.1...')
 
     console.log(' - Regenerating all reviewer actions (This may take a while)')
 
