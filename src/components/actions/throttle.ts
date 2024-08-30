@@ -19,10 +19,14 @@
  */
 const THROTTLE_QUEUE_THRESHOLD = 200 // ms
 
-type EventObject<T, U> = { name: string; data: T; action: (data: T) => Promise<U> | U }
+interface EventObject<T> {
+  name: string
+  data: T
+  action: (data: T) => unknown
+}
 
 export class EventThrottle {
-  queue: EventObject<any, any>[]
+  queue: EventObject<any>[]
   timerId: NodeJS.Timeout | undefined
   queueActive: boolean
 
@@ -50,7 +54,7 @@ export class EventThrottle {
     this.queueActive = false
   }
 
-  public add<T, U>(event: EventObject<T, U>): void {
+  public add<T>(event: EventObject<T>): void {
     // Timer is used solely to determine whether to put new events at the front
     // or end of the queue.
     const currentTimer = this.timerId
