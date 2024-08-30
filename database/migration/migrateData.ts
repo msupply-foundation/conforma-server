@@ -20,6 +20,23 @@ const { version } = config
 const isManualMigration: Boolean = process.argv[2] === '--migrate'
 const simulatedVersion: string | undefined = process.argv[3]
 
+const functionsScript = readFileSync(
+  path.join(getAppEntryPointDir(), '../database/buildSchema/', FUNCTIONS_FILENAME),
+  'utf-8'
+)
+const createIndexesScript = readFileSync(
+  path.join(getAppEntryPointDir(), '../database/buildSchema/', INDEX_FILENAME),
+  'utf-8'
+)
+const rlsScript = readFileSync(
+  path.join(getAppEntryPointDir(), '../database/buildSchema/', RLS_FILENAME),
+  'utf-8'
+)
+const disableRlsScript = readFileSync(
+  path.join(getAppEntryPointDir(), '../database/buildSchema/', DISABLE_RLS_FILENAME),
+  'utf-8'
+)
+
 const migrateData = async () => {
   let databaseVersion: string
 
@@ -1145,10 +1162,13 @@ const migrateData = async () => {
         ADD COLUMN IF NOT EXISTS raw_data_exclude_columns varchar[]`)
   }
 
-  if (databaseVersionLessThan('1.2.0')) {
+  if (databaseVersionLessThan('1.2.1')) {
     console.log('Migrating to v1.2.0...')
 
     console.log(' - Regenerating all reviewer actions (This may take a while)')
+
+    await DB.changeSchema(functionsScript)
+
     try {
       const applicationIds = (
         await DB.query({
@@ -1172,32 +1192,16 @@ const migrateData = async () => {
 
   // Update (almost all) Indexes, Views, Functions, Triggers regardless, since
   // they can be dropped and recreated, or updated with no consequence:
-  const functionsScript = readFileSync(
-    path.join(getAppEntryPointDir(), '../database/buildSchema/', FUNCTIONS_FILENAME),
-    'utf-8'
-  )
+
   console.log(' - Updating views/functions/triggers')
   await DB.changeSchema(functionsScript)
 
-  const createIndexesScript = readFileSync(
-    path.join(getAppEntryPointDir(), '../database/buildSchema/', INDEX_FILENAME),
-    'utf-8'
-  )
   console.log(' - Updating indexes...')
   await DB.changeSchema(createIndexesScript)
   // This shouldn't be necessary after v1.0 migration, but can't hurt in case
   // duplicate indexes creep in at some point, or if loading a snapshot that has
   // additional duplicates we haven't yet discovered
   await DB.removeDuplicateIndexes()
-
-  const rlsScript = readFileSync(
-    path.join(getAppEntryPointDir(), '../database/buildSchema/', RLS_FILENAME),
-    'utf-8'
-  )
-  const disableRlsScript = readFileSync(
-    path.join(getAppEntryPointDir(), '../database/buildSchema/', DISABLE_RLS_FILENAME),
-    'utf-8'
-  )
 
   if (process.env.SKIP_RLS === 'true') {
     // This is an "escape-hatch" for when we quickly want to use the system
