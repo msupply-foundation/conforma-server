@@ -1,4 +1,5 @@
 import fastify, { FastifyPluginCallback, FastifyReply, FastifyRequest } from 'fastify'
+// @ts-ignore
 import fastifyStatic from 'fastify-static'
 import fastifyMultipart from 'fastify-multipart'
 import fastifyCors from 'fastify-cors'
