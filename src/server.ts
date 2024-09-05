@@ -1,7 +1,7 @@
 import fastify, { FastifyPluginCallback, FastifyReply, FastifyRequest } from 'fastify'
-import fastifyStatic from 'fastify-static'
-import fastifyMultipart from 'fastify-multipart'
-import fastifyCors from 'fastify-cors'
+import fastifyStatic from '@fastify/static'
+import fastifyMultipart from '@fastify/multipart'
+import fastifyCors from '@fastify/cors'
 import fastifyWebsocket from '@fastify/websocket'
 import { DateTime, Settings } from 'luxon'
 import path from 'path'
@@ -236,7 +236,7 @@ const startServer = async () => {
   // Set maintenanceMode from previously saved setting
   await updateMaintenanceModeInConfig(config)
 
-  server.listen(config.RESTport, (err, address) => {
+  server.listen({ port: config.RESTport }, (err, address) => {
     if (err) {
       console.error(err)
       process.exit(1)
