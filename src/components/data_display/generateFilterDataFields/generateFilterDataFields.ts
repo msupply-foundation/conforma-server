@@ -1,16 +1,13 @@
 import databaseMethods from './databaseMethods'
 import DBConnect from '../../database/databaseConnect'
-import evaluateExpression from '../../../modules/expression-evaluator'
-import functions from '../../fig-tree-evaluator/functions'
+import FigTree from '../../fig-tree-evaluator/FigTree'
 import { queryDataTable, updateRecord } from '../gqlDynamicQueries'
 import config from '../../../config'
 import { errorMessage, getValidTableName } from '../../utilityFunctions'
-import fetch from 'node-fetch'
 import { camelCase, snakeCase } from 'lodash'
 // @ts-ignore
 import delay from 'delay-sync'
 
-const graphQLEndpoint = config.graphQLendpoint
 const blockSize = 100 // How many database records to process at once
 
 interface Column {
@@ -139,13 +136,7 @@ export const generateFilterDataFields = async (table: string, fullUpdate: boolea
         const patch: any = {}
         for (const { column, expression } of filterTextColumnDefinitions) {
           try {
-            const evaluatedResult = await evaluateExpression(expression, {
-              objects: { ...record, functions },
-              // pgConnection: DBConnect, probably don't want to allow SQL
-              APIfetch: fetch,
-              // TO-DO: Need to pass Auth headers to evaluator API calls
-              graphQLConnection: { fetch, endpoint: graphQLEndpoint },
-            })
+            const evaluatedResult = await FigTree.evaluate(expression, { data: { ...record } })
             patch[camelCase(column)] = evaluatedResult === '' ? null : evaluatedResult
           } catch {
             // If evaluation fails, just continue with next record

@@ -4,9 +4,7 @@ import {
   getValidTableName,
   capitaliseFirstLetter,
 } from '../utilityFunctions'
-import evaluateExpression from '../../modules/expression-evaluator'
-import functions from '../fig-tree-evaluator/functions'
-import fetch from 'node-fetch'
+import FigTree from '../fig-tree-evaluator/FigTree'
 import { camelCase, snakeCase, startCase } from 'lodash'
 // @ts-ignore
 import mapValuesDeep from 'map-values-deep'
@@ -401,12 +399,8 @@ export const constructTableResponse = async (
       else if (!columnDefinition?.valueExpression) return 'Field not defined'
       else {
         evaluationPromiseArray.push(
-          evaluateExpression(columnDefinition?.valueExpression ?? {}, {
-            objects: { ...record, thisField: record[columnName], functions },
-            // pgConnection: DBConnect, probably don't want to allow SQL
-            APIfetch: fetch,
-            // TO-DO: Need to pass Auth headers to evaluator API calls
-            graphQLConnection: { fetch, endpoint: graphQLEndpoint },
+          FigTree.evaluate(columnDefinition?.valueExpression ?? {}, {
+            data: { ...record, thisField: record[columnName] },
           })
         )
       }
@@ -498,15 +492,8 @@ export const constructDetailsResponse = async (
       else if (!columnDefinition?.valueExpression) obj[columnName] = 'Field not defined'
       else {
         evaluationPromiseArray.push(
-          evaluateExpression(columnDefinition?.valueExpression ?? {}, {
-            objects: { ...fetchedRecord, thisField: fetchedRecord[columnName] },
-            // pgConnection: DBConnect, probably don't want to allow SQL
-            APIfetch: fetch,
-            // TO-DO: Need to pass Auth headers to evaluator API calls
-            graphQLConnection: { fetch, endpoint: graphQLEndpoint },
-            headers: {
-              Authorization: `Bearer ${adminJWT}`,
-            },
+          FigTree.evaluate(columnDefinition?.valueExpression ?? {}, {
+            data: { ...fetchedRecord, thisField: fetchedRecord[columnName] },
           })
         )
         obj[columnName] = 'Awaiting promise...'
@@ -536,12 +523,8 @@ export const constructDetailsResponse = async (
   else if (!headerDefinition?.columnDefinition?.valueExpression) header.value = 'Field not defined'
   else {
     evaluationPromiseArray.push(
-      evaluateExpression(headerDefinition?.columnDefinition?.valueExpression ?? {}, {
-        objects: { ...fetchedRecord, thisField: fetchedRecord[headerDefinition.columnName] },
-        // pgConnection: DBConnect, probably don't want to allow SQL
-        APIfetch: fetch,
-        // TO-DO: Need to pass Auth headers to evaluator API calls
-        graphQLConnection: { fetch, endpoint: graphQLEndpoint },
+      FigTree.evaluate(headerDefinition?.columnDefinition?.valueExpression ?? {}, {
+        data: { ...fetchedRecord, thisField: fetchedRecord[headerDefinition.columnName] },
       })
     )
     evaluationFieldArray.push('HEADER')

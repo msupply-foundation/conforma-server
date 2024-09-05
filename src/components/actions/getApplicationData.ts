@@ -1,6 +1,5 @@
 import { ActionApplicationData, ActionPayload, BaseApplicationData, ReviewData } from '../../types'
 import DBConnect from '../database/databaseConnect'
-import { BasicObject } from '../../modules/expression-evaluator'
 import { getAppEntryPointDir } from '../utilityFunctions'
 import config from '../../config'
 import { getUserInfo } from '../permissions/loginHelpers'
@@ -48,7 +47,7 @@ export const getApplicationData = async (input: {
 
   const responses = await DBConnect.getApplicationResponses(applicationId)
 
-  const responseData: BasicObject = {}
+  const responseData: Record<string, any> = {}
   for (const response of responses) {
     responseData[response.code] = response.value
   }

@@ -1,8 +1,9 @@
-import evaluateExpression, { EvaluatorNode } from '../../modules/expression-evaluator'
+import FigTree from '../fig-tree-evaluator/FigTree'
 import { AxiosRequestConfig } from 'axios'
 import { ApiAuthentication, QueryParameters } from './types'
 import { getEnvVariableReplacement } from '../utilityFunctions'
 import { ActionApplicationData } from '../../types'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 
 // Adds appropriate auth properties to Axios request object (modifies in-place)
 const constructAuthHeader = (
@@ -27,7 +28,7 @@ const constructAuthHeader = (
 
 // Build a data object, for either url query params or JSON body data, using:
 // - values from HTTP request, filtered for allowed fields only
-// - values from Route configuration, evaluated using Expression evaluator
+// - values from Route configuration, evaluated using FigTree evaluator
 const constructQueryObject = async (
   requestQuery: QueryParameters = {},
   configQuery: QueryParameters = {},
@@ -44,7 +45,7 @@ const constructQueryObject = async (
   const routeConfigValues = Object.values(configQuery)
 
   const evaluatedValues = await Promise.all(
-    routeConfigValues.map((value) => evaluateExpression(value, { objects }))
+    routeConfigValues.map((value) => FigTree.evaluate(value, { data: objects }))
   )
 
   const routeConfigData = Object.fromEntries(
@@ -62,9 +63,7 @@ const validateResult = async (
 ) => {
   if (!validationExpression) return true
 
-  return await evaluateExpression(validationExpression, {
-    objects: { ...evaluatorData, query, result },
-  })
+  return await FigTree.evaluate(validationExpression, { data: { ...evaluatorData, query, result } })
 }
 
 export { constructAuthHeader, constructQueryObject, validateResult }

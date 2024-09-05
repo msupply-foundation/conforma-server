@@ -1,12 +1,12 @@
 import { TriggerPayload, ActionResult } from '../../types'
 import DBConnect from '../database/databaseConnect'
 import { actionLibrary } from '../pluginsConnect'
-import { EvaluatorNode } from '../../modules/expression-evaluator'
 import { getCoreActions } from './coreActions'
 import { executeAction } from './executeAction'
 import { ActionQueueStatus, TriggerQueueStatus } from '../../generated/graphql'
 import { swapOutAliasedAction } from './helpers'
 import { errorMessage } from '../utilityFunctions'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 
 // Dev config
 const showActionOutcomeLog = false
