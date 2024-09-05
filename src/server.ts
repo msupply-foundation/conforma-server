@@ -227,14 +227,18 @@ const startServer = async () => {
     )}`
   })
 
-  server.get('/server-status', { websocket: true }, (connection, _) =>
-    routeServerStatusWebsocket(connection, server)
-  )
+  server.register(async function (fastify) {
+    fastify.get('/server-status', { websocket: true }, (socket, _) =>
+      routeServerStatusWebsocket(socket, server)
+    )
+  })
 
   server.register(api, { prefix: '/api' })
 
   // Set maintenanceMode from previously saved setting
   await updateMaintenanceModeInConfig(config)
+
+  await server.ready()
 
   server.listen({ port: config.RESTport }, (err, address) => {
     if (err) {

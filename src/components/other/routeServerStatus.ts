@@ -2,7 +2,7 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import databaseConnect from '../database/databaseConnect'
 import config from '../../config'
 import { Config } from '../../types'
-import { SocketStream } from '@fastify/websocket'
+import { WebSocket } from '@fastify/websocket'
 
 const notifyClients = async (message: string, server: FastifyInstance) => {
   server.websocketServer.clients.forEach((client) => client.send(message))
@@ -39,10 +39,10 @@ export const routeSetMaintenanceMode = (
   reply.send({ success: true, enabled })
 }
 
-export const routeServerStatusWebsocket = (connection: SocketStream, server: FastifyInstance) => {
+export const routeServerStatusWebsocket = (socket: WebSocket, server: FastifyInstance) => {
   console.log(`New client connected, ${server.websocketServer.clients.size} current connections`)
   if (config.maintenanceMode)
-    connection.socket.send(
+    socket.send(
       JSON.stringify({
         maintenanceMode: config.maintenanceMode,
         force: true,
@@ -52,10 +52,10 @@ export const routeServerStatusWebsocket = (connection: SocketStream, server: Fas
 
   // Keeps connection alive, otherwise disconnects after 1 min of idle time
   const timerId = setInterval(() => {
-    connection.socket.ping()
+    socket.ping()
   }, 50_000)
 
-  connection.socket.on('close', () => {
+  socket.on('close', () => {
     console.log(`Client disconnected, ${server.websocketServer.clients.size} connections remaining`)
     clearInterval(timerId)
   })

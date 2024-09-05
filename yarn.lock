@@ -837,12 +837,13 @@
     fastq "^1.17.0"
     glob "^10.3.4"
 
-"@fastify/websocket@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@fastify/websocket/-/websocket-5.0.1.tgz#03c69e70988c3a8b88a8cf38036e1aeed0b3b13a"
-  integrity sha512-voOrfqhj9TIEnviQ9lzGBXdCIpIJpK69HLgvPPv7m9JNQ7GfSJAbG2y6YRuoYk8u6zpDuleHoLCmaJBDl5Chtw==
+"@fastify/websocket@^10.0.1":
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/@fastify/websocket/-/websocket-10.0.1.tgz#ece72340870dfccc0d5abdbe7242c632a5f3340a"
+  integrity sha512-8/pQIxTPRD8U94aILTeJ+2O3el/r19+Ej5z1O1mXlqplsUH7KzCjAI0sgd5DM/NoPjAi5qLFNIjgM5+9/rGSNw==
   dependencies:
-    fastify-plugin "^3.0.0"
+    duplexify "^4.1.2"
+    fastify-plugin "^4.0.0"
     ws "^8.0.0"
 
 "@graphile-contrib/pg-simplify-inflector@^6.0.0":
@@ -3524,6 +3525,16 @@ duplexer3@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/duplexer3/-/duplexer3-0.1.4.tgz#ee01dd1cac0ed3cbc7fdbea37dc0a8f1ce002ce2"
 
+duplexify@^4.1.2:
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/duplexify/-/duplexify-4.1.3.tgz#a07e1c0d0a2c001158563d32592ba58bddb0236f"
+  integrity sha512-M3BmBhwJRZsSx38lZyhE53Csddgzl5R7xGJNk7CVddZD6CcmwMCH8J+7AprIrQKH7TonKxaCjcv27Qmf+sQ+oA==
+  dependencies:
+    end-of-stream "^1.4.1"
+    inherits "^2.0.3"
+    readable-stream "^3.1.1"
+    stream-shift "^1.0.2"
+
 eastasianwidth@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/eastasianwidth/-/eastasianwidth-0.2.0.tgz#696ce2ec0aa0e6ea93a397ffcf24aa7840c827cb"
@@ -3987,11 +3998,6 @@ fast-url-parser@^1.1.3:
   integrity sha512-5jOCVXADYNuRkKFzNJ0dCCewsZiYo0dz8QNYljkOpFC6r2U4OBmKtvm/Tsuh4w1YYdDqDb31a8TVhBJ2OJKdqQ==
   dependencies:
     punycode "^1.3.2"
-
-fastify-plugin@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/fastify-plugin/-/fastify-plugin-3.0.0.tgz#cf1b8c8098e3b5a7c8c30e6aeb06903370c054ca"
-  integrity sha512-ZdCvKEEd92DNLps5n0v231Bha8bkz1DjnPP/aEz37rz/q42Z5JVLmgnqR4DYuNn3NXAO3IDCPyRvgvxtJ4Ym4w==
 
 fastify-plugin@^4.0.0:
   version "4.5.1"
@@ -8111,6 +8117,11 @@ statuses@2.0.1:
 stealthy-require@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
+
+stream-shift@^1.0.2:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/stream-shift/-/stream-shift-1.0.3.tgz#85b8fab4d71010fc3ba8772e8046cc49b8a3864b"
+  integrity sha512-76ORR0DO1o1hlKwTbi/DM3EXWGf3ZJYO8cXX5RJwnul2DEg2oyoZyjLNoQM8WsvZiFKCRfC1O0J7iCvie3RZmQ==
 
 stream-wormhole@^1.1.0:
   version "1.1.0"
