@@ -1,5 +1,4 @@
 import { FastifyPluginCallback } from 'fastify'
-// @ts-ignore
 import fastifyStatic from 'fastify-static'
 import { SNAPSHOT_FOLDER } from '../../../constants'
 import routeListSnapshots from './routeListSnapshots'
