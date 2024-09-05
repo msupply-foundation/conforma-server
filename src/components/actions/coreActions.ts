@@ -321,10 +321,7 @@ const coreActions: CoreActions = {
       event_code: '',
       sequence: -5,
       condition: true,
-      parameter_queries: {
-        operator: 'objectProperties',
-        children: ['outputCumulative.reviewStatusHistoryTimestamp'],
-      },
+      parameter_queries: {},
     },
     // Update other review status to PENDING or CHANGES REQUESTED after one
     // review is submitted to another reviewer in the chain of review-levels

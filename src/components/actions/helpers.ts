@@ -1,25 +1,6 @@
 import { merge } from 'lodash'
 import { ActionInTemplate } from '../../types'
-import evaluateExpression, { BasicObject, IParameters } from '../../modules/expression-evaluator'
 import DBConnect from '../database/databaseConnect'
-
-export async function evaluateParameters(
-  parameterQueries: BasicObject,
-  evaluatorParameters: IParameters = {}
-) {
-  const parametersEvaluated: BasicObject = {}
-  try {
-    for (const key in parameterQueries) {
-      parametersEvaluated[key] = await evaluateExpression(
-        parameterQueries[key],
-        evaluatorParameters
-      )
-    }
-    return parametersEvaluated
-  } catch (err) {
-    throw err
-  }
-}
 
 export const swapOutAliasedAction = async (templateId: number, action: ActionInTemplate) => {
   // Fetch aliased action from database

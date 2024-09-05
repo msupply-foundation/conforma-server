@@ -27,16 +27,6 @@ export async function executeAction(
   // Debug helper console.log to inspect applicationData:
   if (showApplicationDataLog) console.log('ApplicationData: ', applicationData)
 
-  // const evaluatorParams = {
-  //   objects: { applicationData, functions, ...additionalObjects },
-  //   pgConnection: DBConnect,
-  //   APIfetch: fetch,
-  //   graphQLConnection: { fetch, endpoint: graphQLEndpoint },
-  //   headers: {
-  //     Authorization: `Bearer ${await getAdminJWT()}`,
-  //   },
-  // }
-
   const evaluatorData = { applicationData, ...additionalObjects }
 
   // Evaluate condition
@@ -76,9 +66,6 @@ export async function executeAction(
       data: evaluatorData,
     })) as Record<string, unknown>
     // TO-DO: Check all required parameters are present
-
-    console.log('evaluatorData', evaluatorData)
-    console.log('parametersEvaluated', parametersEvaluated)
 
     // TO-DO: If Scheduled, create a Job instead
     const actionResult = await actionLibrary[payload.code]({
