@@ -32,13 +32,15 @@ RUN apt install libreoffice -y
 
 # --- NODE and NPX
 ARG NODE_VERSION
-# https://github.com/nodesource/distributions/blob/master/README.md -> Node.js LTS (v14.x): -> # Using Debian, as root
+# https://github.com/nodesource/distributions/blob/master/README.md -> Node.js LTS (v18.x): -> # Using Debian, as root
 RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash 
 RUN apt-get install -y nodejs
 RUN node -v
 RUN npx -v
 
 # --- POSTGRES 
+# For missing 'lsb-release'
+RUN apt-get update && apt-get install -y lsb-release && apt-get clean all
 ARG POSTGRES_VERSION
 # https://www.postgresql.org/download/linux/ubuntu/
 RUN echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list.d/pgdg.list
