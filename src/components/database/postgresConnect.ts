@@ -13,8 +13,6 @@ import {
   FilePayload,
   TriggerQueueUpdatePayload,
   UserOrg,
-  ActionResult,
-  TriggerPayload,
   DBOperationType,
 } from '../../types'
 import {

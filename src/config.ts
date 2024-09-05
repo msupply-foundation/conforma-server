@@ -5,6 +5,7 @@ import { readFileSync } from 'fs'
 import { version } from '../package.json'
 import { serverPrefKeys, ServerPreferences, WebAppPrefs, Config } from './types'
 import { EventThrottle } from './components/actions/throttle'
+import PostgresConfig from './components/database/postgresConfig.json'
 const serverPrefs: ServerPreferences = preferences.server as ServerPreferences
 const isProductionBuild = process.env.NODE_ENV === 'production'
 const siteHost = (preferences.web as WebAppPrefs)?.siteHost
@@ -35,16 +36,7 @@ const Throttle = new EventThrottle()
 
 // Global config object
 const config: Config = {
-  pg_database_connection: {
-    user: 'postgres',
-    host: 'localhost',
-    database: 'tmf_app_manager',
-    password: '',
-    port: 5432,
-    max: 20,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 20000,
-  },
+  pg_database_connection: PostgresConfig,
   version,
   // In production postgraphile is started with -q and -i /postgraphile/...
   graphQLendpoint: isProductionBuild

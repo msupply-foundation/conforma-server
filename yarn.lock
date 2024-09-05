@@ -3446,6 +3446,11 @@ dependency-graph@^0.11.0:
   resolved "https://registry.yarnpkg.com/dependency-graph/-/dependency-graph-0.11.0.tgz#ac0ce7ed68a54da22165a85e97a01d53f5eb2e27"
   integrity sha512-JeMq7fEshyepOWDfcfHK06N3MhyPhz++vtqWhMT5O9A3K42rdsEDpfdVqjaqaAhsw6a+ZqeDvQVtD0hFHQWrzg==
 
+dequal@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/dequal/-/dequal-2.0.3.tgz#2644214f1997d39ed0ee0ece72335490a7ac67be"
+  integrity sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==
+
 detect-indent@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/detect-indent/-/detect-indent-6.0.0.tgz#0abd0f549f69fc6659a254fe96786186b6f528fd"
@@ -4068,6 +4073,14 @@ fd-slicer@~1.1.0:
   integrity sha1-JcfInLH5B3+IkbvmHY85Dq4lbx4=
   dependencies:
     pend "~1.2.0"
+
+fig-tree-evaluator@^2.17.0:
+  version "2.17.0"
+  resolved "https://registry.yarnpkg.com/fig-tree-evaluator/-/fig-tree-evaluator-2.17.0.tgz#a8b29c6671b3dae74857eef511f8d0e681c60740"
+  integrity sha512-mHNtSnIFIJW8sGQFOa8l1psEyYVnCYrJNDihf/AFW0UN3uCj/8C/qvNWo1ZDUjdHKToMdG8r1eUu+ZxLa+9UIQ==
+  dependencies:
+    dequal "^2.0.3"
+    object-property-extractor "^1.0.12"
 
 figlet@1.5.0:
   version "1.5.0"
@@ -6604,6 +6617,11 @@ object-is@^1.1.4:
 object-keys@^1.0.12, object-keys@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.1.1.tgz#1c47f272df277f3b1daf061677d9c82e2322c60e"
+
+object-property-extractor@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/object-property-extractor/-/object-property-extractor-1.0.12.tgz#d3824be4a01e8d4489d3cdcbd1dfc45828d1ad97"
+  integrity sha512-X6rMK1O6O3EU4O06BtATezWKr+5idX6Yo0PndVqr8NlED3Eoa2YE+VKQgQL4EK0+vh+YA83Sjj9Nsi/PuXXeDQ==
 
 object-visit@^1.0.0:
   version "1.0.1"

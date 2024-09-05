@@ -4,22 +4,15 @@ import {
   ActionPayload,
   ActionQueueExecutePayload,
 } from '../../types'
-import evaluateExpression, { EvaluatorNode } from '../../modules/expression-evaluator'
+import FigTree from '../fig-tree-evaluator/FigTree'
 import { merge } from 'lodash'
-import functions from './evaluatorFunctions'
 import DBConnect from '../database/databaseConnect'
-import fetch from 'node-fetch'
 import { getApplicationData } from './getApplicationData'
 import { ActionQueueStatus } from '../../generated/graphql'
-import config from '../../config'
-import { evaluateParameters } from './helpers'
-import { getAdminJWT } from '../permissions/loginHelpers'
 import { errorMessage } from '../utilityFunctions'
 
 // Dev config
 const showApplicationDataLog = false
-
-const graphQLEndpoint = config.graphQLendpoint
 
 export async function executeAction(
   payload: ActionPayload,
@@ -34,23 +27,24 @@ export async function executeAction(
   // Debug helper console.log to inspect applicationData:
   if (showApplicationDataLog) console.log('ApplicationData: ', applicationData)
 
-  const evaluatorParams = {
-    objects: { applicationData, functions, ...additionalObjects },
-    pgConnection: DBConnect,
-    APIfetch: fetch,
-    graphQLConnection: { fetch, endpoint: graphQLEndpoint },
-    headers: {
-      Authorization: `Bearer ${await getAdminJWT()}`,
-    },
-  }
+  // const evaluatorParams = {
+  //   objects: { applicationData, functions, ...additionalObjects },
+  //   pgConnection: DBConnect,
+  //   APIfetch: fetch,
+  //   graphQLConnection: { fetch, endpoint: graphQLEndpoint },
+  //   headers: {
+  //     Authorization: `Bearer ${await getAdminJWT()}`,
+  //   },
+  // }
+
+  const evaluatorData = { applicationData, ...additionalObjects }
 
   // Evaluate condition
   let condition
   try {
-    condition = await evaluateExpression(
-      payload.condition_expression as EvaluatorNode,
-      evaluatorParams
-    )
+    condition = await FigTree.evaluate(payload.condition_expression, {
+      data: evaluatorData,
+    })
   } catch (err) {
     console.log('>> Error evaluating condition for action:', payload.code)
     const actionResult = {
@@ -78,14 +72,19 @@ export async function executeAction(
   // Condition met -- executing now...
   try {
     // Evaluate parameters
-    const parametersEvaluated = await evaluateParameters(payload.parameter_queries, evaluatorParams)
+    const parametersEvaluated = (await FigTree.evaluate(payload.parameter_queries, {
+      data: evaluatorData,
+    })) as Record<string, unknown>
     // TO-DO: Check all required parameters are present
+
+    console.log('evaluatorData', evaluatorData)
+    console.log('parametersEvaluated', parametersEvaluated)
 
     // TO-DO: If Scheduled, create a Job instead
     const actionResult = await actionLibrary[payload.code]({
       parameters: parametersEvaluated,
       applicationData,
-      outputCumulative: evaluatorParams.objects?.outputCumulative || {},
+      outputCumulative: evaluatorData?.outputCumulative || {},
       DBConnect,
     })
 

@@ -10,7 +10,7 @@ import { ExternalApiConfigs, QueryParameters } from './types'
 import { getApplicationData } from '../actions'
 import { getUserInfo } from '../permissions/loginHelpers'
 import { ActionApplicationData } from '../../types'
-import functions from '../actions/evaluatorFunctions'
+import functions from '../fig-tree-evaluator/functions'
 import { errorMessage } from '../utilityFunctions'
 
 export type AccessExternalApiQuery = {

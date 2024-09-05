@@ -1,7 +1,7 @@
 import databaseMethods from './databaseMethods'
 import DBConnect from '../../database/databaseConnect'
 import evaluateExpression from '../../../modules/expression-evaluator'
-import functions from '../../actions/evaluatorFunctions'
+import functions from '../../fig-tree-evaluator/functions'
 import { queryDataTable, updateRecord } from '../gqlDynamicQueries'
 import config from '../../../config'
 import { errorMessage, getValidTableName } from '../../utilityFunctions'
