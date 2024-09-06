@@ -20,6 +20,10 @@ IMAGE_TAG="build-${BRANCH_NAME}_$(date +"%Y-%m-%d")_${RANDOM_ID}"
 
 echo -e "\nBuilding image: ${IMAGE_TAG}\n"
 
+if [ $INITIAL_SNAPSHOT ]; then
+   echo -e "\nUsing snapshot: "${INITIAL_SNAPSHOT}""
+fi
+
 docker build \
    --progress plain \
    -t "${ACCOUNT}/${IMAGE_NAME}:${IMAGE_TAG}" \

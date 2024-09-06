@@ -1333,10 +1333,18 @@ class PostgresDB {
     newData: Record<string, any> | null,
     userId: number | null | undefined,
     orgId: number | null | undefined,
-    username: string | undefined,
     applicationId: number | null | undefined,
     comment: string | null | undefined
   ) => {
+    const username =
+      (
+        await this.query({
+          text: `
+      SELECT username from "user"
+      WHERE id = $1`,
+          values: [userId],
+        })
+      ).rows?.[0]?.username ?? null
     const dataTable = tableName.replace(config.dataTablePrefix, '')
     const text = `
       INSERT INTO data_changelog
