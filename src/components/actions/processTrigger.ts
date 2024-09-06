@@ -1,5 +1,5 @@
 import { TriggerPayload, ActionResult } from '../../types'
-import DBConnect from '../databaseConnect'
+import DBConnect from '../database/databaseConnect'
 import { actionLibrary } from '../pluginsConnect'
 import { EvaluatorNode } from '../../modules/expression-evaluator'
 import { getCoreActions } from './coreActions'

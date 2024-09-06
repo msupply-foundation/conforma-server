@@ -1,4 +1,4 @@
-import DBConnect from '../components/databaseConnect'
+import DBConnect from '../components/database/databaseConnect'
 import { errorMessage } from '../components/utilityFunctions'
 import config from '../config'
 

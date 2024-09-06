@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
-import db from '../databaseConnect'
+import db from '../database/databaseConnect'
 import path from 'path'
 import config from '../../config'
 import { get as extractProperty } from 'lodash'

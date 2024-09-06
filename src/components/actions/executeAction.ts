@@ -7,7 +7,7 @@ import {
 import evaluateExpression, { EvaluatorNode } from '../../modules/expression-evaluator'
 import { merge } from 'lodash'
 import functions from './evaluatorFunctions'
-import DBConnect from '../databaseConnect'
+import DBConnect from '../database/databaseConnect'
 import fetch from 'node-fetch'
 import { getApplicationData } from './getApplicationData'
 import { ActionQueueStatus } from '../../generated/graphql'

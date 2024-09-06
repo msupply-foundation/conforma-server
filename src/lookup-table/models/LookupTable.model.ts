@@ -1,5 +1,5 @@
 import { QueryResult } from 'pg'
-import DBConnect from '../../components/databaseConnect'
+import DBConnect from '../../components/database/databaseConnect'
 import {
   FieldMapType,
   GqlQueryResult,

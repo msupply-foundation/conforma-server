@@ -12,7 +12,7 @@ import {
   objectKeysToSnakeCase,
 } from '../utilityFunctions'
 import config from '../../config'
-import DBConnect from '../databaseConnect'
+import DBConnect from '../database/databaseConnect'
 import createThumbnail from './createThumbnails'
 import { FilePayload } from '../../types'
 import { File } from '../../generated/graphql'

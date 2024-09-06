@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
-import databaseConnect from '../databaseConnect'
+import databaseConnect from '../database/databaseConnect'
 import config from '../../config'
 import { Config } from '../../types'
 import { SocketStream } from '@fastify/websocket'

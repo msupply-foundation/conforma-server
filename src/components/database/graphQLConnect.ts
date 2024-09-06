@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
-import config from '../config'
-import { getAdminJWT } from './permissions/loginHelpers'
+import config from '../../config'
+import { getAdminJWT } from '../permissions/loginHelpers'
 import path from 'path'
 
 const endpoint = config.graphQLendpoint

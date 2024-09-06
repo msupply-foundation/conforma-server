@@ -1,5 +1,5 @@
 import path from 'path'
-import DBConnect from '../../src/components/databaseConnect'
+import DBConnect from '../../src/components/database/databaseConnect'
 import { getTemplateVersionId } from '../../src/components/exportAndImport/helpers'
 import { FILES_FOLDER } from '../../src/constants'
 import fs from 'fs/promises'

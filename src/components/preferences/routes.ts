@@ -1,7 +1,7 @@
 import path from 'path'
 import { readFileSync, writeFile } from 'fs'
 import { promisify } from 'util'
-import databaseConnect from '../databaseConnect'
+import databaseConnect from '../database/databaseConnect'
 import {
   getAppEntryPointDir,
   combineRequestParams,

@@ -1,4 +1,4 @@
-import databaseConnect from '../databaseConnect'
+import databaseConnect from '../database/databaseConnect'
 import { Trigger } from '../../generated/graphql'
 import { errorMessage } from '../utilityFunctions'
 

@@ -1,4 +1,4 @@
-import databaseConnect from '../databaseConnect'
+import databaseConnect from '../database/databaseConnect'
 import { getUserInfo } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
