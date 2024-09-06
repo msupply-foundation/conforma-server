@@ -22,11 +22,11 @@ const THROTTLE_QUEUE_THRESHOLD = 200 // ms
 interface EventObject<T> {
   name: string
   data: T
-  action: (data: T) => unknown
+  action: (data: T) => Promise<unknown>
 }
 
 export class EventThrottle {
-  queue: EventObject<any>[]
+  queue: { name: string; method: () => Promise<unknown> }[]
   timerId: NodeJS.Timeout | undefined
   queueActive: boolean
 
@@ -45,27 +45,27 @@ export class EventThrottle {
     while (this.queue.length > 0) {
       const next = this.queue.shift()
       if (next) {
-        const { data, action, name } = next
+        const { name, method } = next
         console.log('Processing queued event', name)
-        await action(data)
+        await method()
         console.log(`${this.queue.length} events remaining in queue`)
       }
     }
     this.queueActive = false
   }
 
-  public add<T>(event: EventObject<T>): void {
+  public add<T>({ name, action, data }: EventObject<T>): void {
     // Timer is used solely to determine whether to put new events at the front
     // or end of the queue.
     const currentTimer = this.timerId
     this.timerId = setTimeout(() => (this.timerId = undefined), THROTTLE_QUEUE_THRESHOLD)
 
     if (!currentTimer) {
-      console.log('Bumping event to front of queue:', event.name)
-      this.queue.unshift(event)
+      console.log('Bumping event to front of queue:', name)
+      this.queue.unshift({ name, method: async () => await action(data) })
     } else {
-      console.log('Queueing event:', event.name)
-      this.queue.push(event)
+      console.log('Queueing event:', name)
+      this.queue.push({ name, method: async () => await action(data) })
       clearTimeout(currentTimer)
     }
 
