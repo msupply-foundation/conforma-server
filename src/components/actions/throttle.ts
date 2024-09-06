@@ -47,7 +47,11 @@ export class EventThrottle {
       if (next) {
         const { data, action, name } = next
         console.log('Processing queued event', name)
-        await action(data)
+        try {
+          await action(data)
+        } catch (e) {
+          console.log('Error while running throttled action: ', e)
+        }
         console.log(`${this.queue.length} events remaining in queue`)
       }
     }
