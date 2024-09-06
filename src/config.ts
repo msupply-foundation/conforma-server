@@ -4,6 +4,7 @@ import preferences from '../preferences/preferences.json'
 import { readFileSync } from 'fs'
 import { version } from '../package.json'
 import { serverPrefKeys, ServerPreferences, WebAppPrefs, Config } from './types'
+import { EventThrottle } from './components/actions/throttle'
 const serverPrefs: ServerPreferences = preferences.server as ServerPreferences
 const isProductionBuild = process.env.NODE_ENV === 'production'
 const siteHost = (preferences.web as WebAppPrefs)?.siteHost
@@ -27,6 +28,12 @@ Operation modes:
   actually sent). An alternative development mode.
 */
 
+// Global Throttle instance, for spacing out processing when (potentially)
+// several hundred events occur simultaneously, or for making sure a particular
+// function waits till an existing (throttled) event is complete
+const Throttle = new EventThrottle()
+
+// Global config object
 const config: Config = {
   pg_database_connection: {
     user: 'postgres',
@@ -78,6 +85,7 @@ const config: Config = {
   isLiveServer,
   emailMode: getEmailOperationMode(serverPrefs.emailTestMode, serverPrefs.testingEmail),
   maintenanceMode: false,
+  Throttle,
 }
 
 // Mutate the global config object to inject new preferences

@@ -10,6 +10,7 @@ import { EmailOperationMode } from './config'
 import { PoolConfig } from 'pg'
 import { Schedulers } from './components/scheduler'
 import { ExternalApiConfigs } from './components/external-apis/types'
+import { EventThrottle } from './components/actions/throttle'
 
 export interface ActionInTemplate {
   code: string
@@ -383,6 +384,7 @@ interface ConfigBase {
   isLiveServer: boolean
   emailMode: EmailOperationMode
   maintenanceMode: boolean
+  Throttle: EventThrottle
 }
 
 export type Config = ConfigBase & ServerPreferences & { scheduledJobs?: Schedulers }
