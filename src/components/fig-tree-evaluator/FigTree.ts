@@ -6,16 +6,21 @@ import { Client } from 'pg'
 import PostgresConfig from '../database/postgresConfig.json'
 import config from '../../config'
 
+const databaseConnection = new Client(PostgresConfig)
+
 const FigTree = new FigTreeEvaluator({
   httpClient: fetch,
-  sqlConnection: SQLNodePostgres(new Client(PostgresConfig)),
+  sqlConnection: SQLNodePostgres(databaseConnection),
   graphQLConnection: { endpoint: config.graphQLendpoint },
   maxCacheSize: 100,
   maxCacheTime: 600,
   evaluateFullObject: true,
   // baseEndpoint:
   functions,
-  // TO-DO: Load Fragments
+
+  // Undocumented property to support certain V1 expressions. Remove this once
+  // we're sure all evaluator queries have been updated.
+  supportDeprecatedValueNodes: true,
 })
 
 getAdminJWT().then((result) =>
@@ -23,6 +28,19 @@ getAdminJWT().then((result) =>
     headers: {
       Authorization: `Bearer ${result}`,
     },
+  })
+)
+
+databaseConnection.connect().then(() =>
+  FigTree.evaluate({
+    operator: 'SQL',
+    query: 'SELECT name, expression FROM evaluator_fragment WHERE back_end = TRUE;',
+    fallback: [],
+  }).then((result) => {
+    const fragments = (result as any[]).reduce((acc, fragment) => {
+      return { ...acc, [fragment.name]: fragment.expression }
+    }, {})
+    FigTree.updateOptions({ fragments })
   })
 )
 

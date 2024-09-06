@@ -1188,6 +1188,21 @@ const migrateData = async () => {
     }
   }
 
+  if (databaseVersionLessThan('1.3.0')) {
+    console.log('Migrating to v1.3.0...')
+
+    console.log(' - Adding Evaluator Fragments table')
+
+    await DB.changeSchema(`
+      CREATE TABLE IF NOT EXISTS public.evaluator_fragment (
+        id serial PRIMARY KEY,
+        name VARCHAR UNIQUE NOT NULL,
+        expression JSON NOT NULL,
+        front_end BOOLEAN DEFAULT TRUE,
+        back_end BOOLEAN DEFAULT TRUE
+      )`)
+  }
+
   // Other version migrations continue here...
 
   // Update (almost all) Indexes, Views, Functions, Triggers regardless, since
