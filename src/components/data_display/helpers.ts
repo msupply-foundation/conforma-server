@@ -518,7 +518,14 @@ export const constructDetailsResponse = async (
   )
 
   // Don't need anything else for raw data item return
-  if (!headerDefinition) return { item }
+  if (!headerDefinition) {
+    const resolvedValues = await Promise.all(evaluationPromiseArray)
+    resolvedValues.forEach((value, index) => {
+      const field = evaluationFieldArray[index]
+      item[field] = value
+    })
+    return { item }
+  }
 
   // Build header
   const header: DetailsHeader = {
