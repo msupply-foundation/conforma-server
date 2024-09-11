@@ -1,7 +1,7 @@
 # DO NOT LAUNCH DOCKER-COMPOSE DIRECTLY. PLEASE USE THE `launch.sh` SCRIPT WHICH
 # WILL ENSURE ALL REQUIRED ENV VARIABLES ARE PRESENT
 
-# Last updated: 27/06/2024
+# Last updated: 11/09/2024
 
 version: '3.9'
 services:
@@ -27,6 +27,7 @@ services:
       - preferences:/usr/src/conforma-server/build/preferences
       - backups:/usr/src/conforma-server/build/backups
       - logs:/var/log/conforma
+      - file_share:/usr/src/conforma-server/file_share
     tty: true
   grafana:
     image: 'grafana/grafana'
@@ -54,6 +55,12 @@ volumes:
     driver_opts:
       type: none
       device: ${BACKUPS_FOLDER}
+      o: bind
+  file_share:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${SHARE_FOLDER:-/home/ubuntu/demo_server/file_share/}
       o: bind
   logs:
   grafana:
