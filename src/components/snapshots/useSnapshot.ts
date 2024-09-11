@@ -190,7 +190,7 @@ const useSnapshot: SnapshotOperation = async ({
       })
     }
 
-    refreshConfig(config, PREFERENCES_FILE)
+    refreshConfig(config)
 
     console.log('...Snapshot load complete!')
 
