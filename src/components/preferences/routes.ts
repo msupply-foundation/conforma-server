@@ -61,7 +61,7 @@ export const routeSetPrefs = async (request: any, reply: any) => {
   try {
     await setPreferences({ server, web })
 
-    refreshConfig(config, PREFERENCES_FILE)
+    refreshConfig(config)
 
     return reply.send({ success: true, preferences: { server, web } })
   } catch (err) {

@@ -100,17 +100,24 @@ function loadPrefs() {
   const mainPrefs = readJsonSync(
     path.join(getAppEntryPointDir(), preferencesFolder, preferencesFileName)
   )
-  const overridePrefs = process.env.PREFERENCE_OVERRIDES
-    ? readJsonSync(process.env.PREFERENCE_OVERRIDES)
-    : {}
-  return merge(mainPrefs, overridePrefs)
+  if (process.env.PREFERENCE_OVERRIDES) {
+    try {
+      const overridePrefs = readJsonSync(process.env.PREFERENCE_OVERRIDES)
+      console.log('PREFERENCE_OVERRIDES found:')
+      console.log(JSON.stringify(overridePrefs, null, 2))
+      return merge(mainPrefs, overridePrefs)
+    } catch {
+      console.log(
+        `ERROR: Unable to load file specified in PREFERENCE_OVERRIDES: ${process.env.PREFERENCE_OVERRIDES}`
+      )
+      return mainPrefs
+    }
+  } else return mainPrefs
 }
 
 // Mutate the global config object to inject new preferences
-export const refreshConfig = (config: Config, prefsFilePath: string) => {
+export const refreshConfig = (config: Config) => {
   console.log('\nUpdating system configuration...')
-  // prefsFilePath is passed in rather than imported from constants to prevent
-  // circular reference
   const prefs = loadPrefs()
   const serverPrefs: ServerPreferences = prefs.server
   const webAppPrefs: WebAppPrefs = prefs.web
