@@ -1,11 +1,19 @@
 require('dotenv').config()
 import { DateTime, Settings } from 'luxon'
-import preferences from '../preferences/preferences.json'
-import { readFileSync } from 'fs'
 import { version } from '../package.json'
 import { serverPrefKeys, ServerPreferences, WebAppPrefs, Config } from './types'
 import { EventThrottle } from './components/actions/throttle'
 import PostgresConfig from './components/database/postgresConfig.json'
+import { readJsonSync } from 'fs-extra'
+import path from 'path'
+import { getAppEntryPointDir } from './components/utilityFunctions'
+import { merge } from 'lodash'
+
+const preferencesFolder = '../preferences'
+const preferencesFileName = 'preferences.json'
+
+const preferences = loadPrefs()
+
 const serverPrefs: ServerPreferences = preferences.server as ServerPreferences
 const isProductionBuild = process.env.NODE_ENV === 'production'
 const siteHost = (preferences.web as WebAppPrefs)?.siteHost
@@ -48,8 +56,8 @@ const config: Config = {
   imagesFolder: '../images',
   databaseFolder: '../database',
   localisationsFolder: '../localisation',
-  preferencesFolder: '../preferences',
-  preferencesFileName: 'preferences.json',
+  preferencesFolder,
+  preferencesFileName,
   backupsFolder: '../backups',
   genericThumbnailsFolderName: '_generic_thumbnails',
   defaultUnderMaintenanceSite: 'https://msupply.foundation/projects/conforma',
@@ -80,12 +88,29 @@ const config: Config = {
   Throttle,
 }
 
+function loadPrefs() {
+  const mainPrefs = readJsonSync(
+    path.join(getAppEntryPointDir(), preferencesFolder, preferencesFileName)
+  )
+  if (process.env.PREFERENCE_OVERRIDES) {
+    try {
+      const overridePrefs = readJsonSync(process.env.PREFERENCE_OVERRIDES)
+      console.log('PREFERENCE_OVERRIDES found:')
+      console.log(JSON.stringify(overridePrefs, null, 2))
+      return merge(mainPrefs, overridePrefs)
+    } catch {
+      console.log(
+        `ERROR: Unable to load file specified in PREFERENCE_OVERRIDES: ${process.env.PREFERENCE_OVERRIDES}`
+      )
+      return mainPrefs
+    }
+  } else return mainPrefs
+}
+
 // Mutate the global config object to inject new preferences
-export const refreshConfig = (config: Config, prefsFilePath: string) => {
+export const refreshConfig = (config: Config) => {
   console.log('\nUpdating system configuration...')
-  // prefsFilePath is passed in rather than imported from constants to prevent
-  // circular reference
-  const prefs = JSON.parse(readFileSync(prefsFilePath, 'utf-8'))
+  const prefs = loadPrefs()
   const serverPrefs: ServerPreferences = prefs.server
   const webAppPrefs: WebAppPrefs = prefs.web
   serverPrefKeys.forEach((key) => {
