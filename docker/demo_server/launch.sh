@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Updated 03/07/2024
+# Updated 11/09/2024
 
 # Script to start (or restart) one or more containers using docker-compose
 # - Provide the instances you want to launch as arguments -- each must
@@ -79,6 +79,13 @@ for instance in "${ARGS[@]}"; do
         break
     fi
     echo -e " - Snapshots folder: $SNAPSHOTS_FOLDER"
+    
+    export SHARE_FOLDER=$SHARE_FOLDER
+    if [ -z "$SHARE_FOLDER" ]; then
+        echo " - No SHARE_FOLDER specified... will use default"
+	else
+		echo -e " - File share folder: $SHARE_FOLDER"
+    fi
 
     export PORT_APP=$PORT
     if [ -z "$PORT" ]; then
@@ -116,6 +123,7 @@ for instance in "${ARGS[@]}"; do
     unset TAG
     unset BACKUPS_FOLDER
     unset SNAPSHOTS_FOLDER
+    unset SHARE_FOLDER
     unset PORT
     unset WEB_HOST
 done
