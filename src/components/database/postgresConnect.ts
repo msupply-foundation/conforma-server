@@ -13,8 +13,6 @@ import {
   FilePayload,
   TriggerQueueUpdatePayload,
   UserOrg,
-  ActionResult,
-  TriggerPayload,
   DBOperationType,
 } from '../../types'
 import {
@@ -25,6 +23,7 @@ import {
 } from '../../generated/graphql'
 import { errorMessage } from '../utilityFunctions'
 import { updateReviewerStatsFromDBEvent } from './updateReviewerStats'
+import { hashRecord } from '../template-import-export'
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -51,6 +50,7 @@ class PostgresDB {
     listener.query('LISTEN action_notifications')
     listener.query('LISTEN file_notifications')
     listener.query('LISTEN update_reviewer_stats_notification')
+    listener.query('LISTEN recalculate_checksum_notification')
     listener.on('notification', async ({ channel, payload }) => {
       if (!payload) {
         console.log(`Notification ${channel} received with no payload!`)
@@ -89,6 +89,7 @@ class PostgresDB {
           }
         case 'file_notifications':
           deleteFile(payloadObject)
+          break
         case 'update_reviewer_stats_notification':
           // Time delay so this aggregation process doesn't slow down Action
           // execution
@@ -97,6 +98,10 @@ class PostgresDB {
             data: payloadObject,
             action: updateReviewerStatsFromDBEvent,
           })
+          break
+        case 'recalculate_checksum_notification':
+          hashRecord(payloadObject)
+          break
       }
     })
   }
@@ -123,8 +128,8 @@ class PostgresDB {
     }
   }
 
-  public getValuesPlaceholders = (object: { [key: string]: any }) =>
-    Object.keys(object).map((key, index) => `$${index + 1}`)
+  public getValuesPlaceholders = (object: { [key: string]: any }, offset: number = 1) =>
+    Object.keys(object).map((_, index) => `$${index + offset}`)
 
   public static get Instance() {
     return this._instance || (this._instance = new this())

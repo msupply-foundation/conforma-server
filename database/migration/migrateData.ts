@@ -9,6 +9,7 @@ import bcrypt from 'bcrypt'
 import { errorMessage, getAppEntryPointDir } from '../../src/components/utilityFunctions'
 import { loadCurrentPrefs, setPreferences } from '../../src/components/preferences'
 import { updateReviewerStats } from '../../src/components/database/updateReviewerStats'
+import { hashRecord } from '../../src/components/template-import-export'
 
 // CONSTANTS
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
@@ -1186,6 +1187,64 @@ const migrateData = async () => {
     } catch (err) {
       console.log('ERROR regenerating reviewer actions')
     }
+  }
+
+  if (databaseVersionLessThan('1.5.0')) {
+    console.log('Migrating to v1.5.0...')
+
+    console.log(' - Adding checksum fields to template-connected tables')
+
+    const tables = [
+      'permission_name',
+      'data_view',
+      'data_view_column_definition',
+      'data_table',
+      'template_category',
+      'filter',
+    ]
+
+    for (const table of tables) {
+      await DB.changeSchema(`ALTER TABLE ${table}
+        ADD COLUMN IF NOT EXISTS checksum varchar,
+        ADD COLUMN IF NOT EXISTS last_modified timestamptz;`)
+    }
+
+    for (const tableName of tables) {
+      if (tableName === 'data_table') continue
+      try {
+        const ids = (
+          await DB.query({
+            text: `
+              SELECT id
+              FROM ${tableName}
+              ORDER BY id;
+          `,
+            rowMode: 'array',
+          })
+        ).rows.flat()
+        for (const id of ids) {
+          await hashRecord({ tableName, id })
+        }
+      } catch (err) {
+        console.log('ERROR regenerating reviewer actions')
+      }
+    }
+
+    console.log(' - Creating JOIN tables for template-related entities')
+    await DB.changeSchema(`
+     CREATE TABLE IF NOT EXISTS public.template_data_view_join (
+        id serial PRIMARY KEY,
+        template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL,
+        data_view_id integer REFERENCES public.data_view (id) ON DELETE CASCADE NOT NULL
+      );
+    CREATE TABLE IF NOT EXISTS public.template_data_view_join (
+        id serial PRIMARY KEY,
+        template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL,
+        data_view_id integer REFERENCES public.data_view (id) ON DELETE CASCADE NOT NULL
+      );
+      
+      
+      `)
   }
 
   // Other version migrations continue here...

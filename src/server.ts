@@ -55,6 +55,7 @@ import {
   updateMaintenanceModeInConfig,
 } from './components/other/routeServerStatus'
 import { routeFileLists } from './components/files/routes'
+import { cleanupDataTables } from './lookup-table/utils/cleanupDataTables'
 require('dotenv').config()
 
 // Set the default locale and timezone for date-time display (in console)
@@ -76,6 +77,7 @@ const startServer = async () => {
   await loadActionPlugins() // Connects to Database and listens for Triggers
   createDefaultDataFolders()
   await cleanUpFiles() // Runs on schedule as well as startup
+  await cleanupDataTables()
   await updateRowPolicies()
 
   // Add schedulers to global "config" object so we can update them. There
