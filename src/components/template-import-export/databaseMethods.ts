@@ -29,6 +29,41 @@ const databaseMethods = {
       throw err
     }
   },
+  getLinkedEntities: async <T>(input: {
+    templateId: number
+    table: string
+    joinTable: string
+  }): Promise<T[]> => {
+    const { templateId, table, joinTable } = input
+    const text = `
+      SELECT *
+      FROM ${table} WHERE id IN (
+        SELECT ${table}_id FROM ${joinTable}
+        WHERE template_id = $1
+      )
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [templateId] })
+      return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
+  getDataViewColumns: async (tableName: string) => {
+    const text = `
+      SELECT *
+      FROM data_view_column_definition
+      WHERE table_name = $1
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [tableName] })
+      return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
 }
 
 export default databaseMethods

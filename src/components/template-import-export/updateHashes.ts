@@ -1,3 +1,4 @@
+import { getLookupTableData } from '../../lookup-table/export'
 import db from './databaseMethods'
 import { createHash } from 'crypto'
 
@@ -15,9 +16,12 @@ export const hashRecord = async ({ tableName, id }: NotificationPayload) => {
 
   // Remove foreign_key ids and replace with the actual data they refer to
   if (tableName === 'permission_name') {
-    const policyId = data.permission_policy_id
-    delete data.permission_policy_id
-    data.permission_policy = (await db.getRecord('permission_policy', policyId)) ?? null
+    await replaceForeignKeyRef(
+      data,
+      'permission_policy',
+      'permission_policy_id',
+      'permission_policy'
+    )
   }
 
   const checksum = getHash(data)
@@ -30,8 +34,40 @@ export const hashRecord = async ({ tableName, id }: NotificationPayload) => {
   }
 }
 
+export const hashLookupTable = async (tableId: number) => {
+  try {
+    const dataTableRecord = await db.getRecord('data_table', tableId)
+    delete dataTableRecord.checksum
+    delete dataTableRecord.last_modified
+    const recordHashes = [getHash(dataTableRecord)]
+
+    const tableData = await getLookupTableData(tableId)
+    tableData.forEach((row) => recordHashes.push(getHash(row)))
+    const fullTableHash = getHash(recordHashes)
+    await db.updateChecksum('data_table', tableId, fullTableHash)
+  } catch (err) {
+    console.log(`ERROR calculating hash for lookup table ${tableId}: ${(err as Error).message}`)
+  }
+}
+
 export const getHash = (data: unknown) => {
   const hash = createHash('sha256')
   hash.update(JSON.stringify(data))
   return hash.digest('hex')
+}
+
+// Takes a record that has foreign key references and replaces the foreign key
+// id with the actual data referenced. Modifies data object in place.
+export const replaceForeignKeyRef = async (
+  data: Record<string, unknown>,
+  fTable: string,
+  fKeyField: string,
+  replacementField: string
+) => {
+  const fKeyId = data[fKeyField] as number
+  delete data[fKeyField]
+  const replacementData = (await db.getRecord(fTable, fKeyId)) ?? null
+  if (replacementData !== null) delete replacementData.id
+  data[replacementField] = replacementData
+  // No need to return, since original object is mutated directly
 }

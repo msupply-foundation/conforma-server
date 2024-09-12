@@ -56,6 +56,7 @@ import {
 } from './components/other/routeServerStatus'
 import { routeFileLists } from './components/files/routes'
 import { cleanupDataTables } from './lookup-table/utils/cleanupDataTables'
+import { templateRoutes, getTemplateLinkedEntities } from './components/template-import-export'
 require('dotenv').config()
 
 // Set the default locale and timezone for date-time display (in console)
@@ -173,6 +174,7 @@ const startServer = async () => {
         })
 
         server.register(snapshotRoutes, { prefix: '/snapshot' })
+        server.register(templateRoutes, { prefix: '/template' })
         server.get('/updateRowPolicies', routeUpdateRowPolicies)
         server.get('/get-application-data', routeGetApplicationData)
         server.get('/get-all-prefs', routeGetAllPrefs)
@@ -265,6 +267,8 @@ const startServer = async () => {
 }
 
 startServer()
+
+getTemplateLinkedEntities(163)
 
 function generateAsciiHeader(version: string) {
   // Should look like:

@@ -5,7 +5,7 @@ import { setDataTypes, toCamelCase, toSnakeCase } from '../utils'
 import { LookupTableHeadersValidator, LookupTableNameValidator } from '../utils/validations'
 import { ValidationErrors } from '../utils/validations/error'
 import { ILookupTableNameValidator, IValidator } from '../utils/validations/types'
-import { getHash } from '../../components/template-import-export'
+import { getHash, hashLookupTable } from '../../components/template-import-export'
 
 type LookupTableServiceProps = {
   tableId?: number
@@ -86,7 +86,7 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
 
       await createUpdateRows()
       await createOrUpdateDataView()
-      await updateDataTableHash()
+      await hashLookupTable(tableId)
 
       return buildSuccessMessage(results)
     } catch (err) {
@@ -113,7 +113,7 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
       await createNewColumns()
       await createUpdateRows()
       await createOrUpdateDataView()
-      await updateDataTableHash()
+      await hashLookupTable(tableId)
 
       return buildSuccessMessage(results)
     } catch (err) {
@@ -231,11 +231,6 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
     } else {
       await lookupTableModel.createDataView(name, tableName, dataViewCode)
     }
-  }
-
-  const updateDataTableHash = async () => {
-    const fullTableHash = getHash(rowHashes)
-    await lookupTableModel.updateDataTableHash(tableName, fullTableHash)
   }
 
   function comparer(otherArray: any[]) {

@@ -9,7 +9,8 @@ import bcrypt from 'bcrypt'
 import { errorMessage, getAppEntryPointDir } from '../../src/components/utilityFunctions'
 import { loadCurrentPrefs, setPreferences } from '../../src/components/preferences'
 import { updateReviewerStats } from '../../src/components/database/updateReviewerStats'
-import { hashRecord } from '../../src/components/template-import-export'
+import { getHash, hashLookupTable, hashRecord } from '../../src/components/template-import-export'
+import { getLookupTableData } from '../../src/lookup-table/export'
 
 // CONSTANTS
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
@@ -1230,6 +1231,20 @@ const migrateData = async () => {
       }
     }
 
+    console.log(' - Updating checksum hashes for lookup tables')
+
+    const lookupTableIds = (
+      await DB.query({
+        text: `SELECT id FROM public.data_table
+                WHERE is_lookup_table = TRUE;`,
+        rowMode: 'array',
+      })
+    ).rows.flat()
+
+    for (const tableId of lookupTableIds) {
+      await hashLookupTable(tableId)
+    }
+
     console.log(' - Creating JOIN tables for template-related entities')
     await DB.changeSchema(`
      CREATE TABLE IF NOT EXISTS public.template_data_view_join (
@@ -1237,14 +1252,11 @@ const migrateData = async () => {
         template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL,
         data_view_id integer REFERENCES public.data_view (id) ON DELETE CASCADE NOT NULL
       );
-    CREATE TABLE IF NOT EXISTS public.template_data_view_join (
-        id serial PRIMARY KEY,
-        template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL,
-        data_view_id integer REFERENCES public.data_view (id) ON DELETE CASCADE NOT NULL
-      );
-      
-      
       `)
+
+    console.log(' - Adding linked_entities column to template')
+    await DB.changeSchema(`ALTER TABLE public.template
+      ADD COLUMN IF NOT EXISTS linked_entity_metadata jsonb;`)
   }
 
   // Other version migrations continue here...
