@@ -12,6 +12,7 @@ interface DataTableRecord {
 }
 
 export const cleanupDataTables = async () => {
+  console.log('Cleaning up data tables...')
   const dataTableRecords: DataTableRecord[] = await db.getAllDataTableRecords()
   const dataTableNames = dataTableRecords.map(
     ({ table_name }) => `${config.dataTablePrefix}${table_name}`
