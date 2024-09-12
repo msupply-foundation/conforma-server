@@ -22,25 +22,33 @@ const ImportCsvUpdateController = async (
   })
 
   for await (const file of data) {
-    await parseStream(file.file, {
-      headers: lookupTableService.parseCsvHeaders,
-    })
-      .on('data', async (row) => {
-        await lookupTableService.addRow(row)
+    await new Promise((resolve, reject) => {
+      parseStream(file.file, {
+        headers: lookupTableService.parseCsvHeaders,
       })
-      .on('end', async (rowCount: number) => {
-        await lookupTableService
-          .updateTable()
-          .catch((error: Error) =>
+        .on('data', async (row) => {
+          await lookupTableService.addRow(row)
+        })
+        .on('end', async () => {
+          await lookupTableService
+            .updateTable()
+            .catch((error: Error) =>
+              reject(
+                reply
+                  .status(422)
+                  .send({ status: 'error', name: error.name, message: error.message })
+              )
+            )
+            .then((message) => {
+              resolve(reply.send({ status: 'success', message: JSON.stringify(message) }))
+            })
+        })
+        .on('error', (error: Error) => {
+          reject(
             reply.status(422).send({ status: 'error', name: error.name, message: error.message })
           )
-          .then((message) => {
-            reply.send({ status: 'success', message: JSON.stringify(message) })
-          })
-      })
-      .on('error', (error: Error) => {
-        reply.status(422).send({ status: 'error', name: error.name, message: error.message })
-      })
+        })
+    })
   }
 }
 
