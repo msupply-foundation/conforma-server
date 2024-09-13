@@ -1,3 +1,4 @@
+import { DataTable as PgDataTable } from '../../generated/postgres'
 import { getLookupTableData } from '../../lookup-table/export'
 import db from './databaseMethods'
 import { createHash } from 'crypto'
@@ -8,7 +9,7 @@ interface NotificationPayload {
 }
 
 export const hashRecord = async ({ tableName, id }: NotificationPayload) => {
-  const data = await db.getRecord(tableName, id)
+  const data = await db.getRecord<Record<string, unknown>>(tableName, id)
   const oldChecksum = data.checksum
   delete data.id
   delete data.checksum
@@ -36,7 +37,7 @@ export const hashRecord = async ({ tableName, id }: NotificationPayload) => {
 
 export const hashLookupTable = async (tableId: number) => {
   try {
-    const dataTableRecord = await db.getRecord('data_table', tableId)
+    const dataTableRecord = await db.getRecord<Partial<PgDataTable>>('data_table', tableId)
     delete dataTableRecord.checksum
     delete dataTableRecord.last_modified
     const recordHashes = [getHash(dataTableRecord)]
@@ -66,7 +67,7 @@ export const replaceForeignKeyRef = async (
 ) => {
   const fKeyId = data[fKeyField] as number
   delete data[fKeyField]
-  const replacementData = (await db.getRecord(fTable, fKeyId)) ?? null
+  const replacementData = (await db.getRecord<Record<string, unknown>>(fTable, fKeyId)) ?? null
   if (replacementData !== null) delete replacementData.id
   data[replacementField] = replacementData
   // No need to return, since original object is mutated directly

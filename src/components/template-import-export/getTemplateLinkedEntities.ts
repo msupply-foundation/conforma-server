@@ -1,50 +1,39 @@
 import { DataView } from '../../generated/graphql'
+import {
+  PermissionName as PgPermissionName,
+  DataView as PgDataView,
+  Filter as PgFilter,
+  DataViewColumnDefinition as PgDataViewColumnDefinition,
+  Template as PgTemplate,
+  TemplateCategory,
+} from '../../generated/postgres'
 import { buildColumnList } from '../data_display/helpers'
 import { filterObject, objectKeysToCamelCase } from '../utilityFunctions'
 import db from './databaseMethods'
 import { replaceForeignKeyRef } from './updateHashes'
 
-interface LinkedEntityBase {
+interface LinkedEntity {
   checksum: string
   lastModified: Date
-  [key: string]: unknown
+  data: LinkedEntityData
 }
 
-interface LinkedFilter extends LinkedEntityBase {
-  code: string
-}
+type LinkedEntityInput =
+  | PgPermissionName
+  | PgPermissionName
+  | PgFilter
+  | PgDataView
+  | PgDataViewColumnDefinition
 
-interface LinkedDataView extends LinkedEntityBase {
-  identifier: string
-}
-
-interface LinkedDataViewColumn extends LinkedEntityBase {
-  tableName: string
-  columnName: string
-}
-
-interface LinkedCategory extends LinkedEntityBase {
-  code: string
-}
-
-interface LinkedPermission extends LinkedEntityBase {
-  name: string
-}
-
-interface LinkedEntities {
-  filter: LinkedFilter[]
-  dataView: LinkedDataView[]
-  dataViewColumn: LinkedDataViewColumn[]
-  category: LinkedCategory
-  permission: LinkedPermission[]
-}
+type LinkedEntityNoId = Omit<LinkedEntityInput, 'id'>
+type LinkedEntityData = Omit<LinkedEntityNoId, 'checksum' | 'last_modified'>
 
 export const getTemplateLinkedEntities = async (templateId: number) => {
-  const template = await db.getRecord('template', templateId)
+  const template = await db.getRecord<PgTemplate>('template', templateId)
 
   // Get linked entities via JOIN tables
   const linkedFilters = (
-    await db.getLinkedEntities<LinkedFilter>({
+    await db.getLinkedEntities<PgFilter>({
       templateId,
       table: 'filter',
       joinTable: 'template_filter_join',
@@ -52,14 +41,14 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
   ).map(stripIds)
 
   const linkedDataViews = (
-    await db.getLinkedEntities<{ table_name: string }>({
+    await db.getLinkedEntities<PgDataView>({
       templateId,
       table: 'data_view',
       joinTable: 'template_data_view_join',
     })
   ).map(stripIds)
 
-  const dataViewColumns = new Set<LinkedDataViewColumn>()
+  const dataViewColumns = new Set<PgDataViewColumnDefinition>()
   for (const dataView of linkedDataViews) {
     const allColumns = await db.getDataViewColumns(dataView.table_name)
     const allColumnNames = allColumns.map((col) => col.column_name)
@@ -81,7 +70,7 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
   const linkedDataViewColumns = Array.from(dataViewColumns).map(stripIds)
 
   const linkedPermissions = (
-    await db.getLinkedEntities<LinkedPermission>({
+    await db.getLinkedEntities<PgPermissionName>({
       templateId,
       table: 'permission_name',
       joinTable: 'template_permission',
@@ -92,19 +81,36 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
       permission,
       'permission_policy',
       'permission_policy_id',
-      'permission_policy_id'
+      'permission_policy'
     )
   }
   const linkedCategory = stripIds(
-    await db.getRecord('template_category', template.template_category_id)
+    await db.getRecord<TemplateCategory>('template_category', template.template_category_id ?? 0)
   )
 
-  // console.log(linkedFilters)
-  // console.log(linkedDataViews)
-  // console.log(linkedPermissions)
-  // console.log(linkedCategory)
-  // Build into LinkedEntities structure
-  // Save to template table
+  const linkedEntities = {
+    filters: linkedFilters.map((f) => constructLinkedEntity(f)),
+    permissions: linkedPermissions.map((f) => constructLinkedEntity(f)),
+    dataViews: linkedDataViews.map((f) => constructLinkedEntity(f)),
+    dataViewColumns: linkedDataViewColumns.map((f) => constructLinkedEntity(f)),
+    categories: constructLinkedEntity(linkedCategory),
+  }
+
+  console.log(JSON.stringify(linkedEntities, null, 2))
 }
 
-const stripIds = (data: Record<string, unknown>) => filterObject(data, (key) => key !== 'id')
+const stripIds = <T>(data: T): Omit<T, 'id'> =>
+  filterObject(data as { [key: string]: any }, (key) => key !== 'id') as Omit<T, 'id'>
+
+const constructLinkedEntity = (data: LinkedEntityNoId) => {
+  const entity: Partial<LinkedEntity> = {
+    checksum: data.checksum as string,
+    lastModified: data.last_modified as Date,
+  }
+  const reducedData = data as LinkedEntityData & { checksum?: string; last_modified?: Date }
+  delete reducedData.checksum
+  delete reducedData.last_modified
+  entity.data = reducedData
+
+  return entity as LinkedEntity
+}

@@ -2,7 +2,7 @@ import DBConnect from '../database/databaseConnect'
 import { errorMessage } from '../../components/utilityFunctions'
 
 const databaseMethods = {
-  getRecord: async (tableName: string, id: number) => {
+  getRecord: async <T>(tableName: string, id: number): Promise<T> => {
     try {
       const text = `
             SELECT * FROM ${tableName} WHERE id = $1
