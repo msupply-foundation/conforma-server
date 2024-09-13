@@ -268,8 +268,6 @@ const startServer = async () => {
 
 startServer()
 
-getTemplateLinkedEntities(163)
-
 function generateAsciiHeader(version: string) {
   // Should look like:
   // -------------------------

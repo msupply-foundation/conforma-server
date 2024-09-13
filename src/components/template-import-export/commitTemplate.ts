@@ -1,0 +1,30 @@
+import { customAlphabet } from 'nanoid/non-secure'
+import { Template as PgTemplate } from '../../generated/postgres'
+import { ApiError } from './ApiError'
+import db from './databaseMethods'
+import { getTemplateLinkedEntities } from './getTemplateLinkedEntities'
+
+export const commitTemplate = async (templateId: number) => {
+  const template = await db.getRecord<PgTemplate>('template', templateId)
+
+  if (!template) {
+    throw new ApiError(`Template ${templateId} does not exist`, 400)
+  }
+
+  // Check already committed?
+  if (!template.version_id.startsWith('*')) {
+    throw new ApiError(`Template ${templateId} has already been committed`, 400)
+  }
+
+  // Fetch entity data
+  const linkedEntities = await getTemplateLinkedEntities(templateId)
+
+  const versionId = getTemplateVersionId()
+
+  await db.commitTemplate(templateId, versionId, linkedEntities)
+
+  return versionId
+}
+
+// Use nanoid to generate unique template version IDs
+export const getTemplateVersionId = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 6)

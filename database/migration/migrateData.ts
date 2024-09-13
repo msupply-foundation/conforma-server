@@ -1256,7 +1256,7 @@ const migrateData = async () => {
 
     console.log(' - Adding linked_entities column to template')
     await DB.changeSchema(`ALTER TABLE public.template
-      ADD COLUMN IF NOT EXISTS linked_entity_metadata jsonb;`)
+      ADD COLUMN IF NOT EXISTS linked_entity_data jsonb;`)
   }
 
   // Other version migrations continue here...

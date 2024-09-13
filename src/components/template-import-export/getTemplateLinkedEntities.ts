@@ -96,7 +96,7 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
     categories: constructLinkedEntity(linkedCategory),
   }
 
-  console.log(JSON.stringify(linkedEntities, null, 2))
+  return linkedEntities
 }
 
 const stripIds = <T>(data: T): Omit<T, 'id'> =>

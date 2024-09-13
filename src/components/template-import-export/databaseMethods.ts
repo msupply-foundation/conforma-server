@@ -1,5 +1,6 @@
 import DBConnect from '../database/databaseConnect'
 import { errorMessage } from '../../components/utilityFunctions'
+import { commitTemplate } from './commitTemplate'
 
 const databaseMethods = {
   getRecord: async <T>(tableName: string, id: number): Promise<T> => {
@@ -59,6 +60,24 @@ const databaseMethods = {
     try {
       const result = await DBConnect.query({ text, values: [tableName] })
       return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
+  commitTemplate: async (
+    templateId: number,
+    versionId: string,
+    entityData: Record<string, unknown>
+  ) => {
+    const text = `
+      UPDATE template SET
+        version_id = $2,
+        linked_entity_data = $3
+        WHERE id = $1;`
+
+    try {
+      await DBConnect.query({ text, values: [templateId, versionId, entityData] })
     } catch (err) {
       console.log(errorMessage(err))
       throw err

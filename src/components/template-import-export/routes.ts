@@ -1,4 +1,6 @@
 import { FastifyPluginCallback, FastifyReply, FastifyRequest } from 'fastify'
+import { commitTemplate } from './commitTemplate'
+import { ApiError, returnApiError } from './ApiError'
 
 export const templateRoutes: FastifyPluginCallback<{ prefix: string }> = (server, _, done) => {
   server.post('/commit/:id', routeCommitTemplate)
@@ -10,9 +12,29 @@ export const templateRoutes: FastifyPluginCallback<{ prefix: string }> = (server
   server.post('/import/install/:uid', routeImportTemplateInstall)
   server.get('/get-links/:id', routeGetTemplateLinks)
   server.get('/get-suggested-links/:id', routeGetTemplateSuggestedLinks)
-  server.get('/get-entities', routeLinkEntities)
+  server.get('/get-entities', routeGetAllEntities)
+  server.post('/link-entities', routeLinkEntities)
 
   done()
+}
+
+const routeCommitTemplate = async (
+  request: FastifyRequest<{ Params: { id: string } }>,
+  reply: FastifyReply
+) => {
+  const templateId = Number(request.params.id)
+  if (!templateId || isNaN(templateId)) {
+    returnApiError('Invalid template id', reply, 400)
+  }
+
+  try {
+    const result = await commitTemplate(templateId)
+    return reply.send(result)
+  } catch (err) {
+    returnApiError(err, reply)
+  }
+
+  reply.send('DONE')
 }
 
 const routeDuplicateTemplateNew = async (request: FastifyRequest, reply: FastifyReply) => {
@@ -23,13 +45,6 @@ const routeDuplicateTemplateNew = async (request: FastifyRequest, reply: Fastify
 }
 
 const routeDuplicateTemplateVersion = async (request: FastifyRequest, reply: FastifyReply) => {
-  //   const isArchive = (request.query as Query).archive === 'true'
-  //   const snapshotName = (request.query as Query).name
-
-  reply.send('DONE')
-}
-
-const routeCommitTemplate = async (request: FastifyRequest, reply: FastifyReply) => {
   //   const isArchive = (request.query as Query).archive === 'true'
   //   const snapshotName = (request.query as Query).name
 
