@@ -19,22 +19,21 @@ export const templateRoutes: FastifyPluginCallback<{ prefix: string }> = (server
 }
 
 const routeCommitTemplate = async (
-  request: FastifyRequest<{ Params: { id: string } }>,
+  request: FastifyRequest<{ Params: { id: string }; Body: { comment?: string } }>,
   reply: FastifyReply
 ) => {
   const templateId = Number(request.params.id)
   if (!templateId || isNaN(templateId)) {
     returnApiError('Invalid template id', reply, 400)
   }
+  const comment = request.body?.comment ?? null
 
   try {
-    const result = await commitTemplate(templateId)
+    const result = await commitTemplate(templateId, comment)
     return reply.send(result)
   } catch (err) {
     returnApiError(err, reply)
   }
-
-  reply.send('DONE')
 }
 
 const routeDuplicateTemplateNew = async (request: FastifyRequest, reply: FastifyReply) => {

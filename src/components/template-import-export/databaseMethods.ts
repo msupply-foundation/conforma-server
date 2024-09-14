@@ -68,16 +68,18 @@ const databaseMethods = {
   commitTemplate: async (
     templateId: number,
     versionId: string,
+    comment: string | null,
     entityData: Record<string, unknown>
   ) => {
     const text = `
       UPDATE template SET
         version_id = $2,
-        linked_entity_data = $3
+        version_comment = $3,
+        linked_entity_data = $4
         WHERE id = $1;`
 
     try {
-      await DBConnect.query({ text, values: [templateId, versionId, entityData] })
+      await DBConnect.query({ text, values: [templateId, versionId, comment, entityData] })
     } catch (err) {
       console.log(errorMessage(err))
       throw err

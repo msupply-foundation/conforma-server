@@ -4,7 +4,9 @@ import { ApiError } from './ApiError'
 import db from './databaseMethods'
 import { getTemplateLinkedEntities } from './getTemplateLinkedEntities'
 
-export const commitTemplate = async (templateId: number) => {
+export const commitTemplate = async (templateId: number, comment: string | null) => {
+  console.log(`Committing template: ${templateId}...`)
+  console.log(`Comment: ${comment}`)
   const template = await db.getRecord<PgTemplate>('template', templateId)
 
   if (!template) {
@@ -21,9 +23,10 @@ export const commitTemplate = async (templateId: number) => {
 
   const versionId = getTemplateVersionId()
 
-  await db.commitTemplate(templateId, versionId, linkedEntities)
+  await db.commitTemplate(templateId, versionId, comment, linkedEntities)
 
-  return versionId
+  console.log(`Template ${templateId} committed`)
+  return { versionId }
 }
 
 // Use nanoid to generate unique template version IDs
