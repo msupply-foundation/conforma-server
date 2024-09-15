@@ -1,6 +1,7 @@
 import DBConnect from '../database/databaseConnect'
 import { errorMessage } from '../../components/utilityFunctions'
 import { commitTemplate } from './commitTemplate'
+import { FullLinkedEntities } from './getTemplateLinkedEntities'
 
 const databaseMethods = {
   getRecord: async <T>(tableName: string, id: number): Promise<T> => {
@@ -69,7 +70,7 @@ const databaseMethods = {
     templateId: number,
     versionId: string,
     comment: string | null,
-    entityData: Record<string, unknown>
+    entityData: FullLinkedEntities
   ) => {
     const text = `
       UPDATE template SET

@@ -2269,7 +2269,7 @@ export interface Template {
   version_comment: string | null;
   version_history: Json | null;
   priority: number | null;
-  linked_entity_metadata: Json | null;
+  linked_entity_data: Json | null;
 }
 export interface TemplateInput {
   id?: number;
@@ -2291,11 +2291,11 @@ export interface TemplateInput {
   version_comment?: string | null;
   version_history?: Json | null;
   priority?: number | null;
-  linked_entity_metadata?: Json | null;
+  linked_entity_data?: Json | null;
 }
 const template = {
   tableName: 'template',
-  columns: ['id', 'name', 'name_plural', 'code', 'is_linear', 'can_applicant_make_changes', 'start_message', 'status', 'submission_message', 'icon', 'template_category_id', 'version_timestamp', 'serial_pattern', 'dashboard_restrictions', 'version_id', 'parent_version_id', 'version_comment', 'version_history', 'priority', 'linked_entity_metadata'],
+  columns: ['id', 'name', 'name_plural', 'code', 'is_linear', 'can_applicant_make_changes', 'start_message', 'status', 'submission_message', 'icon', 'template_category_id', 'version_timestamp', 'serial_pattern', 'dashboard_restrictions', 'version_id', 'parent_version_id', 'version_comment', 'version_history', 'priority', 'linked_entity_data'],
   requiredForInsert: ['code', 'version_id'],
   primaryKey: 'id',
   foreignKeys: { template_category_id: { table: 'template_category', column: 'id', $type: null as unknown as TemplateCategory }, },

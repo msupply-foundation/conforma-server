@@ -9,21 +9,30 @@ import {
 } from '../../generated/postgres'
 import { buildColumnList } from '../data_display/helpers'
 import { filterObject, objectKeysToCamelCase } from '../utilityFunctions'
+import { ApiError } from './ApiError'
 import db from './databaseMethods'
 import { replaceForeignKeyRef } from './updateHashes'
 
-interface LinkedEntity {
+export interface LinkedEntity {
   checksum: string
   lastModified: Date
   data: LinkedEntityData
 }
 
-type LinkedEntityInput =
-  | PgPermissionName
-  | PgPermissionName
-  | PgFilter
-  | PgDataView
-  | PgDataViewColumnDefinition
+export type LinkedEntities = Record<string, LinkedEntity>
+
+export interface FullLinkedEntities {
+  filters: LinkedEntities
+  permissions: LinkedEntities
+  dataViews: LinkedEntities
+  dataViewColumns: LinkedEntities
+  category: LinkedEntity
+}
+
+type LinkedEntityInput = {
+  checksum: string | null
+  last_modified: Date | null
+}
 
 type LinkedEntityNoId = Omit<LinkedEntityInput, 'id'>
 type LinkedEntityData = Omit<LinkedEntityNoId, 'checksum' | 'last_modified'>
@@ -88,12 +97,12 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
     await db.getRecord<TemplateCategory>('template_category', template.template_category_id ?? 0)
   )
 
-  const linkedEntities = {
-    filters: linkedFilters.map((f) => constructLinkedEntity(f)),
-    permissions: linkedPermissions.map((f) => constructLinkedEntity(f)),
-    dataViews: linkedDataViews.map((f) => constructLinkedEntity(f)),
-    dataViewColumns: linkedDataViewColumns.map((f) => constructLinkedEntity(f)),
-    categories: constructLinkedEntity(linkedCategory),
+  const linkedEntities: FullLinkedEntities = {
+    filters: buildLinkedEntityObject(linkedFilters, 'code'),
+    permissions: buildLinkedEntityObject(linkedPermissions, 'name'),
+    dataViews: buildLinkedEntityObject(linkedDataViews, 'identifier'),
+    dataViewColumns: buildLinkedEntityObject(linkedDataViewColumns, ['table_name', 'column_name']),
+    category: buildLinkedEntityObject([linkedCategory], 'code')[linkedCategory.code],
   }
 
   return linkedEntities
@@ -102,15 +111,20 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
 const stripIds = <T>(data: T): Omit<T, 'id'> =>
   filterObject(data as { [key: string]: any }, (key) => key !== 'id') as Omit<T, 'id'>
 
-const constructLinkedEntity = (data: LinkedEntityNoId) => {
-  const entity: Partial<LinkedEntity> = {
-    checksum: data.checksum as string,
-    lastModified: data.last_modified as Date,
-  }
-  const reducedData = data as LinkedEntityData & { checksum?: string; last_modified?: Date }
-  delete reducedData.checksum
-  delete reducedData.last_modified
-  entity.data = reducedData
+const buildLinkedEntityObject = <T extends LinkedEntityInput>(
+  entities: T[],
+  keyField: keyof T | (keyof T)[]
+): LinkedEntities => {
+  return entities.reduce((acc, entity) => {
+    const key = String(
+      Array.isArray(keyField) ? keyField.map((kf) => entity[kf]).join('__') : entity[keyField]
+    )
 
-  return entity as LinkedEntity
+    const { checksum, last_modified, ...data } = entity
+
+    if (last_modified === null || checksum === null)
+      throw new ApiError('Some linked entities have missing checksums/dates', 500)
+
+    return { ...acc, [key]: { checksum, lastModified: last_modified, data } }
+  }, {})
 }
