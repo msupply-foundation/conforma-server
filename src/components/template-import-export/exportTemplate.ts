@@ -16,7 +16,6 @@ import { FullLinkedEntities, getTemplateLinkedEntities } from './getTemplateLink
 import { FILES_FOLDER, TEMPLATE_TEMP_FOLDER } from '../../constants'
 import { DateTime } from 'luxon'
 import config from '../../config'
-import { zipSnapshot } from '../snapshots/takeSnapshot'
 import archiver from 'archiver'
 
 export const exportTemplateCheck = async (templateId: number) => {
@@ -28,7 +27,7 @@ export const exportTemplateCheck = async (templateId: number) => {
   // Fetch entity data
   const linkedEntities = await getTemplateLinkedEntities(templateId)
 
-  return getDiff(linkedEntities, template.linked_entity_data as FullLinkedEntities)
+  return getDiff(template.linked_entity_data as FullLinkedEntities, linkedEntities)
 }
 
 type TemplateStructure = Omit<PgTemplate, 'id' | 'linked_entity_data'> & {

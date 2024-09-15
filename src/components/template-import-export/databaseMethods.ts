@@ -1,7 +1,7 @@
 import DBConnect from '../database/databaseConnect'
 import { errorMessage } from '../../components/utilityFunctions'
-import { commitTemplate } from './commitTemplate'
 import { FullLinkedEntities } from './getTemplateLinkedEntities'
+import { DataTable } from '../../generated/postgres'
 
 const databaseMethods = {
   getRecord: async <T>(tableName: string, id: number): Promise<T> => {
@@ -58,6 +58,21 @@ const databaseMethods = {
     `
     try {
       const result = await DBConnect.query({ text, values: [templateId] })
+      return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
+  getLinkedDataTables: async (tableNames: string[]): Promise<DataTable[]> => {
+    const text = `
+      SELECT table_name, checksum, last_modified
+        FROM data_table
+        WHERE table_name = ANY($1)
+        AND is_lookup_table = TRUE;
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [tableNames] })
       return result.rows
     } catch (err) {
       console.log(errorMessage(err))

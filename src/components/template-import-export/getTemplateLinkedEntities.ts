@@ -1,3 +1,4 @@
+import { snakeCase } from 'lodash'
 import { DataView } from '../../generated/graphql'
 import {
   PermissionName as PgPermissionName,
@@ -5,7 +6,8 @@ import {
   Filter as PgFilter,
   DataViewColumnDefinition as PgDataViewColumnDefinition,
   Template as PgTemplate,
-  TemplateCategory,
+  TemplateCategory as PgTemplateCategory,
+  DataTable as PgDataTable,
 } from '../../generated/postgres'
 import { buildColumnList } from '../data_display/helpers'
 import { filterObject, objectKeysToCamelCase } from '../utilityFunctions'
@@ -27,6 +29,7 @@ export interface FullLinkedEntities {
   dataViews: LinkedEntities
   dataViewColumns: LinkedEntities
   category: LinkedEntity
+  dataTables: LinkedEntities
 }
 
 type LinkedEntityInput = {
@@ -94,7 +97,11 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
     )
   }
   const linkedCategory = stripIds(
-    await db.getRecord<TemplateCategory>('template_category', template.template_category_id ?? 0)
+    await db.getRecord<PgTemplateCategory>('template_category', template.template_category_id ?? 0)
+  )
+
+  const linkedDataTables = await db.getLinkedDataTables(
+    linkedDataViews.map((dv) => snakeCase(dv.table_name))
   )
 
   const linkedEntities: FullLinkedEntities = {
@@ -103,6 +110,7 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
     dataViews: buildLinkedEntityObject(linkedDataViews, 'identifier'),
     dataViewColumns: buildLinkedEntityObject(linkedDataViewColumns, ['table_name', 'column_name']),
     category: buildLinkedEntityObject([linkedCategory], 'code')[linkedCategory.code],
+    dataTables: buildLinkedEntityObject(linkedDataTables, 'table_name'),
   }
 
   return linkedEntities
