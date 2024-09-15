@@ -1,7 +1,10 @@
 import { FastifyPluginCallback, FastifyReply, FastifyRequest } from 'fastify'
+import fsx from 'fs-extra'
 import { commitTemplate } from './commitTemplate'
 import { returnApiError } from './ApiError'
-import { exportTemplateCheck } from './exportTemplate'
+import { exportTemplateCheck, exportTemplateDump } from './exportTemplate'
+import { FILES_FOLDER } from '../../constants'
+import path from 'path'
 
 export const templateRoutes: FastifyPluginCallback<{ prefix: string }> = (server, _, done) => {
   server.post('/commit/:id', routeCommitTemplate)
@@ -55,13 +58,22 @@ const routeExportTemplateCheck = async (
 }
 
 const routeExportTemplateDump = async (
-  request: FastifyRequest<{ Params: { id: string }; Body: { comment?: string } }>,
+  request: FastifyRequest<{ Params: { id: string } }>,
   reply: FastifyReply
 ) => {
-  //   const isArchive = (request.query as Query).archive === 'true'
-  //   const snapshotName = (request.query as Query).name
+  const templateId = Number(request.params.id)
+  if (!templateId || isNaN(templateId)) {
+    returnApiError('Invalid template id', reply, 400)
+  }
 
-  reply.send('DONE')
+  try {
+    const filepath = await exportTemplateDump(templateId)
+    reply.sendFile(filepath)
+    fsx.remove(path.join(FILES_FOLDER, filepath))
+    return reply
+  } catch (err) {
+    returnApiError(err, reply)
+  }
 }
 
 const routeDuplicateTemplateNew = async (request: FastifyRequest, reply: FastifyReply) => {

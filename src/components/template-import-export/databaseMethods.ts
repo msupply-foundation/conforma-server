@@ -17,6 +17,18 @@ const databaseMethods = {
       throw err
     }
   },
+  getRecordsByField: async <T>(tableName: string, field: string, value: unknown): Promise<T[]> => {
+    try {
+      const text = `
+            SELECT * FROM ${tableName} WHERE ${field} = $1
+          `
+      const result = await DBConnect.query({ text, values: [value] })
+      return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
   updateChecksum: async (tableName: string, id: number, checksum: string) => {
     try {
       const text = `
