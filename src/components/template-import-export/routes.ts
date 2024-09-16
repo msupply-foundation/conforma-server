@@ -3,9 +3,10 @@ import fsx from 'fs-extra'
 import { commitTemplate } from './commitTemplate'
 import { returnApiError } from './ApiError'
 import { exportTemplateCheck, exportTemplateDump } from './exportTemplate'
-import { FILES_FOLDER } from '../../constants'
-import path from 'path'
+import db from './databaseMethods'
 import { duplicateTemplate } from './duplicateTemplate'
+import { DataView as PgDataView } from '../../generated/postgres'
+import { getSuggestedDataViews } from './linking'
 
 export const templateRoutes: FastifyPluginCallback<{ prefix: string }> = (server, _, done) => {
   server.post('/commit/:id', routeCommitTemplate)
@@ -15,8 +16,8 @@ export const templateRoutes: FastifyPluginCallback<{ prefix: string }> = (server
   server.get('/export/dump/:id', routeExportTemplateDump)
   server.post('/import/upload', routeImportTemplateUpload)
   server.post('/import/install/:uid', routeImportTemplateInstall)
-  server.get('/get-links/:id', routeGetTemplateLinks)
-  server.get('/get-suggested-links/:id', routeGetTemplateSuggestedLinks)
+  // server.get('/get-links/:id', routeGetLinkedDataViews)
+  server.get('/get-suggested-data-views/:id', routeGetTemplateSuggestedLinks)
   server.get('/get-entities', routeGetAllEntities)
   server.post('/link-entities', routeLinkEntities)
 
@@ -130,18 +131,42 @@ const routeImportTemplateInstall = async (request: FastifyRequest, reply: Fastif
   reply.send('DONE')
 }
 
-const routeGetTemplateLinks = async (request: FastifyRequest, reply: FastifyReply) => {
-  //   const isArchive = (request.query as Query).archive === 'true'
-  //   const snapshotName = (request.query as Query).name
+// const routeGetLinkedDataViews = async (
+//   request: FastifyRequest<{ Params: { id: string } }>,
+//   reply: FastifyReply
+// ) => {
+//   const templateId = Number(request.params.id)
+//   if (!templateId || isNaN(templateId)) {
+//     returnApiError('Invalid template id', reply, 400)
+//   }
 
-  reply.send('DONE')
-}
+//   try {
+//     const links = await db.getLinkedEntities<PgDataView>({
+//       templateId,
+//       table: 'data_view',
+//       joinTable: 'template_data_view_join',
+//     })
+//     return reply.send(links)
+//   } catch (err) {
+//     returnApiError(err, reply)
+//   }
+// }
 
-const routeGetTemplateSuggestedLinks = async (request: FastifyRequest, reply: FastifyReply) => {
-  //   const isArchive = (request.query as Query).archive === 'true'
-  //   const snapshotName = (request.query as Query).name
+const routeGetTemplateSuggestedLinks = async (
+  request: FastifyRequest<{ Params: { id: string } }>,
+  reply: FastifyReply
+) => {
+  const templateId = Number(request.params.id)
+  if (!templateId || isNaN(templateId)) {
+    returnApiError('Invalid template id', reply, 400)
+  }
 
-  reply.send('DONE')
+  try {
+    const suggested = await getSuggestedDataViews(templateId)
+    return reply.send(suggested)
+  } catch (err) {
+    returnApiError(err, reply)
+  }
 }
 
 const routeGetAllEntities = async (request: FastifyRequest, reply: FastifyReply) => {

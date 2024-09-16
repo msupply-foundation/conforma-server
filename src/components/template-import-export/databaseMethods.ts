@@ -186,6 +186,40 @@ const databaseMethods = {
       throw err
     }
   },
+  getAllDataViews: async () => {
+    const text = `
+      SELECT *
+      FROM data_view;
+    `
+    try {
+      const result = await DBConnect.query({ text })
+      return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
+  getTemplateElementCountUsingDataView: async (templateId: number, dataViewCode: string) => {
+    const text = `
+      WITH a AS (SELECT '%/data-views/${dataViewCode}%' as val)
+        SELECT COUNT(*) FROM public.template_element
+          WHERE (parameters::text LIKE (SELECT val FROM a)
+          OR visibility_condition::text LIKE (SELECT val FROM a)
+          OR is_required::text LIKE (SELECT val FROM a)
+          OR is_editable::text LIKE (SELECT val FROM a))
+          AND section_id IN (
+            SELECT id FROM template_section
+            WHERE template_id = $1
+          )
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [templateId] })
+      return result.rows[0].count
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
 }
 
 export default databaseMethods
