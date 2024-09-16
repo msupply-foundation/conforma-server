@@ -14,31 +14,7 @@ import { filterObject, objectKeysToCamelCase } from '../utilityFunctions'
 import { ApiError } from './ApiError'
 import db from './databaseMethods'
 import { replaceForeignKeyRef } from './updateHashes'
-
-export interface LinkedEntity {
-  checksum: string
-  lastModified: Date
-  data: LinkedEntityData
-}
-
-export type LinkedEntities = Record<string, LinkedEntity>
-
-export interface FullLinkedEntities {
-  filters: LinkedEntities
-  permissions: LinkedEntities
-  dataViews: LinkedEntities
-  dataViewColumns: LinkedEntities
-  category: LinkedEntity
-  dataTables: LinkedEntities
-}
-
-type LinkedEntityInput = {
-  checksum: string | null
-  last_modified: Date | null
-}
-
-type LinkedEntityNoId = Omit<LinkedEntityInput, 'id'>
-type LinkedEntityData = Omit<LinkedEntityNoId, 'checksum' | 'last_modified'>
+import { FullLinkedEntities, LinkedEntities, LinkedEntityInput } from './types'
 
 export const getTemplateLinkedEntities = async (templateId: number) => {
   const template = await db.getRecord<PgTemplate>('template', templateId)

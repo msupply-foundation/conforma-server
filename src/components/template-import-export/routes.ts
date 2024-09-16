@@ -5,6 +5,7 @@ import { returnApiError } from './ApiError'
 import { exportTemplateCheck, exportTemplateDump } from './exportTemplate'
 import { FILES_FOLDER } from '../../constants'
 import path from 'path'
+import { duplicateTemplate } from './duplicateTemplate'
 
 export const templateRoutes: FastifyPluginCallback<{ prefix: string }> = (server, _, done) => {
   server.post('/commit/:id', routeCommitTemplate)
@@ -69,25 +70,50 @@ const routeExportTemplateDump = async (
   try {
     const filepath = await exportTemplateDump(templateId)
     reply.sendFile(filepath)
-    fsx.remove(path.join(FILES_FOLDER, filepath))
+    // fsx.remove(path.join(FILES_FOLDER, filepath))
     return reply
   } catch (err) {
     returnApiError(err, reply)
   }
 }
 
-const routeDuplicateTemplateNew = async (request: FastifyRequest, reply: FastifyReply) => {
-  //   const isArchive = (request.query as Query).archive === 'true'
-  //   const snapshotName = (request.query as Query).name
+const routeDuplicateTemplateNew = async (
+  request: FastifyRequest<{ Params: { id: string }; Body: { code: string } }>,
+  reply: FastifyReply
+) => {
+  const templateId = Number(request.params.id)
+  if (!templateId || isNaN(templateId)) {
+    returnApiError('Invalid template id', reply, 400)
+  }
 
-  reply.send('DONE')
+  const code = request.body?.code
+  if (!code) {
+    returnApiError('New template code missing', reply, 400)
+  }
+
+  try {
+    const result = await duplicateTemplate(templateId, code)
+    return reply.send(result)
+  } catch (err) {
+    returnApiError(err, reply)
+  }
 }
 
-const routeDuplicateTemplateVersion = async (request: FastifyRequest, reply: FastifyReply) => {
-  //   const isArchive = (request.query as Query).archive === 'true'
-  //   const snapshotName = (request.query as Query).name
+const routeDuplicateTemplateVersion = async (
+  request: FastifyRequest<{ Params: { id: string }; Body: { code: string } }>,
+  reply: FastifyReply
+) => {
+  const templateId = Number(request.params.id)
+  if (!templateId || isNaN(templateId)) {
+    returnApiError('Invalid template id', reply, 400)
+  }
 
-  reply.send('DONE')
+  try {
+    const result = await duplicateTemplate(templateId)
+    return reply.send(result)
+  } catch (err) {
+    returnApiError(err, reply)
+  }
 }
 
 const routeImportTemplateUpload = async (request: FastifyRequest, reply: FastifyReply) => {

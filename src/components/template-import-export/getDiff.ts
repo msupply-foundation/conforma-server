@@ -1,5 +1,5 @@
 import { isEqual } from 'lodash'
-import { FullLinkedEntities, LinkedEntities, LinkedEntity } from './getTemplateLinkedEntities'
+import { FullLinkedEntities, LinkedEntities, LinkedEntity } from './types'
 
 export const getDiff = (templateData: FullLinkedEntities, comparisonData: FullLinkedEntities) => {
   const { filters, permissions, dataViews, dataViewColumns, category, dataTables } = templateData

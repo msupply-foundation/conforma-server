@@ -1,16 +1,44 @@
 import DBConnect from '../database/databaseConnect'
-import { errorMessage } from '../../components/utilityFunctions'
-import { FullLinkedEntities } from './getTemplateLinkedEntities'
+import { errorMessage, isObject } from '../../components/utilityFunctions'
 import { DataTable } from '../../generated/postgres'
+import { FullLinkedEntities } from './types'
 
 const databaseMethods = {
-  getRecord: async <T>(tableName: string, id: number): Promise<T> => {
+  beginTransaction: async () => {
+    try {
+      await DBConnect.query({ text: 'BEGIN TRANSACTION;' })
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
+  commitTransaction: async () => {
+    try {
+      await DBConnect.query({ text: 'COMMIT TRANSACTION;' })
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
+  cancelTransaction: async () => {
+    try {
+      await DBConnect.query({ text: 'ROLLBACK TRANSACTION;' })
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
+  getRecord: async <T>(
+    tableName: string,
+    value: number | string,
+    field: string = 'id'
+  ): Promise<T> => {
     try {
       const text = `
-            SELECT * FROM ${tableName} WHERE id = $1
+            SELECT * FROM ${tableName} WHERE ${field} = $1
         `
       // Get table
-      const result = await DBConnect.query({ text, values: [id] })
+      const result = await DBConnect.query({ text, values: [value] })
       return result.rows[0]
     } catch (err) {
       console.log(errorMessage(err))
@@ -108,6 +136,25 @@ const databaseMethods = {
 
     try {
       await DBConnect.query({ text, values: [templateId, versionId, comment, entityData] })
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
+  insertRecord: async (tableName: string, data: Record<string, unknown>) => {
+    const fields = Object.keys(data).join(', ')
+    const values = Object.values(data).map((value) =>
+      isObject(value) || Array.isArray(value) ? JSON.stringify(value) : value
+    )
+
+    try {
+      const text = `
+        INSERT INTO ${tableName}
+          (${fields})
+        VALUES (${DBConnect.getValuesPlaceholders(values)})
+        RETURNING id;`
+      const result = await DBConnect.query({ text, values })
+      return result.rows[0].id
     } catch (err) {
       console.log(errorMessage(err))
       throw err
