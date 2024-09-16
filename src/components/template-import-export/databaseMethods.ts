@@ -160,6 +160,32 @@ const databaseMethods = {
       throw err
     }
   },
+  getNextDraftVersionId: async (code: string) => {
+    const text = `
+      SELECT version_id FROM template
+        WHERE code = $1
+        AND version_id LIKE '*%'
+    `
+    try {
+      const draftVersions = (
+        await DBConnect.query({ text, values: [code], rowMode: 'array' })
+      ).rows.flat()
+      if (!draftVersions.includes('*')) return '*'
+      let i = 1
+      let nextDraftVersionId: string | null = null
+      while (nextDraftVersionId === null) {
+        if (draftVersions.includes(`*_${i}`)) {
+          i++
+          continue
+        }
+        nextDraftVersionId = `*_${i}`
+      }
+      return nextDraftVersionId
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
 }
 
 export default databaseMethods

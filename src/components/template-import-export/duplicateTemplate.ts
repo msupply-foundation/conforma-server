@@ -31,17 +31,21 @@ export const duplicateTemplate = async (templateId: number, newCode?: string) =>
       parentVersionId: templateRecord.parent_version_id,
       comment: templateRecord.version_comment,
     })
+    templateRecord.parent_version_id = templateRecord.version_id
+    templateRecord.version_id = await db.getNextDraftVersionId(templateRecord.code)
   } else {
     // New template type
+    const nextWouldBe = await db.getNextDraftVersionId(newCode)
+    if (nextWouldBe !== '*') throw new ApiError(`Template with code ${newCode} already exists`, 400)
     templateRecord.code = newCode
     templateRecord.version_history = []
-    templateRecord.name = `NEw template base from: ${template.name}`
+    templateRecord.name = `NEW template based from: ${template.name}`
     templateRecord.name_plural = null
+    templateRecord.version_id = '*'
+    templateRecord.parent_version_id = null
   }
 
-  templateRecord.parent_version_id = templateRecord.version_id
   templateRecord.version_comment = null
-  templateRecord.version_id = '*' // TO-DO: Add suffix if this already exists
 
   try {
     await db.beginTransaction()
