@@ -30,15 +30,22 @@ const databaseMethods = {
   },
   getRecord: async <T>(
     tableName: string,
-    value: number | string,
-    field: string = 'id'
+    value: number | string | (number | string)[],
+    field: string | string[] = 'id'
   ): Promise<T> => {
     try {
-      const text = `
-            SELECT * FROM ${tableName} WHERE ${field} = $1
-        `
-      // Get table
-      const result = await DBConnect.query({ text, values: [value] })
+      const text = Array.isArray(field)
+        ? `SELECT * FROM ${tableName} WHERE ${field
+            .map((val, index) =>
+              index === 0 ? `${val} = $${index + 1}` : `AND ${val} = $${index + 1}`
+            )
+            .join(' ')}`
+        : `SELECT * FROM ${tableName} WHERE ${field} = $1`
+
+      const result = await DBConnect.query({
+        text,
+        values: Array.isArray(value) ? [...value] : [value],
+      })
       return result.rows[0]
     } catch (err) {
       console.log(errorMessage(err))

@@ -1,12 +1,22 @@
 import { FastifyPluginCallback, FastifyReply, FastifyRequest } from 'fastify'
 import fsx from 'fs-extra'
+import { pipeline } from 'stream'
+import { promisify } from 'util'
 import { commitTemplate } from './commitTemplate'
-import { returnApiError } from './ApiError'
+import { ApiError, returnApiError } from './ApiError'
 import { exportTemplateCheck, exportTemplateDump } from './exportTemplate'
 import db from './databaseMethods'
 import { duplicateTemplate } from './duplicateTemplate'
 import { DataView as PgDataView } from '../../generated/postgres'
 import { getSuggestedDataViews } from './linking'
+import path from 'path'
+import { FILES_FOLDER, TEMPLATE_TEMP_FOLDER } from '../../constants'
+import StreamZip from 'node-stream-zip'
+import fastifyMultipart from '@fastify/multipart'
+import { importTemplateInstall, importTemplateUpload, InstallDetails } from './importTemplate'
+import { customAlphabet } from 'nanoid'
+
+const pump = promisify(pipeline)
 
 export const templateRoutes: FastifyPluginCallback<{ prefix: string }> = (server, _, done) => {
   server.post('/commit/:id', routeCommitTemplate)
@@ -18,8 +28,8 @@ export const templateRoutes: FastifyPluginCallback<{ prefix: string }> = (server
   server.post('/import/install/:uid', routeImportTemplateInstall)
   // server.get('/get-links/:id', routeGetLinkedDataViews)
   server.get('/get-suggested-data-views/:id', routeGetTemplateSuggestedLinks)
-  server.get('/get-entities', routeGetAllEntities)
-  server.post('/link-entities', routeLinkEntities)
+  // server.get('/get-entities', routeGetAllEntities)
+  // server.post('/link-entities', routeLinkEntities)
 
   done()
 }
@@ -118,17 +128,62 @@ const routeDuplicateTemplateVersion = async (
 }
 
 const routeImportTemplateUpload = async (request: FastifyRequest, reply: FastifyReply) => {
-  //   const isArchive = (request.query as Query).archive === 'true'
-  //   const snapshotName = (request.query as Query).name
+  let upload
+  try {
+    upload = await request.file()
+  } catch (err) {
+    returnApiError('No file attached', reply, 400)
+  }
 
-  reply.send('DONE')
+  if (!upload) {
+    returnApiError('No file attached', reply, 400)
+    return
+  }
+
+  if (upload?.mimetype !== 'application/zip') returnApiError('File is not a ZIP file', reply, 400)
+
+  const tempZipLocation = path.join(TEMPLATE_TEMP_FOLDER, 'templateUpload.zip')
+  await pump(upload.file, fsx.createWriteStream(tempZipLocation))
+
+  const folderName = getRandomTemplateFolderName()
+  const unzippedTemplatePath = path.join(FILES_FOLDER, folderName)
+
+  try {
+    const zip = new StreamZip.async({ file: tempZipLocation })
+    await fsx.ensureDir(unzippedTemplatePath)
+    await zip.extract(null, unzippedTemplatePath)
+    await zip.close()
+    await fsx.remove(tempZipLocation)
+  } catch (err) {
+    returnApiError(`Problem unzipping uploaded file: ${(err as Error).message}`, reply, 400)
+  }
+
+  const modifiedEntities = await importTemplateUpload(folderName)
+
+  try {
+    return reply.send({ uid: folderName, modifiedEntities })
+  } catch (err) {
+    returnApiError(err, reply)
+  }
 }
 
-const routeImportTemplateInstall = async (request: FastifyRequest, reply: FastifyReply) => {
-  //   const isArchive = (request.query as Query).archive === 'true'
-  //   const snapshotName = (request.query as Query).name
+const routeImportTemplateInstall = async (
+  request: FastifyRequest<{ Params: { uid: string }; Body: InstallDetails }>,
+  reply: FastifyReply
+) => {
+  const uid = Number(request.params.uid)
+  if (!uid) {
+    returnApiError('No UID specified for template install', reply, 400)
+  }
 
-  reply.send('DONE')
+  const installDetails = request.body ?? {}
+
+  try {
+    const result = await importTemplateInstall(uid, installDetails)
+    return reply.send(result)
+  } catch (err) {
+    returnApiError(err, reply)
+  }
 }
 
 // const routeGetLinkedDataViews = async (
@@ -169,16 +224,18 @@ const routeGetTemplateSuggestedLinks = async (
   }
 }
 
-const routeGetAllEntities = async (request: FastifyRequest, reply: FastifyReply) => {
-  //   const isArchive = (request.query as Query).archive === 'true'
-  //   const snapshotName = (request.query as Query).name
+// const routeGetAllEntities = async (request: FastifyRequest, reply: FastifyReply) => {
+//   //   const isArchive = (request.query as Query).archive === 'true'
+//   //   const snapshotName = (request.query as Query).name
 
-  reply.send('DONE')
-}
+//   reply.send('DONE')
+// }
 
-const routeLinkEntities = async (request: FastifyRequest, reply: FastifyReply) => {
-  //   const isArchive = (request.query as Query).archive === 'true'
-  //   const snapshotName = (request.query as Query).name
+// const routeLinkEntities = async (request: FastifyRequest, reply: FastifyReply) => {
+//   //   const isArchive = (request.query as Query).archive === 'true'
+//   //   const snapshotName = (request.query as Query).name
 
-  reply.send('DONE')
-}
+//   reply.send('DONE')
+// }
+
+const getRandomTemplateFolderName = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 24)

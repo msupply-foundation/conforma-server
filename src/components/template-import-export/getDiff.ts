@@ -60,7 +60,10 @@ const compare = (templateEntities: LinkedEntities, compareEntities: LinkedEntiti
   return diff
 }
 
-const filterModifiedData = (data1: Record<string, unknown>, data2: Record<string, unknown>) => {
+export const filterModifiedData = (
+  data1: Record<string, unknown>,
+  data2: Record<string, unknown>
+) => {
   const returnData1: Record<string, unknown> = {}
   const returnData2: Record<string, unknown> = {}
 

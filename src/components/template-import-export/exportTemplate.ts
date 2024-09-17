@@ -1,14 +1,6 @@
 import path from 'path'
 import fsx from 'fs-extra'
-import {
-  Template as PgTemplate,
-  TemplateSection as PgTemplateSection,
-  TemplateElement as PgTemplateElement,
-  TemplateStageReviewLevel as PgTemplateStageReviewLevel,
-  TemplateStage as PgTemplateStage,
-  TemplateAction as PgTemplateAction,
-  File as PgFile,
-} from '../../generated/postgres'
+import { Template as PgTemplate } from '../../generated/postgres'
 import { ApiError } from './ApiError'
 import db from './databaseMethods'
 import { getDiff } from './getDiff'
@@ -17,7 +9,7 @@ import { FILES_FOLDER, TEMPLATE_TEMP_FOLDER } from '../../constants'
 import { DateTime } from 'luxon'
 import config from '../../config'
 import archiver from 'archiver'
-import { FullLinkedEntities, TemplateSection, TemplateStage, TemplateStructure } from './types'
+import { FullLinkedEntities } from './types'
 import { buildTemplateStructure } from './buildTemplateStructure'
 
 export const exportTemplateCheck = async (templateId: number) => {

@@ -61,13 +61,14 @@ export const getHash = (data: unknown) => {
 // id with the actual data referenced. Modifies data object in place.
 export const replaceForeignKeyRef = async (
   data: Record<string, unknown>,
-  fTable: string,
-  fKeyField: string,
+  foreignTable: string,
+  foreignKeyField: string,
   replacementField: string
 ) => {
-  const fKeyId = data[fKeyField] as number
-  delete data[fKeyField]
-  const replacementData = (await db.getRecord<Record<string, unknown>>(fTable, fKeyId)) ?? null
+  const foreignKeyId = data[foreignKeyField] as number
+  delete data[foreignKeyField]
+  const replacementData =
+    (await db.getRecord<Record<string, unknown>>(foreignTable, foreignKeyId)) ?? null
   if (replacementData !== null) delete replacementData.id
   data[replacementField] = replacementData
   // No need to return, since original object is mutated directly

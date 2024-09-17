@@ -7,7 +7,6 @@ import {
   DataViewColumnDefinition as PgDataViewColumnDefinition,
   Template as PgTemplate,
   TemplateCategory as PgTemplateCategory,
-  DataTable as PgDataTable,
 } from '../../generated/postgres'
 import { buildColumnList } from '../data_display/helpers'
 import { filterObject, objectKeysToCamelCase } from '../utilityFunctions'
@@ -36,26 +35,9 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
     })
   ).map(stripIds)
 
-  const dataViewColumns = new Set<PgDataViewColumnDefinition>()
-  for (const dataView of linkedDataViews) {
-    const allColumns = await db.getDataViewColumns(dataView.table_name)
-    const allColumnNames = allColumns.map((col) => col.column_name)
+  console.log('linkedDataViews', linkedDataViews)
 
-    ;['TABLE', 'DETAIL', 'FILTER', 'RAW'].forEach((type) => {
-      const usedColumns = buildColumnList(
-        objectKeysToCamelCase(dataView) as DataView,
-        allColumnNames,
-        type as 'TABLE' | 'DETAIL' | 'FILTER' | 'RAW'
-      )
-      allColumns.forEach((col) => {
-        if (usedColumns.includes(col.column_name)) dataViewColumns.add(col)
-      })
-    })
-  }
-
-  // TO-DO: Add search columns?? (Probably)
-
-  const linkedDataViewColumns = Array.from(dataViewColumns).map(stripIds)
+  const linkedDataViewColumns = await getDataViewColumnsFromDataViews(linkedDataViews)
 
   const linkedPermissions = (
     await db.getLinkedEntities<PgPermissionName>({
@@ -111,4 +93,26 @@ const buildLinkedEntityObject = <T extends LinkedEntityInput>(
 
     return { ...acc, [key]: { checksum, lastModified: last_modified, data } }
   }, {})
+}
+
+export const getDataViewColumnsFromDataViews = async (dataViews: Omit<PgDataView, 'id'>[]) => {
+  const dataViewColumns = new Set<PgDataViewColumnDefinition>()
+  for (const dataView of dataViews) {
+    const allColumns = await db.getDataViewColumns(dataView.table_name)
+    const allColumnNames = allColumns.map((col) => col.column_name)
+
+    ;['TABLE', 'DETAIL', 'FILTER', 'RAW'].forEach((type) => {
+      const usedColumns = buildColumnList(
+        objectKeysToCamelCase(dataView) as DataView,
+        allColumnNames,
+        type as 'TABLE' | 'DETAIL' | 'FILTER' | 'RAW'
+      )
+      allColumns.forEach((col) => {
+        if (usedColumns.includes(col.column_name)) dataViewColumns.add(col)
+      })
+    })
+  }
+
+  // TO-DO: Add search columns?? (Probably)
+  return Array.from(dataViewColumns).map(stripIds)
 }

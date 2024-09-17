@@ -30,4 +30,4 @@ export const commitTemplate = async (templateId: number, comment: string | null)
 }
 
 // Use nanoid to generate unique template version IDs
-export const getTemplateVersionId = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 6)
+const getTemplateVersionId = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 6)

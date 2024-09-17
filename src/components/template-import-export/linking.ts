@@ -1,5 +1,3 @@
-import { DataView as PgDataView } from '../../generated/postgres'
-import { ApiError } from './ApiError'
 import db from './databaseMethods'
 
 export const getSuggestedDataViews = async (templateId: number) => {
@@ -14,12 +12,4 @@ export const getSuggestedDataViews = async (templateId: number) => {
   }
 
   return dataViews.filter((dv) => dataViewCodesUsed.includes(dv.code))
-}
-
-export const getAllAvailableLinks = async (templateId: number) => {
-  return {}
-}
-
-export const linkEntities = async (templateId: number, data: unknown) => {
-  return {}
 }
