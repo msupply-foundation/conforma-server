@@ -7,23 +7,32 @@ import {
   TemplateAction as PgTemplateAction,
   File as PgFile,
   TemplateCategory as PgTemplateCategory,
+  TemplatePermission as PgTemplatePermission,
+  PermissionName as PgPermissionName,
+  Filter as PgFilter,
+  DataView as PgDataView,
+  DataViewColumnDefinition as PgDataViewColumn,
+  DataTable as PgDataTable,
 } from '../../generated/postgres'
 
-export interface LinkedEntity {
+export interface LinkedEntity<T = unknown> {
   checksum: string
   lastModified: Date
-  data: LinkedEntityData
+  data: LinkedEntityData<T>
 }
 
-export type LinkedEntities = Record<string, LinkedEntity>
+export type LinkedEntities<T = unknown> = Record<string, LinkedEntity<T>>
 
-export interface FullLinkedEntities {
-  filters: LinkedEntities
-  permissions: LinkedEntities
-  dataViews: LinkedEntities
-  dataViewColumns: LinkedEntities
-  category: LinkedEntity
-  dataTables: LinkedEntities
+// type CommonExclusions = 'id' | 'last_modified' | 'checksum'
+export interface CombinedLinkedEntities {
+  filters: LinkedEntities<Omit<PgFilter, 'id'>>
+  permissions: LinkedEntities<
+    Omit<PgPermissionName, 'id' | 'permission_policy_id'> & { permission_policy: object }
+  >
+  dataViews: LinkedEntities<Omit<PgDataView, 'id'>>
+  dataViewColumns: LinkedEntities<Omit<PgDataViewColumn, 'id'>>
+  category: LinkedEntity<TemplateCategory> | null
+  dataTables: LinkedEntities<Omit<PgDataTable, 'id'>>
 }
 
 export type LinkedEntityInput = {
@@ -32,7 +41,7 @@ export type LinkedEntityInput = {
 }
 
 export type LinkedEntityNoId = Omit<LinkedEntityInput, 'id'>
-export type LinkedEntityData = Omit<LinkedEntityNoId, 'checksum' | 'last_modified'>
+export type LinkedEntityData<T> = Omit<LinkedEntityNoId, 'checksum' | 'last_modified'> & T
 
 export type TemplateStructure = Omit<
   PgTemplate,
@@ -41,8 +50,9 @@ export type TemplateStructure = Omit<
   sections: TemplateSection[]
   stages: TemplateStage[]
   actions: TemplateAction[]
+  permissionJoins: TemplatePermission[]
   files: TemplateFile[]
-  shared: FullLinkedEntities
+  shared: CombinedLinkedEntities
 }
 
 export type TemplateCategory = Omit<PgTemplateCategory, 'id'>
@@ -61,6 +71,11 @@ export type TemplateStage = Omit<PgTemplateStage, 'id' | 'template_id'> & {
 }
 
 export type TemplateStageReviewLevel = Omit<PgTemplateStageReviewLevel, 'id' | 'stage_id'>
+
+export type TemplatePermission = Omit<
+  PgTemplatePermission,
+  'id' | 'template_id' | 'permission_name_id'
+> & { permissionName: string }
 
 export type TemplateAction = Omit<PgTemplateAction, 'id' | 'template_id'>
 

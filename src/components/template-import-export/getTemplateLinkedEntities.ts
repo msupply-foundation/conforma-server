@@ -9,14 +9,16 @@ import {
   TemplateCategory as PgTemplateCategory,
 } from '../../generated/postgres'
 import { buildColumnList } from '../data_display/helpers'
-import { filterObject, objectKeysToCamelCase } from '../utilityFunctions'
+import { filterObject, isObject, objectKeysToCamelCase } from '../utilityFunctions'
 import { ApiError } from './ApiError'
 import db from './databaseMethods'
 import { replaceForeignKeyRef } from './updateHashes'
-import { FullLinkedEntities, LinkedEntities, LinkedEntityInput } from './types'
+import { CombinedLinkedEntities, LinkedEntities, LinkedEntityInput } from './types'
 
 export const getTemplateLinkedEntities = async (templateId: number) => {
   const template = await db.getRecord<PgTemplate>('template', templateId)
+
+  console.log('templateId', templateId)
 
   // Get linked entities via JOIN tables
   const linkedFilters = (
@@ -35,8 +37,6 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
     })
   ).map(stripIds)
 
-  console.log('linkedDataViews', linkedDataViews)
-
   const linkedDataViewColumns = await getDataViewColumnsFromDataViews(linkedDataViews)
 
   const linkedPermissions = (
@@ -54,6 +54,7 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
       'permission_policy'
     )
   }
+
   const linkedCategory = stripIds(
     await db.getRecord<PgTemplateCategory>('template_category', template.template_category_id ?? 0)
   )
@@ -62,25 +63,30 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
     linkedDataViews.map((dv) => snakeCase(dv.table_name))
   )
 
-  const linkedEntities: FullLinkedEntities = {
+  const linkedEntities: CombinedLinkedEntities = {
     filters: buildLinkedEntityObject(linkedFilters, 'code'),
+    // @ts-ignore
     permissions: buildLinkedEntityObject(linkedPermissions, 'name'),
     dataViews: buildLinkedEntityObject(linkedDataViews, 'identifier'),
     dataViewColumns: buildLinkedEntityObject(linkedDataViewColumns, ['table_name', 'column_name']),
-    category: buildLinkedEntityObject([linkedCategory], 'code')[linkedCategory.code],
+    category: linkedCategory
+      ? buildLinkedEntityObject([linkedCategory], 'code')[linkedCategory.code]
+      : null,
     dataTables: buildLinkedEntityObject(linkedDataTables, 'table_name'),
   }
 
   return linkedEntities
 }
 
-const stripIds = <T>(data: T): Omit<T, 'id'> =>
-  filterObject(data as { [key: string]: any }, (key) => key !== 'id') as Omit<T, 'id'>
+const stripIds = <T>(data: T): Omit<T, 'id'> => {
+  if (!isObject(data)) return data
+  return filterObject(data as { [key: string]: any }, (key) => key !== 'id') as Omit<T, 'id'>
+}
 
 const buildLinkedEntityObject = <T extends LinkedEntityInput>(
   entities: T[],
   keyField: keyof T | (keyof T)[]
-): LinkedEntities => {
+): LinkedEntities<T> => {
   return entities.reduce((acc, entity) => {
     const key = String(
       Array.isArray(keyField) ? keyField.map((kf) => entity[kf]).join('__') : entity[keyField]

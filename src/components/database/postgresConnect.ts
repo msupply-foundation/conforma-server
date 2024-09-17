@@ -28,6 +28,7 @@ import { hashRecord } from '../template-import-export'
 class PostgresDB {
   private static _instance: PostgresDB
   private pool: Pool
+  public tableJsonColumns: Record<string, Set<string>>
 
   constructor() {
     this.pool = new Pool(config.pg_database_connection)
@@ -41,6 +42,24 @@ class PostgresDB {
     })
 
     this.startListener()
+
+    // When updating a row generically, JSON data must be handled differently,
+    // so this is a reference we can use to check which columns are JSON type
+    this.tableJsonColumns = {}
+    this.query({
+      text: `SELECT c.table_name, column_name
+          FROM information_schema.columns c
+          LEFT JOIN information_schema.tables t
+          ON c.table_name = t.table_name
+          WHERE
+          data_type = 'jsonb'
+          AND table_type = 'BASE TABLE'`,
+    }).then((result) => {
+      result.rows.forEach(({ table_name, column_name }) => {
+        if (table_name in this.tableJsonColumns) this.tableJsonColumns[table_name].add(column_name)
+        else this.tableJsonColumns[table_name] = new Set([column_name])
+      })
+    })
   }
 
   private startListener = async () => {
@@ -126,6 +145,11 @@ class PostgresDB {
     } catch (err) {
       throw err
     }
+  }
+
+  public isJsonColumn = (tableName: string, columnName: string) => {
+    if (!(tableName in this.tableJsonColumns)) return false
+    return this.tableJsonColumns[tableName].has(columnName)
   }
 
   public getValuesPlaceholders = (object: { [key: string]: any }, offset: number = 1) =>

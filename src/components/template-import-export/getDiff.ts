@@ -1,7 +1,10 @@
 import { isEqual } from 'lodash'
-import { FullLinkedEntities, LinkedEntities, LinkedEntity } from './types'
+import { CombinedLinkedEntities, LinkedEntities, LinkedEntity } from './types'
 
-export const getDiff = (templateData: FullLinkedEntities, comparisonData: FullLinkedEntities) => {
+export const getDiff = (
+  templateData: CombinedLinkedEntities,
+  comparisonData: CombinedLinkedEntities
+) => {
   const { filters, permissions, dataViews, dataViewColumns, category, dataTables } = templateData
 
   const {
@@ -18,7 +21,8 @@ export const getDiff = (templateData: FullLinkedEntities, comparisonData: FullLi
     permissions: compare(permissions, permissionCompare),
     dataViews: compare(dataViews, dataViewCompare),
     dataViewColumns: compare(dataViewColumns, dataViewColumnCompare),
-    category: compare({ category }, { category: categoryCompare }),
+    category:
+      category && categoryCompare ? compare({ category }, { category: categoryCompare }) : {},
     dataTables: compare(dataTables, dataTablesCompare),
   }
 }

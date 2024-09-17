@@ -3,16 +3,13 @@ import fsx from 'fs-extra'
 import { pipeline } from 'stream'
 import { promisify } from 'util'
 import { commitTemplate } from './commitTemplate'
-import { ApiError, returnApiError } from './ApiError'
+import { returnApiError } from './ApiError'
 import { exportTemplateCheck, exportTemplateDump } from './exportTemplate'
-import db from './databaseMethods'
 import { duplicateTemplate } from './duplicateTemplate'
-import { DataView as PgDataView } from '../../generated/postgres'
 import { getSuggestedDataViews } from './linking'
 import path from 'path'
 import { FILES_FOLDER, TEMPLATE_TEMP_FOLDER } from '../../constants'
 import StreamZip from 'node-stream-zip'
-import fastifyMultipart from '@fastify/multipart'
 import { importTemplateInstall, importTemplateUpload, InstallDetails } from './importTemplate'
 import { customAlphabet } from 'nanoid'
 
@@ -26,8 +23,8 @@ export const templateRoutes: FastifyPluginCallback<{ prefix: string }> = (server
   server.get('/export/dump/:id', routeExportTemplateDump)
   server.post('/import/upload', routeImportTemplateUpload)
   server.post('/import/install/:uid', routeImportTemplateInstall)
-  // server.get('/get-links/:id', routeGetLinkedDataViews)
   server.get('/get-suggested-data-views/:id', routeGetTemplateSuggestedLinks)
+  // server.get('/get-links/:id', routeGetLinkedDataViews)
   // server.get('/get-entities', routeGetAllEntities)
   // server.post('/link-entities', routeLinkEntities)
 
@@ -143,6 +140,7 @@ const routeImportTemplateUpload = async (request: FastifyRequest, reply: Fastify
   if (upload?.mimetype !== 'application/zip') returnApiError('File is not a ZIP file', reply, 400)
 
   const tempZipLocation = path.join(TEMPLATE_TEMP_FOLDER, 'templateUpload.zip')
+  await fsx.ensureDir(TEMPLATE_TEMP_FOLDER)
   await pump(upload.file, fsx.createWriteStream(tempZipLocation))
 
   const folderName = getRandomTemplateFolderName()
@@ -171,7 +169,7 @@ const routeImportTemplateInstall = async (
   request: FastifyRequest<{ Params: { uid: string }; Body: InstallDetails }>,
   reply: FastifyReply
 ) => {
-  const uid = Number(request.params.uid)
+  const uid = request.params.uid
   if (!uid) {
     returnApiError('No UID specified for template install', reply, 400)
   }

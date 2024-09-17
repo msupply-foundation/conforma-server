@@ -9,7 +9,7 @@ import { FILES_FOLDER, TEMPLATE_TEMP_FOLDER } from '../../constants'
 import { DateTime } from 'luxon'
 import config from '../../config'
 import archiver from 'archiver'
-import { FullLinkedEntities } from './types'
+import { CombinedLinkedEntities } from './types'
 import { buildTemplateStructure } from './buildTemplateStructure'
 
 export const exportTemplateCheck = async (templateId: number) => {
@@ -21,7 +21,7 @@ export const exportTemplateCheck = async (templateId: number) => {
   // Fetch entity data
   const linkedEntities = await getTemplateLinkedEntities(templateId)
 
-  return getDiff(template.linked_entity_data as FullLinkedEntities, linkedEntities)
+  return getDiff(template.linked_entity_data as CombinedLinkedEntities, linkedEntities)
 }
 
 export const exportTemplateDump = async (templateId: number) => {

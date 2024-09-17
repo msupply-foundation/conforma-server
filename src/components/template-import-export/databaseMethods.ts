@@ -1,7 +1,8 @@
 import DBConnect from '../database/databaseConnect'
 import { errorMessage, isObject } from '../../components/utilityFunctions'
 import { DataTable } from '../../generated/postgres'
-import { FullLinkedEntities } from './types'
+import { CombinedLinkedEntities } from './types'
+import { ApiError } from './ApiError'
 
 const databaseMethods = {
   beginTransaction: async () => {
@@ -132,7 +133,7 @@ const databaseMethods = {
     templateId: number,
     versionId: string,
     comment: string | null,
-    entityData: FullLinkedEntities
+    entityData: CombinedLinkedEntities
   ) => {
     const text = `
       UPDATE template SET
@@ -148,16 +149,17 @@ const databaseMethods = {
       throw err
     }
   },
-  insertRecord: async (tableName: string, data: Record<string, unknown>) => {
-    const fields = Object.keys(data).join(', ')
-    const values = Object.values(data).map((value) =>
-      isObject(value) || Array.isArray(value) ? JSON.stringify(value) : value
+  insertRecord: async <T>(tableName: string, data: T) => {
+    if (!isObject(data)) throw new ApiError("Cannot insert data that isn't an Object", 500)
+    const fields = Object.keys(data)
+    const fieldsString = fields.join(', ')
+    const values = Object.values(data).map((value, index) =>
+      DBConnect.isJsonColumn(tableName, fields[index]) ? JSON.stringify(value) : value
     )
-
     try {
       const text = `
         INSERT INTO ${tableName}
-          (${fields})
+          (${fieldsString})
         VALUES (${DBConnect.getValuesPlaceholders(values)})
         RETURNING id;`
       const result = await DBConnect.query({ text, values })
@@ -166,6 +168,28 @@ const databaseMethods = {
       console.log(errorMessage(err))
       throw err
     }
+  },
+  updateRecord: async (
+    tableName: string,
+    patch: Record<string, unknown>,
+    matchField: string = 'id'
+  ) => {
+    const fields: string[] = []
+    const values: unknown[] = []
+    Object.entries(patch).forEach(([key, value], index) => {
+      if (key === matchField) return
+      fields.push(`"${key}" = $${index + 1}`)
+
+      if (DBConnect.isJsonColumn(tableName, key)) values.push(JSON.stringify(value))
+      else values.push(value)
+    })
+    const matchValueText =
+      typeof patch[matchField] === 'number' ? patch[matchField] : `'${patch[matchField]}'`
+
+    const text = `UPDATE ${tableName} SET ${fields.join(
+      ', '
+    )} WHERE ${matchField} = ${matchValueText}`
+    await DBConnect.query({ text, values })
   },
   getNextDraftVersionId: async (code: string) => {
     const text = `

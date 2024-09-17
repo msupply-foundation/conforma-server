@@ -5,12 +5,13 @@ import {
   TemplateStageReviewLevel as PgTemplateStageReviewLevel,
   TemplateStage as PgTemplateStage,
   TemplateAction as PgTemplateAction,
+  TemplatePermission as PgTemplatePermission,
   File as PgFile,
+  PermissionName as PgPermissionName,
 } from '../../generated/postgres'
-import { ApiError } from './ApiError'
 import db from './databaseMethods'
 import { getTemplateLinkedEntities } from './getTemplateLinkedEntities'
-import { FullLinkedEntities, TemplateSection, TemplateStage, TemplateStructure } from './types'
+import { CombinedLinkedEntities, TemplateSection, TemplateStage, TemplateStructure } from './types'
 
 export const buildTemplateStructure = async (template: PgTemplate) => {
   const { id: templateId, linked_entity_data, template_category_id, ...structure } = template
@@ -20,11 +21,12 @@ export const buildTemplateStructure = async (template: PgTemplate) => {
     sections: [],
     stages: [],
     actions: [],
+    permissionJoins: [],
     files: [],
     shared:
       linked_entity_data === null
         ? await getTemplateLinkedEntities(templateId)
-        : { ...(linked_entity_data as FullLinkedEntities) },
+        : { ...(linked_entity_data as CombinedLinkedEntities) },
   }
 
   // Template Sections
@@ -79,6 +81,22 @@ export const buildTemplateStructure = async (template: PgTemplate) => {
   )
   for (const { id, template_id, ...action } of templateActions) {
     templateStructure.actions.push(action)
+  }
+
+  // TemplatePermissions
+  const templatePermissions = await db.getRecordsByField<PgTemplatePermission>(
+    'template_permission',
+    'template_id',
+    templateId
+  )
+  for (const { id, template_id, permission_name_id, ...permission } of templatePermissions) {
+    const permissionName = await db
+      // TO-DO Remove "as" after making field non-nullable
+      .getRecord<PgPermissionName>('permission_name', permission_name_id as number)
+    templateStructure.permissionJoins.push({
+      ...permission,
+      permissionName: permissionName.name as string,
+    })
   }
 
   // Files

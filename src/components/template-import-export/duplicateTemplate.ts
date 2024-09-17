@@ -21,7 +21,8 @@ export const duplicateTemplate = async (templateId: number, newCode?: string) =>
   console.log('Building structure...')
   const templateStructure = await buildTemplateStructure(template)
 
-  const { sections, actions, stages, files, shared, ...templateRecord } = templateStructure
+  const { sections, actions, stages, files, permissionJoins, shared, ...templateRecord } =
+    templateStructure
 
   if (!newCode) {
     // Making a new version
@@ -110,6 +111,8 @@ export const duplicateTemplate = async (templateId: number, newCode?: string) =>
         ...templatePermission,
       })
     }
+
+    // TO-DO INSERT PERMISSIONS
 
     const dataViewJoins = await db.getRecordsByField<PgTemplateDataViewJoin>(
       'template_data_view_join',

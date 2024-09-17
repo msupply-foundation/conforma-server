@@ -9,7 +9,12 @@ import bcrypt from 'bcrypt'
 import { errorMessage, getAppEntryPointDir } from '../../src/components/utilityFunctions'
 import { loadCurrentPrefs, setPreferences } from '../../src/components/preferences'
 import { updateReviewerStats } from '../../src/components/database/updateReviewerStats'
-import { getHash, hashLookupTable, hashRecord } from '../../src/components/template-import-export'
+import {
+  getHash,
+  getTemplateLinkedEntities,
+  hashLookupTable,
+  hashRecord,
+} from '../../src/components/template-import-export'
 import { getLookupTableData } from '../../src/lookup-table/export'
 
 // CONSTANTS
@@ -1227,22 +1232,26 @@ const migrateData = async () => {
           await hashRecord({ tableName, id })
         }
       } catch (err) {
-        console.log('ERROR regenerating reviewer actions')
+        console.log('ERROR generating checksums')
       }
     }
 
     console.log(' - Updating checksum hashes for lookup tables')
 
-    const lookupTableIds = (
-      await DB.query({
-        text: `SELECT id FROM public.data_table
-                WHERE is_lookup_table = TRUE;`,
-        rowMode: 'array',
-      })
-    ).rows.flat()
+    try {
+      const lookupTableIds = (
+        await DB.query({
+          text: `SELECT id FROM public.data_table
+                  WHERE is_lookup_table = TRUE;`,
+          rowMode: 'array',
+        })
+      ).rows.flat()
 
-    for (const tableId of lookupTableIds) {
-      await hashLookupTable(tableId)
+      for (const tableId of lookupTableIds) {
+        await hashLookupTable(tableId)
+      }
+    } catch (err) {
+      console.log('ERROR generating checksums for lookup tables')
     }
 
     console.log(' - Creating JOIN tables for template-related entities')
@@ -1257,6 +1266,33 @@ const migrateData = async () => {
     console.log(' - Adding linked_entities column to template')
     await DB.changeSchema(`ALTER TABLE public.template
       ADD COLUMN IF NOT EXISTS linked_entity_data jsonb;`)
+
+    console.log(' - Generating linked_entity data for existing templates')
+    try {
+      const templateIds = (
+        await DB.query({
+          text: `
+        SELECT id FROM public.template
+          WHERE version_id NOT LIKE '*%'
+          AND linked_entity_data IS NULL;
+        `,
+          rowMode: 'array',
+        })
+      ).rows.flat()
+
+      for (const templateId of templateIds) {
+        const linkedEntities = await getTemplateLinkedEntities(templateId)
+        await DB.query({
+          text: `
+          UPDATE template SET linked_entity_data = $2
+          WHERE id = $1
+          `,
+          values: [templateId, JSON.stringify(linkedEntities)],
+        })
+      }
+    } catch (err) {
+      console.log('ERROR generating linked entity data for templates')
+    }
   }
 
   // Other version migrations continue here...
