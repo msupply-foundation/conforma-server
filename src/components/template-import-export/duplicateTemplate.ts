@@ -1,13 +1,9 @@
-import {
-  Template as PgTemplate,
-  TemplateFilterJoin as PgTemplateFilterJoin,
-  TemplatePermission as PgTemplatePermission,
-  TemplateDataViewJoin as PgTemplateDataViewJoin,
-} from '../../generated/postgres'
+import { Template as PgTemplate } from '../../generated/postgres'
 import { ApiError } from './ApiError'
 import db from './databaseMethods'
 
 import { buildTemplateStructure } from './buildTemplateStructure'
+import { installTemplate } from './importTemplate'
 
 export const duplicateTemplate = async (templateId: number, newCode?: string) => {
   console.log(`Duplicating template: ${templateId}...`)
@@ -21,113 +17,33 @@ export const duplicateTemplate = async (templateId: number, newCode?: string) =>
   console.log('Building structure...')
   const templateStructure = await buildTemplateStructure(template)
 
-  const { sections, actions, stages, files, permissionJoins, shared, ...templateRecord } =
-    templateStructure
+  console.log('CODE', newCode)
 
   if (!newCode) {
     // Making a new version
-    ;(templateRecord.version_history as Record<string, unknown>[]).push({
-      timestamp: templateRecord.version_timestamp,
-      versionId: templateRecord.version_id,
-      parentVersionId: templateRecord.parent_version_id,
-      comment: templateRecord.version_comment,
+    ;(templateStructure.version_history as Record<string, unknown>[]).push({
+      timestamp: templateStructure.version_timestamp,
+      versionId: templateStructure.version_id,
+      parentVersionId: templateStructure.parent_version_id,
+      comment: templateStructure.version_comment,
     })
-    templateRecord.parent_version_id = templateRecord.version_id
-    templateRecord.version_id = await db.getNextDraftVersionId(templateRecord.code)
+    templateStructure.parent_version_id = templateStructure.version_id
+    templateStructure.version_id = await db.getNextDraftVersionId(templateStructure.code)
   } else {
     // New template type
     const nextWouldBe = await db.getNextDraftVersionId(newCode)
     if (nextWouldBe !== '*') throw new ApiError(`Template with code ${newCode} already exists`, 400)
-    templateRecord.code = newCode
-    templateRecord.version_history = []
-    templateRecord.name = `NEW template based from: ${template.name}`
-    templateRecord.name_plural = null
-    templateRecord.version_id = '*'
-    templateRecord.parent_version_id = null
+    templateStructure.code = newCode
+    templateStructure.version_history = []
+    templateStructure.name = `NEW template based from: ${template.name}`
+    templateStructure.name_plural = null
+    templateStructure.version_id = '*'
+    templateStructure.parent_version_id = null
   }
 
-  templateRecord.version_comment = null
+  templateStructure.version_comment = null
 
-  try {
-    await db.beginTransaction()
+  const newTemplateId = await installTemplate(templateStructure)
 
-    const newTemplateId = await db.insertRecord('template', {
-      ...templateRecord,
-      linked_entity_data: null,
-      template_category_id: template.dashboard_restrictions,
-    })
-
-    for (const section of sections) {
-      const { elements, ...sectionRecord } = section
-      const newSectionId = await db.insertRecord('template_section', {
-        ...sectionRecord,
-        template_id: newTemplateId,
-      })
-
-      for (const element of elements) {
-        await db.insertRecord('template_element', { ...element, section_id: newSectionId })
-      }
-    }
-
-    for (const stage of stages) {
-      const { review_levels, ...stageRecord } = stage
-      const newStageId = await db.insertRecord('template_stage', {
-        ...stageRecord,
-        template_id: newTemplateId,
-      })
-
-      for (const level of review_levels) {
-        await db.insertRecord('template_stage_review_level', { ...level, stage_id: newStageId })
-      }
-    }
-
-    for (const action of actions) {
-      await db.insertRecord('template_action', {
-        ...action,
-        template_id: newTemplateId,
-      })
-    }
-
-    // We don't insert new FILE records, and we don't re-link the existing one
-    // until the new template is made "AVAILABLE" -- This needs re-visiting
-
-    const filterJoins = await db.getRecordsByField<PgTemplateFilterJoin>(
-      'template_filter_join',
-      'template_id',
-      template.id
-    )
-    for (const { filter_id } of filterJoins) {
-      await db.insertRecord('template_filter_join', { filter_id, template_id: newTemplateId })
-    }
-
-    const templatePermissionJoins = await db.getRecordsByField<PgTemplatePermission>(
-      'template_permission',
-      'template_id',
-      template.id
-    )
-    for (const { template_id, id, ...templatePermission } of templatePermissionJoins) {
-      await db.insertRecord('template_permission', {
-        template_id: newTemplateId,
-        ...templatePermission,
-      })
-    }
-
-    // TO-DO INSERT PERMISSIONS
-
-    const dataViewJoins = await db.getRecordsByField<PgTemplateDataViewJoin>(
-      'template_data_view_join',
-      'template_id',
-      template.id
-    )
-    for (const { data_view_id } of dataViewJoins) {
-      await db.insertRecord('template_data_view_join', { data_view_id, template_id: newTemplateId })
-    }
-
-    await db.commitTransaction()
-
-    return newTemplateId
-  } catch (err) {
-    await db.cancelTransaction()
-    throw err
-  }
+  return newTemplateId
 }

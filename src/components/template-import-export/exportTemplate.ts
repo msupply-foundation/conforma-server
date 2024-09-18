@@ -23,7 +23,6 @@ export const exportTemplateCheck = async (templateId: number) => {
 
   const diff = getDiff(template.linked_entity_data as CombinedLinkedEntities, linkedEntities)
 
-  // TO-DO: Check for data views that are not associated
   const unconnectedDataViews = (await getSuggestedDataViews(templateId)).map(
     ({ identifier, title }) => ({ identifier, title })
   )

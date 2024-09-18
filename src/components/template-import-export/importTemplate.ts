@@ -223,7 +223,7 @@ const getModifiedEntities = async (
 export const installTemplate = async (
   template: TemplateStructure,
   installDetails: InstallDetails = {},
-  sourceFolder: string
+  sourceFolder: string | null = null
 ) => {
   try {
     const {
@@ -259,7 +259,8 @@ export const installTemplate = async (
         )
         if (existing) {
           categoryId = existing?.id
-          await db.updateRecord('template_category', { ...category.data, id: existing.id })
+          if (existing.checksum !== category.checksum)
+            await db.updateRecord('template_category', { ...category.data, id: existing.id })
         } else categoryId = (await db.insertRecord('template_category', category.data)).id
       }
     }
@@ -301,16 +302,17 @@ export const installTemplate = async (
     }
 
     for (const filterCode of Object.keys(filters)) {
-      const filter = filters[filterCode].data
+      const { checksum, data } = filters[filterCode]
       let filter_id: number | null = null
 
       const existing = await db.getRecord<PgFilter>('filter', filterCode, 'code')
       if (existing) {
         filter_id = existing?.id
         if (!preserveFilters?.[filterCode])
-          await db.updateRecord('filter', { ...filter, id: filter_id })
+          if (existing.checksum !== checksum)
+            await db.updateRecord('filter', { ...data, id: filter_id })
       } else {
-        filter_id = (await db.insertRecord('filter', filter)).id
+        filter_id = (await db.insertRecord('filter', data)).id
       }
 
       const filterJoinRecord = { filter_id, template_id: newTemplateId }
@@ -320,7 +322,10 @@ export const installTemplate = async (
     const permissionNameIds: Record<string, number> = {}
 
     for (const permissionName of Object.keys(permissions)) {
-      const { permission_policy, ...permissionNameRecord } = permissions[permissionName].data
+      const {
+        checksum,
+        data: { permission_policy, ...permissionNameRecord },
+      } = permissions[permissionName]
       let permission_name_id: number | null = null
 
       const existing = await db.getRecord<PgPermissionName>(
@@ -331,10 +336,11 @@ export const installTemplate = async (
       if (existing) {
         permission_name_id = existing.id
         if (!preservePermissions?.[permissionName])
-          await db.updateRecord('permission_name', {
-            ...permissionNameRecord,
-            id: permission_name_id,
-          })
+          if (existing.checksum !== checksum)
+            await db.updateRecord('permission_name', {
+              ...permissionNameRecord,
+              id: permission_name_id,
+            })
       } else {
         permission_name_id = (await db.insertRecord('permission_name', permissionNameRecord)).id
       }
@@ -351,16 +357,17 @@ export const installTemplate = async (
     }
 
     for (const identifier of Object.keys(dataViews)) {
-      const dataView = dataViews[identifier].data
+      const { checksum, data } = dataViews[identifier]
       let data_view_id: number | null = null
 
       const existing = await db.getRecord<PgDataView>('data_view', identifier, 'identifier')
       if (existing) {
         data_view_id = existing?.id
         if (!preserveDataViews?.[identifier])
-          await db.updateRecord('data_view', { ...dataView, id: data_view_id })
+          if (existing.checksum !== checksum)
+            await db.updateRecord('data_view', { ...data, id: data_view_id })
       } else {
-        data_view_id = (await db.insertRecord('data_view', dataView)).id
+        data_view_id = (await db.insertRecord('data_view', data)).id
       }
 
       const dataViewJoinRecord = { data_view_id, template_id: newTemplateId }
@@ -369,7 +376,7 @@ export const installTemplate = async (
 
     for (const compositeKey of Object.keys(dataViewColumns)) {
       const [tableName, columnName] = compositeKey.split('__')
-      const dataViewColumn = dataViewColumns[compositeKey].data
+      const { checksum, data } = dataViewColumns[compositeKey]
 
       const existing = await db.getRecord<PgDataViewColumnDefinition>(
         'data_view_column_definition',
@@ -378,57 +385,65 @@ export const installTemplate = async (
       )
       if (existing) {
         if (!preserveDataViewColumns?.[compositeKey])
-          await db.updateRecord('data_view_column_definition', {
-            ...dataViewColumn,
-            id: existing?.id,
-          })
-      } else await db.insertRecord('data_view_column_definition', dataViewColumn)
+          if (existing.checksum !== checksum)
+            await db.updateRecord('data_view_column_definition', {
+              ...data,
+              id: existing?.id,
+            })
+      } else await db.insertRecord('data_view_column_definition', data)
     }
 
     for (const tableName of Object.keys(dataTables)) {
-      const dataTable = dataTables[tableName].data
-
+      const { checksum, data } = dataTables[tableName]
       const existing = await db.getRecord<PgDataTable>('data_table', tableName, 'table_name')
       if (existing) {
         if (!preserveDataTables?.[tableName])
-          await db.updateRecord('data_table', {
-            ...dataTable,
-            id: existing?.id,
-          })
+          if (existing.checksum !== checksum)
+            await db.updateRecord('data_table', {
+              ...data,
+              id: existing?.id,
+            })
       } else {
-        await db.insertRecord('data_table', dataTable)
+        await db.insertRecord('data_table', data)
       }
     }
 
-    for (const file of files) {
-      const { unique_id, archive_path, file_path } = file
-      const existing = await db.getRecord<PgFile>('file', unique_id, 'unique_id')
-      if (!existing) {
-        await db.insertRecord('file', file)
-      } else {
-        if (preserveFiles?.[unique_id]) {
-          continue
-        }
-        await db.updateRecord('file', file, 'unique_id')
-      }
-      const existingFilePath = path.join(FILES_FOLDER, archive_path ?? '', file_path)
-      if (!(await fsx.exists(existingFilePath))) {
-        let destination: string
-        if (archive_path && (await fsx.exists(path.join(FILES_FOLDER, archive_path, file_path)))) {
-          destination = path.join(FILES_FOLDER, archive_path, file_path)
+    // When duplicating, we don't need to copy any files, so sourceFolder is not
+    // provided
+    if (sourceFolder) {
+      for (const file of files) {
+        const { unique_id, archive_path, file_path } = file
+        const existing = await db.getRecord<PgFile>('file', unique_id, 'unique_id')
+        if (!existing) {
+          await db.insertRecord('file', file)
         } else {
-          destination = path.join(FILES_FOLDER, file_path)
-          await db.updateRecord('file', { unique_id, archive_path: null }, 'unique_id')
+          if (preserveFiles?.[unique_id]) {
+            continue
+          }
+          await db.updateRecord('file', file, 'unique_id')
         }
-        await fsx.copy(path.join(sourceFolder, file_path), destination)
-      } else {
-        const existingFileHash = await hashFile(existingFilePath)
-        const newFileHash = await hashFile(path.join(sourceFolder, file_path))
-        if (existingFileHash !== newFileHash)
-          throw new ApiError(
-            'This would replace an existing file with a different file. Files should never be changed once in the system.',
-            500
-          )
+        const existingFilePath = path.join(FILES_FOLDER, archive_path ?? '', file_path)
+        if (!(await fsx.exists(existingFilePath))) {
+          let destination: string
+          if (
+            archive_path &&
+            (await fsx.exists(path.join(FILES_FOLDER, archive_path, file_path)))
+          ) {
+            destination = path.join(FILES_FOLDER, archive_path, file_path)
+          } else {
+            destination = path.join(FILES_FOLDER, file_path)
+            await db.updateRecord('file', { unique_id, archive_path: null }, 'unique_id')
+          }
+          await fsx.copy(path.join(sourceFolder, file_path), destination)
+        } else {
+          const existingFileHash = await hashFile(existingFilePath)
+          const newFileHash = await hashFile(path.join(sourceFolder, file_path))
+          if (existingFileHash !== newFileHash)
+            throw new ApiError(
+              'This would replace an existing file with a different file. Files should never be changed once in the system.',
+              500
+            )
+        }
       }
     }
 
