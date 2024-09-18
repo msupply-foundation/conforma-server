@@ -1,6 +1,6 @@
 import DBConnect from '../database/databaseConnect'
 import { errorMessage, isObject } from '../../components/utilityFunctions'
-import { DataTable } from '../../generated/postgres'
+import { DataTable, DataView as PgDataView } from '../../generated/postgres'
 import { CombinedLinkedEntities } from './types'
 import { ApiError } from './ApiError'
 
@@ -79,7 +79,7 @@ const databaseMethods = {
       throw err
     }
   },
-  getLinkedEntities: async <T>(input: {
+  getJoinedEntities: async <T>(input: {
     templateId: number
     table: string
     joinTable: string
@@ -95,6 +95,21 @@ const databaseMethods = {
     try {
       const result = await DBConnect.query({ text, values: [templateId] })
       return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
+  getFilesFromDocAction: async (templateId: number): Promise<string[]> => {
+    const text = `
+      SELECT DISTINCT parameter_queries->>'docTemplateId' AS file_id
+      FROM template_action
+      WHERE template_id = $1
+      AND action_code = 'generateDoc'
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [templateId], rowMode: 'array' })
+      return result.rows.flat()
     } catch (err) {
       console.log(errorMessage(err))
       throw err
@@ -217,7 +232,7 @@ const databaseMethods = {
       throw err
     }
   },
-  getAllDataViews: async () => {
+  getAllDataViews: async (): Promise<PgDataView[]> => {
     const text = `
       SELECT *
       FROM data_view;

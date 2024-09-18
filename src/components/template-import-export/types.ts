@@ -79,4 +79,12 @@ export type TemplatePermission = Omit<
 
 export type TemplateAction = Omit<PgTemplateAction, 'id' | 'template_id'>
 
-export type TemplateFile = Omit<PgFile, 'id' | 'template_id'>
+export type TemplateFile = Omit<
+  PgFile,
+  | 'id'
+  | 'template_id'
+  | 'user_id'
+  | 'application_serial'
+  | 'application_response_id'
+  | 'application_note_id'
+>

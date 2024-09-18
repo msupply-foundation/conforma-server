@@ -46,7 +46,7 @@ import migrateData from '../database/migration/migrateData'
 import routeArchiveFiles from './components/files/routeArchiveFiles'
 import { Schedulers } from './components/scheduler'
 import { AccessExternalApiQuery, routeAccessExternalApi } from './components/external-apis/routes'
-import { DEFAULT_LOGOUT_TIME } from './constants'
+import { DEFAULT_LOGOUT_TIME, FILES_FOLDER } from './constants'
 import { updateRowPolicies } from './components/permissions/rowLevelPolicyHelpers'
 import { routeRawData } from './components/other/routeRawData'
 import {
@@ -56,7 +56,7 @@ import {
 } from './components/other/routeServerStatus'
 import { routeFileLists } from './components/files/routes'
 import { cleanupDataTables } from './lookup-table/utils/cleanupDataTables'
-import { templateRoutes, getTemplateLinkedEntities } from './components/template-import-export'
+import { hashFile, templateRoutes } from './components/template-import-export'
 require('dotenv').config()
 
 // Set the default locale and timezone for date-time display (in console)

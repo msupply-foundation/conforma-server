@@ -7,6 +7,7 @@ import {
   DataViewColumnDefinition as PgDataViewColumnDefinition,
   Template as PgTemplate,
   TemplateCategory as PgTemplateCategory,
+  File as PgFile,
 } from '../../generated/postgres'
 import { buildColumnList } from '../data_display/helpers'
 import { filterObject, isObject, objectKeysToCamelCase } from '../utilityFunctions'
@@ -18,11 +19,9 @@ import { CombinedLinkedEntities, LinkedEntities, LinkedEntityInput } from './typ
 export const getTemplateLinkedEntities = async (templateId: number) => {
   const template = await db.getRecord<PgTemplate>('template', templateId)
 
-  console.log('templateId', templateId)
-
   // Get linked entities via JOIN tables
   const linkedFilters = (
-    await db.getLinkedEntities<PgFilter>({
+    await db.getJoinedEntities<PgFilter>({
       templateId,
       table: 'filter',
       joinTable: 'template_filter_join',
@@ -30,7 +29,7 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
   ).map(stripIds)
 
   const linkedDataViews = (
-    await db.getLinkedEntities<PgDataView>({
+    await db.getJoinedEntities<PgDataView>({
       templateId,
       table: 'data_view',
       joinTable: 'template_data_view_join',
@@ -40,7 +39,9 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
   const linkedDataViewColumns = await getDataViewColumnsFromDataViews(linkedDataViews)
 
   const linkedPermissions = (
-    await db.getLinkedEntities<PgPermissionName>({
+    await db.getJoinedEntities<
+      Omit<PgPermissionName, 'id' | 'permission_policy_id'> & { permission_policy: object }
+    >({
       templateId,
       table: 'permission_name',
       joinTable: 'template_permission',
@@ -63,9 +64,33 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
     linkedDataViews.map((dv) => snakeCase(dv.table_name))
   )
 
+  // const fileUidsUsedInActions = await db.getFilesFromDocAction(templateId)
+  // const linkedFiles: (Omit<PgFile, 'id'> | { unique_id: string; error: string })[] = []
+  // for (const fileId of fileUidsUsedInActions) {
+  //   const file = await db.getRecord<PgFile>('file', fileId, 'unique_id')
+  //   if (!file) {
+  //     linkedFiles.push({
+  //       unique_id: fileId,
+  //       error: `WARNING: This template references a file that is missing from the database: ${fileId}`,
+  //     })
+  //     console.log(
+  //       `WARNING: This template (id ${templateId}) references a file that is missing from the database: ${fileId}`
+  //     )
+  //     continue
+  //   }
+  //   const { id, ...fileRecord } = file
+  //   linkedFiles.push(fileRecord)
+  // }
+  // linkedFiles.push(
+  //   ...stripIds(
+  //     (await db.getRecordsByField<PgFile>('file', 'template_id', templateId)).filter(
+  //       (file) => !fileUidsUsedInActions.includes(file.unique_id)
+  //     )
+  //   )
+  // )
+
   const linkedEntities: CombinedLinkedEntities = {
     filters: buildLinkedEntityObject(linkedFilters, 'code'),
-    // @ts-ignore
     permissions: buildLinkedEntityObject(linkedPermissions, 'name'),
     dataViews: buildLinkedEntityObject(linkedDataViews, 'identifier'),
     dataViewColumns: buildLinkedEntityObject(linkedDataViewColumns, ['table_name', 'column_name']),

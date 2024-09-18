@@ -4,14 +4,11 @@ import semverCompare from 'semver/functions/compare'
 import {
   DataTable as PgDataTable,
   TemplateCategory as PgTemplateCategory,
-  Template as PgTemplate,
-  TemplateFilterJoin as PgTemplateFilterJoin,
-  TemplatePermission as PgTemplatePermission,
-  TemplateDataViewJoin as PgTemplateDataViewJoin,
   Filter as PgFilter,
   PermissionName as PgPermissionName,
   DataView as PgDataView,
   DataViewColumnDefinition as PgDataViewColumnDefinition,
+  File as PgFile,
 } from '../../generated/postgres'
 import { ApiError } from './ApiError'
 import db from './databaseMethods'
@@ -19,7 +16,7 @@ import { filterModifiedData } from './getDiff'
 import { FILES_FOLDER } from '../../constants'
 import config from '../../config'
 import { LinkedEntities, LinkedEntity, TemplateStructure } from './types'
-import { replaceForeignKeyRef } from './updateHashes'
+import { hashFile, replaceForeignKeyRef } from './updateHashes'
 
 interface InfoFile {
   timestamp: string
@@ -33,6 +30,7 @@ export type InstallDetails = {
   dataViewColumns?: Record<string, number>
   dataTables?: Record<string, number>
   category?: number
+  files?: Record<string, number>
 }
 
 export const importTemplateUpload = async (folderName: string) => {
@@ -91,6 +89,39 @@ export const importTemplateUpload = async (folderName: string) => {
     }
   }
 
+  const changedFiles: Record<
+    string,
+    {
+      incoming: { timestamp: Date; data: Partial<PgFile> }
+      current: { timestamp: Date; data: Partial<PgFile> & { id: number } }
+    }
+  > = {}
+  for (const file of template.files) {
+    const currentFile = await db.getRecord<PgFile>('file', file.unique_id, 'unique_id')
+    if (!currentFile) continue
+
+    const { timestamp, archive_path, ...incomingFileData } = file
+    const {
+      id,
+      user_id: userId,
+      template_id,
+      application_serial: serial,
+      application_response_id: response,
+      application_note_id: note,
+      timestamp: currentTimestamp,
+      archive_path: archive,
+      ...currentFileData
+    } = currentFile
+
+    const [incomingDiff, existingDiff] = filterModifiedData(incomingFileData, currentFileData)
+
+    if (Object.keys(incomingDiff).length > 0)
+      changedFiles[file.unique_id] = {
+        incoming: { timestamp, data: incomingDiff },
+        current: { timestamp: currentTimestamp, data: { ...existingDiff, id } },
+      }
+  }
+
   return {
     filters: changedFilters,
     permissions: changedPermissions,
@@ -98,6 +129,7 @@ export const importTemplateUpload = async (folderName: string) => {
     dataViewColumns: changedDataViewColumns,
     category: changedCategory,
     dataTables: changedDataTables,
+    files: changedFiles,
   }
 }
 
@@ -123,7 +155,7 @@ export const importTemplateInstall = async (uid: string, installDetails: Install
 
   // Process template, using installDetails
   try {
-    const result = await installTemplate(template, installDetails)
+    const result = await installTemplate(template, installDetails, path.join(FILES_FOLDER, uid))
     return result
   } catch (err) {
     await db.cancelTransaction()
@@ -190,7 +222,8 @@ const getModifiedEntities = async (
 
 export const installTemplate = async (
   template: TemplateStructure,
-  installDetails: InstallDetails = {}
+  installDetails: InstallDetails = {},
+  sourceFolder: string
 ) => {
   try {
     const {
@@ -210,6 +243,7 @@ export const installTemplate = async (
       dataViewColumns: preserveDataViewColumns,
       dataTables: preserveDataTables,
       category: preserveCategory,
+      files: preserveFiles,
     } = installDetails
 
     await db.beginTransaction()
@@ -366,9 +400,37 @@ export const installTemplate = async (
       }
     }
 
-    // COPY FILES
-
-    // INSERT FILES
+    for (const file of files) {
+      const { unique_id, archive_path, file_path } = file
+      const existing = await db.getRecord<PgFile>('file', unique_id, 'unique_id')
+      if (!existing) {
+        await db.insertRecord('file', file)
+      } else {
+        if (preserveFiles?.[unique_id]) {
+          continue
+        }
+        await db.updateRecord('file', file, 'unique_id')
+      }
+      const existingFilePath = path.join(FILES_FOLDER, archive_path ?? '', file_path)
+      if (!(await fsx.exists(existingFilePath))) {
+        let destination: string
+        if (archive_path && (await fsx.exists(path.join(FILES_FOLDER, archive_path, file_path)))) {
+          destination = path.join(FILES_FOLDER, archive_path, file_path)
+        } else {
+          destination = path.join(FILES_FOLDER, file_path)
+          await db.updateRecord('file', { unique_id, archive_path: null }, 'unique_id')
+        }
+        await fsx.copy(path.join(sourceFolder, file_path), destination)
+      } else {
+        const existingFileHash = await hashFile(existingFilePath)
+        const newFileHash = await hashFile(path.join(sourceFolder, file_path))
+        if (existingFileHash !== newFileHash)
+          throw new ApiError(
+            'This would replace an existing file with a different file. Files should never be changed once in the system.',
+            500
+          )
+      }
+    }
 
     await db.commitTransaction()
 

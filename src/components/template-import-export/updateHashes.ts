@@ -1,7 +1,9 @@
 import { DataTable as PgDataTable } from '../../generated/postgres'
+import fs from 'fs'
 import { getLookupTableData } from '../../lookup-table/export'
 import db from './databaseMethods'
 import { createHash } from 'crypto'
+import { pipeline } from 'stream'
 
 interface NotificationPayload {
   tableName: string
@@ -56,6 +58,15 @@ export const getHash = (data: unknown) => {
   hash.update(JSON.stringify(data))
   return hash.digest('hex')
 }
+
+export const hashFile = (filePath: string) =>
+  new Promise((resolve, reject) => {
+    const hash = createHash('sha256')
+    const rs = fs.createReadStream(filePath)
+    rs.on('error', reject)
+    rs.on('data', (chunk) => hash.update(chunk))
+    rs.on('end', () => resolve(hash.digest('hex')))
+  })
 
 // Takes a record that has foreign key references and replaces the foreign key
 // id with the actual data referenced. Modifies data object in place.

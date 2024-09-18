@@ -1291,7 +1291,7 @@ const migrateData = async () => {
         })
       }
     } catch (err) {
-      console.log('ERROR generating linked entity data for templates')
+      console.log('ERROR generating linked entity data for templates - ' + (err as Error).message)
     }
   }
 

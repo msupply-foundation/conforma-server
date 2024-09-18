@@ -11,6 +11,7 @@ import config from '../../config'
 import archiver from 'archiver'
 import { CombinedLinkedEntities } from './types'
 import { buildTemplateStructure } from './buildTemplateStructure'
+import { getSuggestedDataViews } from './linking'
 
 export const exportTemplateCheck = async (templateId: number) => {
   console.log(`Checking template: ${templateId}...`)
@@ -18,10 +19,21 @@ export const exportTemplateCheck = async (templateId: number) => {
 
   if (!template) throw new ApiError(`Template ${templateId} does not exist`, 400)
 
-  // Fetch entity data
   const linkedEntities = await getTemplateLinkedEntities(templateId)
 
-  return getDiff(template.linked_entity_data as CombinedLinkedEntities, linkedEntities)
+  const diff = getDiff(template.linked_entity_data as CombinedLinkedEntities, linkedEntities)
+
+  // TO-DO: Check for data views that are not associated
+  const unconnectedDataViews = (await getSuggestedDataViews(templateId)).map(
+    ({ identifier, title }) => ({ identifier, title })
+  )
+
+  const ready =
+    unconnectedDataViews.length === 0 &&
+    Object.values(diff)
+      .map((ob) => Object.values(ob))
+      .flat().length === 0
+  return { ready, unconnectedDataViews, diff }
 }
 
 export const exportTemplateDump = async (templateId: number) => {
