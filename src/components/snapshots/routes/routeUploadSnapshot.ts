@@ -51,14 +51,10 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
 
     await pump(upload.file, fs.createWriteStream(tempZipLocation))
 
-    console.log('tempZipLocation', tempZipLocation)
-
     const zip = new StreamZip.async({ file: tempZipLocation })
 
     const zipEntries = Object.values(await zip.entries())
     const files = zipEntries.map(({ name }) => name)
-
-    // console.log('files', files)
 
     if (!files.includes('info.json')) {
       return reply.send({
