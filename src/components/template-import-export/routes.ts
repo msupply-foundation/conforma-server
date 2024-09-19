@@ -10,7 +10,11 @@ import { getSuggestedDataViews } from './linking'
 import path from 'path'
 import { FILES_FOLDER, TEMPLATE_TEMP_FOLDER } from '../../constants'
 import StreamZip from 'node-stream-zip'
-import { importTemplateInstall, importTemplateUpload, InstallDetails } from './importTemplate'
+import {
+  importTemplateInstall,
+  importTemplateUpload,
+  PreserveExistingEntities,
+} from './importTemplate'
 import { customAlphabet } from 'nanoid'
 
 const pump = promisify(pipeline)
@@ -157,16 +161,23 @@ const routeImportTemplateUpload = async (request: FastifyRequest, reply: Fastify
   }
 
   const modifiedEntities = await importTemplateUpload(folderName)
+  const ready =
+    Object.values(modifiedEntities)
+      .map((ob) => Object.values(ob))
+      .flat().length === 0
 
   try {
-    return reply.send({ uid: folderName, modifiedEntities })
+    return reply.send({ uid: folderName, modifiedEntities, ready })
   } catch (err) {
     returnApiError(err, reply)
   }
 }
 
 const routeImportTemplateInstall = async (
-  request: FastifyRequest<{ Params: { uid: string }; Body: InstallDetails }>,
+  request: FastifyRequest<{
+    Params: { uid: string }
+    Body: { [K in keyof PreserveExistingEntities]: string[] } & { category: string }
+  }>,
   reply: FastifyReply
 ) => {
   const uid = request.params.uid
@@ -174,36 +185,21 @@ const routeImportTemplateInstall = async (
     returnApiError('No UID specified for template install', reply, 400)
   }
 
-  const installDetails = request.body ?? {}
+  const preserveExistingEntities = request.body ?? {}
+
+  const preserveExistingEntitySets = Object.fromEntries(
+    Object.entries(preserveExistingEntities)
+      .filter(([_, value]) => value !== undefined)
+      .map(([key, value]) => [key, key === 'category' ? value : new Set(value)])
+  )
 
   try {
-    const result = await importTemplateInstall(uid, installDetails)
+    const result = await importTemplateInstall(uid, preserveExistingEntitySets)
     return reply.send(result)
   } catch (err) {
     returnApiError(err, reply)
   }
 }
-
-// const routeGetLinkedDataViews = async (
-//   request: FastifyRequest<{ Params: { id: string } }>,
-//   reply: FastifyReply
-// ) => {
-//   const templateId = Number(request.params.id)
-//   if (!templateId || isNaN(templateId)) {
-//     returnApiError('Invalid template id', reply, 400)
-//   }
-
-//   try {
-//     const links = await db.getLinkedEntities<PgDataView>({
-//       templateId,
-//       table: 'data_view',
-//       joinTable: 'template_data_view_join',
-//     })
-//     return reply.send(links)
-//   } catch (err) {
-//     returnApiError(err, reply)
-//   }
-// }
 
 const routeGetTemplateSuggestedLinks = async (
   request: FastifyRequest<{ Params: { id: string } }>,

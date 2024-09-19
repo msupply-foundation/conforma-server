@@ -23,14 +23,14 @@ interface InfoFile {
   version: string
 }
 
-export type InstallDetails = {
-  filters?: Record<string, number>
-  permissions?: Record<string, number>
-  dataViews?: Record<string, number>
-  dataViewColumns?: Record<string, number>
-  dataTables?: Record<string, number>
-  category?: number
-  files?: Record<string, number>
+export type PreserveExistingEntities = {
+  filters?: Set<string>
+  permissions?: Set<string>
+  dataViews?: Set<string>
+  dataViewColumns?: Set<string>
+  dataTables?: Set<string>
+  category?: string
+  files?: Set<string>
 }
 
 export const importTemplateUpload = async (folderName: string) => {
@@ -133,13 +133,15 @@ export const importTemplateUpload = async (folderName: string) => {
   }
 }
 
-export const importTemplateInstall = async (uid: string, installDetails: InstallDetails) => {
-  if (!(await fsx.exists(path.join(FILES_FOLDER, uid))))
+export const importTemplateInstall = async (
+  uid: string,
+  installDetails: PreserveExistingEntities
+) => {
+  const sourceFolder = path.join(FILES_FOLDER, uid)
+  if (!(await fsx.exists(sourceFolder)))
     throw new ApiError(`There is no uploaded template with UID ${uid}`, 400)
 
-  const template: TemplateStructure = await fsx.readJSON(
-    path.join(FILES_FOLDER, uid, 'template.json')
-  )
+  const template: TemplateStructure = await fsx.readJSON(path.join(sourceFolder, 'template.json'))
 
   const existingVersion = await db.getRecord(
     'template',
@@ -155,16 +157,13 @@ export const importTemplateInstall = async (uid: string, installDetails: Install
 
   // Process template, using installDetails
   try {
-    const result = await installTemplate(template, installDetails, path.join(FILES_FOLDER, uid))
+    const result = await installTemplate(template, installDetails, sourceFolder)
+    fsx.remove(sourceFolder)
     return result
   } catch (err) {
     await db.cancelTransaction()
     throw err
   }
-
-  // Delete folder
-
-  return template
 }
 
 interface ExistingRecord extends Record<string, unknown> {
@@ -179,7 +178,7 @@ const getModifiedEntities = async (
 ) => {
   const changeEntities: Record<
     string,
-    { incoming: LinkedEntity | null; current: (LinkedEntity & { id: number }) | null }
+    { incoming: LinkedEntity | null; current: LinkedEntity | null }
   > = ({} = {})
 
   for (const [key, { checksum, lastModified, data }] of Object.entries(incomingEntities)) {
@@ -212,7 +211,7 @@ const getModifiedEntities = async (
           checksum,
           lastModified: existingLastModified,
           data: existingDiff,
-          id: id as number,
+          // id: id as number,
         },
       }
     }
@@ -222,7 +221,7 @@ const getModifiedEntities = async (
 
 export const installTemplate = async (
   template: TemplateStructure,
-  installDetails: InstallDetails = {},
+  installDetails: PreserveExistingEntities = {},
   sourceFolder: string | null = null
 ) => {
   try {
@@ -249,19 +248,21 @@ export const installTemplate = async (
     await db.beginTransaction()
 
     let categoryId: number | null = null
+
     if (category) {
-      if (preserveCategory) categoryId = preserveCategory
-      else {
-        const existing = await db.getRecord<PgTemplateCategory>(
-          'template_category',
-          category.data.code,
-          'code'
-        )
-        if (existing) {
-          categoryId = existing?.id
-          if (existing.checksum !== category.checksum)
-            await db.updateRecord('template_category', { ...category.data, id: existing.id })
-        } else categoryId = (await db.insertRecord('template_category', category.data)).id
+      const { checksum, data } = category
+      const existing = await db.getRecord<PgTemplateCategory>(
+        'template_category',
+        category.data.code,
+        'code'
+      )
+      if (existing) {
+        categoryId = existing.id
+        if (!(preserveCategory === data.code))
+          if (existing.checksum !== checksum)
+            await db.updateRecord('template_category', { ...data, id: existing.id })
+      } else {
+        categoryId = (await db.insertRecord('template_category', category.data)).id
       }
     }
 
@@ -308,7 +309,7 @@ export const installTemplate = async (
       const existing = await db.getRecord<PgFilter>('filter', filterCode, 'code')
       if (existing) {
         filter_id = existing?.id
-        if (!preserveFilters?.[filterCode])
+        if (!preserveFilters?.has(filterCode))
           if (existing.checksum !== checksum)
             await db.updateRecord('filter', { ...data, id: filter_id })
       } else {
@@ -335,7 +336,7 @@ export const installTemplate = async (
       )
       if (existing) {
         permission_name_id = existing.id
-        if (!preservePermissions?.[permissionName])
+        if (!preservePermissions?.has(permissionName))
           if (existing.checksum !== checksum)
             await db.updateRecord('permission_name', {
               ...permissionNameRecord,
@@ -363,7 +364,7 @@ export const installTemplate = async (
       const existing = await db.getRecord<PgDataView>('data_view', identifier, 'identifier')
       if (existing) {
         data_view_id = existing?.id
-        if (!preserveDataViews?.[identifier])
+        if (!preserveDataViews?.has(identifier))
           if (existing.checksum !== checksum)
             await db.updateRecord('data_view', { ...data, id: data_view_id })
       } else {
@@ -384,7 +385,7 @@ export const installTemplate = async (
         ['table_name', 'column_name']
       )
       if (existing) {
-        if (!preserveDataViewColumns?.[compositeKey])
+        if (!preserveDataViewColumns?.has(compositeKey))
           if (existing.checksum !== checksum)
             await db.updateRecord('data_view_column_definition', {
               ...data,
@@ -397,7 +398,7 @@ export const installTemplate = async (
       const { checksum, data } = dataTables[tableName]
       const existing = await db.getRecord<PgDataTable>('data_table', tableName, 'table_name')
       if (existing) {
-        if (!preserveDataTables?.[tableName])
+        if (!preserveDataTables?.has(tableName))
           if (existing.checksum !== checksum)
             await db.updateRecord('data_table', {
               ...data,
@@ -417,7 +418,7 @@ export const installTemplate = async (
         if (!existing) {
           await db.insertRecord('file', file)
         } else {
-          if (preserveFiles?.[unique_id]) {
+          if (preserveFiles?.has(unique_id)) {
             continue
           }
           await db.updateRecord('file', file, 'unique_id')
@@ -449,7 +450,13 @@ export const installTemplate = async (
 
     await db.commitTransaction()
 
-    return newTemplateId
+    return {
+      newTemplateId,
+      code: template.code,
+      versionId: template.version_id,
+      versionNo: ((template.version_history as string[]) ?? []).length + 1,
+      status: template.status,
+    }
   } catch (err) {
     await db.cancelTransaction()
     throw err

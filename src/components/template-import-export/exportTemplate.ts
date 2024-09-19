@@ -19,6 +19,8 @@ export const exportTemplateCheck = async (templateId: number) => {
 
   if (!template) throw new ApiError(`Template ${templateId} does not exist`, 400)
 
+  if (template.version_id.startsWith('*')) return { committed: false }
+
   const linkedEntities = await getTemplateLinkedEntities(templateId)
 
   const diff = getDiff(template.linked_entity_data as CombinedLinkedEntities, linkedEntities)
@@ -32,7 +34,7 @@ export const exportTemplateCheck = async (templateId: number) => {
     Object.values(diff)
       .map((ob) => Object.values(ob))
       .flat().length === 0
-  return { ready, unconnectedDataViews, diff }
+  return { committed: true, ready, unconnectedDataViews, diff }
 }
 
 export const exportTemplateDump = async (templateId: number) => {

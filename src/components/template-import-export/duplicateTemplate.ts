@@ -11,13 +11,11 @@ export const duplicateTemplate = async (templateId: number, newCode?: string) =>
 
   if (!template) throw new ApiError(`Template ${templateId} does not exist`, 400)
 
-  if (template.version_id.startsWith('*'))
+  if (template.version_id.startsWith('*') && !newCode)
     throw new ApiError(`Current template version must be committed before duplicating`, 400)
 
   console.log('Building structure...')
   const templateStructure = await buildTemplateStructure(template)
-
-  console.log('CODE', newCode)
 
   if (!newCode) {
     // Making a new version
