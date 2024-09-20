@@ -92,7 +92,7 @@ const startServer = async () => {
     root: path.join(getAppEntryPointDir(), filesFolder),
   })
 
-  server.register(fastifyMultipart)
+  server.register(fastifyMultipart, { limits: { fileSize: config.fileUploadLimit } })
 
   server.register(fastifyCors, { origin: '*' }) // Allow all origin (TODO change in PROD)
 

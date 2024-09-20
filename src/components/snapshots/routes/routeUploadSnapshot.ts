@@ -11,6 +11,7 @@ import { promisify } from 'util'
 import { timestampStringExpression } from './helpers'
 import { DateTime } from 'luxon'
 import StreamZip from 'node-stream-zip'
+import config from '../../../config'
 const pump = promisify(pipeline)
 
 const errorMessageBase = {
@@ -32,6 +33,7 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
   } catch (err) {
     throw new Error('No file attached')
   }
+
   // const data = await request.files()
   const isTemplate = (request.query as Query)?.template === 'true'
 
@@ -51,14 +53,16 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
 
     await pump(upload.file, fs.createWriteStream(tempZipLocation))
 
-    console.log('tempZipLocation', tempZipLocation)
+    if (upload.file.truncated)
+      return reply.send({
+        ...errorMessageBase,
+        error: `Uploaded file too big (Limit ${config.fileUploadLimit} bytes)`,
+      })
 
     const zip = new StreamZip.async({ file: tempZipLocation })
 
     const zipEntries = Object.values(await zip.entries())
     const files = zipEntries.map(({ name }) => name)
-
-    // console.log('files', files)
 
     if (!files.includes('info.json')) {
       return reply.send({
