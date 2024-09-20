@@ -1,7 +1,13 @@
 import db from './databaseMethods'
 
 export const getSuggestedDataViews = async (templateId: number) => {
-  const dataViews = await db.getAllDataViews()
+  // Gets all the dataviews someone with this template's "Apply" permissions
+  // can access
+
+  const permissions = await db.getApplyPermissionsForTemplate(templateId)
+  console.log('permissions', permissions)
+
+  const dataViews = await db.getAllAccessibleDataViews(permissions)
 
   const distinctCodes = new Set(dataViews.map((dv) => dv.code))
 

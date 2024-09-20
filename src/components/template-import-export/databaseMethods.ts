@@ -232,14 +232,30 @@ const databaseMethods = {
       throw err
     }
   },
-  getAllDataViews: async (): Promise<PgDataView[]> => {
+  getAllAccessibleDataViews: async (permissions: string[]): Promise<PgDataView[]> => {
     const text = `
       SELECT *
-      FROM data_view;
+      FROM data_view
+      WHERE $1 && permission_names
+      OR array_length(permission_names, 1) IS NULL;
     `
     try {
-      const result = await DBConnect.query({ text })
+      const result = await DBConnect.query({ text, values: [permissions] })
       return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
+  getApplyPermissionsForTemplate: async (templateId: number) => {
+    const text = `
+      SELECT DISTINCT "permissionName" FROM public.permissions_all
+        WHERE "templateId" = $1
+        AND "permissionType" = 'APPLY'
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [templateId], rowMode: 'array' })
+      return result.rows.flat()
     } catch (err) {
       console.log(errorMessage(err))
       throw err
