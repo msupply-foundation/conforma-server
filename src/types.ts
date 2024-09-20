@@ -377,6 +377,7 @@ interface ConfigBase {
   filterListMaxLength: number
   filterListBatchSize: number
   filterColumnSuffix: string
+  fileUploadLimit: number
   isProductionBuild: boolean
   defaultSystemManagerPermissionName: string
   webHostUrl?: string
