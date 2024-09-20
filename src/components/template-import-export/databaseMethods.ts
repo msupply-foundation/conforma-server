@@ -232,6 +232,19 @@ const databaseMethods = {
       throw err
     }
   },
+  getAllDataViews: async (): Promise<PgDataView[]> => {
+    const text = `
+      SELECT *
+      FROM data_view
+    `
+    try {
+      const result = await DBConnect.query({ text })
+      return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
   getAllAccessibleDataViews: async (permissions: string[]): Promise<PgDataView[]> => {
     const text = `
       SELECT *
@@ -247,7 +260,7 @@ const databaseMethods = {
       throw err
     }
   },
-  getApplyPermissionsForTemplate: async (templateId: number) => {
+  getApplyPermissionsForTemplate: async (templateId: number): Promise<string[]> => {
     const text = `
       SELECT DISTINCT "permissionName" FROM public.permissions_all
         WHERE "templateId" = $1

@@ -25,9 +25,9 @@ export const exportTemplateCheck = async (templateId: number) => {
 
   const diff = getDiff(template.linked_entity_data as CombinedLinkedEntities, linkedEntities)
 
-  const unconnectedDataViews = (await getSuggestedDataViews(templateId)).map(
-    ({ identifier, title }) => ({ identifier, title })
-  )
+  const unconnectedDataViews = (await getSuggestedDataViews(templateId))
+    .filter(({ identifier }) => !(identifier in linkedEntities.dataViews))
+    .map(({ id, code, identifier, title }) => ({ id, code, identifier, title }))
 
   const ready =
     unconnectedDataViews.length === 0 &&

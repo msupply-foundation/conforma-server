@@ -1,21 +1,36 @@
 import db from './databaseMethods'
+import { DataView as PgDataView } from '../../generated/postgres'
 
-export const getSuggestedDataViews = async (templateId: number) => {
-  // Gets all the dataviews someone with this template's "Apply" permissions
-  // can access
+interface DataViewDetails {
+  data: PgDataView
+  applicantAccessible: boolean
+  suggested: boolean
+}
+
+export const getDataViewDetails = async (templateId: number) => {
+  const allDataViews = await db.getAllDataViews()
 
   const permissions = await db.getApplyPermissionsForTemplate(templateId)
-  console.log('permissions', permissions)
+  const applicantAccessibleDataViews = await db.getAllAccessibleDataViews(permissions)
+  const accessibleIdentifiers = applicantAccessibleDataViews.map(({ identifier }) => identifier)
 
-  const dataViews = await db.getAllAccessibleDataViews(permissions)
-
-  const distinctCodes = new Set(dataViews.map((dv) => dv.code))
-
+  const distinctCodes = new Set(applicantAccessibleDataViews.map((dv) => dv.code))
   const dataViewCodesUsed: string[] = []
   for (const code of distinctCodes) {
     const elementCount = await db.getTemplateElementCountUsingDataView(templateId, code)
     if (elementCount > 0) dataViewCodesUsed.push(code)
   }
 
-  return dataViews.filter((dv) => dataViewCodesUsed.includes(dv.code))
+  const fullData: DataViewDetails[] = allDataViews.map((data) => {
+    const applicantAccessible = accessibleIdentifiers.includes(data.identifier)
+    return {
+      data,
+      applicantAccessible,
+      suggested: applicantAccessible && dataViewCodesUsed.includes(data.code),
+    }
+  })
+  return fullData
 }
+
+export const getSuggestedDataViews = async (templateId: number) =>
+  (await getDataViewDetails(templateId)).filter((dv) => dv.suggested).map(({ data }) => data)

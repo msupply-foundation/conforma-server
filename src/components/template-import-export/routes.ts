@@ -6,7 +6,7 @@ import { commitTemplate } from './commitTemplate'
 import { returnApiError } from './ApiError'
 import { exportTemplateCheck, exportTemplateDump } from './exportTemplate'
 import { duplicateTemplate } from './duplicateTemplate'
-import { getSuggestedDataViews } from './linking'
+import { getDataViewDetails, getSuggestedDataViews } from './linking'
 import path from 'path'
 import { FILES_FOLDER, TEMPLATE_TEMP_FOLDER } from '../../constants'
 import StreamZip from 'node-stream-zip'
@@ -27,10 +27,8 @@ export const templateRoutes: FastifyPluginCallback<{ prefix: string }> = (server
   server.get('/export/dump/:id', routeExportTemplateDump)
   server.post('/import/upload', routeImportTemplateUpload)
   server.post('/import/install/:uid', routeImportTemplateInstall)
-  server.get('/get-suggested-data-views/:id', routeGetTemplateSuggestedLinks)
-  // server.get('/get-links/:id', routeGetLinkedDataViews)
-  // server.get('/get-entities', routeGetAllEntities)
-  // server.post('/link-entities', routeLinkEntities)
+  server.get('/get-data-view-details/:id', routeGetDataViewDetails)
+  server.get('/get-suggested-data-views/:id', routeGetTemplateSuggestedDataViews)
 
   done()
 }
@@ -201,7 +199,24 @@ const routeImportTemplateInstall = async (
   }
 }
 
-const routeGetTemplateSuggestedLinks = async (
+const routeGetDataViewDetails = async (
+  request: FastifyRequest<{ Params: { id: string } }>,
+  reply: FastifyReply
+) => {
+  const templateId = Number(request.params.id)
+  if (!templateId || isNaN(templateId)) {
+    returnApiError('Invalid template id', reply, 400)
+  }
+
+  try {
+    const dataViews = await getDataViewDetails(templateId)
+    return reply.send(dataViews)
+  } catch (err) {
+    returnApiError(err, reply)
+  }
+}
+
+const routeGetTemplateSuggestedDataViews = async (
   request: FastifyRequest<{ Params: { id: string } }>,
   reply: FastifyReply
 ) => {
@@ -217,19 +232,5 @@ const routeGetTemplateSuggestedLinks = async (
     returnApiError(err, reply)
   }
 }
-
-// const routeGetAllEntities = async (request: FastifyRequest, reply: FastifyReply) => {
-//   //   const isArchive = (request.query as Query).archive === 'true'
-//   //   const snapshotName = (request.query as Query).name
-
-//   reply.send('DONE')
-// }
-
-// const routeLinkEntities = async (request: FastifyRequest, reply: FastifyReply) => {
-//   //   const isArchive = (request.query as Query).archive === 'true'
-//   //   const snapshotName = (request.query as Query).name
-
-//   reply.send('DONE')
-// }
 
 const getRandomTemplateFolderName = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 24)
