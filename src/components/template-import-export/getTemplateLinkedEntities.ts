@@ -64,31 +64,6 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
     linkedDataViews.map((dv) => snakeCase(dv.table_name))
   )
 
-  // const fileUidsUsedInActions = await db.getFilesFromDocAction(templateId)
-  // const linkedFiles: (Omit<PgFile, 'id'> | { unique_id: string; error: string })[] = []
-  // for (const fileId of fileUidsUsedInActions) {
-  //   const file = await db.getRecord<PgFile>('file', fileId, 'unique_id')
-  //   if (!file) {
-  //     linkedFiles.push({
-  //       unique_id: fileId,
-  //       error: `WARNING: This template references a file that is missing from the database: ${fileId}`,
-  //     })
-  //     console.log(
-  //       `WARNING: This template (id ${templateId}) references a file that is missing from the database: ${fileId}`
-  //     )
-  //     continue
-  //   }
-  //   const { id, ...fileRecord } = file
-  //   linkedFiles.push(fileRecord)
-  // }
-  // linkedFiles.push(
-  //   ...stripIds(
-  //     (await db.getRecordsByField<PgFile>('file', 'template_id', templateId)).filter(
-  //       (file) => !fileUidsUsedInActions.includes(file.unique_id)
-  //     )
-  //   )
-  // )
-
   const linkedEntities: CombinedLinkedEntities = {
     filters: buildLinkedEntityObject(linkedFilters, 'code'),
     permissions: buildLinkedEntityObject(linkedPermissions, 'name'),
@@ -108,7 +83,7 @@ const stripIds = <T>(data: T): Omit<T, 'id'> => {
   return filterObject(data as { [key: string]: any }, (key) => key !== 'id') as Omit<T, 'id'>
 }
 
-const buildLinkedEntityObject = <T extends LinkedEntityInput>(
+export const buildLinkedEntityObject = <T extends LinkedEntityInput>(
   entities: T[],
   keyField: keyof T | (keyof T)[]
 ): LinkedEntities<T> => {

@@ -236,6 +236,7 @@ const databaseMethods = {
     const text = `
       SELECT *
       FROM data_view
+      ORDER BY table_name;
     `
     try {
       const result = await DBConnect.query({ text })

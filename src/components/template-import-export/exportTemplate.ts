@@ -1,10 +1,10 @@
 import path from 'path'
 import fsx from 'fs-extra'
-import { Template as PgTemplate } from '../../generated/postgres'
+import { DataView as PgDataView, Template as PgTemplate } from '../../generated/postgres'
 import { ApiError } from './ApiError'
 import db from './databaseMethods'
 import { getDiff } from './getDiff'
-import { getTemplateLinkedEntities } from './getTemplateLinkedEntities'
+import { buildLinkedEntityObject, getTemplateLinkedEntities } from './getTemplateLinkedEntities'
 import { FILES_FOLDER, TEMPLATE_TEMP_FOLDER } from '../../constants'
 import { DateTime } from 'luxon'
 import config from '../../config'
@@ -19,22 +19,43 @@ export const exportTemplateCheck = async (templateId: number) => {
 
   if (!template) throw new ApiError(`Template ${templateId} does not exist`, 400)
 
-  if (template.version_id.startsWith('*')) return { committed: false }
+  const committed = !template.version_id.startsWith('*')
 
-  const linkedEntities = await getTemplateLinkedEntities(templateId)
+  const suggestedDataViews = await getSuggestedDataViews(templateId)
 
-  const diff = getDiff(template.linked_entity_data as CombinedLinkedEntities, linkedEntities)
+  const linkedEntities = (
+    committed
+      ? await getTemplateLinkedEntities(templateId)
+      : // A simplified structure with only Data Views as we can't build a
+        // complete object if not committed
+        {
+          dataViews: buildLinkedEntityObject(
+            await db.getJoinedEntities<PgDataView>({
+              templateId,
+              table: 'data_view',
+              joinTable: 'template_data_view_join',
+            }),
+            'identifier'
+          ),
+        }
+  ) as CombinedLinkedEntities
 
-  const unconnectedDataViews = (await getSuggestedDataViews(templateId))
+  const unconnectedDataViews = suggestedDataViews
     .filter(({ identifier }) => !(identifier in linkedEntities.dataViews))
     .map(({ id, code, identifier, title }) => ({ id, code, identifier, title }))
+
+  if (!committed) {
+    return { committed, unconnectedDataViews }
+  }
+
+  const diff = getDiff(template.linked_entity_data as CombinedLinkedEntities, linkedEntities)
 
   const ready =
     unconnectedDataViews.length === 0 &&
     Object.values(diff)
       .map((ob) => Object.values(ob))
       .flat().length === 0
-  return { committed: true, ready, unconnectedDataViews, diff }
+  return { committed, ready, unconnectedDataViews, diff }
 }
 
 export const exportTemplateDump = async (templateId: number) => {
