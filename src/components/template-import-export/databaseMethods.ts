@@ -192,7 +192,6 @@ const databaseMethods = {
     const fields: string[] = []
     const values: unknown[] = []
     Object.entries(patch).forEach(([key, value], index) => {
-      if (key === matchField) return
       fields.push(`"${key}" = $${index + 1}`)
 
       if (DBConnect.isJsonColumn(tableName, key)) values.push(JSON.stringify(value))

@@ -424,6 +424,7 @@ export const installTemplate = async (
           await db.updateRecord('file', file, 'unique_id')
         }
         const existingFilePath = path.join(FILES_FOLDER, archive_path ?? '', file_path)
+        const incomingFileSourcePath = path.join(sourceFolder, 'files', file_path)
         if (!(await fsx.exists(existingFilePath))) {
           let destination: string
           if (
@@ -435,10 +436,10 @@ export const installTemplate = async (
             destination = path.join(FILES_FOLDER, file_path)
             await db.updateRecord('file', { unique_id, archive_path: null }, 'unique_id')
           }
-          await fsx.copy(path.join(sourceFolder, file_path), destination)
+          await fsx.copy(incomingFileSourcePath, destination)
         } else {
           const existingFileHash = await hashFile(existingFilePath)
-          const newFileHash = await hashFile(path.join(sourceFolder, file_path))
+          const newFileHash = await hashFile(incomingFileSourcePath)
           if (existingFileHash !== newFileHash)
             throw new ApiError(
               'This would replace an existing file with a different file. Files should never be changed once in the system.',
