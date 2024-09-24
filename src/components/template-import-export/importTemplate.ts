@@ -15,7 +15,7 @@ import db from './databaseMethods'
 import { filterModifiedData } from './getDiff'
 import { FILES_FOLDER } from '../../constants'
 import config from '../../config'
-import { LinkedEntities, LinkedEntity, TemplateStructure } from './types'
+import { CombinedLinkedEntities, LinkedEntities, LinkedEntity, TemplateStructure } from './types'
 import { hashFile, replaceForeignKeyRef } from './updateHashes'
 
 interface InfoFile {
@@ -31,6 +31,18 @@ export type PreserveExistingEntities = {
   dataTables?: Set<string>
   category?: string
   files?: Set<string>
+}
+
+export const entityDataMap = {
+  filters: { table: 'filter', keyField: 'code' },
+  permissions: { table: 'permission_name', keyField: 'name' },
+  dataViews: { table: 'data_view', keyField: 'identifier' },
+  dataViewColumns: {
+    table: 'data_view_column_definition',
+    keyField: ['table_name', 'column_name'],
+  },
+  category: { table: 'template_category', keyField: 'code' },
+  dataTables: { table: 'data_table', keyField: 'table_name' },
 }
 
 export const importTemplateUpload = async (folderName: string) => {
@@ -131,6 +143,44 @@ export const importTemplateUpload = async (folderName: string) => {
     dataTables: changedDataTables,
     files: changedFiles,
   }
+}
+
+export const getSingleEntityDiff = async (
+  uid: string,
+  type: keyof CombinedLinkedEntities,
+  value: string
+) => {
+  const sourceFolder = path.join(FILES_FOLDER, uid)
+  if (!(await fsx.exists(sourceFolder)))
+    throw new ApiError(`There is no uploaded template with UID ${uid}`, 400)
+
+  const template: TemplateStructure = await fsx.readJSON(path.join(sourceFolder, 'template.json'))
+
+  const group = template?.shared?.[type]
+  if (!group) throw new ApiError(`Invalid entity type`, 400)
+
+  if (!(value in group)) throw new ApiError(`Invalid entity id/code`, 400)
+
+  const templateData: any = (group as Record<string, unknown>)?.[value]
+
+  const { table, keyField } = entityDataMap[type]
+
+  const values = Array.isArray(keyField) ? value.split('__') : value
+  const existing = await db.getRecord<ExistingRecord>(table, values, keyField)
+
+  if (!existing) throw new ApiError('No matching entity in the system', 400)
+
+  if (table === 'permission_name')
+    await replaceForeignKeyRef(
+      existing,
+      'permission_policy',
+      'permission_policy_id',
+      'permission_policy'
+    )
+
+  const { checksum, last_modified, id, ...existingData } = existing
+
+  return { incoming: templateData.data, existing: existingData }
 }
 
 export const importTemplateInstall = async (

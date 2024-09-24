@@ -11,11 +11,13 @@ import path from 'path'
 import { FILES_FOLDER, TEMPLATE_TEMP_FOLDER } from '../../constants'
 import StreamZip from 'node-stream-zip'
 import {
+  getSingleEntityDiff,
   importTemplateInstall,
   importTemplateUpload,
   PreserveExistingEntities,
 } from './importTemplate'
 import { customAlphabet } from 'nanoid'
+import { CombinedLinkedEntities } from './types'
 
 const pump = promisify(pipeline)
 
@@ -26,6 +28,7 @@ export const templateRoutes: FastifyPluginCallback<{ prefix: string }> = (server
   server.get('/export/check/:id', routeExportTemplateCheck)
   server.get('/export/dump/:id', routeExportTemplateDump)
   server.post('/import/upload', routeImportTemplateUpload)
+  server.get('/import/get-full-entity-diff/:uid', routeImportGetDiff)
   server.post('/import/install/:uid', routeImportTemplateInstall)
   server.get('/get-data-view-details/:id', routeGetDataViewDetails)
   server.get('/get-suggested-data-views/:id', routeGetTemplateSuggestedDataViews)
@@ -166,6 +169,28 @@ const routeImportTemplateUpload = async (request: FastifyRequest, reply: Fastify
 
   try {
     return reply.send({ uid: folderName, modifiedEntities, ready })
+  } catch (err) {
+    returnApiError(err, reply)
+  }
+}
+
+const routeImportGetDiff = async (
+  request: FastifyRequest<{
+    Params: { uid: string }
+    Querystring: { type: keyof CombinedLinkedEntities; value: string }
+  }>,
+  reply: FastifyReply
+) => {
+  const uid = request.params.uid
+  if (!uid) {
+    returnApiError('No UID specified for imported template', reply, 400)
+  }
+
+  const { type, value } = request.query
+
+  try {
+    const result = await getSingleEntityDiff(uid, type, value)
+    return reply.send(result)
   } catch (err) {
     returnApiError(err, reply)
   }

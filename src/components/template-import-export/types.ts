@@ -23,7 +23,6 @@ export interface LinkedEntity<T = unknown> {
 
 export type LinkedEntities<T = unknown> = Record<string, LinkedEntity<T>>
 
-// type CommonExclusions = 'id' | 'last_modified' | 'checksum'
 export interface CombinedLinkedEntities {
   filters: LinkedEntities<Omit<PgFilter, 'id'>>
   permissions: LinkedEntities<
