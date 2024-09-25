@@ -159,9 +159,10 @@ export const getSingleEntityDiff = async (
   const group = template?.shared?.[type]
   if (!group) throw new ApiError(`Invalid entity type`, 400)
 
-  if (!(value in group)) throw new ApiError(`Invalid entity id/code`, 400)
+  if (!(value in group) && type !== 'category') throw new ApiError(`Invalid entity id/code`, 400)
 
-  const templateData: any = (group as Record<string, unknown>)?.[value]
+  const templateData: any =
+    type === 'category' ? group : (group as Record<string, unknown>)?.[value]
 
   const { table, keyField } = entityDataMap[type]
 
@@ -180,7 +181,7 @@ export const getSingleEntityDiff = async (
 
   const { checksum, last_modified, id, ...existingData } = existing
 
-  return { incoming: templateData.data, existing: existingData }
+  return { incoming: matchPropertyOrder(templateData.data, existingData), current: existingData }
 }
 
 export const importTemplateInstall = async (
@@ -512,4 +513,30 @@ export const installTemplate = async (
     await db.cancelTransaction()
     throw err
   }
+}
+
+// Returns a copy of the first object with the keys ordered to correspond with
+// the second object
+const matchPropertyOrder = (
+  input: Record<string, unknown>,
+  comparison: Record<string, unknown>
+) => {
+  const inputKeys = Object.keys(input)
+  const comparisonKeys = Object.keys(comparison)
+
+  const done = new Set<string>()
+
+  const result: Record<string, unknown> = {}
+
+  comparisonKeys.forEach((key) => {
+    if (!inputKeys.includes(key)) return
+    result[key] = input[key]
+    done.add(key)
+  })
+
+  const remainingKeys = inputKeys.filter((key) => !done.has(key))
+
+  remainingKeys.forEach((key) => (result[key] = input[key]))
+
+  return result
 }
