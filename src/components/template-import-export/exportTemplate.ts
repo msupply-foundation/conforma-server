@@ -5,7 +5,7 @@ import { ApiError } from './ApiError'
 import db from './databaseMethods'
 import { getDiff } from './getDiff'
 import { buildLinkedEntityObject, getTemplateLinkedEntities } from './getTemplateLinkedEntities'
-import { FILES_FOLDER, TEMPLATE_TEMP_FOLDER } from '../../constants'
+import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../constants'
 import { DateTime } from 'luxon'
 import config from '../../config'
 import archiver from 'archiver'
@@ -75,7 +75,7 @@ export const exportTemplateDump = async (templateId: number) => {
   console.log('Outputting to disk...')
   const { code, version_id, version_history } = template
   const outputName = `${code}-${version_id}_v${((version_history as unknown[]) ?? []).length + 1}`
-  const fullOutputPath = path.join(TEMPLATE_TEMP_FOLDER, outputName)
+  const fullOutputPath = path.join(FILES_TEMP_FOLDER, outputName)
 
   await fsx.emptyDir(fullOutputPath)
   await fsx.writeJSON(path.join(fullOutputPath, 'template.json'), templateStructure, { spaces: 2 })
@@ -97,7 +97,7 @@ export const exportTemplateDump = async (templateId: number) => {
   }
 
   console.log('Zipping template...')
-  const zipFilePath = path.join(FILES_FOLDER, `${outputName}.zip`)
+  const zipFilePath = path.join(FILES_TEMP_FOLDER, `${outputName}.zip`)
   const output = await fsx.createWriteStream(zipFilePath)
   const archive = archiver('zip', { zlib: { level: 9 } })
 
@@ -107,5 +107,6 @@ export const exportTemplateDump = async (templateId: number) => {
 
   await fsx.remove(fullOutputPath)
   console.log('Returning zip')
+  config.scheduledJobs?.manuallySchedule('cleanup', 5)
   return `${outputName}.zip`
 }

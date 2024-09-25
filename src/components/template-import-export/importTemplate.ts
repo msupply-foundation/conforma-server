@@ -13,7 +13,7 @@ import {
 import { ApiError } from './ApiError'
 import db from './databaseMethods'
 import { filterModifiedData } from './getDiff'
-import { FILES_FOLDER } from '../../constants'
+import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../constants'
 import config from '../../config'
 import { CombinedLinkedEntities, LinkedEntities, LinkedEntity, TemplateStructure } from './types'
 import { hashFile, replaceForeignKeyRef } from './updateHashes'
@@ -48,7 +48,7 @@ export const entityDataMap = {
 export const importTemplateUpload = async (folderName: string) => {
   console.log(`Analysing uploaded template...`)
 
-  const fullTemplateFolderPath = path.join(FILES_FOLDER, folderName)
+  const fullTemplateFolderPath = path.join(FILES_TEMP_FOLDER, folderName)
 
   let info: InfoFile
   let template: TemplateStructure
@@ -71,6 +71,18 @@ export const importTemplateUpload = async (folderName: string) => {
   } catch (_) {
     throw new ApiError('template.json file missing from upload', 400)
   }
+
+  const existingVersion = await db.getRecord(
+    'template',
+    [template.code, template.version_id],
+    ['code', 'version_id']
+  )
+
+  if (existingVersion)
+    throw new ApiError(
+      `Template code ${template.code} with versionID ${template.version_id} already installed`,
+      400
+    )
 
   const { filters, permissions, dataViews, dataViewColumns, category, dataTables } = template.shared
 
@@ -150,7 +162,7 @@ export const getSingleEntityDiff = async (
   type: keyof CombinedLinkedEntities,
   value: string
 ) => {
-  const sourceFolder = path.join(FILES_FOLDER, uid)
+  const sourceFolder = path.join(FILES_TEMP_FOLDER, uid)
   if (!(await fsx.exists(sourceFolder)))
     throw new ApiError(`There is no uploaded template with UID ${uid}`, 400)
 
@@ -188,7 +200,7 @@ export const importTemplateInstall = async (
   uid: string,
   installDetails: PreserveExistingEntities
 ) => {
-  const sourceFolder = path.join(FILES_FOLDER, uid)
+  const sourceFolder = path.join(FILES_TEMP_FOLDER, uid)
   if (!(await fsx.exists(sourceFolder)))
     throw new ApiError(`There is no uploaded template with UID ${uid}`, 400)
 
@@ -202,7 +214,7 @@ export const importTemplateInstall = async (
 
   if (existingVersion)
     throw new ApiError(
-      `Template of code ${template.code} and versionID ${template.version_id} already installed`,
+      `Template code ${template.code} with versionID ${template.version_id} already installed`,
       400
     )
 

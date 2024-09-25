@@ -8,7 +8,7 @@ import { exportTemplateCheck, exportTemplateDump } from './exportTemplate'
 import { duplicateTemplate } from './duplicateTemplate'
 import { getDataViewDetails, getSuggestedDataViews } from './linking'
 import path from 'path'
-import { FILES_FOLDER, TEMPLATE_TEMP_FOLDER } from '../../constants'
+import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../constants'
 import StreamZip from 'node-stream-zip'
 import {
   getSingleEntityDiff,
@@ -18,6 +18,7 @@ import {
 } from './importTemplate'
 import { customAlphabet } from 'nanoid'
 import { CombinedLinkedEntities } from './types'
+import config from '../../config'
 
 const pump = promisify(pipeline)
 
@@ -144,12 +145,12 @@ const routeImportTemplateUpload = async (request: FastifyRequest, reply: Fastify
 
   if (upload?.mimetype !== 'application/zip') returnApiError('File is not a ZIP file', reply, 400)
 
-  const tempZipLocation = path.join(TEMPLATE_TEMP_FOLDER, 'templateUpload.zip')
-  await fsx.ensureDir(TEMPLATE_TEMP_FOLDER)
+  const tempZipLocation = path.join(FILES_TEMP_FOLDER, 'templateUpload.zip')
+  await fsx.ensureDir(FILES_TEMP_FOLDER)
   await pump(upload.file, fsx.createWriteStream(tempZipLocation))
 
   const folderName = getRandomTemplateFolderName()
-  const unzippedTemplatePath = path.join(FILES_FOLDER, folderName)
+  const unzippedTemplatePath = path.join(FILES_TEMP_FOLDER, folderName)
 
   try {
     const zip = new StreamZip.async({ file: tempZipLocation })
@@ -166,6 +167,9 @@ const routeImportTemplateUpload = async (request: FastifyRequest, reply: Fastify
     Object.values(modifiedEntities)
       .map((ob) => Object.values(ob))
       .flat().length === 0
+
+  // Cleanup temp upload if not installed within next 10 mins
+  config.scheduledJobs?.manuallySchedule('cleanup', 10)
 
   try {
     return reply.send({ uid: folderName, modifiedEntities, ready })
