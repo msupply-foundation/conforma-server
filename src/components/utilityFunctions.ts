@@ -111,6 +111,7 @@ export const clearEmptyDirectories = async (directory: string) => {
     fs.statSync(path.join(directory, dir)).isDirectory()
   )
   for (const dir of directories) {
+    await clearEmptyDirectories(path.join(directory, dir))
     const files = await fsProm.readdir(path.join(directory, dir))
     if (files.length === 0) await fsProm.rmdir(path.join(directory, dir))
   }
