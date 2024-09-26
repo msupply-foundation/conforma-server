@@ -2400,3 +2400,16 @@ CREATE TRIGGER recalculate_filter_checksum_update
     FOR EACH ROW
     WHEN (NEW.checksum = OLD.checksum OR NEW.checksum IS NULL)
     EXECUTE FUNCTION public.notify_server_to_update_checksum ();
+
+DROP TRIGGER IF EXISTS recalculate_file_checksum_insert ON public.file;
+CREATE TRIGGER recalculate_file_checksum_insert
+    AFTER INSERT ON public.file
+    FOR EACH ROW
+    EXECUTE FUNCTION public.notify_server_to_update_checksum ();
+
+DROP TRIGGER IF EXISTS recalculate_file_checksum_update ON public.file;
+CREATE TRIGGER recalculate_file_checksum_update
+    AFTER UPDATE ON public.file
+    FOR EACH ROW
+    WHEN (NEW.checksum = OLD.checksum OR NEW.checksum IS NULL)
+    EXECUTE FUNCTION public.notify_server_to_update_checksum ();

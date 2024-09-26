@@ -1,64 +1,15 @@
 import path from 'path'
 import fsx from 'fs-extra'
-import { DataView as PgDataView, Template as PgTemplate } from '../../generated/postgres'
+import { Template as PgTemplate } from '../../generated/postgres'
 import { ApiError } from './ApiError'
 import db from './databaseMethods'
-import { getDiff } from './getDiff'
-import { buildLinkedEntityObject, getTemplateLinkedEntities } from './getTemplateLinkedEntities'
 import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../constants'
 import { DateTime } from 'luxon'
 import config from '../../config'
 import archiver from 'archiver'
-import { CombinedLinkedEntities } from './types'
 import { buildTemplateStructure } from './buildTemplateStructure'
-import { getSuggestedDataViews } from './linking'
 
-export const exportTemplateCheck = async (templateId: number) => {
-  console.log(`Checking template: ${templateId}...`)
-  const template = await db.getRecord<PgTemplate>('template', templateId)
-
-  if (!template) throw new ApiError(`Template ${templateId} does not exist`, 400)
-
-  const committed = !template.version_id.startsWith('*')
-
-  const suggestedDataViews = await getSuggestedDataViews(templateId)
-
-  const linkedEntities = (
-    committed
-      ? await getTemplateLinkedEntities(templateId)
-      : // A simplified structure with only Data Views as we can't build a
-        // complete object if not committed
-        {
-          dataViews: buildLinkedEntityObject(
-            await db.getJoinedEntities<PgDataView>({
-              templateId,
-              table: 'data_view',
-              joinTable: 'template_data_view_join',
-            }),
-            'identifier'
-          ),
-        }
-  ) as CombinedLinkedEntities
-
-  const unconnectedDataViews = suggestedDataViews
-    .filter(({ identifier }) => !(identifier in linkedEntities.dataViews))
-    .map(({ id, code, identifier, title }) => ({ id, code, identifier, title }))
-
-  if (!committed) {
-    return { committed, unconnectedDataViews }
-  }
-
-  const diff = getDiff(template.linked_entity_data as CombinedLinkedEntities, linkedEntities)
-
-  const ready =
-    unconnectedDataViews.length === 0 &&
-    Object.values(diff)
-      .map((ob) => Object.values(ob))
-      .flat().length === 0
-  return { committed, ready, unconnectedDataViews, diff }
-}
-
-export const exportTemplateDump = async (templateId: number) => {
+export const exportTemplate = async (templateId: number) => {
   console.log(`Exporting template: ${templateId}...`)
   const template = await db.getRecord<PgTemplate>('template', templateId)
 
@@ -85,9 +36,10 @@ export const exportTemplateDump = async (templateId: number) => {
     { spaces: 2 }
   )
 
-  if (templateStructure.files.length > 0) {
+  const files = Object.values(templateStructure.shared.files).map(({ data }) => data)
+  if (files.length > 0) {
     await fsx.mkdir(path.join(fullOutputPath, 'files'))
-    for (const file of templateStructure.files) {
+    for (const file of files) {
       const { file_path, archive_path } = file
       await fsx.copy(
         path.join(FILES_FOLDER, archive_path ?? '', file_path),

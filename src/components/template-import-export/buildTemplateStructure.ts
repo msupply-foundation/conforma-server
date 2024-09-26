@@ -6,10 +6,8 @@ import {
   TemplateStage as PgTemplateStage,
   TemplateAction as PgTemplateAction,
   TemplatePermission as PgTemplatePermission,
-  File as PgFile,
   PermissionName as PgPermissionName,
 } from '../../generated/postgres'
-import { ApiError } from './ApiError'
 import db from './databaseMethods'
 import { getTemplateLinkedEntities } from './getTemplateLinkedEntities'
 import { CombinedLinkedEntities, TemplateSection, TemplateStage, TemplateStructure } from './types'
@@ -23,7 +21,6 @@ export const buildTemplateStructure = async (template: PgTemplate) => {
     stages: [],
     actions: [],
     permissionJoins: [],
-    files: [],
     shared:
       linked_entity_data === null
         ? await getTemplateLinkedEntities(templateId)
@@ -98,37 +95,6 @@ export const buildTemplateStructure = async (template: PgTemplate) => {
       ...permission,
       permissionName: permissionName.name as string,
     })
-  }
-
-  // Files
-  const fileUidsUsedInActions = await db.getFilesFromDocAction(templateId)
-  for (const fileId of fileUidsUsedInActions) {
-    const file = await db.getRecord<PgFile>('file', fileId, 'unique_id')
-    if (!file)
-      throw new ApiError(
-        `This template references a file (UID: ${fileId} that is missing from the database. Please rectify this immediately.`,
-        500
-      )
-    const {
-      id,
-      user_id,
-      template_id,
-      application_serial,
-      application_response_id,
-      application_note_id,
-      ...fileRecord
-    } = file
-    templateStructure.files.push(fileRecord)
-  }
-  const filesLinkedByTemplate = await db.getRecordsByField<PgFile>(
-    'file',
-    'template_id',
-    templateId
-  )
-
-  for (const file of filesLinkedByTemplate) {
-    const { id, ...fileRecord } = file
-    if (!fileUidsUsedInActions.includes(file.unique_id)) templateStructure.files.push(fileRecord)
   }
 
   return templateStructure

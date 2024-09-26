@@ -32,6 +32,7 @@ export interface CombinedLinkedEntities {
   dataViewColumns: LinkedEntities<Omit<PgDataViewColumn, 'id'>>
   category: LinkedEntity<TemplateCategory> | null
   dataTables: LinkedEntities<Omit<PgDataTable, 'id'>>
+  files: LinkedEntities<TemplateFile>
 }
 
 export type LinkedEntityInput = {
@@ -50,7 +51,6 @@ export type TemplateStructure = Omit<
   stages: TemplateStage[]
   actions: TemplateAction[]
   permissionJoins: TemplatePermission[]
-  files: TemplateFile[]
   shared: CombinedLinkedEntities
 }
 
@@ -80,10 +80,5 @@ export type TemplateAction = Omit<PgTemplateAction, 'id' | 'template_id'>
 
 export type TemplateFile = Omit<
   PgFile,
-  | 'id'
-  | 'template_id'
-  | 'user_id'
-  | 'application_serial'
-  | 'application_response_id'
-  | 'application_note_id'
+  'id' | 'user_id' | 'application_serial' | 'application_response_id' | 'application_note_id'
 >

@@ -4,11 +4,11 @@ import { pipeline } from 'stream'
 import { promisify } from 'util'
 import { commitTemplate } from './commitTemplate'
 import { returnApiError } from './ApiError'
-import { exportTemplateCheck, exportTemplateDump } from './exportTemplate'
+import { exportTemplate } from './exportTemplate'
 import { duplicateTemplate } from './duplicateTemplate'
 import { getDataViewDetails, getSuggestedDataViews } from './linking'
 import path from 'path'
-import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../constants'
+import { FILES_TEMP_FOLDER } from '../../constants'
 import StreamZip from 'node-stream-zip'
 import {
   getSingleEntityDiff,
@@ -19,6 +19,7 @@ import {
 import { customAlphabet } from 'nanoid'
 import { CombinedLinkedEntities } from './types'
 import config from '../../config'
+import { checkTemplate } from './checkTemplate'
 
 const pump = promisify(pipeline)
 
@@ -26,8 +27,8 @@ export const templateRoutes: FastifyPluginCallback<{ prefix: string }> = (server
   server.post('/commit/:id', routeCommitTemplate)
   server.post('/duplicate/new/:id', routeDuplicateTemplateNew)
   server.post('/duplicate/version/:id', routeDuplicateTemplateVersion)
-  server.get('/export/check/:id', routeExportTemplateCheck)
-  server.get('/export/dump/:id', routeExportTemplateDump)
+  server.get('/export/:id', routeTemplateExport)
+  server.get('/check/:id', routeTemplateCheck)
   server.post('/import/upload', routeImportTemplateUpload)
   server.get('/import/get-full-entity-diff/:uid', routeImportGetDiff)
   server.post('/import/install/:uid', routeImportTemplateInstall)
@@ -55,7 +56,7 @@ const routeCommitTemplate = async (
   }
 }
 
-const routeExportTemplateCheck = async (
+const routeTemplateCheck = async (
   request: FastifyRequest<{ Params: { id: string } }>,
   reply: FastifyReply
 ) => {
@@ -65,14 +66,14 @@ const routeExportTemplateCheck = async (
   }
 
   try {
-    const result = await exportTemplateCheck(templateId)
+    const result = await checkTemplate(templateId)
     return reply.send(result)
   } catch (err) {
     returnApiError(err, reply)
   }
 }
 
-const routeExportTemplateDump = async (
+const routeTemplateExport = async (
   request: FastifyRequest<{ Params: { id: string } }>,
   reply: FastifyReply
 ) => {
@@ -82,10 +83,11 @@ const routeExportTemplateDump = async (
   }
 
   try {
-    const filepath = await exportTemplateDump(templateId)
-    reply.sendFile(filepath)
+    const filepath = await exportTemplate(templateId)
+    return reply.send(filepath)
+    // return reply.sendFile(filepath)
     // fsx.remove(path.join(FILES_FOLDER, filepath))
-    return reply
+    // return reply
   } catch (err) {
     returnApiError(err, reply)
   }

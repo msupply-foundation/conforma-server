@@ -46,7 +46,7 @@ import migrateData from '../database/migration/migrateData'
 import routeArchiveFiles from './components/files/routeArchiveFiles'
 import { Schedulers } from './components/scheduler'
 import { AccessExternalApiQuery, routeAccessExternalApi } from './components/external-apis/routes'
-import { DEFAULT_LOGOUT_TIME, FILES_FOLDER } from './constants'
+import { DEFAULT_LOGOUT_TIME } from './constants'
 import { updateRowPolicies } from './components/permissions/rowLevelPolicyHelpers'
 import { routeRawData } from './components/other/routeRawData'
 import {

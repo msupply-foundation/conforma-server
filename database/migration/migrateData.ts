@@ -1207,6 +1207,7 @@ const migrateData = async () => {
       'data_table',
       'template_category',
       'filter',
+      'file',
     ]
 
     for (const table of tables) {

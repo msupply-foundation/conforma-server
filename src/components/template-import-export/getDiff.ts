@@ -5,7 +5,8 @@ export const getDiff = (
   templateData: CombinedLinkedEntities,
   comparisonData: CombinedLinkedEntities
 ) => {
-  const { filters, permissions, dataViews, dataViewColumns, category, dataTables } = templateData
+  const { filters, permissions, dataViews, dataViewColumns, category, dataTables, files } =
+    templateData
 
   const {
     filters: filterCompare,
@@ -14,6 +15,7 @@ export const getDiff = (
     dataViewColumns: dataViewColumnCompare,
     category: categoryCompare,
     dataTables: dataTablesCompare,
+    files: filesCompare,
   } = comparisonData
 
   return {
@@ -24,6 +26,7 @@ export const getDiff = (
     category:
       category && categoryCompare ? compare({ category }, { category: categoryCompare }) : {},
     dataTables: compare(dataTables, dataTablesCompare),
+    files: compare(files, filesCompare),
   }
 }
 

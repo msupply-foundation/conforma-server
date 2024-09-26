@@ -3,7 +3,6 @@ import fs from 'fs'
 import { getLookupTableData } from '../../lookup-table/export'
 import db from './databaseMethods'
 import { createHash } from 'crypto'
-import { pipeline } from 'stream'
 
 interface NotificationPayload {
   tableName: string
@@ -24,6 +23,17 @@ export const hashRecord = async ({ tableName, id }: NotificationPayload) => {
       'permission_policy',
       'permission_policy_id',
       'permission_policy'
+    )
+  }
+
+  // For file table, we just ignore foreign key references, as they shouldn't be
+  // relevant to template import/export, which is what the purpose of this is
+
+  if (tableName === 'file') {
+    ;['user_id', 'application_response_id', 'application_note_id', 'application_serial'].forEach(
+      (column) => {
+        delete data[column]
+      }
     )
   }
 

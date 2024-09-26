@@ -43,6 +43,7 @@ export const entityDataMap = {
   },
   category: { table: 'template_category', keyField: 'code' },
   dataTables: { table: 'data_table', keyField: 'table_name' },
+  files: { table: 'files', keyField: 'unique_id' },
 }
 
 export const importTemplateUpload = async (folderName: string) => {
@@ -120,7 +121,8 @@ export const importTemplateUpload = async (folderName: string) => {
       current: { timestamp: Date; data: Partial<PgFile> & { id: number } }
     }
   > = {}
-  for (const file of template.files) {
+  const files = Object.values(template.shared.files).map(({ data }) => data)
+  for (const file of files) {
     const currentFile = await db.getRecord<PgFile>('file', file.unique_id, 'unique_id')
     if (!currentFile) continue
 
@@ -128,7 +130,6 @@ export const importTemplateUpload = async (folderName: string) => {
     const {
       id,
       user_id: userId,
-      template_id,
       application_serial: serial,
       application_response_id: response,
       application_note_id: note,
@@ -293,8 +294,7 @@ export const installTemplate = async (
       actions,
       stages,
       permissionJoins,
-      files,
-      shared: { filters, permissions, category, dataViews, dataViewColumns, dataTables },
+      shared: { filters, permissions, category, dataViews, dataViewColumns, dataTables, files },
       ...templateRecord
     } = template
 
@@ -472,10 +472,29 @@ export const installTemplate = async (
       }
     }
 
+    for (const uniqueId of Object.keys(files)) {
+      const { checksum, data } = files[uniqueId]
+      let file_id: number | null = null
+
+      const existing = await db.getRecord<PgDataView>('file', uniqueId, 'unique_id')
+      if (existing) {
+        file_id = existing?.id
+        if (!preserveFiles?.has(uniqueId))
+          if (existing.checksum !== checksum)
+            await db.updateRecord('file', { ...data, id: file_id })
+      } else {
+        file_id = (await db.insertRecord('file', data)).id
+      }
+
+      const fileJoinRecord = { file_id, template_id: newTemplateId }
+      await db.insertRecord('template_data_view_join', fileJoinRecord)
+    }
+
     // When duplicating, we don't need to copy any files, so sourceFolder is not
     // provided
     if (sourceFolder) {
-      for (const file of files) {
+      const fileArray = Object.values(files).map(({ data }) => data)
+      for (const file of fileArray) {
         const { unique_id, archive_path, file_path } = file
         const existing = await db.getRecord<PgFile>('file', unique_id, 'unique_id')
         if (!existing) {

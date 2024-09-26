@@ -64,6 +64,32 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
     linkedDataViews.map((dv) => snakeCase(dv.table_name))
   )
 
+  const databaseFiles = await db.getJoinedEntities<PgFile>({
+    templateId,
+    table: 'file',
+    joinTable: 'template_file_join',
+  })
+
+  const filesUsedInActions = []
+  const fileUidsUsedInActions = await db.getFilesFromDocAction(templateId)
+  for (const fileId of fileUidsUsedInActions) {
+    const file = await db.getRecord<PgFile>('file', fileId, 'unique_id')
+    if (!file)
+      throw new ApiError(
+        `This template references a file (UID: ${fileId} that is missing from the database. Please rectify this immediately.`,
+        500
+      )
+    filesUsedInActions.push(file)
+  }
+
+  const linkedFiles = [...databaseFiles, ...filesUsedInActions]
+    .map(stripIds)
+    .map(
+      ({ user_id, application_response_id, application_note_id, application_serial, ...file }) => ({
+        ...file,
+      })
+    )
+
   const linkedEntities: CombinedLinkedEntities = {
     filters: buildLinkedEntityObject(linkedFilters, 'code'),
     permissions: buildLinkedEntityObject(linkedPermissions, 'name'),
@@ -73,6 +99,7 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
       ? buildLinkedEntityObject([linkedCategory], 'code')[linkedCategory.code]
       : null,
     dataTables: buildLinkedEntityObject(linkedDataTables, 'table_name'),
+    files: buildLinkedEntityObject(linkedFiles, 'unique_id'),
   }
 
   return linkedEntities
