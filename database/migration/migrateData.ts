@@ -1259,9 +1259,39 @@ const migrateData = async () => {
      CREATE TABLE IF NOT EXISTS public.template_data_view_join (
         id serial PRIMARY KEY,
         template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL,
-        data_view_id integer REFERENCES public.data_view (id) ON DELETE CASCADE NOT NULL
+        data_view_id integer REFERENCES public.data_view (id) ON DELETE CASCADE NOT NULL,
+        UNIQUE (template_id, data_view_id)
+      );
+      CREATE TABLE IF NOT EXISTS public.template_file_join (
+        id serial PRIMARY KEY,
+        template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL,
+        file_id integer REFERENCES public.file (id) ON DELETE CASCADE NOT NULL,
+        UNIQUE (template_id, file_id)
       );
       `)
+    console.log(' - Adding join entries for existing files, then removing template_id column')
+    try {
+      const filesToUpdate = (
+        await DB.query({
+          text: `
+          SELECT id, template_id FROM public.file
+          WHERE template_id IS NOT NULL;`,
+        })
+      ).rows
+      for (const file of filesToUpdate) {
+        await DB.query({
+          text: `
+          INSERT INTO public.template_file_join (template_id, file_id)
+          VALUES ($1, $2)
+          ON CONFLICT(template_id, file_id) DO NOTHING;`,
+          values: [file.template_id, file.id],
+        })
+      }
+      await DB.changeSchema(`ALTER TABLE public.file
+        DROP COLUMN IF EXISTS template_id;`)
+    } catch (err) {
+      console.log('ERROR creating Join tables - ' + (err as Error).message)
+    }
 
     console.log(' - Adding linked_entities column to template')
     await DB.changeSchema(`ALTER TABLE public.template
