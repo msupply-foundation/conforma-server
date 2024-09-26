@@ -8,7 +8,7 @@ import { exportTemplate } from './exportTemplate'
 import { duplicateTemplate } from './duplicateTemplate'
 import { getDataViewDetails, getSuggestedDataViews } from './linking'
 import path from 'path'
-import { FILES_TEMP_FOLDER } from '../../constants'
+import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../constants'
 import StreamZip from 'node-stream-zip'
 import {
   getSingleEntityDiff,
@@ -84,10 +84,9 @@ const routeTemplateExport = async (
 
   try {
     const filepath = await exportTemplate(templateId)
-    return reply.send(filepath)
-    // return reply.sendFile(filepath)
-    // fsx.remove(path.join(FILES_FOLDER, filepath))
-    // return reply
+    reply.sendFile(filepath)
+    fsx.remove(path.join(FILES_FOLDER, filepath))
+    return reply
   } catch (err) {
     returnApiError(err, reply)
   }

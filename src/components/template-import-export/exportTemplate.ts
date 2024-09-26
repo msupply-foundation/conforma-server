@@ -37,6 +37,7 @@ export const exportTemplate = async (templateId: number) => {
   )
 
   const files = Object.values(templateStructure.shared.files).map(({ data }) => data)
+
   if (files.length > 0) {
     await fsx.mkdir(path.join(fullOutputPath, 'files'))
     for (const file of files) {
@@ -49,7 +50,7 @@ export const exportTemplate = async (templateId: number) => {
   }
 
   console.log('Zipping template...')
-  const zipFilePath = path.join(FILES_TEMP_FOLDER, `${outputName}.zip`)
+  const zipFilePath = path.join(FILES_FOLDER, `${outputName}.zip`)
   const output = await fsx.createWriteStream(zipFilePath)
   const archive = archiver('zip', { zlib: { level: 9 } })
 

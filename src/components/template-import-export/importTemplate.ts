@@ -43,7 +43,7 @@ export const entityDataMap = {
   },
   category: { table: 'template_category', keyField: 'code' },
   dataTables: { table: 'data_table', keyField: 'table_name' },
-  files: { table: 'files', keyField: 'unique_id' },
+  files: { table: 'file', keyField: 'unique_id' },
 }
 
 export const importTemplateUpload = async (folderName: string) => {
@@ -85,7 +85,8 @@ export const importTemplateUpload = async (folderName: string) => {
       400
     )
 
-  const { filters, permissions, dataViews, dataViewColumns, category, dataTables } = template.shared
+  const { filters, permissions, dataViews, dataViewColumns, category, dataTables, files } =
+    template.shared
 
   const changedFilters = await getModifiedEntities(filters, 'filter', 'code')
   const changedPermissions = await getModifiedEntities(permissions, 'permission_name', 'name')
@@ -95,6 +96,7 @@ export const importTemplateUpload = async (folderName: string) => {
     'data_view_column_definition',
     ['table_name', 'column_name']
   )
+  const changedFiles = await getModifiedEntities(files, 'file', 'unique_id')
 
   const categoryCode = category ? (category.data as PgTemplateCategory).code : ''
   const changedCategory = category
@@ -112,39 +114,6 @@ export const importTemplateUpload = async (folderName: string) => {
         current: { lastModified: last_modified, checksum: existingChecksum },
       }
     }
-  }
-
-  const changedFiles: Record<
-    string,
-    {
-      incoming: { timestamp: Date; data: Partial<PgFile> }
-      current: { timestamp: Date; data: Partial<PgFile> & { id: number } }
-    }
-  > = {}
-  const files = Object.values(template.shared.files).map(({ data }) => data)
-  for (const file of files) {
-    const currentFile = await db.getRecord<PgFile>('file', file.unique_id, 'unique_id')
-    if (!currentFile) continue
-
-    const { timestamp, archive_path, ...incomingFileData } = file
-    const {
-      id,
-      user_id: userId,
-      application_serial: serial,
-      application_response_id: response,
-      application_note_id: note,
-      timestamp: currentTimestamp,
-      archive_path: archive,
-      ...currentFileData
-    } = currentFile
-
-    const [incomingDiff, existingDiff] = filterModifiedData(incomingFileData, currentFileData)
-
-    if (Object.keys(incomingDiff).length > 0)
-      changedFiles[file.unique_id] = {
-        incoming: { timestamp, data: incomingDiff },
-        current: { timestamp: currentTimestamp, data: { ...existingDiff, id } },
-      }
   }
 
   return {
@@ -193,6 +162,14 @@ export const getSingleEntityDiff = async (
     )
 
   const { checksum, last_modified, id, ...existingData } = existing
+
+  if (table === 'file') {
+    ;['user_id', 'application_response_id', 'application_note_id', 'application_serial'].forEach(
+      (column) => {
+        delete existingData[column]
+      }
+    )
+  }
 
   return { incoming: matchPropertyOrder(templateData.data, existingData), current: existingData }
 }
@@ -487,7 +464,7 @@ export const installTemplate = async (
       }
 
       const fileJoinRecord = { file_id, template_id: newTemplateId }
-      await db.insertRecord('template_data_view_join', fileJoinRecord)
+      await db.insertRecord('template_file_join', fileJoinRecord)
     }
 
     // When duplicating, we don't need to copy any files, so sourceFolder is not
