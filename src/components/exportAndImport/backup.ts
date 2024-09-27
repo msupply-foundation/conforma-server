@@ -34,10 +34,16 @@ const isManualBackup: Boolean = process.argv[2] === '--backup'
 const passwordArg: string | undefined = process.argv[3]
 
 const createBackup = async (password?: string) => {
+  console.log('1. Backup starting...')
   // Take snapshot
   const snapshotName = backupFilePrefix
   await fsx.ensureDir(path.join(BACKUPS_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME))
   execSync(`chmod -R 777 ${BACKUPS_FOLDER}/${SNAPSHOT_ARCHIVES_FOLDER_NAME}`)
+
+  console.log(
+    '2. Snapshot folder exists:',
+    path.join(BACKUPS_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME)
+  )
 
   console.log(
     DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
@@ -53,6 +59,8 @@ const createBackup = async (password?: string) => {
     backupInfo = { latestBackup: null, archives: [] }
   }
 
+  console.log('3. Backup info,', backupInfo)
+
   // Get ids of all existing archive backups (and confirm snapshots still exist)
   const existingArchiveBackupIds = await getArchiveBackups(backupInfo)
 
@@ -62,15 +70,20 @@ const createBackup = async (password?: string) => {
     const archiveInfo: ArchiveData = await fsx.readJSON(
       path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME, 'archive.json')
     )
+    console.log('4. Archive info', archiveInfo)
     currentSystemArchives = archiveInfo.history
   } catch {
     currentSystemArchives = []
   }
 
+  console.log('5. Current archives,', currentSystemArchives)
+
   // Compare them and collect all missing
   const archivesNotBackedUp = currentSystemArchives.filter(
     (archive) => !existingArchiveBackupIds.includes(archive.uid)
   )
+
+  console.log('6. Archives not backed up:', archivesNotBackedUp)
 
   const zipSources: string[] = []
 
@@ -78,6 +91,7 @@ const createBackup = async (password?: string) => {
   if (archivesNotBackedUp.length > 0) {
     const archiveFrom = Math.min(...archivesNotBackedUp.map((a) => a.timestamp))
     const archiveTo = Math.max(...archivesNotBackedUp.map((a) => a.timestamp))
+    console.log('7. Archive from:', archiveFrom, 'Archive to:', archiveTo)
 
     const { snapshot: archiveSnapshot } = await takeSnapshot({
       snapshotName: `archive_${snapshotName}`,
@@ -85,14 +99,20 @@ const createBackup = async (password?: string) => {
       extraOptions: { archive: { from: archiveFrom, to: archiveTo } },
       isArchiveSnapshot: true,
     })
+    console.log('8. Archive snapshot done:', archiveSnapshot)
 
-    if (!archiveSnapshot) throw new Error("Couldn't create archive snapshot")
+    if (!archiveSnapshot) {
+      // throw new Error("Couldn't create archive snapshot")
+      console.log('ERROR: Problem creating archive snapshot')
+      return
+    }
 
     zipSources.push(path.join(SNAPSHOT_ARCHIVES_FOLDER_NAME, archiveSnapshot))
 
     const archiveInfo = await fsx.readJSON(
       path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME, archiveSnapshot, 'info.json')
     )
+    console.log('9. Archive info', archiveInfo)
 
     backupInfo.archives.push(
       ...archivesNotBackedUp.map(({ uid }) => ({
@@ -104,6 +124,7 @@ const createBackup = async (password?: string) => {
     )
   } else console.log('No new archives to back up')
 
+  console.log('10. Taking snapshot...')
   // Make new snapshot with no archives
   const { snapshot } = await takeSnapshot({
     snapshotName,
@@ -128,6 +149,7 @@ const createBackup = async (password?: string) => {
       : archiver('zip', { zlib: { level: 9 } })
 
     output.on('close', () => {
+      console.log('11. Zipping done')
       fsx.remove(path.join(SNAPSHOT_FOLDER, source))
     })
 
@@ -136,8 +158,10 @@ const createBackup = async (password?: string) => {
       fsx.remove(path.join(SNAPSHOT_FOLDER, source))
     })
 
+    console.log('12. Piping...')
     await archive.pipe(output)
     await archive.directory(path.join(SNAPSHOT_FOLDER, source), false)
+    console.log('13. Finalizing...')
     await archive.finalize()
 
     // Make it read-writeable by everyone (so Dropbox can sync it)
@@ -147,9 +171,11 @@ const createBackup = async (password?: string) => {
 
   // Update backup.json
   backupInfo.latestBackup = snapshot
+  console.log('14. Writing new backup info', backupInfo.latestBackup)
   await fsx.writeJSON(path.join(BACKUPS_FOLDER, 'backup.json'), backupInfo, { spaces: 2 })
   execSync(`chmod 666 ${BACKUPS_FOLDER}/backup.json`)
 
+  console.log('15. Cleaning up exiling backups')
   await cleanUpBackups()
 
   console.log(
