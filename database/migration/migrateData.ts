@@ -1195,8 +1195,8 @@ const migrateData = async () => {
     }
   }
 
-  if (databaseVersionLessThan('1.5.0')) {
-    console.log('Migrating to v1.5.0...')
+  if (databaseVersionLessThan('1.4.0')) {
+    console.log('Migrating to v1.4.0...')
 
     console.log(' - Adding checksum fields to template-connected tables')
 
