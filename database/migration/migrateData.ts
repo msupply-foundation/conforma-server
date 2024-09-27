@@ -10,12 +10,10 @@ import { errorMessage, getAppEntryPointDir } from '../../src/components/utilityF
 import { loadCurrentPrefs, setPreferences } from '../../src/components/preferences'
 import { updateReviewerStats } from '../../src/components/database/updateReviewerStats'
 import {
-  getHash,
   getTemplateLinkedEntities,
   hashLookupTable,
   hashRecord,
 } from '../../src/components/template-import-export'
-import { getLookupTableData } from '../../src/lookup-table/export'
 
 // CONSTANTS
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
@@ -1312,14 +1310,22 @@ const migrateData = async () => {
       ).rows.flat()
 
       for (const templateId of templateIds) {
-        const linkedEntities = await getTemplateLinkedEntities(templateId)
-        await DB.query({
-          text: `
+        try {
+          const linkedEntities = await getTemplateLinkedEntities(templateId)
+          await DB.query({
+            text: `
           UPDATE template SET linked_entity_data = $2
           WHERE id = $1
           `,
-          values: [templateId, JSON.stringify(linkedEntities)],
-        })
+            values: [templateId, JSON.stringify(linkedEntities)],
+          })
+        } catch (err) {
+          console.log(
+            `ERROR: Unable to generate linked entity data for template ${templateId} - ${
+              (err as Error).message
+            }`
+          )
+        }
       }
     } catch (err) {
       console.log('ERROR generating linked entity data for templates - ' + (err as Error).message)
