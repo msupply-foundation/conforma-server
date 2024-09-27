@@ -6,7 +6,7 @@ import { commitTemplate } from './commitTemplate'
 import { returnApiError } from './ApiError'
 import { exportTemplate } from './exportTemplate'
 import { duplicateTemplate } from './duplicateTemplate'
-import { getDataViewDetails, getSuggestedDataViews } from './linking'
+import { getDataViewDetails, getLinkedFiles, getSuggestedDataViews } from './linking'
 import path from 'path'
 import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../constants'
 import StreamZip from 'node-stream-zip'
@@ -33,7 +33,7 @@ export const templateRoutes: FastifyPluginCallback<{ prefix: string }> = (server
   server.get('/import/get-full-entity-diff/:uid', routeImportGetDiff)
   server.post('/import/install/:uid', routeImportTemplateInstall)
   server.get('/get-data-view-details/:id', routeGetDataViewDetails)
-  server.get('/get-suggested-data-views/:id', routeGetTemplateSuggestedDataViews)
+  server.get('/get-linked-files/:id', routeGetLinkedFiles)
 
   done()
 }
@@ -245,8 +245,7 @@ const routeGetDataViewDetails = async (
     returnApiError(err, reply)
   }
 }
-
-const routeGetTemplateSuggestedDataViews = async (
+const routeGetLinkedFiles = async (
   request: FastifyRequest<{ Params: { id: string } }>,
   reply: FastifyReply
 ) => {
@@ -256,11 +255,28 @@ const routeGetTemplateSuggestedDataViews = async (
   }
 
   try {
-    const suggested = await getSuggestedDataViews(templateId)
-    return reply.send(suggested)
+    const files = await getLinkedFiles(templateId)
+    return reply.send(files)
   } catch (err) {
     returnApiError(err, reply)
   }
 }
+
+// const routeGetTemplateSuggestedDataViews = async (
+//   request: FastifyRequest<{ Params: { id: string } }>,
+//   reply: FastifyReply
+// ) => {
+//   const templateId = Number(request.params.id)
+//   if (!templateId || isNaN(templateId)) {
+//     returnApiError('Invalid template id', reply, 400)
+//   }
+
+//   try {
+//     const suggested = await getSuggestedDataViews(templateId)
+//     return reply.send(suggested)
+//   } catch (err) {
+//     returnApiError(err, reply)
+//   }
+// }
 
 const getRandomTemplateFolderName = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 24)

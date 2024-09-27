@@ -1,13 +1,8 @@
 import db from './databaseMethods'
 import { filterObject } from '../utilityFunctions'
 import { DataView } from '../../generated/graphql'
-import { PgDataView } from './types'
-
-interface DataViewDetails {
-  data: PgDataView
-  applicantAccessible: boolean
-  suggested: boolean
-}
+import { PgFile } from './types'
+import { ApiError } from './ApiError'
 
 const returnColumns = [
   'id',
@@ -59,3 +54,65 @@ export const getSuggestedDataViews = async (templateId: number) =>
   (await getDataViewDetails(templateId))
     .filter((dv) => dv.inTemplateElements || dv.inOutputTables)
     .map(({ data }) => data)
+
+interface LinkedFile {
+  unique_id: string
+  id?: number
+  original_filename?: string
+  description?: string | null
+  timestamp?: Date
+  file_size?: number | null
+  linkedInDatabase: boolean
+  usedInAction: boolean
+  missingFromDatabase?: boolean
+}
+export const getLinkedFiles = async (templateId: number) => {
+  const files: LinkedFile[] = (
+    await db.getJoinedEntities<PgFile>({
+      templateId,
+      table: 'file',
+      joinTable: 'template_file_join',
+    })
+  ).map(({ id, unique_id, original_filename, description, timestamp, file_size }) => ({
+    id,
+    unique_id,
+    original_filename,
+    description,
+    timestamp,
+    file_size,
+    linkedInDatabase: true,
+    usedInAction: false,
+  }))
+
+  const fileUidsUsedInActions = await db.getFilesFromDocAction(templateId)
+  for (const fileId of fileUidsUsedInActions) {
+    const file = await db.getRecord<PgFile>('file', fileId, 'unique_id')
+    if (!file) {
+      files.push({
+        unique_id: fileId,
+        linkedInDatabase: false,
+        usedInAction: true,
+        missingFromDatabase: true,
+      })
+      continue
+    }
+
+    const existing = files.find((f) => (f.unique_id = fileId))
+    if (existing) existing.usedInAction = true
+    else {
+      const { id, unique_id, original_filename, description, timestamp, file_size } = file
+      files.push({
+        id,
+        unique_id,
+        original_filename,
+        description,
+        timestamp,
+        file_size,
+        linkedInDatabase: false,
+        usedInAction: true,
+      })
+    }
+  }
+
+  return files
+}
