@@ -363,14 +363,25 @@ class PostgresDB {
   }
 
   public addFile = async (payload: FilePayload): Promise<string> => {
-    const text = `INSERT INTO file (${Object.keys(payload)}) 
-      VALUES (${this.getValuesPlaceholders(payload)})
+    const { template_id, ...file } = payload
+    const text = `INSERT INTO file (${Object.keys(file)}) 
+      VALUES (${this.getValuesPlaceholders(file)})
       ON CONFLICT (unique_id) DO UPDATE
-        SET (${Object.keys(payload)}) = (${this.getValuesPlaceholders(payload)})
-        RETURNING unique_id`
+        SET (${Object.keys(file)}) = (${this.getValuesPlaceholders(file)})
+        RETURNING id, unique_id`
     try {
-      const result = await this.query({ text, values: Object.values(payload) })
-      return result.rows[0].unique_id
+      const result = await this.query({ text, values: Object.values(file) })
+      const { unique_id, id } = result.rows[0]
+      if (template_id) {
+        // Create a template_join record
+        await this.query({
+          text: `
+          INSERT INTO template_file_join (template_id, file_id)
+          VALUES ($1, $2);`,
+          values: [template_id, id],
+        })
+      }
+      return unique_id
     } catch (err) {
       throw err
     }

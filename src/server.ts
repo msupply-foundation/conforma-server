@@ -56,7 +56,7 @@ import {
 } from './components/other/routeServerStatus'
 import { routeFileLists } from './components/files/routes'
 import { cleanupDataTables } from './lookup-table/utils/cleanupDataTables'
-import { hashFile, templateRoutes } from './components/template-import-export'
+import { templateRoutes } from './components/template-import-export'
 require('dotenv').config()
 
 // Set the default locale and timezone for date-time display (in console)
