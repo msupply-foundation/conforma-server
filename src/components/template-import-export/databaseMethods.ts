@@ -114,6 +114,21 @@ const databaseMethods = {
       throw err
     }
   },
+  getDataTablesFromModifyRecord: async (templateId: number): Promise<string[]> => {
+    const text = `
+      SELECT DISTINCT parameter_queries->>'tableName' as data_table
+      FROM public.template_action
+      WHERE template_id = $1
+      AND action_code = 'modifyRecord'
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [templateId], rowMode: 'array' })
+      return result.rows.flat()
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
   getLinkedDataTables: async (tableNames: string[]): Promise<PgDataTable[]> => {
     const text = `
       SELECT table_name, checksum, last_modified
@@ -253,6 +268,20 @@ const databaseMethods = {
     `
     try {
       const result = await DBConnect.query({ text, values: [permissions] })
+      return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
+  getDataViewsUsingTables: async (tables: string[]): Promise<PgDataView[]> => {
+    const text = `
+        SELECT *
+          FROM data_view
+          WHERE table_name = ANY($1);
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [tables] })
       return result.rows
     } catch (err) {
       console.log(errorMessage(err))
