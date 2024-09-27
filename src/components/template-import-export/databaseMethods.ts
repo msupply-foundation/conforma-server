@@ -1,7 +1,6 @@
 import DBConnect from '../database/databaseConnect'
 import { errorMessage, isObject } from '../../components/utilityFunctions'
-import { DataTable, DataView as PgDataView } from '../../generated/postgres'
-import { CombinedLinkedEntities } from './types'
+import { CombinedLinkedEntities, PgDataTable, PgDataView } from './types'
 import { ApiError } from './ApiError'
 
 const databaseMethods = {
@@ -115,7 +114,7 @@ const databaseMethods = {
       throw err
     }
   },
-  getLinkedDataTables: async (tableNames: string[]): Promise<DataTable[]> => {
+  getLinkedDataTables: async (tableNames: string[]): Promise<PgDataTable[]> => {
     const text = `
       SELECT table_name, checksum, last_modified
         FROM data_table

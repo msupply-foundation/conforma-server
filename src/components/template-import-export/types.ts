@@ -82,3 +82,21 @@ export type TemplateFile = Omit<
   PgFile,
   'id' | 'user_id' | 'application_serial' | 'application_response_id' | 'application_note_id'
 >
+
+// Re-export PG types so they're all in one place
+export {
+  PgTemplate,
+  PgTemplateSection,
+  PgTemplateElement,
+  PgTemplateStageReviewLevel,
+  PgTemplateStage,
+  PgTemplateAction,
+  PgFile,
+  PgTemplateCategory,
+  PgTemplatePermission,
+  PgPermissionName,
+  PgFilter,
+  PgDataView,
+  PgDataViewColumn,
+  PgDataTable,
+}

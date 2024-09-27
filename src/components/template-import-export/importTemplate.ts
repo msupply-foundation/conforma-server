@@ -1,21 +1,24 @@
 import path from 'path'
 import fsx from 'fs-extra'
 import semverCompare from 'semver/functions/compare'
-import {
-  DataTable as PgDataTable,
-  TemplateCategory as PgTemplateCategory,
-  Filter as PgFilter,
-  PermissionName as PgPermissionName,
-  DataView as PgDataView,
-  DataViewColumnDefinition as PgDataViewColumnDefinition,
-  File as PgFile,
-} from '../../generated/postgres'
 import { ApiError } from './ApiError'
 import db from './databaseMethods'
 import { filterModifiedData } from './getDiff'
 import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../constants'
 import config from '../../config'
-import { CombinedLinkedEntities, LinkedEntities, LinkedEntity, TemplateStructure } from './types'
+import {
+  CombinedLinkedEntities,
+  LinkedEntities,
+  LinkedEntity,
+  PgDataTable,
+  PgDataView,
+  PgDataViewColumn,
+  PgFile,
+  PgFilter,
+  PgPermissionName,
+  PgTemplateCategory,
+  TemplateStructure,
+} from './types'
 import { hashFile, replaceForeignKeyRef } from './updateHashes'
 
 interface InfoFile {
@@ -419,7 +422,7 @@ export const installTemplate = async (
       const [tableName, columnName] = compositeKey.split('__')
       const { checksum, data } = dataViewColumns[compositeKey]
 
-      const existing = await db.getRecord<PgDataViewColumnDefinition>(
+      const existing = await db.getRecord<PgDataViewColumn>(
         'data_view_column_definition',
         [tableName, columnName],
         ['table_name', 'column_name']

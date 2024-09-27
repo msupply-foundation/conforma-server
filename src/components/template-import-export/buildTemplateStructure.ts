@@ -1,16 +1,19 @@
-import {
-  Template as PgTemplate,
-  TemplateSection as PgTemplateSection,
-  TemplateElement as PgTemplateElement,
-  TemplateStageReviewLevel as PgTemplateStageReviewLevel,
-  TemplateStage as PgTemplateStage,
-  TemplateAction as PgTemplateAction,
-  TemplatePermission as PgTemplatePermission,
-  PermissionName as PgPermissionName,
-} from '../../generated/postgres'
 import db from './databaseMethods'
 import { getTemplateLinkedEntities } from './getTemplateLinkedEntities'
-import { CombinedLinkedEntities, TemplateSection, TemplateStage, TemplateStructure } from './types'
+import {
+  CombinedLinkedEntities,
+  PgPermissionName,
+  PgTemplate,
+  PgTemplateAction,
+  PgTemplateElement,
+  PgTemplatePermission,
+  PgTemplateSection,
+  PgTemplateStage,
+  PgTemplateStageReviewLevel,
+  TemplateSection,
+  TemplateStage,
+  TemplateStructure,
+} from './types'
 
 export const buildTemplateStructure = async (template: PgTemplate) => {
   const { id: templateId, linked_entity_data, template_category_id, ...structure } = template

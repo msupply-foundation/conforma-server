@@ -1,6 +1,5 @@
 import path from 'path'
 import fsx from 'fs-extra'
-import { Template as PgTemplate } from '../../generated/postgres'
 import { ApiError } from './ApiError'
 import db from './databaseMethods'
 import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../constants'
@@ -8,6 +7,7 @@ import { DateTime } from 'luxon'
 import config from '../../config'
 import archiver from 'archiver'
 import { buildTemplateStructure } from './buildTemplateStructure'
+import { PgTemplate } from './types'
 
 export const exportTemplate = async (templateId: number) => {
   console.log(`Exporting template: ${templateId}...`)

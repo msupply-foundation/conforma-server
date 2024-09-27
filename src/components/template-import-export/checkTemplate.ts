@@ -1,9 +1,8 @@
-import { DataView as PgDataView, Template as PgTemplate } from '../../generated/postgres'
 import { ApiError } from './ApiError'
 import db from './databaseMethods'
 import { getDiff } from './getDiff'
 import { buildLinkedEntityObject, getTemplateLinkedEntities } from './getTemplateLinkedEntities'
-import { CombinedLinkedEntities } from './types'
+import { CombinedLinkedEntities, PgDataView, PgTemplate } from './types'
 import { getSuggestedDataViews } from './linking'
 
 export const checkTemplate = async (templateId: number) => {

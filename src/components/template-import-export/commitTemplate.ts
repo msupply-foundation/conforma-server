@@ -1,8 +1,8 @@
 import { customAlphabet } from 'nanoid/non-secure'
-import { Template as PgTemplate } from '../../generated/postgres'
 import { ApiError } from './ApiError'
 import db from './databaseMethods'
 import { getTemplateLinkedEntities } from './getTemplateLinkedEntities'
+import { PgTemplate } from './types'
 
 export const commitTemplate = async (templateId: number, comment: string | null) => {
   console.log(`Committing template: ${templateId}...`)

@@ -1,20 +1,22 @@
 import { snakeCase } from 'lodash'
 import { DataView } from '../../generated/graphql'
-import {
-  PermissionName as PgPermissionName,
-  DataView as PgDataView,
-  Filter as PgFilter,
-  DataViewColumnDefinition as PgDataViewColumnDefinition,
-  Template as PgTemplate,
-  TemplateCategory as PgTemplateCategory,
-  File as PgFile,
-} from '../../generated/postgres'
 import { buildColumnList } from '../data_display/helpers'
 import { filterObject, isObject, objectKeysToCamelCase } from '../utilityFunctions'
 import { ApiError } from './ApiError'
 import db from './databaseMethods'
 import { replaceForeignKeyRef } from './updateHashes'
-import { CombinedLinkedEntities, LinkedEntities, LinkedEntityInput } from './types'
+import {
+  CombinedLinkedEntities,
+  LinkedEntities,
+  LinkedEntityInput,
+  PgDataView,
+  PgDataViewColumn,
+  PgFile,
+  PgFilter,
+  PgPermissionName,
+  PgTemplate,
+  PgTemplateCategory,
+} from './types'
 
 export const getTemplateLinkedEntities = async (templateId: number) => {
   const template = await db.getRecord<PgTemplate>('template', templateId)
@@ -129,7 +131,7 @@ export const buildLinkedEntityObject = <T extends LinkedEntityInput>(
 }
 
 export const getDataViewColumnsFromDataViews = async (dataViews: Omit<PgDataView, 'id'>[]) => {
-  const dataViewColumns = new Set<PgDataViewColumnDefinition>()
+  const dataViewColumns = new Set<PgDataViewColumn>()
   for (const dataView of dataViews) {
     const allColumns = await db.getDataViewColumns(dataView.table_name)
     const allColumnNames = allColumns.map((col) => col.column_name)

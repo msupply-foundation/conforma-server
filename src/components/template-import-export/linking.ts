@@ -1,7 +1,7 @@
 import db from './databaseMethods'
-import { DataView as PgDataView } from '../../generated/postgres'
 import { filterObject } from '../utilityFunctions'
 import { DataView } from '../../generated/graphql'
+import { PgDataView } from './types'
 
 interface DataViewDetails {
   data: PgDataView
