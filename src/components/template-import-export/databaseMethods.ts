@@ -99,6 +99,20 @@ const databaseMethods = {
       throw err
     }
   },
+  getFileJoinId: async (templateId: number, fileId: number) => {
+    const text = `
+      SELECT id FROM template_file_join
+      WHERE template_id = $1
+      AND file_id = $2
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [templateId, fileId] })
+      return result.rows[0].id
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
   getFilesFromDocAction: async (templateId: number): Promise<string[]> => {
     const text = `
       SELECT DISTINCT parameter_queries->>'docTemplateId' AS file_id

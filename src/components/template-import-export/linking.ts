@@ -58,6 +58,7 @@ export const getSuggestedDataViews = async (templateId: number) =>
 interface LinkedFile {
   unique_id: string
   id?: number
+  joinId?: number
   original_filename?: string
   description?: string | null
   timestamp?: Date
@@ -73,16 +74,22 @@ export const getLinkedFiles = async (templateId: number) => {
       table: 'file',
       joinTable: 'template_file_join',
     })
-  ).map(({ id, unique_id, original_filename, description, timestamp, file_size }) => ({
-    id,
-    unique_id,
-    original_filename,
-    description,
-    timestamp,
-    file_size,
-    linkedInDatabase: true,
-    usedInAction: false,
-  }))
+  ).map(({ id, unique_id, original_filename, description, timestamp, file_size }) => {
+    return {
+      id,
+      unique_id,
+      original_filename,
+      description,
+      timestamp,
+      file_size,
+      linkedInDatabase: true,
+      usedInAction: false,
+    }
+  })
+
+  for (const file of files) {
+    file.joinId = await db.getFileJoinId(templateId, file?.id ?? 0)
+  }
 
   const fileUidsUsedInActions = await db.getFilesFromDocAction(templateId)
   for (const fileId of fileUidsUsedInActions) {
