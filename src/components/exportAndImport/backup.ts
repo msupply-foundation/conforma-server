@@ -79,14 +79,17 @@ const createBackup = async (password?: string) => {
     const archiveFrom = Math.min(...archivesNotBackedUp.map((a) => a.timestamp))
     const archiveTo = Math.max(...archivesNotBackedUp.map((a) => a.timestamp))
 
-    const { snapshot: archiveSnapshot } = await takeSnapshot({
+    const { snapshot: archiveSnapshot, error } = await takeSnapshot({
       snapshotName: `archive_${snapshotName}`,
       optionsName: 'backup',
       extraOptions: { archive: { from: archiveFrom, to: archiveTo } },
       isArchiveSnapshot: true,
     })
 
-    if (!archiveSnapshot) throw new Error("Couldn't create archive snapshot")
+    if (!archiveSnapshot || error) {
+      console.log('ERROR CREATING BACKUP: ' + error)
+      return
+    }
 
     zipSources.push(path.join(SNAPSHOT_ARCHIVES_FOLDER_NAME, archiveSnapshot))
 
