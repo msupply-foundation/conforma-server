@@ -1,15 +1,12 @@
 #!/bin/bash
 
-# This command requires githubtoken.txt, in the repo root (it's git ingored btw).
-# githubtoken.txt should contain github token: https://github.com/settings/tokens -> generate new token -> [x] read:packages
-
 BRANCH_NAME=${1:-develop} # Use develop if no branch/tag specified in args
 IMAGE_NAME='conforma'
 ACCOUNT='msupplyfoundation'
 INITIAL_DATA_LOCALE=''
 PUSH=${2:-nopush} # Default won't push to Docker hub
 
-NODE_VERSION='14'
+NODE_VERSION='18'
 POSTGRES_VERSION='16'
 
 # Generate a random ID so Images built on same day with same branch
@@ -34,7 +31,7 @@ docker build \
    --build-arg INITIAL_DATA_LOCALE="$INITIAL_DATA_LOCALE" \
    --build-arg INITIAL_SNAPSHOT="$INITIAL_SNAPSHOT" \
    --platform "linux/amd64" \
-   . # --secret id=githubtoken,src=../githubtoken.txt \
+   .
 
 echo -e "\nFinished building. To run locally, use command:\nyarn docker_run ${ACCOUNT}/${IMAGE_NAME}:${IMAGE_TAG}\n"
 

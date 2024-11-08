@@ -1,7 +1,7 @@
 import fastify, { FastifyPluginCallback, FastifyReply, FastifyRequest } from 'fastify'
-import fastifyStatic from 'fastify-static'
-import fastifyMultipart from 'fastify-multipart'
-import fastifyCors from 'fastify-cors'
+import fastifyStatic from '@fastify/static'
+import fastifyMultipart from '@fastify/multipart'
+import fastifyCors from '@fastify/cors'
 import fastifyWebsocket from '@fastify/websocket'
 import { DateTime, Settings } from 'luxon'
 import path from 'path'
@@ -89,7 +89,7 @@ const startServer = async () => {
     root: path.join(getAppEntryPointDir(), filesFolder),
   })
 
-  server.register(fastifyMultipart)
+  server.register(fastifyMultipart, { limits: { fileSize: config.fileUploadLimit } })
 
   server.register(fastifyCors, { origin: '*' }) // Allow all origin (TODO change in PROD)
 
@@ -227,16 +227,20 @@ const startServer = async () => {
     )}`
   })
 
-  server.get('/server-status', { websocket: true }, (connection, _) =>
-    routeServerStatusWebsocket(connection, server)
-  )
+  server.register(async function (fastify) {
+    fastify.get('/server-status', { websocket: true }, (socket, _) =>
+      routeServerStatusWebsocket(socket, server)
+    )
+  })
 
   server.register(api, { prefix: '/api' })
 
   // Set maintenanceMode from previously saved setting
   await updateMaintenanceModeInConfig(config)
 
-  server.listen(config.RESTport, (err, address) => {
+  await server.ready()
+
+  server.listen({ port: config.RESTport }, (err, address) => {
     if (err) {
       console.error(err)
       process.exit(1)

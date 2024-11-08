@@ -21,7 +21,7 @@ echo '--- RUNNING POST INSTALL'
 ./database/post_data_insert.sh
 
 echo '--- COPY CLEAN DATABASE TO BE USED IF NO VOLUMES ARE MOUNTED'
-cp -R /var/lib/postgresql/12/main/ ./fresh_db
+cp -R /var/lib/postgresql/16/main/ ./fresh_db
 
 # Loading a snapshot from here puts these folders in the repo root rather than
 # the "build" folder so, need to move them in:
