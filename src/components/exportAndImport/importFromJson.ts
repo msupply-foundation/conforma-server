@@ -1,5 +1,5 @@
 import { camelCase, mapValues } from 'lodash'
-import databaseConnect from '../databaseConnect'
+import databaseConnect from '../database/databaseConnect'
 import getDatabaseInfo from './getDatabaseInfo'
 import { filterByIncludeAndExclude, getTemplateVersionId, isTemplateUnlocked } from './helpers'
 import { singular } from 'pluralize'

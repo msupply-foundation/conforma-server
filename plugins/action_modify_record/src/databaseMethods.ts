@@ -6,7 +6,6 @@ const DATA_TABLE_PREFIX = config.dataTablePrefix
 interface UserData {
   userId?: number | null
   orgId?: number | null
-  username?: string
   applicationId?: number | null
 }
 
@@ -49,7 +48,7 @@ const databaseMethods = (DBConnect: any) => {
       VALUES (${DBConnect.getValuesPlaceholders(record)})
       RETURNING *
       `
-    const { userId, orgId, username, applicationId, noChangeLog, comment } = changeLogOptions
+    const { userId, orgId, applicationId, noChangeLog, comment } = changeLogOptions
     try {
       const result = await DBConnect.query({ text, values: Object.values(record) })
       const firstRow = result.rows[0]
@@ -62,7 +61,6 @@ const databaseMethods = (DBConnect: any) => {
           record,
           userId,
           orgId,
-          username,
           applicationId,
           comment
         )
@@ -93,7 +91,7 @@ const databaseMethods = (DBConnect: any) => {
       record: Record<string, any>,
       changeLogOptions: ChangeLogOptions
     ) => {
-      const { userId, orgId, username, applicationId, noChangeLog, comment } = changeLogOptions
+      const { userId, orgId, applicationId, noChangeLog, comment } = changeLogOptions
 
       let oldData: Record<string, any> = {}
       const newData = { ...record }
@@ -147,7 +145,6 @@ const databaseMethods = (DBConnect: any) => {
             newData,
             userId,
             orgId,
-            username,
             applicationId,
             comment
           )
@@ -162,7 +159,7 @@ const databaseMethods = (DBConnect: any) => {
       }
     },
     deleteRecord: async (tableName: string, id: number, changeLogOptions: ChangeLogOptions) => {
-      const { userId, orgId, username, applicationId, noChangeLog, comment } = changeLogOptions
+      const { userId, orgId, applicationId, noChangeLog, comment } = changeLogOptions
 
       let oldData: Record<string, any> = {}
 
@@ -192,7 +189,6 @@ const databaseMethods = (DBConnect: any) => {
             {},
             userId,
             orgId,
-            username,
             applicationId,
             comment
           )

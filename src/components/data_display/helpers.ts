@@ -1,4 +1,4 @@
-import DBConnect from '../databaseConnect'
+import DBConnect from '../database/databaseConnect'
 import {
   objectKeysToCamelCase,
   getValidTableName,
@@ -28,6 +28,7 @@ import { DataView, DataViewColumnDefinition } from '../../generated/graphql'
 import dataTypeMap, { JSDataType, PostgresDataType } from './postGresToJSDataTypes'
 import config from '../../config'
 import { plural } from 'pluralize'
+import { getAdminJWT } from '../permissions/loginHelpers'
 
 // CONSTANTS
 const REST_OF_DATAVIEW_FIELDS = '...'
@@ -486,6 +487,7 @@ export const constructDetailsResponse = async (
       {}
     )
 
+  const adminJWT = await getAdminJWT()
   // Build item, keeping unresolved Promises in separate array (as above)
   const evaluationPromiseArray: Promise<any>[] = []
   const evaluationFieldArray: string[] = []
@@ -502,6 +504,9 @@ export const constructDetailsResponse = async (
             APIfetch: fetch,
             // TO-DO: Need to pass Auth headers to evaluator API calls
             graphQLConnection: { fetch, endpoint: graphQLEndpoint },
+            headers: {
+              Authorization: `Bearer ${adminJWT}`,
+            },
           })
         )
         obj[columnName] = 'Awaiting promise...'
@@ -513,7 +518,14 @@ export const constructDetailsResponse = async (
   )
 
   // Don't need anything else for raw data item return
-  if (!headerDefinition) return { item }
+  if (!headerDefinition) {
+    const resolvedValues = await Promise.all(evaluationPromiseArray)
+    resolvedValues.forEach((value, index) => {
+      const field = evaluationFieldArray[index]
+      item[field] = value
+    })
+    return { item }
+  }
 
   // Build header
   const header: DetailsHeader = {

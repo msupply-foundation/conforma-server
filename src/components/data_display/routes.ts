@@ -1,4 +1,4 @@
-import DBConnect from '../databaseConnect'
+import DBConnect from '../database/databaseConnect'
 import { getDistinctObjects, getValidTableName, objectKeysToCamelCase } from '../utilityFunctions'
 import {
   getPermissionNamesFromJWT,

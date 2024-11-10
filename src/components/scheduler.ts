@@ -1,4 +1,4 @@
-import DBConnect from './databaseConnect'
+import DBConnect from './database/databaseConnect'
 import Scheduler, { RecurrenceRule, RecurrenceSpecObjLit } from 'node-schedule'
 import config from '../config'
 import { DateTime, Settings } from 'luxon'

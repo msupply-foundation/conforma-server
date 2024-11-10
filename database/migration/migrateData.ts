@@ -8,15 +8,34 @@ import { readFileSync } from 'fs'
 import bcrypt from 'bcrypt'
 import { errorMessage, getAppEntryPointDir } from '../../src/components/utilityFunctions'
 import { loadCurrentPrefs, setPreferences } from '../../src/components/preferences'
+import { updateReviewerStats } from '../../src/components/database/updateReviewerStats'
 
 // CONSTANTS
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
 const INDEX_FILENAME = '44_index.sql'
 const RLS_FILENAME = '45_row_level_security.sql'
+const DISABLE_RLS_FILENAME = '46_disable_row_level_security.sql'
 
 const { version } = config
 const isManualMigration: Boolean = process.argv[2] === '--migrate'
 const simulatedVersion: string | undefined = process.argv[3]
+
+const functionsScript = readFileSync(
+  path.join(getAppEntryPointDir(), '../database/buildSchema/', FUNCTIONS_FILENAME),
+  'utf-8'
+)
+const createIndexesScript = readFileSync(
+  path.join(getAppEntryPointDir(), '../database/buildSchema/', INDEX_FILENAME),
+  'utf-8'
+)
+const rlsScript = readFileSync(
+  path.join(getAppEntryPointDir(), '../database/buildSchema/', RLS_FILENAME),
+  'utf-8'
+)
+const disableRlsScript = readFileSync(
+  path.join(getAppEntryPointDir(), '../database/buildSchema/', DISABLE_RLS_FILENAME),
+  'utf-8'
+)
 
 const migrateData = async () => {
   let databaseVersion: string
@@ -1143,21 +1162,40 @@ const migrateData = async () => {
         ADD COLUMN IF NOT EXISTS raw_data_exclude_columns varchar[]`)
   }
 
+  if (databaseVersionLessThan('1.2.1')) {
+    console.log('Migrating to v1.2.1...')
+
+    console.log(' - Regenerating all reviewer actions (This may take a while)')
+
+    await DB.changeSchema(functionsScript)
+
+    try {
+      const applicationIds = (
+        await DB.query({
+          text: `
+        SELECT DISTINCT(application_id)
+        FROM public.application_reviewer_action
+        ORDER BY application_id;
+        `,
+          rowMode: 'array',
+        })
+      ).rows.flat()
+      for (const id of applicationIds) {
+        await updateReviewerStats(id)
+      }
+    } catch (err) {
+      console.log('ERROR regenerating reviewer actions')
+    }
+  }
+
   // Other version migrations continue here...
 
   // Update (almost all) Indexes, Views, Functions, Triggers regardless, since
   // they can be dropped and recreated, or updated with no consequence:
-  const functionsScript = readFileSync(
-    path.join(getAppEntryPointDir(), '../database/buildSchema/', FUNCTIONS_FILENAME),
-    'utf-8'
-  )
+
   console.log(' - Updating views/functions/triggers')
   await DB.changeSchema(functionsScript)
 
-  const createIndexesScript = readFileSync(
-    path.join(getAppEntryPointDir(), '../database/buildSchema/', INDEX_FILENAME),
-    'utf-8'
-  )
   console.log(' - Updating indexes...')
   await DB.changeSchema(createIndexesScript)
   // This shouldn't be necessary after v1.0 migration, but can't hurt in case
@@ -1165,13 +1203,18 @@ const migrateData = async () => {
   // additional duplicates we haven't yet discovered
   await DB.removeDuplicateIndexes()
 
-  const rlsScript = readFileSync(
-    path.join(getAppEntryPointDir(), '../database/buildSchema/', RLS_FILENAME),
-    'utf-8'
-  )
-
-  console.log(' - Updating row-level security...')
-  await DB.changeSchema(rlsScript)
+  if (process.env.SKIP_RLS === 'true') {
+    // This is an "escape-hatch" for when we quickly want to use the system
+    // without having to migrate old templates that don't work with the new
+    // restrictions.
+    console.log('WARNING! - Disabling row-level security...')
+    await DB.changeSchema(disableRlsScript)
+    await DB.disableDataTableSecurity()
+  } else {
+    console.log(' - Updating row-level security...')
+    await DB.changeSchema(rlsScript)
+    await DB.secureDataTables()
+  }
 
   // Finally, set the database version to the current version
   if (databaseVersionLessThan(version)) await DB.setDatabaseVersion(version)

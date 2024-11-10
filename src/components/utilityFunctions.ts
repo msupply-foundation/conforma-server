@@ -111,6 +111,7 @@ export const clearEmptyDirectories = async (directory: string) => {
     fs.statSync(path.join(directory, dir)).isDirectory()
   )
   for (const dir of directories) {
+    await clearEmptyDirectories(path.join(directory, dir))
     const files = await fsProm.readdir(path.join(directory, dir))
     if (files.length === 0) await fsProm.rmdir(path.join(directory, dir))
   }
@@ -118,13 +119,13 @@ export const clearEmptyDirectories = async (directory: string) => {
 
 export const capitaliseFirstLetter = (str: string) => str[0].toUpperCase() + str.slice(1)
 
-// The only tables in the system that we allow to be mutated directly by
-// modifyRecord or displayed as data views. All other names must have
-// "data_table_" prepended.
-const DATA_TABLE_PREFIX = config.dataTablePrefix
-const ALLOWED_TABLE_NAMES = config.allowedTableNames
-
 export const getValidTableName = (inputName: string | undefined): string => {
+  // The only tables in the system that we allow to be mutated directly by
+  // modifyRecord or displayed as data views. All other names must have
+  // "data_table_" prepended.
+  const DATA_TABLE_PREFIX = config.dataTablePrefix
+  const ALLOWED_TABLE_NAMES = config.allowedTableNames
+
   if (!inputName) throw new Error('Missing table name')
   const tableName = snakeCase(singular(inputName))
   if (ALLOWED_TABLE_NAMES.includes(tableName)) return tableName

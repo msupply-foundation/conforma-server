@@ -1,6 +1,7 @@
 import { FastifyPluginCallback, FastifyReply } from 'fastify'
 import path from 'path'
 import { rmdirSync, readFileSync, writeFile } from 'fs'
+import fsx from 'fs-extra'
 import { promisify } from 'util'
 import {
   getAppEntryPointDir,
@@ -69,8 +70,10 @@ export const routeGetLanguageFile = async (request: any, reply: any) => {
     })
   }
 
-  const stringsFile = path.join(code, 'strings.json')
-  reply.sendFile(stringsFile, path.join(getAppEntryPointDir(), localisationsFolder))
+  const data = await fsx.readJSON(
+    path.join(getAppEntryPointDir(), localisationsFolder, code, 'strings.json')
+  )
+  reply.send(data)
 }
 
 export const routeGetAllLanguageFiles = async (request: any, reply: any) => {

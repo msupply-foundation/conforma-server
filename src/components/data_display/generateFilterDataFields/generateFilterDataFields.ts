@@ -1,5 +1,5 @@
 import databaseMethods from './databaseMethods'
-import DBConnect from '../../databaseConnect'
+import DBConnect from '../../database/databaseConnect'
 import evaluateExpression from '../../../modules/expression-evaluator'
 import functions from '../../actions/evaluatorFunctions'
 import { queryDataTable, updateRecord } from '../gqlDynamicQueries'

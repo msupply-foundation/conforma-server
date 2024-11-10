@@ -136,8 +136,6 @@ class DBConnect {
 
   public getApplicationResponses = PostgresDB.getApplicationResponses
 
-  public getSystemOrgTemplatePermissions = PostgresDB.getSystemOrgTemplatePermissions
-
   public getUserTemplatePermissions = PostgresDB.getUserTemplatePermissions
 
   public getOrgTemplatePermissions = PostgresDB.getOrgTemplatePermissions
@@ -199,6 +197,10 @@ class DBConnect {
   public getAllApplicationTriggers = GraphQLdb.getAllApplicationTriggers
 
   public getTemplatePermissionsFromApplication = GraphQLdb.getTemplatePermissionsFromApplication
+
+  public getApplicationFiles = GraphQLdb.getApplicationFiles
+
+  public getReferenceDocs = GraphQLdb.getReferenceDocs
 }
 
 const dbConnectInstance = DBConnect.Instance

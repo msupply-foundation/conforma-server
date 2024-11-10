@@ -1,4 +1,4 @@
-import databaseConnect from '../databaseConnect'
+import databaseConnect from '../database/databaseConnect'
 import getDatabaseInfo from './getDatabaseInfo'
 import { DatabaseTable, ExportAndImportOptions, ObjectRecords } from './types'
 import pluralize from 'pluralize'

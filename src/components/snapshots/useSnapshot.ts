@@ -4,7 +4,7 @@ import fsx from 'fs-extra'
 import path from 'path'
 import { execSync } from 'child_process'
 import insertData from '../../../database/insertData'
-import DBConnect from '../../../src/components/databaseConnect'
+import DBConnect from '../../../src/components/database/databaseConnect'
 import { updateRowPolicies } from '../permissions/rowLevelPolicyHelpers'
 import { SnapshotOperation, ExportAndImportOptions, ObjectRecord } from '../exportAndImport/types'
 import importFromJson from '../exportAndImport/importFromJson'
@@ -190,7 +190,7 @@ const useSnapshot: SnapshotOperation = async ({
       })
     }
 
-    refreshConfig(config, PREFERENCES_FILE)
+    refreshConfig(config)
 
     console.log('...Snapshot load complete!')
 

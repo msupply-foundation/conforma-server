@@ -1,4 +1,4 @@
-import DBConnect from '../databaseConnect'
+import DBConnect from '../database/databaseConnect'
 import { plural } from 'pluralize'
 import { camelCase, snakeCase, upperFirst } from 'lodash'
 import { LinkedApplication } from './types'

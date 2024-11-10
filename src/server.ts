@@ -1,7 +1,8 @@
-import fastify, { FastifyPluginCallback, FastifyReply } from 'fastify'
-import fastifyStatic from 'fastify-static'
-import fastifyMultipart from 'fastify-multipart'
-import fastifyCors from 'fastify-cors'
+import fastify, { FastifyPluginCallback, FastifyReply, FastifyRequest } from 'fastify'
+import fastifyStatic from '@fastify/static'
+import fastifyMultipart from '@fastify/multipart'
+import fastifyCors from '@fastify/cors'
+import fastifyWebsocket from '@fastify/websocket'
 import { DateTime, Settings } from 'luxon'
 import path from 'path'
 import { loadActionPlugins } from './components/pluginsConnect'
@@ -48,6 +49,12 @@ import { AccessExternalApiQuery, routeAccessExternalApi } from './components/ext
 import { DEFAULT_LOGOUT_TIME } from './constants'
 import { updateRowPolicies } from './components/permissions/rowLevelPolicyHelpers'
 import { routeRawData } from './components/other/routeRawData'
+import {
+  routeServerStatusWebsocket,
+  routeSetMaintenanceMode,
+  updateMaintenanceModeInConfig,
+} from './components/other/routeServerStatus'
+import { routeFileLists } from './components/files/routes'
 require('dotenv').config()
 
 // Set the default locale and timezone for date-time display (in console)
@@ -82,9 +89,11 @@ const startServer = async () => {
     root: path.join(getAppEntryPointDir(), filesFolder),
   })
 
-  server.register(fastifyMultipart)
+  server.register(fastifyMultipart, { limits: { fileSize: config.fileUploadLimit } })
 
   server.register(fastifyCors, { origin: '*' }) // Allow all origin (TODO change in PROD)
+
+  server.register(fastifyWebsocket)
 
   const api: FastifyPluginCallback = (server, _, done) => {
     // Here we parse JWT, and set it in request.auth, which is available for
@@ -107,11 +116,22 @@ const startServer = async () => {
         const expiryTime =
           tokenData.iat * 1000 + (config.logoutAfterInactivity ?? DEFAULT_LOGOUT_TIME) * 60_000
 
-        if (Date.now() > expiryTime) {
+        if (Date.now() > expiryTime && !config.maintenanceMode) {
           reply.statusCode = 401
           console.log('Expired token from:', tokenData.username)
           return reply.send({ success: false, message: 'Expired token' })
         }
+      }
+
+      // All endpoints become admin-only in Maintenance mode
+      if (
+        config.maintenanceMode &&
+        !request.auth.isAdmin &&
+        request.url !== '/api/login-org' &&
+        request.url !== '/api/user-info'
+      ) {
+        reply.statusCode = 401
+        return reply.send({ success: false, message: 'Must be admin user in Maintenance mode' })
       }
     })
 
@@ -146,7 +166,7 @@ const startServer = async () => {
         server.addHook('preValidation', async (request: any, reply: FastifyReply) => {
           if (!request.auth.isAdmin) {
             reply.statusCode = 401
-            return reply.send({ sucess: false, message: 'Not admin user' })
+            return reply.send({ success: false, message: 'Not admin user' })
           }
         })
 
@@ -162,6 +182,11 @@ const startServer = async () => {
         server.post('/generate-filter-data-fields', routeGenerateFilterDataFields)
         done()
         server.get('/raw-data/:dataTable/:id', routeRawData)
+        server.post(
+          '/set-maintenance-mode',
+          (request: FastifyRequest<{ Body: { enabled: boolean } }>, reply: FastifyReply) =>
+            routeSetMaintenanceMode(request, reply, server)
+        )
       },
       { prefix: '/admin' }
     )
@@ -177,6 +202,7 @@ const startServer = async () => {
     server.post('/data-views/:dataViewCode', routeDataViewTable)
     server.get('/data-views/:dataViewCode/:id', routeDataViewDetail)
     server.post('/data-views/:dataViewCode/filterList/:column', routeDataViewFilterList)
+    server.get('/files', routeFileLists)
     server.get('/check-triggers', routeTriggers)
     server.post('/preview-actions', routePreviewActions)
     server.post('/extend-application', routeExtendApplication)
@@ -201,9 +227,20 @@ const startServer = async () => {
     )}`
   })
 
+  server.register(async function (fastify) {
+    fastify.get('/server-status', { websocket: true }, (socket, _) =>
+      routeServerStatusWebsocket(socket, server)
+    )
+  })
+
   server.register(api, { prefix: '/api' })
 
-  server.listen(config.RESTport, (err, address) => {
+  // Set maintenanceMode from previously saved setting
+  await updateMaintenanceModeInConfig(config)
+
+  await server.ready()
+
+  server.listen({ port: config.RESTport }, (err, address) => {
     if (err) {
       console.error(err)
       process.exit(1)
@@ -214,6 +251,7 @@ const startServer = async () => {
     console.log('Timezone:', Settings.defaultZoneName)
     console.log('Email mode:', config.emailMode)
     if (config.emailMode === 'TEST') console.log('All email will be sent to:', config.testingEmail)
+    if (config.maintenanceMode) console.log(`-- Server in Maintenance mode`)
     console.log(`\nServer listening at ${address}`)
   })
 

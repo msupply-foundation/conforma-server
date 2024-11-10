@@ -10,6 +10,7 @@ import { EmailOperationMode } from './config'
 import { PoolConfig } from 'pg'
 import { Schedulers } from './components/scheduler'
 import { ExternalApiConfigs } from './components/external-apis/types'
+import { EventThrottle } from './components/actions/throttle'
 
 export interface ActionInTemplate {
   code: string
@@ -306,6 +307,7 @@ export interface ServerPreferences {
   timezone?: string
   externalApiConfigs?: ExternalApiConfigs
   envVars?: string[]
+  maintenanceSite?: string
 }
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
@@ -331,6 +333,7 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'timezone',
   'externalApiConfigs',
   'envVars',
+  'maintenanceSite',
 ]
 
 export interface WebAppPrefs {
@@ -364,6 +367,7 @@ interface ConfigBase {
   preferencesFileName: string
   backupsFolder: string
   genericThumbnailsFolderName: string
+  defaultUnderMaintenanceSite: string
   nodeModulesFolder: string
   jwtSecret: string
   RESTport: number
@@ -373,12 +377,15 @@ interface ConfigBase {
   filterListMaxLength: number
   filterListBatchSize: number
   filterColumnSuffix: string
+  fileUploadLimit: number
   isProductionBuild: boolean
   defaultSystemManagerPermissionName: string
   webHostUrl?: string
   productionHost?: string
   isLiveServer: boolean
   emailMode: EmailOperationMode
+  maintenanceMode: boolean
+  Throttle: EventThrottle
 }
 
 export type Config = ConfigBase & ServerPreferences & { scheduledJobs?: Schedulers }

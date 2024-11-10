@@ -1,7 +1,7 @@
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import databaseMethods, { DatabaseMethodsType } from './databaseMethods'
-import { DBConnectType } from '../../../src/components/databaseConnect'
+import { DBConnectType } from '../../../src/components/database/databaseConnect'
 import { mapValues, get, snakeCase } from 'lodash'
 import {
   objectKeysToSnakeCase,
@@ -75,7 +75,6 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
             noChangeLog: false,
             userId: applicationData?.userId,
             orgId: applicationData?.orgId,
-            username: applicationData?.username,
             applicationId: applicationData?.applicationId,
             comment: changeLogComment,
           }
@@ -105,7 +104,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     }
 
     for (const recordId of recordIds) {
-      if (shouldCreateJoinTable && operationType === 'CREATE')
+      if (shouldCreateJoinTable && operationType !== 'DELETE')
         await db.createJoinTableAndRecord(tableNameProper, applicationId, recordId)
     }
 

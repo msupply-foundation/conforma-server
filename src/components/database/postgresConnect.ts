@@ -1,7 +1,7 @@
-import { processTrigger, executeAction } from './actions'
-import { actionLibrary } from './pluginsConnect'
-import { deleteFile } from './files/deleteFiles'
-import config from '../config'
+import { processTrigger, executeAction } from '../actions'
+import { actionLibrary } from '../pluginsConnect'
+import { deleteFile } from '../files/deleteFiles'
+import config from '../../config'
 import { Client, Pool, QueryResult } from 'pg'
 import {
   ActionInTemplate,
@@ -16,12 +16,15 @@ import {
   ActionResult,
   TriggerPayload,
   DBOperationType,
-} from '../types'
-import { ApplicationOutcome, ApplicationStatus, ReviewStatus, Trigger } from '../generated/graphql'
-import { errorMessage } from './utilityFunctions'
-import { EventThrottle } from './actions/throttle'
-
-const Throttle = new EventThrottle<TriggerPayload, ActionResult[]>()
+} from '../../types'
+import {
+  ApplicationOutcome,
+  ApplicationStatus,
+  ReviewStatus,
+  Trigger,
+} from '../../generated/graphql'
+import { errorMessage } from '../utilityFunctions'
+import { updateReviewerStatsFromDBEvent } from './updateReviewerStats'
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -47,6 +50,7 @@ class PostgresDB {
     listener.query('LISTEN trigger_notifications')
     listener.query('LISTEN action_notifications')
     listener.query('LISTEN file_notifications')
+    listener.query('LISTEN update_reviewer_stats_notification')
     listener.on('notification', async ({ channel, payload }) => {
       if (!payload) {
         console.log(`Notification ${channel} received with no payload!`)
@@ -55,11 +59,13 @@ class PostgresDB {
       const payloadObject = JSON.parse(payload)
       switch (channel) {
         case 'trigger_notifications':
+          // Temporary diagnostic:
+          console.log(new Date().toLocaleString(), 'TRIGGER', payloadObject.trigger)
           // "data" is stored output from scheduled trigger or verification
           // "data" can sometimes exceed the byte limit for notification payload, so must be fetched separately
           const data = await this.getTriggerPayloadData(payloadObject.trigger_id)
           const { trigger, table, record_id } = payloadObject
-          Throttle.add({
+          config.Throttle.add({
             name: `Trigger ${trigger} on ${table}, id ${record_id}`,
             data: { ...payloadObject, data },
             action: processTrigger,
@@ -68,7 +74,8 @@ class PostgresDB {
         case 'action_notifications':
           // For Async Actions only
           try {
-            // Trigger payload fetched separately to avoid over-size payload error
+            // Trigger payload fetched separately to avoid over-size payload
+            // error
             const trigger_payload = await this.getTriggerPayload(payloadObject.id)
             await executeAction(
               { ...payloadObject, trigger_payload },
@@ -82,6 +89,14 @@ class PostgresDB {
           }
         case 'file_notifications':
           deleteFile(payloadObject)
+        case 'update_reviewer_stats_notification':
+          // Time delay so this aggregation process doesn't slow down Action
+          // execution
+          config.Throttle.add({
+            name: `Reviewer Action update from DB trigger on table ${payloadObject?.tableName}`,
+            data: payloadObject,
+            action: updateReviewerStatsFromDBEvent,
+          })
       }
     })
   }
@@ -958,19 +973,6 @@ class PostgresDB {
     }
   }
 
-  public getSystemOrgTemplatePermissions = async (isSystemOrg: boolean) => {
-    const text = `SELECT * FROM permissions_all
-      WHERE "isSystemOrgPermission" = $1
-      `
-    try {
-      const result = await this.query({ text, values: [isSystemOrg] })
-      return result.rows
-    } catch (err) {
-      console.log(errorMessage(err))
-      throw err
-    }
-  }
-
   public getUserTemplatePermissions = async (
     username: string,
     orgId: number | null,
@@ -1331,10 +1333,18 @@ class PostgresDB {
     newData: Record<string, any> | null,
     userId: number | null | undefined,
     orgId: number | null | undefined,
-    username: string | undefined,
     applicationId: number | null | undefined,
     comment: string | null | undefined
   ) => {
+    const username =
+      (
+        await this.query({
+          text: `
+      SELECT username from "user"
+      WHERE id = $1`,
+          values: [userId],
+        })
+      ).rows?.[0]?.username ?? null
     const dataTable = tableName.replace(config.dataTablePrefix, '')
     const text = `
       INSERT INTO data_changelog
@@ -1380,7 +1390,7 @@ class PostgresDB {
     }
   }
 
-  public setSystemInfo = async (type: string, value: string) => {
+  public setSystemInfo = async (type: string, value: unknown) => {
     const text = `
       INSERT INTO system_info (name, value)
       VALUES($1, $2)

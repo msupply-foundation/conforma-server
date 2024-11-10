@@ -1,5 +1,5 @@
 import path from 'path'
-import DBConnect from '../../src/components/databaseConnect'
+import DBConnect from '../../src/components/database/databaseConnect'
 import { getTemplateVersionId } from '../../src/components/exportAndImport/helpers'
 import { FILES_FOLDER } from '../../src/constants'
 import fs from 'fs/promises'
@@ -22,6 +22,8 @@ const databaseMethods = {
       if (!options?.silent) console.log('Problem altering schema:', errorMessage(err), '\n')
     }
   },
+  // Make base "query" method available unmodified
+  query: DBConnect.query,
   getDatabaseVersion: async () => {
     const text = `SELECT name, value, timestamp
       FROM system_info
@@ -493,6 +495,21 @@ const databaseMethods = {
         })
       } catch {
         console.log(`ERROR: Problem securing data table "${table}"`)
+      }
+    }
+  },
+  disableDataTableSecurity: async () => {
+    const dataTables = (
+      await DBConnect.query({ text: `SELECT table_name FROM data_table;`, rowMode: 'array' })
+    ).rows.flat()
+
+    for (const table of dataTables) {
+      try {
+        await DBConnect.query({
+          text: `ALTER TABLE ${config.dataTablePrefix}${table} DISABLE ROW LEVEL SECURITY;`,
+        })
+      } catch {
+        console.log(`ERROR: Problem changing data table security: "${table}"`)
       }
     }
   },
