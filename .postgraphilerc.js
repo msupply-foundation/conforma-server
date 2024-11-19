@@ -2,6 +2,7 @@ require('dotenv').config()
 module.exports = {
   options: {
     watch: true,
+    port: 5010,
     appendPlugins: [
       '@graphile-contrib/pg-simplify-inflector',
       'postgraphile-plugin-nested-mutations',
