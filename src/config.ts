@@ -56,8 +56,8 @@ const config: Config = {
   version,
   // In production postgraphile is started with -q and -i /postgraphile/...
   graphQLendpoint: isProductionBuild
-    ? 'http://localhost:5010/postgraphile/graphql'
-    : 'http://localhost:5010/graphql',
+    ? 'http://127.0.0.1:5010/postgraphile/graphql'
+    : 'http://127.0.0.1:5010/graphql',
   // 'Folder path from perspective of server.ts/js'
   filesFolder: '../files',
   pluginsFolder: '../plugins',
