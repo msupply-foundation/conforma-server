@@ -10,8 +10,6 @@ echo '--- ADDING SCHEMA'
 
 echo '--- STARTING SERVER'
 node ./build/src/server.js &
-echo '--- STARTING POST-GRAPHILE (graphQL)'
-yarn postgraphile -c "postgres://postgres@localhost/tmf_app_manager" --watch --disable-query-log &
 sleep 3
 
 echo '--- ADDING DATA'
