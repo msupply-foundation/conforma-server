@@ -1,3 +1,8 @@
+/**
+ * https://www.graphile.org/postgraphile/usage-library/
+ */
+
+require('dotenv').config()
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { postgraphile, PostGraphileResponseFastify3, PostGraphileResponse } from 'postgraphile'
 
@@ -15,16 +20,16 @@ export const pgMiddleware = postgraphile(
     pgDefaultRole: 'graphile_user',
     graphiql: true,
     enhanceGraphiql: true,
-    // cors: true,
     dynamicJson: true,
     jwtSecret: process.env.JWT_SECRET || 'devsecret',
-    // disableQueryLog: true,
+    disableQueryLog:
+      process.env.NODE_ENV === 'production' || process.env.HIDE_GRAPHQL_QUERY_LOG === 'true',
     graphileBuildOptions: {
       connectionFilterRelations: true,
       connectionFilterAllowEmptyObjectInput: true,
     },
+    allowExplain: process.env.NODE_ENV !== 'production',
     bodySizeLimit: '500kb',
-    // retryOnInitFail: true,
   }
 )
 

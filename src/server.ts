@@ -77,7 +77,6 @@ const startServer = async () => {
   await migrateData()
   await loadActionPlugins() // Connects to Database and listens for Triggers
   createDefaultDataFolders()
-  await cleanUpFiles() // Runs on schedule as well as startup
   await updateRowPolicies()
 
   // Add schedulers to global "config" object so we can update them. There
@@ -284,11 +283,7 @@ const startServer = async () => {
     console.log(`\nServer listening at ${address}`)
   })
 
-  // Fastify TO DO:
-  //  - Serve actual bundled React App
-  //  - Authentication endpoint
-  //  - Endpoint for file serving
-  //  - etc...
+  cleanUpFiles() // Runs on schedule as well as startup
 }
 
 startServer()
@@ -297,7 +292,7 @@ function generateAsciiHeader(version: string) {
   // Should look like:
   // -------------------------
   // |                       |
-  // |    CONFORMA v0.2.1    |
+  // |    CONFORMA v1.2.1    |
   // |                       |
   // -------------------------
   const name = `CONFORMA v${version}`
