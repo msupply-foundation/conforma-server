@@ -8,7 +8,7 @@
     "url": "https://github.com/msupply-foundation/conforma-server"
   },
   "engines": {
-    "node": ">=18.18.2"
+    "node": ">=18.18.2 <19.0.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.2",
