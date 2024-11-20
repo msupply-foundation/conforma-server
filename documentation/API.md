@@ -24,11 +24,13 @@ The back-end currently has two server instances which are launched to handle inc
 
 ## Postgraphile server API:
 
-`http://localhost:5000/graphql` (in Development environment)  
-`http://localhost:5000/postgraphile/graphql` (in Production environment)
+(Note that the default port for Postgraphile is 5000, but MacOS uses port 5000 for Airplay sharing, so it's easier to change it to 5010 to avoid confusing conflicts)
+
+`http://localhost:5010/graphql` (in Development environment)  
+`http://localhost:5010/postgraphile/graphql` (in Production environment)
 
 Web-based GUI available at:  
-`http://localhost:5000/graphiql` (development only)
+`http://localhost:5010/graphiql` (development only)
 
 ---
 

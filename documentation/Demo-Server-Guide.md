@@ -266,7 +266,7 @@ From there the following commands might be useful:
 ### Copy the log file to your local environment:
 
 1. Log in to the server using terminal
-2. Copy the log to an accessible place (in the server) i.e. if getting log for instance 5000:
+2. Copy the log to an accessible place (in the server) i.e. if getting log for instance 50000:
 
    `sudo cp /var/lib/docker/volumes/conforma-on-8000_logs/_data/server.log demo_server/2022-11-15.log`
 
