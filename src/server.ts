@@ -55,6 +55,8 @@ import {
   updateMaintenanceModeInConfig,
 } from './components/other/routeServerStatus'
 import { routeFileLists } from './components/files/routes'
+import { convertHandler, pgMiddleware } from './postgraphile'
+
 require('dotenv').config()
 
 // Set the default locale and timezone for date-time display (in console)
@@ -94,6 +96,33 @@ const startServer = async () => {
   server.register(fastifyCors, { origin: '*' }) // Allow all origin (TODO change in PROD)
 
   server.register(fastifyWebsocket)
+
+  // Register Postgraphile Middleware
+  server.options(pgMiddleware.graphqlRoute, convertHandler(pgMiddleware.graphqlRouteHandler))
+  server.post(pgMiddleware.graphqlRoute, convertHandler(pgMiddleware.graphqlRouteHandler))
+
+  // Postgraphile GraphiQL
+  if (pgMiddleware.options.graphiql && pgMiddleware.graphiqlRouteHandler) {
+    server.head(pgMiddleware.graphiqlRoute, convertHandler(pgMiddleware.graphiqlRouteHandler))
+    server.get(pgMiddleware.graphiqlRoute, convertHandler(pgMiddleware.graphiqlRouteHandler))
+    if (pgMiddleware.faviconRouteHandler) {
+      server.get('/favicon.ico', convertHandler(pgMiddleware.faviconRouteHandler))
+    }
+  }
+
+  // Postgraphile "Watch" mode
+  if (pgMiddleware.options.watchPg) {
+    if (pgMiddleware.eventStreamRouteHandler) {
+      server.options(
+        pgMiddleware.eventStreamRoute,
+        convertHandler(pgMiddleware.eventStreamRouteHandler)
+      )
+      server.get(
+        pgMiddleware.eventStreamRoute,
+        convertHandler(pgMiddleware.eventStreamRouteHandler)
+      )
+    }
+  }
 
   const api: FastifyPluginCallback = (server, _, done) => {
     // Here we parse JWT, and set it in request.auth, which is available for
