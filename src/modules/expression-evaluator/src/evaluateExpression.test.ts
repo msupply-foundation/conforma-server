@@ -14,7 +14,7 @@ pgConnect.connect()
 
 // CONFIG -- GraphQL SETUP
 const fetch = require('node-fetch')
-const graphQLendpoint = 'http://[::1]:5010/graphql'
+const graphQLendpoint = 'http://localhost:5010/graphql'
 
 // Basic (single level literals)
 
