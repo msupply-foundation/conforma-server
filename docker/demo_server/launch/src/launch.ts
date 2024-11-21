@@ -1,9 +1,35 @@
-// Updated 20/11/2024
-
-// Script to start (or restart) one or more containers using docker-compose
-// - Provide the instances you want to launch as arguments -- each must
-//   correspond to an .env file in "/env_files". Will prompt for a single
-//   instance if not provided
+/**
+ * Updated 20/11/2024
+ *
+ * CONFORMA/DOCKER LAUNCH SCRIPT
+ *
+ * This script can be compiled and placed on a server (or locally) and used to
+ * launch Conforma Docker containers using configuration options specified in
+ * either:
+ * - a site-specific "env" file (place in /env_files/<site>.env)
+ * - a common "default.env" file (in the same location as the launch script)
+ * - environment variables
+ *
+ * See env_files/example.env and default.env in this folder for examples
+ *
+ * Launch the script with `node launch.mjs <site1> <site2> ...`
+ *
+ * Will prompt for a single site if site args are omitted.
+ *
+ * To create a global alias (that can be run from anywhere), add the following
+ * line to the host shell configuration file (probably ~/.zshrc or ~/.bashrc):
+ *
+ * alias launch_conforma=\"node /path/to/script_folder/launch.mjs
+ *
+ * To run this script from the repo locally, run from
+ * /docker/demo_server/launch:
+ *
+ * "yarn dev <site>"
+ *
+ * Or to re-compile to JS file:
+ *
+ * "yarn build"
+ */
 
 const DEFAULT_FILE = 'default.env'
 const ENV_FOLDER = 'env_files'
