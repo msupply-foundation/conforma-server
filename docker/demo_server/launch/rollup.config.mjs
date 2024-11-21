@@ -1,6 +1,9 @@
 import typescript from '@rollup/plugin-typescript'
+import sizes from 'rollup-plugin-sizes'
+import terser from '@rollup/plugin-terser'
 import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
+// import json from '@rollup/plugin-json'
 
 export default [
   {
@@ -13,8 +16,11 @@ export default [
     ],
     plugins: [
       typescript(),
+      // json(),
       resolve({ preferBuiltins: true, exportConditions: ['node'] }),
       commonjs(),
+      terser(),
+      sizes(),
     ],
   },
 ]
