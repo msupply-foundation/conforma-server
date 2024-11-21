@@ -6,9 +6,9 @@
  * This script can be compiled and placed on a server (or locally) and used to
  * launch Conforma Docker containers using configuration options specified in
  * either:
+ * - environment variables
  * - a site-specific "env" file (place in /env_files/<site>.env)
  * - a common "default.env" file (in the same location as the launch script)
- * - environment variables
  *
  * See env_files/example.env and default.env in this folder for examples
  *
