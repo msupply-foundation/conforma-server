@@ -79,12 +79,12 @@ for instance in "${ARGS[@]}"; do
         break
     fi
     echo -e " - Snapshots folder: $SNAPSHOTS_FOLDER"
-    
+
     export SHARE_FOLDER=$SHARE_FOLDER
     if [ -z "$SHARE_FOLDER" ]; then
         echo " - No SHARE_FOLDER specified... will use default"
-	else
-		echo -e " - File share folder: $SHARE_FOLDER"
+    else
+        echo -e " - File share folder: $SHARE_FOLDER"
     fi
 
     export PORT_APP=$PORT
