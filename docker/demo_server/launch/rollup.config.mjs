@@ -42,7 +42,43 @@ export default [
  * line to the host shell configuration file (probably ~/.zshrc or ~/.bashrc):
  *
  * alias launch_conforma="node /path/to/script_folder/launch.mjs"
- */`,
+ */
+`,
+        },
+      }),
+      sizes(),
+    ],
+  },
+  {
+    input: 'src/stop.ts',
+    output: [
+      {
+        file: '../stop.mjs',
+        format: 'esm',
+      },
+    ],
+    plugins: [
+      typescript(),
+      resolve({ preferBuiltins: true, exportConditions: ['node'] }),
+      commonjs(),
+      terser({
+        module: true,
+        format: {
+          preamble: `/**
+ * Updated ${new Date().toLocaleDateString()}
+ *
+ * CONFORMA/DOCKER STOP SCRIPT
+ * 
+ * Stop Conforma Docker instance.
+ * 
+ * See launch.mjs for command line usage
+ *
+ * To create a global alias (that can be run from anywhere), add the following
+ * line to the host shell configuration file (probably ~/.zshrc or ~/.bashrc):
+ *
+ * alias stop_conforma="node /path/to/script_folder/stop.mjs"
+ */
+`,
         },
       }),
       sizes(),

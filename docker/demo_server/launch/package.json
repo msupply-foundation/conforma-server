@@ -22,7 +22,8 @@
     "tslib": "^2.6.3"
   },
   "scripts": {
-    "dev": "rollup --config rollup.devConfig.mjs && node ../launch.mjs",
+    "launch": "rollup --config rollup.launchConfig.mjs && node ../launch.mjs",
+    "stop": "rollup --config rollup.stopConfig.mjs && node ../stop.mjs",
     "build": "rollup -c"
   }
 }
