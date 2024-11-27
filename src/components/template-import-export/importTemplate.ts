@@ -63,6 +63,13 @@ export const importTemplateUpload = async (folderName: string) => {
     throw new ApiError('info.json file missing from upload', 400)
   }
 
+  if (semverCompare('1.4.0', info.version) === 1) {
+    throw new ApiError(
+      `Template was exported with Conforma version: ${info.version}\n. From Conforma v1.5.0 we use a new template import/export mechanism and can no longer import templates in the old format. Please use the v1.4.0 Docker image where you can import this version and export a version in the new format.`,
+      400
+    )
+  }
+
   if (semverCompare(info.version, config.version) === 1) {
     throw new ApiError(
       `Template was exported with Conforma version: ${info.version}\n You can't install a template created with a version newer than the current application version: ${config.version}`,
