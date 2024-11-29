@@ -1,8 +1,8 @@
+import path from 'path'
 import db from './databaseMethods'
 import { filterObject } from '../utilityFunctions'
 import { DataView } from '../../generated/graphql'
 import { PgFile } from './types'
-import { ApiError } from './ApiError'
 
 const returnColumns = [
   'id',
@@ -60,6 +60,7 @@ interface LinkedFile {
   id?: number
   joinId?: number
   original_filename?: string
+  subfolder?: string
   description?: string | null
   timestamp?: Date
   file_size?: number | null
@@ -74,7 +75,7 @@ export const getLinkedFiles = async (templateId: number) => {
       table: 'file',
       joinTable: 'template_file_join',
     })
-  ).map(({ id, unique_id, original_filename, description, timestamp, file_size }) => {
+  ).map(({ id, unique_id, original_filename, description, timestamp, file_size, file_path }) => {
     return {
       id,
       unique_id,
@@ -82,6 +83,7 @@ export const getLinkedFiles = async (templateId: number) => {
       description,
       timestamp,
       file_size,
+      subfolder: path.dirname(file_path),
       linkedInDatabase: true,
       usedInAction: false,
     }
@@ -104,10 +106,11 @@ export const getLinkedFiles = async (templateId: number) => {
       continue
     }
 
-    const existing = files.find((f) => (f.unique_id = fileId))
+    const existing = files.find((f) => f.unique_id === fileId)
     if (existing) existing.usedInAction = true
     else {
-      const { id, unique_id, original_filename, description, timestamp, file_size } = file
+      const { id, unique_id, original_filename, description, timestamp, file_size, file_path } =
+        file
       files.push({
         id,
         unique_id,
@@ -115,6 +118,7 @@ export const getLinkedFiles = async (templateId: number) => {
         description,
         timestamp,
         file_size,
+        subfolder: path.dirname(file_path),
         linkedInDatabase: false,
         usedInAction: true,
       })
