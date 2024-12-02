@@ -6,7 +6,7 @@ import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../../constants'
 import { DateTime } from 'luxon'
 import config from '../../../config'
 import archiver from 'archiver'
-import { buildTemplateStructure } from '../buildTemplateStructure'
+import { buildTemplateStructure } from '../utilities'
 import { PgTemplate } from '../types'
 
 export const exportTemplate = async (templateId: number) => {

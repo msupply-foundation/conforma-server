@@ -1,8 +1,12 @@
+/**
+ * Provides linked data view and linked file data to the respective routes
+ */
+
 import path from 'path'
-import db from './databaseMethods'
-import { filterObject } from '../utilityFunctions'
-import { DataView } from '../../generated/graphql'
-import { PgFile } from './types'
+import db from '../databaseMethods'
+import { filterObject } from '../../utilityFunctions'
+import { DataView } from '../../../generated/graphql'
+import { PgFile } from '../types'
 
 const returnColumns = [
   'id',
@@ -15,6 +19,15 @@ const returnColumns = [
 ] as const
 
 type PgDataViewField = (typeof returnColumns)[number]
+
+/**
+ * Provides a list of data views connected to a template. Contains metadata
+ * about the dataview itself, as well as how it's used in the template:
+ * - applicantAccessible (applicant has permission to access data view, so safe
+ *   to use in template elements)
+ * - inTemplateElements,
+ * - inOutputTables
+ */
 
 export const getDataViewDetails = async (templateId: number) => {
   const allDataViews = await db.getAllDataViews()
@@ -68,6 +81,17 @@ interface LinkedFile {
   usedInAction: boolean
   missingFromDatabase?: boolean
 }
+
+/**
+ * Provides a list of files connected to a template. Contains standard file
+ * metadata, as well as:
+ * - linkedInDatabase (is the file linked via the file join table, as opposed to
+ *   used in an action but not yet linked)
+ * - usedInAction (file is in use in one of the generateDocument actions)
+ * - missingFromDatabase (file is not present in the database, but is referenced
+ *   in an action)
+ */
+
 export const getLinkedFiles = async (templateId: number) => {
   const files: LinkedFile[] = (
     await db.getJoinedEntities<PgFile>({

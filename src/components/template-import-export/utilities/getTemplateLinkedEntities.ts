@@ -1,9 +1,21 @@
+/**
+ * Pulls all data linked to a template from the database and organises them into
+ * a structured object containing arrays of:
+ * - filters
+ * - permissions
+ * - dataViews
+ * - dataViewColumns
+ * - category (single, not an array)
+ * - dataTables
+ * - files
+ */
+
 import { snakeCase } from 'lodash'
-import { DataView } from '../../generated/graphql'
-import { buildColumnList } from '../data_display/helpers'
-import { filterObject, isObject, objectKeysToCamelCase } from '../utilityFunctions'
-import { ApiError } from '../../ApiError'
-import db from './databaseMethods'
+import { DataView } from '../../../generated/graphql'
+import { buildColumnList } from '../../data_display/helpers'
+import { filterObject, isObject, objectKeysToCamelCase } from '../../utilityFunctions'
+import { ApiError } from '../../../ApiError'
+import db from '../databaseMethods'
 import { replaceForeignKeyRef } from './updateHashes'
 import {
   CombinedLinkedEntities,
@@ -16,7 +28,7 @@ import {
   PgPermissionName,
   PgTemplate,
   PgTemplateCategory,
-} from './types'
+} from '../types'
 
 export const getTemplateLinkedEntities = async (templateId: number) => {
   const template = await db.getRecord<PgTemplate>('template', templateId)

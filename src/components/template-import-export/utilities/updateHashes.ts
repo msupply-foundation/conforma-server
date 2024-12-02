@@ -1,7 +1,22 @@
-import { DataTable as PgDataTable } from '../../generated/postgres'
+/**
+ * Generates SHA-256 hashes for database records. The `hashRecord` operation is
+ * called via a database trigger whenever template-relevant records are inserted
+ * or updated, namely:
+ *  - data_view
+ *  - data_view_column_definition
+ *  - data_table
+ *  - template_category
+ *  - filter
+ *  - file
+ *
+ * Foreign key references are replaced by the actual data they refer to before
+ * hashing
+ */
+
+import { DataTable as PgDataTable } from '../../../generated/postgres'
 import fs from 'fs'
-import { getLookupTableData } from '../../lookup-table/export'
-import db from './databaseMethods'
+import { getLookupTableData } from '../../../lookup-table/export'
+import db from '../databaseMethods'
 import { createHash } from 'crypto'
 
 interface NotificationPayload {
@@ -46,6 +61,8 @@ export const hashRecord = async ({ tableName, id }: NotificationPayload) => {
   }
 }
 
+// Creates a hash for an entire lookup table by taking the hash of all the
+// individual record hashes
 export const hashLookupTable = async (tableId: number) => {
   try {
     const dataTableRecord = await db.getRecord<Partial<PgDataTable>>('data_table', tableId)
@@ -68,6 +85,8 @@ export const getHash = (data: unknown) => {
   return hash.digest('hex')
 }
 
+// Hash a file -- this is checked on template import to ensure that an imported
+// file that already exists hasn't been changed since the template export
 export const hashFile = (filePath: string) =>
   new Promise((resolve, reject) => {
     const hash = createHash('sha256')

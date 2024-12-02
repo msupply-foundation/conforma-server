@@ -1,7 +1,7 @@
 import { customAlphabet } from 'nanoid/non-secure'
 import { ApiError } from '../../../ApiError'
 import db from '../databaseMethods'
-import { getTemplateLinkedEntities } from '../getTemplateLinkedEntities'
+import { getTemplateLinkedEntities } from '../utilities'
 import { PgTemplate } from '../types'
 
 export const commitTemplate = async (templateId: number, comment: string | null) => {

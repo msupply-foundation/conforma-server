@@ -1,5 +1,12 @@
+/**
+ * Compares two sets of linked template entities and returns the difference. Use
+ * when importing a template to compare the imported entities against matching
+ * ones already in the database. The diff is returned to the user so they can
+ * choose which version to preserve.
+ */
+
 import { isEqual } from 'lodash'
-import { CombinedLinkedEntities, LinkedEntities, LinkedEntity } from './types'
+import { CombinedLinkedEntities, LinkedEntities, LinkedEntity } from '../types'
 
 export const getDiff = (
   templateData: CombinedLinkedEntities,
