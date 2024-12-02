@@ -28,7 +28,6 @@ export const hashRecord = async ({ tableName, id }: NotificationPayload) => {
 
   // For file table, we just ignore foreign key references, as they shouldn't be
   // relevant to template import/export, which is what the purpose of this is
-
   if (tableName === 'file') {
     ;['user_id', 'application_response_id', 'application_note_id', 'application_serial'].forEach(
       (column) => {

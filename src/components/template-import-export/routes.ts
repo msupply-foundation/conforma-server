@@ -6,7 +6,7 @@ import { commitTemplate } from './commitTemplate'
 import { returnApiError } from './ApiError'
 import { exportTemplate } from './exportTemplate'
 import { duplicateTemplate } from './duplicateTemplate'
-import { getDataViewDetails, getLinkedFiles, getSuggestedDataViews } from './linking'
+import { getDataViewDetails, getLinkedFiles } from './linking'
 import path from 'path'
 import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../constants'
 import StreamZip from 'node-stream-zip'
@@ -34,7 +34,6 @@ export const templateRoutes: FastifyPluginCallback<{ prefix: string }> = (server
   server.post('/import/install/:uid', routeImportTemplateInstall)
   server.get('/get-data-view-details/:id', routeGetDataViewDetails)
   server.get('/get-linked-files/:id', routeGetLinkedFiles)
-
   done()
 }
 
