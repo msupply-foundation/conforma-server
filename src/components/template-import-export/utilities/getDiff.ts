@@ -37,7 +37,7 @@ export const getDiff = (
   }
 }
 
-const compare = (templateEntities: LinkedEntities, compareEntities: LinkedEntities) => {
+const compare = (templateEntities: LinkedEntities = {}, compareEntities: LinkedEntities = {}) => {
   const diff: Record<string, { template: LinkedEntity | null; other: LinkedEntity | null }> = {}
 
   Object.entries(templateEntities).forEach(([key, { checksum, lastModified, data }]) => {

@@ -281,7 +281,15 @@ export const installTemplate = async (
       actions,
       stages,
       permissionJoins,
-      shared: { filters, permissions, category, dataViews, dataViewColumns, dataTables, files },
+      shared: {
+        filters = {},
+        permissions = {},
+        category,
+        dataViews = {},
+        dataViewColumns = {},
+        dataTables = {},
+        files = {},
+      },
       ...templateRecord
     } = template
 

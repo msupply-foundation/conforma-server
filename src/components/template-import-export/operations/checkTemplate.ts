@@ -36,7 +36,8 @@ export const checkTemplate = async (templateId: number) => {
     .map(({ id, code, identifier, title }) => ({ id, code, identifier, title }))
 
   if (!committed) {
-    return { committed, unconnectedDataViews }
+    const ready = unconnectedDataViews.length === 0
+    return { committed, unconnectedDataViews, ready }
   }
 
   const diff = getDiff(template.linked_entity_data as CombinedLinkedEntities, linkedEntities)
