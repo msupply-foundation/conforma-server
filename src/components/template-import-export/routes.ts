@@ -260,21 +260,4 @@ const routeGetLinkedFiles = async (
   }
 }
 
-// const routeGetTemplateSuggestedDataViews = async (
-//   request: FastifyRequest<{ Params: { id: string } }>,
-//   reply: FastifyReply
-// ) => {
-//   const templateId = Number(request.params.id)
-//   if (!templateId || isNaN(templateId)) {
-//     returnApiError('Invalid template id', reply, 400)
-//   }
-
-//   try {
-//     const suggested = await getSuggestedDataViews(templateId)
-//     return reply.send(suggested)
-//   } catch (err) {
-//     returnApiError(err, reply)
-//   }
-// }
-
 const getRandomTemplateFolderName = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 24)

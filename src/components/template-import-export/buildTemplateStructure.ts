@@ -17,8 +17,11 @@ import {
 
 /**
  * Pulls all template data, including "linked" items (e.g. data views, files,
- * etc) and builds them into a single tree structure that is not dependent at
- * all on database IDs
+ * etc) from database and builds them into a single tree structure that is not
+ * dependent at all on database IDs.
+ *
+ * This is the structure that gets exported to file as JSON when exporting a
+ * template.
  */
 
 export const buildTemplateStructure = async (template: PgTemplate) => {
