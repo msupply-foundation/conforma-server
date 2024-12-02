@@ -1,11 +1,11 @@
 import path from 'path'
 import fsx from 'fs-extra'
 import semverCompare from 'semver/functions/compare'
-import { ApiError } from './ApiError'
-import db from './databaseMethods'
-import { filterModifiedData } from './getDiff'
-import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../constants'
-import config from '../../config'
+import { ApiError } from '../../../ApiError'
+import db from '../databaseMethods'
+import { filterModifiedData } from '../getDiff'
+import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../../constants'
+import config from '../../../config'
 import {
   CombinedLinkedEntities,
   LinkedEntities,
@@ -18,8 +18,8 @@ import {
   PgPermissionName,
   PgTemplateCategory,
   TemplateStructure,
-} from './types'
-import { hashFile, replaceForeignKeyRef } from './updateHashes'
+} from '../types'
+import { hashFile, replaceForeignKeyRef } from '../updateHashes'
 
 interface InfoFile {
   timestamp: string

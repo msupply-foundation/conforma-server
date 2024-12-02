@@ -2,7 +2,7 @@ import { snakeCase } from 'lodash'
 import { DataView } from '../../generated/graphql'
 import { buildColumnList } from '../data_display/helpers'
 import { filterObject, isObject, objectKeysToCamelCase } from '../utilityFunctions'
-import { ApiError } from './ApiError'
+import { ApiError } from '../../ApiError'
 import db from './databaseMethods'
 import { replaceForeignKeyRef } from './updateHashes'
 import {

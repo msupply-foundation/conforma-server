@@ -1,9 +1,9 @@
-import { ApiError } from './ApiError'
-import db from './databaseMethods'
-import { getDiff } from './getDiff'
-import { buildLinkedEntityObject, getTemplateLinkedEntities } from './getTemplateLinkedEntities'
-import { CombinedLinkedEntities, PgDataView, PgTemplate } from './types'
-import { getSuggestedDataViews } from './linking'
+import { ApiError } from '../../../ApiError'
+import db from '../databaseMethods'
+import { getDiff } from '../getDiff'
+import { buildLinkedEntityObject, getTemplateLinkedEntities } from '../getTemplateLinkedEntities'
+import { CombinedLinkedEntities, PgDataView, PgTemplate } from '../types'
+import { getSuggestedDataViews } from '../linking'
 
 export const checkTemplate = async (templateId: number) => {
   console.log(`Checking template: ${templateId}...`)

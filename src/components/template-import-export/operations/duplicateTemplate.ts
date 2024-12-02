@@ -1,9 +1,9 @@
-import { ApiError } from './ApiError'
-import db from './databaseMethods'
+import { ApiError } from '../../../ApiError'
+import db from '../databaseMethods'
 
-import { buildTemplateStructure } from './buildTemplateStructure'
+import { buildTemplateStructure } from '../buildTemplateStructure'
 import { installTemplate } from './importTemplate'
-import { PgTemplate } from './types'
+import { PgTemplate } from '../types'
 
 export const duplicateTemplate = async (templateId: number, newCode?: string) => {
   console.log(`Duplicating template: ${templateId}...`)

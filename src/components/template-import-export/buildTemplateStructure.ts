@@ -15,6 +15,12 @@ import {
   TemplateStructure,
 } from './types'
 
+/**
+ * Pulls all template data, including "linked" items (e.g. data views, files,
+ * etc) and builds them into a single tree structure that is not dependent at
+ * all on database IDs
+ */
+
 export const buildTemplateStructure = async (template: PgTemplate) => {
   const { id: templateId, linked_entity_data, template_category_id, ...structure } = template
 

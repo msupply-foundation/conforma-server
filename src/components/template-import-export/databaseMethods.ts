@@ -1,7 +1,7 @@
 import DBConnect from '../database/databaseConnect'
 import { errorMessage, isObject } from '../../components/utilityFunctions'
 import { CombinedLinkedEntities, PgDataTable, PgDataView } from './types'
-import { ApiError } from './ApiError'
+import { ApiError } from '../../ApiError'
 
 const databaseMethods = {
   beginTransaction: async () => {

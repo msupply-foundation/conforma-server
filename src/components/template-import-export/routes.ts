@@ -2,10 +2,8 @@ import { FastifyPluginCallback, FastifyReply, FastifyRequest } from 'fastify'
 import fsx from 'fs-extra'
 import { pipeline } from 'stream'
 import { promisify } from 'util'
-import { commitTemplate } from './commitTemplate'
-import { returnApiError } from './ApiError'
-import { exportTemplate } from './exportTemplate'
-import { duplicateTemplate } from './duplicateTemplate'
+import { returnApiError } from '../../ApiError'
+import { exportTemplate, duplicateTemplate, checkTemplate, commitTemplate } from './operations'
 import { getDataViewDetails, getLinkedFiles } from './linking'
 import path from 'path'
 import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../constants'
@@ -15,13 +13,14 @@ import {
   importTemplateInstall,
   importTemplateUpload,
   PreserveExistingEntities,
-} from './importTemplate'
+} from './operations'
 import { customAlphabet } from 'nanoid'
 import { CombinedLinkedEntities } from './types'
 import config from '../../config'
-import { checkTemplate } from './checkTemplate'
 
 const pump = promisify(pipeline)
+
+/** All the routes for template management */
 
 export const templateRoutes: FastifyPluginCallback<{ prefix: string }> = (server, _, done) => {
   server.post('/commit/:id', routeCommitTemplate)
