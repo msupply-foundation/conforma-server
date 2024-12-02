@@ -147,6 +147,54 @@ class PostgresDB {
     }
   }
 
+  // Generic method to fetch a single full record from any table, by any field
+  // (defaults to "id"). If more than one record matches the query, only the
+  // first one is returned (so try and make sure you only query by a unique
+  // field)
+  public getRecord = async <T>(
+    tableName: string,
+    value: number | string | (number | string)[],
+    field: string | string[] = 'id'
+  ): Promise<T> => {
+    try {
+      const text = Array.isArray(field)
+        ? `SELECT * FROM ${tableName} WHERE ${field
+            .map((val, index) =>
+              index === 0 ? `${val} = $${index + 1}` : `AND ${val} = $${index + 1}`
+            )
+            .join(' ')}`
+        : `SELECT * FROM ${tableName} WHERE ${field} = $1`
+
+      const result = await this.query({
+        text,
+        values: Array.isArray(value) ? [...value] : [value],
+      })
+      return result.rows[0]
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  // Generic method to return multiple full records from any table by matching
+  // against any field.
+  public getRecordsByField = async <T>(
+    tableName: string,
+    field: string,
+    value: unknown
+  ): Promise<T[]> => {
+    try {
+      const text = `
+            SELECT * FROM ${tableName} WHERE ${field} = $1
+          `
+      const result = await this.query({ text, values: [value] })
+      return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
   public isJsonColumn = (tableName: string, columnName: string) => {
     if (!(tableName in this.tableJsonColumns)) return false
     return this.tableJsonColumns[tableName].has(columnName)

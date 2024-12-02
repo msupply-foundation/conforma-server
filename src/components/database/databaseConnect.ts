@@ -18,6 +18,10 @@ class DBConnect {
 
   public end = PostgresDB.end
 
+  public getRecord = PostgresDB.getRecord
+
+  public getRecordsByField = PostgresDB.getRecordsByField
+
   public getValuesPlaceholders = PostgresDB.getValuesPlaceholders
 
   public getCounter = PostgresDB.getCounter

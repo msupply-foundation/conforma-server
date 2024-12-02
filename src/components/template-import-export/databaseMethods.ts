@@ -28,42 +28,8 @@ const databaseMethods = {
       throw err
     }
   },
-  getRecord: async <T>(
-    tableName: string,
-    value: number | string | (number | string)[],
-    field: string | string[] = 'id'
-  ): Promise<T> => {
-    try {
-      const text = Array.isArray(field)
-        ? `SELECT * FROM ${tableName} WHERE ${field
-            .map((val, index) =>
-              index === 0 ? `${val} = $${index + 1}` : `AND ${val} = $${index + 1}`
-            )
-            .join(' ')}`
-        : `SELECT * FROM ${tableName} WHERE ${field} = $1`
-
-      const result = await DBConnect.query({
-        text,
-        values: Array.isArray(value) ? [...value] : [value],
-      })
-      return result.rows[0]
-    } catch (err) {
-      console.log(errorMessage(err))
-      throw err
-    }
-  },
-  getRecordsByField: async <T>(tableName: string, field: string, value: unknown): Promise<T[]> => {
-    try {
-      const text = `
-            SELECT * FROM ${tableName} WHERE ${field} = $1
-          `
-      const result = await DBConnect.query({ text, values: [value] })
-      return result.rows
-    } catch (err) {
-      console.log(errorMessage(err))
-      throw err
-    }
-  },
+  getRecord: DBConnect.getRecord,
+  getRecordsByField: DBConnect.getRecordsByField,
   updateChecksum: async (tableName: string, id: number, checksum: string) => {
     try {
       const text = `
