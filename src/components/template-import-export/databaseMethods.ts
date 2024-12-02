@@ -28,8 +28,16 @@ const databaseMethods = {
       throw err
     }
   },
-  getRecord: DBConnect.getRecord,
-  getRecordsByField: DBConnect.getRecordsByField,
+  getRecord: async <T>(
+    tableName: string,
+    value: number | string | (number | string)[],
+    field: string | string[] = 'id'
+  ): Promise<T> => {
+    return await DBConnect.getRecord(tableName, value, field)
+  },
+  getRecordsByField: async <T>(tableName: string, field: string, value: unknown): Promise<T[]> => {
+    return await DBConnect.getRecordsByField(tableName, field, value)
+  },
   updateChecksum: async (tableName: string, id: number, checksum: string) => {
     try {
       const text = `
