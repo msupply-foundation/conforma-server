@@ -1,4 +1,4 @@
 export * from './routes'
-export * from './utilities/updateHashes'
-export * from './utilities/getTemplateLinkedEntities'
+export * from './utilities'
 export * from './operations'
+export * from './types'
