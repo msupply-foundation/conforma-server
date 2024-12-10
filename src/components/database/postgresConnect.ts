@@ -789,6 +789,21 @@ class PostgresDB {
     organisation_id: number
     user_role?: string
   }): Promise<object> => {
+    // First check if exists
+    const result = await this.query({
+      text: `
+        SELECT id FROM user_organisation
+        WHERE user_id = $1
+        AND organisation_id = $2
+      `,
+      values: [userOrg.user_id, userOrg.organisation_id],
+    })
+    const id = result.rows[0]?.id
+    if (id) {
+      console.log('User already exists in organisation:', id)
+      return { userOrgId: result.rows[0].id, success: true }
+    }
+
     const text = `INSERT INTO user_organisation (${Object.keys(userOrg)}) 
       VALUES (${this.getValuesPlaceholders(userOrg)})
       RETURNING id`
