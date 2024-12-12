@@ -1196,6 +1196,11 @@ const migrateData = async () => {
   if (databaseVersionLessThan('1.4.0')) {
     console.log('Migrating to v1.4.0...')
 
+    console.log(' - Making permission_name_id field on template_permission non-nullable')
+
+    await DB.changeSchema(`
+      ALTER TABLE template_permission ALTER COLUMN permission_name_id SET NOT NULL;`)
+
     console.log(' - Adding checksum fields to template-connected tables')
 
     const tables = [
