@@ -87,6 +87,7 @@ const routeTemplateExport = async (
 
   try {
     const filepath = await exportTemplate(templateId)
+    // @ts-ignore
     reply.sendFile(filepath)
     fsx.remove(path.join(FILES_FOLDER, filepath))
     return reply
@@ -137,6 +138,7 @@ const routeDuplicateTemplateVersion = async (
 const routeImportTemplateUpload = async (request: FastifyRequest, reply: FastifyReply) => {
   let upload
   try {
+    // @ts-ignore
     upload = await request.file()
   } catch (err) {
     returnApiError('No file attached', reply, 400)
