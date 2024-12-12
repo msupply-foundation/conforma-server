@@ -96,7 +96,7 @@ const databaseMethods = {
     `
     try {
       const result = await DBConnect.query({ text, values: [templateId], rowMode: 'array' })
-      return result.rows.flat()
+      return extractFileIdsFromExpressions(result.rows.flat())
     } catch (err) {
       console.log(errorMessage(err))
       throw err
@@ -314,3 +314,44 @@ const databaseMethods = {
 }
 
 export default databaseMethods
+
+const MIN_STRING_LENGTH = 20
+const MAX_STRING_LENGTH = 24
+
+// Used by db.getFilesFromDocAction -- if the value of the `docTemplateId`
+// property is an evaluator expression rather than a straight string, we want to
+// pull out any appropriate strings from within. This recursively searches for
+// strings between 20-24 chars in the JSON structure and returns them as an
+// array (of file IDs)
+
+const extractFileIdsFromExpressions = (values: string[]) => {
+  const output: string[] = []
+  for (const val of values) {
+    try {
+      const parsed: JsonData = JSON.parse(val)
+      output.push(...extractData(parsed))
+    } catch {
+      output.push(val)
+    }
+  }
+  return output
+}
+
+type JsonPrimitive = string | number | boolean | null
+type JsonBaseObject = Record<string, JsonPrimitive>
+type JsonData = Record<string, JsonPrimitive | JsonBaseObject> | (JsonData | JsonPrimitive)[]
+
+const extractData = (data: JsonData | JsonPrimitive): string[] => {
+  if (
+    typeof data === 'string' &&
+    data.length >= MIN_STRING_LENGTH &&
+    data.length <= MAX_STRING_LENGTH
+  )
+    return [data]
+
+  if (typeof data !== 'object' || data === null) return []
+
+  const values = Object.values(data)
+
+  return values.map((val) => extractData(val)).flat()
+}
