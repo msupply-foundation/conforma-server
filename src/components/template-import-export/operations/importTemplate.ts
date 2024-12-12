@@ -324,7 +324,7 @@ export const installTemplate = async (
       }
     }
 
-    const newTemplateId = await db.insertRecord('template', {
+    const newTemplateId: number = await db.insertRecord('template', {
       ...templateRecord,
       template_category_id: categoryId,
     })
