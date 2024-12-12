@@ -207,18 +207,6 @@ BEGIN
             code = NEW.code
             AND status = 'AVAILABLE'
             AND id != NEW.id;
-        UPDATE
-            public.file
-        SET
-            template_id = NEW.id
-        WHERE
-            template_id IN (
-                SELECT
-                    id
-                FROM
-                    TEMPLATE
-                WHERE
-                    code = NEW.code);
     END IF;
     RETURN NULL;
 END;
