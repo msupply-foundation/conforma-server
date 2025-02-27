@@ -51,6 +51,7 @@
     "dev": "nodemon",
     "start": "yarn build && cd build && node server.js",
     "build": "./utils/build_all.sh",
+    "serve": "cp -R preferences ./build && cp postgraphile.tags.json5 ./build && cp -R .env ./build && cd build && node src/server.js",
     "test": "jest --runInBand",
     "database_init": "yarn snapshot use",
     "build_plugins": "node ./utils/pluginScripts/buildPlugins.js",

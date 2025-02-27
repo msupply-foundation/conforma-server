@@ -22,6 +22,8 @@ const isLiveServer = getIsLiveServer(webHostUrl, siteHost)
 // Change to true to force email server to use local Mailhog
 const USE_MAIL_HOG = false
 
+console.log('isProductionBuild', isProductionBuild)
+
 export type EmailOperationMode = 'LIVE' | 'TEST' | 'NONE' | 'MAILHOG'
 /*
 Operation modes:
