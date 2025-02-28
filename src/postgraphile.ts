@@ -6,6 +6,8 @@ require('dotenv').config()
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { postgraphile, PostGraphileResponseFastify3, PostGraphileResponse } from 'postgraphile'
 
+const isProductionBuild = process.env.NODE_ENV === 'production'
+
 export const pgMiddleware = postgraphile(
   'postgres://postgres@localhost/tmf_app_manager',
   'public',
@@ -20,16 +22,15 @@ export const pgMiddleware = postgraphile(
     pgDefaultRole: 'graphile_user',
     graphiql: true,
     enhanceGraphiql: true,
-    externalUrlBase: '/server',
+    externalUrlBase: isProductionBuild ? '/server' : '',
     dynamicJson: true,
     jwtSecret: process.env.JWT_SECRET || 'devsecret',
-    disableQueryLog:
-      process.env.NODE_ENV === 'production' || process.env.HIDE_GRAPHQL_QUERY_LOG === 'true',
+    disableQueryLog: isProductionBuild || process.env.HIDE_GRAPHQL_QUERY_LOG === 'true',
     graphileBuildOptions: {
       connectionFilterRelations: true,
       connectionFilterAllowEmptyObjectInput: true,
     },
-    allowExplain: process.env.NODE_ENV !== 'production',
+    allowExplain: !isProductionBuild,
     bodySizeLimit: '500kb',
   }
 )
