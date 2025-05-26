@@ -603,7 +603,7 @@ Generates a PDF file based on a [Carbone](https://carbone.io/api-reference.html)
 | ---------------------------------------- | ------------------------------------------ |
 | `docTemplateId`\*                        | `document: {uniqueId, filename, filepath}` |
 | `options`                                |                                            |
-| `appicationSerial`                       |                                            |
+| `applicationSerial`                      |                                            |
 | `templateId`                             |                                            |
 | `userId`                                 |                                            |
 | `data`                                   |                                            |

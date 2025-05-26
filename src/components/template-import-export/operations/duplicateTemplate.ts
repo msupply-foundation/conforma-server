@@ -1,7 +1,7 @@
 import { ApiError } from '../../../ApiError'
 import db from '../databaseMethods'
 import { buildTemplateStructure } from '../utilities'
-import { installTemplate } from './importTemplate'
+import { installTemplate, PreserveExistingEntities } from './importTemplate'
 import { PgTemplate } from '../types'
 import { TemplateStatus } from '../../../generated/graphql'
 
@@ -43,7 +43,26 @@ export const duplicateTemplate = async (templateId: number, newCode?: string) =>
   templateStructure.version_timestamp = new Date()
   templateStructure.status = TemplateStatus.Draft
 
-  const newTemplateId = await installTemplate(templateStructure)
+  // Collect ALL the linked entity identifiers stored with the original template
+  // so they don't get overwritten on install
+  const preserveEntityDetails: PreserveExistingEntities = {
+    filters: new Set(Object.values(templateStructure.shared.filters).map(({ data }) => data.code)),
+    permissions: new Set(
+      Object.values(templateStructure.shared.permissions).map(({ data }) => data.name ?? '')
+    ),
+    dataViews: new Set(
+      Object.values(templateStructure.shared.dataViews).map(({ data }) => data.identifier)
+    ),
+    dataViewColumns: new Set(
+      Object.values(templateStructure.shared.dataViewColumns).map(
+        ({ data }) => `${data.table_name}__${data.column_name}`
+      )
+    ),
+    category: templateStructure.shared.category?.data.code,
+    files: new Set(Object.values(templateStructure.shared.files).map(({ data }) => data.unique_id)),
+  }
+
+  const newTemplateId = await installTemplate(templateStructure, preserveEntityDetails)
 
   return newTemplateId
 }
