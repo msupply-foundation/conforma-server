@@ -15,6 +15,7 @@ const FigTree = new FigTreeEvaluator({
   maxCacheSize: 100,
   maxCacheTime: 600,
   evaluateFullObject: true,
+  nullEqualsUndefined: true,
   // baseEndpoint:
   functions,
 
