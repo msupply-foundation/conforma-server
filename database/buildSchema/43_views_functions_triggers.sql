@@ -2402,3 +2402,24 @@ CREATE TRIGGER recalculate_file_checksum_update
     FOR EACH ROW
     WHEN (NEW.checksum = OLD.checksum OR NEW.checksum IS NULL)
     EXECUTE FUNCTION public.notify_server_to_update_checksum ();
+
+-- FILE LIST
+-- FUNCTION to return a list of files associated with an Application Note
+-- This will be exposed automatically by Postgraphile as the node "fileList" on
+-- `applicationNode`.
+-- The reason for this is that the "file" table is locked down with Row-level
+-- security, so this provides a way for the correct files for a note to be
+-- retrieved without adding additional complex policies.
+CREATE OR REPLACE FUNCTION public.application_note_file_list(note_row application_note)
+ RETURNS SETOF file
+ SECURITY DEFINER
+ LANGUAGE plpgsql
+ STABLE
+AS $function$
+BEGIN
+  RETURN QUERY
+  SELECT f.*
+  FROM file f
+  WHERE f.application_note_id = note_row.id;
+END;
+$function$
