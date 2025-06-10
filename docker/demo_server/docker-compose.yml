@@ -16,7 +16,7 @@ services:
       JWT_SECRET: '${JWT_SECRET}'
       # passwords override will be ignored if <30 chars
       # REMOVE THIS LINE ON LIVE SERVERS!
-      USER_PASSWORD_OVERRIDE: '${USER_PASSWORD_OVERRIDE:-"ignore"}'
+      # USER_PASSWORD_OVERRIDE: '${USER_PASSWORD_OVERRIDE:-"ignore"}'
     restart: always
     volumes:
       - postgres:/var/lib/postgresql/16/main/
