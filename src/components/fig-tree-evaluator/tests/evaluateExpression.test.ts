@@ -35,7 +35,7 @@ export const figTree = new FigTreeEvaluator({
   httpClient: FetchClient(fetch),
   graphQLConnection: { endpoint: graphQLendpoint },
   sqlConnection: SQLNodePostgres(databaseConnection),
-  // supportDeprecatedValueNodes: true,
+  supportDeprecatedValueNodes: true,
   nullEqualsUndefined: true,
   functions: testData.functions,
   // evaluateFullObject: true,
@@ -1043,7 +1043,7 @@ test('Testing basic buildObject', () => {
   const testOut = {
     someKey: 'someValue',
   }
-  return figTree.evaluate(testIn).then((result: any) => {
+  return figTree.evaluate(testIn, { supportDeprecatedValueNodes: false }).then((result: any) => {
     expect(result).toEqual(testOut)
   })
 })
@@ -1068,7 +1068,7 @@ test('Testing buildObject for handling erroneous input', () => {
   const testOut = {
     someKey: 'someValue',
   }
-  return figTree.evaluate(testIn).then((result: any) => {
+  return figTree.evaluate(testIn, { supportDeprecatedValueNodes: false }).then((result: any) => {
     expect(result).toEqual(testOut)
   })
 })
@@ -1101,6 +1101,7 @@ test('Testing buildObject with evaluated key and value', () => {
 
   const params = {
     objects: { key: 'keyFromObjects', value: 'valueFromObjects' },
+    supportDeprecatedValueNodes: false,
   }
 
   return figTree.evaluate(testIn, params).then((result: any) => {
@@ -1144,6 +1145,7 @@ test('Testing buildObject with evaluations and nesting', () => {
 
   const params = {
     objects: { key: 'keyFromObjects', value: 'valueFromObjects' },
+    supportDeprecatedValueNodes: false,
   }
 
   return figTree.evaluate(testIn, params).then((result: any) => {
