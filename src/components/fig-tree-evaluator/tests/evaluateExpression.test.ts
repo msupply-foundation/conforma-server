@@ -44,11 +44,9 @@ export const figTree = new FigTreeEvaluator({
 // Basic (single level literals)
 
 test('Testing basic string literal', () => {
-  return figTree
-    .evaluate(testData.basicStringLiteral, { supportDeprecatedValueNodes: true })
-    .then((result: any) => {
-      expect(result).toBe('First Name')
-    })
+  return figTree.evaluate(testData.basicStringLiteral).then((result: any) => {
+    expect(result).toBe('First Name')
+  })
 })
 
 test('Testing basic string literal - no type', () => {

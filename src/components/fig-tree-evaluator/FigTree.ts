@@ -21,7 +21,7 @@ const FigTree = new FigTreeEvaluator({
 
   // Undocumented property to support certain V1 expressions. Remove this once
   // we're sure all evaluator queries have been updated.
-  supportDeprecatedValueNodes: true,
+  // supportDeprecatedValueNodes: true,
 })
 
 getAdminJWT().then((result) =>
