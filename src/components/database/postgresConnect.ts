@@ -195,6 +195,26 @@ class PostgresDB {
     }
   }
 
+  // Generic method to return ALL full records for a particular table
+  // CAUTION: Only use on tables with a small number of records!
+  public getAllRecords = async <T>(tableName: string): Promise<T[]> => {
+    try {
+      const text = `
+            SELECT * FROM ${tableName}
+          `
+      const result = await this.query({ text })
+      if (result.rowCount > 500) {
+        console.log(
+          `WARNING: getAllRecords called on table ${tableName} with more than 500 records, this may cause performance issues.`
+        )
+      }
+      return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
   public isJsonColumn = (tableName: string, columnName: string) => {
     if (!(tableName in this.tableJsonColumns)) return false
     return this.tableJsonColumns[tableName].has(columnName)

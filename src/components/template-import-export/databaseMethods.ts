@@ -1,6 +1,6 @@
 import DBConnect from '../database/databaseConnect'
 import { errorMessage, isObject } from '../../components/utilityFunctions'
-import { CombinedLinkedEntities, PgDataTable, PgDataView } from './types'
+import { CombinedLinkedEntities, PgDataTable, PgDataView, PgEvaluatorFragment } from './types'
 import { ApiError } from '../../ApiError'
 
 const databaseMethods = {
@@ -37,6 +37,9 @@ const databaseMethods = {
   },
   getRecordsByField: async <T>(tableName: string, field: string, value: unknown): Promise<T[]> => {
     return await DBConnect.getRecordsByField(tableName, field, value)
+  },
+  getAllRecords: async <T>(tableName: string): Promise<T[]> => {
+    return await DBConnect.getAllRecords(tableName)
   },
   updateChecksum: async (tableName: string, id: number, checksum: string) => {
     try {
@@ -140,20 +143,6 @@ const databaseMethods = {
       throw err
     }
   },
-  getDataViewColumns: async (tableName: string) => {
-    const text = `
-      SELECT *
-      FROM data_view_column_definition
-      WHERE table_name = $1
-    `
-    try {
-      const result = await DBConnect.query({ text, values: [tableName] })
-      return result.rows
-    } catch (err) {
-      console.log(errorMessage(err))
-      throw err
-    }
-  },
   commitTemplate: async (
     templateId: number,
     versionId: string,
@@ -248,20 +237,6 @@ const databaseMethods = {
       throw err
     }
   },
-  getAllDataViews: async (): Promise<PgDataView[]> => {
-    const text = `
-      SELECT *
-      FROM data_view
-      ORDER BY table_name;
-    `
-    try {
-      const result = await DBConnect.query({ text })
-      return result.rows
-    } catch (err) {
-      console.log(errorMessage(err))
-      throw err
-    }
-  },
   // Data views that can be accessed with the specified permissions. Used to
   // determine if an applicant would be able to see a particular data view based
   // on the template permissions
@@ -288,6 +263,20 @@ const databaseMethods = {
     `
     try {
       const result = await DBConnect.query({ text, values: [tables] })
+      return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
+  getAllFragments: async (): Promise<PgEvaluatorFragment[]> => {
+    const text = `
+      SELECT *
+      FROM evaluator_fragment
+      ORDER BY name;
+    `
+    try {
+      const result = await DBConnect.query({ text })
       return result.rows
     } catch (err) {
       console.log(errorMessage(err))

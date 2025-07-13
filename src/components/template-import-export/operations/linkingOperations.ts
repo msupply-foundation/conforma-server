@@ -6,7 +6,7 @@ import path from 'path'
 import db from '../databaseMethods'
 import { filterObject } from '../../utilityFunctions'
 import { DataView } from '../../../generated/graphql'
-import { PgFile } from '../types'
+import { PgDataView, PgFile } from '../types'
 
 const returnColumns = [
   'id',
@@ -30,7 +30,7 @@ type PgDataViewField = (typeof returnColumns)[number]
  */
 
 export const getDataViewDetails = async (templateId: number) => {
-  const allDataViews = await db.getAllDataViews()
+  const allDataViews = await db.getAllRecords<PgDataView>('data_view')
 
   const permissions = await db.getApplyPermissionsForTemplate(templateId)
   const applicantAccessibleDataViews = await db.getAllAccessibleDataViews(permissions)
@@ -67,6 +67,43 @@ export const getSuggestedDataViews = async (templateId: number) =>
   (await getDataViewDetails(templateId))
     .filter((dv) => dv.inTemplateElements || dv.inOutputTables)
     .map(({ data }) => data)
+
+/**
+ * Same as getDataViewDetails, but for FigTree Evaluator fragments
+ */
+// export const getFragmentDetails = async (templateId: number) => {
+//   const allFragments = await db.getAllFragments()
+
+//   const permissions = await db.getApplyPermissionsForTemplate(templateId)
+//   const applicantAccessibleFragments = await db.getAllAccessibleFragments(permissions)
+//   const accessibleFragmentNames = applicantAccessibleFragments.map(({ identifier }) => identifier)
+
+//   const distinctCodes = new Set(applicantAccessibleFragments.map((dv) => dv.code))
+//   const dataViewCodesUsed: string[] = []
+//   for (const code of distinctCodes) {
+//     const elementCount = await db.getTemplateElementCountUsingDataView(templateId, code)
+//     if (elementCount > 0) dataViewCodesUsed.push(code)
+//   }
+
+//   const dataTablesReferencedInModifyRecord = await db.getDataTablesFromModifyRecord(templateId)
+//   const dataViewsInOutcomeTables = await db.getDataViewsUsingTables(
+//     dataTablesReferencedInModifyRecord
+//   )
+
+//   const fullData = allFragments.map((data) => {
+//     const applicantAccessible = accessibleFragmentNames.includes(data.name)
+//     const { table_name, ...rest } = filterObject(data, (key) =>
+//       returnColumns.includes(key as PgDataViewField)
+//     )
+//     return {
+//       data: { tableName: table_name, ...rest } as DataView,
+//       applicantAccessible,
+//       inTemplateElements: applicantAccessible && dataViewCodesUsed.includes(data.code),
+//       inOutputTables: dataViewsInOutcomeTables.some((dv) => dv.id === data.id),
+//     }
+//   })
+//   return fullData
+// }
 
 interface LinkedFile {
   unique_id: string

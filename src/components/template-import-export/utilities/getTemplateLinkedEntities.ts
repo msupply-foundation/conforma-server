@@ -155,7 +155,11 @@ export const buildLinkedEntityObject = <T extends LinkedEntityInput>(
 export const getDataViewColumnsFromDataViews = async (dataViews: Omit<PgDataView, 'id'>[]) => {
   const dataViewColumns = new Set<PgDataViewColumn>()
   for (const dataView of dataViews) {
-    const allColumns = await db.getDataViewColumns(dataView.table_name)
+    const allColumns = await db.getRecordsByField<PgDataViewColumn>(
+      'data_view_column_definition',
+      'table_name',
+      dataView.table_name
+    )
     const allColumnNames = allColumns.map((col) => col.column_name)
 
     ;['TABLE', 'DETAIL', 'FILTER', 'RAW'].forEach((type) => {
