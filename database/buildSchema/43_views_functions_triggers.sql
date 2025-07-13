@@ -2402,6 +2402,19 @@ CREATE TRIGGER recalculate_file_checksum_update
     FOR EACH ROW
     WHEN (NEW.checksum = OLD.checksum OR NEW.checksum IS NULL)
     EXECUTE FUNCTION public.notify_server_to_update_checksum ();
+        
+DROP TRIGGER IF EXISTS recalculate_evaluator_fragment_checksum_insert ON public.evaluator_fragment;
+CREATE TRIGGER recalculate_evaluator_fragment_checksum_insert
+    AFTER INSERT ON public.evaluator_fragment
+    FOR EACH ROW
+    EXECUTE FUNCTION public.notify_server_to_update_checksum ();
+
+DROP TRIGGER IF EXISTS recalculate_evaluator_fragment_checksum_update ON public.evaluator_fragment;
+CREATE TRIGGER recalculate_evaluator_fragment_checksum_update
+    AFTER UPDATE ON public.evaluator_fragment
+    FOR EACH ROW
+    WHEN (NEW.checksum = OLD.checksum OR NEW.checksum IS NULL)
+    EXECUTE FUNCTION public.notify_server_to_update_checksum ();
 
 -- FILE LIST
 -- FUNCTION to return a list of files associated with an Application Note

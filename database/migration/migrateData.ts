@@ -1373,8 +1373,18 @@ const migrateData = async () => {
         metadata jsonb,
         front_end boolean NOT NULL DEFAULT TRUE,
         back_end boolean NOT NULL DEFAULT TRUE,
-        permission_names varchar[]
-      )`)
+        permission_names varchar[],
+        checksum varchar,
+        last_modified timestamptz
+      );`)
+
+    await DB.changeSchema(`
+     CREATE TABLE IF NOT EXISTS public.template_evaluator_fragment_join (
+        id serial PRIMARY KEY,
+        template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL,
+        evaluator_fragment_id integer REFERENCES public.evaluator_fragment (id) ON DELETE CASCADE NOT NULL,
+        UNIQUE (template_id, evaluator_fragment_id)
+      );`)
   }
 
   // Other version migrations continue here...
