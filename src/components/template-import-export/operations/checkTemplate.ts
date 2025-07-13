@@ -44,9 +44,9 @@ export const checkTemplate = async (templateId: number) => {
     .filter(({ identifier }) => !(identifier in linkedEntities.dataViews))
     .map(({ id, code, identifier, title }) => ({ id, code, identifier, title }))
 
-  const unconnectedFragments = suggestedFragments
-    .filter(({ name }) => !(name in linkedEntities.fragments))
-    .map(({ id, code, name, title }) => ({ id, code, name, title }))
+  const unconnectedFragments = suggestedFragments.filter(
+    ({ name }) => !(name in linkedEntities.fragments)
+  )
 
   if (!committed) {
     const ready = unconnectedDataViews.length === 0 && unconnectedFragments.length === 0
