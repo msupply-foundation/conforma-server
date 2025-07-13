@@ -14,6 +14,7 @@ import {
   importTemplateInstall,
   importTemplateUpload,
   PreserveExistingEntities,
+  getFragmentDetails,
 } from './operations'
 import path from 'path'
 import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../constants'
@@ -36,6 +37,7 @@ export const templateRoutes: FastifyPluginCallback<{ prefix: string }> = (server
   server.get('/import/get-full-entity-diff/:uid', routeImportGetDiff)
   server.post('/import/install/:uid', routeImportTemplateInstall)
   server.get('/get-data-view-details/:id', routeGetDataViewDetails)
+  server.get('/get-fragment-details/:id', routeGetFragmentDetails)
   server.get('/get-linked-files/:id', routeGetLinkedFiles)
   done()
 }
@@ -249,6 +251,24 @@ const routeGetDataViewDetails = async (
     returnApiError(err, reply)
   }
 }
+
+const routeGetFragmentDetails = async (
+  request: FastifyRequest<{ Params: { id: string } }>,
+  reply: FastifyReply
+) => {
+  const templateId = Number(request.params.id)
+  if (!templateId || isNaN(templateId)) {
+    returnApiError('Invalid template id', reply, 400)
+  }
+
+  try {
+    const fragments = await getFragmentDetails(templateId)
+    return reply.send(fragments)
+  } catch (err) {
+    returnApiError(err, reply)
+  }
+}
+
 const routeGetLinkedFiles = async (
   request: FastifyRequest<{ Params: { id: string } }>,
   reply: FastifyReply

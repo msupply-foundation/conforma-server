@@ -269,20 +269,6 @@ const databaseMethods = {
       throw err
     }
   },
-  getAllFragments: async (): Promise<PgEvaluatorFragment[]> => {
-    const text = `
-      SELECT *
-      FROM evaluator_fragment
-      ORDER BY name;
-    `
-    try {
-      const result = await DBConnect.query({ text })
-      return result.rows
-    } catch (err) {
-      console.log(errorMessage(err))
-      throw err
-    }
-  },
   getApplyPermissionsForTemplate: async (templateId: number): Promise<string[]> => {
     const text = `
       SELECT DISTINCT "permissionName" FROM public.permissions_all
@@ -312,6 +298,35 @@ const databaseMethods = {
     `
     try {
       const result = await DBConnect.query({ text, values: [templateId] })
+      return result.rows[0].count
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
+  getFragmentCountForTemplate: async (
+    templateId: number,
+    fragment: string,
+    table: 'template_element' | 'template_action'
+  ) => {
+    const text = `
+      SELECT COUNT(*) FROM ${table}
+      ${
+        table === 'template_element'
+          ? `
+        WHERE section_id = (
+        SELECT id FROM template_section
+        WHERE template_id = $1
+      )`
+          : 'WHERE template_id = $1'
+      }
+      AND (
+          to_jsonb(${table}) @? format('$.**."$%s"', $2::TEXT)::jsonpath
+          OR to_jsonb(${table}) @? format('$.**?((@.fragment == "%s"))', $2::TEXT)::jsonpath
+      );
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [templateId, fragment] })
       return result.rows[0].count
     } catch (err) {
       console.log(errorMessage(err))

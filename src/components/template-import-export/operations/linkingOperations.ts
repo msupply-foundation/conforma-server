@@ -1,14 +1,15 @@
 /**
- * Provides linked data view and linked file data to the respective routes
+ * Provides linked data view, linked fragments, and linked file data to the
+ * respective routes
  */
 
 import path from 'path'
 import db from '../databaseMethods'
 import { filterObject } from '../../utilityFunctions'
 import { DataView } from '../../../generated/graphql'
-import { PgDataView, PgFile } from '../types'
+import { PgDataView, PgEvaluatorFragment, PgFile } from '../types'
 
-const returnColumns = [
+const dataViewReturnColumns = [
   'id',
   'table_name',
   'title',
@@ -18,7 +19,7 @@ const returnColumns = [
   'identifier',
 ] as const
 
-type PgDataViewField = (typeof returnColumns)[number]
+type PgDataViewField = (typeof dataViewReturnColumns)[number]
 
 /**
  * Provides a list of data views connected to a template. Contains metadata
@@ -51,7 +52,7 @@ export const getDataViewDetails = async (templateId: number) => {
   const fullData = allDataViews.map((data) => {
     const applicantAccessible = accessibleIdentifiers.includes(data.identifier)
     const { table_name, ...rest } = filterObject(data, (key) =>
-      returnColumns.includes(key as PgDataViewField)
+      dataViewReturnColumns.includes(key as PgDataViewField)
     )
     return {
       data: { tableName: table_name, ...rest } as DataView,
@@ -69,41 +70,67 @@ export const getSuggestedDataViews = async (templateId: number) =>
     .map(({ data }) => data)
 
 /**
- * Same as getDataViewDetails, but for FigTree Evaluator fragments
+ * Same as getDataViewDetails, but for FigTree Evaluator fragments. We only consider fragments found in Form Elements or Actions.
  */
-// export const getFragmentDetails = async (templateId: number) => {
-//   const allFragments = await db.getAllFragments()
 
-//   const permissions = await db.getApplyPermissionsForTemplate(templateId)
-//   const applicantAccessibleFragments = await db.getAllAccessibleFragments(permissions)
-//   const accessibleFragmentNames = applicantAccessibleFragments.map(({ identifier }) => identifier)
+const fragmentReturnColumns = [
+  'id',
+  'name',
+  // 'expression',
+  'metadata',
+  // 'front-end',
+  // 'back-end',
+  // 'permission_names',
+] as const
 
-//   const distinctCodes = new Set(applicantAccessibleFragments.map((dv) => dv.code))
-//   const dataViewCodesUsed: string[] = []
-//   for (const code of distinctCodes) {
-//     const elementCount = await db.getTemplateElementCountUsingDataView(templateId, code)
-//     if (elementCount > 0) dataViewCodesUsed.push(code)
-//   }
+type PgFragmentField = (typeof fragmentReturnColumns)[number]
 
-//   const dataTablesReferencedInModifyRecord = await db.getDataTablesFromModifyRecord(templateId)
-//   const dataViewsInOutcomeTables = await db.getDataViewsUsingTables(
-//     dataTablesReferencedInModifyRecord
-//   )
+export const getFragmentDetails = async (templateId: number) => {
+  const allFragments = await db.getAllRecords<PgEvaluatorFragment>('evaluator_fragment')
 
-//   const fullData = allFragments.map((data) => {
-//     const applicantAccessible = accessibleFragmentNames.includes(data.name)
-//     const { table_name, ...rest } = filterObject(data, (key) =>
-//       returnColumns.includes(key as PgDataViewField)
-//     )
-//     return {
-//       data: { tableName: table_name, ...rest } as DataView,
-//       applicantAccessible,
-//       inTemplateElements: applicantAccessible && dataViewCodesUsed.includes(data.code),
-//       inOutputTables: dataViewsInOutcomeTables.some((dv) => dv.id === data.id),
-//     }
-//   })
-//   return fullData
-// }
+  const permissions = await db.getApplyPermissionsForTemplate(templateId)
+  const applicantAccessibleFragments = allFragments.filter(
+    (fragment) =>
+      fragment.permission_names === null ||
+      fragment.permission_names.some((name) => permissions.some((perm) => perm === name))
+  )
+
+  const accessibleFragmentNames = applicantAccessibleFragments.map(({ name }) => name)
+
+  const fragmentsInFormElements: string[] = []
+  for (const fragment of accessibleFragmentNames) {
+    const elementCount = await db.getFragmentCountForTemplate(
+      templateId,
+      fragment,
+      'template_element'
+    )
+    if (elementCount > 0) fragmentsInFormElements.push(fragment)
+  }
+
+  const fragmentsInActions: string[] = []
+  for (const fragment of accessibleFragmentNames) {
+    const elementCount = await db.getFragmentCountForTemplate(
+      templateId,
+      fragment,
+      'template_action'
+    )
+    if (elementCount > 0) fragmentsInActions.push(fragment)
+  }
+
+  const fullData = allFragments.map((data) => {
+    const applicantAccessible = accessibleFragmentNames.includes(data.name)
+    const { table_name, ...rest } = filterObject(data, (key) =>
+      fragmentReturnColumns.includes(key as PgFragmentField)
+    )
+    return {
+      data: { tableName: table_name, ...rest } as DataView,
+      applicantAccessible,
+      inTemplateElements: applicantAccessible && fragmentsInFormElements.includes(data.name),
+      inActions: applicantAccessible && fragmentsInActions.includes(data.name),
+    }
+  })
+  return fullData
+}
 
 interface LinkedFile {
   unique_id: string
