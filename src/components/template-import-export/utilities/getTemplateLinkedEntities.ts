@@ -23,6 +23,7 @@ import {
   LinkedEntityInput,
   PgDataView,
   PgDataViewColumn,
+  PgEvaluatorFragment,
   PgFile,
   PgFilter,
   PgPermissionName,
@@ -104,6 +105,14 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
       })
     )
 
+  const linkedFragments = (
+    await db.getJoinedEntities<PgEvaluatorFragment>({
+      templateId,
+      table: 'evaluator_fragment',
+      joinTable: 'template_evaluator_fragment_join',
+    })
+  ).map(stripIds)
+
   const linkedEntities: CombinedLinkedEntities = {
     filters: buildLinkedEntityObject(linkedFilters, 'code'),
     permissions: buildLinkedEntityObject(linkedPermissions, 'name'),
@@ -114,6 +123,7 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
       : null,
     dataTables: buildLinkedEntityObject(linkedDataTables, 'table_name'),
     files: buildLinkedEntityObject(linkedFiles, 'unique_id'),
+    fragments: buildLinkedEntityObject(linkedFragments, 'name'),
   }
 
   return linkedEntities

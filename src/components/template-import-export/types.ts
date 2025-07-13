@@ -13,6 +13,7 @@ import {
   DataView as PgDataView,
   DataViewColumnDefinition as PgDataViewColumn,
   DataTable as PgDataTable,
+  EvaluatorFragment as PgEvaluatorFragment,
 } from '../../generated/postgres'
 
 export interface LinkedEntity<T = unknown> {
@@ -33,6 +34,7 @@ export interface CombinedLinkedEntities {
   category: LinkedEntity<TemplateCategory> | null
   dataTables: LinkedEntities<Omit<PgDataTable, 'id'>>
   files: LinkedEntities<TemplateFile>
+  fragments: LinkedEntities<Omit<PgEvaluatorFragment, 'id'>>
 }
 
 export type LinkedEntityInput = {
@@ -99,4 +101,5 @@ export {
   PgDataView,
   PgDataViewColumn,
   PgDataTable,
+  PgEvaluatorFragment,
 }

@@ -13,6 +13,7 @@ import {
   PgDataTable,
   PgDataView,
   PgDataViewColumn,
+  PgEvaluatorFragment,
   PgFile,
   PgFilter,
   PgPermissionName,
@@ -34,6 +35,7 @@ export type PreserveExistingEntities = {
   dataTables?: Set<string>
   category?: string
   files?: Set<string>
+  fragments?: Set<string>
 }
 
 export const entityDataMap = {
@@ -47,6 +49,7 @@ export const entityDataMap = {
   category: { table: 'template_category', keyField: 'code' },
   dataTables: { table: 'data_table', keyField: 'table_name' },
   files: { table: 'file', keyField: 'unique_id' },
+  fragments: { table: 'evaluator_fragment', keyField: 'name' },
 }
 
 export const importTemplateUpload = async (folderName: string) => {
@@ -95,8 +98,16 @@ export const importTemplateUpload = async (folderName: string) => {
       400
     )
 
-  const { filters, permissions, dataViews, dataViewColumns, category, dataTables, files } =
-    template.shared
+  const {
+    filters,
+    permissions,
+    dataViews,
+    dataViewColumns,
+    category,
+    dataTables,
+    files,
+    fragments,
+  } = template.shared
 
   const changedFilters = await getModifiedEntities(filters, 'filter', 'code')
   const changedPermissions = await getModifiedEntities(permissions, 'permission_name', 'name')
@@ -107,6 +118,7 @@ export const importTemplateUpload = async (folderName: string) => {
     ['table_name', 'column_name']
   )
   const changedFiles = await getModifiedEntities(files, 'file', 'unique_id')
+  const changedFragments = await getModifiedEntities(fragments, 'evaluator_fragment', 'name')
 
   const categoryCode = category ? (category.data as PgTemplateCategory).code : ''
   const changedCategory = category
@@ -127,6 +139,7 @@ export const importTemplateUpload = async (folderName: string) => {
     category: changedCategory,
     dataTables: changedDataTables,
     files: changedFiles,
+    fragments: changedFragments,
   }
 }
 
@@ -287,6 +300,7 @@ export const installTemplate = async (
         dataViewColumns = {},
         dataTables = {},
         files = {},
+        fragments = {},
       },
       ...templateRecord
     } = template
@@ -299,6 +313,7 @@ export const installTemplate = async (
       dataTables: preserveDataTables,
       category: preserveCategory,
       files: preserveFiles,
+      fragments: preserveFragments,
     } = installDetails
 
     console.log(`Importing template, code: ${template.code} (version ${template.version_id})`)
@@ -450,6 +465,24 @@ export const installTemplate = async (
               id: existing?.id,
             })
       } else await db.insertRecord('data_view_column_definition', data)
+    }
+
+    for (const name of Object.keys(fragments)) {
+      const { checksum, data } = fragments[name]
+      let evaluator_fragment_id: number | null = null
+
+      const existing = await db.getRecord<PgEvaluatorFragment>('evaluator_fragment', name, 'name')
+      if (existing) {
+        evaluator_fragment_id = existing?.id
+        if (!preserveFragments?.has(name))
+          if (existing.checksum !== checksum)
+            await db.updateRecord('evaluator_fragment', { ...data, id: evaluator_fragment_id })
+      } else {
+        evaluator_fragment_id = await db.insertRecord('evaluator_fragment', data)
+      }
+
+      const fragmentJoinRecord = { evaluator_fragment_id, template_id: newTemplateId }
+      await db.insertRecord('template_evaluator_fragment_join', fragmentJoinRecord)
     }
 
     for (const tableName of Object.keys(dataTables)) {
