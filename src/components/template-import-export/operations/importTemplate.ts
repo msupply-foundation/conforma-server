@@ -99,14 +99,14 @@ export const importTemplateUpload = async (folderName: string) => {
     )
 
   const {
-    filters,
-    permissions,
-    dataViews,
-    dataViewColumns,
-    category,
-    dataTables,
-    files,
-    fragments,
+    filters = {},
+    permissions = {},
+    dataViews = {},
+    dataViewColumns = {},
+    category = null,
+    dataTables = {},
+    files = {},
+    fragments = {},
   } = template.shared
 
   const changedFilters = await getModifiedEntities(filters, 'filter', 'code')
