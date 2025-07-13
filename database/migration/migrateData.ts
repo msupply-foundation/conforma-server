@@ -1356,8 +1356,12 @@ const migrateData = async () => {
     `)
   }
 
-  if (databaseVersionLessThan('1.7.0')) {
-    console.log('Migrating to v1.7.0...')
+  /**
+   * V 2.0 -- introducing FigTree Evaluator, the successor to the
+   * "expressionEvaluator" module
+   */
+  if (databaseVersionLessThan('2.0.0')) {
+    console.log('Migrating to v2.0.0...')
 
     console.log(' - Adding Evaluator Fragments table')
 
