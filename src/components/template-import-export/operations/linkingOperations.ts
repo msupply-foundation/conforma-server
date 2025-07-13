@@ -6,7 +6,7 @@
 import path from 'path'
 import db from '../databaseMethods'
 import { filterObject } from '../../utilityFunctions'
-import { DataView } from '../../../generated/graphql'
+import { DataView, EvaluatorFragment } from '../../../generated/graphql'
 import { PgDataView, PgEvaluatorFragment, PgFile } from '../types'
 
 const dataViewReturnColumns = [
@@ -117,20 +117,23 @@ export const getFragmentDetails = async (templateId: number) => {
     if (elementCount > 0) fragmentsInActions.push(fragment)
   }
 
-  const fullData = allFragments.map((data) => {
-    const applicantAccessible = accessibleFragmentNames.includes(data.name)
-    const { table_name, ...rest } = filterObject(data, (key) =>
-      fragmentReturnColumns.includes(key as PgFragmentField)
-    )
+  const fullData = allFragments.map((frag) => {
+    const applicantAccessible = accessibleFragmentNames.includes(frag.name)
+    const data = filterObject(frag, (key) => fragmentReturnColumns.includes(key as PgFragmentField))
     return {
-      data: { tableName: table_name, ...rest } as DataView,
+      data,
       applicantAccessible,
-      inTemplateElements: applicantAccessible && fragmentsInFormElements.includes(data.name),
-      inActions: applicantAccessible && fragmentsInActions.includes(data.name),
+      inTemplateElements: applicantAccessible && fragmentsInFormElements.includes(frag.name),
+      inActions: applicantAccessible && fragmentsInActions.includes(frag.name),
     }
   })
   return fullData
 }
+
+export const getSuggestedFragments = async (templateId: number) =>
+  (await getFragmentDetails(templateId))
+    .filter((dv) => dv.inTemplateElements || dv.inActions)
+    .map(({ data }) => data)
 
 interface LinkedFile {
   unique_id: string
