@@ -237,24 +237,6 @@ const databaseMethods = {
       throw err
     }
   },
-  // Data views that can be accessed with the specified permissions. Used to
-  // determine if an applicant would be able to see a particular data view based
-  // on the template permissions
-  getAllAccessibleDataViews: async (permissions: string[]): Promise<PgDataView[]> => {
-    const text = `
-      SELECT *
-      FROM data_view
-      WHERE $1 && permission_names
-      OR array_length(permission_names, 1) IS NULL;
-    `
-    try {
-      const result = await DBConnect.query({ text, values: [permissions] })
-      return result.rows
-    } catch (err) {
-      console.log(errorMessage(err))
-      throw err
-    }
-  },
   getDataViewsUsingTables: async (tables: string[]): Promise<PgDataView[]> => {
     const text = `
         SELECT *

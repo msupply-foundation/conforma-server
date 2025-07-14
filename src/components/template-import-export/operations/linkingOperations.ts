@@ -6,7 +6,7 @@
 import path from 'path'
 import db from '../databaseMethods'
 import { filterObject } from '../../utilityFunctions'
-import { DataView, EvaluatorFragment } from '../../../generated/graphql'
+import { DataView } from '../../../generated/graphql'
 import { PgDataView, PgEvaluatorFragment, PgFile } from '../types'
 
 const dataViewReturnColumns = [
@@ -34,7 +34,12 @@ export const getDataViewDetails = async (templateId: number) => {
   const allDataViews = await db.getAllRecords<PgDataView>('data_view')
 
   const permissions = await db.getApplyPermissionsForTemplate(templateId)
-  const applicantAccessibleDataViews = await db.getAllAccessibleDataViews(permissions)
+  const applicantAccessibleDataViews = allDataViews.filter(
+    (dv) =>
+      dv.permission_names === null || dv.permission_names.some((name) => permissions.includes(name))
+  )
+
+  // await db.getAllAccessibleDataViews(permissions)
   const accessibleIdentifiers = applicantAccessibleDataViews.map(({ identifier }) => identifier)
 
   const distinctCodes = new Set(applicantAccessibleDataViews.map((dv) => dv.code))
@@ -92,7 +97,7 @@ export const getFragmentDetails = async (templateId: number) => {
   const applicantAccessibleFragments = allFragments.filter(
     (fragment) =>
       fragment.permission_names === null ||
-      fragment.permission_names.some((name) => permissions.some((perm) => perm === name))
+      fragment.permission_names.some((name) => permissions.includes(name))
   )
 
   const accessibleFragmentNames = applicantAccessibleFragments.map(({ name }) => name)
