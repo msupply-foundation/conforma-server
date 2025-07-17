@@ -1150,8 +1150,23 @@ class PostgresDB {
   }
 
   public getTemplatePermissions = async (isSystemOrgPermission: boolean = false) => {
-    const text = `SELECT * FROM permissions_all
+    const text = `
+      SELECT
+        "permissionNameId",
+        "permissionName",
+        description, 
+        "policyName",
+        "isSystemOrgPermission",
+        "templateCode"
+      FROM permissions_all
       WHERE  "isSystemOrgPermission" = $1
+      GROUP BY 
+        "permissionNameId",
+        "permissionName",
+        description, 
+        "policyName",
+        "isSystemOrgPermission",
+        "templateCode"
       ORDER BY "permissionName"
       `
     try {
