@@ -45,7 +45,7 @@ export const getDataViewDetails = async (templateId: number) => {
   const dataViewCodesUsed: string[] = []
   for (const code of distinctCodes) {
     const elementCount = await db.getTemplateElementCountUsingDataView(templateId, code)
-    if (elementCount > 0) dataViewCodesUsed.push(code)
+    if (elementCount > 0 && code !== '') dataViewCodesUsed.push(code)
   }
 
   const dataTablesReferencedInModifyRecord = await db.getDataTablesFromModifyRecord(templateId)
