@@ -39,7 +39,6 @@ export const getDataViewDetails = async (templateId: number) => {
       dv.permission_names === null || dv.permission_names.some((name) => permissions.includes(name))
   )
 
-  // await db.getAllAccessibleDataViews(permissions)
   const accessibleIdentifiers = applicantAccessibleDataViews.map(({ identifier }) => identifier)
 
   const distinctCodes = new Set(applicantAccessibleDataViews.map((dv) => dv.code))
