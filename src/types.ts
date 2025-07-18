@@ -346,7 +346,7 @@ export interface WebAppPrefs {
   brandLogoOnDarkFileId?: string
   defaultListFilters?: string[]
   userRegistrationCode?: string
-  style?: { headerBgColor?: string }
+  style?: Record<string, unknown> // Must be valid CSS descriptors
   googleAnalyticsId?: string
   siteHost?: string
 }
