@@ -341,14 +341,22 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
 export interface WebAppPrefs {
   paginationPresets?: number[]
   paginationDefault?: number
-  defaultLanguageCode: string
+  defaultLanguageCode?: string
   brandLogoFileId?: string
   brandLogoOnDarkFileId?: string
   defaultListFilters?: string[]
-  userRegistrationCode?: string
-  style?: Record<string, unknown> // Must be valid CSS descriptors
+  showDocumentModal: boolean
   googleAnalyticsId?: string
   siteHost?: string
+  userRegistrationCode?: string
+  style?: Record<string, object> // Must be valid CSS definitions
+  helpLinks?: { text: string; link: string }[]
+  footerText?: string
+  footerLogoId?: string
+  publicUrlMap?: Record<
+    string,
+    string | { code: string; urlQuery: Record<string, string | number | boolean> }
+  >
 }
 
 export interface Preferences {
