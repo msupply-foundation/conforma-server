@@ -357,6 +357,7 @@ export interface WebAppPrefs {
     string,
     string | { code: string; urlQuery: Record<string, string | number | boolean> }
   >
+  appDataTestApplications?: string[]
 }
 
 export interface Preferences {
