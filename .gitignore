@@ -58,6 +58,7 @@ database/schema.json
 
 # Build folders
 build
+build-web-app
 lib
 
 # Docker related

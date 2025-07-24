@@ -69,12 +69,14 @@ RUN git clone -b ${WEB_APP_BRANCH} https://github.com/openmsupply/conforma-web-a
 # --- BUILD SERVER
 WORKDIR /usr/src/conforma-server
 RUN yarn install
-RUN yarn build
+# RUN yarn build
+COPY ./build ./build
 
 # --- BUILD WEB APP
 WORKDIR /usr/src/conforma-web-app
-RUN yarn install
-RUN yarn build
+COPY ./build-web-app ./dist
+# RUN yarn install
+# RUN yarn build
 
 # --- ADD NGINX CONFIG
 COPY nginx_config/conforma.conf /etc/nginx/conf.d/
