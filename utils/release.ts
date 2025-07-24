@@ -64,7 +64,7 @@ Valid types: ${releaseTypes.join(', ')}`)
 
   try {
     await exec(
-      `cd ${FRONT_END_PATH} && yarn version --new-version ${tag} && git push origin ${tag}`
+      `cd ${FRONT_END_PATH} && yarn version --new-version ${pkg.version} && git push origin ${tag}`
     )
   } catch {
     exitWithError('Problem creating front-end version')
