@@ -3,6 +3,7 @@ import readlineSync from 'readline-sync'
 import { writeFileSync } from 'fs'
 import { promisify } from 'util'
 import { exec as execCallback } from 'child_process'
+import pkg from '../package.json'
 
 const exec = promisify(execCallback)
 const FRONT_END_PATH = process.env.FRONT_END_PATH
@@ -16,7 +17,7 @@ const releaseTypes = [
   '--premajor',
   '--prepatch',
 ] as const
-type ReleaseType = typeof releaseTypes[number]
+type ReleaseType = (typeof releaseTypes)[number]
 
 const release = async () => {
   if (!FRONT_END_PATH) exitWithError('No front-end repo path in .env file')
@@ -24,7 +25,9 @@ const release = async () => {
   const releaseType: ReleaseType = (process.argv[2] || '--prerelease') as ReleaseType
 
   if (!releaseTypes.includes(releaseType))
-    exitWithError(`${releaseType} is not a valid release type`)
+    exitWithError(`❌ Invalid release type "${releaseType}".
+Usage: yarn release <version_type>
+Valid types: ${releaseTypes.join(', ')}`)
 
   const branch = await getGitBranch()
   if (!branch) exitWithError('Invalid git branch')
@@ -35,11 +38,19 @@ const release = async () => {
 
   if (!(await userRespondsYes())) process.exit(0)
 
-  const { currentVersion, newVersion, error } = await bumpVersion(releaseType)
-  if (error) exitWithError(error as string)
-  const tag = `v${newVersion}` // Generated automatically by yarn
-  console.log(`\nServer version bumped to: ${newVersion}\n`)
+  try {
+    console.log(`🚀 Bumping version with: yarn version ${releaseType}`)
+    await exec(`yarn version ${releaseType}`)
 
+    // Import updated package.json to get the new version
+    // const pkgPath = path.resolve(__dirname, '..', 'package.json')
+    // const pkg = require(pkgPath)
+    console.log(`\nServer version bumped to: v${pkg.version}\n`)
+  } catch (error) {
+    console.error(`Error bumping version: ${error}`)
+  }
+
+  const tag = `v${pkg.version}`
   console.log(`\nPushing tag ${tag} to Github...`)
   try {
     await exec(`git push origin ${tag}`)
@@ -53,14 +64,14 @@ const release = async () => {
 
   try {
     await exec(
-      `cd ${FRONT_END_PATH} && yarn version --new-version ${newVersion} && git push origin ${tag}`
+      `cd ${FRONT_END_PATH} && yarn version --new-version ${pkg.version} && git push origin ${tag}`
     )
   } catch {
     exitWithError('Problem creating front-end version')
   }
   console.log('Done!\n')
 
-  console.log(`Would you like to start a Docker build for version ${newVersion}?`)
+  console.log(`Would you like to start a Docker build for version ${pkg.version}?`)
 
   if (userRespondsYes()) {
     return tag
@@ -85,13 +96,4 @@ async function getGitBranch() {
 function userRespondsYes(prompt: string = '(Y/n)? ') {
   const answer = readlineSync.question(prompt)
   return answer.includes('Y') || answer.includes('y')
-}
-
-async function bumpVersion(releaseType: ReleaseType) {
-  const { stdout, stderr } = await exec(`yarn version ${releaseType}`)
-  const regex = /([0-9]{1,2}\.[0-9]{1,2}.[0-9]{1,2}(-[0-9]{1,2})?)/gm
-  const currentVersion = regex.exec(stdout)?.[1]
-  const newVersion = regex.exec(stdout)?.[1]
-  if (stderr) return { error: stderr }
-  return { currentVersion, newVersion }
 }
