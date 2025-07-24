@@ -5,15 +5,47 @@ IMAGE_NAME='conforma'
 ACCOUNT='msupplyfoundation'
 INITIAL_DATA_LOCALE=''
 PUSH=${2:-nopush} # Default won't push to Docker hub
+SKIP_BUILD=${3:-false} # Default will skip compilation into local "build" folders
+
+CURRENT_BRANCH=$(git branch --show-current)
 
 NODE_VERSION='18'
 POSTGRES_VERSION='16'
 
-# Generate a random ID so Images built on same day with same branch
-# have a unique name
-RANDOM_ID=$(openssl rand -hex 3)
-
 IMAGE_TAG="${BRANCH_NAME}_$(date +"%Y-%m-%d_%H-%M-%S")"
+
+if [ "$SKIP_BUILD" != false ]; then
+   source ../.env
+   echo "FRONT END: $FRONT_END_PATH"
+   if [ -z "$FRONT_END_PATH" ]; then
+      echo "FRONT_END_PATH is not set. Please set it in the .env file."
+      exit 1
+   fi
+
+   echo -e "\nBuilding back-end"
+   git stash push -u -m "Auto-stash before checkout" && git checkout ${BRANCH_NAME}
+   yarn build
+   git checkout ${CURRENT_BRANCH}
+
+   echo -e "\nBuilding front-end"
+   cd ${FRONT_END_PATH}
+   CURRENT_BRANCH=$(git branch --show-current)
+   git stash push -u -m "Auto-stash before checkout" && git checkout ${BRANCH_NAME}
+   yarn build
+   git checkout ${CURRENT_BRANCH}
+fi
+
+exit 0
+
+
+if [ $? -ne 0 ]; then
+   echo "Build failed. Please fix the errors and try again."
+   exit 1
+fi
+
+
+
+
 
 echo -e "\nBuilding image: ${IMAGE_TAG}\n"
 
