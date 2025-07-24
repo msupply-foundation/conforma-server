@@ -13,7 +13,7 @@ POSTGRES_VERSION='16'
 # have a unique name
 RANDOM_ID=$(openssl rand -hex 3)
 
-IMAGE_TAG="build-${BRANCH_NAME}_$(date +"%Y-%m-%d")_${RANDOM_ID}"
+IMAGE_TAG="${BRANCH_NAME}_$(date +"%Y-%m-%d_%H-%M-%S")"
 
 echo -e "\nBuilding image: ${IMAGE_TAG}\n"
 

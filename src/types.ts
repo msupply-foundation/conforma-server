@@ -394,6 +394,7 @@ interface ConfigBase {
   webHostUrl?: string
   productionHost?: string
   isLiveServer: boolean
+  latestSnapshot?: string
   emailMode: EmailOperationMode
   maintenanceMode: boolean
   Throttle: EventThrottle

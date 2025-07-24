@@ -149,7 +149,7 @@ const useSnapshot: SnapshotOperation = async ({ snapshotName }) => {
 
     await cleanupDataTables()
 
-    refreshConfig(config)
+    await refreshConfig(config)
 
     console.log('...Snapshot load complete!')
     console.log('Total time:', getTimeString(startTime))

@@ -8,6 +8,7 @@ import { readJsonSync } from 'fs-extra'
 import path from 'path'
 import { getAppEntryPointDir } from './components/utilityFunctions'
 import { merge } from 'lodash'
+import databaseConnect from './components/database/databaseConnect'
 
 const preferencesFolder = '../preferences'
 const preferencesFileName = 'preferences.json'
@@ -108,7 +109,7 @@ function loadPrefs() {
 }
 
 // Mutate the global config object to inject new preferences
-export const refreshConfig = (config: Config) => {
+export const refreshConfig = async (config: Config) => {
   console.log('\nUpdating system configuration...')
   const prefs = loadPrefs()
   const serverPrefs: ServerPreferences = prefs.server
@@ -124,6 +125,7 @@ export const refreshConfig = (config: Config) => {
 
   config.isLiveServer = getIsLiveServer(webHostUrl, webAppPrefs.siteHost)
   config.emailMode = getEmailOperationMode(serverPrefs.emailTestMode, serverPrefs.testingEmail)
+  config.latestSnapshot = await databaseConnect.getSystemInfo('snapshot')
 
   // Update locale and timezone if changed
   const newLocale = serverPrefs.locale ?? Intl.DateTimeFormat().resolvedOptions().locale

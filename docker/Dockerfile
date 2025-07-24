@@ -61,22 +61,21 @@ RUN apt-get install yarn -y
 
 # --- ADD REPOS
 ARG SERVER_BRANCH=main
-ARG WEB_APP_BRANCH=main
 WORKDIR /usr/src/
 RUN git clone -b ${SERVER_BRANCH} https://github.com/openmsupply/conforma-server.git
-RUN git clone -b ${WEB_APP_BRANCH} https://github.com/openmsupply/conforma-web-app.git
 
 # --- BUILD SERVER
 WORKDIR /usr/src/conforma-server
+# Server needs dependencies as "build" folder only contains compiled JS files
 RUN yarn install
-# RUN yarn build
+# Assumes server has been built locally and copied to the correct location
 COPY ./build ./build
 
 # --- BUILD WEB APP
 WORKDIR /usr/src/conforma-web-app
-COPY ./build-web-app ./dist
-# RUN yarn install
-# RUN yarn build
+# Assumes web app has been built locally and copied to the correct location
+# directory
+COPY ./build-web-app ./
 
 # --- ADD NGINX CONFIG
 COPY nginx_config/conforma.conf /etc/nginx/conf.d/
