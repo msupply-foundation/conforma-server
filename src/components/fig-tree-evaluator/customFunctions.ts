@@ -1,6 +1,6 @@
 // This file should be identical to the front-end "customFunctions.ts". It
-// allows us to preview the "objectFunctions" operator in the Template Builder
-// Actions config
+// allows us to preview the "customOperators" in the Template Builder Actions
+// config, as well as use them in application expressions.
 
 import { DateTime, Duration } from 'luxon'
 
@@ -30,7 +30,13 @@ const dateFormats = {
   hugeDateTime: DateTime.DATETIME_HUGE,
 }
 
-export const functions: Record<string, any> = {
+interface FunctionDefinition {
+  function: (...args: any[]) => any
+  description: string
+  argsDefault?: any[]
+}
+
+export const functions: Record<string, FunctionDefinition> = {
   filterArray: {
     function: (valuesArray: unknown[], options: FilterOptions) => {
       const { key, rule = 'exclude', values } = options
@@ -156,6 +162,16 @@ export const functions: Record<string, any> = {
     function: (text: string) => text.toLowerCase(),
     description: 'Convert string to lowercase',
     argsDefault: ['STOP SHOUTING!!!'], // ==> "stop shouting"
+  },
+  objectEntries: {
+    function: (obj: Record<string, any>) => {
+      return {
+        entries: Object.entries(obj),
+        flat: Object.entries(obj).flat(),
+      }
+    },
+    description: 'Convert an object to an array of key-value pairs',
+    argsDefault: [{ a: 1, b: 2, c: 3 }], // => [['a', 1], ['b', 2], ['c', 3]]
   },
 
   // The following can now be performed by native operators. Please remove once
