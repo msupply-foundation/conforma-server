@@ -18,6 +18,7 @@ const modifyMultipleRecords: ActionPluginType = async ({
     data,
     records,
     keyMap,
+    delete: deleteRecord = false,
     ...otherCommonFields
   } = parameters
 
@@ -33,7 +34,15 @@ const modifyMultipleRecords: ActionPluginType = async ({
     newRecord.shouldCreateJoinTable = record.shouldCreateJoinTable ?? shouldCreateJoinTable ?? true
     newRecord.data = { ...data, ...record.data }
 
-    return { ...otherCommonFields, ...newRecord }
+    // If `delete` is set, we assume we want to delete all records in the
+    // `records` array, so we set the record's matchValue to its own matchField
+    // (or id by default) value
+    if (deleteRecord && newRecord.matchValue === undefined) {
+      const matchFieldName = newRecord.matchField || 'id'
+      newRecord.matchValue = newRecord[matchFieldName]
+    }
+
+    return { ...otherCommonFields, ...newRecord, delete: deleteRecord }
   })
 
   let status = ActionQueueStatus.Success
