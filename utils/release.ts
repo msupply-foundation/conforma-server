@@ -3,7 +3,6 @@ import readlineSync from 'readline-sync'
 import { writeFileSync } from 'fs'
 import { promisify } from 'util'
 import { exec as execCallback } from 'child_process'
-import pkg from '../package.json'
 
 const exec = promisify(execCallback)
 const FRONT_END_PATH = process.env.FRONT_END_PATH
@@ -43,13 +42,13 @@ Valid types: ${releaseTypes.join(', ')}`)
     await exec(`yarn version ${releaseType}`)
 
     // Import updated package.json to get the new version
-    // const pkgPath = path.resolve(__dirname, '..', 'package.json')
-    // const pkg = require(pkgPath)
+    const pkg = require('../package.json')
     console.log(`\nServer version bumped to: v${pkg.version}\n`)
   } catch (error) {
     console.error(`Error bumping version: ${error}`)
   }
 
+  const pkg = require('../package.json')
   const tag = `v${pkg.version}`
   console.log(`\nPushing tag ${tag} to Github...`)
   try {
