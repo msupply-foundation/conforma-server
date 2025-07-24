@@ -12,8 +12,8 @@ const FigTree = new FigTreeEvaluator({
   httpClient: FetchClient(fetch),
   sqlConnection: SQLNodePostgres(databaseConnection),
   graphQLConnection: { endpoint: config.graphQLendpoint },
-  maxCacheSize: 100,
-  maxCacheTime: 600,
+  maxCacheSize: 400,
+  maxCacheTime: 60 * 30, // 30 minutes
   evaluateFullObject: true,
   nullEqualsUndefined: true,
   // baseEndpoint:
