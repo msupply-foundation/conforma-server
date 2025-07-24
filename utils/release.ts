@@ -60,10 +60,11 @@ Valid types: ${releaseTypes.join(', ')}`)
   console.log('Done!\n')
 
   console.log('\nSwitching to front-end repo and doing the same...')
+  console.log(`Tagging front-end with: ${tag}\n`)
 
   try {
     await exec(
-      `cd ${FRONT_END_PATH} && yarn version --new-version ${pkg.version} && git push origin ${tag}`
+      `cd ${FRONT_END_PATH} && yarn version --new-version ${tag} && git push origin ${tag}`
     )
   } catch {
     exitWithError('Problem creating front-end version')
