@@ -16,7 +16,6 @@ IMAGE_TAG="${BRANCH_NAME}_$(date +"%Y-%m-%d_%H-%M-%S")"
 
 if [ "$SKIP_BUILD" != false ]; then
    source ../.env
-   echo "FRONT END: $FRONT_END_PATH"
    if [ -z "$FRONT_END_PATH" ]; then
       echo "FRONT_END_PATH is not set. Please set it in the .env file."
       exit 1
@@ -33,10 +32,13 @@ if [ "$SKIP_BUILD" != false ]; then
    git stash push -u -m "Auto-stash before checkout" && git checkout ${BRANCH_NAME}
    yarn build
    git checkout ${CURRENT_BRANCH}
+
+   echo -e "\nCopying builds to docker context..."
+   cp -r $FRONT_END_PATH/dist/* ./build-web-app
+   cp -r ./build/* ./build
 fi
 
 exit 0
-
 
 if [ $? -ne 0 ]; then
    echo "Build failed. Please fix the errors and try again."
