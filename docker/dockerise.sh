@@ -14,7 +14,7 @@ POSTGRES_VERSION='16'
 
 IMAGE_TAG="${BRANCH_NAME}_$(date +"%Y-%m-%d_%H-%M-%S")"
 
-if [ "$SKIP_BUILD" != false ]; then
+if [ "$SKIP_BUILD" = false ]; then
    source ../.env
    if [ -z "$FRONT_END_PATH" ]; then
       echo "FRONT_END_PATH is not set. Please set it in the .env file."
