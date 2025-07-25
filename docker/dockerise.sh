@@ -37,6 +37,9 @@ if [ "$SKIP_BUILD" = false ]; then
    cd ${CURRENT_DIR}
 fi
 
+rm -rf ./build-web-app
+rm -rf ./build
+
 echo -e "\nCopying builds to docker context..."
 mkdir -p ./build-web-app
 mkdir -p ./build
