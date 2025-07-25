@@ -119,6 +119,15 @@ export async function processTrigger(payload: TriggerPayload): Promise<ActionRes
         actionFailed = action.action_code
       }
     } catch (err) {
+      console.error('>> Error executing action:', action.action_code)
+      await DBConnect.executedActionStatusUpdate({
+        status: ActionQueueStatus.Fail,
+        error_log: "Couldn't execute Action: " + errorMessage(err),
+        parameters_evaluated: null,
+        output: null,
+        id: action.id,
+      })
+
       actionOutputs.push({
         action: action.action_code,
         status: ActionQueueStatus.Fail,

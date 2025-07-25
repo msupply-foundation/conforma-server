@@ -52,10 +52,6 @@ class GraphQLdb {
             fullName
             username
             email
-            address
-            country
-            dateOfBirth
-            phone
           }
         }
       }`,
