@@ -61,6 +61,7 @@ import { templateRoutes } from './components/template-import-export'
 import { convertHandler, pgMiddleware } from './postgraphile'
 import { routeGetFragments } from './components/fig-tree-evaluator/routes'
 import { loadStartupSnapshot } from './components/snapshots/loadStartupSnapshot'
+import databaseConnect from './components/database/databaseConnect'
 
 require('dotenv').config()
 
@@ -89,6 +90,8 @@ const startServer = async () => {
   // Add schedulers to global "config" object so we can update them. There
   // should only be a single global instance of Schedulers -- this one!
   config.scheduledJobs = new Schedulers()
+
+  config.latestSnapshot = await databaseConnect.getSystemInfo('snapshot')
 
   const server = fastify()
 
