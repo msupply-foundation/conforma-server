@@ -358,6 +358,11 @@ export interface WebAppPrefs {
     string | { code: string; urlQuery: Record<string, string | number | boolean> }
   >
   appDataTestApplications?: string[]
+  figTreeDefaults?: {
+    defaultNewOperatorExpression?: EvaluatorNode
+    defaultNewFragment?: string
+    defaultNewCustomOperator?: string
+  }
 }
 
 export interface Preferences {
