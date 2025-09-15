@@ -80,7 +80,7 @@
     "archiver-zip-encrypted": "^1.0.11",
     "axios": "^1.5.1",
     "bcrypt": "^5.1.0",
-    "carbone": "^3.2.3",
+    "carbone": "3.2.3",
     "comment-json": "^4.1.0",
     "deep-equal": "^2.0.5",
     "delay-sync": "^1.0.2",
