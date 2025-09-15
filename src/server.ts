@@ -179,11 +179,26 @@ const startServer = async () => {
         // File download endpoint (get by unique ID)
         server.get('/file', async function (request: any, reply: any) {
           const { uid, thumbnail = false } = request.query
-          const { originalFilename, filePath, thumbnailPath } = await getFilePath(uid, thumbnail)
+          const {
+            originalFilename,
+            filePath,
+            thumbnailPath,
+            mimeType = 'application/octet-stream',
+          } = await getFilePath(uid, thumbnail)
+
+          const actualPath = thumbnail ? thumbnailPath : filePath
+          reply.header('Content-Type', mimeType)
+          reply.header(
+            'Content-Disposition',
+            `inline; filename="${encodeURIComponent(
+              originalFilename
+            )}"; filename*=UTF-8''${encodeURIComponent(originalFilename)}`
+          )
+
           // TO-DO Check for permission to access file
           try {
             // TO-DO: Rename file back to original for download
-            return reply.sendFile(thumbnail ? thumbnailPath : filePath)
+            return reply.sendFile(actualPath)
           } catch {
             return reply.send({ success: false, message: 'Unable to retrieve file' })
           }
