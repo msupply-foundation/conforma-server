@@ -3,7 +3,6 @@ import fastifyStatic from '@fastify/static'
 import fastifyMultipart from '@fastify/multipart'
 import fastifyCors from '@fastify/cors'
 import fastifyWebsocket from '@fastify/websocket'
-import kill from 'tree-kill'
 import { DateTime, Settings } from 'luxon'
 import path from 'path'
 import { loadActionPlugins } from './components/pluginsConnect'
@@ -310,13 +309,15 @@ const startServer = async () => {
 
 startServer()
 
-process.on('SIGINT', () => {
-  // Forces all child processes to quit, such as headless LibreOffice, which
-  // sometimes doesn't
-  kill(process.pid, 'SIGKILL', () => {
-    console.log('Killed process tree')
-  })
-})
+// NOT WORKING CURRENTLY, CAUSES LIBREOFFICE TO FAIL IN DOCKER BUILD. Re-visit
+// later
+// process.on('SIGINT', () => {
+//   // Forces all child processes to quit, such as headless LibreOffice, which
+//   // sometimes doesn't
+//   kill(process.pid, 'SIGKILL', () => {
+//     console.log('Killed process tree')
+//   })
+// })
 
 function generateAsciiHeader(version: string) {
   // Should look like:
