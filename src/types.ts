@@ -194,6 +194,7 @@ export interface FileDownloadInfo {
   file_path: string
   thumbnail_path: string
   archive_path: string | null
+  mimetype: string
 }
 
 export interface FilePayload {

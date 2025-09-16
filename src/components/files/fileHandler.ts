@@ -37,7 +37,12 @@ export async function getFilePath(uid: string, thumbnail = false) {
     !isGenericThumbnail ? fileData.archive_path ?? '' : '',
     fileData.thumbnail_path
   )
-  return { filePath, thumbnailPath, originalFilename: fileData.original_filename }
+  return {
+    filePath,
+    thumbnailPath,
+    originalFilename: fileData.original_filename,
+    mimeType: fileData.mimetype,
+  }
 }
 
 const pump = util.promisify(pipeline)

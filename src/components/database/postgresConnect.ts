@@ -471,7 +471,7 @@ class PostgresDB {
   }
 
   public getFileDownloadInfo = async (uid: string): Promise<FileDownloadInfo | undefined> => {
-    const text = `SELECT original_filename, file_path, thumbnail_path, archive_path FROM file WHERE unique_id = $1`
+    const text = `SELECT original_filename, file_path, thumbnail_path, archive_path, mimetype FROM file WHERE unique_id = $1`
     try {
       const result = await this.query({ text, values: [uid] })
       return result.rows[0] as FileDownloadInfo
