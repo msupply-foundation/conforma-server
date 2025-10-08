@@ -26,7 +26,15 @@ export const cleanupStaleApplications = async () => {
         const stale = await DBConnect.getStaleApplications(template.id, template.days)
         staleApplications.push(...stale)
       }
-      console.log(` - Found ${staleApplications.length} stale applications`)
+      if (staleApplications.length === 0) {
+        console.log(' - No stale applications found')
+        continue
+      }
+
+      console.log(` - Deleting ${staleApplications.length} stale applications...`)
+      const staleIds = staleApplications.map((app) => app.id)
+      const deletedIds = await DBConnect.deleteApplications(staleIds)
+      console.log(`   Deleted ${deletedIds.length} applications`)
     }
   } catch (err) {
     console.log('ERROR', errorMessage(err))

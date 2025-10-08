@@ -84,6 +84,8 @@ class DBConnect {
 
   public getStaleApplications = PostgresDB.getStaleApplications
 
+  public deleteApplications = PostgresDB.deleteApplications
+
   public getVerification = PostgresDB.getVerification
 
   public setVerification = PostgresDB.setVerification

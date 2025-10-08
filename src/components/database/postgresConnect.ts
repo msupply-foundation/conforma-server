@@ -777,15 +777,15 @@ class PostgresDB {
       -- most recent response (older than $1 days)
       WITH draft_only_applications AS (
           -- Find applications that have only one status and it's DRAFT
-          SELECT 
-              application_id,
-              COUNT(DISTINCT status) as status_count,
-              MAX(status) as only_status
-          FROM application_stage_status_all 
-          WHERE status IS NOT NULL
-          GROUP BY application_id
-          HAVING COUNT(DISTINCT status) = 1 
-            AND MAX(status) = 'DRAFT'
+        SELECT 
+            application_id,
+            COUNT(DISTINCT status) as status_count,
+            MAX(status) as only_status,
+            COUNT(CASE WHEN status IS NULL THEN 1 END) as null_count
+        FROM application_stage_status_all 
+        GROUP BY application_id
+        HAVING (COUNT(DISTINCT status) = 1 AND MAX(status) = 'DRAFT')
+            OR COUNT(CASE WHEN status IS NULL THEN 1 END) > 0
       ),
       latest_responses AS (
           -- Get the most recent response for each application
@@ -808,7 +808,7 @@ class PostgresDB {
           a.id,
           a.serial,
           a.name,
-          'DRAFT' as status,
+          doa.only_status as status,
           lr.time_updated as last_updated
       FROM draft_only_applications doa
       JOIN latest_responses lr ON doa.application_id = lr.application_id
@@ -820,6 +820,16 @@ class PostgresDB {
     `
     const result = await this.query({ text, values: [templateId, days] })
     return result.rows
+  }
+
+  public deleteApplications = async (applicationIds: number[]) => {
+    const text = `
+      DELETE FROM application
+      WHERE id = ANY($1)
+      RETURNING id;
+    `
+    const result = await this.query({ text, values: [applicationIds] })
+    return result.rows.map((row) => row.id)
   }
 
   public getVerification = async (uid: string) => {
