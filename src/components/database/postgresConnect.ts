@@ -816,6 +816,7 @@ class PostgresDB {
       WHERE lr.rn = 1 
         AND a.template_id = $1
         AND lr.time_updated < NOW() - ($2 || ' days')::INTERVAL
+        AND a.is_config = false
       ORDER BY lr.time_updated DESC;
     `
     const result = await this.query({ text, values: [templateId, days] })
