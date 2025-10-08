@@ -1356,6 +1356,18 @@ const migrateData = async () => {
     `)
   }
 
+  if (databaseVersionLessThan('1.7.0')) {
+    console.log('Migrating to v1.7.0...')
+
+    console.log(' - Adding stale application timeout to template table')
+
+    await DB.changeSchema(`
+      ALTER TABLE public.template
+        ADD COLUMN IF NOT EXISTS stale_draft_retention_days
+          INTEGER DEFAULT 90 NOT NULL;
+    `)
+  }
+
   // Other version migrations continue here...
 
   // Update (almost all) Indexes, Views, Functions, Triggers regardless, since

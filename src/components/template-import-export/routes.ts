@@ -174,7 +174,7 @@ const routeImportTemplateUpload = async (request: FastifyRequest, reply: Fastify
       .flat().length === 0
 
   // Cleanup temp upload if not installed within next 10 mins
-  config.scheduledJobs?.manuallySchedule('cleanup', 10)
+  config.scheduledJobs?.manuallySchedule('fileCleanup', 10)
 
   try {
     return reply.send({ uid: folderName, modifiedEntities, ready })

@@ -5,6 +5,7 @@ import { DateTime, Settings } from 'luxon'
 import cleanUpFiles from './files/cleanup'
 import createBackup from './exportAndImport/backup'
 import archiveFiles from './files/archive'
+import cleanupStaleApplications from './other/staleApplicationCleanup'
 import { ScheduleObject } from '../types'
 
 // Dev config option
@@ -17,7 +18,7 @@ const defaultSchedules: { [K in ScheduleType]: RecurrenceSpecObjLit } = {
     hour: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
     minute: 0,
   },
-  cleanup: {
+  fileCleanup: {
     // Once per day at 1:05am
     hour: 1,
     minute: 5,
@@ -33,16 +34,22 @@ const defaultSchedules: { [K in ScheduleType]: RecurrenceSpecObjLit } = {
     hour: 1,
     minute: 10,
   },
+  staleApplicationCleanup: {
+    // Once per day at 1:30am
+    hour: 1,
+    minute: 30,
+  },
 }
 
-type ScheduleType = 'action' | 'cleanup' | 'backup' | 'archive'
+type ScheduleType = 'action' | 'fileCleanup' | 'backup' | 'archive' | 'staleApplicationCleanup'
 type UnknownFunction = (...args: never[]) => unknown | void | Promise<void>
 
 export class Schedulers {
   private actionSchedule: Scheduler.Job
-  private cleanupSchedule: Scheduler.Job
+  private fileCleanupSchedule: Scheduler.Job
   private backupSchedule: Scheduler.Job
   private archiveSchedule: Scheduler.Job
+  private staleApplicationCleanupSchedule: Scheduler.Job
   private manualScheduleTimers: Record<string, NodeJS.Timeout>
   constructor() {
     if (schedulerTestMode)
@@ -51,8 +58,8 @@ export class Schedulers {
       getSchedule('action', schedulerTestMode, config.actionSchedule ?? config?.hoursSchedule),
       () => triggerScheduledActions()
     )
-    this.cleanupSchedule = Scheduler.scheduleJob(
-      getSchedule('cleanup', schedulerTestMode, config?.fileCleanupSchedule) as RecurrenceRule,
+    this.fileCleanupSchedule = Scheduler.scheduleJob(
+      getSchedule('fileCleanup', schedulerTestMode, config?.fileCleanupSchedule) as RecurrenceRule,
       () => cleanUpFiles()
     )
     this.backupSchedule = Scheduler.scheduleJob(
@@ -69,13 +76,22 @@ export class Schedulers {
       getSchedule('archive', schedulerTestMode, config?.archiveSchedule) as RecurrenceRule,
       () => archiveFiles()
     )
+    this.staleApplicationCleanupSchedule = Scheduler.scheduleJob(
+      getSchedule(
+        'staleApplicationCleanup',
+        schedulerTestMode,
+        config?.staleApplicationsCleanupSchedule
+      ) as RecurrenceRule,
+      cleanupStaleApplications
+    )
     this.manualScheduleTimers = {}
 
     console.log('\nScheduled jobs started:')
     logNextAction(this.actionSchedule, 'action')
-    logNextAction(this.cleanupSchedule, 'cleanup')
+    logNextAction(this.fileCleanupSchedule, 'fileCleanup')
     logNextAction(this.backupSchedule, 'backup')
     logNextAction(this.archiveSchedule, 'archive')
+    logNextAction(this.staleApplicationCleanupSchedule, 'staleApplicationCleanup')
   }
 
   public reschedule(
@@ -91,11 +107,11 @@ export class Schedulers {
         )
         scheduler = this.actionSchedule
         break
-      case 'cleanup':
-        result = this.cleanupSchedule.reschedule(
-          getSchedule('cleanup', false, schedule) as RecurrenceRule
+      case 'fileCleanup':
+        result = this.fileCleanupSchedule.reschedule(
+          getSchedule('fileCleanup', false, schedule) as RecurrenceRule
         )
-        scheduler = this.cleanupSchedule
+        scheduler = this.fileCleanupSchedule
         break
       case 'backup':
         result = this.backupSchedule.reschedule(
@@ -108,6 +124,12 @@ export class Schedulers {
           getSchedule('archive', false, schedule) as RecurrenceRule
         )
         scheduler = this.archiveSchedule
+        break
+      case 'staleApplicationCleanup':
+        result = this.staleApplicationCleanupSchedule.reschedule(
+          getSchedule('staleApplicationCleanup', false, schedule) as RecurrenceRule
+        )
+        scheduler = this.staleApplicationCleanupSchedule
         break
     }
     if (result) logNextAction(scheduler, type)
@@ -128,11 +150,14 @@ export class Schedulers {
       case 'archive':
         method = archiveFiles
         break
-      case 'cleanup':
+      case 'fileCleanup':
         method = cleanUpFiles
         break
       case 'backup':
         method = createBackup // Not encrypted
+        break
+      case 'staleApplicationCleanup':
+        method = cleanupStaleApplications
         break
       default:
         method = run
@@ -187,16 +212,18 @@ function getSchedule(
   schedule?: number[] | ScheduleObject | RecurrenceSpecObjLit
 ): RecurrenceSpecObjLit {
   if (testMode) {
-    // Run each of these 30secs apart, on a 2-minute overall cycle
+    // Run each of these 30secs apart, on a 3-minute overall cycle
     switch (type) {
       case 'action':
-        return { second: [0], minute: new Scheduler.Range(0, 58, 2) }
-      case 'cleanup':
-        return { second: [30], minute: new Scheduler.Range(0, 58, 2) }
+        return { second: [0], minute: new Scheduler.Range(0, 57, 3) }
+      case 'fileCleanup':
+        return { second: [30], minute: new Scheduler.Range(0, 57, 3) }
       case 'backup':
-        return { second: [0], minute: new Scheduler.Range(1, 59, 2) }
+        return { second: [0], minute: new Scheduler.Range(1, 58, 3) }
       case 'archive':
-        return { second: [30], minute: new Scheduler.Range(1, 59, 2) }
+        return { second: [30], minute: new Scheduler.Range(1, 58, 3) }
+      case 'staleApplicationCleanup':
+        return { second: [0], minute: new Scheduler.Range(2, 59, 3) }
     }
   }
 
