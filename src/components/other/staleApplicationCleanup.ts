@@ -36,6 +36,7 @@ export const cleanupStaleApplications = async () => {
       const deletedIds = await DBConnect.deleteApplications(staleIds)
       console.log(`   Deleted ${deletedIds.length} applications`)
     }
+    console.log('Stale application cleanup -- Done!\n')
   } catch (err) {
     console.log('ERROR', errorMessage(err))
   }
@@ -44,7 +45,6 @@ export const cleanupStaleApplications = async () => {
 // Manually launch cleanup with command `yarn staleApplications`
 if (isManualCleanup) {
   cleanupStaleApplications().then(() => {
-    console.log('Stale application cleanup -- Done!\n')
     process.exit(0)
   })
 }

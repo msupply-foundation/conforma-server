@@ -152,6 +152,10 @@ export const refreshConfig = (config: Config) => {
     config.scheduledJobs.reschedule('backup', serverPrefs.backupSchedule)
     config.scheduledJobs.reschedule('fileCleanup', serverPrefs.fileCleanupSchedule)
     config.scheduledJobs.reschedule('archive', serverPrefs.archiveSchedule)
+    config.scheduledJobs.reschedule(
+      'staleApplicationCleanup',
+      serverPrefs.staleApplicationsCleanupSchedule
+    )
   }
 
   console.log('Email mode:', config.emailMode)

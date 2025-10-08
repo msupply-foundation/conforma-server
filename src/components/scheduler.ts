@@ -56,11 +56,11 @@ export class Schedulers {
       console.log('Scheduler in test mode, will run a scheduled event every 30 seconds...')
     this.actionSchedule = Scheduler.scheduleJob(
       getSchedule('action', schedulerTestMode, config.actionSchedule ?? config?.hoursSchedule),
-      () => triggerScheduledActions()
+      triggerScheduledActions
     )
     this.fileCleanupSchedule = Scheduler.scheduleJob(
       getSchedule('fileCleanup', schedulerTestMode, config?.fileCleanupSchedule) as RecurrenceRule,
-      () => cleanUpFiles()
+      cleanUpFiles
     )
     this.backupSchedule = Scheduler.scheduleJob(
       getSchedule('backup', schedulerTestMode, config?.backupSchedule) as RecurrenceRule,
