@@ -1364,7 +1364,7 @@ const migrateData = async () => {
     await DB.changeSchema(`
       ALTER TABLE public.template
         ADD COLUMN IF NOT EXISTS stale_draft_retention_days
-          INTEGER DEFAULT 90 NOT NULL;
+        INTEGER DEFAULT 90;
     `)
   }
 

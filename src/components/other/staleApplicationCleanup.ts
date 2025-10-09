@@ -23,6 +23,11 @@ export const cleanupStaleApplications = async () => {
       const staleApplications = []
       const templates = groupedTemplates[code]
       for (const template of templates) {
+        if (template.days === null) {
+          console.log(` - Skipping template id ${template.id} (no retention time set)`)
+          continue
+        }
+
         const stale = await DBConnect.getStaleApplications(template.id, template.days)
         staleApplications.push(...stale)
       }
