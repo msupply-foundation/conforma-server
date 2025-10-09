@@ -771,10 +771,15 @@ class PostgresDB {
     return result.rows
   }
 
+  /**
+   * Gets "stale" applications for a given template ID, i.e. applications that
+   * have never been submitted and have had to activity for a certain number of
+   * days. We consider these "abandoned" and so can be deleted.
+   */
   public getStaleApplications = async (templateId: number, days: number) => {
     const text = `
-      -- Query to get applications with only DRAFT status and their
-      -- most recent response (older than $1 days)
+      -- Query to get applications with only DRAFT/NULL status and their
+      -- most recent responses (older than n days)
       WITH draft_only_applications AS (
           -- Find applications that have only one status and it's DRAFT
         SELECT 
