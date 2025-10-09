@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import db from '../database/databaseConnect'
-import path from 'path'
+import { URL } from 'url'
 import config from '../../config'
 import { get as extractProperty } from 'lodash'
 import axios, { AxiosError, AxiosRequestConfig } from 'axios'
@@ -88,7 +88,7 @@ export const routeAccessExternalApi = async (
 
   const axiosRequest = {
     method,
-    url: path.join(baseUrl, url),
+    url: new URL(url, baseUrl).toString(),
     ...additionalAxiosProperties,
   } as AxiosRequestConfig
 
