@@ -158,6 +158,16 @@ export const getDataViewColumnsFromDataViews = async (dataViews: Omit<PgDataView
         if (usedColumns.includes(col.column_name)) dataViewColumns.add(col)
       })
     })
+
+    // Also get the "detail view header column" -- normally it'd be one of the
+    // existing columns, but it can sometimes be a unique, specially-defined
+    // column
+    const headerColumn = allColumns.find(
+      (col) =>
+        col.column_name === dataView.detail_view_header_column &&
+        col.table_name === dataView.table_name
+    )
+    if (headerColumn) dataViewColumns.add(headerColumn)
   }
 
   // TO-DO: Add search columns?? (Probably)
