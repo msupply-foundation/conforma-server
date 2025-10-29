@@ -2744,14 +2744,14 @@ capture-exit@^2.0.0:
   dependencies:
     rsvp "^4.8.4"
 
-carbone@^3.2.3:
-  version "3.5.6"
-  resolved "https://registry.yarnpkg.com/carbone/-/carbone-3.5.6.tgz#19ebf24d1f3b337e1c12903e5cf35ff7e3d9e6c8"
-  integrity sha512-bjTEJAmVQnMJoFAIs6Z0tAUpQoglUH0i4dLV34m8rCKWKagfhAM/zJyyKkU6n9EeyuuoOfCyppsShdvYr0ZfDw==
+carbone@3.2.3:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/carbone/-/carbone-3.2.3.tgz#9317b9403de2a9e8137c94754e12ada56f4f54f7"
+  integrity sha512-UV7nOsxje6/ChjbGip4lBOepozwPtH06JaiO08YAAx45f4M7HVRR8y6YPzLy0g3XfbVewODCaIFIPqCFwO6O5Q==
   dependencies:
-    dayjs "=1.11.11"
-    dayjs-timezone-iana-plugin "=0.1.0"
-    debug "=4.3.5"
+    dayjs "=1.10.4"
+    debug "=4.1.1"
+    timsort "=0.3.0"
     which "=2.0.2"
     yauzl "=2.10.0"
     yazl "=2.5.1"
@@ -3270,15 +3270,10 @@ dataloader@^2.2.2:
   resolved "https://registry.yarnpkg.com/dataloader/-/dataloader-2.2.2.tgz#216dc509b5abe39d43a9b9d97e6e5e473dfbe3e0"
   integrity sha512-8YnDaaf7N3k/q5HnTJVuzSyLETjoZjVmHc4AeKAzOvKHEFQKcn64OKBfzHYtE9zGjctNM7V9I0MfnUVLpi7M5g==
 
-dayjs-timezone-iana-plugin@=0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/dayjs-timezone-iana-plugin/-/dayjs-timezone-iana-plugin-0.1.0.tgz#216613f6ec80106ab8be025cf5935018c901e997"
-  integrity sha512-xc8cIZmi4oKr2nfu41I/FDWZKa8n8YaRMxSz9MrpXTNo8c6ZsjZuIoy5RPNmLXPqntFuITWI8obB7lUA+CdzGQ==
-
-dayjs@=1.11.11:
-  version "1.11.11"
-  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.11.tgz#dfe0e9d54c5f8b68ccf8ca5f72ac603e7e5ed59e"
-  integrity sha512-okzr3f11N6WuqYtZSvm+F776mB41wRZMhKP+hc34YdW+KmtYYK9iqvHSwo2k9FEH3fhGXvOPV6yz2IcSrfRUDg==
+dayjs@=1.10.4:
+  version "1.10.4"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.10.4.tgz#8e544a9b8683f61783f570980a8a80eaf54ab1e2"
+  integrity sha512-RI/Hh4kqRc1UKLOAf/T5zdMMX5DQIlDxwUe3wSyMMnEbGunnpENCdbUgM+dW7kXidZqCttBrmw7BhN4TMddkCw==
 
 debounce@^1.2.0:
   version "1.2.0"
@@ -3296,12 +3291,12 @@ debug@4, "debug@>=3 <5", debug@^4.1.0, debug@^4.1.1:
   dependencies:
     ms "2.1.2"
 
-debug@=4.3.5:
-  version "4.3.5"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.5.tgz#e83444eceb9fedd4a1da56d671ae2446a01a6e1e"
-  integrity sha512-pt0bNEmneDIvdL1Xsd9oDQ/wrQRkXDT4AUWlNZNPKvW5x/jyO9VFXkJUP07vQ2upmw5PlaITaPKc31jK13V+jg==
+debug@=4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
+  integrity sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==
   dependencies:
-    ms "2.1.2"
+    ms "^2.1.1"
 
 debug@^3.2.6:
   version "3.2.6"
@@ -8459,6 +8454,11 @@ timers-ext@0.1, timers-ext@0.1.x:
     es5-ext "~0.10.46"
     next-tick "1"
 
+timsort@=0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/timsort/-/timsort-0.3.0.tgz#405411a8e7e6339fe64db9a234de11dc31e02bd4"
+  integrity sha512-qsdtZH+vMoCARQtyod4imc2nIJwg9Cc7lPRrw9CzF8ZKR0khdr8+2nX80PBhET3tcyTtJDxAffGh2rXH4tyU8A==
+
 title-case@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/title-case/-/title-case-3.0.3.tgz#bc689b46f02e411f1d1e1d081f7c3deca0489982"
@@ -8562,11 +8562,6 @@ tr46@~0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
   integrity sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==
-
-tree-kill@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/tree-kill/-/tree-kill-1.2.2.tgz#4ca09a9092c88b73a7cdc5e8a01b507b0790a0cc"
-  integrity sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==
 
 ts-jest@^26.2.0:
   version "26.4.1"
