@@ -37,11 +37,14 @@ export async function getFilePath(uid: string, thumbnail = false) {
     !isGenericThumbnail ? fileData.archive_path ?? '' : '',
     fileData.thumbnail_path
   )
+  const mimeType = thumbnail
+    ? `image/${path.extname(thumbnailPath).toLowerCase().slice(1)}`
+    : fileData.mimetype
   return {
     filePath,
     thumbnailPath,
     originalFilename: fileData.original_filename,
-    mimeType: fileData.mimetype,
+    mimeType,
   }
 }
 
