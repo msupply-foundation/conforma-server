@@ -84,7 +84,7 @@ const config: Config = {
   filterListMaxLength: 10,
   filterListBatchSize: 1000,
   filterColumnSuffix: '_filter_data', // snake_case,
-  fileUploadLimit: 2_147_483_648, // 2GB, fastify-multipart
+  fileUploadLimit: 5 * 1024 * 1024 * 1024, // 5GB
   isProductionBuild,
   defaultSystemManagerPermissionName: 'systemManager',
   ...serverPrefs,
