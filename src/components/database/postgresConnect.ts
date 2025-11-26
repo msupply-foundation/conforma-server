@@ -788,6 +788,7 @@ class PostgresDB {
             MAX(status) as only_status,
             COUNT(CASE WHEN status IS NULL THEN 1 END) as null_count
         FROM application_stage_status_all 
+        WHERE template_id = $1        
         GROUP BY application_id
         HAVING (COUNT(DISTINCT status) = 1 AND MAX(status) = 'DRAFT')
             OR COUNT(CASE WHEN status IS NULL THEN 1 END) > 0
