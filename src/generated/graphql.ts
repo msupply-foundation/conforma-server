@@ -615,6 +615,7 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -5374,6 +5375,7 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -32344,6 +32346,7 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -34910,6 +34913,7 @@ export type Template = Node & {
   /** Reads and enables pagination through a set of `ReviewAssignment`. */
   reviewAssignments: ReviewAssignmentsConnection;
   serialPattern?: Maybe<Scalars['String']['output']>;
+  staleDraftRetentionDays?: Maybe<Scalars['Int']['output']>;
   startMessage?: Maybe<Scalars['JSON']['output']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']['output']>;
@@ -35306,6 +35310,7 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -35629,6 +35634,8 @@ export type TemplateCondition = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `serialPattern` field. */
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `staleDraftRetentionDays` field. */
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `startMessage` field. */
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `status` field. */
@@ -35947,6 +35954,7 @@ export type TemplateDataViewJoinTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -36808,6 +36816,7 @@ export type TemplateEvaluatorFragmentJoinTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -37169,6 +37178,7 @@ export type TemplateFileJoinTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -37276,6 +37286,8 @@ export type TemplateFilter = {
   reviewAssignmentsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `serialPattern` field. */
   serialPattern?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `staleDraftRetentionDays` field. */
+  staleDraftRetentionDays?: InputMaybe<IntFilter>;
   /** Filter by the object’s `startMessage` field. */
   startMessage?: InputMaybe<JsonFilter>;
   /** Filter by the object’s `status` field. */
@@ -37575,6 +37587,7 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -37655,6 +37668,7 @@ export type TemplateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -38003,6 +38017,7 @@ export type TemplatePatch = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -38304,6 +38319,7 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -38612,6 +38628,7 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -39250,6 +39267,7 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -39477,6 +39495,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -39689,6 +39708,8 @@ export enum TemplatesOrderBy {
   PriorityDesc = 'PRIORITY_DESC',
   SerialPatternAsc = 'SERIAL_PATTERN_ASC',
   SerialPatternDesc = 'SERIAL_PATTERN_DESC',
+  StaleDraftRetentionDaysAsc = 'STALE_DRAFT_RETENTION_DAYS_ASC',
+  StaleDraftRetentionDaysDesc = 'STALE_DRAFT_RETENTION_DAYS_DESC',
   StartMessageAsc = 'START_MESSAGE_ASC',
   StartMessageDesc = 'START_MESSAGE_DESC',
   StatusAsc = 'STATUS_ASC',
@@ -40455,6 +40476,7 @@ export type TriggerScheduleTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49207,6 +49229,7 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49244,6 +49267,7 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49281,6 +49305,7 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49318,6 +49343,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49355,6 +49381,7 @@ export type UpdateTemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateI
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49392,6 +49419,7 @@ export type UpdateTemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFra
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49429,6 +49457,7 @@ export type UpdateTemplateOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyPat
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49466,6 +49495,7 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49503,6 +49533,7 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49539,6 +49570,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49576,6 +49608,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49613,6 +49646,7 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49650,6 +49684,7 @@ export type UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -59878,6 +59913,7 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
   priority?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   reviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<TemplateReviewAssignmentsArgs, 'orderBy'>>;
   serialPattern?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  staleDraftRetentionDays?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   startMessage?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['TemplateStatus']>, ParentType, ContextType>;
   submissionMessage?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
