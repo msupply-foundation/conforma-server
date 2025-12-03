@@ -22,7 +22,7 @@ const RLS_FILENAME = '45_row_level_security.sql'
 const DISABLE_RLS_FILENAME = '46_disable_row_level_security.sql'
 
 const { version } = config
-const isManualMigration: Boolean = process.argv[2] === '--migrate'
+const isManualMigration: boolean = process.argv[2] === '--migrate'
 const simulatedVersion: string | undefined = process.argv[3]
 
 const functionsScript = readFileSync(
@@ -1353,6 +1353,18 @@ const migrateData = async () => {
     await DB.changeSchema(`
       ALTER TABLE public.application   
         ADD COLUMN IF NOT EXISTS url_properties jsonb;
+    `)
+  }
+
+  if (databaseVersionLessThan('1.7.0')) {
+    console.log('Migrating to v1.7.0...')
+
+    console.log(' - Adding stale application timeout to template table')
+
+    await DB.changeSchema(`
+      ALTER TABLE public.template
+        ADD COLUMN IF NOT EXISTS stale_draft_retention_days
+        INTEGER DEFAULT 90;
     `)
   }
 

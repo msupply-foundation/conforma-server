@@ -77,7 +77,7 @@ const config: Config = {
   filterListMaxLength: 10,
   filterListBatchSize: 1000,
   filterColumnSuffix: '_filter_data', // snake_case,
-  fileUploadLimit: 2_147_483_648, // 2GB, fastify-multipart
+  fileUploadLimit: 5 * 1024 * 1024 * 1024, // 5GB
   isProductionBuild,
   defaultSystemManagerPermissionName: 'systemManager',
   ...serverPrefs,
@@ -144,8 +144,12 @@ export const refreshConfig = async (config: Config) => {
   if (config.scheduledJobs) {
     config.scheduledJobs.reschedule('action', serverPrefs.actionSchedule)
     config.scheduledJobs.reschedule('backup', serverPrefs.backupSchedule)
-    config.scheduledJobs.reschedule('cleanup', serverPrefs.fileCleanupSchedule)
+    config.scheduledJobs.reschedule('fileCleanup', serverPrefs.fileCleanupSchedule)
     config.scheduledJobs.reschedule('archive', serverPrefs.archiveSchedule)
+    config.scheduledJobs.reschedule(
+      'staleApplicationCleanup',
+      serverPrefs.staleApplicationsCleanupSchedule
+    )
   }
 
   console.log('Email mode:', config.emailMode)

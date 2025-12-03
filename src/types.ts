@@ -297,6 +297,7 @@ export interface ServerPreferences {
   managerCanEditLocalisation?: boolean
   previewDocsMinKeepTime?: string
   fileCleanupSchedule?: number[] | ScheduleObject
+  staleApplicationsCleanupSchedule?: number[] | ScheduleObject
   backupSchedule?: number[] | ScheduleObject
   backupFilePrefix?: string
   skipBackup?: boolean

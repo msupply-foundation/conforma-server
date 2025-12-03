@@ -15,7 +15,7 @@
 import DBConnect from '../../components/database/databaseConnect'
 import { errorMessage } from '../utilityFunctions'
 
-const isManualUpdate: Boolean = process.argv[2] === '--update-reviewer-stats'
+const isManualUpdate: boolean = process.argv[2] === '--update-reviewer-stats'
 
 interface NotificationPayload {
   tableName: string

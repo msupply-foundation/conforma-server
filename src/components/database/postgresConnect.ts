@@ -21,6 +21,7 @@ import {
   ReviewStatus,
   Trigger,
 } from '../../generated/graphql'
+import { Template as PgTemplate } from '../../generated/postgres'
 import { errorMessage } from '../utilityFunctions'
 import { updateReviewerStatsFromDBEvent } from './updateReviewerStats'
 import { hashRecord } from '../template-import-export'
@@ -776,6 +777,89 @@ class PostgresDB {
     } catch (err) {
       throw err
     }
+  }
+
+  public getAllTemplatesRetentionTimes = async (): Promise<
+    Pick<PgTemplate, 'id' | 'code' | 'stale_draft_retention_days'>[]
+  > => {
+    const text = `
+      SELECT id, code, stale_draft_retention_days
+      FROM template
+      ORDER BY code;
+    `
+    const result = await this.query({ text })
+    return result.rows
+  }
+
+  /**
+   * Gets "stale" applications for a given template ID, i.e. applications that
+   * have never been submitted and have had no activity for a certain number of
+   * days. We consider these "abandoned" and so can be deleted.
+   *
+   * We use the latest of the Draft status update timestamp or the latest
+   * response timestamp to determine last activity.
+   */
+  public getStaleApplications = async (templateId: number, days: number) => {
+    const text = `
+      -- Query to get applications with only DRAFT/NULL status and their
+      -- most recent responses (older than n days)
+      WITH draft_only_applications AS (
+          -- Find applications that have only one status and it's DRAFT
+        SELECT 
+            application_id,
+            COUNT(DISTINCT status) as status_count,
+            MAX(status) as only_status,
+            COUNT(CASE WHEN status IS NULL THEN 1 END) as null_count
+        FROM application_stage_status_all 
+        WHERE template_id = $1        
+        GROUP BY application_id
+        HAVING (COUNT(DISTINCT status) = 1 AND MAX(status) = 'DRAFT')
+            OR COUNT(CASE WHEN status IS NULL THEN 1 END) > 0
+      ),
+      latest_responses AS (
+          -- Get the most recent response for each application
+          SELECT 
+              application_id,
+              id as response_id,
+              template_element_id,
+              stage_number,
+              status,
+              value,
+              time_updated,
+              ROW_NUMBER() OVER (
+                  PARTITION BY application_id 
+                  ORDER BY time_updated DESC
+              ) as rn
+          FROM application_response
+          WHERE application_id IN (SELECT application_id FROM draft_only_applications)
+      )
+      SELECT 
+          a.id,
+          a.serial,
+          a.name,
+          doa.only_status as status,
+          lr.time_updated as last_updated
+      FROM draft_only_applications doa
+      JOIN latest_responses lr ON doa.application_id = lr.application_id
+      JOIN application a ON doa.application_id = a.id
+      WHERE lr.rn = 1 
+        AND a.template_id = $1
+        AND lr.time_updated < NOW() - ($2 || ' days')::INTERVAL
+        AND a.is_config = false
+      ORDER BY lr.time_updated DESC;
+    `
+    const result = await this.query({ text, values: [templateId, days] })
+    return result.rows
+  }
+
+  public deleteApplications = async (applicationIds: number[]) => {
+    const text = `
+      DELETE FROM application
+      WHERE id = ANY($1)
+      RETURNING id;
+    `
+    const result = await this.query({ text, values: [applicationIds] })
+    return result.rows.map((row) => row.id)
   }
 
   public getVerification = async (uid: string) => {
