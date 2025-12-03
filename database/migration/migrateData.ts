@@ -22,7 +22,7 @@ const RLS_FILENAME = '45_row_level_security.sql'
 const DISABLE_RLS_FILENAME = '46_disable_row_level_security.sql'
 
 const { version } = config
-const isManualMigration: Boolean = process.argv[2] === '--migrate'
+const isManualMigration: boolean = process.argv[2] === '--migrate'
 const simulatedVersion: string | undefined = process.argv[3]
 
 const functionsScript = readFileSync(

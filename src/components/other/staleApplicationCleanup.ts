@@ -2,7 +2,7 @@ import { DateTime } from 'luxon'
 import DBConnect from '../database/databaseConnect'
 import { errorMessage } from '../utilityFunctions'
 
-const isManualCleanup: Boolean = process.argv[2] === '--staleApplications'
+const isManualCleanup: boolean = process.argv[2] === '--staleApplications'
 
 export const cleanupStaleApplications = async () => {
   try {
