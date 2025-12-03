@@ -773,8 +773,11 @@ class PostgresDB {
 
   /**
    * Gets "stale" applications for a given template ID, i.e. applications that
-   * have never been submitted and have had to activity for a certain number of
+   * have never been submitted and have had no activity for a certain number of
    * days. We consider these "abandoned" and so can be deleted.
+   *
+   * We use the latest of the Draft status update timestamp or the latest
+   * response timestamp to determine last activity.
    */
   public getStaleApplications = async (templateId: number, days: number) => {
     const text = `
