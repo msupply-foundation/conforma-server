@@ -1,6 +1,6 @@
 {
   "name": "conforma-server",
-  "version": "1.6.8",
+  "version": "1.7.0-1",
   "main": "server.js",
   "license": "MIT",
   "repository": {
@@ -68,6 +68,7 @@
     "cleanup": "ts-node ./src/components/files/cleanup.ts --cleanup",
     "backup": "ts-node ./src/components/exportAndImport/backup.ts --backup",
     "archive": "ts-node ./src/components/files/archive.ts --archive",
+    "staleApplications": "ts-node ./src/components/other/staleApplicationCleanup.ts --staleApplications",
     "update-reviewer-stats": "ts-node ./src/components/database/updateReviewerStats.ts --update-reviewer-stats"
   },
   "dependencies": {

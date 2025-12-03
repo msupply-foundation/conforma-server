@@ -80,6 +80,12 @@ class DBConnect {
 
   public updateTriggerQueueStatus = PostgresDB.updateTriggerQueueStatus
 
+  public getAllTemplatesRetentionTimes = PostgresDB.getAllTemplatesRetentionTimes
+
+  public getStaleApplications = PostgresDB.getStaleApplications
+
+  public deleteApplications = PostgresDB.deleteApplications
+
   public getVerification = PostgresDB.getVerification
 
   public setVerification = PostgresDB.setVerification

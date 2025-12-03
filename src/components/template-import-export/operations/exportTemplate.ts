@@ -60,6 +60,6 @@ export const exportTemplate = async (templateId: number) => {
 
   await fsx.remove(fullOutputPath)
   console.log('Returning zip')
-  config.scheduledJobs?.manuallySchedule('cleanup', 5)
+  config.scheduledJobs?.manuallySchedule('fileCleanup', 5)
   return `${outputName}.zip`
 }

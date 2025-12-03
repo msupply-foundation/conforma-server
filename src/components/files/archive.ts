@@ -12,7 +12,7 @@ import { ARCHIVE_FOLDER, ARCHIVE_SUBFOLDER_NAME, FILES_FOLDER } from '../../cons
 import config from '../../config'
 import { nanoid } from 'nanoid'
 
-const isManualArchive: Boolean = process.argv[2] === '--archive'
+const isManualArchive: boolean = process.argv[2] === '--archive'
 const param = Number.parseInt(process.argv[3])
 const archiveDays = Number.isNaN(param) ? undefined : param
 

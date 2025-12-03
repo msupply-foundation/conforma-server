@@ -18,7 +18,7 @@ import { clearEmptyDirectories, crawlFileSystem, errorMessage } from '../utility
 import { deleteFile } from '../files/deleteFiles'
 import { ARCHIVE_FOLDER, FILES_FOLDER, GENERIC_THUMBNAILS_FOLDER } from '../../constants'
 
-const isManualCleanup: Boolean = process.argv[2] === '--cleanup'
+const isManualCleanup: boolean = process.argv[2] === '--cleanup'
 
 interface FilePathData {
   id: number
