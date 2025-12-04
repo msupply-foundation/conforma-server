@@ -23,6 +23,12 @@ if [ "$SKIP_BUILD" = false ]; then
       exit 1
    fi
 
+   # We build the bundles locally and then copy then into the docker image
+   # after. This is faster and more reliable than building inside docker. The
+   # only thing that needs to be built inside docker is the native modules for
+   # the correct platform, which we do by running `yarn install` in the
+   # Dockerfile
+
    echo -e "\nBuilding back-end"
    git stash push -u -m "Auto-stash before checkout" && git checkout ${BRANCH_NAME}
    yarn build
