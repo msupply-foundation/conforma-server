@@ -296,7 +296,7 @@ const databaseMethods = {
       ${
         table === 'template_element'
           ? `
-        WHERE section_id = (
+        WHERE section_id IN (
         SELECT id FROM template_section
         WHERE template_id = $1
       )`
