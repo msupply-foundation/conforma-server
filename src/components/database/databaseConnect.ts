@@ -22,6 +22,8 @@ class DBConnect {
 
   public getRecordsByField = PostgresDB.getRecordsByField
 
+  public getRecordsByFieldWithMultipleValues = PostgresDB.getRecordsByFieldWithMultipleValues
+
   public getAllRecords = PostgresDB.getAllRecords
 
   public getValuesPlaceholders = PostgresDB.getValuesPlaceholders

@@ -53,10 +53,12 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
 
   const linkedDataViewColumns = await getDataViewColumnsFromDataViews(linkedDataViews)
 
+  type LinkedPermission = Omit<PgPermissionName, 'id' | 'permission_policy_id'> & {
+    permission_policy: object
+  }
+
   const linkedPermissions = (
-    await db.getJoinedEntities<
-      Omit<PgPermissionName, 'id' | 'permission_policy_id'> & { permission_policy: object }
-    >({
+    await db.getJoinedEntities<LinkedPermission>({
       templateId,
       table: 'permission_name',
       joinTable: 'template_permission',
@@ -69,6 +71,30 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
       'permission_policy_id',
       'permission_policy'
     )
+  }
+
+  // Also get permissions used in "grantPermissions" actions, since they're not
+  // joined (don't need ones from "revokePermissions" actions though, since it
+  // doesn't matter if they're missing)
+  const existingPermissionNames = linkedPermissions.map((p) => p.name)
+  const actionPermissions = (await db.getPermissionNamesFromGrantPermissions(templateId)).filter(
+    (p) => !existingPermissionNames.includes(p)
+  )
+  const additionalPermissions = (
+    await db.getRecordsByFieldWithMultipleValues<LinkedPermission>(
+      'permission_name',
+      'name',
+      actionPermissions
+    )
+  ).map(stripIds)
+  for (const permission of additionalPermissions) {
+    await replaceForeignKeyRef(
+      permission,
+      'permission_policy',
+      'permission_policy_id',
+      'permission_policy'
+    )
+    linkedPermissions.push(permission)
   }
 
   const linkedCategory = stripIds(

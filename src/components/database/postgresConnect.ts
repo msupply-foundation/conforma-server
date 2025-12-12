@@ -196,6 +196,25 @@ class PostgresDB {
     }
   }
 
+  // Generic method to return multiple full records from any table by matching
+  // an ARRAY of values against any field.
+  public getRecordsByFieldWithMultipleValues = async <T>(
+    tableName: string,
+    field: string,
+    values: unknown[]
+  ): Promise<T[]> => {
+    try {
+      const text = `
+            SELECT * FROM ${tableName} WHERE ${field} = ANY($1)
+          `
+      const result = await this.query({ text, values: [values] })
+      return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
   // Generic method to return ALL full records for a particular table
   // CAUTION: Only use on tables with a small number of records!
   public getAllRecords = async <T>(tableName: string): Promise<T[]> => {

@@ -38,6 +38,13 @@ const databaseMethods = {
   getRecordsByField: async <T>(tableName: string, field: string, value: unknown): Promise<T[]> => {
     return await DBConnect.getRecordsByField(tableName, field, value)
   },
+  getRecordsByFieldWithMultipleValues: async <T>(
+    tableName: string,
+    field: string,
+    values: unknown[]
+  ): Promise<T[]> => {
+    return await DBConnect.getRecordsByFieldWithMultipleValues(tableName, field, values)
+  },
   getAllRecords: async <T>(tableName: string): Promise<T[]> => {
     return await DBConnect.getAllRecords(tableName)
   },
@@ -109,6 +116,25 @@ const databaseMethods = {
       throw err
     }
   },
+
+  // Gets a list of permissionNames used by "grantPermissions" actions
+  getPermissionNamesFromGrantPermissions: async (templateId: number): Promise<string[]> => {
+    const text = `
+      SELECT DISTINCT jsonb_array_elements_text
+        ((parameter_queries->'permissionNames')::jsonb) as permissions
+          FROM public.template_action
+          WHERE template_id = $1
+          AND action_code = 'grantPermissions'
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [templateId], rowMode: 'array' })
+      return result.rows.flat()
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
+
   // Gets a list of data tables used by "modifyRecord" actions
   getDataTablesFromModifyRecord: async (templateId: number): Promise<string[]> => {
     const text = `
@@ -127,6 +153,7 @@ const databaseMethods = {
       throw err
     }
   },
+
   getLinkedDataTables: async (tableNames: string[]): Promise<PgDataTable[]> => {
     const text = `
       SELECT table_name, display_name, field_map,
