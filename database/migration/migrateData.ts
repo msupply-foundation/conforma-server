@@ -1401,7 +1401,7 @@ const migrateData = async () => {
     console.log(' - Adding reviewer section flag to template_section table')
 
     await DB.changeSchema(`ALTER TABLE public.template_section
-        ADD COLUMN IF NOT EXISTS is_review_section BOOLEAN DEFAULT FALSE;`)
+        ADD COLUMN IF NOT EXISTS is_review_section BOOLEAN NOT NULL DEFAULT FALSE;`)
   }
 
   // Other version migrations continue here...

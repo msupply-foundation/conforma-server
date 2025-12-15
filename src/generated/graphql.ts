@@ -39762,7 +39762,7 @@ export type TemplateSection = Node & {
   code?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   index?: Maybe<Scalars['Int']['output']>;
-  isReviewSection?: Maybe<Scalars['Boolean']['output']>;
+  isReviewSection: Scalars['Boolean']['output'];
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID']['output'];
   /** Reads a single `Template` that is related to this `TemplateSection`. */
@@ -62180,7 +62180,7 @@ export type TemplateSectionResolvers<ContextType = any, ParentType extends Resol
   code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   index?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  isReviewSection?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isReviewSection?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   templateElementsBySectionId?: Resolver<ResolversTypes['TemplateElementsConnection'], ParentType, ContextType, RequireFields<TemplateSectionTemplateElementsBySectionIdArgs, 'orderBy'>>;
