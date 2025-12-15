@@ -1397,6 +1397,11 @@ const migrateData = async () => {
         evaluator_fragment_id integer REFERENCES public.evaluator_fragment (id) ON DELETE CASCADE NOT NULL,
         UNIQUE (template_id, evaluator_fragment_id)
       );`)
+
+    console.log(' - Adding reviewer section flag to template_section table')
+
+    await DB.changeSchema(`ALTER TABLE public.template_section
+        ADD COLUMN IF NOT EXISTS is_review_section BOOLEAN DEFAULT FALSE;`)
   }
 
   // Other version migrations continue here...
