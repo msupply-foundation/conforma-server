@@ -29137,7 +29137,7 @@ export type Query = Node & {
   applications?: Maybe<ApplicationsConnection>;
   assignableQuestionsCount?: Maybe<Scalars['BigInt']['output']>;
   assignedQuestions?: Maybe<AssignedQuestionsConnection>;
-  assignedQuestionsCount?: Maybe<Scalars['BigInt']['output']>;
+  assignedQuestionsCount?: Maybe<Scalars['Int']['output']>;
   /** Reads and enables pagination through a set of `AssignedSectionsByStageAndLevel`. */
   assignedSectionsByStageAndLevels?: Maybe<AssignedSectionsByStageAndLevelsConnection>;
   assignerList?: Maybe<AssignerListConnection>;
@@ -29438,13 +29438,13 @@ export type Query = Node & {
   /** Reads a single `ReviewStatusHistory` using its globally unique `ID`. */
   reviewStatusHistoryByNodeId?: Maybe<ReviewStatusHistory>;
   reviewableQuestions?: Maybe<ReviewableQuestionsConnection>;
-  reviewableQuestionsCount?: Maybe<Scalars['BigInt']['output']>;
+  reviewableQuestionsCount?: Maybe<Scalars['Int']['output']>;
   /** Reads and enables pagination through a set of `Review`. */
   reviews?: Maybe<ReviewsConnection>;
   /** Reads and enables pagination through a set of `SchemaColumn`. */
   schemaColumns?: Maybe<SchemaColumnsConnection>;
   singleApplicationDetail?: Maybe<SingleApplicationDetailConnection>;
-  submittedAssignedQuestionsCount?: Maybe<Scalars['BigInt']['output']>;
+  submittedAssignedQuestionsCount?: Maybe<Scalars['Int']['output']>;
   systemInfo?: Maybe<SystemInfo>;
   /** Reads a single `SystemInfo` using its globally unique `ID`. */
   systemInfoByNodeId?: Maybe<SystemInfo>;
@@ -61306,7 +61306,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applications?: Resolver<Maybe<ResolversTypes['ApplicationsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationsArgs, 'orderBy'>>;
   assignableQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, Partial<QueryAssignableQuestionsCountArgs>>;
   assignedQuestions?: Resolver<Maybe<ResolversTypes['AssignedQuestionsConnection']>, ParentType, ContextType, Partial<QueryAssignedQuestionsArgs>>;
-  assignedQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, Partial<QueryAssignedQuestionsCountArgs>>;
+  assignedQuestionsCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, Partial<QueryAssignedQuestionsCountArgs>>;
   assignedSectionsByStageAndLevels?: Resolver<Maybe<ResolversTypes['AssignedSectionsByStageAndLevelsConnection']>, ParentType, ContextType, RequireFields<QueryAssignedSectionsByStageAndLevelsArgs, 'orderBy'>>;
   assignerList?: Resolver<Maybe<ResolversTypes['AssignerListConnection']>, ParentType, ContextType, Partial<QueryAssignerListArgs>>;
   assignmentList?: Resolver<Maybe<ResolversTypes['AssignmentListConnection']>, ParentType, ContextType, Partial<QueryAssignmentListArgs>>;
@@ -61491,11 +61491,11 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   reviewStatusHistory?: Resolver<Maybe<ResolversTypes['ReviewStatusHistory']>, ParentType, ContextType, RequireFields<QueryReviewStatusHistoryArgs, 'id'>>;
   reviewStatusHistoryByNodeId?: Resolver<Maybe<ResolversTypes['ReviewStatusHistory']>, ParentType, ContextType, RequireFields<QueryReviewStatusHistoryByNodeIdArgs, 'nodeId'>>;
   reviewableQuestions?: Resolver<Maybe<ResolversTypes['ReviewableQuestionsConnection']>, ParentType, ContextType, Partial<QueryReviewableQuestionsArgs>>;
-  reviewableQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, Partial<QueryReviewableQuestionsCountArgs>>;
+  reviewableQuestionsCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, Partial<QueryReviewableQuestionsCountArgs>>;
   reviews?: Resolver<Maybe<ResolversTypes['ReviewsConnection']>, ParentType, ContextType, RequireFields<QueryReviewsArgs, 'orderBy'>>;
   schemaColumns?: Resolver<Maybe<ResolversTypes['SchemaColumnsConnection']>, ParentType, ContextType, RequireFields<QuerySchemaColumnsArgs, 'orderBy'>>;
   singleApplicationDetail?: Resolver<Maybe<ResolversTypes['SingleApplicationDetailConnection']>, ParentType, ContextType, Partial<QuerySingleApplicationDetailArgs>>;
-  submittedAssignedQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, Partial<QuerySubmittedAssignedQuestionsCountArgs>>;
+  submittedAssignedQuestionsCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, Partial<QuerySubmittedAssignedQuestionsCountArgs>>;
   systemInfo?: Resolver<Maybe<ResolversTypes['SystemInfo']>, ParentType, ContextType, RequireFields<QuerySystemInfoArgs, 'id'>>;
   systemInfoByNodeId?: Resolver<Maybe<ResolversTypes['SystemInfo']>, ParentType, ContextType, RequireFields<QuerySystemInfoByNodeIdArgs, 'nodeId'>>;
   systemInfos?: Resolver<Maybe<ResolversTypes['SystemInfosConnection']>, ParentType, ContextType, RequireFields<QuerySystemInfosArgs, 'orderBy'>>;
