@@ -1413,6 +1413,7 @@ class PostgresDB {
     FROM application_response ar JOIN template_element te
     ON ar.template_element_id = te.id
     WHERE application_id = $1
+    AND status != 'REVIEW'
     ORDER BY time_updated
     `
     try {

@@ -1398,10 +1398,16 @@ const migrateData = async () => {
         UNIQUE (template_id, evaluator_fragment_id)
       );`)
 
-    console.log(' - Adding reviewer section flag to template_section table')
+    console.log(
+      ' - Adding reviewer section flag to template_section table and new application_response status'
+    )
 
     await DB.changeSchema(`ALTER TABLE public.template_section
         ADD COLUMN IF NOT EXISTS is_review_section BOOLEAN NOT NULL DEFAULT FALSE;`)
+
+    await DB.changeSchema(`
+      ALTER TYPE public.application_response_status ADD VALUE IF NOT EXISTS
+      'REVIEW' AFTER  'SUBMITTED';`)
   }
 
   // Other version migrations continue here...
