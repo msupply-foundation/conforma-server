@@ -17,6 +17,7 @@ import {
   PgFile,
   PgFilter,
   PgPermissionName,
+  PgPermissionPolicy,
   PgTemplateCategory,
   TemplateStructure,
 } from '../types'
@@ -402,6 +403,18 @@ export const installTemplate = async (
       } = permissions[permissionName]
       let permission_name_id: number | null = null
 
+      const dbPermissionPolicy = await db.getRecordsByField<PgPermissionPolicy>(
+        'permission_policy',
+        'name',
+        (permission_policy as PgPermissionPolicy).name
+      )
+
+      const permission_policy_id =
+        dbPermissionPolicy.length > 0
+          ? dbPermissionPolicy[0].id
+          : // Policy should exist, but if it doesn't create it here
+            await db.insertRecord('permission_policy', permission_policy)
+
       const existing = await db.getRecord<PgPermissionName>(
         'permission_name',
         permissionName,
@@ -414,9 +427,13 @@ export const installTemplate = async (
             await db.updateRecord('permission_name', {
               ...permissionNameRecord,
               id: permission_name_id,
+              permission_policy_id,
             })
       } else {
-        permission_name_id = await db.insertRecord('permission_name', permissionNameRecord)
+        permission_name_id = await db.insertRecord('permission_name', {
+          ...permissionNameRecord,
+          permission_policy_id,
+        })
       }
 
       permissionNameIds[permissionName] = permission_name_id as number
