@@ -150,7 +150,7 @@ const coreActions: CoreActions = {
       name: 'Generate Review Assignment Records',
       trigger: 'ON_APPLICATION_SUBMIT',
       event_code: null,
-      sequence: -4,
+      sequence: -5,
       condition: true,
       parameter_queries: {},
     },
@@ -162,7 +162,7 @@ const coreActions: CoreActions = {
       name: 'Clean up application files',
       trigger: 'ON_APPLICATION_SUBMIT',
       event_code: null,
-      sequence: -3,
+      sequence: -4,
       condition: true,
       parameter_queries: {},
     },
@@ -174,7 +174,7 @@ const coreActions: CoreActions = {
       name: 'Update Review Statuses',
       trigger: 'ON_APPLICATION_SUBMIT',
       event_code: null,
-      sequence: -2,
+      sequence: -3,
       condition: true,
       parameter_queries: {
         changedResponses: {
@@ -192,7 +192,7 @@ const coreActions: CoreActions = {
       name: 'Change Outcome',
       trigger: 'ON_APPLICATION_SUBMIT',
       event_code: null,
-      sequence: -1,
+      sequence: -2,
       // Condition checks that the templates is not reviewable (no associated
       // templateStageReviewLevels) and that there are no other "changeOutcome"
       // actions implemented
@@ -241,6 +241,20 @@ const coreActions: CoreActions = {
       },
       parameter_queries: {
         newOutcome: 'APPROVED',
+      },
+    },
+    // Cancel applicant deadline when (re-)submitting
+    {
+      code: 'scheduleAction',
+      path: '../plugins/action_schedule_action/src/index.ts',
+      name: 'Create Scheduled Action',
+      trigger: 'ON_APPLICATION_SUBMIT',
+      event_code: null,
+      sequence: -1,
+      condition: true,
+      parameter_queries: {
+        cancel: true,
+        eventCode: 'applicantDeadline',
       },
     },
   ],
