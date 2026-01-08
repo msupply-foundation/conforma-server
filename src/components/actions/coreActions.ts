@@ -434,7 +434,7 @@ const coreActions: CoreActions = {
             values: [
               {
                 operator: 'getData',
-                property: 'applicationData.reviewData.isLastLevel',
+                property: 'applicationData.reviewData.isLastStage',
                 fallback: false,
               },
               true,
