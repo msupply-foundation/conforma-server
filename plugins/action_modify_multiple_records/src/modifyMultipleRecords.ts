@@ -1,3 +1,4 @@
+import { get as extractProperty } from 'lodash'
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginOutput, ActionPluginType } from '../../types'
 import { action as modifyRecord } from '../../action_modify_record/src'
@@ -71,8 +72,10 @@ const constructMappedRecords = (
   keyMap: { [key: string]: string }
 ) => {
   const newRecord: { [key: string]: any } = {}
-  Object.entries(keyMap).forEach(([key, value]) => {
-    if (value in record) newRecord[key] = record?.[value]
+  Object.entries(keyMap).forEach(([key, path]) => {
+    const mappedValue = extractProperty(record, path, '__MAPPING_NOT_FOUND__')
+    console.log(path, mappedValue)
+    if (mappedValue !== '__MAPPING_NOT_FOUND__') newRecord[key] = mappedValue
   })
 
   return newRecord

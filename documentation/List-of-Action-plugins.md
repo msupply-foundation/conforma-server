@@ -262,7 +262,7 @@ Most of these parameters are the same as for `modifyRecord`. The `records` param
 
 The output `records` property is an array of results, each structured as per a single `modifyRecord` output.
 
-The `keyMap` property is used if the `records` have field names different from what you need the database field to be named. You provide an object which maps record field names to database field names -- the `keys` are the names of the fields in the database, and the `values` are the record fields that get mapped to them. 
+The `keyMap` property is used if the `records` have field names different from what you need the database field to be named. You provide an object which maps record field names to database field names -- the `keys` are the names of the fields in the database, and the `values` are the record fields that get mapped to them. The `value` can be a full path in a nested object, e.g. `medSearch.value.selection[0].unit`
 
 For example:
 
