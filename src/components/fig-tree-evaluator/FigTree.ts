@@ -12,8 +12,11 @@ const FigTree = new FigTreeEvaluator({
   httpClient: FetchClient(fetch),
   sqlConnection: SQLNodePostgres(databaseConnection),
   graphQLConnection: { endpoint: config.graphQLendpoint },
-  maxCacheSize: 400,
-  maxCacheTime: 60 * 30, // 30 minutes
+  // Don't cache back-end evaluations, as we want Actions to have access to
+  // immediate data changes, such as Approved question counts, etc. Can cause
+  // problems if using cached results. Better to change globally here than
+  // remembering to update for each affected expression.
+  useCache: false,
   evaluateFullObject: true,
   nullEqualsUndefined: true,
   // baseEndpoint:
