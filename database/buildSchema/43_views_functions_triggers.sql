@@ -2440,4 +2440,4 @@ BEGIN
   FROM file f
   WHERE f.application_note_id = note_row.id;
 END;
-$function$
+$function$;

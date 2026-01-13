@@ -25,6 +25,7 @@ import { Template as PgTemplate } from '../../generated/postgres'
 import { errorMessage } from '../utilityFunctions'
 import { updateReviewerStatsFromDBEvent } from './updateReviewerStats'
 import { hashRecord } from '../template-import-export'
+import { reloadFragments } from '../fig-tree-evaluator/FigTree'
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -71,6 +72,7 @@ class PostgresDB {
     listener.query('LISTEN file_notifications')
     listener.query('LISTEN update_reviewer_stats_notification')
     listener.query('LISTEN recalculate_checksum_notification')
+    listener.query('LISTEN evaluator_fragment_notification')
     listener.on('notification', async ({ channel, payload }) => {
       if (!payload) {
         console.log(`Notification ${channel} received with no payload!`)
@@ -120,7 +122,10 @@ class PostgresDB {
           })
           break
         case 'recalculate_checksum_notification':
-          hashRecord(payloadObject)
+          hashRecord(payloadObject).then(() => {
+            if (payloadObject?.tableName === 'evaluator_fragment') reloadFragments()
+          })
+
           break
       }
     })
