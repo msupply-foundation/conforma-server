@@ -78,7 +78,11 @@ export async function generatePDF({
   console.log('Generating document: ' + originalFilename)
 
   try {
-    const result = await carboneRender(templateFullPath, data, { convertTo: 'pdf', ...options })
+    const result = await carboneRender(templateFullPath, data, {
+      convertTo: 'pdf',
+      lang: 'en-nz',
+      ...options,
+    })
     fs.writeFileSync(path.join(appRootFolder, filesFolder, outputFilePath), result)
     await saveToDB(
       objectKeysToSnakeCase({

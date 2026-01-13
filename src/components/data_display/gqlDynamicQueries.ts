@@ -3,6 +3,7 @@ import { plural } from 'pluralize'
 import { camelCase, snakeCase, upperFirst } from 'lodash'
 import { LinkedApplication } from './types'
 import { capitaliseFirstLetter, errorMessage } from '../utilityFunctions'
+import { getDistinctRecords } from './helpers'
 
 export const queryDataTable = async (
   tableName: string,
@@ -11,7 +12,8 @@ export const queryDataTable = async (
   first: number,
   offset: number,
   orderBy: string,
-  ascending: boolean
+  ascending: boolean,
+  distinctField?: string
 ) => {
   const tableNamePlural = plural(tableName)
   const filterType = upperFirst(camelCase(tableName)) + 'Filter'
@@ -30,7 +32,8 @@ export const queryDataTable = async (
       error: { error: true, message: 'Problem with Data Table query', detail: errorMessage(err) },
     }
   }
-  const fetchedRecords = queryResult?.[tableNamePlural]?.nodes
+  const result = queryResult?.[tableNamePlural]?.nodes
+  const fetchedRecords = distinctField ? getDistinctRecords(result, distinctField) : result
   const totalCount = queryResult?.[tableNamePlural]?.totalCount
   return { fetchedRecords, totalCount }
 }

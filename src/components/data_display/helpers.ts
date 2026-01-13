@@ -543,3 +543,16 @@ export const constructDetailsResponse = async (
     linkedApplications,
   }
 }
+
+export const getDistinctRecords = (records: Record<string, unknown>[], distinctField: string) => {
+  const seen = new Set()
+  return records.filter((record) => {
+    const fieldValue = record[distinctField]
+    if (seen.has(fieldValue)) {
+      return false
+    } else {
+      seen.add(fieldValue)
+      return true
+    }
+  })
+}
