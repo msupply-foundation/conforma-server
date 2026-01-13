@@ -228,6 +228,7 @@ export type ActionQueueApplicationIdFkeyApplicationCreateInput = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -821,6 +822,7 @@ export type ActivityLogApplicationIdFkeyApplicationCreateInput = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -1144,6 +1146,8 @@ export type Application = Node & {
   dataTableManufacturerRepresentativeApplicationJoins: DataTableManufacturerRepresentativeApplicationJoinsConnection;
   /** Reads and enables pagination through a set of `DataTablePermitChemicalApplicationJoin`. */
   dataTablePermitChemicalApplicationJoins: DataTablePermitChemicalApplicationJoinsConnection;
+  /** Reads and enables pagination through a set of `DataTablePermitMedicalApplicationJoin`. */
+  dataTablePermitMedicalApplicationJoins: DataTablePermitMedicalApplicationJoinsConnection;
   /** Reads and enables pagination through a set of `DataTablePrequalManufacturerApplicationJoin`. */
   dataTablePrequalManufacturerApplicationJoins: DataTablePrequalManufacturerApplicationJoinsConnection;
   /** Reads and enables pagination through a set of `DataTableProductApplicationJoin`. */
@@ -1313,6 +1317,18 @@ export type ApplicationDataTablePermitChemicalApplicationJoinsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<DataTablePermitChemicalApplicationJoinsOrderBy>>;
+};
+
+
+export type ApplicationDataTablePermitMedicalApplicationJoinsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DataTablePermitMedicalApplicationJoinCondition>;
+  filter?: InputMaybe<DataTablePermitMedicalApplicationJoinFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DataTablePermitMedicalApplicationJoinsOrderBy>>;
 };
 
 
@@ -1572,6 +1588,10 @@ export type ApplicationFilter = {
   dataTablePermitChemicalApplicationJoins?: InputMaybe<ApplicationToManyDataTablePermitChemicalApplicationJoinFilter>;
   /** Some related `dataTablePermitChemicalApplicationJoins` exist. */
   dataTablePermitChemicalApplicationJoinsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `dataTablePermitMedicalApplicationJoins` relation. */
+  dataTablePermitMedicalApplicationJoins?: InputMaybe<ApplicationToManyDataTablePermitMedicalApplicationJoinFilter>;
+  /** Some related `dataTablePermitMedicalApplicationJoins` exist. */
+  dataTablePermitMedicalApplicationJoinsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `dataTablePrequalManufacturerApplicationJoins` relation. */
   dataTablePrequalManufacturerApplicationJoins?: InputMaybe<ApplicationToManyDataTablePrequalManufacturerApplicationJoinFilter>;
   /** Some related `dataTablePrequalManufacturerApplicationJoins` exist. */
@@ -1683,6 +1703,7 @@ export type ApplicationInput = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -2071,6 +2092,7 @@ export type ApplicationNoteApplicationIdFkeyApplicationCreateInput = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -2377,10 +2399,16 @@ export type ApplicationNoteOrgIdFkeyOrganisationCreateInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -2399,7 +2427,9 @@ export type ApplicationNoteOrgIdFkeyOrganisationCreateInput = {
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   subType?: InputMaybe<Scalars['String']['input']>;
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
+  tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** Represents an update to a `ApplicationNote`. Fields that are set will be updated. */
@@ -2837,6 +2867,35 @@ export type ApplicationOnDataTablePermitChemicalApplicationJoinForDataTablePermi
 };
 
 /** The globally unique `ID` look up for the row to update. */
+export type ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `dataTablePermitMedicalApplicationJoin` to be connected. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `dataTablePermitMedicalApplicationJoin` being updated. */
+  patch: DataTablePermitMedicalApplicationJoinPatch;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate = {
+  outcomeRegistration: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyPatch;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate = {
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyPatch;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyPatch;
+  serial: Scalars['String']['input'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
 export type ApplicationOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `dataTablePrequalManufacturerApplicationJoin` to be connected. */
   nodeId: Scalars['ID']['input'];
@@ -3197,6 +3256,7 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -3299,10 +3359,16 @@ export type ApplicationOrgIdFkeyOrganisationCreateInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -3321,7 +3387,9 @@ export type ApplicationOrgIdFkeyOrganisationCreateInput = {
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   subType?: InputMaybe<Scalars['String']['input']>;
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
+  tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 export enum ApplicationOutcome {
@@ -3371,6 +3439,7 @@ export type ApplicationPatch = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -3464,6 +3533,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -3758,6 +3828,7 @@ export type ApplicationResponsePatch = {
 
 export enum ApplicationResponseStatus {
   Draft = 'DRAFT',
+  Review = 'REVIEW',
   Submitted = 'SUBMITTED'
 }
 
@@ -3971,6 +4042,7 @@ export type ApplicationReviewerActionApplicationIdFkeyApplicationCreateInput = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -4303,6 +4375,7 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -5272,6 +5345,7 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -5494,6 +5568,16 @@ export type ApplicationToManyDataTablePermitChemicalApplicationJoinFilter = {
   none?: InputMaybe<DataTablePermitChemicalApplicationJoinFilter>;
   /** Some related `DataTablePermitChemicalApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<DataTablePermitChemicalApplicationJoinFilter>;
+};
+
+/** A filter to be used against many `DataTablePermitMedicalApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationToManyDataTablePermitMedicalApplicationJoinFilter = {
+  /** Every related `DataTablePermitMedicalApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<DataTablePermitMedicalApplicationJoinFilter>;
+  /** No related `DataTablePermitMedicalApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<DataTablePermitMedicalApplicationJoinFilter>;
+  /** Some related `DataTablePermitMedicalApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<DataTablePermitMedicalApplicationJoinFilter>;
 };
 
 /** A filter to be used against many `DataTablePrequalManufacturerApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
@@ -7244,6 +7328,76 @@ export type CreateDataTablePermitChemicalPayloadDataTablePermitChemicalEdgeArgs 
   orderBy?: InputMaybe<Array<DataTablePermitChemicalsOrderBy>>;
 };
 
+/** All input for the create `DataTablePermitMedicalApplicationJoin` mutation. */
+export type CreateDataTablePermitMedicalApplicationJoinInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `DataTablePermitMedicalApplicationJoin` to be created by this mutation. */
+  dataTablePermitMedicalApplicationJoin: DataTablePermitMedicalApplicationJoinInput;
+};
+
+/** The output of our create `DataTablePermitMedicalApplicationJoin` mutation. */
+export type CreateDataTablePermitMedicalApplicationJoinPayload = {
+  __typename?: 'CreateDataTablePermitMedicalApplicationJoinPayload';
+  /** Reads a single `Application` that is related to this `DataTablePermitMedicalApplicationJoin`. */
+  application?: Maybe<Application>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `DataTablePermitMedical` that is related to this `DataTablePermitMedicalApplicationJoin`. */
+  dataTablePermitMedical?: Maybe<DataTablePermitMedical>;
+  /** The `DataTablePermitMedicalApplicationJoin` that was created by this mutation. */
+  dataTablePermitMedicalApplicationJoin?: Maybe<DataTablePermitMedicalApplicationJoin>;
+  /** An edge for our `DataTablePermitMedicalApplicationJoin`. May be used by Relay 1. */
+  dataTablePermitMedicalApplicationJoinEdge?: Maybe<DataTablePermitMedicalApplicationJoinsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `DataTablePermitMedicalApplicationJoin` mutation. */
+export type CreateDataTablePermitMedicalApplicationJoinPayloadDataTablePermitMedicalApplicationJoinEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTablePermitMedicalApplicationJoinsOrderBy>>;
+};
+
+/** All input for the create `DataTablePermitMedical` mutation. */
+export type CreateDataTablePermitMedicalInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `DataTablePermitMedical` to be created by this mutation. */
+  dataTablePermitMedical: DataTablePermitMedicalInput;
+};
+
+/** The output of our create `DataTablePermitMedical` mutation. */
+export type CreateDataTablePermitMedicalPayload = {
+  __typename?: 'CreateDataTablePermitMedicalPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `DataTablePermitMedical` that was created by this mutation. */
+  dataTablePermitMedical?: Maybe<DataTablePermitMedical>;
+  /** An edge for our `DataTablePermitMedical`. May be used by Relay 1. */
+  dataTablePermitMedicalEdge?: Maybe<DataTablePermitMedicalsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `DataTablePermitMedical` mutation. */
+export type CreateDataTablePermitMedicalPayloadDataTablePermitMedicalEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTablePermitMedicalsOrderBy>>;
+};
+
 /** All input for the create `DataTablePreRegisteredProductsProvisional` mutation. */
 export type CreateDataTablePreRegisteredProductsProvisionalInput = {
   /**
@@ -7615,6 +7769,39 @@ export type CreateDataTableStorageConditionsSimplifiedPayload = {
 /** The output of our create `DataTableStorageConditionsSimplified` mutation. */
 export type CreateDataTableStorageConditionsSimplifiedPayloadDataTableStorageConditionsSimplifiedEdgeArgs = {
   orderBy?: InputMaybe<Array<DataTableStorageConditionsSimplifiedsOrderBy>>;
+};
+
+/** All input for the create `DataTableTownsDivisionsIsland` mutation. */
+export type CreateDataTableTownsDivisionsIslandInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `DataTableTownsDivisionsIsland` to be created by this mutation. */
+  dataTableTownsDivisionsIsland: DataTableTownsDivisionsIslandInput;
+};
+
+/** The output of our create `DataTableTownsDivisionsIsland` mutation. */
+export type CreateDataTableTownsDivisionsIslandPayload = {
+  __typename?: 'CreateDataTableTownsDivisionsIslandPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `DataTableTownsDivisionsIsland` that was created by this mutation. */
+  dataTableTownsDivisionsIsland?: Maybe<DataTableTownsDivisionsIsland>;
+  /** An edge for our `DataTableTownsDivisionsIsland`. May be used by Relay 1. */
+  dataTableTownsDivisionsIslandEdge?: Maybe<DataTableTownsDivisionsIslandsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `DataTableTownsDivisionsIsland` mutation. */
+export type CreateDataTableTownsDivisionsIslandPayloadDataTableTownsDivisionsIslandEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableTownsDivisionsIslandsOrderBy>>;
 };
 
 /** All input for the create `DataTableUnitsOfProportion` mutation. */
@@ -9146,6 +9333,7 @@ export type DataChangelogApplicationIdFkeyApplicationCreateInput = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -9464,10 +9652,16 @@ export type DataChangelogOrgIdFkeyOrganisationCreateInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -9486,7 +9680,9 @@ export type DataChangelogOrgIdFkeyOrganisationCreateInput = {
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   subType?: InputMaybe<Scalars['String']['input']>;
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
+  tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** Represents an update to a `DataChangelog`. Fields that are set will be updated. */
@@ -10528,6 +10724,7 @@ export type DataTableManufacturerApplicationJoinApplicationIdFkeyApplicationCrea
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -10989,6 +11186,7 @@ export type DataTableManufacturerRepresentativeApplApplicationIdFkeyApplicationC
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -11720,6 +11918,7 @@ export type DataTablePermitChemicalApplicationJoinApplicationIdFkeyApplicationCr
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -12110,6 +12309,598 @@ export enum DataTablePermitChemicalsOrderBy {
   RegistrationDateDesc = 'REGISTRATION_DATE_DESC'
 }
 
+export type DataTablePermitMedical = Node & {
+  __typename?: 'DataTablePermitMedical';
+  billLadingNumber?: Maybe<Scalars['String']['output']>;
+  companyId?: Maybe<Scalars['Int']['output']>;
+  companyName?: Maybe<Scalars['String']['output']>;
+  consignorAddress?: Maybe<Scalars['String']['output']>;
+  consignorName?: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `DataTablePermitMedicalApplicationJoin`. */
+  dataTablePermitMedicalApplicationJoins: DataTablePermitMedicalApplicationJoinsConnection;
+  exportCountry?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  modeOfTransport?: Maybe<Scalars['String']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID']['output'];
+  nonRegisteredProducts?: Maybe<Scalars['JSON']['output']>;
+  nonRegisteredProductsFilterData?: Maybe<Scalars['String']['output']>;
+  nonRegisteredReason?: Maybe<Scalars['String']['output']>;
+  permitNo?: Maybe<Scalars['String']['output']>;
+  portOfEntry?: Maybe<Scalars['String']['output']>;
+  provisionalProducts?: Maybe<Scalars['JSON']['output']>;
+  provisionalProductsFilterData?: Maybe<Scalars['String']['output']>;
+  registrationDate?: Maybe<Scalars['Datetime']['output']>;
+};
+
+
+export type DataTablePermitMedicalDataTablePermitMedicalApplicationJoinsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DataTablePermitMedicalApplicationJoinCondition>;
+  filter?: InputMaybe<DataTablePermitMedicalApplicationJoinFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DataTablePermitMedicalApplicationJoinsOrderBy>>;
+};
+
+/** The `dataTablePermitMedicalApplicationJoin` to be created by this mutation. */
+export type DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyDataTablePermitMedicalApplicationJoinCreateInput = {
+  applicationId?: InputMaybe<Scalars['Int']['input']>;
+  applicationToApplicationId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInput>;
+  dataTablePermitMedicalToDataTablePermitMedicalId?: InputMaybe<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** The `dataTablePermitMedical` to be created by this mutation. */
+export type DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyDataTablePermitMedicalCreateInput = {
+  billLadingNumber?: InputMaybe<Scalars['String']['input']>;
+  companyId?: InputMaybe<Scalars['Int']['input']>;
+  companyName?: InputMaybe<Scalars['String']['input']>;
+  consignorAddress?: InputMaybe<Scalars['String']['input']>;
+  consignorName?: InputMaybe<Scalars['String']['input']>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInverseInput>;
+  exportCountry?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  modeOfTransport?: InputMaybe<Scalars['String']['input']>;
+  nonRegisteredProducts?: InputMaybe<Scalars['JSON']['input']>;
+  nonRegisteredProductsFilterData?: InputMaybe<Scalars['String']['input']>;
+  nonRegisteredReason?: InputMaybe<Scalars['String']['input']>;
+  permitNo?: InputMaybe<Scalars['String']['input']>;
+  portOfEntry?: InputMaybe<Scalars['String']['input']>;
+  provisionalProducts?: InputMaybe<Scalars['JSON']['input']>;
+  provisionalProductsFilterData?: InputMaybe<Scalars['String']['input']>;
+  registrationDate?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** Input for the nested mutation of `dataTablePermitMedical` in the `DataTablePermitMedicalApplicationJoinInput` mutation. */
+export type DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInput = {
+  /** The primary key(s) for `dataTablePermitMedical` for the far side of the relationship. */
+  connectById?: InputMaybe<DataTablePermitMedicalDataTablePermitMedicalPkeyConnect>;
+  /** The primary key(s) for `dataTablePermitMedical` for the far side of the relationship. */
+  connectByNodeId?: InputMaybe<DataTablePermitMedicalNodeIdConnect>;
+  /** A `DataTablePermitMedicalInput` object that will be created and connected to this object. */
+  create?: InputMaybe<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyDataTablePermitMedicalCreateInput>;
+  /** The primary key(s) for `dataTablePermitMedical` for the far side of the relationship. */
+  deleteById?: InputMaybe<DataTablePermitMedicalDataTablePermitMedicalPkeyDelete>;
+  /** The primary key(s) for `dataTablePermitMedical` for the far side of the relationship. */
+  deleteByNodeId?: InputMaybe<DataTablePermitMedicalNodeIdDelete>;
+  /** The primary key(s) and patch data for `dataTablePermitMedical` for the far side of the relationship. */
+  updateById?: InputMaybe<DataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyUsingDataTablePermitMedicalPkeyUpdate>;
+  /** The primary key(s) and patch data for `dataTablePermitMedical` for the far side of the relationship. */
+  updateByNodeId?: InputMaybe<DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyNodeIdUpdate>;
+};
+
+/** Input for the nested mutation of `dataTablePermitMedicalApplicationJoin` in the `DataTablePermitMedicalInput` mutation. */
+export type DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInverseInput = {
+  /** The primary key(s) for `dataTablePermitMedicalApplicationJoin` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<DataTablePermitMedicalApplicationJoinDataTablePermitMedicalApplicationJoinPkeyConnect>>;
+  /** The primary key(s) for `dataTablePermitMedicalApplicationJoin` for the far side of the relationship. */
+  connectByNodeId?: InputMaybe<Array<DataTablePermitMedicalApplicationJoinNodeIdConnect>>;
+  /** A `DataTablePermitMedicalApplicationJoinInput` object that will be created and connected to this object. */
+  create?: InputMaybe<Array<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyDataTablePermitMedicalApplicationJoinCreateInput>>;
+  /** The primary key(s) for `dataTablePermitMedicalApplicationJoin` for the far side of the relationship. */
+  deleteById?: InputMaybe<Array<DataTablePermitMedicalApplicationJoinDataTablePermitMedicalApplicationJoinPkeyDelete>>;
+  /** The primary key(s) for `dataTablePermitMedicalApplicationJoin` for the far side of the relationship. */
+  deleteByNodeId?: InputMaybe<Array<DataTablePermitMedicalApplicationJoinNodeIdDelete>>;
+  /** Flag indicating whether all other `dataTablePermitMedicalApplicationJoin` records that match this relationship should be removed. */
+  deleteOthers?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The primary key(s) and patch data for `dataTablePermitMedicalApplicationJoin` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyUsingDataTablePermitMedicalApplicationJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `dataTablePermitMedicalApplicationJoin` for the far side of the relationship. */
+  updateByNodeId?: InputMaybe<Array<DataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyNodeIdUpdate>>;
+};
+
+export type DataTablePermitMedicalApplicationJoin = Node & {
+  __typename?: 'DataTablePermitMedicalApplicationJoin';
+  /** Reads a single `Application` that is related to this `DataTablePermitMedicalApplicationJoin`. */
+  application?: Maybe<Application>;
+  applicationId: Scalars['Int']['output'];
+  /** Reads a single `DataTablePermitMedical` that is related to this `DataTablePermitMedicalApplicationJoin`. */
+  dataTablePermitMedical?: Maybe<DataTablePermitMedical>;
+  dataTablePermitMedicalId: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID']['output'];
+};
+
+/** The `application` to be created by this mutation. */
+export type DataTablePermitMedicalApplicationJoinApplicationIdFkeyApplicationCreateInput = {
+  actionQueuesUsingId?: InputMaybe<ActionQueueApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: InputMaybe<ActivityLogApplicationIdFkeyInverseInput>;
+  applicationNotesUsingId?: InputMaybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: InputMaybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: InputMaybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
+  dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
+  dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: InputMaybe<FileApplicationSerialFkeyInverseInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  isConfig?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  notificationsUsingId?: InputMaybe<NotificationApplicationIdFkeyInverseInput>;
+  orgId?: InputMaybe<Scalars['Int']['input']>;
+  organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationToOrgId?: InputMaybe<ApplicationOrgIdFkeyInput>;
+  outcome?: InputMaybe<ApplicationOutcome>;
+  outcomeRegistration?: InputMaybe<Scalars['String']['input']>;
+  reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  reviewsUsingId?: InputMaybe<ReviewApplicationIdFkeyInverseInput>;
+  serial?: InputMaybe<Scalars['String']['input']>;
+  sessionId?: InputMaybe<Scalars['String']['input']>;
+  templateId?: InputMaybe<Scalars['Int']['input']>;
+  templateToTemplateId?: InputMaybe<ApplicationTemplateIdFkeyInput>;
+  trigger?: InputMaybe<Trigger>;
+  triggerQueuesUsingId?: InputMaybe<TriggerQueueApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: InputMaybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  urlProperties?: InputMaybe<Scalars['JSON']['input']>;
+  userApplicationJoinsUsingId?: InputMaybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userId?: InputMaybe<Scalars['Int']['input']>;
+  userListToUserId?: InputMaybe<FakePublicApplicationForeignKey0Input>;
+  verificationsUsingId?: InputMaybe<VerificationApplicationIdFkeyInverseInput>;
+};
+
+/** The `dataTablePermitMedicalApplicationJoin` to be created by this mutation. */
+export type DataTablePermitMedicalApplicationJoinApplicationIdFkeyDataTablePermitMedicalApplicationJoinCreateInput = {
+  applicationToApplicationId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInput>;
+  dataTablePermitMedicalId?: InputMaybe<Scalars['Int']['input']>;
+  dataTablePermitMedicalToDataTablePermitMedicalId?: InputMaybe<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Input for the nested mutation of `application` in the `DataTablePermitMedicalApplicationJoinInput` mutation. */
+export type DataTablePermitMedicalApplicationJoinApplicationIdFkeyInput = {
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectById?: InputMaybe<ApplicationApplicationPkeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByNodeId?: InputMaybe<ApplicationNodeIdConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByOutcomeRegistration?: InputMaybe<ApplicationApplicationOutcomeRegistrationKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: InputMaybe<ApplicationApplicationSerialKeyConnect>;
+  /** A `ApplicationInput` object that will be created and connected to this object. */
+  create?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyApplicationCreateInput>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteById?: InputMaybe<ApplicationApplicationPkeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByNodeId?: InputMaybe<ApplicationNodeIdDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByOutcomeRegistration?: InputMaybe<ApplicationApplicationOutcomeRegistrationKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: InputMaybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateById?: InputMaybe<ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByNodeId?: InputMaybe<DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyNodeIdUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByOutcomeRegistration?: InputMaybe<ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: InputMaybe<ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
+};
+
+/** Input for the nested mutation of `dataTablePermitMedicalApplicationJoin` in the `ApplicationInput` mutation. */
+export type DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput = {
+  /** The primary key(s) for `dataTablePermitMedicalApplicationJoin` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<DataTablePermitMedicalApplicationJoinDataTablePermitMedicalApplicationJoinPkeyConnect>>;
+  /** The primary key(s) for `dataTablePermitMedicalApplicationJoin` for the far side of the relationship. */
+  connectByNodeId?: InputMaybe<Array<DataTablePermitMedicalApplicationJoinNodeIdConnect>>;
+  /** A `DataTablePermitMedicalApplicationJoinInput` object that will be created and connected to this object. */
+  create?: InputMaybe<Array<DataTablePermitMedicalApplicationJoinApplicationIdFkeyDataTablePermitMedicalApplicationJoinCreateInput>>;
+  /** The primary key(s) for `dataTablePermitMedicalApplicationJoin` for the far side of the relationship. */
+  deleteById?: InputMaybe<Array<DataTablePermitMedicalApplicationJoinDataTablePermitMedicalApplicationJoinPkeyDelete>>;
+  /** The primary key(s) for `dataTablePermitMedicalApplicationJoin` for the far side of the relationship. */
+  deleteByNodeId?: InputMaybe<Array<DataTablePermitMedicalApplicationJoinNodeIdDelete>>;
+  /** Flag indicating whether all other `dataTablePermitMedicalApplicationJoin` records that match this relationship should be removed. */
+  deleteOthers?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The primary key(s) and patch data for `dataTablePermitMedicalApplicationJoin` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingDataTablePermitMedicalApplicationJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `dataTablePermitMedicalApplicationJoin` for the far side of the relationship. */
+  updateByNodeId?: InputMaybe<Array<ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyNodeIdUpdate>>;
+};
+
+/**
+ * A condition to be used against `DataTablePermitMedicalApplicationJoin` object
+ * types. All fields are tested for equality and combined with a logical ‘and.’
+ */
+export type DataTablePermitMedicalApplicationJoinCondition = {
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `dataTablePermitMedicalId` field. */
+  dataTablePermitMedicalId?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** The fields on `dataTablePermitMedicalApplicationJoin` to look up the row to connect. */
+export type DataTablePermitMedicalApplicationJoinDataTablePermitMedicalApplicationJoinPkeyConnect = {
+  id: Scalars['Int']['input'];
+};
+
+/** The fields on `dataTablePermitMedicalApplicationJoin` to look up the row to delete. */
+export type DataTablePermitMedicalApplicationJoinDataTablePermitMedicalApplicationJoinPkeyDelete = {
+  id: Scalars['Int']['input'];
+};
+
+/** A filter to be used against `DataTablePermitMedicalApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type DataTablePermitMedicalApplicationJoinFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<DataTablePermitMedicalApplicationJoinFilter>>;
+  /** Filter by the object’s `application` relation. */
+  application?: InputMaybe<ApplicationFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `dataTablePermitMedical` relation. */
+  dataTablePermitMedical?: InputMaybe<DataTablePermitMedicalFilter>;
+  /** Filter by the object’s `dataTablePermitMedicalId` field. */
+  dataTablePermitMedicalId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<IntFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<DataTablePermitMedicalApplicationJoinFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<DataTablePermitMedicalApplicationJoinFilter>>;
+};
+
+/** An input for mutations affecting `DataTablePermitMedicalApplicationJoin` */
+export type DataTablePermitMedicalApplicationJoinInput = {
+  applicationId?: InputMaybe<Scalars['Int']['input']>;
+  applicationToApplicationId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInput>;
+  dataTablePermitMedicalId?: InputMaybe<Scalars['Int']['input']>;
+  dataTablePermitMedicalToDataTablePermitMedicalId?: InputMaybe<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type DataTablePermitMedicalApplicationJoinNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `dataTablePermitMedicalApplicationJoin` to be connected. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type DataTablePermitMedicalApplicationJoinNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `dataTablePermitMedicalApplicationJoin` to be deleted. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `dataTablePermitMedical` to be connected. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `dataTablePermitMedical` being updated. */
+  patch: DataTablePermitMedicalPatch;
+};
+
+/** The fields on `dataTablePermitMedicalApplicationJoin` to look up the row to update. */
+export type DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyUsingDataTablePermitMedicalApplicationJoinPkeyUpdate = {
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `dataTablePermitMedicalApplicationJoin` being updated. */
+  patch: UpdateDataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyPatch;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `application` to be connected. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: ApplicationPatch;
+};
+
+/** The fields on `dataTablePermitMedicalApplicationJoin` to look up the row to update. */
+export type DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingDataTablePermitMedicalApplicationJoinPkeyUpdate = {
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `dataTablePermitMedicalApplicationJoin` being updated. */
+  patch: UpdateDataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyPatch;
+};
+
+/** Represents an update to a `DataTablePermitMedicalApplicationJoin`. Fields that are set will be updated. */
+export type DataTablePermitMedicalApplicationJoinPatch = {
+  applicationId?: InputMaybe<Scalars['Int']['input']>;
+  applicationToApplicationId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInput>;
+  dataTablePermitMedicalId?: InputMaybe<Scalars['Int']['input']>;
+  dataTablePermitMedicalToDataTablePermitMedicalId?: InputMaybe<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** A connection to a list of `DataTablePermitMedicalApplicationJoin` values. */
+export type DataTablePermitMedicalApplicationJoinsConnection = {
+  __typename?: 'DataTablePermitMedicalApplicationJoinsConnection';
+  /** A list of edges which contains the `DataTablePermitMedicalApplicationJoin` and cursor to aid in pagination. */
+  edges: Array<DataTablePermitMedicalApplicationJoinsEdge>;
+  /** A list of `DataTablePermitMedicalApplicationJoin` objects. */
+  nodes: Array<Maybe<DataTablePermitMedicalApplicationJoin>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `DataTablePermitMedicalApplicationJoin` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `DataTablePermitMedicalApplicationJoin` edge in the connection. */
+export type DataTablePermitMedicalApplicationJoinsEdge = {
+  __typename?: 'DataTablePermitMedicalApplicationJoinsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `DataTablePermitMedicalApplicationJoin` at the end of the edge. */
+  node?: Maybe<DataTablePermitMedicalApplicationJoin>;
+};
+
+/** Methods to use when ordering `DataTablePermitMedicalApplicationJoin`. */
+export enum DataTablePermitMedicalApplicationJoinsOrderBy {
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  DataTablePermitMedicalIdAsc = 'DATA_TABLE_PERMIT_MEDICAL_ID_ASC',
+  DataTablePermitMedicalIdDesc = 'DATA_TABLE_PERMIT_MEDICAL_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/**
+ * A condition to be used against `DataTablePermitMedical` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type DataTablePermitMedicalCondition = {
+  /** Checks for equality with the object’s `billLadingNumber` field. */
+  billLadingNumber?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `companyId` field. */
+  companyId?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `companyName` field. */
+  companyName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `consignorAddress` field. */
+  consignorAddress?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `consignorName` field. */
+  consignorName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `exportCountry` field. */
+  exportCountry?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `modeOfTransport` field. */
+  modeOfTransport?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `nonRegisteredProducts` field. */
+  nonRegisteredProducts?: InputMaybe<Scalars['JSON']['input']>;
+  /** Checks for equality with the object’s `nonRegisteredProductsFilterData` field. */
+  nonRegisteredProductsFilterData?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `nonRegisteredReason` field. */
+  nonRegisteredReason?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `permitNo` field. */
+  permitNo?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `portOfEntry` field. */
+  portOfEntry?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `provisionalProducts` field. */
+  provisionalProducts?: InputMaybe<Scalars['JSON']['input']>;
+  /** Checks for equality with the object’s `provisionalProductsFilterData` field. */
+  provisionalProductsFilterData?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `registrationDate` field. */
+  registrationDate?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** The fields on `dataTablePermitMedical` to look up the row to connect. */
+export type DataTablePermitMedicalDataTablePermitMedicalPkeyConnect = {
+  id: Scalars['Int']['input'];
+};
+
+/** The fields on `dataTablePermitMedical` to look up the row to delete. */
+export type DataTablePermitMedicalDataTablePermitMedicalPkeyDelete = {
+  id: Scalars['Int']['input'];
+};
+
+/** A filter to be used against `DataTablePermitMedical` object types. All fields are combined with a logical ‘and.’ */
+export type DataTablePermitMedicalFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<DataTablePermitMedicalFilter>>;
+  /** Filter by the object’s `billLadingNumber` field. */
+  billLadingNumber?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `companyId` field. */
+  companyId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `companyName` field. */
+  companyName?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `consignorAddress` field. */
+  consignorAddress?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `consignorName` field. */
+  consignorName?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `dataTablePermitMedicalApplicationJoins` relation. */
+  dataTablePermitMedicalApplicationJoins?: InputMaybe<DataTablePermitMedicalToManyDataTablePermitMedicalApplicationJoinFilter>;
+  /** Some related `dataTablePermitMedicalApplicationJoins` exist. */
+  dataTablePermitMedicalApplicationJoinsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `exportCountry` field. */
+  exportCountry?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `modeOfTransport` field. */
+  modeOfTransport?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `nonRegisteredProducts` field. */
+  nonRegisteredProducts?: InputMaybe<JsonFilter>;
+  /** Filter by the object’s `nonRegisteredProductsFilterData` field. */
+  nonRegisteredProductsFilterData?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `nonRegisteredReason` field. */
+  nonRegisteredReason?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<DataTablePermitMedicalFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<DataTablePermitMedicalFilter>>;
+  /** Filter by the object’s `permitNo` field. */
+  permitNo?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `portOfEntry` field. */
+  portOfEntry?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `provisionalProducts` field. */
+  provisionalProducts?: InputMaybe<JsonFilter>;
+  /** Filter by the object’s `provisionalProductsFilterData` field. */
+  provisionalProductsFilterData?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `registrationDate` field. */
+  registrationDate?: InputMaybe<DatetimeFilter>;
+};
+
+/** An input for mutations affecting `DataTablePermitMedical` */
+export type DataTablePermitMedicalInput = {
+  billLadingNumber?: InputMaybe<Scalars['String']['input']>;
+  companyId?: InputMaybe<Scalars['Int']['input']>;
+  companyName?: InputMaybe<Scalars['String']['input']>;
+  consignorAddress?: InputMaybe<Scalars['String']['input']>;
+  consignorName?: InputMaybe<Scalars['String']['input']>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInverseInput>;
+  exportCountry?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  modeOfTransport?: InputMaybe<Scalars['String']['input']>;
+  nonRegisteredProducts?: InputMaybe<Scalars['JSON']['input']>;
+  nonRegisteredProductsFilterData?: InputMaybe<Scalars['String']['input']>;
+  nonRegisteredReason?: InputMaybe<Scalars['String']['input']>;
+  permitNo?: InputMaybe<Scalars['String']['input']>;
+  portOfEntry?: InputMaybe<Scalars['String']['input']>;
+  provisionalProducts?: InputMaybe<Scalars['JSON']['input']>;
+  provisionalProductsFilterData?: InputMaybe<Scalars['String']['input']>;
+  registrationDate?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type DataTablePermitMedicalNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `dataTablePermitMedical` to be connected. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type DataTablePermitMedicalNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `dataTablePermitMedical` to be deleted. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type DataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `dataTablePermitMedicalApplicationJoin` to be connected. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `dataTablePermitMedicalApplicationJoin` being updated. */
+  patch: DataTablePermitMedicalApplicationJoinPatch;
+};
+
+/** The fields on `dataTablePermitMedical` to look up the row to update. */
+export type DataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyUsingDataTablePermitMedicalPkeyUpdate = {
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `dataTablePermitMedical` being updated. */
+  patch: UpdateDataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyPatch;
+};
+
+/** Represents an update to a `DataTablePermitMedical`. Fields that are set will be updated. */
+export type DataTablePermitMedicalPatch = {
+  billLadingNumber?: InputMaybe<Scalars['String']['input']>;
+  companyId?: InputMaybe<Scalars['Int']['input']>;
+  companyName?: InputMaybe<Scalars['String']['input']>;
+  consignorAddress?: InputMaybe<Scalars['String']['input']>;
+  consignorName?: InputMaybe<Scalars['String']['input']>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInverseInput>;
+  exportCountry?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  modeOfTransport?: InputMaybe<Scalars['String']['input']>;
+  nonRegisteredProducts?: InputMaybe<Scalars['JSON']['input']>;
+  nonRegisteredProductsFilterData?: InputMaybe<Scalars['String']['input']>;
+  nonRegisteredReason?: InputMaybe<Scalars['String']['input']>;
+  permitNo?: InputMaybe<Scalars['String']['input']>;
+  portOfEntry?: InputMaybe<Scalars['String']['input']>;
+  provisionalProducts?: InputMaybe<Scalars['JSON']['input']>;
+  provisionalProductsFilterData?: InputMaybe<Scalars['String']['input']>;
+  registrationDate?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** A filter to be used against many `DataTablePermitMedicalApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type DataTablePermitMedicalToManyDataTablePermitMedicalApplicationJoinFilter = {
+  /** Every related `DataTablePermitMedicalApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<DataTablePermitMedicalApplicationJoinFilter>;
+  /** No related `DataTablePermitMedicalApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<DataTablePermitMedicalApplicationJoinFilter>;
+  /** Some related `DataTablePermitMedicalApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<DataTablePermitMedicalApplicationJoinFilter>;
+};
+
+/** A connection to a list of `DataTablePermitMedical` values. */
+export type DataTablePermitMedicalsConnection = {
+  __typename?: 'DataTablePermitMedicalsConnection';
+  /** A list of edges which contains the `DataTablePermitMedical` and cursor to aid in pagination. */
+  edges: Array<DataTablePermitMedicalsEdge>;
+  /** A list of `DataTablePermitMedical` objects. */
+  nodes: Array<Maybe<DataTablePermitMedical>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `DataTablePermitMedical` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `DataTablePermitMedical` edge in the connection. */
+export type DataTablePermitMedicalsEdge = {
+  __typename?: 'DataTablePermitMedicalsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `DataTablePermitMedical` at the end of the edge. */
+  node?: Maybe<DataTablePermitMedical>;
+};
+
+/** Methods to use when ordering `DataTablePermitMedical`. */
+export enum DataTablePermitMedicalsOrderBy {
+  BillLadingNumberAsc = 'BILL_LADING_NUMBER_ASC',
+  BillLadingNumberDesc = 'BILL_LADING_NUMBER_DESC',
+  CompanyIdAsc = 'COMPANY_ID_ASC',
+  CompanyIdDesc = 'COMPANY_ID_DESC',
+  CompanyNameAsc = 'COMPANY_NAME_ASC',
+  CompanyNameDesc = 'COMPANY_NAME_DESC',
+  ConsignorAddressAsc = 'CONSIGNOR_ADDRESS_ASC',
+  ConsignorAddressDesc = 'CONSIGNOR_ADDRESS_DESC',
+  ConsignorNameAsc = 'CONSIGNOR_NAME_ASC',
+  ConsignorNameDesc = 'CONSIGNOR_NAME_DESC',
+  ExportCountryAsc = 'EXPORT_COUNTRY_ASC',
+  ExportCountryDesc = 'EXPORT_COUNTRY_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  ModeOfTransportAsc = 'MODE_OF_TRANSPORT_ASC',
+  ModeOfTransportDesc = 'MODE_OF_TRANSPORT_DESC',
+  Natural = 'NATURAL',
+  NonRegisteredProductsAsc = 'NON_REGISTERED_PRODUCTS_ASC',
+  NonRegisteredProductsDesc = 'NON_REGISTERED_PRODUCTS_DESC',
+  NonRegisteredProductsFilterDataAsc = 'NON_REGISTERED_PRODUCTS_FILTER_DATA_ASC',
+  NonRegisteredProductsFilterDataDesc = 'NON_REGISTERED_PRODUCTS_FILTER_DATA_DESC',
+  NonRegisteredReasonAsc = 'NON_REGISTERED_REASON_ASC',
+  NonRegisteredReasonDesc = 'NON_REGISTERED_REASON_DESC',
+  PermitNoAsc = 'PERMIT_NO_ASC',
+  PermitNoDesc = 'PERMIT_NO_DESC',
+  PortOfEntryAsc = 'PORT_OF_ENTRY_ASC',
+  PortOfEntryDesc = 'PORT_OF_ENTRY_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  ProvisionalProductsAsc = 'PROVISIONAL_PRODUCTS_ASC',
+  ProvisionalProductsDesc = 'PROVISIONAL_PRODUCTS_DESC',
+  ProvisionalProductsFilterDataAsc = 'PROVISIONAL_PRODUCTS_FILTER_DATA_ASC',
+  ProvisionalProductsFilterDataDesc = 'PROVISIONAL_PRODUCTS_FILTER_DATA_DESC',
+  RegistrationDateAsc = 'REGISTRATION_DATE_ASC',
+  RegistrationDateDesc = 'REGISTRATION_DATE_DESC'
+}
+
 export type DataTablePreRegisteredProductsProvisional = Node & {
   __typename?: 'DataTablePreRegisteredProductsProvisional';
   activeIngredients?: Maybe<Scalars['JSON']['output']>;
@@ -12487,6 +13278,7 @@ export type DataTablePrequalManufacturerApplicationApplicationIdFkeyApplicationC
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -13076,6 +13868,7 @@ export type DataTableProductApplicationJoinApplicationIdFkeyApplicationCreateInp
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -13741,6 +14534,7 @@ export type DataTableProvisionalProductApplicationApplicationIdFkeyApplicationCr
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -14676,6 +15470,102 @@ export enum DataTableStorageConditionsSimplifiedsOrderBy {
   PortugueseNameDesc = 'PORTUGUESE_NAME_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+export type DataTableTownsDivisionsIsland = Node & {
+  __typename?: 'DataTableTownsDivisionsIsland';
+  division?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  island?: Maybe<Scalars['String']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID']['output'];
+  town?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * A condition to be used against `DataTableTownsDivisionsIsland` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
+ */
+export type DataTableTownsDivisionsIslandCondition = {
+  /** Checks for equality with the object’s `division` field. */
+  division?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `island` field. */
+  island?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `town` field. */
+  town?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A filter to be used against `DataTableTownsDivisionsIsland` object types. All fields are combined with a logical ‘and.’ */
+export type DataTableTownsDivisionsIslandFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<DataTableTownsDivisionsIslandFilter>>;
+  /** Filter by the object’s `division` field. */
+  division?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `island` field. */
+  island?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<DataTableTownsDivisionsIslandFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<DataTableTownsDivisionsIslandFilter>>;
+  /** Filter by the object’s `town` field. */
+  town?: InputMaybe<StringFilter>;
+};
+
+/** An input for mutations affecting `DataTableTownsDivisionsIsland` */
+export type DataTableTownsDivisionsIslandInput = {
+  division?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
+  town?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents an update to a `DataTableTownsDivisionsIsland`. Fields that are set will be updated. */
+export type DataTableTownsDivisionsIslandPatch = {
+  division?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
+  town?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A connection to a list of `DataTableTownsDivisionsIsland` values. */
+export type DataTableTownsDivisionsIslandsConnection = {
+  __typename?: 'DataTableTownsDivisionsIslandsConnection';
+  /** A list of edges which contains the `DataTableTownsDivisionsIsland` and cursor to aid in pagination. */
+  edges: Array<DataTableTownsDivisionsIslandsEdge>;
+  /** A list of `DataTableTownsDivisionsIsland` objects. */
+  nodes: Array<Maybe<DataTableTownsDivisionsIsland>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `DataTableTownsDivisionsIsland` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `DataTableTownsDivisionsIsland` edge in the connection. */
+export type DataTableTownsDivisionsIslandsEdge = {
+  __typename?: 'DataTableTownsDivisionsIslandsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `DataTableTownsDivisionsIsland` at the end of the edge. */
+  node?: Maybe<DataTableTownsDivisionsIsland>;
+};
+
+/** Methods to use when ordering `DataTableTownsDivisionsIsland`. */
+export enum DataTableTownsDivisionsIslandsOrderBy {
+  DivisionAsc = 'DIVISION_ASC',
+  DivisionDesc = 'DIVISION_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  IslandAsc = 'ISLAND_ASC',
+  IslandDesc = 'ISLAND_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  TownAsc = 'TOWN_ASC',
+  TownDesc = 'TOWN_DESC'
 }
 
 export type DataTableUnitsOfProportion = Node & {
@@ -16875,6 +17765,98 @@ export type DeleteDataTablePermitChemicalPayloadDataTablePermitChemicalEdgeArgs 
   orderBy?: InputMaybe<Array<DataTablePermitChemicalsOrderBy>>;
 };
 
+/** All input for the `deleteDataTablePermitMedicalApplicationJoinByNodeId` mutation. */
+export type DeleteDataTablePermitMedicalApplicationJoinByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `DataTablePermitMedicalApplicationJoin` to be deleted. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteDataTablePermitMedicalApplicationJoin` mutation. */
+export type DeleteDataTablePermitMedicalApplicationJoinInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+/** The output of our delete `DataTablePermitMedicalApplicationJoin` mutation. */
+export type DeleteDataTablePermitMedicalApplicationJoinPayload = {
+  __typename?: 'DeleteDataTablePermitMedicalApplicationJoinPayload';
+  /** Reads a single `Application` that is related to this `DataTablePermitMedicalApplicationJoin`. */
+  application?: Maybe<Application>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `DataTablePermitMedical` that is related to this `DataTablePermitMedicalApplicationJoin`. */
+  dataTablePermitMedical?: Maybe<DataTablePermitMedical>;
+  /** The `DataTablePermitMedicalApplicationJoin` that was deleted by this mutation. */
+  dataTablePermitMedicalApplicationJoin?: Maybe<DataTablePermitMedicalApplicationJoin>;
+  /** An edge for our `DataTablePermitMedicalApplicationJoin`. May be used by Relay 1. */
+  dataTablePermitMedicalApplicationJoinEdge?: Maybe<DataTablePermitMedicalApplicationJoinsEdge>;
+  deletedDataTablePermitMedicalApplicationJoinNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `DataTablePermitMedicalApplicationJoin` mutation. */
+export type DeleteDataTablePermitMedicalApplicationJoinPayloadDataTablePermitMedicalApplicationJoinEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTablePermitMedicalApplicationJoinsOrderBy>>;
+};
+
+/** All input for the `deleteDataTablePermitMedicalByNodeId` mutation. */
+export type DeleteDataTablePermitMedicalByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `DataTablePermitMedical` to be deleted. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteDataTablePermitMedical` mutation. */
+export type DeleteDataTablePermitMedicalInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+/** The output of our delete `DataTablePermitMedical` mutation. */
+export type DeleteDataTablePermitMedicalPayload = {
+  __typename?: 'DeleteDataTablePermitMedicalPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `DataTablePermitMedical` that was deleted by this mutation. */
+  dataTablePermitMedical?: Maybe<DataTablePermitMedical>;
+  /** An edge for our `DataTablePermitMedical`. May be used by Relay 1. */
+  dataTablePermitMedicalEdge?: Maybe<DataTablePermitMedicalsEdge>;
+  deletedDataTablePermitMedicalNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `DataTablePermitMedical` mutation. */
+export type DeleteDataTablePermitMedicalPayloadDataTablePermitMedicalEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTablePermitMedicalsOrderBy>>;
+};
+
 /** All input for the `deleteDataTablePreRegisteredProductsProvisionalByNodeId` mutation. */
 export type DeleteDataTablePreRegisteredProductsProvisionalByNodeIdInput = {
   /**
@@ -17367,6 +18349,50 @@ export type DeleteDataTableStorageConditionsSimplifiedPayload = {
 /** The output of our delete `DataTableStorageConditionsSimplified` mutation. */
 export type DeleteDataTableStorageConditionsSimplifiedPayloadDataTableStorageConditionsSimplifiedEdgeArgs = {
   orderBy?: InputMaybe<Array<DataTableStorageConditionsSimplifiedsOrderBy>>;
+};
+
+/** All input for the `deleteDataTableTownsDivisionsIslandByNodeId` mutation. */
+export type DeleteDataTableTownsDivisionsIslandByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `DataTableTownsDivisionsIsland` to be deleted. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteDataTableTownsDivisionsIsland` mutation. */
+export type DeleteDataTableTownsDivisionsIslandInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+/** The output of our delete `DataTableTownsDivisionsIsland` mutation. */
+export type DeleteDataTableTownsDivisionsIslandPayload = {
+  __typename?: 'DeleteDataTableTownsDivisionsIslandPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `DataTableTownsDivisionsIsland` that was deleted by this mutation. */
+  dataTableTownsDivisionsIsland?: Maybe<DataTableTownsDivisionsIsland>;
+  /** An edge for our `DataTableTownsDivisionsIsland`. May be used by Relay 1. */
+  dataTableTownsDivisionsIslandEdge?: Maybe<DataTableTownsDivisionsIslandsEdge>;
+  deletedDataTableTownsDivisionsIslandNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `DataTableTownsDivisionsIsland` mutation. */
+export type DeleteDataTableTownsDivisionsIslandPayloadDataTableTownsDivisionsIslandEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableTownsDivisionsIslandsOrderBy>>;
 };
 
 /** All input for the `deleteDataTableUnitsOfProportionByNodeId` mutation. */
@@ -19812,6 +20838,7 @@ export type FakePublicApplicationForeignKey0ApplicationCreateInput = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -20561,6 +21588,7 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -21477,6 +22505,10 @@ export type Mutation = {
   createDataTablePermitChemical?: Maybe<CreateDataTablePermitChemicalPayload>;
   /** Creates a single `DataTablePermitChemicalApplicationJoin`. */
   createDataTablePermitChemicalApplicationJoin?: Maybe<CreateDataTablePermitChemicalApplicationJoinPayload>;
+  /** Creates a single `DataTablePermitMedical`. */
+  createDataTablePermitMedical?: Maybe<CreateDataTablePermitMedicalPayload>;
+  /** Creates a single `DataTablePermitMedicalApplicationJoin`. */
+  createDataTablePermitMedicalApplicationJoin?: Maybe<CreateDataTablePermitMedicalApplicationJoinPayload>;
   /** Creates a single `DataTablePreRegisteredProductsProvisional`. */
   createDataTablePreRegisteredProductsProvisional?: Maybe<CreateDataTablePreRegisteredProductsProvisionalPayload>;
   /** Creates a single `DataTablePrequalManufacturer`. */
@@ -21499,6 +22531,8 @@ export type Mutation = {
   createDataTableStorageCondition?: Maybe<CreateDataTableStorageConditionPayload>;
   /** Creates a single `DataTableStorageConditionsSimplified`. */
   createDataTableStorageConditionsSimplified?: Maybe<CreateDataTableStorageConditionsSimplifiedPayload>;
+  /** Creates a single `DataTableTownsDivisionsIsland`. */
+  createDataTableTownsDivisionsIsland?: Maybe<CreateDataTableTownsDivisionsIslandPayload>;
   /** Creates a single `DataTableUnitsOfProportion`. */
   createDataTableUnitsOfProportion?: Maybe<CreateDataTableUnitsOfProportionPayload>;
   /** Creates a single `DataTableWorldHealthOrganisationPqListOfFpp`. */
@@ -21699,6 +22733,14 @@ export type Mutation = {
   deleteDataTablePermitChemicalApplicationJoinByNodeId?: Maybe<DeleteDataTablePermitChemicalApplicationJoinPayload>;
   /** Deletes a single `DataTablePermitChemical` using its globally unique id. */
   deleteDataTablePermitChemicalByNodeId?: Maybe<DeleteDataTablePermitChemicalPayload>;
+  /** Deletes a single `DataTablePermitMedical` using a unique key. */
+  deleteDataTablePermitMedical?: Maybe<DeleteDataTablePermitMedicalPayload>;
+  /** Deletes a single `DataTablePermitMedicalApplicationJoin` using a unique key. */
+  deleteDataTablePermitMedicalApplicationJoin?: Maybe<DeleteDataTablePermitMedicalApplicationJoinPayload>;
+  /** Deletes a single `DataTablePermitMedicalApplicationJoin` using its globally unique id. */
+  deleteDataTablePermitMedicalApplicationJoinByNodeId?: Maybe<DeleteDataTablePermitMedicalApplicationJoinPayload>;
+  /** Deletes a single `DataTablePermitMedical` using its globally unique id. */
+  deleteDataTablePermitMedicalByNodeId?: Maybe<DeleteDataTablePermitMedicalPayload>;
   /** Deletes a single `DataTablePreRegisteredProductsProvisional` using a unique key. */
   deleteDataTablePreRegisteredProductsProvisional?: Maybe<DeleteDataTablePreRegisteredProductsProvisionalPayload>;
   /** Deletes a single `DataTablePreRegisteredProductsProvisional` using its globally unique id. */
@@ -21743,6 +22785,10 @@ export type Mutation = {
   deleteDataTableStorageConditionsSimplified?: Maybe<DeleteDataTableStorageConditionsSimplifiedPayload>;
   /** Deletes a single `DataTableStorageConditionsSimplified` using its globally unique id. */
   deleteDataTableStorageConditionsSimplifiedByNodeId?: Maybe<DeleteDataTableStorageConditionsSimplifiedPayload>;
+  /** Deletes a single `DataTableTownsDivisionsIsland` using a unique key. */
+  deleteDataTableTownsDivisionsIsland?: Maybe<DeleteDataTableTownsDivisionsIslandPayload>;
+  /** Deletes a single `DataTableTownsDivisionsIsland` using its globally unique id. */
+  deleteDataTableTownsDivisionsIslandByNodeId?: Maybe<DeleteDataTableTownsDivisionsIslandPayload>;
   /** Deletes a single `DataTableUnitsOfProportion` using a unique key. */
   deleteDataTableUnitsOfProportion?: Maybe<DeleteDataTableUnitsOfProportionPayload>;
   /** Deletes a single `DataTableUnitsOfProportion` using its globally unique id. */
@@ -22052,6 +23098,14 @@ export type Mutation = {
   updateDataTablePermitChemicalApplicationJoinByNodeId?: Maybe<UpdateDataTablePermitChemicalApplicationJoinPayload>;
   /** Updates a single `DataTablePermitChemical` using its globally unique id and a patch. */
   updateDataTablePermitChemicalByNodeId?: Maybe<UpdateDataTablePermitChemicalPayload>;
+  /** Updates a single `DataTablePermitMedical` using a unique key and a patch. */
+  updateDataTablePermitMedical?: Maybe<UpdateDataTablePermitMedicalPayload>;
+  /** Updates a single `DataTablePermitMedicalApplicationJoin` using a unique key and a patch. */
+  updateDataTablePermitMedicalApplicationJoin?: Maybe<UpdateDataTablePermitMedicalApplicationJoinPayload>;
+  /** Updates a single `DataTablePermitMedicalApplicationJoin` using its globally unique id and a patch. */
+  updateDataTablePermitMedicalApplicationJoinByNodeId?: Maybe<UpdateDataTablePermitMedicalApplicationJoinPayload>;
+  /** Updates a single `DataTablePermitMedical` using its globally unique id and a patch. */
+  updateDataTablePermitMedicalByNodeId?: Maybe<UpdateDataTablePermitMedicalPayload>;
   /** Updates a single `DataTablePreRegisteredProductsProvisional` using a unique key and a patch. */
   updateDataTablePreRegisteredProductsProvisional?: Maybe<UpdateDataTablePreRegisteredProductsProvisionalPayload>;
   /** Updates a single `DataTablePreRegisteredProductsProvisional` using its globally unique id and a patch. */
@@ -22096,6 +23150,10 @@ export type Mutation = {
   updateDataTableStorageConditionsSimplified?: Maybe<UpdateDataTableStorageConditionsSimplifiedPayload>;
   /** Updates a single `DataTableStorageConditionsSimplified` using its globally unique id and a patch. */
   updateDataTableStorageConditionsSimplifiedByNodeId?: Maybe<UpdateDataTableStorageConditionsSimplifiedPayload>;
+  /** Updates a single `DataTableTownsDivisionsIsland` using a unique key and a patch. */
+  updateDataTableTownsDivisionsIsland?: Maybe<UpdateDataTableTownsDivisionsIslandPayload>;
+  /** Updates a single `DataTableTownsDivisionsIsland` using its globally unique id and a patch. */
+  updateDataTableTownsDivisionsIslandByNodeId?: Maybe<UpdateDataTableTownsDivisionsIslandPayload>;
   /** Updates a single `DataTableUnitsOfProportion` using a unique key and a patch. */
   updateDataTableUnitsOfProportion?: Maybe<UpdateDataTableUnitsOfProportionPayload>;
   /** Updates a single `DataTableUnitsOfProportion` using its globally unique id and a patch. */
@@ -22460,6 +23518,18 @@ export type MutationCreateDataTablePermitChemicalApplicationJoinArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDataTablePermitMedicalArgs = {
+  input: CreateDataTablePermitMedicalInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDataTablePermitMedicalApplicationJoinArgs = {
+  input: CreateDataTablePermitMedicalApplicationJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateDataTablePreRegisteredProductsProvisionalArgs = {
   input: CreateDataTablePreRegisteredProductsProvisionalInput;
 };
@@ -22522,6 +23592,12 @@ export type MutationCreateDataTableStorageConditionArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateDataTableStorageConditionsSimplifiedArgs = {
   input: CreateDataTableStorageConditionsSimplifiedInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDataTableTownsDivisionsIslandArgs = {
+  input: CreateDataTableTownsDivisionsIslandInput;
 };
 
 
@@ -23126,6 +24202,30 @@ export type MutationDeleteDataTablePermitChemicalByNodeIdArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTablePermitMedicalArgs = {
+  input: DeleteDataTablePermitMedicalInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTablePermitMedicalApplicationJoinArgs = {
+  input: DeleteDataTablePermitMedicalApplicationJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTablePermitMedicalApplicationJoinByNodeIdArgs = {
+  input: DeleteDataTablePermitMedicalApplicationJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTablePermitMedicalByNodeIdArgs = {
+  input: DeleteDataTablePermitMedicalByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteDataTablePreRegisteredProductsProvisionalArgs = {
   input: DeleteDataTablePreRegisteredProductsProvisionalInput;
 };
@@ -23254,6 +24354,18 @@ export type MutationDeleteDataTableStorageConditionsSimplifiedArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteDataTableStorageConditionsSimplifiedByNodeIdArgs = {
   input: DeleteDataTableStorageConditionsSimplifiedByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableTownsDivisionsIslandArgs = {
+  input: DeleteDataTableTownsDivisionsIslandInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableTownsDivisionsIslandByNodeIdArgs = {
+  input: DeleteDataTableTownsDivisionsIslandByNodeIdInput;
 };
 
 
@@ -24188,6 +25300,30 @@ export type MutationUpdateDataTablePermitChemicalByNodeIdArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTablePermitMedicalArgs = {
+  input: UpdateDataTablePermitMedicalInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTablePermitMedicalApplicationJoinArgs = {
+  input: UpdateDataTablePermitMedicalApplicationJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTablePermitMedicalApplicationJoinByNodeIdArgs = {
+  input: UpdateDataTablePermitMedicalApplicationJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTablePermitMedicalByNodeIdArgs = {
+  input: UpdateDataTablePermitMedicalByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateDataTablePreRegisteredProductsProvisionalArgs = {
   input: UpdateDataTablePreRegisteredProductsProvisionalInput;
 };
@@ -24316,6 +25452,18 @@ export type MutationUpdateDataTableStorageConditionsSimplifiedArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateDataTableStorageConditionsSimplifiedByNodeIdArgs = {
   input: UpdateDataTableStorageConditionsSimplifiedByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableTownsDivisionsIslandArgs = {
+  input: UpdateDataTableTownsDivisionsIslandInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableTownsDivisionsIslandByNodeIdArgs = {
+  input: UpdateDataTableTownsDivisionsIslandByNodeIdInput;
 };
 
 
@@ -24935,6 +26083,7 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -25343,10 +26492,16 @@ export type Organisation = Node & {
   country?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `DataChangelog`. */
   dataChangelogsByOrgId: DataChangelogsConnection;
+  establishmentLicence?: Maybe<Scalars['JSON']['output']>;
   id: Scalars['Int']['output'];
   isChemicalImporter?: Maybe<Scalars['Boolean']['output']>;
+  isFreeMedProgram?: Maybe<Scalars['Boolean']['output']>;
+  isMedImporter?: Maybe<Scalars['Boolean']['output']>;
+  isMedPrequalifier?: Maybe<Scalars['Boolean']['output']>;
+  isMedProvRegister?: Maybe<Scalars['Boolean']['output']>;
   isSponsorCompany?: Maybe<Scalars['Boolean']['output']>;
   isSystemOrg?: Maybe<Scalars['Boolean']['output']>;
+  licenceExpiry?: Maybe<Scalars['Date']['output']>;
   license?: Maybe<Scalars['JSON']['output']>;
   localAgentBusinessAddress?: Maybe<Scalars['String']['output']>;
   localAgentEmail?: Maybe<Scalars['String']['output']>;
@@ -25371,8 +26526,10 @@ export type Organisation = Node & {
   reviewAssignments: ReviewAssignmentsConnection;
   subType?: Maybe<Scalars['String']['output']>;
   tinLetter?: Maybe<Scalars['JSON']['output']>;
+  tinNumber?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations: UserOrganisationsConnection;
+  wholesaleLicence?: Maybe<Scalars['JSON']['output']>;
 };
 
 
@@ -25497,6 +26654,7 @@ export type OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput =
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -25748,10 +26906,16 @@ export type OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -25770,7 +26934,9 @@ export type OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   subType?: InputMaybe<Scalars['String']['input']>;
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
+  tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** Represents an update to a `OrganisationApplicationJoin`. Fields that are set will be updated. */
@@ -25832,14 +26998,26 @@ export type OrganisationCondition = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `country` field. */
   country?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `establishmentLicence` field. */
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `isChemicalImporter` field. */
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isFreeMedProgram` field. */
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isMedImporter` field. */
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isMedPrequalifier` field. */
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isMedProvRegister` field. */
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isSponsorCompany` field. */
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isSystemOrg` field. */
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `licenceExpiry` field. */
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `license` field. */
   license?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `localAgentBusinessAddress` field. */
@@ -25868,6 +27046,10 @@ export type OrganisationCondition = {
   subType?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tinLetter` field. */
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
+  /** Checks for equality with the object’s `tinNumber` field. */
+  tinNumber?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `wholesaleLicence` field. */
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** A filter to be used against `Organisation` object types. All fields are combined with a logical ‘and.’ */
@@ -25896,14 +27078,26 @@ export type OrganisationFilter = {
   dataChangelogsByOrgId?: InputMaybe<OrganisationToManyDataChangelogFilter>;
   /** Some related `dataChangelogsByOrgId` exist. */
   dataChangelogsByOrgIdExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `establishmentLicence` field. */
+  establishmentLicence?: InputMaybe<JsonFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
   /** Filter by the object’s `isChemicalImporter` field. */
   isChemicalImporter?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `isFreeMedProgram` field. */
+  isFreeMedProgram?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `isMedImporter` field. */
+  isMedImporter?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `isMedPrequalifier` field. */
+  isMedPrequalifier?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `isMedProvRegister` field. */
+  isMedProvRegister?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `isSponsorCompany` field. */
   isSponsorCompany?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `isSystemOrg` field. */
   isSystemOrg?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `licenceExpiry` field. */
+  licenceExpiry?: InputMaybe<DateFilter>;
   /** Filter by the object’s `license` field. */
   license?: InputMaybe<JsonFilter>;
   /** Filter by the object’s `localAgentBusinessAddress` field. */
@@ -25952,10 +27146,14 @@ export type OrganisationFilter = {
   subType?: InputMaybe<StringFilter>;
   /** Filter by the object’s `tinLetter` field. */
   tinLetter?: InputMaybe<JsonFilter>;
+  /** Filter by the object’s `tinNumber` field. */
+  tinNumber?: InputMaybe<StringFilter>;
   /** Filter by the object’s `userOrganisations` relation. */
   userOrganisations?: InputMaybe<OrganisationToManyUserOrganisationFilter>;
   /** Some related `userOrganisations` exist. */
   userOrganisationsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `wholesaleLicence` field. */
+  wholesaleLicence?: InputMaybe<JsonFilter>;
 };
 
 /** An input for mutations affecting `Organisation` */
@@ -25968,10 +27166,16 @@ export type OrganisationInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -25990,7 +27194,9 @@ export type OrganisationInput = {
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   subType?: InputMaybe<Scalars['String']['input']>;
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
+  tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -26277,10 +27483,16 @@ export type OrganisationPatch = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -26299,7 +27511,9 @@ export type OrganisationPatch = {
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   subType?: InputMaybe<Scalars['String']['input']>;
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
+  tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** A filter to be used against many `Application` object types. All fields are combined with a logical ‘and.’ */
@@ -26416,14 +27630,26 @@ export enum OrganisationsOrderBy {
   ContactPhoneDesc = 'CONTACT_PHONE_DESC',
   CountryAsc = 'COUNTRY_ASC',
   CountryDesc = 'COUNTRY_DESC',
+  EstablishmentLicenceAsc = 'ESTABLISHMENT_LICENCE_ASC',
+  EstablishmentLicenceDesc = 'ESTABLISHMENT_LICENCE_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
   IsChemicalImporterAsc = 'IS_CHEMICAL_IMPORTER_ASC',
   IsChemicalImporterDesc = 'IS_CHEMICAL_IMPORTER_DESC',
+  IsFreeMedProgramAsc = 'IS_FREE_MED_PROGRAM_ASC',
+  IsFreeMedProgramDesc = 'IS_FREE_MED_PROGRAM_DESC',
+  IsMedImporterAsc = 'IS_MED_IMPORTER_ASC',
+  IsMedImporterDesc = 'IS_MED_IMPORTER_DESC',
+  IsMedPrequalifierAsc = 'IS_MED_PREQUALIFIER_ASC',
+  IsMedPrequalifierDesc = 'IS_MED_PREQUALIFIER_DESC',
+  IsMedProvRegisterAsc = 'IS_MED_PROV_REGISTER_ASC',
+  IsMedProvRegisterDesc = 'IS_MED_PROV_REGISTER_DESC',
   IsSponsorCompanyAsc = 'IS_SPONSOR_COMPANY_ASC',
   IsSponsorCompanyDesc = 'IS_SPONSOR_COMPANY_DESC',
   IsSystemOrgAsc = 'IS_SYSTEM_ORG_ASC',
   IsSystemOrgDesc = 'IS_SYSTEM_ORG_DESC',
+  LicenceExpiryAsc = 'LICENCE_EXPIRY_ASC',
+  LicenceExpiryDesc = 'LICENCE_EXPIRY_DESC',
   LicenseAsc = 'LICENSE_ASC',
   LicenseDesc = 'LICENSE_DESC',
   LocalAgentBusinessAddressAsc = 'LOCAL_AGENT_BUSINESS_ADDRESS_ASC',
@@ -26454,7 +27680,11 @@ export enum OrganisationsOrderBy {
   SubTypeAsc = 'SUB_TYPE_ASC',
   SubTypeDesc = 'SUB_TYPE_DESC',
   TinLetterAsc = 'TIN_LETTER_ASC',
-  TinLetterDesc = 'TIN_LETTER_DESC'
+  TinLetterDesc = 'TIN_LETTER_DESC',
+  TinNumberAsc = 'TIN_NUMBER_ASC',
+  TinNumberDesc = 'TIN_NUMBER_DESC',
+  WholesaleLicenceAsc = 'WHOLESALE_LICENCE_ASC',
+  WholesaleLicenceDesc = 'WHOLESALE_LICENCE_DESC'
 }
 
 /** Information about pagination in a connection. */
@@ -26731,10 +27961,16 @@ export type PermissionJoinOrganisationIdFkeyOrganisationCreateInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -26753,7 +27989,9 @@ export type PermissionJoinOrganisationIdFkeyOrganisationCreateInput = {
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   subType?: InputMaybe<Scalars['String']['input']>;
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
+  tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** The `permissionJoin` to be created by this mutation. */
@@ -27899,7 +29137,7 @@ export type Query = Node & {
   applications?: Maybe<ApplicationsConnection>;
   assignableQuestionsCount?: Maybe<Scalars['BigInt']['output']>;
   assignedQuestions?: Maybe<AssignedQuestionsConnection>;
-  assignedQuestionsCount?: Maybe<Scalars['BigInt']['output']>;
+  assignedQuestionsCount?: Maybe<Scalars['Int']['output']>;
   /** Reads and enables pagination through a set of `AssignedSectionsByStageAndLevel`. */
   assignedSectionsByStageAndLevels?: Maybe<AssignedSectionsByStageAndLevelsConnection>;
   assignerList?: Maybe<AssignerListConnection>;
@@ -27991,6 +29229,16 @@ export type Query = Node & {
   dataTablePermitChemicalByNodeId?: Maybe<DataTablePermitChemical>;
   /** Reads and enables pagination through a set of `DataTablePermitChemical`. */
   dataTablePermitChemicals?: Maybe<DataTablePermitChemicalsConnection>;
+  dataTablePermitMedical?: Maybe<DataTablePermitMedical>;
+  dataTablePermitMedicalApplicationJoin?: Maybe<DataTablePermitMedicalApplicationJoin>;
+  /** Reads a single `DataTablePermitMedicalApplicationJoin` using its globally unique `ID`. */
+  dataTablePermitMedicalApplicationJoinByNodeId?: Maybe<DataTablePermitMedicalApplicationJoin>;
+  /** Reads and enables pagination through a set of `DataTablePermitMedicalApplicationJoin`. */
+  dataTablePermitMedicalApplicationJoins?: Maybe<DataTablePermitMedicalApplicationJoinsConnection>;
+  /** Reads a single `DataTablePermitMedical` using its globally unique `ID`. */
+  dataTablePermitMedicalByNodeId?: Maybe<DataTablePermitMedical>;
+  /** Reads and enables pagination through a set of `DataTablePermitMedical`. */
+  dataTablePermitMedicals?: Maybe<DataTablePermitMedicalsConnection>;
   dataTablePreRegisteredProductsProvisional?: Maybe<DataTablePreRegisteredProductsProvisional>;
   /** Reads a single `DataTablePreRegisteredProductsProvisional` using its globally unique `ID`. */
   dataTablePreRegisteredProductsProvisionalByNodeId?: Maybe<DataTablePreRegisteredProductsProvisional>;
@@ -28046,6 +29294,11 @@ export type Query = Node & {
   dataTableStorageConditionsSimplifiedByNodeId?: Maybe<DataTableStorageConditionsSimplified>;
   /** Reads and enables pagination through a set of `DataTableStorageConditionsSimplified`. */
   dataTableStorageConditionsSimplifieds?: Maybe<DataTableStorageConditionsSimplifiedsConnection>;
+  dataTableTownsDivisionsIsland?: Maybe<DataTableTownsDivisionsIsland>;
+  /** Reads a single `DataTableTownsDivisionsIsland` using its globally unique `ID`. */
+  dataTableTownsDivisionsIslandByNodeId?: Maybe<DataTableTownsDivisionsIsland>;
+  /** Reads and enables pagination through a set of `DataTableTownsDivisionsIsland`. */
+  dataTableTownsDivisionsIslands?: Maybe<DataTableTownsDivisionsIslandsConnection>;
   dataTableUnitsOfProportion?: Maybe<DataTableUnitsOfProportion>;
   /** Reads a single `DataTableUnitsOfProportion` using its globally unique `ID`. */
   dataTableUnitsOfProportionByNodeId?: Maybe<DataTableUnitsOfProportion>;
@@ -28185,13 +29438,13 @@ export type Query = Node & {
   /** Reads a single `ReviewStatusHistory` using its globally unique `ID`. */
   reviewStatusHistoryByNodeId?: Maybe<ReviewStatusHistory>;
   reviewableQuestions?: Maybe<ReviewableQuestionsConnection>;
-  reviewableQuestionsCount?: Maybe<Scalars['BigInt']['output']>;
+  reviewableQuestionsCount?: Maybe<Scalars['Int']['output']>;
   /** Reads and enables pagination through a set of `Review`. */
   reviews?: Maybe<ReviewsConnection>;
   /** Reads and enables pagination through a set of `SchemaColumn`. */
   schemaColumns?: Maybe<SchemaColumnsConnection>;
   singleApplicationDetail?: Maybe<SingleApplicationDetailConnection>;
-  submittedAssignedQuestionsCount?: Maybe<Scalars['BigInt']['output']>;
+  submittedAssignedQuestionsCount?: Maybe<Scalars['Int']['output']>;
   systemInfo?: Maybe<SystemInfo>;
   /** Reads a single `SystemInfo` using its globally unique `ID`. */
   systemInfoByNodeId?: Maybe<SystemInfo>;
@@ -29196,6 +30449,56 @@ export type QueryDataTablePermitChemicalsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryDataTablePermitMedicalArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTablePermitMedicalApplicationJoinArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTablePermitMedicalApplicationJoinByNodeIdArgs = {
+  nodeId: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTablePermitMedicalApplicationJoinsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DataTablePermitMedicalApplicationJoinCondition>;
+  filter?: InputMaybe<DataTablePermitMedicalApplicationJoinFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DataTablePermitMedicalApplicationJoinsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTablePermitMedicalByNodeIdArgs = {
+  nodeId: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTablePermitMedicalsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DataTablePermitMedicalCondition>;
+  filter?: InputMaybe<DataTablePermitMedicalFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DataTablePermitMedicalsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryDataTablePreRegisteredProductsProvisionalArgs = {
   id: Scalars['Int']['input'];
 };
@@ -29467,6 +30770,31 @@ export type QueryDataTableStorageConditionsSimplifiedsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<DataTableStorageConditionsSimplifiedsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableTownsDivisionsIslandArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableTownsDivisionsIslandByNodeIdArgs = {
+  nodeId: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableTownsDivisionsIslandsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DataTableTownsDivisionsIslandCondition>;
+  filter?: InputMaybe<DataTableTownsDivisionsIslandFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DataTableTownsDivisionsIslandsOrderBy>>;
 };
 
 
@@ -30876,6 +32204,7 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -31071,6 +32400,7 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -31431,10 +32761,16 @@ export type ReviewAssignmentAssignerJoinOrganisationIdFkeyOrganisationCreateInpu
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -31453,7 +32789,9 @@ export type ReviewAssignmentAssignerJoinOrganisationIdFkeyOrganisationCreateInpu
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   subType?: InputMaybe<Scalars['String']['input']>;
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
+  tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** The `reviewAssignmentAssignerJoin` to be created by this mutation. */
@@ -32038,10 +33376,16 @@ export type ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -32060,7 +33404,9 @@ export type ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput = {
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   subType?: InputMaybe<Scalars['String']['input']>;
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
+  tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** The `reviewAssignment` to be created by this mutation. */
@@ -34913,7 +36259,7 @@ export type Template = Node & {
   /** Reads and enables pagination through a set of `ReviewAssignment`. */
   reviewAssignments: ReviewAssignmentsConnection;
   serialPattern?: Maybe<Scalars['String']['output']>;
-  staleDraftRetentionDays?: Maybe<Scalars['Int']['output']>;
+  staleDraftRetentionDays: Scalars['Int']['output'];
   startMessage?: Maybe<Scalars['JSON']['output']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']['output']>;
@@ -36418,6 +37764,7 @@ export type TemplateElementSectionIdFkeyTemplateSectionCreateInput = {
   code?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  isReviewSection?: InputMaybe<Scalars['Boolean']['input']>;
   templateElementsUsingId?: InputMaybe<TemplateElementSectionIdFkeyInverseInput>;
   templateId?: InputMaybe<Scalars['Int']['input']>;
   templateToTemplateId?: InputMaybe<TemplateSectionTemplateIdFkeyInput>;
@@ -38416,6 +39763,7 @@ export type TemplateSection = Node & {
   code?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   index?: Maybe<Scalars['Int']['output']>;
+  isReviewSection: Scalars['Boolean']['output'];
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID']['output'];
   /** Reads a single `Template` that is related to this `TemplateSection`. */
@@ -38449,6 +39797,8 @@ export type TemplateSectionCondition = {
   id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `index` field. */
   index?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `isReviewSection` field. */
+  isReviewSection?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `title` field. */
@@ -38465,6 +39815,8 @@ export type TemplateSectionFilter = {
   id?: InputMaybe<IntFilter>;
   /** Filter by the object’s `index` field. */
   index?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `isReviewSection` field. */
+  isReviewSection?: InputMaybe<BooleanFilter>;
   /** Negates the expression. */
   not?: InputMaybe<TemplateSectionFilter>;
   /** Checks for any expressions in this list. */
@@ -38486,6 +39838,7 @@ export type TemplateSectionInput = {
   code?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  isReviewSection?: InputMaybe<Scalars['Boolean']['input']>;
   templateElementsUsingId?: InputMaybe<TemplateElementSectionIdFkeyInverseInput>;
   templateId?: InputMaybe<Scalars['Int']['input']>;
   templateToTemplateId?: InputMaybe<TemplateSectionTemplateIdFkeyInput>;
@@ -38555,6 +39908,7 @@ export type TemplateSectionPatch = {
   code?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  isReviewSection?: InputMaybe<Scalars['Boolean']['input']>;
   templateElementsUsingId?: InputMaybe<TemplateElementSectionIdFkeyInverseInput>;
   templateId?: InputMaybe<Scalars['Int']['input']>;
   templateToTemplateId?: InputMaybe<TemplateSectionTemplateIdFkeyInput>;
@@ -38654,6 +40008,7 @@ export type TemplateSectionTemplateIdFkeyTemplateSectionCreateInput = {
   code?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  isReviewSection?: InputMaybe<Scalars['Boolean']['input']>;
   templateElementsUsingId?: InputMaybe<TemplateElementSectionIdFkeyInverseInput>;
   templateToTemplateId?: InputMaybe<TemplateSectionTemplateIdFkeyInput>;
   title?: InputMaybe<Scalars['String']['input']>;
@@ -38721,6 +40076,8 @@ export enum TemplateSectionsOrderBy {
   IdDesc = 'ID_DESC',
   IndexAsc = 'INDEX_ASC',
   IndexDesc = 'INDEX_DESC',
+  IsReviewSectionAsc = 'IS_REVIEW_SECTION_ASC',
+  IsReviewSectionDesc = 'IS_REVIEW_SECTION_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -39820,6 +41177,7 @@ export type TriggerQueueApplicationIdFkeyApplicationCreateInput = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -40189,6 +41547,7 @@ export type TriggerScheduleApplicationIdFkeyApplicationCreateInput = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -42024,6 +43383,104 @@ export type UpdateDataTablePermitChemicalPayloadDataTablePermitChemicalEdgeArgs 
   orderBy?: InputMaybe<Array<DataTablePermitChemicalsOrderBy>>;
 };
 
+/** All input for the `updateDataTablePermitMedicalApplicationJoinByNodeId` mutation. */
+export type UpdateDataTablePermitMedicalApplicationJoinByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `DataTablePermitMedicalApplicationJoin` to be updated. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `DataTablePermitMedicalApplicationJoin` being updated. */
+  patch: DataTablePermitMedicalApplicationJoinPatch;
+};
+
+/** All input for the `updateDataTablePermitMedicalApplicationJoin` mutation. */
+export type UpdateDataTablePermitMedicalApplicationJoinInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `DataTablePermitMedicalApplicationJoin` being updated. */
+  patch: DataTablePermitMedicalApplicationJoinPatch;
+};
+
+/** The output of our update `DataTablePermitMedicalApplicationJoin` mutation. */
+export type UpdateDataTablePermitMedicalApplicationJoinPayload = {
+  __typename?: 'UpdateDataTablePermitMedicalApplicationJoinPayload';
+  /** Reads a single `Application` that is related to this `DataTablePermitMedicalApplicationJoin`. */
+  application?: Maybe<Application>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `DataTablePermitMedical` that is related to this `DataTablePermitMedicalApplicationJoin`. */
+  dataTablePermitMedical?: Maybe<DataTablePermitMedical>;
+  /** The `DataTablePermitMedicalApplicationJoin` that was updated by this mutation. */
+  dataTablePermitMedicalApplicationJoin?: Maybe<DataTablePermitMedicalApplicationJoin>;
+  /** An edge for our `DataTablePermitMedicalApplicationJoin`. May be used by Relay 1. */
+  dataTablePermitMedicalApplicationJoinEdge?: Maybe<DataTablePermitMedicalApplicationJoinsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `DataTablePermitMedicalApplicationJoin` mutation. */
+export type UpdateDataTablePermitMedicalApplicationJoinPayloadDataTablePermitMedicalApplicationJoinEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTablePermitMedicalApplicationJoinsOrderBy>>;
+};
+
+/** All input for the `updateDataTablePermitMedicalByNodeId` mutation. */
+export type UpdateDataTablePermitMedicalByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `DataTablePermitMedical` to be updated. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `DataTablePermitMedical` being updated. */
+  patch: DataTablePermitMedicalPatch;
+};
+
+/** All input for the `updateDataTablePermitMedical` mutation. */
+export type UpdateDataTablePermitMedicalInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `DataTablePermitMedical` being updated. */
+  patch: DataTablePermitMedicalPatch;
+};
+
+/** The output of our update `DataTablePermitMedical` mutation. */
+export type UpdateDataTablePermitMedicalPayload = {
+  __typename?: 'UpdateDataTablePermitMedicalPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `DataTablePermitMedical` that was updated by this mutation. */
+  dataTablePermitMedical?: Maybe<DataTablePermitMedical>;
+  /** An edge for our `DataTablePermitMedical`. May be used by Relay 1. */
+  dataTablePermitMedicalEdge?: Maybe<DataTablePermitMedicalsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `DataTablePermitMedical` mutation. */
+export type UpdateDataTablePermitMedicalPayloadDataTablePermitMedicalEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTablePermitMedicalsOrderBy>>;
+};
+
 /** All input for the `updateDataTablePreRegisteredProductsProvisionalByNodeId` mutation. */
 export type UpdateDataTablePreRegisteredProductsProvisionalByNodeIdInput = {
   /**
@@ -42549,6 +44006,53 @@ export type UpdateDataTableStorageConditionsSimplifiedPayload = {
 /** The output of our update `DataTableStorageConditionsSimplified` mutation. */
 export type UpdateDataTableStorageConditionsSimplifiedPayloadDataTableStorageConditionsSimplifiedEdgeArgs = {
   orderBy?: InputMaybe<Array<DataTableStorageConditionsSimplifiedsOrderBy>>;
+};
+
+/** All input for the `updateDataTableTownsDivisionsIslandByNodeId` mutation. */
+export type UpdateDataTableTownsDivisionsIslandByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `DataTableTownsDivisionsIsland` to be updated. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `DataTableTownsDivisionsIsland` being updated. */
+  patch: DataTableTownsDivisionsIslandPatch;
+};
+
+/** All input for the `updateDataTableTownsDivisionsIsland` mutation. */
+export type UpdateDataTableTownsDivisionsIslandInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `DataTableTownsDivisionsIsland` being updated. */
+  patch: DataTableTownsDivisionsIslandPatch;
+};
+
+/** The output of our update `DataTableTownsDivisionsIsland` mutation. */
+export type UpdateDataTableTownsDivisionsIslandPayload = {
+  __typename?: 'UpdateDataTableTownsDivisionsIslandPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `DataTableTownsDivisionsIsland` that was updated by this mutation. */
+  dataTableTownsDivisionsIsland?: Maybe<DataTableTownsDivisionsIsland>;
+  /** An edge for our `DataTableTownsDivisionsIsland`. May be used by Relay 1. */
+  dataTableTownsDivisionsIslandEdge?: Maybe<DataTableTownsDivisionsIslandsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `DataTableTownsDivisionsIsland` mutation. */
+export type UpdateDataTableTownsDivisionsIslandPayloadDataTableTownsDivisionsIslandEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableTownsDivisionsIslandsOrderBy>>;
 };
 
 /** All input for the `updateDataTableUnitsOfProportionByNodeId` mutation. */
@@ -44770,6 +46274,7 @@ export type UserApplicationJoinApplicationIdFkeyApplicationCreateInput = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -45705,10 +47210,16 @@ export type UserOrganisationOrganisationIdFkeyOrganisationCreateInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -45727,7 +47238,9 @@ export type UserOrganisationOrganisationIdFkeyOrganisationCreateInput = {
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   subType?: InputMaybe<Scalars['String']['input']>;
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
+  tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** The `userOrganisation` to be created by this mutation. */
@@ -45886,6 +47399,7 @@ export type VerificationApplicationIdFkeyApplicationCreateInput = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -46398,6 +47912,7 @@ export type UpdateApplicationOnActionQueueForActionQueueApplicationIdFkeyPatch =
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -46442,6 +47957,7 @@ export type UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch =
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -46486,6 +48002,7 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -46529,6 +48046,7 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -46572,6 +48090,7 @@ export type UpdateApplicationOnApplicationForFakePublicApplicationForeignKey0Pat
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -46615,6 +48134,7 @@ export type UpdateApplicationOnApplicationNoteForApplicationNoteApplicationIdFke
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -46659,6 +48179,7 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -46703,6 +48224,7 @@ export type UpdateApplicationOnApplicationReviewerActionForApplicationReviewerAc
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -46747,6 +48269,7 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -46791,6 +48314,7 @@ export type UpdateApplicationOnDataChangelogForDataChangelogApplicationIdFkeyPat
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -46835,6 +48359,7 @@ export type UpdateApplicationOnDataTableManufacturerApplicationJoinForDataTableM
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -46879,6 +48404,7 @@ export type UpdateApplicationOnDataTableManufacturerRepresentativeApplicationJoi
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -46923,6 +48449,52 @@ export type UpdateApplicationOnDataTablePermitChemicalApplicationJoinForDataTabl
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
+  dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: InputMaybe<FileApplicationSerialFkeyInverseInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  isConfig?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  notificationsUsingId?: InputMaybe<NotificationApplicationIdFkeyInverseInput>;
+  orgId?: InputMaybe<Scalars['Int']['input']>;
+  organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationToOrgId?: InputMaybe<ApplicationOrgIdFkeyInput>;
+  outcome?: InputMaybe<ApplicationOutcome>;
+  outcomeRegistration?: InputMaybe<Scalars['String']['input']>;
+  reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  reviewsUsingId?: InputMaybe<ReviewApplicationIdFkeyInverseInput>;
+  serial?: InputMaybe<Scalars['String']['input']>;
+  sessionId?: InputMaybe<Scalars['String']['input']>;
+  templateId?: InputMaybe<Scalars['Int']['input']>;
+  templateToTemplateId?: InputMaybe<ApplicationTemplateIdFkeyInput>;
+  trigger?: InputMaybe<Trigger>;
+  triggerQueuesUsingId?: InputMaybe<TriggerQueueApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: InputMaybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  urlProperties?: InputMaybe<Scalars['JSON']['input']>;
+  userApplicationJoinsUsingId?: InputMaybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userId?: InputMaybe<Scalars['Int']['input']>;
+  userListToUserId?: InputMaybe<FakePublicApplicationForeignKey0Input>;
+  verificationsUsingId?: InputMaybe<VerificationApplicationIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `application` being updated. */
+export type UpdateApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyPatch = {
+  actionQueuesUsingId?: InputMaybe<ActionQueueApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: InputMaybe<ActivityLogApplicationIdFkeyInverseInput>;
+  applicationNotesUsingId?: InputMaybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: InputMaybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: InputMaybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
+  dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -46967,6 +48539,7 @@ export type UpdateApplicationOnDataTablePrequalManufacturerApplicationJoinForDat
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -47011,6 +48584,7 @@ export type UpdateApplicationOnDataTableProductApplicationJoinForDataTableProduc
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -47055,6 +48629,7 @@ export type UpdateApplicationOnDataTableProvisionalProductApplicationJoinForData
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -47099,6 +48674,7 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -47143,6 +48719,7 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -47187,6 +48764,7 @@ export type UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplica
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -47231,6 +48809,7 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -47275,6 +48854,7 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -47319,6 +48899,7 @@ export type UpdateApplicationOnTriggerQueueForTriggerQueueApplicationIdFkeyPatch
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -47363,6 +48944,7 @@ export type UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFke
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -47407,6 +48989,7 @@ export type UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicat
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -47451,6 +49034,7 @@ export type UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
   dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
@@ -47741,6 +49325,43 @@ export type UpdateDataTablePermitChemicalOnDataTablePermitChemicalApplicationJoi
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApDataTablePermitChemicalIFkeyInverseInput>;
   id?: InputMaybe<Scalars['Int']['input']>;
   permitNo?: InputMaybe<Scalars['String']['input']>;
+  registrationDate?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An object where the defined keys will be set on the `dataTablePermitMedicalApplicationJoin` being updated. */
+export type UpdateDataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyPatch = {
+  applicationId?: InputMaybe<Scalars['Int']['input']>;
+  applicationToApplicationId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInput>;
+  dataTablePermitMedicalToDataTablePermitMedicalId?: InputMaybe<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** An object where the defined keys will be set on the `dataTablePermitMedicalApplicationJoin` being updated. */
+export type UpdateDataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyPatch = {
+  applicationToApplicationId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInput>;
+  dataTablePermitMedicalId?: InputMaybe<Scalars['Int']['input']>;
+  dataTablePermitMedicalToDataTablePermitMedicalId?: InputMaybe<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** An object where the defined keys will be set on the `dataTablePermitMedical` being updated. */
+export type UpdateDataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyPatch = {
+  billLadingNumber?: InputMaybe<Scalars['String']['input']>;
+  companyId?: InputMaybe<Scalars['Int']['input']>;
+  companyName?: InputMaybe<Scalars['String']['input']>;
+  consignorAddress?: InputMaybe<Scalars['String']['input']>;
+  consignorName?: InputMaybe<Scalars['String']['input']>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInverseInput>;
+  exportCountry?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  modeOfTransport?: InputMaybe<Scalars['String']['input']>;
+  nonRegisteredProducts?: InputMaybe<Scalars['JSON']['input']>;
+  nonRegisteredProductsFilterData?: InputMaybe<Scalars['String']['input']>;
+  nonRegisteredReason?: InputMaybe<Scalars['String']['input']>;
+  permitNo?: InputMaybe<Scalars['String']['input']>;
+  portOfEntry?: InputMaybe<Scalars['String']['input']>;
+  provisionalProducts?: InputMaybe<Scalars['JSON']['input']>;
+  provisionalProductsFilterData?: InputMaybe<Scalars['String']['input']>;
   registrationDate?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -48076,10 +49697,16 @@ export type UpdateOrganisationOnApplicationForApplicationOrgIdFkeyPatch = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -48098,7 +49725,9 @@ export type UpdateOrganisationOnApplicationForApplicationOrgIdFkeyPatch = {
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   subType?: InputMaybe<Scalars['String']['input']>;
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
+  tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -48111,10 +49740,16 @@ export type UpdateOrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyPatch 
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -48133,7 +49768,9 @@ export type UpdateOrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyPatch 
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   subType?: InputMaybe<Scalars['String']['input']>;
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
+  tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -48146,10 +49783,16 @@ export type UpdateOrganisationOnDataChangelogForDataChangelogOrgIdFkeyPatch = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -48168,7 +49811,9 @@ export type UpdateOrganisationOnDataChangelogForDataChangelogOrgIdFkeyPatch = {
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   subType?: InputMaybe<Scalars['String']['input']>;
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
+  tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -48181,10 +49826,16 @@ export type UpdateOrganisationOnOrganisationApplicationJoinForOrganisationApplic
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -48203,7 +49854,9 @@ export type UpdateOrganisationOnOrganisationApplicationJoinForOrganisationApplic
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   subType?: InputMaybe<Scalars['String']['input']>;
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
+  tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -48216,10 +49869,16 @@ export type UpdateOrganisationOnPermissionJoinForPermissionJoinOrganisationIdFke
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -48238,7 +49897,9 @@ export type UpdateOrganisationOnPermissionJoinForPermissionJoinOrganisationIdFke
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   subType?: InputMaybe<Scalars['String']['input']>;
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
+  tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -48251,10 +49912,16 @@ export type UpdateOrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentA
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -48273,7 +49940,9 @@ export type UpdateOrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentA
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   subType?: InputMaybe<Scalars['String']['input']>;
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
+  tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -48286,10 +49955,16 @@ export type UpdateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationI
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -48308,7 +49983,9 @@ export type UpdateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationI
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   subType?: InputMaybe<Scalars['String']['input']>;
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
+  tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -48321,10 +49998,16 @@ export type UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationI
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -48343,7 +50026,9 @@ export type UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationI
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
   subType?: InputMaybe<Scalars['String']['input']>;
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
+  tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** An object where the defined keys will be set on the `permissionJoin` being updated. */
@@ -49738,6 +51423,7 @@ export type UpdateTemplateSectionOnTemplateElementForTemplateElementSectionIdFke
   code?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  isReviewSection?: InputMaybe<Scalars['Boolean']['input']>;
   templateElementsUsingId?: InputMaybe<TemplateElementSectionIdFkeyInverseInput>;
   templateId?: InputMaybe<Scalars['Int']['input']>;
   templateToTemplateId?: InputMaybe<TemplateSectionTemplateIdFkeyInput>;
@@ -49749,6 +51435,7 @@ export type UpdateTemplateSectionOnTemplateSectionForTemplateSectionTemplateIdFk
   code?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  isReviewSection?: InputMaybe<Scalars['Boolean']['input']>;
   templateElementsUsingId?: InputMaybe<TemplateElementSectionIdFkeyInverseInput>;
   templateToTemplateId?: InputMaybe<TemplateSectionTemplateIdFkeyInput>;
   title?: InputMaybe<Scalars['String']['input']>;
@@ -50000,7 +51687,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = {
-  Node: ( ActionPlugin ) | ( ActionQueue ) | ( ActivityLog ) | ( Application ) | ( ApplicationNote ) | ( ApplicationResponse ) | ( ApplicationReviewerAction ) | ( ApplicationStageHistory ) | ( ApplicationStatusHistory ) | ( Counter ) | ( DataChangelog ) | ( DataTable ) | ( DataTableActiveIngredient ) | ( DataTableAdministrationRoute ) | ( DataTableAtcCode ) | ( DataTableContainer ) | ( DataTableCountry ) | ( DataTableDosageForm ) | ( DataTableDosageFormGroup ) | ( DataTableGenericIngredient ) | ( DataTableManufacturer ) | ( DataTableManufacturerApplicationJoin ) | ( DataTableManufacturerRepresentative ) | ( DataTableManufacturerRepresentativeApplicationJoin ) | ( DataTablePermitChemical ) | ( DataTablePermitChemicalApplicationJoin ) | ( DataTablePreRegisteredProductsProvisional ) | ( DataTablePrequalManufacturer ) | ( DataTablePrequalManufacturerApplicationJoin ) | ( DataTableProcessingStep ) | ( DataTableProduct ) | ( DataTableProductApplicationJoin ) | ( DataTableProvisionalProduct ) | ( DataTableProvisionalProductApplicationJoin ) | ( DataTableScheduledChemical ) | ( DataTableStorageCondition ) | ( DataTableStorageConditionsSimplified ) | ( DataTableUnitsOfProportion ) | ( DataTableWorldHealthOrganisationPqListOfFpp ) | ( DataView ) | ( DataViewColumnDefinition ) | ( ElementTypePlugin ) | ( EvaluatorFragment ) | ( File ) | ( Filter ) | ( GrafanaDashboardImage ) | ( Notification ) | ( Organisation ) | ( OrganisationApplicationJoin ) | ( PermissionJoin ) | ( PermissionName ) | ( PermissionPolicy ) | ( Omit<Query, 'actionPlugins' | 'node' | 'query'> & { actionPlugins?: Maybe<_RefType['ActionPluginsConnection']>, node?: Maybe<_RefType['Node']>, query: _RefType['Query'] } ) | ( Review ) | ( ReviewAssignment ) | ( ReviewAssignmentAssignerJoin ) | ( ReviewDecision ) | ( ReviewResponse ) | ( ReviewStatusHistory ) | ( SystemInfo ) | ( Template ) | ( TemplateAction ) | ( TemplateCategory ) | ( TemplateDataViewJoin ) | ( TemplateElement ) | ( TemplateEvaluatorFragmentJoin ) | ( TemplateFileJoin ) | ( TemplateFilterJoin ) | ( TemplatePermission ) | ( TemplateSection ) | ( TemplateStage ) | ( TemplateStageReviewLevel ) | ( TriggerQueue ) | ( TriggerSchedule ) | ( UserApplicationJoin ) | ( UserOrganisation ) | ( Verification );
+  Node: ( ActionPlugin ) | ( ActionQueue ) | ( ActivityLog ) | ( Application ) | ( ApplicationNote ) | ( ApplicationResponse ) | ( ApplicationReviewerAction ) | ( ApplicationStageHistory ) | ( ApplicationStatusHistory ) | ( Counter ) | ( DataChangelog ) | ( DataTable ) | ( DataTableActiveIngredient ) | ( DataTableAdministrationRoute ) | ( DataTableAtcCode ) | ( DataTableContainer ) | ( DataTableCountry ) | ( DataTableDosageForm ) | ( DataTableDosageFormGroup ) | ( DataTableGenericIngredient ) | ( DataTableManufacturer ) | ( DataTableManufacturerApplicationJoin ) | ( DataTableManufacturerRepresentative ) | ( DataTableManufacturerRepresentativeApplicationJoin ) | ( DataTablePermitChemical ) | ( DataTablePermitChemicalApplicationJoin ) | ( DataTablePermitMedical ) | ( DataTablePermitMedicalApplicationJoin ) | ( DataTablePreRegisteredProductsProvisional ) | ( DataTablePrequalManufacturer ) | ( DataTablePrequalManufacturerApplicationJoin ) | ( DataTableProcessingStep ) | ( DataTableProduct ) | ( DataTableProductApplicationJoin ) | ( DataTableProvisionalProduct ) | ( DataTableProvisionalProductApplicationJoin ) | ( DataTableScheduledChemical ) | ( DataTableStorageCondition ) | ( DataTableStorageConditionsSimplified ) | ( DataTableTownsDivisionsIsland ) | ( DataTableUnitsOfProportion ) | ( DataTableWorldHealthOrganisationPqListOfFpp ) | ( DataView ) | ( DataViewColumnDefinition ) | ( ElementTypePlugin ) | ( EvaluatorFragment ) | ( File ) | ( Filter ) | ( GrafanaDashboardImage ) | ( Notification ) | ( Organisation ) | ( OrganisationApplicationJoin ) | ( PermissionJoin ) | ( PermissionName ) | ( PermissionPolicy ) | ( Omit<Query, 'actionPlugins' | 'node' | 'query'> & { actionPlugins?: Maybe<_RefType['ActionPluginsConnection']>, node?: Maybe<_RefType['Node']>, query: _RefType['Query'] } ) | ( Review ) | ( ReviewAssignment ) | ( ReviewAssignmentAssignerJoin ) | ( ReviewDecision ) | ( ReviewResponse ) | ( ReviewStatusHistory ) | ( SystemInfo ) | ( Template ) | ( TemplateAction ) | ( TemplateCategory ) | ( TemplateDataViewJoin ) | ( TemplateElement ) | ( TemplateEvaluatorFragmentJoin ) | ( TemplateFileJoin ) | ( TemplateFilterJoin ) | ( TemplatePermission ) | ( TemplateSection ) | ( TemplateStage ) | ( TemplateStageReviewLevel ) | ( TriggerQueue ) | ( TriggerSchedule ) | ( UserApplicationJoin ) | ( UserOrganisation ) | ( Verification );
 };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -50178,6 +51865,10 @@ export type ResolversTypes = {
   ApplicationOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate: ApplicationOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate;
   ApplicationOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
   ApplicationOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate: ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate;
+  ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
+  ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ApplicationOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyNodeIdUpdate: ApplicationOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyNodeIdUpdate;
   ApplicationOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate: ApplicationOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate;
   ApplicationOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyUsingApplicationPkeyUpdate;
@@ -50359,6 +52050,7 @@ export type ResolversTypes = {
   ApplicationToManyDataTableManufacturerApplicationJoinFilter: ApplicationToManyDataTableManufacturerApplicationJoinFilter;
   ApplicationToManyDataTableManufacturerRepresentativeApplicationJoinFilter: ApplicationToManyDataTableManufacturerRepresentativeApplicationJoinFilter;
   ApplicationToManyDataTablePermitChemicalApplicationJoinFilter: ApplicationToManyDataTablePermitChemicalApplicationJoinFilter;
+  ApplicationToManyDataTablePermitMedicalApplicationJoinFilter: ApplicationToManyDataTablePermitMedicalApplicationJoinFilter;
   ApplicationToManyDataTablePrequalManufacturerApplicationJoinFilter: ApplicationToManyDataTablePrequalManufacturerApplicationJoinFilter;
   ApplicationToManyDataTableProductApplicationJoinFilter: ApplicationToManyDataTableProductApplicationJoinFilter;
   ApplicationToManyDataTableProvisionalProductApplicationJoinFilter: ApplicationToManyDataTableProvisionalProductApplicationJoinFilter;
@@ -50472,6 +52164,10 @@ export type ResolversTypes = {
   CreateDataTablePermitChemicalApplicationJoinPayload: ResolverTypeWrapper<Omit<CreateDataTablePermitChemicalApplicationJoinPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   CreateDataTablePermitChemicalInput: CreateDataTablePermitChemicalInput;
   CreateDataTablePermitChemicalPayload: ResolverTypeWrapper<Omit<CreateDataTablePermitChemicalPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
+  CreateDataTablePermitMedicalApplicationJoinInput: CreateDataTablePermitMedicalApplicationJoinInput;
+  CreateDataTablePermitMedicalApplicationJoinPayload: ResolverTypeWrapper<Omit<CreateDataTablePermitMedicalApplicationJoinPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
+  CreateDataTablePermitMedicalInput: CreateDataTablePermitMedicalInput;
+  CreateDataTablePermitMedicalPayload: ResolverTypeWrapper<Omit<CreateDataTablePermitMedicalPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   CreateDataTablePreRegisteredProductsProvisionalInput: CreateDataTablePreRegisteredProductsProvisionalInput;
   CreateDataTablePreRegisteredProductsProvisionalPayload: ResolverTypeWrapper<Omit<CreateDataTablePreRegisteredProductsProvisionalPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   CreateDataTablePrequalManufacturerApplicationJoinInput: CreateDataTablePrequalManufacturerApplicationJoinInput;
@@ -50494,6 +52190,8 @@ export type ResolversTypes = {
   CreateDataTableStorageConditionPayload: ResolverTypeWrapper<Omit<CreateDataTableStorageConditionPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   CreateDataTableStorageConditionsSimplifiedInput: CreateDataTableStorageConditionsSimplifiedInput;
   CreateDataTableStorageConditionsSimplifiedPayload: ResolverTypeWrapper<Omit<CreateDataTableStorageConditionsSimplifiedPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
+  CreateDataTableTownsDivisionsIslandInput: CreateDataTableTownsDivisionsIslandInput;
+  CreateDataTableTownsDivisionsIslandPayload: ResolverTypeWrapper<Omit<CreateDataTableTownsDivisionsIslandPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   CreateDataTableUnitsOfProportionInput: CreateDataTableUnitsOfProportionInput;
   CreateDataTableUnitsOfProportionPayload: ResolverTypeWrapper<Omit<CreateDataTableUnitsOfProportionPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   CreateDataTableWorldHealthOrganisationPqListOfFppInput: CreateDataTableWorldHealthOrganisationPqListOfFppInput;
@@ -50789,6 +52487,45 @@ export type ResolversTypes = {
   DataTablePermitChemicalsConnection: ResolverTypeWrapper<DataTablePermitChemicalsConnection>;
   DataTablePermitChemicalsEdge: ResolverTypeWrapper<DataTablePermitChemicalsEdge>;
   DataTablePermitChemicalsOrderBy: DataTablePermitChemicalsOrderBy;
+  DataTablePermitMedical: ResolverTypeWrapper<DataTablePermitMedical>;
+  DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyDataTablePermitMedicalApplicationJoinCreateInput: DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyDataTablePermitMedicalApplicationJoinCreateInput;
+  DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyDataTablePermitMedicalCreateInput: DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyDataTablePermitMedicalCreateInput;
+  DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInput: DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInput;
+  DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInverseInput: DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInverseInput;
+  DataTablePermitMedicalApplicationJoin: ResolverTypeWrapper<DataTablePermitMedicalApplicationJoin>;
+  DataTablePermitMedicalApplicationJoinApplicationIdFkeyApplicationCreateInput: DataTablePermitMedicalApplicationJoinApplicationIdFkeyApplicationCreateInput;
+  DataTablePermitMedicalApplicationJoinApplicationIdFkeyDataTablePermitMedicalApplicationJoinCreateInput: DataTablePermitMedicalApplicationJoinApplicationIdFkeyDataTablePermitMedicalApplicationJoinCreateInput;
+  DataTablePermitMedicalApplicationJoinApplicationIdFkeyInput: DataTablePermitMedicalApplicationJoinApplicationIdFkeyInput;
+  DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput: DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput;
+  DataTablePermitMedicalApplicationJoinCondition: DataTablePermitMedicalApplicationJoinCondition;
+  DataTablePermitMedicalApplicationJoinDataTablePermitMedicalApplicationJoinPkeyConnect: DataTablePermitMedicalApplicationJoinDataTablePermitMedicalApplicationJoinPkeyConnect;
+  DataTablePermitMedicalApplicationJoinDataTablePermitMedicalApplicationJoinPkeyDelete: DataTablePermitMedicalApplicationJoinDataTablePermitMedicalApplicationJoinPkeyDelete;
+  DataTablePermitMedicalApplicationJoinFilter: DataTablePermitMedicalApplicationJoinFilter;
+  DataTablePermitMedicalApplicationJoinInput: DataTablePermitMedicalApplicationJoinInput;
+  DataTablePermitMedicalApplicationJoinNodeIdConnect: DataTablePermitMedicalApplicationJoinNodeIdConnect;
+  DataTablePermitMedicalApplicationJoinNodeIdDelete: DataTablePermitMedicalApplicationJoinNodeIdDelete;
+  DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyNodeIdUpdate: DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyNodeIdUpdate;
+  DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyUsingDataTablePermitMedicalApplicationJoinPkeyUpdate: DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyUsingDataTablePermitMedicalApplicationJoinPkeyUpdate;
+  DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyNodeIdUpdate: DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingDataTablePermitMedicalApplicationJoinPkeyUpdate: DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingDataTablePermitMedicalApplicationJoinPkeyUpdate;
+  DataTablePermitMedicalApplicationJoinPatch: DataTablePermitMedicalApplicationJoinPatch;
+  DataTablePermitMedicalApplicationJoinsConnection: ResolverTypeWrapper<DataTablePermitMedicalApplicationJoinsConnection>;
+  DataTablePermitMedicalApplicationJoinsEdge: ResolverTypeWrapper<DataTablePermitMedicalApplicationJoinsEdge>;
+  DataTablePermitMedicalApplicationJoinsOrderBy: DataTablePermitMedicalApplicationJoinsOrderBy;
+  DataTablePermitMedicalCondition: DataTablePermitMedicalCondition;
+  DataTablePermitMedicalDataTablePermitMedicalPkeyConnect: DataTablePermitMedicalDataTablePermitMedicalPkeyConnect;
+  DataTablePermitMedicalDataTablePermitMedicalPkeyDelete: DataTablePermitMedicalDataTablePermitMedicalPkeyDelete;
+  DataTablePermitMedicalFilter: DataTablePermitMedicalFilter;
+  DataTablePermitMedicalInput: DataTablePermitMedicalInput;
+  DataTablePermitMedicalNodeIdConnect: DataTablePermitMedicalNodeIdConnect;
+  DataTablePermitMedicalNodeIdDelete: DataTablePermitMedicalNodeIdDelete;
+  DataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyNodeIdUpdate: DataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyNodeIdUpdate;
+  DataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyUsingDataTablePermitMedicalPkeyUpdate: DataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyUsingDataTablePermitMedicalPkeyUpdate;
+  DataTablePermitMedicalPatch: DataTablePermitMedicalPatch;
+  DataTablePermitMedicalToManyDataTablePermitMedicalApplicationJoinFilter: DataTablePermitMedicalToManyDataTablePermitMedicalApplicationJoinFilter;
+  DataTablePermitMedicalsConnection: ResolverTypeWrapper<DataTablePermitMedicalsConnection>;
+  DataTablePermitMedicalsEdge: ResolverTypeWrapper<DataTablePermitMedicalsEdge>;
+  DataTablePermitMedicalsOrderBy: DataTablePermitMedicalsOrderBy;
   DataTablePreRegisteredProductsProvisional: ResolverTypeWrapper<DataTablePreRegisteredProductsProvisional>;
   DataTablePreRegisteredProductsProvisionalCondition: DataTablePreRegisteredProductsProvisionalCondition;
   DataTablePreRegisteredProductsProvisionalFilter: DataTablePreRegisteredProductsProvisionalFilter;
@@ -50933,6 +52670,14 @@ export type ResolversTypes = {
   DataTableStorageConditionsSimplifiedsConnection: ResolverTypeWrapper<DataTableStorageConditionsSimplifiedsConnection>;
   DataTableStorageConditionsSimplifiedsEdge: ResolverTypeWrapper<DataTableStorageConditionsSimplifiedsEdge>;
   DataTableStorageConditionsSimplifiedsOrderBy: DataTableStorageConditionsSimplifiedsOrderBy;
+  DataTableTownsDivisionsIsland: ResolverTypeWrapper<DataTableTownsDivisionsIsland>;
+  DataTableTownsDivisionsIslandCondition: DataTableTownsDivisionsIslandCondition;
+  DataTableTownsDivisionsIslandFilter: DataTableTownsDivisionsIslandFilter;
+  DataTableTownsDivisionsIslandInput: DataTableTownsDivisionsIslandInput;
+  DataTableTownsDivisionsIslandPatch: DataTableTownsDivisionsIslandPatch;
+  DataTableTownsDivisionsIslandsConnection: ResolverTypeWrapper<DataTableTownsDivisionsIslandsConnection>;
+  DataTableTownsDivisionsIslandsEdge: ResolverTypeWrapper<DataTableTownsDivisionsIslandsEdge>;
+  DataTableTownsDivisionsIslandsOrderBy: DataTableTownsDivisionsIslandsOrderBy;
   DataTableUnitsOfProportion: ResolverTypeWrapper<DataTableUnitsOfProportion>;
   DataTableUnitsOfProportionCondition: DataTableUnitsOfProportionCondition;
   DataTableUnitsOfProportionFilter: DataTableUnitsOfProportionFilter;
@@ -51068,6 +52813,12 @@ export type ResolversTypes = {
   DeleteDataTablePermitChemicalByNodeIdInput: DeleteDataTablePermitChemicalByNodeIdInput;
   DeleteDataTablePermitChemicalInput: DeleteDataTablePermitChemicalInput;
   DeleteDataTablePermitChemicalPayload: ResolverTypeWrapper<Omit<DeleteDataTablePermitChemicalPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
+  DeleteDataTablePermitMedicalApplicationJoinByNodeIdInput: DeleteDataTablePermitMedicalApplicationJoinByNodeIdInput;
+  DeleteDataTablePermitMedicalApplicationJoinInput: DeleteDataTablePermitMedicalApplicationJoinInput;
+  DeleteDataTablePermitMedicalApplicationJoinPayload: ResolverTypeWrapper<Omit<DeleteDataTablePermitMedicalApplicationJoinPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
+  DeleteDataTablePermitMedicalByNodeIdInput: DeleteDataTablePermitMedicalByNodeIdInput;
+  DeleteDataTablePermitMedicalInput: DeleteDataTablePermitMedicalInput;
+  DeleteDataTablePermitMedicalPayload: ResolverTypeWrapper<Omit<DeleteDataTablePermitMedicalPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   DeleteDataTablePreRegisteredProductsProvisionalByNodeIdInput: DeleteDataTablePreRegisteredProductsProvisionalByNodeIdInput;
   DeleteDataTablePreRegisteredProductsProvisionalInput: DeleteDataTablePreRegisteredProductsProvisionalInput;
   DeleteDataTablePreRegisteredProductsProvisionalPayload: ResolverTypeWrapper<Omit<DeleteDataTablePreRegisteredProductsProvisionalPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
@@ -51101,6 +52852,9 @@ export type ResolversTypes = {
   DeleteDataTableStorageConditionsSimplifiedByNodeIdInput: DeleteDataTableStorageConditionsSimplifiedByNodeIdInput;
   DeleteDataTableStorageConditionsSimplifiedInput: DeleteDataTableStorageConditionsSimplifiedInput;
   DeleteDataTableStorageConditionsSimplifiedPayload: ResolverTypeWrapper<Omit<DeleteDataTableStorageConditionsSimplifiedPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
+  DeleteDataTableTownsDivisionsIslandByNodeIdInput: DeleteDataTableTownsDivisionsIslandByNodeIdInput;
+  DeleteDataTableTownsDivisionsIslandInput: DeleteDataTableTownsDivisionsIslandInput;
+  DeleteDataTableTownsDivisionsIslandPayload: ResolverTypeWrapper<Omit<DeleteDataTableTownsDivisionsIslandPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   DeleteDataTableUnitsOfProportionByNodeIdInput: DeleteDataTableUnitsOfProportionByNodeIdInput;
   DeleteDataTableUnitsOfProportionInput: DeleteDataTableUnitsOfProportionInput;
   DeleteDataTableUnitsOfProportionPayload: ResolverTypeWrapper<Omit<DeleteDataTableUnitsOfProportionPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
@@ -52299,6 +54053,12 @@ export type ResolversTypes = {
   UpdateDataTablePermitChemicalByNodeIdInput: UpdateDataTablePermitChemicalByNodeIdInput;
   UpdateDataTablePermitChemicalInput: UpdateDataTablePermitChemicalInput;
   UpdateDataTablePermitChemicalPayload: ResolverTypeWrapper<Omit<UpdateDataTablePermitChemicalPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
+  UpdateDataTablePermitMedicalApplicationJoinByNodeIdInput: UpdateDataTablePermitMedicalApplicationJoinByNodeIdInput;
+  UpdateDataTablePermitMedicalApplicationJoinInput: UpdateDataTablePermitMedicalApplicationJoinInput;
+  UpdateDataTablePermitMedicalApplicationJoinPayload: ResolverTypeWrapper<Omit<UpdateDataTablePermitMedicalApplicationJoinPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
+  UpdateDataTablePermitMedicalByNodeIdInput: UpdateDataTablePermitMedicalByNodeIdInput;
+  UpdateDataTablePermitMedicalInput: UpdateDataTablePermitMedicalInput;
+  UpdateDataTablePermitMedicalPayload: ResolverTypeWrapper<Omit<UpdateDataTablePermitMedicalPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   UpdateDataTablePreRegisteredProductsProvisionalByNodeIdInput: UpdateDataTablePreRegisteredProductsProvisionalByNodeIdInput;
   UpdateDataTablePreRegisteredProductsProvisionalInput: UpdateDataTablePreRegisteredProductsProvisionalInput;
   UpdateDataTablePreRegisteredProductsProvisionalPayload: ResolverTypeWrapper<Omit<UpdateDataTablePreRegisteredProductsProvisionalPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
@@ -52332,6 +54092,9 @@ export type ResolversTypes = {
   UpdateDataTableStorageConditionsSimplifiedByNodeIdInput: UpdateDataTableStorageConditionsSimplifiedByNodeIdInput;
   UpdateDataTableStorageConditionsSimplifiedInput: UpdateDataTableStorageConditionsSimplifiedInput;
   UpdateDataTableStorageConditionsSimplifiedPayload: ResolverTypeWrapper<Omit<UpdateDataTableStorageConditionsSimplifiedPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
+  UpdateDataTableTownsDivisionsIslandByNodeIdInput: UpdateDataTableTownsDivisionsIslandByNodeIdInput;
+  UpdateDataTableTownsDivisionsIslandInput: UpdateDataTableTownsDivisionsIslandInput;
+  UpdateDataTableTownsDivisionsIslandPayload: ResolverTypeWrapper<Omit<UpdateDataTableTownsDivisionsIslandPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   UpdateDataTableUnitsOfProportionByNodeIdInput: UpdateDataTableUnitsOfProportionByNodeIdInput;
   UpdateDataTableUnitsOfProportionInput: UpdateDataTableUnitsOfProportionInput;
   UpdateDataTableUnitsOfProportionPayload: ResolverTypeWrapper<Omit<UpdateDataTableUnitsOfProportionPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
@@ -52583,6 +54346,7 @@ export type ResolversTypes = {
   updateApplicationOnDataTableManufacturerApplicationJoinForDataTableManufacturerApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnDataTableManufacturerApplicationJoinForDataTableManufacturerApplicationJoinApplicationIdFkeyPatch;
   updateApplicationOnDataTableManufacturerRepresentativeApplicationJoinForDataTableManufacturerRepresentativeApplApplicationIdFkeyPatch: UpdateApplicationOnDataTableManufacturerRepresentativeApplicationJoinForDataTableManufacturerRepresentativeApplApplicationIdFkeyPatch;
   updateApplicationOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyPatch;
+  updateApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyPatch;
   updateApplicationOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyPatch: UpdateApplicationOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyPatch;
   updateApplicationOnDataTableProductApplicationJoinForDataTableProductApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnDataTableProductApplicationJoinForDataTableProductApplicationJoinApplicationIdFkeyPatch;
   updateApplicationOnDataTableProvisionalProductApplicationJoinForDataTableProvisionalProductApplicationApplicationIdFkeyPatch: UpdateApplicationOnDataTableProvisionalProductApplicationJoinForDataTableProvisionalProductApplicationApplicationIdFkeyPatch;
@@ -52615,6 +54379,9 @@ export type ResolversTypes = {
   updateDataTablePermitChemicalApplicationJoinOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApDataTablePermitChemicalIFkeyPatch: UpdateDataTablePermitChemicalApplicationJoinOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApDataTablePermitChemicalIFkeyPatch;
   updateDataTablePermitChemicalApplicationJoinOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyPatch: UpdateDataTablePermitChemicalApplicationJoinOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyPatch;
   updateDataTablePermitChemicalOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApDataTablePermitChemicalIFkeyPatch: UpdateDataTablePermitChemicalOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApDataTablePermitChemicalIFkeyPatch;
+  updateDataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyPatch: UpdateDataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyPatch;
+  updateDataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyPatch: UpdateDataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyPatch;
+  updateDataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyPatch: UpdateDataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyPatch;
   updateDataTablePrequalManufacturerApplicationJoinOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturDataTablePrequalManufactuFkeyPatch: UpdateDataTablePrequalManufacturerApplicationJoinOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturDataTablePrequalManufactuFkeyPatch;
   updateDataTablePrequalManufacturerApplicationJoinOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyPatch: UpdateDataTablePrequalManufacturerApplicationJoinOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyPatch;
   updateDataTablePrequalManufacturerOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturDataTablePrequalManufactuFkeyPatch: UpdateDataTablePrequalManufacturerOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturDataTablePrequalManufactuFkeyPatch;
@@ -52888,6 +54655,10 @@ export type ResolversParentTypes = {
   ApplicationOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate: ApplicationOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate;
   ApplicationOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
   ApplicationOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate: ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate;
+  ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
+  ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ApplicationOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyNodeIdUpdate: ApplicationOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyNodeIdUpdate;
   ApplicationOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate: ApplicationOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate;
   ApplicationOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyUsingApplicationPkeyUpdate;
@@ -53060,6 +54831,7 @@ export type ResolversParentTypes = {
   ApplicationToManyDataTableManufacturerApplicationJoinFilter: ApplicationToManyDataTableManufacturerApplicationJoinFilter;
   ApplicationToManyDataTableManufacturerRepresentativeApplicationJoinFilter: ApplicationToManyDataTableManufacturerRepresentativeApplicationJoinFilter;
   ApplicationToManyDataTablePermitChemicalApplicationJoinFilter: ApplicationToManyDataTablePermitChemicalApplicationJoinFilter;
+  ApplicationToManyDataTablePermitMedicalApplicationJoinFilter: ApplicationToManyDataTablePermitMedicalApplicationJoinFilter;
   ApplicationToManyDataTablePrequalManufacturerApplicationJoinFilter: ApplicationToManyDataTablePrequalManufacturerApplicationJoinFilter;
   ApplicationToManyDataTableProductApplicationJoinFilter: ApplicationToManyDataTableProductApplicationJoinFilter;
   ApplicationToManyDataTableProvisionalProductApplicationJoinFilter: ApplicationToManyDataTableProvisionalProductApplicationJoinFilter;
@@ -53167,6 +54939,10 @@ export type ResolversParentTypes = {
   CreateDataTablePermitChemicalApplicationJoinPayload: Omit<CreateDataTablePermitChemicalApplicationJoinPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   CreateDataTablePermitChemicalInput: CreateDataTablePermitChemicalInput;
   CreateDataTablePermitChemicalPayload: Omit<CreateDataTablePermitChemicalPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
+  CreateDataTablePermitMedicalApplicationJoinInput: CreateDataTablePermitMedicalApplicationJoinInput;
+  CreateDataTablePermitMedicalApplicationJoinPayload: Omit<CreateDataTablePermitMedicalApplicationJoinPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
+  CreateDataTablePermitMedicalInput: CreateDataTablePermitMedicalInput;
+  CreateDataTablePermitMedicalPayload: Omit<CreateDataTablePermitMedicalPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   CreateDataTablePreRegisteredProductsProvisionalInput: CreateDataTablePreRegisteredProductsProvisionalInput;
   CreateDataTablePreRegisteredProductsProvisionalPayload: Omit<CreateDataTablePreRegisteredProductsProvisionalPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   CreateDataTablePrequalManufacturerApplicationJoinInput: CreateDataTablePrequalManufacturerApplicationJoinInput;
@@ -53189,6 +54965,8 @@ export type ResolversParentTypes = {
   CreateDataTableStorageConditionPayload: Omit<CreateDataTableStorageConditionPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   CreateDataTableStorageConditionsSimplifiedInput: CreateDataTableStorageConditionsSimplifiedInput;
   CreateDataTableStorageConditionsSimplifiedPayload: Omit<CreateDataTableStorageConditionsSimplifiedPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
+  CreateDataTableTownsDivisionsIslandInput: CreateDataTableTownsDivisionsIslandInput;
+  CreateDataTableTownsDivisionsIslandPayload: Omit<CreateDataTableTownsDivisionsIslandPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   CreateDataTableUnitsOfProportionInput: CreateDataTableUnitsOfProportionInput;
   CreateDataTableUnitsOfProportionPayload: Omit<CreateDataTableUnitsOfProportionPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   CreateDataTableWorldHealthOrganisationPqListOfFppInput: CreateDataTableWorldHealthOrganisationPqListOfFppInput;
@@ -53469,6 +55247,43 @@ export type ResolversParentTypes = {
   DataTablePermitChemicalToManyDataTablePermitChemicalApplicationJoinFilter: DataTablePermitChemicalToManyDataTablePermitChemicalApplicationJoinFilter;
   DataTablePermitChemicalsConnection: DataTablePermitChemicalsConnection;
   DataTablePermitChemicalsEdge: DataTablePermitChemicalsEdge;
+  DataTablePermitMedical: DataTablePermitMedical;
+  DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyDataTablePermitMedicalApplicationJoinCreateInput: DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyDataTablePermitMedicalApplicationJoinCreateInput;
+  DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyDataTablePermitMedicalCreateInput: DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyDataTablePermitMedicalCreateInput;
+  DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInput: DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInput;
+  DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInverseInput: DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInverseInput;
+  DataTablePermitMedicalApplicationJoin: DataTablePermitMedicalApplicationJoin;
+  DataTablePermitMedicalApplicationJoinApplicationIdFkeyApplicationCreateInput: DataTablePermitMedicalApplicationJoinApplicationIdFkeyApplicationCreateInput;
+  DataTablePermitMedicalApplicationJoinApplicationIdFkeyDataTablePermitMedicalApplicationJoinCreateInput: DataTablePermitMedicalApplicationJoinApplicationIdFkeyDataTablePermitMedicalApplicationJoinCreateInput;
+  DataTablePermitMedicalApplicationJoinApplicationIdFkeyInput: DataTablePermitMedicalApplicationJoinApplicationIdFkeyInput;
+  DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput: DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput;
+  DataTablePermitMedicalApplicationJoinCondition: DataTablePermitMedicalApplicationJoinCondition;
+  DataTablePermitMedicalApplicationJoinDataTablePermitMedicalApplicationJoinPkeyConnect: DataTablePermitMedicalApplicationJoinDataTablePermitMedicalApplicationJoinPkeyConnect;
+  DataTablePermitMedicalApplicationJoinDataTablePermitMedicalApplicationJoinPkeyDelete: DataTablePermitMedicalApplicationJoinDataTablePermitMedicalApplicationJoinPkeyDelete;
+  DataTablePermitMedicalApplicationJoinFilter: DataTablePermitMedicalApplicationJoinFilter;
+  DataTablePermitMedicalApplicationJoinInput: DataTablePermitMedicalApplicationJoinInput;
+  DataTablePermitMedicalApplicationJoinNodeIdConnect: DataTablePermitMedicalApplicationJoinNodeIdConnect;
+  DataTablePermitMedicalApplicationJoinNodeIdDelete: DataTablePermitMedicalApplicationJoinNodeIdDelete;
+  DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyNodeIdUpdate: DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyNodeIdUpdate;
+  DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyUsingDataTablePermitMedicalApplicationJoinPkeyUpdate: DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyUsingDataTablePermitMedicalApplicationJoinPkeyUpdate;
+  DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyNodeIdUpdate: DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingDataTablePermitMedicalApplicationJoinPkeyUpdate: DataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyUsingDataTablePermitMedicalApplicationJoinPkeyUpdate;
+  DataTablePermitMedicalApplicationJoinPatch: DataTablePermitMedicalApplicationJoinPatch;
+  DataTablePermitMedicalApplicationJoinsConnection: DataTablePermitMedicalApplicationJoinsConnection;
+  DataTablePermitMedicalApplicationJoinsEdge: DataTablePermitMedicalApplicationJoinsEdge;
+  DataTablePermitMedicalCondition: DataTablePermitMedicalCondition;
+  DataTablePermitMedicalDataTablePermitMedicalPkeyConnect: DataTablePermitMedicalDataTablePermitMedicalPkeyConnect;
+  DataTablePermitMedicalDataTablePermitMedicalPkeyDelete: DataTablePermitMedicalDataTablePermitMedicalPkeyDelete;
+  DataTablePermitMedicalFilter: DataTablePermitMedicalFilter;
+  DataTablePermitMedicalInput: DataTablePermitMedicalInput;
+  DataTablePermitMedicalNodeIdConnect: DataTablePermitMedicalNodeIdConnect;
+  DataTablePermitMedicalNodeIdDelete: DataTablePermitMedicalNodeIdDelete;
+  DataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyNodeIdUpdate: DataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyNodeIdUpdate;
+  DataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyUsingDataTablePermitMedicalPkeyUpdate: DataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyUsingDataTablePermitMedicalPkeyUpdate;
+  DataTablePermitMedicalPatch: DataTablePermitMedicalPatch;
+  DataTablePermitMedicalToManyDataTablePermitMedicalApplicationJoinFilter: DataTablePermitMedicalToManyDataTablePermitMedicalApplicationJoinFilter;
+  DataTablePermitMedicalsConnection: DataTablePermitMedicalsConnection;
+  DataTablePermitMedicalsEdge: DataTablePermitMedicalsEdge;
   DataTablePreRegisteredProductsProvisional: DataTablePreRegisteredProductsProvisional;
   DataTablePreRegisteredProductsProvisionalCondition: DataTablePreRegisteredProductsProvisionalCondition;
   DataTablePreRegisteredProductsProvisionalFilter: DataTablePreRegisteredProductsProvisionalFilter;
@@ -53602,6 +55417,13 @@ export type ResolversParentTypes = {
   DataTableStorageConditionsSimplifiedPatch: DataTableStorageConditionsSimplifiedPatch;
   DataTableStorageConditionsSimplifiedsConnection: DataTableStorageConditionsSimplifiedsConnection;
   DataTableStorageConditionsSimplifiedsEdge: DataTableStorageConditionsSimplifiedsEdge;
+  DataTableTownsDivisionsIsland: DataTableTownsDivisionsIsland;
+  DataTableTownsDivisionsIslandCondition: DataTableTownsDivisionsIslandCondition;
+  DataTableTownsDivisionsIslandFilter: DataTableTownsDivisionsIslandFilter;
+  DataTableTownsDivisionsIslandInput: DataTableTownsDivisionsIslandInput;
+  DataTableTownsDivisionsIslandPatch: DataTableTownsDivisionsIslandPatch;
+  DataTableTownsDivisionsIslandsConnection: DataTableTownsDivisionsIslandsConnection;
+  DataTableTownsDivisionsIslandsEdge: DataTableTownsDivisionsIslandsEdge;
   DataTableUnitsOfProportion: DataTableUnitsOfProportion;
   DataTableUnitsOfProportionCondition: DataTableUnitsOfProportionCondition;
   DataTableUnitsOfProportionFilter: DataTableUnitsOfProportionFilter;
@@ -53731,6 +55553,12 @@ export type ResolversParentTypes = {
   DeleteDataTablePermitChemicalByNodeIdInput: DeleteDataTablePermitChemicalByNodeIdInput;
   DeleteDataTablePermitChemicalInput: DeleteDataTablePermitChemicalInput;
   DeleteDataTablePermitChemicalPayload: Omit<DeleteDataTablePermitChemicalPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
+  DeleteDataTablePermitMedicalApplicationJoinByNodeIdInput: DeleteDataTablePermitMedicalApplicationJoinByNodeIdInput;
+  DeleteDataTablePermitMedicalApplicationJoinInput: DeleteDataTablePermitMedicalApplicationJoinInput;
+  DeleteDataTablePermitMedicalApplicationJoinPayload: Omit<DeleteDataTablePermitMedicalApplicationJoinPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
+  DeleteDataTablePermitMedicalByNodeIdInput: DeleteDataTablePermitMedicalByNodeIdInput;
+  DeleteDataTablePermitMedicalInput: DeleteDataTablePermitMedicalInput;
+  DeleteDataTablePermitMedicalPayload: Omit<DeleteDataTablePermitMedicalPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   DeleteDataTablePreRegisteredProductsProvisionalByNodeIdInput: DeleteDataTablePreRegisteredProductsProvisionalByNodeIdInput;
   DeleteDataTablePreRegisteredProductsProvisionalInput: DeleteDataTablePreRegisteredProductsProvisionalInput;
   DeleteDataTablePreRegisteredProductsProvisionalPayload: Omit<DeleteDataTablePreRegisteredProductsProvisionalPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
@@ -53764,6 +55592,9 @@ export type ResolversParentTypes = {
   DeleteDataTableStorageConditionsSimplifiedByNodeIdInput: DeleteDataTableStorageConditionsSimplifiedByNodeIdInput;
   DeleteDataTableStorageConditionsSimplifiedInput: DeleteDataTableStorageConditionsSimplifiedInput;
   DeleteDataTableStorageConditionsSimplifiedPayload: Omit<DeleteDataTableStorageConditionsSimplifiedPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
+  DeleteDataTableTownsDivisionsIslandByNodeIdInput: DeleteDataTableTownsDivisionsIslandByNodeIdInput;
+  DeleteDataTableTownsDivisionsIslandInput: DeleteDataTableTownsDivisionsIslandInput;
+  DeleteDataTableTownsDivisionsIslandPayload: Omit<DeleteDataTableTownsDivisionsIslandPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   DeleteDataTableUnitsOfProportionByNodeIdInput: DeleteDataTableUnitsOfProportionByNodeIdInput;
   DeleteDataTableUnitsOfProportionInput: DeleteDataTableUnitsOfProportionInput;
   DeleteDataTableUnitsOfProportionPayload: Omit<DeleteDataTableUnitsOfProportionPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
@@ -54910,6 +56741,12 @@ export type ResolversParentTypes = {
   UpdateDataTablePermitChemicalByNodeIdInput: UpdateDataTablePermitChemicalByNodeIdInput;
   UpdateDataTablePermitChemicalInput: UpdateDataTablePermitChemicalInput;
   UpdateDataTablePermitChemicalPayload: Omit<UpdateDataTablePermitChemicalPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
+  UpdateDataTablePermitMedicalApplicationJoinByNodeIdInput: UpdateDataTablePermitMedicalApplicationJoinByNodeIdInput;
+  UpdateDataTablePermitMedicalApplicationJoinInput: UpdateDataTablePermitMedicalApplicationJoinInput;
+  UpdateDataTablePermitMedicalApplicationJoinPayload: Omit<UpdateDataTablePermitMedicalApplicationJoinPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
+  UpdateDataTablePermitMedicalByNodeIdInput: UpdateDataTablePermitMedicalByNodeIdInput;
+  UpdateDataTablePermitMedicalInput: UpdateDataTablePermitMedicalInput;
+  UpdateDataTablePermitMedicalPayload: Omit<UpdateDataTablePermitMedicalPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   UpdateDataTablePreRegisteredProductsProvisionalByNodeIdInput: UpdateDataTablePreRegisteredProductsProvisionalByNodeIdInput;
   UpdateDataTablePreRegisteredProductsProvisionalInput: UpdateDataTablePreRegisteredProductsProvisionalInput;
   UpdateDataTablePreRegisteredProductsProvisionalPayload: Omit<UpdateDataTablePreRegisteredProductsProvisionalPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
@@ -54943,6 +56780,9 @@ export type ResolversParentTypes = {
   UpdateDataTableStorageConditionsSimplifiedByNodeIdInput: UpdateDataTableStorageConditionsSimplifiedByNodeIdInput;
   UpdateDataTableStorageConditionsSimplifiedInput: UpdateDataTableStorageConditionsSimplifiedInput;
   UpdateDataTableStorageConditionsSimplifiedPayload: Omit<UpdateDataTableStorageConditionsSimplifiedPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
+  UpdateDataTableTownsDivisionsIslandByNodeIdInput: UpdateDataTableTownsDivisionsIslandByNodeIdInput;
+  UpdateDataTableTownsDivisionsIslandInput: UpdateDataTableTownsDivisionsIslandInput;
+  UpdateDataTableTownsDivisionsIslandPayload: Omit<UpdateDataTableTownsDivisionsIslandPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   UpdateDataTableUnitsOfProportionByNodeIdInput: UpdateDataTableUnitsOfProportionByNodeIdInput;
   UpdateDataTableUnitsOfProportionInput: UpdateDataTableUnitsOfProportionInput;
   UpdateDataTableUnitsOfProportionPayload: Omit<UpdateDataTableUnitsOfProportionPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
@@ -55188,6 +57028,7 @@ export type ResolversParentTypes = {
   updateApplicationOnDataTableManufacturerApplicationJoinForDataTableManufacturerApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnDataTableManufacturerApplicationJoinForDataTableManufacturerApplicationJoinApplicationIdFkeyPatch;
   updateApplicationOnDataTableManufacturerRepresentativeApplicationJoinForDataTableManufacturerRepresentativeApplApplicationIdFkeyPatch: UpdateApplicationOnDataTableManufacturerRepresentativeApplicationJoinForDataTableManufacturerRepresentativeApplApplicationIdFkeyPatch;
   updateApplicationOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyPatch;
+  updateApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyPatch;
   updateApplicationOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyPatch: UpdateApplicationOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyPatch;
   updateApplicationOnDataTableProductApplicationJoinForDataTableProductApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnDataTableProductApplicationJoinForDataTableProductApplicationJoinApplicationIdFkeyPatch;
   updateApplicationOnDataTableProvisionalProductApplicationJoinForDataTableProvisionalProductApplicationApplicationIdFkeyPatch: UpdateApplicationOnDataTableProvisionalProductApplicationJoinForDataTableProvisionalProductApplicationApplicationIdFkeyPatch;
@@ -55220,6 +57061,9 @@ export type ResolversParentTypes = {
   updateDataTablePermitChemicalApplicationJoinOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApDataTablePermitChemicalIFkeyPatch: UpdateDataTablePermitChemicalApplicationJoinOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApDataTablePermitChemicalIFkeyPatch;
   updateDataTablePermitChemicalApplicationJoinOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyPatch: UpdateDataTablePermitChemicalApplicationJoinOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApplicationJoinApplicationIdFkeyPatch;
   updateDataTablePermitChemicalOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApDataTablePermitChemicalIFkeyPatch: UpdateDataTablePermitChemicalOnDataTablePermitChemicalApplicationJoinForDataTablePermitChemicalApDataTablePermitChemicalIFkeyPatch;
+  updateDataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyPatch: UpdateDataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyPatch;
+  updateDataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyPatch: UpdateDataTablePermitMedicalApplicationJoinOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalApplicationJoinApplicationIdFkeyPatch;
+  updateDataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyPatch: UpdateDataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinForDataTablePermitMedicalAppDataTablePermitMedicalIdFkeyPatch;
   updateDataTablePrequalManufacturerApplicationJoinOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturDataTablePrequalManufactuFkeyPatch: UpdateDataTablePrequalManufacturerApplicationJoinOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturDataTablePrequalManufactuFkeyPatch;
   updateDataTablePrequalManufacturerApplicationJoinOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyPatch: UpdateDataTablePrequalManufacturerApplicationJoinOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturerApplicationApplicationIdFkeyPatch;
   updateDataTablePrequalManufacturerOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturDataTablePrequalManufactuFkeyPatch: UpdateDataTablePrequalManufacturerOnDataTablePrequalManufacturerApplicationJoinForDataTablePrequalManufacturDataTablePrequalManufactuFkeyPatch;
@@ -55449,6 +57293,7 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   dataTableManufacturerApplicationJoins?: Resolver<ResolversTypes['DataTableManufacturerApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationDataTableManufacturerApplicationJoinsArgs, 'orderBy'>>;
   dataTableManufacturerRepresentativeApplicationJoins?: Resolver<ResolversTypes['DataTableManufacturerRepresentativeApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationDataTableManufacturerRepresentativeApplicationJoinsArgs, 'orderBy'>>;
   dataTablePermitChemicalApplicationJoins?: Resolver<ResolversTypes['DataTablePermitChemicalApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationDataTablePermitChemicalApplicationJoinsArgs, 'orderBy'>>;
+  dataTablePermitMedicalApplicationJoins?: Resolver<ResolversTypes['DataTablePermitMedicalApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationDataTablePermitMedicalApplicationJoinsArgs, 'orderBy'>>;
   dataTablePrequalManufacturerApplicationJoins?: Resolver<ResolversTypes['DataTablePrequalManufacturerApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationDataTablePrequalManufacturerApplicationJoinsArgs, 'orderBy'>>;
   dataTableProductApplicationJoins?: Resolver<ResolversTypes['DataTableProductApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationDataTableProductApplicationJoinsArgs, 'orderBy'>>;
   dataTableProvisionalProductApplicationJoins?: Resolver<ResolversTypes['DataTableProvisionalProductApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationDataTableProvisionalProductApplicationJoinsArgs, 'orderBy'>>;
@@ -56210,6 +58055,24 @@ export type CreateDataTablePermitChemicalPayloadResolvers<ContextType = any, Par
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateDataTablePermitMedicalApplicationJoinPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateDataTablePermitMedicalApplicationJoinPayload'] = ResolversParentTypes['CreateDataTablePermitMedicalApplicationJoinPayload']> = {
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataTablePermitMedical?: Resolver<Maybe<ResolversTypes['DataTablePermitMedical']>, ParentType, ContextType>;
+  dataTablePermitMedicalApplicationJoin?: Resolver<Maybe<ResolversTypes['DataTablePermitMedicalApplicationJoin']>, ParentType, ContextType>;
+  dataTablePermitMedicalApplicationJoinEdge?: Resolver<Maybe<ResolversTypes['DataTablePermitMedicalApplicationJoinsEdge']>, ParentType, ContextType, RequireFields<CreateDataTablePermitMedicalApplicationJoinPayloadDataTablePermitMedicalApplicationJoinEdgeArgs, 'orderBy'>>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateDataTablePermitMedicalPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateDataTablePermitMedicalPayload'] = ResolversParentTypes['CreateDataTablePermitMedicalPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataTablePermitMedical?: Resolver<Maybe<ResolversTypes['DataTablePermitMedical']>, ParentType, ContextType>;
+  dataTablePermitMedicalEdge?: Resolver<Maybe<ResolversTypes['DataTablePermitMedicalsEdge']>, ParentType, ContextType, RequireFields<CreateDataTablePermitMedicalPayloadDataTablePermitMedicalEdgeArgs, 'orderBy'>>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateDataTablePreRegisteredProductsProvisionalPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateDataTablePreRegisteredProductsProvisionalPayload'] = ResolversParentTypes['CreateDataTablePreRegisteredProductsProvisionalPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   dataTablePreRegisteredProductsProvisional?: Resolver<Maybe<ResolversTypes['DataTablePreRegisteredProductsProvisional']>, ParentType, ContextType>;
@@ -56299,6 +58162,14 @@ export type CreateDataTableStorageConditionsSimplifiedPayloadResolvers<ContextTy
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   dataTableStorageConditionsSimplified?: Resolver<Maybe<ResolversTypes['DataTableStorageConditionsSimplified']>, ParentType, ContextType>;
   dataTableStorageConditionsSimplifiedEdge?: Resolver<Maybe<ResolversTypes['DataTableStorageConditionsSimplifiedsEdge']>, ParentType, ContextType, RequireFields<CreateDataTableStorageConditionsSimplifiedPayloadDataTableStorageConditionsSimplifiedEdgeArgs, 'orderBy'>>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateDataTableTownsDivisionsIslandPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateDataTableTownsDivisionsIslandPayload'] = ResolversParentTypes['CreateDataTableTownsDivisionsIslandPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataTableTownsDivisionsIsland?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIsland']>, ParentType, ContextType>;
+  dataTableTownsDivisionsIslandEdge?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIslandsEdge']>, ParentType, ContextType, RequireFields<CreateDataTableTownsDivisionsIslandPayloadDataTableTownsDivisionsIslandEdgeArgs, 'orderBy'>>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -57099,6 +58970,66 @@ export type DataTablePermitChemicalsEdgeResolvers<ContextType = any, ParentType 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DataTablePermitMedicalResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTablePermitMedical'] = ResolversParentTypes['DataTablePermitMedical']> = {
+  billLadingNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  companyId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  companyName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  consignorAddress?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  consignorName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataTablePermitMedicalApplicationJoins?: Resolver<ResolversTypes['DataTablePermitMedicalApplicationJoinsConnection'], ParentType, ContextType, RequireFields<DataTablePermitMedicalDataTablePermitMedicalApplicationJoinsArgs, 'orderBy'>>;
+  exportCountry?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  modeOfTransport?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  nonRegisteredProducts?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  nonRegisteredProductsFilterData?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  nonRegisteredReason?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  permitNo?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  portOfEntry?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  provisionalProducts?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  provisionalProductsFilterData?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  registrationDate?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DataTablePermitMedicalApplicationJoinResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTablePermitMedicalApplicationJoin'] = ResolversParentTypes['DataTablePermitMedicalApplicationJoin']> = {
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  applicationId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  dataTablePermitMedical?: Resolver<Maybe<ResolversTypes['DataTablePermitMedical']>, ParentType, ContextType>;
+  dataTablePermitMedicalId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DataTablePermitMedicalApplicationJoinsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTablePermitMedicalApplicationJoinsConnection'] = ResolversParentTypes['DataTablePermitMedicalApplicationJoinsConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['DataTablePermitMedicalApplicationJoinsEdge']>, ParentType, ContextType>;
+  nodes?: Resolver<Array<Maybe<ResolversTypes['DataTablePermitMedicalApplicationJoin']>>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DataTablePermitMedicalApplicationJoinsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTablePermitMedicalApplicationJoinsEdge'] = ResolversParentTypes['DataTablePermitMedicalApplicationJoinsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['DataTablePermitMedicalApplicationJoin']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DataTablePermitMedicalsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTablePermitMedicalsConnection'] = ResolversParentTypes['DataTablePermitMedicalsConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['DataTablePermitMedicalsEdge']>, ParentType, ContextType>;
+  nodes?: Resolver<Array<Maybe<ResolversTypes['DataTablePermitMedical']>>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DataTablePermitMedicalsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTablePermitMedicalsEdge'] = ResolversParentTypes['DataTablePermitMedicalsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['DataTablePermitMedical']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DataTablePreRegisteredProductsProvisionalResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTablePreRegisteredProductsProvisional'] = ResolversParentTypes['DataTablePreRegisteredProductsProvisional']> = {
   activeIngredients?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   activeIngredientsResponse?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
@@ -57439,6 +59370,29 @@ export type DataTableStorageConditionsSimplifiedsConnectionResolvers<ContextType
 export type DataTableStorageConditionsSimplifiedsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTableStorageConditionsSimplifiedsEdge'] = ResolversParentTypes['DataTableStorageConditionsSimplifiedsEdge']> = {
   cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
   node?: Resolver<Maybe<ResolversTypes['DataTableStorageConditionsSimplified']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DataTableTownsDivisionsIslandResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTableTownsDivisionsIsland'] = ResolversParentTypes['DataTableTownsDivisionsIsland']> = {
+  division?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  island?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  town?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DataTableTownsDivisionsIslandsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTableTownsDivisionsIslandsConnection'] = ResolversParentTypes['DataTableTownsDivisionsIslandsConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['DataTableTownsDivisionsIslandsEdge']>, ParentType, ContextType>;
+  nodes?: Resolver<Array<Maybe<ResolversTypes['DataTableTownsDivisionsIsland']>>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DataTableTownsDivisionsIslandsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTableTownsDivisionsIslandsEdge'] = ResolversParentTypes['DataTableTownsDivisionsIslandsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIsland']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -57853,6 +59807,26 @@ export type DeleteDataTablePermitChemicalPayloadResolvers<ContextType = any, Par
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DeleteDataTablePermitMedicalApplicationJoinPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteDataTablePermitMedicalApplicationJoinPayload'] = ResolversParentTypes['DeleteDataTablePermitMedicalApplicationJoinPayload']> = {
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataTablePermitMedical?: Resolver<Maybe<ResolversTypes['DataTablePermitMedical']>, ParentType, ContextType>;
+  dataTablePermitMedicalApplicationJoin?: Resolver<Maybe<ResolversTypes['DataTablePermitMedicalApplicationJoin']>, ParentType, ContextType>;
+  dataTablePermitMedicalApplicationJoinEdge?: Resolver<Maybe<ResolversTypes['DataTablePermitMedicalApplicationJoinsEdge']>, ParentType, ContextType, RequireFields<DeleteDataTablePermitMedicalApplicationJoinPayloadDataTablePermitMedicalApplicationJoinEdgeArgs, 'orderBy'>>;
+  deletedDataTablePermitMedicalApplicationJoinNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DeleteDataTablePermitMedicalPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteDataTablePermitMedicalPayload'] = ResolversParentTypes['DeleteDataTablePermitMedicalPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataTablePermitMedical?: Resolver<Maybe<ResolversTypes['DataTablePermitMedical']>, ParentType, ContextType>;
+  dataTablePermitMedicalEdge?: Resolver<Maybe<ResolversTypes['DataTablePermitMedicalsEdge']>, ParentType, ContextType, RequireFields<DeleteDataTablePermitMedicalPayloadDataTablePermitMedicalEdgeArgs, 'orderBy'>>;
+  deletedDataTablePermitMedicalNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DeleteDataTablePreRegisteredProductsProvisionalPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteDataTablePreRegisteredProductsProvisionalPayload'] = ResolversParentTypes['DeleteDataTablePreRegisteredProductsProvisionalPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   dataTablePreRegisteredProductsProvisional?: Resolver<Maybe<ResolversTypes['DataTablePreRegisteredProductsProvisional']>, ParentType, ContextType>;
@@ -57953,6 +59927,15 @@ export type DeleteDataTableStorageConditionsSimplifiedPayloadResolvers<ContextTy
   dataTableStorageConditionsSimplified?: Resolver<Maybe<ResolversTypes['DataTableStorageConditionsSimplified']>, ParentType, ContextType>;
   dataTableStorageConditionsSimplifiedEdge?: Resolver<Maybe<ResolversTypes['DataTableStorageConditionsSimplifiedsEdge']>, ParentType, ContextType, RequireFields<DeleteDataTableStorageConditionsSimplifiedPayloadDataTableStorageConditionsSimplifiedEdgeArgs, 'orderBy'>>;
   deletedDataTableStorageConditionsSimplifiedNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DeleteDataTableTownsDivisionsIslandPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteDataTableTownsDivisionsIslandPayload'] = ResolversParentTypes['DeleteDataTableTownsDivisionsIslandPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataTableTownsDivisionsIsland?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIsland']>, ParentType, ContextType>;
+  dataTableTownsDivisionsIslandEdge?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIslandsEdge']>, ParentType, ContextType, RequireFields<DeleteDataTableTownsDivisionsIslandPayloadDataTableTownsDivisionsIslandEdgeArgs, 'orderBy'>>;
+  deletedDataTableTownsDivisionsIslandNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -58553,6 +60536,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createDataTableManufacturerRepresentativeApplicationJoin?: Resolver<Maybe<ResolversTypes['CreateDataTableManufacturerRepresentativeApplicationJoinPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableManufacturerRepresentativeApplicationJoinArgs, 'input'>>;
   createDataTablePermitChemical?: Resolver<Maybe<ResolversTypes['CreateDataTablePermitChemicalPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTablePermitChemicalArgs, 'input'>>;
   createDataTablePermitChemicalApplicationJoin?: Resolver<Maybe<ResolversTypes['CreateDataTablePermitChemicalApplicationJoinPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTablePermitChemicalApplicationJoinArgs, 'input'>>;
+  createDataTablePermitMedical?: Resolver<Maybe<ResolversTypes['CreateDataTablePermitMedicalPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTablePermitMedicalArgs, 'input'>>;
+  createDataTablePermitMedicalApplicationJoin?: Resolver<Maybe<ResolversTypes['CreateDataTablePermitMedicalApplicationJoinPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTablePermitMedicalApplicationJoinArgs, 'input'>>;
   createDataTablePreRegisteredProductsProvisional?: Resolver<Maybe<ResolversTypes['CreateDataTablePreRegisteredProductsProvisionalPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTablePreRegisteredProductsProvisionalArgs, 'input'>>;
   createDataTablePrequalManufacturer?: Resolver<Maybe<ResolversTypes['CreateDataTablePrequalManufacturerPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTablePrequalManufacturerArgs, 'input'>>;
   createDataTablePrequalManufacturerApplicationJoin?: Resolver<Maybe<ResolversTypes['CreateDataTablePrequalManufacturerApplicationJoinPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTablePrequalManufacturerApplicationJoinArgs, 'input'>>;
@@ -58564,6 +60549,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createDataTableScheduledChemical?: Resolver<Maybe<ResolversTypes['CreateDataTableScheduledChemicalPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableScheduledChemicalArgs, 'input'>>;
   createDataTableStorageCondition?: Resolver<Maybe<ResolversTypes['CreateDataTableStorageConditionPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableStorageConditionArgs, 'input'>>;
   createDataTableStorageConditionsSimplified?: Resolver<Maybe<ResolversTypes['CreateDataTableStorageConditionsSimplifiedPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableStorageConditionsSimplifiedArgs, 'input'>>;
+  createDataTableTownsDivisionsIsland?: Resolver<Maybe<ResolversTypes['CreateDataTableTownsDivisionsIslandPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableTownsDivisionsIslandArgs, 'input'>>;
   createDataTableUnitsOfProportion?: Resolver<Maybe<ResolversTypes['CreateDataTableUnitsOfProportionPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableUnitsOfProportionArgs, 'input'>>;
   createDataTableWorldHealthOrganisationPqListOfFpp?: Resolver<Maybe<ResolversTypes['CreateDataTableWorldHealthOrganisationPqListOfFppPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableWorldHealthOrganisationPqListOfFppArgs, 'input'>>;
   createDataView?: Resolver<Maybe<ResolversTypes['CreateDataViewPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataViewArgs, 'input'>>;
@@ -58664,6 +60650,10 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteDataTablePermitChemicalApplicationJoin?: Resolver<Maybe<ResolversTypes['DeleteDataTablePermitChemicalApplicationJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTablePermitChemicalApplicationJoinArgs, 'input'>>;
   deleteDataTablePermitChemicalApplicationJoinByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTablePermitChemicalApplicationJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTablePermitChemicalApplicationJoinByNodeIdArgs, 'input'>>;
   deleteDataTablePermitChemicalByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTablePermitChemicalPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTablePermitChemicalByNodeIdArgs, 'input'>>;
+  deleteDataTablePermitMedical?: Resolver<Maybe<ResolversTypes['DeleteDataTablePermitMedicalPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTablePermitMedicalArgs, 'input'>>;
+  deleteDataTablePermitMedicalApplicationJoin?: Resolver<Maybe<ResolversTypes['DeleteDataTablePermitMedicalApplicationJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTablePermitMedicalApplicationJoinArgs, 'input'>>;
+  deleteDataTablePermitMedicalApplicationJoinByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTablePermitMedicalApplicationJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTablePermitMedicalApplicationJoinByNodeIdArgs, 'input'>>;
+  deleteDataTablePermitMedicalByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTablePermitMedicalPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTablePermitMedicalByNodeIdArgs, 'input'>>;
   deleteDataTablePreRegisteredProductsProvisional?: Resolver<Maybe<ResolversTypes['DeleteDataTablePreRegisteredProductsProvisionalPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTablePreRegisteredProductsProvisionalArgs, 'input'>>;
   deleteDataTablePreRegisteredProductsProvisionalByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTablePreRegisteredProductsProvisionalPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTablePreRegisteredProductsProvisionalByNodeIdArgs, 'input'>>;
   deleteDataTablePrequalManufacturer?: Resolver<Maybe<ResolversTypes['DeleteDataTablePrequalManufacturerPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTablePrequalManufacturerArgs, 'input'>>;
@@ -58686,6 +60676,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteDataTableStorageConditionByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTableStorageConditionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableStorageConditionByNodeIdArgs, 'input'>>;
   deleteDataTableStorageConditionsSimplified?: Resolver<Maybe<ResolversTypes['DeleteDataTableStorageConditionsSimplifiedPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableStorageConditionsSimplifiedArgs, 'input'>>;
   deleteDataTableStorageConditionsSimplifiedByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTableStorageConditionsSimplifiedPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableStorageConditionsSimplifiedByNodeIdArgs, 'input'>>;
+  deleteDataTableTownsDivisionsIsland?: Resolver<Maybe<ResolversTypes['DeleteDataTableTownsDivisionsIslandPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableTownsDivisionsIslandArgs, 'input'>>;
+  deleteDataTableTownsDivisionsIslandByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTableTownsDivisionsIslandPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableTownsDivisionsIslandByNodeIdArgs, 'input'>>;
   deleteDataTableUnitsOfProportion?: Resolver<Maybe<ResolversTypes['DeleteDataTableUnitsOfProportionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableUnitsOfProportionArgs, 'input'>>;
   deleteDataTableUnitsOfProportionByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTableUnitsOfProportionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableUnitsOfProportionByNodeIdArgs, 'input'>>;
   deleteDataTableWorldHealthOrganisationPqListOfFpp?: Resolver<Maybe<ResolversTypes['DeleteDataTableWorldHealthOrganisationPqListOfFppPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableWorldHealthOrganisationPqListOfFppArgs, 'input'>>;
@@ -58841,6 +60833,10 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateDataTablePermitChemicalApplicationJoin?: Resolver<Maybe<ResolversTypes['UpdateDataTablePermitChemicalApplicationJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTablePermitChemicalApplicationJoinArgs, 'input'>>;
   updateDataTablePermitChemicalApplicationJoinByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTablePermitChemicalApplicationJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTablePermitChemicalApplicationJoinByNodeIdArgs, 'input'>>;
   updateDataTablePermitChemicalByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTablePermitChemicalPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTablePermitChemicalByNodeIdArgs, 'input'>>;
+  updateDataTablePermitMedical?: Resolver<Maybe<ResolversTypes['UpdateDataTablePermitMedicalPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTablePermitMedicalArgs, 'input'>>;
+  updateDataTablePermitMedicalApplicationJoin?: Resolver<Maybe<ResolversTypes['UpdateDataTablePermitMedicalApplicationJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTablePermitMedicalApplicationJoinArgs, 'input'>>;
+  updateDataTablePermitMedicalApplicationJoinByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTablePermitMedicalApplicationJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTablePermitMedicalApplicationJoinByNodeIdArgs, 'input'>>;
+  updateDataTablePermitMedicalByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTablePermitMedicalPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTablePermitMedicalByNodeIdArgs, 'input'>>;
   updateDataTablePreRegisteredProductsProvisional?: Resolver<Maybe<ResolversTypes['UpdateDataTablePreRegisteredProductsProvisionalPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTablePreRegisteredProductsProvisionalArgs, 'input'>>;
   updateDataTablePreRegisteredProductsProvisionalByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTablePreRegisteredProductsProvisionalPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTablePreRegisteredProductsProvisionalByNodeIdArgs, 'input'>>;
   updateDataTablePrequalManufacturer?: Resolver<Maybe<ResolversTypes['UpdateDataTablePrequalManufacturerPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTablePrequalManufacturerArgs, 'input'>>;
@@ -58863,6 +60859,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateDataTableStorageConditionByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTableStorageConditionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableStorageConditionByNodeIdArgs, 'input'>>;
   updateDataTableStorageConditionsSimplified?: Resolver<Maybe<ResolversTypes['UpdateDataTableStorageConditionsSimplifiedPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableStorageConditionsSimplifiedArgs, 'input'>>;
   updateDataTableStorageConditionsSimplifiedByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTableStorageConditionsSimplifiedPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableStorageConditionsSimplifiedByNodeIdArgs, 'input'>>;
+  updateDataTableTownsDivisionsIsland?: Resolver<Maybe<ResolversTypes['UpdateDataTableTownsDivisionsIslandPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableTownsDivisionsIslandArgs, 'input'>>;
+  updateDataTableTownsDivisionsIslandByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTableTownsDivisionsIslandPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableTownsDivisionsIslandByNodeIdArgs, 'input'>>;
   updateDataTableUnitsOfProportion?: Resolver<Maybe<ResolversTypes['UpdateDataTableUnitsOfProportionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableUnitsOfProportionArgs, 'input'>>;
   updateDataTableUnitsOfProportionByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTableUnitsOfProportionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableUnitsOfProportionByNodeIdArgs, 'input'>>;
   updateDataTableWorldHealthOrganisationPqListOfFpp?: Resolver<Maybe<ResolversTypes['UpdateDataTableWorldHealthOrganisationPqListOfFppPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableWorldHealthOrganisationPqListOfFppArgs, 'input'>>;
@@ -58962,7 +60960,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'ActionPlugin' | 'ActionQueue' | 'ActivityLog' | 'Application' | 'ApplicationNote' | 'ApplicationResponse' | 'ApplicationReviewerAction' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'Counter' | 'DataChangelog' | 'DataTable' | 'DataTableActiveIngredient' | 'DataTableAdministrationRoute' | 'DataTableAtcCode' | 'DataTableContainer' | 'DataTableCountry' | 'DataTableDosageForm' | 'DataTableDosageFormGroup' | 'DataTableGenericIngredient' | 'DataTableManufacturer' | 'DataTableManufacturerApplicationJoin' | 'DataTableManufacturerRepresentative' | 'DataTableManufacturerRepresentativeApplicationJoin' | 'DataTablePermitChemical' | 'DataTablePermitChemicalApplicationJoin' | 'DataTablePreRegisteredProductsProvisional' | 'DataTablePrequalManufacturer' | 'DataTablePrequalManufacturerApplicationJoin' | 'DataTableProcessingStep' | 'DataTableProduct' | 'DataTableProductApplicationJoin' | 'DataTableProvisionalProduct' | 'DataTableProvisionalProductApplicationJoin' | 'DataTableScheduledChemical' | 'DataTableStorageCondition' | 'DataTableStorageConditionsSimplified' | 'DataTableUnitsOfProportion' | 'DataTableWorldHealthOrganisationPqListOfFpp' | 'DataView' | 'DataViewColumnDefinition' | 'ElementTypePlugin' | 'EvaluatorFragment' | 'File' | 'Filter' | 'GrafanaDashboardImage' | 'Notification' | 'Organisation' | 'OrganisationApplicationJoin' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'Query' | 'Review' | 'ReviewAssignment' | 'ReviewAssignmentAssignerJoin' | 'ReviewDecision' | 'ReviewResponse' | 'ReviewStatusHistory' | 'SystemInfo' | 'Template' | 'TemplateAction' | 'TemplateCategory' | 'TemplateDataViewJoin' | 'TemplateElement' | 'TemplateEvaluatorFragmentJoin' | 'TemplateFileJoin' | 'TemplateFilterJoin' | 'TemplatePermission' | 'TemplateSection' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'TriggerQueue' | 'TriggerSchedule' | 'UserApplicationJoin' | 'UserOrganisation' | 'Verification', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'ActionPlugin' | 'ActionQueue' | 'ActivityLog' | 'Application' | 'ApplicationNote' | 'ApplicationResponse' | 'ApplicationReviewerAction' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'Counter' | 'DataChangelog' | 'DataTable' | 'DataTableActiveIngredient' | 'DataTableAdministrationRoute' | 'DataTableAtcCode' | 'DataTableContainer' | 'DataTableCountry' | 'DataTableDosageForm' | 'DataTableDosageFormGroup' | 'DataTableGenericIngredient' | 'DataTableManufacturer' | 'DataTableManufacturerApplicationJoin' | 'DataTableManufacturerRepresentative' | 'DataTableManufacturerRepresentativeApplicationJoin' | 'DataTablePermitChemical' | 'DataTablePermitChemicalApplicationJoin' | 'DataTablePermitMedical' | 'DataTablePermitMedicalApplicationJoin' | 'DataTablePreRegisteredProductsProvisional' | 'DataTablePrequalManufacturer' | 'DataTablePrequalManufacturerApplicationJoin' | 'DataTableProcessingStep' | 'DataTableProduct' | 'DataTableProductApplicationJoin' | 'DataTableProvisionalProduct' | 'DataTableProvisionalProductApplicationJoin' | 'DataTableScheduledChemical' | 'DataTableStorageCondition' | 'DataTableStorageConditionsSimplified' | 'DataTableTownsDivisionsIsland' | 'DataTableUnitsOfProportion' | 'DataTableWorldHealthOrganisationPqListOfFpp' | 'DataView' | 'DataViewColumnDefinition' | 'ElementTypePlugin' | 'EvaluatorFragment' | 'File' | 'Filter' | 'GrafanaDashboardImage' | 'Notification' | 'Organisation' | 'OrganisationApplicationJoin' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'Query' | 'Review' | 'ReviewAssignment' | 'ReviewAssignmentAssignerJoin' | 'ReviewDecision' | 'ReviewResponse' | 'ReviewStatusHistory' | 'SystemInfo' | 'Template' | 'TemplateAction' | 'TemplateCategory' | 'TemplateDataViewJoin' | 'TemplateElement' | 'TemplateEvaluatorFragmentJoin' | 'TemplateFileJoin' | 'TemplateFilterJoin' | 'TemplatePermission' | 'TemplateSection' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'TriggerQueue' | 'TriggerSchedule' | 'UserApplicationJoin' | 'UserOrganisation' | 'Verification', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -59008,10 +61006,16 @@ export type OrganisationResolvers<ContextType = any, ParentType extends Resolver
   contactPhone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   dataChangelogsByOrgId?: Resolver<ResolversTypes['DataChangelogsConnection'], ParentType, ContextType, RequireFields<OrganisationDataChangelogsByOrgIdArgs, 'orderBy'>>;
+  establishmentLicence?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   isChemicalImporter?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isFreeMedProgram?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isMedImporter?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isMedPrequalifier?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isMedProvRegister?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   isSponsorCompany?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   isSystemOrg?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  licenceExpiry?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   license?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   localAgentBusinessAddress?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   localAgentEmail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -59031,7 +61035,9 @@ export type OrganisationResolvers<ContextType = any, ParentType extends Resolver
   reviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<OrganisationReviewAssignmentsArgs, 'orderBy'>>;
   subType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   tinLetter?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  tinNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   userOrganisations?: Resolver<ResolversTypes['UserOrganisationsConnection'], ParentType, ContextType, RequireFields<OrganisationUserOrganisationsArgs, 'orderBy'>>;
+  wholesaleLicence?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -59300,7 +61306,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applications?: Resolver<Maybe<ResolversTypes['ApplicationsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationsArgs, 'orderBy'>>;
   assignableQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, Partial<QueryAssignableQuestionsCountArgs>>;
   assignedQuestions?: Resolver<Maybe<ResolversTypes['AssignedQuestionsConnection']>, ParentType, ContextType, Partial<QueryAssignedQuestionsArgs>>;
-  assignedQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, Partial<QueryAssignedQuestionsCountArgs>>;
+  assignedQuestionsCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, Partial<QueryAssignedQuestionsCountArgs>>;
   assignedSectionsByStageAndLevels?: Resolver<Maybe<ResolversTypes['AssignedSectionsByStageAndLevelsConnection']>, ParentType, ContextType, RequireFields<QueryAssignedSectionsByStageAndLevelsArgs, 'orderBy'>>;
   assignerList?: Resolver<Maybe<ResolversTypes['AssignerListConnection']>, ParentType, ContextType, Partial<QueryAssignerListArgs>>;
   assignmentList?: Resolver<Maybe<ResolversTypes['AssignmentListConnection']>, ParentType, ContextType, Partial<QueryAssignmentListArgs>>;
@@ -59357,6 +61363,12 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   dataTablePermitChemicalApplicationJoins?: Resolver<Maybe<ResolversTypes['DataTablePermitChemicalApplicationJoinsConnection']>, ParentType, ContextType, RequireFields<QueryDataTablePermitChemicalApplicationJoinsArgs, 'orderBy'>>;
   dataTablePermitChemicalByNodeId?: Resolver<Maybe<ResolversTypes['DataTablePermitChemical']>, ParentType, ContextType, RequireFields<QueryDataTablePermitChemicalByNodeIdArgs, 'nodeId'>>;
   dataTablePermitChemicals?: Resolver<Maybe<ResolversTypes['DataTablePermitChemicalsConnection']>, ParentType, ContextType, RequireFields<QueryDataTablePermitChemicalsArgs, 'orderBy'>>;
+  dataTablePermitMedical?: Resolver<Maybe<ResolversTypes['DataTablePermitMedical']>, ParentType, ContextType, RequireFields<QueryDataTablePermitMedicalArgs, 'id'>>;
+  dataTablePermitMedicalApplicationJoin?: Resolver<Maybe<ResolversTypes['DataTablePermitMedicalApplicationJoin']>, ParentType, ContextType, RequireFields<QueryDataTablePermitMedicalApplicationJoinArgs, 'id'>>;
+  dataTablePermitMedicalApplicationJoinByNodeId?: Resolver<Maybe<ResolversTypes['DataTablePermitMedicalApplicationJoin']>, ParentType, ContextType, RequireFields<QueryDataTablePermitMedicalApplicationJoinByNodeIdArgs, 'nodeId'>>;
+  dataTablePermitMedicalApplicationJoins?: Resolver<Maybe<ResolversTypes['DataTablePermitMedicalApplicationJoinsConnection']>, ParentType, ContextType, RequireFields<QueryDataTablePermitMedicalApplicationJoinsArgs, 'orderBy'>>;
+  dataTablePermitMedicalByNodeId?: Resolver<Maybe<ResolversTypes['DataTablePermitMedical']>, ParentType, ContextType, RequireFields<QueryDataTablePermitMedicalByNodeIdArgs, 'nodeId'>>;
+  dataTablePermitMedicals?: Resolver<Maybe<ResolversTypes['DataTablePermitMedicalsConnection']>, ParentType, ContextType, RequireFields<QueryDataTablePermitMedicalsArgs, 'orderBy'>>;
   dataTablePreRegisteredProductsProvisional?: Resolver<Maybe<ResolversTypes['DataTablePreRegisteredProductsProvisional']>, ParentType, ContextType, RequireFields<QueryDataTablePreRegisteredProductsProvisionalArgs, 'id'>>;
   dataTablePreRegisteredProductsProvisionalByNodeId?: Resolver<Maybe<ResolversTypes['DataTablePreRegisteredProductsProvisional']>, ParentType, ContextType, RequireFields<QueryDataTablePreRegisteredProductsProvisionalByNodeIdArgs, 'nodeId'>>;
   dataTablePreRegisteredProductsProvisionals?: Resolver<Maybe<ResolversTypes['DataTablePreRegisteredProductsProvisionalsConnection']>, ParentType, ContextType, RequireFields<QueryDataTablePreRegisteredProductsProvisionalsArgs, 'orderBy'>>;
@@ -59390,6 +61402,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   dataTableStorageConditionsSimplified?: Resolver<Maybe<ResolversTypes['DataTableStorageConditionsSimplified']>, ParentType, ContextType, RequireFields<QueryDataTableStorageConditionsSimplifiedArgs, 'id'>>;
   dataTableStorageConditionsSimplifiedByNodeId?: Resolver<Maybe<ResolversTypes['DataTableStorageConditionsSimplified']>, ParentType, ContextType, RequireFields<QueryDataTableStorageConditionsSimplifiedByNodeIdArgs, 'nodeId'>>;
   dataTableStorageConditionsSimplifieds?: Resolver<Maybe<ResolversTypes['DataTableStorageConditionsSimplifiedsConnection']>, ParentType, ContextType, RequireFields<QueryDataTableStorageConditionsSimplifiedsArgs, 'orderBy'>>;
+  dataTableTownsDivisionsIsland?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIsland']>, ParentType, ContextType, RequireFields<QueryDataTableTownsDivisionsIslandArgs, 'id'>>;
+  dataTableTownsDivisionsIslandByNodeId?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIsland']>, ParentType, ContextType, RequireFields<QueryDataTableTownsDivisionsIslandByNodeIdArgs, 'nodeId'>>;
+  dataTableTownsDivisionsIslands?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIslandsConnection']>, ParentType, ContextType, RequireFields<QueryDataTableTownsDivisionsIslandsArgs, 'orderBy'>>;
   dataTableUnitsOfProportion?: Resolver<Maybe<ResolversTypes['DataTableUnitsOfProportion']>, ParentType, ContextType, RequireFields<QueryDataTableUnitsOfProportionArgs, 'id'>>;
   dataTableUnitsOfProportionByNodeId?: Resolver<Maybe<ResolversTypes['DataTableUnitsOfProportion']>, ParentType, ContextType, RequireFields<QueryDataTableUnitsOfProportionByNodeIdArgs, 'nodeId'>>;
   dataTableUnitsOfProportions?: Resolver<Maybe<ResolversTypes['DataTableUnitsOfProportionsConnection']>, ParentType, ContextType, RequireFields<QueryDataTableUnitsOfProportionsArgs, 'orderBy'>>;
@@ -59476,11 +61491,11 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   reviewStatusHistory?: Resolver<Maybe<ResolversTypes['ReviewStatusHistory']>, ParentType, ContextType, RequireFields<QueryReviewStatusHistoryArgs, 'id'>>;
   reviewStatusHistoryByNodeId?: Resolver<Maybe<ResolversTypes['ReviewStatusHistory']>, ParentType, ContextType, RequireFields<QueryReviewStatusHistoryByNodeIdArgs, 'nodeId'>>;
   reviewableQuestions?: Resolver<Maybe<ResolversTypes['ReviewableQuestionsConnection']>, ParentType, ContextType, Partial<QueryReviewableQuestionsArgs>>;
-  reviewableQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, Partial<QueryReviewableQuestionsCountArgs>>;
+  reviewableQuestionsCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, Partial<QueryReviewableQuestionsCountArgs>>;
   reviews?: Resolver<Maybe<ResolversTypes['ReviewsConnection']>, ParentType, ContextType, RequireFields<QueryReviewsArgs, 'orderBy'>>;
   schemaColumns?: Resolver<Maybe<ResolversTypes['SchemaColumnsConnection']>, ParentType, ContextType, RequireFields<QuerySchemaColumnsArgs, 'orderBy'>>;
   singleApplicationDetail?: Resolver<Maybe<ResolversTypes['SingleApplicationDetailConnection']>, ParentType, ContextType, Partial<QuerySingleApplicationDetailArgs>>;
-  submittedAssignedQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, Partial<QuerySubmittedAssignedQuestionsCountArgs>>;
+  submittedAssignedQuestionsCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, Partial<QuerySubmittedAssignedQuestionsCountArgs>>;
   systemInfo?: Resolver<Maybe<ResolversTypes['SystemInfo']>, ParentType, ContextType, RequireFields<QuerySystemInfoArgs, 'id'>>;
   systemInfoByNodeId?: Resolver<Maybe<ResolversTypes['SystemInfo']>, ParentType, ContextType, RequireFields<QuerySystemInfoByNodeIdArgs, 'nodeId'>>;
   systemInfos?: Resolver<Maybe<ResolversTypes['SystemInfosConnection']>, ParentType, ContextType, RequireFields<QuerySystemInfosArgs, 'orderBy'>>;
@@ -59913,7 +61928,7 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
   priority?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   reviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<TemplateReviewAssignmentsArgs, 'orderBy'>>;
   serialPattern?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  staleDraftRetentionDays?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  staleDraftRetentionDays?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   startMessage?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['TemplateStatus']>, ParentType, ContextType>;
   submissionMessage?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
@@ -60166,6 +62181,7 @@ export type TemplateSectionResolvers<ContextType = any, ParentType extends Resol
   code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   index?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  isReviewSection?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   templateElementsBySectionId?: Resolver<ResolversTypes['TemplateElementsConnection'], ParentType, ContextType, RequireFields<TemplateSectionTemplateElementsBySectionIdArgs, 'orderBy'>>;
@@ -60571,6 +62587,24 @@ export type UpdateDataTablePermitChemicalPayloadResolvers<ContextType = any, Par
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateDataTablePermitMedicalApplicationJoinPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateDataTablePermitMedicalApplicationJoinPayload'] = ResolversParentTypes['UpdateDataTablePermitMedicalApplicationJoinPayload']> = {
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataTablePermitMedical?: Resolver<Maybe<ResolversTypes['DataTablePermitMedical']>, ParentType, ContextType>;
+  dataTablePermitMedicalApplicationJoin?: Resolver<Maybe<ResolversTypes['DataTablePermitMedicalApplicationJoin']>, ParentType, ContextType>;
+  dataTablePermitMedicalApplicationJoinEdge?: Resolver<Maybe<ResolversTypes['DataTablePermitMedicalApplicationJoinsEdge']>, ParentType, ContextType, RequireFields<UpdateDataTablePermitMedicalApplicationJoinPayloadDataTablePermitMedicalApplicationJoinEdgeArgs, 'orderBy'>>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UpdateDataTablePermitMedicalPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateDataTablePermitMedicalPayload'] = ResolversParentTypes['UpdateDataTablePermitMedicalPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataTablePermitMedical?: Resolver<Maybe<ResolversTypes['DataTablePermitMedical']>, ParentType, ContextType>;
+  dataTablePermitMedicalEdge?: Resolver<Maybe<ResolversTypes['DataTablePermitMedicalsEdge']>, ParentType, ContextType, RequireFields<UpdateDataTablePermitMedicalPayloadDataTablePermitMedicalEdgeArgs, 'orderBy'>>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateDataTablePreRegisteredProductsProvisionalPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateDataTablePreRegisteredProductsProvisionalPayload'] = ResolversParentTypes['UpdateDataTablePreRegisteredProductsProvisionalPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   dataTablePreRegisteredProductsProvisional?: Resolver<Maybe<ResolversTypes['DataTablePreRegisteredProductsProvisional']>, ParentType, ContextType>;
@@ -60660,6 +62694,14 @@ export type UpdateDataTableStorageConditionsSimplifiedPayloadResolvers<ContextTy
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   dataTableStorageConditionsSimplified?: Resolver<Maybe<ResolversTypes['DataTableStorageConditionsSimplified']>, ParentType, ContextType>;
   dataTableStorageConditionsSimplifiedEdge?: Resolver<Maybe<ResolversTypes['DataTableStorageConditionsSimplifiedsEdge']>, ParentType, ContextType, RequireFields<UpdateDataTableStorageConditionsSimplifiedPayloadDataTableStorageConditionsSimplifiedEdgeArgs, 'orderBy'>>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UpdateDataTableTownsDivisionsIslandPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateDataTableTownsDivisionsIslandPayload'] = ResolversParentTypes['UpdateDataTableTownsDivisionsIslandPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataTableTownsDivisionsIsland?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIsland']>, ParentType, ContextType>;
+  dataTableTownsDivisionsIslandEdge?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIslandsEdge']>, ParentType, ContextType, RequireFields<UpdateDataTableTownsDivisionsIslandPayloadDataTableTownsDivisionsIslandEdgeArgs, 'orderBy'>>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -61302,6 +63344,8 @@ export type Resolvers<ContextType = any> = {
   CreateDataTablePayload?: CreateDataTablePayloadResolvers<ContextType>;
   CreateDataTablePermitChemicalApplicationJoinPayload?: CreateDataTablePermitChemicalApplicationJoinPayloadResolvers<ContextType>;
   CreateDataTablePermitChemicalPayload?: CreateDataTablePermitChemicalPayloadResolvers<ContextType>;
+  CreateDataTablePermitMedicalApplicationJoinPayload?: CreateDataTablePermitMedicalApplicationJoinPayloadResolvers<ContextType>;
+  CreateDataTablePermitMedicalPayload?: CreateDataTablePermitMedicalPayloadResolvers<ContextType>;
   CreateDataTablePreRegisteredProductsProvisionalPayload?: CreateDataTablePreRegisteredProductsProvisionalPayloadResolvers<ContextType>;
   CreateDataTablePrequalManufacturerApplicationJoinPayload?: CreateDataTablePrequalManufacturerApplicationJoinPayloadResolvers<ContextType>;
   CreateDataTablePrequalManufacturerPayload?: CreateDataTablePrequalManufacturerPayloadResolvers<ContextType>;
@@ -61313,6 +63357,7 @@ export type Resolvers<ContextType = any> = {
   CreateDataTableScheduledChemicalPayload?: CreateDataTableScheduledChemicalPayloadResolvers<ContextType>;
   CreateDataTableStorageConditionPayload?: CreateDataTableStorageConditionPayloadResolvers<ContextType>;
   CreateDataTableStorageConditionsSimplifiedPayload?: CreateDataTableStorageConditionsSimplifiedPayloadResolvers<ContextType>;
+  CreateDataTableTownsDivisionsIslandPayload?: CreateDataTableTownsDivisionsIslandPayloadResolvers<ContextType>;
   CreateDataTableUnitsOfProportionPayload?: CreateDataTableUnitsOfProportionPayloadResolvers<ContextType>;
   CreateDataTableWorldHealthOrganisationPqListOfFppPayload?: CreateDataTableWorldHealthOrganisationPqListOfFppPayloadResolvers<ContextType>;
   CreateDataViewColumnDefinitionPayload?: CreateDataViewColumnDefinitionPayloadResolvers<ContextType>;
@@ -61402,6 +63447,12 @@ export type Resolvers<ContextType = any> = {
   DataTablePermitChemicalApplicationJoinsEdge?: DataTablePermitChemicalApplicationJoinsEdgeResolvers<ContextType>;
   DataTablePermitChemicalsConnection?: DataTablePermitChemicalsConnectionResolvers<ContextType>;
   DataTablePermitChemicalsEdge?: DataTablePermitChemicalsEdgeResolvers<ContextType>;
+  DataTablePermitMedical?: DataTablePermitMedicalResolvers<ContextType>;
+  DataTablePermitMedicalApplicationJoin?: DataTablePermitMedicalApplicationJoinResolvers<ContextType>;
+  DataTablePermitMedicalApplicationJoinsConnection?: DataTablePermitMedicalApplicationJoinsConnectionResolvers<ContextType>;
+  DataTablePermitMedicalApplicationJoinsEdge?: DataTablePermitMedicalApplicationJoinsEdgeResolvers<ContextType>;
+  DataTablePermitMedicalsConnection?: DataTablePermitMedicalsConnectionResolvers<ContextType>;
+  DataTablePermitMedicalsEdge?: DataTablePermitMedicalsEdgeResolvers<ContextType>;
   DataTablePreRegisteredProductsProvisional?: DataTablePreRegisteredProductsProvisionalResolvers<ContextType>;
   DataTablePreRegisteredProductsProvisionalsConnection?: DataTablePreRegisteredProductsProvisionalsConnectionResolvers<ContextType>;
   DataTablePreRegisteredProductsProvisionalsEdge?: DataTablePreRegisteredProductsProvisionalsEdgeResolvers<ContextType>;
@@ -61435,6 +63486,9 @@ export type Resolvers<ContextType = any> = {
   DataTableStorageConditionsSimplified?: DataTableStorageConditionsSimplifiedResolvers<ContextType>;
   DataTableStorageConditionsSimplifiedsConnection?: DataTableStorageConditionsSimplifiedsConnectionResolvers<ContextType>;
   DataTableStorageConditionsSimplifiedsEdge?: DataTableStorageConditionsSimplifiedsEdgeResolvers<ContextType>;
+  DataTableTownsDivisionsIsland?: DataTableTownsDivisionsIslandResolvers<ContextType>;
+  DataTableTownsDivisionsIslandsConnection?: DataTableTownsDivisionsIslandsConnectionResolvers<ContextType>;
+  DataTableTownsDivisionsIslandsEdge?: DataTableTownsDivisionsIslandsEdgeResolvers<ContextType>;
   DataTableUnitsOfProportion?: DataTableUnitsOfProportionResolvers<ContextType>;
   DataTableUnitsOfProportionsConnection?: DataTableUnitsOfProportionsConnectionResolvers<ContextType>;
   DataTableUnitsOfProportionsEdge?: DataTableUnitsOfProportionsEdgeResolvers<ContextType>;
@@ -61477,6 +63531,8 @@ export type Resolvers<ContextType = any> = {
   DeleteDataTablePayload?: DeleteDataTablePayloadResolvers<ContextType>;
   DeleteDataTablePermitChemicalApplicationJoinPayload?: DeleteDataTablePermitChemicalApplicationJoinPayloadResolvers<ContextType>;
   DeleteDataTablePermitChemicalPayload?: DeleteDataTablePermitChemicalPayloadResolvers<ContextType>;
+  DeleteDataTablePermitMedicalApplicationJoinPayload?: DeleteDataTablePermitMedicalApplicationJoinPayloadResolvers<ContextType>;
+  DeleteDataTablePermitMedicalPayload?: DeleteDataTablePermitMedicalPayloadResolvers<ContextType>;
   DeleteDataTablePreRegisteredProductsProvisionalPayload?: DeleteDataTablePreRegisteredProductsProvisionalPayloadResolvers<ContextType>;
   DeleteDataTablePrequalManufacturerApplicationJoinPayload?: DeleteDataTablePrequalManufacturerApplicationJoinPayloadResolvers<ContextType>;
   DeleteDataTablePrequalManufacturerPayload?: DeleteDataTablePrequalManufacturerPayloadResolvers<ContextType>;
@@ -61488,6 +63544,7 @@ export type Resolvers<ContextType = any> = {
   DeleteDataTableScheduledChemicalPayload?: DeleteDataTableScheduledChemicalPayloadResolvers<ContextType>;
   DeleteDataTableStorageConditionPayload?: DeleteDataTableStorageConditionPayloadResolvers<ContextType>;
   DeleteDataTableStorageConditionsSimplifiedPayload?: DeleteDataTableStorageConditionsSimplifiedPayloadResolvers<ContextType>;
+  DeleteDataTableTownsDivisionsIslandPayload?: DeleteDataTableTownsDivisionsIslandPayloadResolvers<ContextType>;
   DeleteDataTableUnitsOfProportionPayload?: DeleteDataTableUnitsOfProportionPayloadResolvers<ContextType>;
   DeleteDataTableWorldHealthOrganisationPqListOfFppPayload?: DeleteDataTableWorldHealthOrganisationPqListOfFppPayloadResolvers<ContextType>;
   DeleteDataViewColumnDefinitionPayload?: DeleteDataViewColumnDefinitionPayloadResolvers<ContextType>;
@@ -61683,6 +63740,8 @@ export type Resolvers<ContextType = any> = {
   UpdateDataTablePayload?: UpdateDataTablePayloadResolvers<ContextType>;
   UpdateDataTablePermitChemicalApplicationJoinPayload?: UpdateDataTablePermitChemicalApplicationJoinPayloadResolvers<ContextType>;
   UpdateDataTablePermitChemicalPayload?: UpdateDataTablePermitChemicalPayloadResolvers<ContextType>;
+  UpdateDataTablePermitMedicalApplicationJoinPayload?: UpdateDataTablePermitMedicalApplicationJoinPayloadResolvers<ContextType>;
+  UpdateDataTablePermitMedicalPayload?: UpdateDataTablePermitMedicalPayloadResolvers<ContextType>;
   UpdateDataTablePreRegisteredProductsProvisionalPayload?: UpdateDataTablePreRegisteredProductsProvisionalPayloadResolvers<ContextType>;
   UpdateDataTablePrequalManufacturerApplicationJoinPayload?: UpdateDataTablePrequalManufacturerApplicationJoinPayloadResolvers<ContextType>;
   UpdateDataTablePrequalManufacturerPayload?: UpdateDataTablePrequalManufacturerPayloadResolvers<ContextType>;
@@ -61694,6 +63753,7 @@ export type Resolvers<ContextType = any> = {
   UpdateDataTableScheduledChemicalPayload?: UpdateDataTableScheduledChemicalPayloadResolvers<ContextType>;
   UpdateDataTableStorageConditionPayload?: UpdateDataTableStorageConditionPayloadResolvers<ContextType>;
   UpdateDataTableStorageConditionsSimplifiedPayload?: UpdateDataTableStorageConditionsSimplifiedPayloadResolvers<ContextType>;
+  UpdateDataTableTownsDivisionsIslandPayload?: UpdateDataTableTownsDivisionsIslandPayloadResolvers<ContextType>;
   UpdateDataTableUnitsOfProportionPayload?: UpdateDataTableUnitsOfProportionPayloadResolvers<ContextType>;
   UpdateDataTableWorldHealthOrganisationPqListOfFppPayload?: UpdateDataTableWorldHealthOrganisationPqListOfFppPayloadResolvers<ContextType>;
   UpdateDataViewColumnDefinitionPayload?: UpdateDataViewColumnDefinitionPayloadResolvers<ContextType>;

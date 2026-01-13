@@ -294,7 +294,7 @@ const databaseMethods = {
   },
   getTemplateElementCountUsingDataView: async (templateId: number, dataViewCode: string) => {
     const text = `
-      WITH a AS (SELECT '%/data-views/${dataViewCode}%' as val)
+      WITH a AS (SELECT '%${dataViewCode}%' as val)
         SELECT COUNT(*) FROM public.template_element
           WHERE (parameters::text LIKE (SELECT val FROM a)
           OR visibility_condition::text LIKE (SELECT val FROM a)

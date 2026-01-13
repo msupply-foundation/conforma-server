@@ -1131,6 +1131,7 @@ CREATE OR REPLACE FUNCTION public.reviewable_questions (app_id int)
                 AND te.reviewability = 'OPTIONAL_IF_NO_RESPONSE')
             OR (ar.value IS NOT NULL
                 AND te.reviewability != 'NEVER'))
+            AND ar.status != 'REVIEW'
     GROUP BY
         te.code,
         ar.time_submitted,
@@ -1205,8 +1206,10 @@ LANGUAGE sql
 STABLE;
 
 -- Function to return TOTAL of reviewable questions (per application)
-CREATE OR REPLACE FUNCTION public.reviewable_questions_count (app_id int)
-    RETURNS bigint
+DROP FUNCTION IF EXISTS public.reviewable_questions_count;
+
+CREATE FUNCTION public.reviewable_questions_count (app_id int)
+    RETURNS integer
     AS $$
     SELECT
         COUNT(*)
@@ -1221,7 +1224,7 @@ STABLE;
 DROP FUNCTION IF EXISTS public.assigned_questions_count;
 
 CREATE FUNCTION public.assigned_questions_count (app_id int, stage_id int, level_number int)
-    RETURNS bigint
+    RETURNS integer
     AS $$
     SELECT
         COUNT(*)
@@ -1232,8 +1235,10 @@ LANGUAGE sql
 STABLE;
 
 -- Function to return TOTAL of assigned and submitted (element that can't be re-assigned)
-CREATE OR REPLACE FUNCTION public.submitted_assigned_questions_count (app_id int, stage_id int, level_number int)
-    RETURNS bigint
+DROP FUNCTION IF EXISTS public.submitted_assigned_questions_count;
+
+CREATE FUNCTION public.submitted_assigned_questions_count (app_id int, stage_id int, level_number int)
+    RETURNS integer
     AS $$
     SELECT
         COUNT(*)
