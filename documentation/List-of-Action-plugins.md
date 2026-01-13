@@ -119,9 +119,14 @@ Creates or updates a database record on any table, and creates/updates a related
 | `regenerateDataTableFilters` (default `false`) |                                               |
 | `data` (shorthand for multiple fields at once) |                                               |
 | `patch` (pre-constructed data object)          |                                               |
+| `databaseTypes`                                |                                               |
 | `...fields for database record`                |                                               |
 
-The Action first checks if `<tableName>` exists in the database and creates it if not. It creates fields matching the incoming record and makes a best match of the data type from one of the following postGres data types:
+The Action first checks if `<tableName>` exists in the database and creates it if not. It then creates fields one of two ways:
+- If a type is defined in `databaseTypes` parameter (e.g. `{ finalTotal: "double precision" }`),
+- Properties of the incoming record are inspected and it makes a best match based on the data type.
+
+Normally, the latter approach is sufficient, but if data can be ambiguous (e.g. incoming value is an `integer` but later values might be `double precision`), then it's best to explicitly define a type. The auto-generated fields are created from the following possible types, and it's probably best to stick with these when defining explicitly, although the full range of available types can be found [here](https://www.postgresql.org/docs/current/datatype.html)
 
 - `date`
 - `time with timezone`
@@ -130,7 +135,7 @@ The Action first checks if `<tableName>` exists in the database and creates it i
 - `boolean`
 - `integer` (number)
 - `double precision` (number)
-- `varchar` (string)
+- `citext` (a case-insensitive variant of `varchar`)
 - `array` (whose element type is any of the above)
 
 Any time a record is inserted or updated on a table, if the field name doesn't exist it will be created accordingly. (See below for detail on how the record is constructed)
