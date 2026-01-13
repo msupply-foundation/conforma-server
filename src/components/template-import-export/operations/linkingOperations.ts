@@ -112,7 +112,9 @@ export const getFragmentDetails = async (templateId: number) => {
   }
 
   const fragmentsInActions: string[] = []
-  for (const fragment of accessibleFragmentNames) {
+
+  const fragmentNames = allFragments.map(({ name }) => name)
+  for (const fragment of fragmentNames) {
     const elementCount = await db.getFragmentCountForTemplate(
       templateId,
       fragment,

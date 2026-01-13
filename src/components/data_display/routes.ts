@@ -56,9 +56,17 @@ const routeDataViewTable = async (request: any, reply: any) => {
   // metaData
   const returnRawData = query?.raw === 'true'
 
+  const distinctField = query?.distinct as string | undefined
+
   // GraphQL pagination parameters
-  const first = query?.first ? Number(query.first) : returnRawData ? MAX_32_BIT_INT : 20
-  const offset = query?.offset ? Number(query.offset) : 0
+  const first = distinctField
+    ? MAX_32_BIT_INT
+    : query?.first
+    ? Number(query.first)
+    : returnRawData
+    ? MAX_32_BIT_INT
+    : 20
+  const offset = distinctField ? 0 : query?.offset ? Number(query.offset) : 0
   const orderBy = query?.orderBy
   const ascending = query?.ascending ? query?.ascending === 'true' : true
   const search = query?.search
@@ -119,7 +127,8 @@ const routeDataViewTable = async (request: any, reply: any) => {
     first,
     offset,
     orderBy ?? defaultSortColumn ?? 'id',
-    ascending
+    ascending,
+    distinctField
   )
   if (error) return error
 

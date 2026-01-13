@@ -113,6 +113,7 @@ Query parameters are (currently) as follows:
 - `order-by` -- field to sort by (default: `id`),
 - `ascending` -- whether to sort ascending or descending (default: `true`)
 - `raw` -- set to `true` and the table data will be returned as just a single array of objects, i.e. no column or data definitions. This is useful when making queries to a table in an application form (e.g. a list of countries in a drop-down) -- you just want simple access to the data, not its display definitions.
+- `distinct` -- if specified, the list of records is restricted to one per unique value of this field, so you can get a list of *distinct* values for a given field. If specified, the `first` and `offset` parameters are ignored.
 
 ##### Filter / search
 Additional filtering is primarily done via JSON in the request body. The JSON object is a GraphQL filter object. However, an additional `search` query parameter can be provided, which will be converted to and merged with the Filter JSON (the `search` parameter adds a filter for the `table_search_columns` that are [defined](#data_view-table)).
