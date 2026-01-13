@@ -35,19 +35,24 @@ getAdminJWT().then((result) =>
   })
 )
 
-databaseConnection.connect().then(() =>
-  FigTree.evaluate({
-    operator: 'SQL',
-    query: `SELECT name, expression
+export const reloadFragments = () => {
+  console.log('Loading Evaluator Fragments from database...')
+  databaseConnection.connect().then(() =>
+    FigTree.evaluate({
+      operator: 'SQL',
+      query: `SELECT name, expression
               FROM evaluator_fragment
             WHERE back_end = TRUE;`,
-    fallback: [],
-  }).then((result) => {
-    const fragments = (result as any[]).reduce((acc, fragment) => {
-      return { ...acc, [fragment.name]: fragment.expression }
-    }, {})
-    FigTree.updateOptions({ fragments })
-  })
-)
+      fallback: [],
+    }).then((result) => {
+      const fragments = (result as any[]).reduce((acc, fragment) => {
+        return { ...acc, [fragment.name]: fragment.expression }
+      }, {})
+      FigTree.updateOptions({ fragments })
+    })
+  )
+}
+
+reloadFragments()
 
 export default FigTree

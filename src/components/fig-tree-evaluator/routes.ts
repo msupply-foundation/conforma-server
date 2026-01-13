@@ -1,21 +1,7 @@
-import { FastifyPluginCallback, FastifyReply, FastifyRequest } from 'fastify'
-import fsx from 'fs-extra'
-import { pipeline } from 'stream'
-import { promisify } from 'util'
+import { FastifyReply, FastifyRequest } from 'fastify'
 import DBConnect from '../database/databaseConnect'
 import { returnApiError } from '../../ApiError'
-import path from 'path'
-import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../constants'
-import StreamZip from 'node-stream-zip'
-import { customAlphabet } from 'nanoid'
-import config from '../../config'
-import {
-  extractJWTfromHeader,
-  getPermissionNamesFromJWT,
-  getPublicTokenData,
-  getTokenData,
-} from '../permissions/loginHelpers'
-import { values } from 'lodash'
+import { getPermissionNamesFromJWT, getPublicTokenData } from '../permissions/loginHelpers'
 
 /** Routes for providing and updating FigTree fragments */
 
