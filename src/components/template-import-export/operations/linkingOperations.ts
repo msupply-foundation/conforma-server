@@ -100,9 +100,10 @@ export const getFragmentDetails = async (templateId: number) => {
   )
 
   const accessibleFragmentNames = applicantAccessibleFragments.map(({ name }) => name)
+  const allFragmentNames = allFragments.map(({ name }) => name)
 
   const fragmentsInFormElements: string[] = []
-  for (const fragment of accessibleFragmentNames) {
+  for (const fragment of allFragmentNames) {
     const elementCount = await db.getFragmentCountForTemplate(
       templateId,
       fragment,
@@ -113,8 +114,7 @@ export const getFragmentDetails = async (templateId: number) => {
 
   const fragmentsInActions: string[] = []
 
-  const fragmentNames = allFragments.map(({ name }) => name)
-  for (const fragment of fragmentNames) {
+  for (const fragment of allFragmentNames) {
     const elementCount = await db.getFragmentCountForTemplate(
       templateId,
       fragment,
@@ -130,7 +130,7 @@ export const getFragmentDetails = async (templateId: number) => {
       data,
       applicantAccessible,
       inTemplateElements: applicantAccessible && fragmentsInFormElements.includes(frag.name),
-      inActions: applicantAccessible && fragmentsInActions.includes(frag.name),
+      inActions: fragmentsInActions.includes(frag.name),
     }
   })
   return fullData
