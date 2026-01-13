@@ -247,10 +247,14 @@ const LookupTableModel = () => {
   }
 
   const getDataViews = async (tableName: string, dataViewCode: string): Promise<DataView[]> => {
+    const camelTableName = camelCase(tableName)
     const text = `
       SELECT id FROM public.data_view
-      WHERE table_name = $1 AND code = $2;`
-    const result = await DBConnect.query({ text, values: [tableName, dataViewCode] })
+      WHERE (table_name = $1 OR table_name = $2) AND code = $3;`
+    const result = await DBConnect.query({
+      text,
+      values: [tableName, camelTableName, dataViewCode],
+    })
     return result.rows
   }
 
