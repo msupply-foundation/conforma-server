@@ -36,7 +36,9 @@ export const getDataViewDetails = async (templateId: number) => {
   const permissions = await db.getApplyPermissionsForTemplate(templateId)
   const applicantAccessibleDataViews = allDataViews.filter(
     (dv) =>
-      dv.permission_names === null || dv.permission_names.some((name) => permissions.includes(name))
+      dv.permission_names === null ||
+      (Array.isArray(dv.permission_names) && dv.permission_names.length === 0) ||
+      dv.permission_names.some((name) => permissions.includes(name))
   )
 
   const accessibleIdentifiers = applicantAccessibleDataViews.map(({ identifier }) => identifier)
@@ -96,6 +98,7 @@ export const getFragmentDetails = async (templateId: number) => {
   const applicantAccessibleFragments = allFragments.filter(
     (fragment) =>
       fragment.permission_names === null ||
+      (Array.isArray(fragment.permission_names) && fragment.permission_names.length === 0) ||
       fragment.permission_names.some((name) => permissions.includes(name))
   )
 
