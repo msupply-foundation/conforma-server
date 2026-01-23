@@ -10,7 +10,7 @@ SKIP_BUILD=${3:-false} # Default will skip compilation into local "build" folder
 CURRENT_BRANCH=$(git branch --show-current)
 CURRENT_DIR=$(pwd)
 
-NODE_VERSION='18'
+NODE_VERSION='20'
 POSTGRES_VERSION='16'
 
 IMAGE_TAG="${BRANCH_NAME}_$(date +"%Y-%m-%d_%H-%M-%S")"
