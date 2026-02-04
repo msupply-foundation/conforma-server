@@ -67,6 +67,15 @@ export async function executeAction(
     })) as Record<string, unknown>
     // TO-DO: Check all required parameters are present
 
+    // Check if action exists and is a function
+    if (typeof actionLibrary[payload.code] !== 'function') {
+      throw new Error(
+        `Action "${payload.code}" is not loaded or is not a function (type: ${typeof actionLibrary[
+          payload.code
+        ]})`
+      )
+    }
+
     // TO-DO: If Scheduled, create a Job instead
     const actionResult = await actionLibrary[payload.code]({
       parameters: parametersEvaluated,

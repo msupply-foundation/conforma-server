@@ -12,8 +12,18 @@ export const loadActions = async function (actionLibrary: ActionLibrary) {
 
     result.forEach((row) => {
       // This should import action from index.js (entry point of plugin)
-      actionLibrary[row.code] = require(path.join(getAppEntryPointDir(), row.path)).action
-      console.log('Action loaded: ' + row.code)
+      const pluginModule = require(path.join(getAppEntryPointDir(), row.path))
+      const action = pluginModule.action || pluginModule.default?.action || pluginModule
+
+      if (typeof action === 'function') {
+        actionLibrary[row.code] = action
+        console.log('Action loaded: ' + row.code)
+      } else {
+        console.error(
+          `Failed to load action ${row.code}: exported value is not a function`,
+          typeof action
+        )
+      }
     })
 
     console.log('Actions loaded.')
