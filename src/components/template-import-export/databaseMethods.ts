@@ -199,7 +199,9 @@ const databaseMethods = {
     const fields = Object.keys(data)
     const fieldsString = fields.join(', ')
     const values = Object.values(data).map((value, index) =>
-      DBConnect.isJsonColumn(tableName, fields[index]) ? JSON.stringify(value) : value
+      DBConnect.isJsonColumn(tableName, fields[index]) && value !== null
+        ? JSON.stringify(value)
+        : value
     )
     try {
       const text = `
