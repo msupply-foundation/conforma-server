@@ -4068,13 +4068,13 @@ fd-slicer@~1.1.0:
   dependencies:
     pend "~1.2.0"
 
-fig-tree-evaluator@^2.21.2:
-  version "2.21.2"
-  resolved "https://registry.yarnpkg.com/fig-tree-evaluator/-/fig-tree-evaluator-2.21.2.tgz#b196325bd435a54510f82e16ccb3e114510dabe4"
-  integrity sha512-kEp0vpzj2Ouf6u9b3LsvzrTWe88GU4tKpDGvBXIsI64ZQlqeCekqkFeDbfv25xu1LT/szhaGvJA0leajmVbovQ==
+fig-tree-evaluator@^2.21.3:
+  version "2.21.3"
+  resolved "https://registry.yarnpkg.com/fig-tree-evaluator/-/fig-tree-evaluator-2.21.3.tgz#e7026afbb4170f55de7993138d670d3aa563cf4b"
+  integrity sha512-Ec7jx3SRCPbrQRZGNeLX0jcEo/6Mp85AaJuT5JlBpnINLWeXX/c8isfMB/Q35/appn5LPWQeH4iHoOb/G+zzCA==
   dependencies:
     dequal "^2.0.3"
-    object-property-extractor "^1.0.13"
+    object-property-extractor "^1.0.14"
 
 figlet@1.5.0:
   version "1.5.0"
@@ -6595,10 +6595,10 @@ object-keys@^1.0.12, object-keys@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.1.1.tgz#1c47f272df277f3b1daf061677d9c82e2322c60e"
 
-object-property-extractor@^1.0.13:
-  version "1.0.13"
-  resolved "https://registry.yarnpkg.com/object-property-extractor/-/object-property-extractor-1.0.13.tgz#fff188d6308ac5574eb2610221af906eb87b4f38"
-  integrity sha512-9kgEjTWDhTPuPn7nyof+5mLmCKBPKdU0c7IVpTbOvYKYSdXQ5skH4Pa/8MPbZXeyXBGrqS82JyWecsh6tMxiLw==
+object-property-extractor@^1.0.14:
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/object-property-extractor/-/object-property-extractor-1.0.14.tgz#bff9292974a47633129e8108b547b6a116ad67b6"
+  integrity sha512-euG3MQwj41DMbfk1keguY+jKQvaf9r26NeECtb28G8jABnhZVqxVEvIFywWC2107cSgx8dimA+JXuCAZFfbsSg==
 
 object-visit@^1.0.0:
   version "1.0.1"
