@@ -18,6 +18,8 @@ const scheduleAction: ActionPluginType = async ({
     duration, // either number (weeks) or object in Luxon Duration format
     eventCode = null,
     cancel = false,
+    extend = false,
+    active = true,
     data = { outputCumulative },
   } = parameters
 
@@ -32,7 +34,15 @@ const scheduleAction: ActionPluginType = async ({
       }
     }
 
-    const scheduledDateTime = getScheduledDateTime({ date, duration })
+    const currentScheduledDateTime = extend
+      ? await db.getScheduledTrigger({ applicationId, eventCode })
+      : null
+
+    const scheduledDateTime = getScheduledDateTime({
+      date,
+      duration,
+      currentScheduledDateTime,
+    })
     // Add record
     const scheduledEvent = await db.createOrUpdateTriggerSchedule({
       applicationId,
@@ -40,7 +50,7 @@ const scheduleAction: ActionPluginType = async ({
       scheduledDateTime,
       eventCode,
       data,
-      cancel,
+      active,
     })
     console.log('Trigger/Action event scheduled:', {
       applicationId,
@@ -75,21 +85,44 @@ export default scheduleAction
 const getScheduledDateTime = ({
   date,
   duration,
+  currentScheduledDateTime,
 }: {
   date?: string | Date | object
   duration?: number | object
+  currentScheduledDateTime?: Date | null
 }): string => {
+  const luxDuration = duration
+    ? typeof duration === 'number'
+      ? Duration.fromObject({ weeks: duration })
+      : Duration.fromObject(duration)
+    : undefined
+
   if (date) {
-    if (typeof date === 'string') return date
-    if (date instanceof Date) return DateTime.fromJSDate(date).toISO()
-    const luxDate = DateTime.fromObject(date)
-    if (DateTime.isDateTime(luxDate)) return luxDate.toISO()
-    throw new Error('"date" must be ISO string, JS Date or object in Luxon DateTime format')
+    let luxDate =
+      typeof date === 'string'
+        ? DateTime.fromISO(date)
+        : date instanceof Date
+        ? DateTime.fromJSDate(date)
+        : DateTime.fromObject(date)
+
+    if (!DateTime.isDateTime(luxDate))
+      throw new Error('"date" must be ISO string, JS Date or object in Luxon DateTime format')
+
+    // If a date AND a duration is provided, add the duration to the date
+    if (luxDuration) luxDate = luxDate.plus(luxDuration)
+
+    return luxDate.toISO()
   }
   if (duration) {
-    if (typeof duration === 'number') return DateTime.now().plus({ weeks: duration }).toISO()
-    const luxDuration = Duration.fromObject(duration)
-    if (Duration.isDuration(luxDuration)) return DateTime.now().plus(duration).toISO()
+    // If extending, use the later of current scheduled time or now as reference
+    // for adding duration, to avoid accidentally shortening the duration if the
+    // action is executed after the originally scheduled time
+    const referenceTime =
+      currentScheduledDateTime && DateTime.fromJSDate(currentScheduledDateTime) > DateTime.now()
+        ? DateTime.fromJSDate(currentScheduledDateTime)
+        : DateTime.now()
+
+    if (Duration.isDuration(luxDuration)) return referenceTime.plus(luxDuration).toISO()
     throw new Error('"duration" must be a number or object in Luxon Duration')
   }
   throw new Error('Requires either "date" or "duration" parameter')
