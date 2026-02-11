@@ -732,6 +732,8 @@ A "special" action that allows other actions to be triggered at some time in the
 | `applicationId`                          |                   |
 | `templateId`                             |                   |
 | `cancel`                                 |                   |
+| `extend`                                 |                   |
+| `active`                                 |                   |
 | `data`                                   |                   |
 
 *Either* of `duration` or `date` is required
@@ -744,9 +746,14 @@ By default, when an event is saved, the `outputCumulative` object from the `sche
 
 The `cancel` parameter is a way to prevent a previously scheduled event from occurring. Passing in `cancel: true` will, instead of creating a new event, find any *existing* event that has matching `applicationId` and `eventCode` and set to to inactive without it ever firing. In practice, though, targeting an event by `applicationId` is often not feasible, so the preferred way to cancel a scheduled event is to just apply an appropriate Condition to the subsequent action -- so the event is still triggered, but the matching action won't occur if the condition is not met (e.g. don't expire a product if registration has been renewed)
 
+If `extend` is `true`, then, if the event matches one already in the system (matched by `applicationId` and `eventCode`), then the duration will be added to *that* date rather than the current time. (Assuming the event date is in the future, otherwise it will use the current time.) Can be used to add extensions to events.
+
+New events are always `active` (i.e. they will fire at the scheduled time) and they are set to inactive after firing. However, you can create a new event already inactive (`active = false`). The use case for this is if an event is not currently required, but you wish to add an extension to it in future, initialise it in an inactive state and update it somewhere else.
+
 Note:
 - the `duration` value can be *either* a number (representing time in weeks) or an object in [Luxon Duration format](https://moment.github.io/luxon/api-docs/index.html#duration).
 - the `date` value can be *either* an ISO string, a JS Date object or an object in [Luxon DateTime format](https://moment.github.io/luxon/api-docs/index.html#datetime)
+- if a `date` AND a `duration` are provided, the duration will be added to this date rather than the current time (or the previous event time if using `extend`)
 
 
 ---
