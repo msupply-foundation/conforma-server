@@ -11,13 +11,14 @@ import {
 import path from 'path'
 import { SnapshotInfo } from '../../exportAndImport/types'
 import { ArchiveInfo } from '../../files/archive'
+import { ArchiveStore } from '../ArchiveStore'
 
 export const timestampStringExpression = /_\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d$/
 
 export const getSnapshotList = async () => {
   const dirents = await fs.readdir(SNAPSHOT_FOLDER, { encoding: 'utf-8', withFileTypes: true })
 
-  const archiveStore: Record<string, ArchiveInfo> = await getArchiveStore()
+  const archiveStore = await ArchiveStore.create()
 
   const snapshots: (SnapshotInfo & {
     name: string
@@ -65,9 +66,7 @@ export const getSnapshotList = async () => {
 
     console.log(dirent.name, archiveSize)
 
-    const missingArchives = archives
-      .filter(({ uid }) => !archiveStore[uid])
-      .map(({ archiveFolder }) => archiveFolder)
+    const missingArchives = archiveStore.getMissing(archives)
 
     const name = dirent.name.replace(timestampStringExpression, '')
 
