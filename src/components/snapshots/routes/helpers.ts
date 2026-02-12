@@ -4,78 +4,118 @@ import fsx from 'fs-extra'
 import getFolderSize from 'get-folder-size'
 import {
   ARCHIVE_SUBFOLDER_NAME,
-  FILES_FOLDER,
   INFO_FILE_NAME,
-  SNAPSHOT_ARCHIVES_FOLDER_NAME,
-  SNAPSHOT_FILE_NAME,
+  SNAPSHOT_ARCHIVE_FOLDER,
   SNAPSHOT_FOLDER,
 } from '../../../constants'
 import path from 'path'
 import { SnapshotInfo } from '../../exportAndImport/types'
-import { has } from 'lodash'
+import { ArchiveInfo } from '../../files/archive'
 
 export const timestampStringExpression = /_\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d$/
 
-export const getSnapshotList = async (archive?: boolean) => {
-  const sourceFolder = archive
-    ? path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME)
-    : SNAPSHOT_FOLDER
+export const getSnapshotList = async () => {
+  const dirents = await fs.readdir(SNAPSHOT_FOLDER, { encoding: 'utf-8', withFileTypes: true })
 
-  const dirents = await fs.readdir(sourceFolder, { encoding: 'utf-8', withFileTypes: true })
+  const archiveStore: Record<string, ArchiveInfo> = await getArchiveStore()
 
   const snapshots: (SnapshotInfo & {
     name: string
     size: number
-    modifiedTimestamp: number
-    hasZip: boolean
+    timestamp: string
+    missingArchives: string[]
+    archiveSize: number
+    archiveSizeIncomplete: boolean
   })[] = []
 
   for (const dirent of dirents) {
     if (!dirent.isDirectory()) continue
-    if (!fsSync.existsSync(path.join(sourceFolder, dirent.name, `${INFO_FILE_NAME}.json`))) continue
+    if (!fsSync.existsSync(path.join(SNAPSHOT_FOLDER, dirent.name, `${INFO_FILE_NAME}.json`)))
+      continue
     if (
-      !archive &&
-      !(
-        (await fsx.pathExists(path.join(sourceFolder, dirent.name, `database.dump`))) ||
-        (await fsx.pathExists(path.join(sourceFolder, dirent.name, `${SNAPSHOT_FILE_NAME}.json`)))
-      )
+      !(await fsx.pathExists(path.join(SNAPSHOT_FOLDER, dirent.name, `database.dump`))) ||
+      !(await fsx.pathExists(path.join(SNAPSHOT_FOLDER, dirent.name, `${INFO_FILE_NAME}.json`)))
     )
       continue
 
-    let size: number | null = null
-    let modifiedTimestamp: number | null = null
-    let hasZip = true
-    try {
-      const fileInfo = await fs.stat(path.join(sourceFolder, `${dirent.name}.zip`))
-      size = fileInfo.size
-      modifiedTimestamp = fileInfo.mtimeMs
-    } catch {
-      // If the .zip file doesn't exist, get info from the folder instead
-      size = await getFolderSize.loose(path.join(sourceFolder, dirent.name))
-      const folderInfo = await fs.stat(path.join(sourceFolder, dirent.name))
-      modifiedTimestamp = folderInfo.mtimeMs
-      hasZip = false
-    }
+    const info = await fsx.readJson(
+      path.join(SNAPSHOT_FOLDER, dirent.name, `${INFO_FILE_NAME}.json`)
+    )
 
-    const info = await fsx.readJson(path.join(sourceFolder, dirent.name, `${INFO_FILE_NAME}.json`))
+    const size = await getFolderSize.loose(path.join(SNAPSHOT_FOLDER, dirent.name))
+    const timestamp: string = info.timestamp
+
+    const snapshotArchiveFolder = path.join(
+      SNAPSHOT_FOLDER,
+      dirent.name,
+      'files',
+      ARCHIVE_SUBFOLDER_NAME,
+      'archive.json'
+    )
+    const archives: ArchiveInfo[] = (await fsx.pathExists(snapshotArchiveFolder))
+      ? Object.values((await fsx.readJson(snapshotArchiveFolder))?.archives)
+      : []
+
+    const archiveFileSizes = archives?.map(({ totalFileSize }) => totalFileSize)
+
+    // Older snapshots don't have file size data stored against them
+    const archiveSizeIncomplete = archiveFileSizes.some((fileSize) => !fileSize)
+
+    const archiveSize = archives.reduce((sum, { totalFileSize }) => sum + (totalFileSize ?? 0), 0)
+
+    console.log(dirent.name, archiveSize)
+
+    const missingArchives = archives
+      .filter(({ uid }) => !archiveStore[uid])
+      .map(({ archiveFolder }) => archiveFolder)
 
     const name = dirent.name.replace(timestampStringExpression, '')
 
-    snapshots.push({ name, filename: dirent.name, size, ...info, modifiedTimestamp, hasZip })
+    snapshots.push({
+      name,
+      filename: dirent.name,
+      size,
+      ...info,
+      timestamp,
+      missingArchives,
+      archiveSize,
+      archiveSizeIncomplete,
+    })
   }
 
-  snapshots.sort((a, b) => b.modifiedTimestamp - a.modifiedTimestamp)
+  snapshots.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
 
   return snapshots
 }
 
-export const getCurrentArchiveList = async () => {
-  try {
-    const { history } = await fsx.readJson(
-      path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME, 'archive.json')
+export const getArchiveStore = async () => {
+  const store: Record<string, ArchiveInfo> = {}
+  const dirents = await fs.readdir(SNAPSHOT_ARCHIVE_FOLDER, {
+    encoding: 'utf-8',
+    withFileTypes: true,
+  })
+  for (const dirent of dirents) {
+    if (!dirent.isDirectory()) continue
+    if (
+      !fsSync.existsSync(path.join(SNAPSHOT_ARCHIVE_FOLDER, dirent.name, `${INFO_FILE_NAME}.json`))
     )
-    return history
-  } catch {
-    return []
+      continue
+
+    const info: ArchiveInfo = await fsx.readJson(
+      path.join(SNAPSHOT_ARCHIVE_FOLDER, dirent.name, `${INFO_FILE_NAME}.json`)
+    )
+    store[info.uid] = info
   }
+  return store
 }
+
+// export const getCurrentArchiveList = async () => {
+//   try {
+//     const { history } = await fsx.readJson(
+//       path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME, 'archive.json')
+//     )
+//     return history
+//   } catch {
+//     return []
+//   }
+// }
