@@ -1,6 +1,7 @@
 import fs from 'fs/promises'
 import fsSync from 'fs'
 import fsx from 'fs-extra'
+import getFolderSize from 'get-folder-size'
 import {
   ARCHIVE_SUBFOLDER_NAME,
   FILES_FOLDER,
@@ -11,7 +12,7 @@ import {
 } from '../../../constants'
 import path from 'path'
 import { SnapshotInfo } from '../../exportAndImport/types'
-import { DateTime } from 'luxon'
+import { has } from 'lodash'
 
 export const timestampStringExpression = /_\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d$/
 
@@ -22,7 +23,12 @@ export const getSnapshotList = async (archive?: boolean) => {
 
   const dirents = await fs.readdir(sourceFolder, { encoding: 'utf-8', withFileTypes: true })
 
-  const snapshots: (SnapshotInfo & { name: string; size: number; modifiedTimestamp: number })[] = []
+  const snapshots: (SnapshotInfo & {
+    name: string
+    size: number
+    modifiedTimestamp: number
+    hasZip: boolean
+  })[] = []
 
   for (const dirent of dirents) {
     if (!dirent.isDirectory()) continue
@@ -38,19 +44,24 @@ export const getSnapshotList = async (archive?: boolean) => {
 
     let size: number | null = null
     let modifiedTimestamp: number | null = null
+    let hasZip = true
     try {
       const fileInfo = await fs.stat(path.join(sourceFolder, `${dirent.name}.zip`))
       size = fileInfo.size
       modifiedTimestamp = fileInfo.mtimeMs
     } catch {
-      size = null
+      // If the .zip file doesn't exist, get info from the folder instead
+      size = await getFolderSize.loose(path.join(sourceFolder, dirent.name))
+      const folderInfo = await fs.stat(path.join(sourceFolder, dirent.name))
+      modifiedTimestamp = folderInfo.mtimeMs
+      hasZip = false
     }
 
     const info = await fsx.readJson(path.join(sourceFolder, dirent.name, `${INFO_FILE_NAME}.json`))
 
     const name = dirent.name.replace(timestampStringExpression, '')
 
-    snapshots.push({ name, filename: dirent.name, size, ...info, modifiedTimestamp })
+    snapshots.push({ name, filename: dirent.name, size, ...info, modifiedTimestamp, hasZip })
   }
 
   snapshots.sort((a, b) => b.modifiedTimestamp - a.modifiedTimestamp)
