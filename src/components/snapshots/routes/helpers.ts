@@ -11,14 +11,12 @@ import {
 import path from 'path'
 import { SnapshotInfo } from '../../exportAndImport/types'
 import { ArchiveInfo } from '../../files/archive'
-import { ArchiveStore } from '../ArchiveStore'
+import type { ArchiveStore } from '../ArchiveStore'
 
 export const timestampStringExpression = /_\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d$/
 
-export const getSnapshotList = async () => {
+export const getSnapshotList = async (archiveStore: ArchiveStore) => {
   const dirents = await fs.readdir(SNAPSHOT_FOLDER, { encoding: 'utf-8', withFileTypes: true })
-
-  const archiveStore = await ArchiveStore.create()
 
   const snapshots: (SnapshotInfo & {
     name: string
@@ -57,14 +55,14 @@ export const getSnapshotList = async () => {
       ? Object.values((await fsx.readJson(snapshotArchiveFolder))?.archives)
       : []
 
+    archiveStore.markInUse(archives.map(({ uid }) => uid))
+
     const archiveFileSizes = archives?.map(({ totalFileSize }) => totalFileSize)
 
     // Older snapshots don't have file size data stored against them
     const archiveSizeIncomplete = archiveFileSizes.some((fileSize) => !fileSize)
 
     const archiveSize = archives.reduce((sum, { totalFileSize }) => sum + (totalFileSize ?? 0), 0)
-
-    console.log(dirent.name, archiveSize)
 
     const missingArchives = archiveStore.getMissing(archives)
 
