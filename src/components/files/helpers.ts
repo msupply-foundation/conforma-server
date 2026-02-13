@@ -1,13 +1,6 @@
-import fs from 'fs/promises'
-import { readJSON, pathExists, readdir } from 'fs-extra'
+import { readJSON } from 'fs-extra'
 import path from 'path'
-import {
-  ARCHIVE_FOLDER,
-  ARCHIVE_SUBFOLDER_NAME,
-  FILES_FOLDER,
-  SNAPSHOT_ARCHIVE_FOLDER,
-  SNAPSHOT_FOLDER,
-} from '../../constants'
+import { ARCHIVE_FOLDER } from '../../constants'
 import { ArchiveData, ArchiveInfo } from './archive'
 import { ArchiveOption } from '../exportAndImport/types'
 
@@ -26,6 +19,17 @@ export const getCurrentArchives = async () => {
   const currentArchives: ArchiveData = await readJSON(path.join(ARCHIVE_FOLDER, 'archive.json'))
 
   return currentArchives.history
+}
+
+// Gets archive data for a specified snapshot
+export const getSnapshotArchives = async (snapshotFolder: string) => {
+  try {
+    const archives: ArchiveData = await readJSON(path.join(snapshotFolder, `archive.json`))
+
+    return archives.history
+  } catch {
+    return []
+  }
 }
 
 // Gets a list of system archive sub-folders to export as part of snapshot
@@ -56,115 +60,4 @@ const getTimestamp = (
     if (!archive) throw new Error('Invalid Archive ID')
     return archive.timestamp
   } else return timestampOrArchiveId
-}
-
-// Checks the archive metadata in a snapshot and verifies that the complete
-// archive can be restored from the following sources:
-// - system archive
-// - this snapshot
-// - the system snapshots/archives
-// - backups (TO-DO)
-// If not, it returns an error
-// If so, returns a list of the paths to all the folders
-
-export const findArchiveSources = async (snapshotFolder: string) => {
-  // Load archive metadata and get all UIDs
-  const { archives, history } =
-    (await loadArchiveData(path.join(snapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME))) ?? {}
-
-  if (!history || !archives) return []
-
-  const requiredUids = new Set(history.map((archive) => archive.uid))
-  const foundSourceFolders: [string, string][] = []
-
-  // Yield these one by one so we don't scan larger sources if we find
-  // everything we need earlier
-  const sources = async function* () {
-    yield path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME)
-    yield path.join(snapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME)
-
-    const snapshotArchives = await getSnapshotArchiveFolders()
-    for (const folder of snapshotArchives) {
-      yield folder
-    }
-
-    const archivesInSnapshots = await getArchivesWithinSnapshots()
-    for (const folder of archivesInSnapshots) {
-      yield folder
-    }
-
-    // TO-DO:
-    // Scan Backups, but that will require unzipping so might not be worth it.
-  }
-
-  for await (const source of sources()) {
-    if (await pathExists(source)) {
-      const foundArchives = await scanArchive(source)
-      foundArchives.forEach((archive) => {
-        if (requiredUids.has(archive.uid)) {
-          foundSourceFolders.push([source, archive.archiveFolder])
-          requiredUids.delete(archive.uid)
-        }
-      })
-      // Stop searching as soon as all required archives found
-      if (requiredUids.size === 0) return foundSourceFolders
-    }
-  }
-
-  // We haven't found all the required archives so throw an informative error
-  const missingArchives = Array.from(requiredUids).map(
-    (uid) => ` • ${archives[uid].archiveFolder} (ID: ${uid})`
-  )
-  throw new Error(`Missing archive folders:
-    ${missingArchives.join('\n')}
-  `)
-}
-
-// Scans a single archive source and return the archives within
-const scanArchive = async (source: string) => {
-  const archives = new Set<ArchiveInfo>()
-
-  const folders = await fs.readdir(source)
-
-  for (const folder of folders) {
-    if (!(await fs.stat(path.join(source, folder))).isDirectory()) continue
-
-    try {
-      archives.add(await readJSON(path.join(source, folder, 'info.json')))
-    } catch {
-      throw new Error('Missing info.json in archive: ' + path.join(source, folder))
-    }
-  }
-  return archives
-}
-
-// Scan /_snapshots/_archives (i.e. "Archive snapshots")
-const getSnapshotArchiveFolders = async () => {
-  const archiveSnapshotFolders = []
-
-  const archiveSnapshotsContents = await fs.readdir(path.join(SNAPSHOT_ARCHIVE_FOLDER))
-
-  for (const item of archiveSnapshotsContents) {
-    const itemPath = path.join(SNAPSHOT_ARCHIVE_FOLDER, item)
-    if ((await fs.stat(itemPath)).isDirectory()) archiveSnapshotFolders.push(itemPath)
-  }
-
-  return archiveSnapshotFolders
-}
-
-// Scan "_ARCHIVE" within individual snapshots
-const getArchivesWithinSnapshots = async () => {
-  const archiveSnapshotFolders = []
-
-  const snapshotFolders = await fs.readdir(path.join(SNAPSHOT_FOLDER))
-
-  for (const item of snapshotFolders) {
-    const itemPath = path.join(SNAPSHOT_FOLDER, item)
-    if (!(await fs.stat(itemPath)).isDirectory()) continue
-    const itemArchiveFolder = path.join(SNAPSHOT_FOLDER, item, 'files', ARCHIVE_SUBFOLDER_NAME)
-    if (!pathExists(itemArchiveFolder)) continue
-    archiveSnapshotFolders.push(itemArchiveFolder)
-  }
-
-  return archiveSnapshotFolders
 }

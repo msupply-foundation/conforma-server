@@ -39,7 +39,7 @@ export type ExportAndImportOptions = {
 export interface SnapshotInfo {
   timestamp: string
   version: string
-  archive?: ArchiveInfo[]
+  // archive?: ArchiveInfo[]
 }
 
 export type SnapshotType = 'normal' | 'backup'

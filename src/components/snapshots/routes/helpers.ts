@@ -2,12 +2,7 @@ import fs from 'fs/promises'
 import fsSync from 'fs'
 import fsx from 'fs-extra'
 import getFolderSize from 'get-folder-size'
-import {
-  ARCHIVE_SUBFOLDER_NAME,
-  INFO_FILE_NAME,
-  SNAPSHOT_ARCHIVE_FOLDER,
-  SNAPSHOT_FOLDER,
-} from '../../../constants'
+import { ARCHIVE_SUBFOLDER_NAME, INFO_FILE_NAME, SNAPSHOT_FOLDER } from '../../../constants'
 import path from 'path'
 import { SnapshotInfo } from '../../exportAndImport/types'
 import { ArchiveInfo } from '../../files/archive'
@@ -84,35 +79,3 @@ export const getSnapshotList = async (archiveStore: ArchiveStore) => {
 
   return snapshots
 }
-
-export const getArchiveStore = async () => {
-  const store: Record<string, ArchiveInfo> = {}
-  const dirents = await fs.readdir(SNAPSHOT_ARCHIVE_FOLDER, {
-    encoding: 'utf-8',
-    withFileTypes: true,
-  })
-  for (const dirent of dirents) {
-    if (!dirent.isDirectory()) continue
-    if (
-      !fsSync.existsSync(path.join(SNAPSHOT_ARCHIVE_FOLDER, dirent.name, `${INFO_FILE_NAME}.json`))
-    )
-      continue
-
-    const info: ArchiveInfo = await fsx.readJson(
-      path.join(SNAPSHOT_ARCHIVE_FOLDER, dirent.name, `${INFO_FILE_NAME}.json`)
-    )
-    store[info.uid] = info
-  }
-  return store
-}
-
-// export const getCurrentArchiveList = async () => {
-//   try {
-//     const { history } = await fsx.readJson(
-//       path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME, 'archive.json')
-//     )
-//     return history
-//   } catch {
-//     return []
-//   }
-// }

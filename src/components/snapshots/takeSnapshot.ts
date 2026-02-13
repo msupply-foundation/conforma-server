@@ -15,6 +15,7 @@ import {
   ARCHIVE_SUBFOLDER_NAME,
   GENERIC_THUMBNAILS_FOLDER,
   SNAPSHOT_ARCHIVES_FOLDER_NAME,
+  ARCHIVE_FOLDER,
 } from '../../constants'
 import DBConnect from '../../../src/components/database/databaseConnect'
 import config from '../../config'
@@ -66,6 +67,16 @@ const takeSnapshot: SnapshotOperation = async ({
 
     await archiveStore.copyTo(currentArchives)
 
+    // Copy archive.json file to snapshot
+    try {
+      await fsx.copy(
+        path.join(ARCHIVE_FOLDER, 'archive.json'),
+        path.join(tempFolder, 'archive.json')
+      )
+    } catch {
+      console.log('No archives in current system...')
+    }
+
     // Copy localisation
     execSync(`cp -r '${LOCALISATION_FOLDER}/' '${tempFolder}/localisation'`)
 
@@ -73,7 +84,7 @@ const takeSnapshot: SnapshotOperation = async ({
     execSync(`cp '${PREFERENCES_FILE}' '${tempFolder}'`)
 
     // Save snapshot info (version, timestamp, etc)
-    const info = getSnapshotInfo(currentArchives)
+    const info = getSnapshotInfo()
     await fs.promises.writeFile(
       path.join(tempFolder, `${INFO_FILE_NAME}.json`),
       JSON.stringify(info, null, ' ')
@@ -126,14 +137,12 @@ export const getTimeString = (startTime: number) => {
   return `${Math.round(timeInMs / 100) / 10} seconds`
 }
 
-const getSnapshotInfo = (archiveInfo: ArchiveInfo[]) => {
+const getSnapshotInfo = () => {
   const snapshotInfo: SnapshotInfo = {
     timestamp: DateTime.now().toISO(),
     version: config.version,
   }
-  if (archiveInfo === null) return snapshotInfo
 
-  snapshotInfo.archive = archiveInfo
   return snapshotInfo
 }
 
