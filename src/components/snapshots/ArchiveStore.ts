@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
 import fsx from 'fs-extra'
-import { INFO_FILE_NAME, SNAPSHOT_ARCHIVE_FOLDER } from '../../constants'
+import { ARCHIVE_FOLDER, INFO_FILE_NAME, SNAPSHOT_ARCHIVE_FOLDER } from '../../constants'
 import path from 'path'
 import { ArchiveInfo } from '../files/archive'
 
@@ -19,6 +19,25 @@ export class ArchiveStore {
 
   public getArchiveList() {
     return Object.values(this.store).map(({ archiveFolder }) => archiveFolder)
+  }
+
+  // Copies the provided archive folders from the source location (defaults to
+  // current archive folder) to the snapshot archive folder, and adds them to
+  // the store if they are not already present.
+  public copyTo = async (archives: ArchiveInfo[], basePath: string = ARCHIVE_FOLDER) => {
+    for (const archive of archives) {
+      const info = await fsx.readJson(
+        path.join(basePath, archive.archiveFolder, `${INFO_FILE_NAME}.json`)
+      )
+      const { uid } = info
+      if (!this.store[uid]) {
+        this.store[uid] = info
+        await fsx.copy(
+          path.join(basePath, archive.archiveFolder),
+          path.join(SNAPSHOT_ARCHIVE_FOLDER, archive.archiveFolder)
+        )
+      }
+    }
   }
 
   // Marks the provided archive UIDs as in use, which means they are used by at

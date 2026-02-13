@@ -8,16 +8,15 @@ type Query = {
 }
 
 const routeTakeSnapshot = async (
-  request: FastifyRequest<{ Querystring: Query; Body?: { archive: ArchiveOption } }>,
+  request: FastifyRequest<{ Querystring: Query }>,
   reply: FastifyReply
 ) => {
   const snapshotType = request.query.type
   const snapshotName = request.query.name
-  const archive = request?.body?.archive
 
   if (!snapshotName) return reply.send({ success: false, message: 'error while loading snapshot' })
 
-  reply.send(await takeSnapshot({ snapshotName, snapshotType, archive }))
+  reply.send(await takeSnapshot({ snapshotName, snapshotType }))
 }
 
 export default routeTakeSnapshot

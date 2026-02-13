@@ -3,6 +3,7 @@ import fsx from 'fs-extra'
 import { getSnapshotList } from './helpers'
 import { ArchiveStore } from '../ArchiveStore'
 import { ARCHIVE_FOLDER } from '../../../constants'
+import { getCurrentArchives } from '../../files/helpers'
 
 const routeListSnapshots = async (request: FastifyRequest, reply: FastifyReply) => {
   const archiveStore = await ArchiveStore.create()
@@ -12,14 +13,7 @@ const routeListSnapshots = async (request: FastifyRequest, reply: FastifyReply) 
 
   const fullArchiveList = archiveStore.getArchiveList()
 
-  const currentArchives = (
-    await fsx.readdir(ARCHIVE_FOLDER, {
-      encoding: 'utf-8',
-      withFileTypes: true,
-    })
-  )
-    .filter((dirent) => dirent.isDirectory())
-    .map((dirent) => dirent.name)
+  const currentArchives = (await getCurrentArchives()).map((archive) => archive.archiveFolder)
 
   const archivesNotInStore = currentArchives.filter((archive) => !fullArchiveList.includes(archive))
 

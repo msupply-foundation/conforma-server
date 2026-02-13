@@ -1,3 +1,5 @@
+import { ArchiveInfo } from '../files/archive'
+
 export type DatabaseColumn = {
   columnName: string
   isPrimary: boolean
@@ -34,19 +36,18 @@ export type ExportAndImportOptions = {
   archive?: ArchiveOption
 }
 
-export type ArchiveInfo = { type: 'full' | 'none' | 'partial'; from?: string; to?: string } | null
 export interface SnapshotInfo {
   timestamp: string
   version: string
-  archive?: ArchiveInfo
+  archive?: ArchiveInfo[]
 }
 
-export type SnapshotType = 'normal' | 'archive' | 'backup'
+export type SnapshotType = 'normal' | 'backup'
 
 export type SnapshotOperation = (props: {
   snapshotName: string
   snapshotType?: SnapshotType
-  archive?: ArchiveOption
+  // archive?: ArchiveOption
 }) => Promise<{ success: boolean; message: string; error?: string; snapshot?: string }>
 
 export type ArchiveSnapshotOperation = (props: {

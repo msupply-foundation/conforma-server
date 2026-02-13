@@ -1,5 +1,5 @@
 import fs from 'fs/promises'
-import { readJSON, pathExists } from 'fs-extra'
+import { readJSON, pathExists, readdir } from 'fs-extra'
 import path from 'path'
 import {
   ARCHIVE_FOLDER,
@@ -19,6 +19,13 @@ export const loadArchiveData = async (source: string) => {
   } catch {
     return null
   }
+}
+
+// Gets archive data for the current system
+export const getCurrentArchives = async () => {
+  const currentArchives: ArchiveData = await readJSON(path.join(ARCHIVE_FOLDER, 'archive.json'))
+
+  return currentArchives.history
 }
 
 // Gets a list of system archive sub-folders to export as part of snapshot
