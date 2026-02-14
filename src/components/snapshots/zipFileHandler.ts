@@ -58,7 +58,7 @@ export const getZippedSnapshot = async (
     const stats = await fsx.stat(zipFilePath)
     await fsx.utimes(zipFilePath, new Date(), stats.mtime)
 
-    return zipFilePath
+    return zipFileName
   }
 
   // Collect list of files/folders to include in zip based on snapshot info and
@@ -93,7 +93,7 @@ export const getZippedSnapshot = async (
 
   await zipSnapshot(filesToInclude, `${snapshotName}_${hash}`)
 
-  return zipFilePath
+  return zipFileName
 }
 
 export const zipSnapshot = async (

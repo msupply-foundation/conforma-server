@@ -5,6 +5,7 @@ import fastifyCors from '@fastify/cors'
 import fastifyWebsocket from '@fastify/websocket'
 import { DateTime, Settings } from 'luxon'
 import path from 'path'
+import fs from 'fs'
 import { loadActionPlugins } from './components/pluginsConnect'
 import {
   routeUserInfo,
@@ -181,7 +182,40 @@ const startServer = async () => {
         server.get('/verify', routeVerification)
         // File download endpoint (get by unique ID)
         server.get('/file', async function (request: any, reply: any) {
-          const { uid, thumbnail = false } = request.query
+          const { uid, thumbnail = false, zipFile, filename } = request.query
+          // zipFile is used when downloading files from a snapshot zip, so we
+          // look in the zip cache folder instead of querying uid in the
+          // database
+
+          console.log('zipFile', zipFile)
+
+          if (zipFile) {
+            const zipFilePath = path.join(ZIP_CACHE_FOLDER, zipFile)
+            console.log('zipFilePath', zipFilePath)
+
+            console.log('filename', filename)
+
+            try {
+              const stats = fs.statSync(zipFilePath)
+              const downloadFilename = filename || zipFile
+              reply.header('Content-Type', 'application/zip')
+              reply.header('Content-Length', stats.size)
+              reply.header(
+                'Content-Disposition',
+                `attachment; filename="${encodeURIComponent(
+                  downloadFilename
+                )}"; filename*=UTF-8''${encodeURIComponent(downloadFilename)}`
+              )
+              const stream = fs.createReadStream(zipFilePath)
+              stream.on('error', () => {
+                reply.send({ success: false, message: 'Unable to retrieve file' })
+              })
+              return reply.send(stream)
+            } catch {
+              return reply.send({ success: false, message: 'Unable to retrieve file' })
+            }
+          }
+
           const {
             originalFilename,
             filePath,
@@ -198,6 +232,8 @@ const startServer = async () => {
             )}"; filename*=UTF-8''${encodeURIComponent(originalFilename)}`
           )
 
+          console.log('actualPath', actualPath)
+
           // TO-DO Check for permission to access file
           try {
             // TO-DO: Rename file back to original for download
@@ -206,6 +242,7 @@ const startServer = async () => {
             return reply.send({ success: false, message: 'Unable to retrieve file' })
           }
         })
+
         server.get('/fragments', routeGetFragments)
 
         done()

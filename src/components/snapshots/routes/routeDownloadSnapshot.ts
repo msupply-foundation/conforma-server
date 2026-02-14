@@ -1,10 +1,8 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { getZippedSnapshot } from '../zipFileHandler'
-import { createReadStream } from 'fs'
 
 type Query = {
   name: string
-  filename?: string
 }
 
 type DownloadOptions = {
@@ -17,21 +15,17 @@ const routeDownloadSnapshot = async (
   reply: FastifyReply
 ) => {
   const snapshotName = request.query.name
-  const customFilename = request.query.filename
 
   if (!snapshotName) return reply.send({ success: false, message: 'Snapshot name not specified' })
 
   const includeSnapshot = request?.body?.includeSnapshot ?? true
   const archiveRange = request?.body?.archiveRange ?? null
 
-  const zipFilePath = await getZippedSnapshot(snapshotName, includeSnapshot, archiveRange)
+  console.log('request?.body', request?.body)
 
-  const filename = customFilename || `${snapshotName}.zip`
+  const zipFileName = await getZippedSnapshot(snapshotName, includeSnapshot, archiveRange)
 
-  reply.header('Content-Type', 'application/zip')
-  reply.header('Content-Disposition', `attachment; filename="${filename}"`)
-
-  return reply.send(createReadStream(zipFilePath))
+  return reply.send({ success: true, message: 'Zip file ready', zipFileName })
 }
 
 export default routeDownloadSnapshot
