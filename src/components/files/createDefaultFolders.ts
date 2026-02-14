@@ -15,6 +15,7 @@ import {
   DATABASE_FOLDER,
   BASE_SNAPSHOT_NAME,
   SNAPSHOT_ARCHIVE_FOLDER,
+  ZIP_CACHE_FOLDER,
 } from '../../constants'
 import fs from 'fs'
 import path from 'path'
@@ -27,6 +28,7 @@ export function createDefaultDataFolders() {
     makeFolder(SNAPSHOT_FOLDER, 'Creating SNAPSHOTS folder')
     makeFolder(SNAPSHOT_ARCHIVE_FOLDER)
     makeFolder(BACKUPS_FOLDER, 'Creating BACKUPS folder')
+    makeFolder(ZIP_CACHE_FOLDER, 'Creating ZIP CACHE folder')
     // Copy core_templates to snapshots folder
     execSync(`cp -r '${DATABASE_FOLDER}/${BASE_SNAPSHOT_NAME}' '${SNAPSHOT_FOLDER}'`)
     // Make sure there is a zipped copy of core_templates too

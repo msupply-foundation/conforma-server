@@ -4,7 +4,6 @@ import archiver from 'archiver'
 import path from 'path'
 import { execSync } from 'child_process'
 import { SnapshotInfo, SnapshotOperation } from '../exportAndImport/types'
-import { ArchiveInfo } from '../files/archive'
 import {
   DEFAULT_SNAPSHOT_NAME,
   INFO_FILE_NAME,
@@ -27,7 +26,6 @@ import { cleanupDataTables } from '../../lookup-table/utils/cleanupDataTables'
 import { ArchiveStore } from './ArchiveStore'
 
 const TEMP_SNAPSHOT_FOLDER_NAME = '__tempSnapshot'
-const TEMP_ARCHIVE_FOLDER_NAME = '__tempArchive'
 
 const takeSnapshot: SnapshotOperation = async ({
   snapshotName = DEFAULT_SNAPSHOT_NAME,

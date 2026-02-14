@@ -42,10 +42,7 @@ const useSnapshot: SnapshotOperation = async ({ snapshotName }) => {
 
     const snapshotFolder = path.join(SNAPSHOT_FOLDER, snapshotName)
 
-    if (!fsx.existsSync(snapshotFolder)) {
-      if (!fsx.existsSync(`${snapshotFolder}.zip`))
-        throw new Error('Snapshot missing: ' + snapshotName)
-    }
+    if (!fsx.existsSync(snapshotFolder)) throw new Error('Snapshot missing: ' + snapshotName)
 
     // Don't proceed if snapshot version higher than current installation
     const infoFile = path.join(snapshotFolder, `${INFO_FILE_NAME}.json`)

@@ -383,6 +383,7 @@ interface ConfigBase {
   localisationsFolder: string
   preferencesFolder: string
   preferencesFileName: string
+  zipCacheFolder: string
   backupsFolder: string
   genericThumbnailsFolderName: string
   defaultUnderMaintenanceSite: string

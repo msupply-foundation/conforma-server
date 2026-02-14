@@ -56,6 +56,7 @@ const config: Config = {
   imagesFolder: '../images',
   databaseFolder: '../database',
   localisationsFolder: '../localisation',
+  zipCacheFolder: '../__zip_cache',
   preferencesFolder,
   preferencesFileName,
   backupsFolder: '../backups',
