@@ -7,7 +7,7 @@ const routeUseSnapshot = async (
 ) => {
   const snapshotName = request.query.name
 
-  if (!snapshotName) return reply.send({ success: false, message: 'error while loading snapshot' })
+  if (!snapshotName) return reply.send({ success: false, message: 'Snapshot name missing' })
 
   reply.send(await useSnapshot({ snapshotName }))
 }
