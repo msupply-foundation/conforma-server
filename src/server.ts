@@ -193,7 +193,7 @@ const startServer = async () => {
           reply.header('Content-Type', mimeType)
           reply.header(
             'Content-Disposition',
-            `inline; filename="${encodeURIComponent(
+            `attachment; filename="${encodeURIComponent(
               originalFilename
             )}"; filename*=UTF-8''${encodeURIComponent(originalFilename)}`
           )

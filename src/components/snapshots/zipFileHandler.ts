@@ -85,22 +85,13 @@ export const getZippedSnapshot = async (
     }
   }
 
-  console.log('filesToInclude:', filesToInclude)
-
   const totalFileSize = filesToInclude.reduce((sum, { size }) => sum + size, 0)
   console.log(`Total file size to include in zip: ${totalFileSize}`)
 
+  // TO-DO: Check there is enough disk space to create zip file (2x size of
+  // files to include). If not run cleanup to free up space
+
   await zipSnapshot(filesToInclude, `${snapshotName}_${hash}`)
-
-  // Check there is enough disk space to create zip file (2x size of files to include). If not run cleanup to free up space
-
-  // Copy files/folders to temp folder (snapshotName+HASH as folder name)
-
-  // Create zip file from temp folder
-
-  // Delete temp folder
-
-  // Return path to zip file
 
   return zipFilePath
 }
