@@ -14,11 +14,19 @@ import { getTimeString } from './takeSnapshot'
 
 type ZipItem = { name: string; size: number; outputPath: string }
 
-export const getZippedSnapshot = async (
-  snapshotName: string,
-  includeSnapshot: boolean,
-  archiveRange: { from?: number; to?: number } | null = null
-): Promise<string> => {
+interface GetZippedSnapshotOptions {
+  snapshotName: string
+  includeSnapshot: boolean
+  archiveRange?: { from?: number; to?: number } | null
+  zlibCompression?: number
+}
+
+export const getZippedSnapshot = async ({
+  snapshotName,
+  includeSnapshot,
+  archiveRange = null,
+  zlibCompression = 6,
+}: GetZippedSnapshotOptions): Promise<string> => {
   console.log(`Getting zipped snapshot for ${snapshotName}...`)
 
   // Get snapshot folder path
@@ -91,20 +99,32 @@ export const getZippedSnapshot = async (
   // TO-DO: Check there is enough disk space to create zip file (2x size of
   // files to include). If not run cleanup to free up space
 
-  await zipSnapshot(filesToInclude, `${snapshotName}_${hash}`)
+  await zipSnapshot({
+    sources: filesToInclude,
+    zipName: `${snapshotName}_${hash}`,
+    zlibCompression,
+  })
 
   return zipFileName
 }
 
-export const zipSnapshot = async (
-  sources: ZipItem[],
-  zipName: string,
-  destination = ZIP_CACHE_FOLDER
-) => {
+interface ZipSnapshotOptions {
+  sources: ZipItem[]
+  zipName: string
+  destination?: string
+  zlibCompression?: number // 0-9
+}
+
+export const zipSnapshot = async ({
+  sources,
+  zipName,
+  destination = ZIP_CACHE_FOLDER,
+  zlibCompression = 6,
+}: ZipSnapshotOptions) => {
   console.log('Zipping snapshot...')
   const zipStartTime = Date.now()
   const output = fsx.createWriteStream(path.join(destination, `${zipName}.zip`))
-  const archive = archiver('zip', { zlib: { level: 0 } })
+  const archive = archiver('zip', { zlib: { level: zlibCompression } })
 
   await archive.pipe(output)
   for (const { name, outputPath } of sources) {

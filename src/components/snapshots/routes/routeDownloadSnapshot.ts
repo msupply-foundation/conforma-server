@@ -8,6 +8,7 @@ type Query = {
 type DownloadOptions = {
   includeSnapshot?: boolean
   archiveRange?: { from?: number; to?: number }
+  zlibCompression?: number // 0-9, where 0 is no compression and 9 is maximum compression (default is 6)
 }
 
 const routeDownloadSnapshot = async (
@@ -20,10 +21,14 @@ const routeDownloadSnapshot = async (
 
   const includeSnapshot = request?.body?.includeSnapshot ?? true
   const archiveRange = request?.body?.archiveRange ?? null
+  const zlibCompression = request?.body?.zlibCompression ?? 6
 
-  console.log('request?.body', request?.body)
-
-  const zipFileName = await getZippedSnapshot(snapshotName, includeSnapshot, archiveRange)
+  const zipFileName = await getZippedSnapshot({
+    snapshotName,
+    includeSnapshot,
+    archiveRange,
+    zlibCompression,
+  })
 
   return reply.send({ success: true, message: 'Zip file ready', zipFileName })
 }
