@@ -128,6 +128,7 @@ export const zipSnapshot = async ({
 
   await archive.pipe(output)
   for (const { name, outputPath } of sources) {
+    console.log('Archiving:', name)
     await archive.directory(name, outputPath)
   }
   await archive.finalize()

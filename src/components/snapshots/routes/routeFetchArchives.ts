@@ -15,9 +15,16 @@ const routeFetchArchives = async (
 
   if (!snapshotName) return reply.send({ success: false, message: 'Snapshot name missing' })
 
-  const archives = await getSnapshotArchives(path.join(SNAPSHOT_FOLDER, snapshotName))
+  try {
+    const archives = await getSnapshotArchives(path.join(SNAPSHOT_FOLDER, snapshotName))
 
-  return reply.send({ success: true, archives })
+    return reply.send({ success: true, archives })
+  } catch (error) {
+    return reply.send({
+      success: false,
+      message: 'Error fetching archives',
+    })
+  }
 }
 
 export default routeFetchArchives

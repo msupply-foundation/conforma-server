@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import { getSnapshotList } from './helpers'
 import { ArchiveStore } from '../ArchiveStore'
 import { getCurrentArchives } from '../../files/helpers'
+import { errorMessage } from '../../utilityFunctions'
 
 const routeListSnapshots = async (request: FastifyRequest, reply: FastifyReply) => {
   const archiveStore = await ArchiveStore.create()
@@ -16,7 +17,15 @@ const routeListSnapshots = async (request: FastifyRequest, reply: FastifyReply) 
 
   const archivesNotInStore = currentArchives.filter((archive) => !fullArchiveList.includes(archive))
 
-  return reply.send({ snapshots, orphanArchives, archivesNotInStore })
+  try {
+    return reply.send({ snapshots, orphanArchives, archivesNotInStore })
+  } catch (e) {
+    return reply.send({
+      success: false,
+      message: 'Error fetching snapshot list',
+      error: errorMessage(e),
+    })
+  }
 }
 
 export default routeListSnapshots

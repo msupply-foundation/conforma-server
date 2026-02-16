@@ -12,11 +12,13 @@ import { timestampStringExpression } from './helpers'
 import { DateTime } from 'luxon'
 import StreamZip from 'node-stream-zip'
 import config from '../../../config'
+import { error } from 'console'
+import { errorMessage } from '../../utilityFunctions'
 const pump = promisify(pipeline)
 
 const errorMessageBase = {
   success: false,
-  message: 'failed to upload snapshot',
+  message: 'Failed to upload snapshot',
 }
 
 const TEMP_ZIP_FILE = 'tempUpload.zip'
@@ -29,9 +31,9 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
   let upload
   try {
     upload = await request.file()
-    if (!upload) throw new Error('No file attached')
+    if (!upload) return reply.send({ ...errorMessageBase, error: 'No file attached' })
   } catch (err) {
-    throw new Error('No file attached')
+    return reply.send({ ...errorMessageBase, error: errorMessage(err) })
   }
 
   // const data = await request.files()
