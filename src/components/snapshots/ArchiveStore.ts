@@ -25,16 +25,14 @@ export class ArchiveStore {
   // current archive folder) to the snapshot archive folder, and adds them to
   // the store if they are not already present.
   public copyTo = async (archives: ArchiveInfo[], basePath: string = ARCHIVE_FOLDER) => {
-    for (const archive of archives) {
-      const info = await fsx.readJson(
-        path.join(basePath, archive.archiveFolder, `${INFO_FILE_NAME}.json`)
-      )
+    for (const { archiveFolder } of archives) {
+      const info = await fsx.readJson(path.join(basePath, archiveFolder, `${INFO_FILE_NAME}.json`))
       const { uid } = info
       if (!this.store[uid]) {
         this.store[uid] = info
         await fsx.copy(
-          path.join(basePath, archive.archiveFolder),
-          path.join(SNAPSHOT_ARCHIVE_FOLDER, archive.archiveFolder)
+          path.join(basePath, archiveFolder),
+          path.join(SNAPSHOT_ARCHIVE_FOLDER, archiveFolder)
         )
       }
     }

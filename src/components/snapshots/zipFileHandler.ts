@@ -4,6 +4,7 @@ import archiver from 'archiver'
 import {
   INFO_FILE_NAME,
   SNAPSHOT_ARCHIVE_FOLDER,
+  SNAPSHOT_ARCHIVES_FOLDER_NAME,
   SNAPSHOT_FOLDER,
   ZIP_CACHE_FOLDER,
 } from '../../constants'
@@ -87,7 +88,7 @@ export const getZippedSnapshot = async ({
         filesToInclude.push({
           name: path.join(SNAPSHOT_ARCHIVE_FOLDER, arch.archiveFolder),
           size: arch.totalFileSize ?? 0,
-          outputPath: path.join('archives/', arch.archiveFolder),
+          outputPath: path.join(SNAPSHOT_ARCHIVES_FOLDER_NAME, arch.archiveFolder),
         })
       }
     }
@@ -96,8 +97,8 @@ export const getZippedSnapshot = async ({
   const totalFileSize = filesToInclude.reduce((sum, { size }) => sum + size, 0)
   console.log(`Total file size to include in zip: ${totalFileSize}`)
 
-  // TO-DO: Check there is enough disk space to create zip file (2x size of
-  // files to include). If not run cleanup to free up space
+  // TO-DO: Check there is enough disk space to create zip file (size of files
+  // to include + a bit of headroom). If not run cleanup to free up space
 
   await zipSnapshot({
     sources: filesToInclude,
