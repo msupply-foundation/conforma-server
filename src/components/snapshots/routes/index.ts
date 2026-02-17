@@ -6,6 +6,7 @@ import routeUploadSnapshot from './routeUploadSnapshot'
 import routeDeleteSnapshot from './routeDeleteSnapshot'
 import routeDownloadSnapshot from './routeDownloadSnapshot'
 import routeFetchArchives from './routeFetchArchives'
+import routePurgeOrphanArchives from './routePurgeOrphanArchives'
 
 const snapshotRoutes: FastifyPluginCallback<{ prefix: string }> = (server, _, done) => {
   server.get('/list', routeListSnapshots)
@@ -15,6 +16,8 @@ const snapshotRoutes: FastifyPluginCallback<{ prefix: string }> = (server, _, do
   server.post('/upload', routeUploadSnapshot)
   server.post('/delete', routeDeleteSnapshot)
   server.post('/download', routeDownloadSnapshot)
+  server.post('/purge-orphan-archives', routePurgeOrphanArchives)
+  // server.post('/store-archives', routeStoreArchives)
 
   done()
 }
