@@ -66,14 +66,27 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
     const zipEntries = Object.values(await zip.entries())
     const files = zipEntries.map(({ name }) => name)
 
-    const hasArchives = files.some((name) => name.startsWith(SNAPSHOT_ARCHIVES_FOLDER_NAME + '/'))
+    let hasArchives = files.some((name) => name.startsWith(SNAPSHOT_ARCHIVES_FOLDER_NAME + '/'))
 
-    const hasSnapshot = files.includes(INFO_FILE_NAME + '.json')
+    let hasSnapshot = files.includes(INFO_FILE_NAME + '.json')
     if (!hasSnapshot) snapshotName = 'TEMP_SNAPSHOT_DESTINATION'
 
     const isOldStructure =
       snapshotName.startsWith('ARCHIVE_') ||
       files.some((name) => name.startsWith(`files/${ARCHIVE_SUBFOLDER_NAME}/`))
+
+    console.log('snapshotName', snapshotName)
+
+    if (isOldStructure) {
+      // Old structure has a different way of determining if it's an
+      // archive-only snapshot,
+      if (snapshotName.startsWith('ARCHIVE_')) {
+        hasSnapshot = false
+        hasArchives = true
+      }
+      if (files.some((name) => name.startsWith(`files/${ARCHIVE_SUBFOLDER_NAME}/`)))
+        hasArchives = true
+    }
 
     if (!hasSnapshot && !hasArchives) {
       return reply.send({
@@ -127,7 +140,7 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
       }
     }
 
-    if (hasArchives) {
+    if (hasArchives && !isOldStructure) {
       const archiveStore = await ArchiveStore.create()
       // Copy the archives to the archive store, then remove from snapshot
       const archiveFolders = (
