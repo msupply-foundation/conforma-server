@@ -1,13 +1,12 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { getSnapshotList } from './helpers'
 import { ArchiveStore } from '../ArchiveStore'
 import { getCurrentArchives } from '../../files/helpers'
 import { errorMessage } from '../../utilityFunctions'
 
-const routeListSnapshots = async (request: FastifyRequest, reply: FastifyReply) => {
+const routeListSnapshots = async (_: FastifyRequest, reply: FastifyReply) => {
   const archiveStore = await ArchiveStore.create()
 
-  const snapshots = await getSnapshotList(archiveStore)
+  const snapshots = await archiveStore.getSnapshots()
 
   const orphanArchives = await archiveStore.getOrphans()
 

@@ -14,23 +14,40 @@ import getFolderSize from 'get-folder-size'
 import { timestampStringExpression } from './routes/helpers'
 
 type Store = Record<string, ArchiveInfo & { inUse?: boolean }>
+
+type SnapshotWithArchiveInfo = SnapshotInfo & {
+  name: string
+  size: number
+  timestamp: string
+  missingArchives: string[]
+  archiveSize: number
+  archiveSizeIncomplete: boolean
+}
 export class ArchiveStore {
   private store: Store = {}
-  private active: ArchiveInfo[] = []
+  private snapshots: SnapshotWithArchiveInfo[] = []
 
-  private constructor(store: Store, active: ArchiveInfo[]) {
+  private constructor(store: Store, snapshots: SnapshotWithArchiveInfo[]) {
     this.store = store
-    this.active = active
+    this.snapshots = snapshots
   }
 
   public static async create(): Promise<ArchiveStore> {
+    console.log('Initializing archive store...')
     const store = await getArchiveStore()
-    const active = await getCurrentArchives(this.markInUse, getMissing)
-    return new ArchiveStore(store, active)
+    // console.log('Archive store initialized')
+    const instance = new ArchiveStore(store, [])
+    instance.snapshots = await instance.buildCurrentArchives()
+    // console.log('Snapshot list initialised')
+    return instance
   }
 
   public getArchiveList() {
     return Object.values(this.store).map(({ archiveFolder }) => archiveFolder)
+  }
+
+  public getSnapshots() {
+    return this.snapshots
   }
 
   // Copies the provided archive folders from the source location (defaults to
@@ -54,6 +71,15 @@ export class ArchiveStore {
   // least one snapshot. This is used to determine which archives are not in use
   // and can be safely deleted
 
+  // Marks the provided archive UIDs as in use
+  public markInUse = (archiveUids: string[]) => {
+    for (const uid of archiveUids) {
+      if (this.store[uid]) {
+        this.store[uid].inUse = true
+      }
+    }
+  }
+
   // Returns a list of missing archive folders based on the provided list of
   // snapshot archives
   public getMissing = (snapshotArchives: ArchiveInfo[]) => {
@@ -72,13 +98,73 @@ export class ArchiveStore {
 
   public purgeOrphans = async () => {
     const orphans = await this.getOrphans()
-    console.log('orphans', orphans)
     for (const folder of orphans) {
-      // await fsx.remove(path.join(ARCHIVE_FOLDER, folder))
-      // await fsx.remove(path.join(SNAPSHOT_ARCHIVE_FOLDER, folder))
-      // console.log('Purged orphan archive:', folder)
+      await fsx.remove(path.join(SNAPSHOT_ARCHIVE_FOLDER, folder))
     }
     return orphans
+  }
+
+  private buildCurrentArchives = async (): Promise<SnapshotWithArchiveInfo[]> => {
+    const dirents = await fs.readdir(SNAPSHOT_FOLDER, { encoding: 'utf-8', withFileTypes: true })
+
+    const snapshots: SnapshotWithArchiveInfo[] = []
+
+    for (const dirent of dirents) {
+      if (!dirent.isDirectory()) continue
+      if (!(await fsx.exists(path.join(SNAPSHOT_FOLDER, dirent.name, `${INFO_FILE_NAME}.json`))))
+        continue
+      if (
+        !(await fsx.pathExists(path.join(SNAPSHOT_FOLDER, dirent.name, `database.dump`))) ||
+        !(await fsx.pathExists(path.join(SNAPSHOT_FOLDER, dirent.name, `${INFO_FILE_NAME}.json`)))
+      )
+        continue
+
+      const info = await fsx.readJson(
+        path.join(SNAPSHOT_FOLDER, dirent.name, `${INFO_FILE_NAME}.json`)
+      )
+
+      const size = await getFolderSize.loose(path.join(SNAPSHOT_FOLDER, dirent.name))
+      const timestamp: string = info.timestamp
+
+      const snapshotArchiveFolder = path.join(
+        SNAPSHOT_FOLDER,
+        dirent.name,
+        'files',
+        ARCHIVE_SUBFOLDER_NAME,
+        'archive.json'
+      )
+      const archives: ArchiveInfo[] = (await fsx.pathExists(snapshotArchiveFolder))
+        ? Object.values((await fsx.readJson(snapshotArchiveFolder))?.archives)
+        : []
+
+      this.markInUse(archives.map(({ uid }) => uid))
+
+      const archiveFileSizes = archives?.map(({ totalFileSize }) => totalFileSize)
+
+      // Older snapshots don't have file size data stored against them
+      const archiveSizeIncomplete = archiveFileSizes.some((fileSize) => !fileSize)
+
+      const archiveSize = archives.reduce((sum, { totalFileSize }) => sum + (totalFileSize ?? 0), 0)
+
+      const missingArchives = this.getMissing(archives)
+
+      const name = dirent.name.replace(timestampStringExpression, '')
+
+      snapshots.push({
+        name,
+        filename: dirent.name,
+        size,
+        ...info,
+        timestamp,
+        missingArchives,
+        archiveSize,
+        archiveSizeIncomplete,
+      })
+    }
+
+    snapshots.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+
+    return snapshots
   }
 }
 
@@ -103,77 +189,4 @@ const getArchiveStore = async () => {
     store[info.uid] = info
   }
   return store
-}
-
-const getCurrentArchives = async (
-  markInUse: (archiveUids: string[]) => void,
-  getMissing: (snapshotArchives: ArchiveInfo[]) => string[]
-): Promise<ArchiveInfo[]> => {
-  const dirents = await fs.readdir(SNAPSHOT_FOLDER, { encoding: 'utf-8', withFileTypes: true })
-
-  const snapshots: (SnapshotInfo & {
-    name: string
-    size: number
-    timestamp: string
-    missingArchives: string[]
-    archiveSize: number
-    archiveSizeIncomplete: boolean
-  })[] = []
-
-  for (const dirent of dirents) {
-    if (!dirent.isDirectory()) continue
-    if (!(await fsx.exists(path.join(SNAPSHOT_FOLDER, dirent.name, `${INFO_FILE_NAME}.json`))))
-      continue
-    if (
-      !(await fsx.pathExists(path.join(SNAPSHOT_FOLDER, dirent.name, `database.dump`))) ||
-      !(await fsx.pathExists(path.join(SNAPSHOT_FOLDER, dirent.name, `${INFO_FILE_NAME}.json`)))
-    )
-      continue
-
-    const info = await fsx.readJson(
-      path.join(SNAPSHOT_FOLDER, dirent.name, `${INFO_FILE_NAME}.json`)
-    )
-
-    const size = await getFolderSize.loose(path.join(SNAPSHOT_FOLDER, dirent.name))
-    const timestamp: string = info.timestamp
-
-    const snapshotArchiveFolder = path.join(
-      SNAPSHOT_FOLDER,
-      dirent.name,
-      'files',
-      ARCHIVE_SUBFOLDER_NAME,
-      'archive.json'
-    )
-    const archives: ArchiveInfo[] = (await fsx.pathExists(snapshotArchiveFolder))
-      ? Object.values((await fsx.readJson(snapshotArchiveFolder))?.archives)
-      : []
-
-    archiveStore.markInUse(archives.map(({ uid }) => uid))
-
-    const archiveFileSizes = archives?.map(({ totalFileSize }) => totalFileSize)
-
-    // Older snapshots don't have file size data stored against them
-    const archiveSizeIncomplete = archiveFileSizes.some((fileSize) => !fileSize)
-
-    const archiveSize = archives.reduce((sum, { totalFileSize }) => sum + (totalFileSize ?? 0), 0)
-
-    const missingArchives = archiveStore.getMissing(archives)
-
-    const name = dirent.name.replace(timestampStringExpression, '')
-
-    snapshots.push({
-      name,
-      filename: dirent.name,
-      size,
-      ...info,
-      timestamp,
-      missingArchives,
-      archiveSize,
-      archiveSizeIncomplete,
-    })
-  }
-
-  snapshots.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-
-  return snapshots
 }
