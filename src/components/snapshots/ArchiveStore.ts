@@ -124,15 +124,10 @@ export class ArchiveStore {
       const size = await getFolderSize.loose(path.join(SNAPSHOT_FOLDER, dirent.name))
       const timestamp: string = info.timestamp
 
-      const snapshotArchiveFolder = path.join(
-        SNAPSHOT_FOLDER,
-        dirent.name,
-        'files',
-        ARCHIVE_SUBFOLDER_NAME,
-        'archive.json'
-      )
-      const archives: ArchiveInfo[] = (await fsx.pathExists(snapshotArchiveFolder))
-        ? Object.values((await fsx.readJson(snapshotArchiveFolder))?.archives)
+      const snapshotArchiveFile = path.join(SNAPSHOT_FOLDER, dirent.name, 'archive.json')
+
+      const archives: ArchiveInfo[] = (await fsx.pathExists(snapshotArchiveFile))
+        ? Object.values((await fsx.readJson(snapshotArchiveFile))?.archives)
         : []
 
       this.markInUse(archives.map(({ uid }) => uid))
