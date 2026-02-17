@@ -3,10 +3,12 @@ import { errorMessage } from '../../utilityFunctions'
 import { ArchiveStore } from '../ArchiveStore'
 
 const routePurgeOrphanArchives = async (_: FastifyRequest, reply: FastifyReply) => {
+  console.log('Purge orphan archives request received')
   try {
     const archiveStore = await ArchiveStore.create()
 
     const orphans = await archiveStore.purgeOrphans()
+    console.log('Purging...Done')
 
     return reply.send({ success: true, message: 'Purged orphan archives', orphans })
   } catch (e) {

@@ -6,9 +6,9 @@ import { errorMessage } from '../../utilityFunctions'
 const routeListSnapshots = async (_: FastifyRequest, reply: FastifyReply) => {
   const archiveStore = await ArchiveStore.create()
 
-  const snapshots = await archiveStore.getSnapshots()
+  const snapshots = archiveStore.getSnapshots()
 
-  const orphanArchives = await archiveStore.getOrphans()
+  const orphanArchives = archiveStore.getOrphans()
 
   const fullArchiveList = archiveStore.getArchiveList()
 

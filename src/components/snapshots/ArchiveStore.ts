@@ -70,9 +70,7 @@ export class ArchiveStore {
   // Marks the provided archive UIDs as in use, which means they are used by at
   // least one snapshot. This is used to determine which archives are not in use
   // and can be safely deleted
-
-  // Marks the provided archive UIDs as in use
-  public markInUse = (archiveUids: string[]) => {
+  private markInUse = (archiveUids: string[]) => {
     for (const uid of archiveUids) {
       if (this.store[uid]) {
         this.store[uid].inUse = true
@@ -82,7 +80,7 @@ export class ArchiveStore {
 
   // Returns a list of missing archive folders based on the provided list of
   // snapshot archives
-  public getMissing = (snapshotArchives: ArchiveInfo[]) => {
+  private getMissing = (snapshotArchives: ArchiveInfo[]) => {
     return snapshotArchives
       .filter(({ uid }) => !this.store[uid])
       .map(({ archiveFolder }) => archiveFolder)
@@ -91,7 +89,7 @@ export class ArchiveStore {
   // Returns a list of archive folders that are not in use by any snapshots and
   // can be safely deleted -- should only be invoked after all snapshots have
   // been processed and marked
-  public getOrphans = async () => {
+  public getOrphans = () => {
     const orphans = Object.values(this.store).filter((archive) => !archive.inUse)
     return orphans.map(({ archiveFolder }) => archiveFolder)
   }
