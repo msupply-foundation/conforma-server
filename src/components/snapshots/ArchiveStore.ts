@@ -2,7 +2,6 @@ import fs from 'fs/promises'
 import fsx from 'fs-extra'
 import {
   ARCHIVE_FOLDER,
-  ARCHIVE_SUBFOLDER_NAME,
   INFO_FILE_NAME,
   SNAPSHOT_ARCHIVE_FOLDER,
   SNAPSHOT_FOLDER,
@@ -21,7 +20,6 @@ type SnapshotWithArchiveInfo = SnapshotInfo & {
   timestamp: string
   missingArchives: string[]
   archiveSize: number
-  archiveSizeIncomplete: boolean
 }
 export class ArchiveStore {
   private store: Store = {}
@@ -35,7 +33,6 @@ export class ArchiveStore {
   public static async create(): Promise<ArchiveStore> {
     console.log('Initializing archive store...')
     const store = await getArchiveStore()
-    // console.log('Archive store initialized')
     const instance = new ArchiveStore(store, [])
     instance.snapshots = await instance.buildCurrentArchives()
     // console.log('Snapshot list initialised')
@@ -132,10 +129,13 @@ export class ArchiveStore {
 
       this.markInUse(archives.map(({ uid }) => uid))
 
-      const archiveFileSizes = archives?.map(({ totalFileSize }) => totalFileSize)
-
-      // Older snapshots don't have file size data stored against them
-      const archiveSizeIncomplete = archiveFileSizes.some((fileSize) => !fileSize)
+      const archiveFileSizes = archives?.map(({ totalFileSize, uid }) => {
+        if (totalFileSize) return totalFileSize
+        // Older archives don't have file size data stored against them, so we
+        // need to calculate it manually.
+        const measuredFileSize = this.store[uid]?.totalFileSize
+        if (measuredFileSize) return measuredFileSize
+      })
 
       const archiveSize = archives.reduce((sum, { totalFileSize }) => sum + (totalFileSize ?? 0), 0)
 
@@ -151,7 +151,6 @@ export class ArchiveStore {
         timestamp,
         missingArchives,
         archiveSize,
-        archiveSizeIncomplete,
       })
     }
 
@@ -179,6 +178,10 @@ const getArchiveStore = async () => {
     const info: ArchiveInfo = await fsx.readJson(
       path.join(SNAPSHOT_ARCHIVE_FOLDER, dirent.name, `${INFO_FILE_NAME}.json`)
     )
+    if (!info.totalFileSize)
+      info.totalFileSize = await getFolderSize.loose(
+        path.join(SNAPSHOT_ARCHIVE_FOLDER, dirent.name)
+      )
     store[info.uid] = info
   }
   return store
