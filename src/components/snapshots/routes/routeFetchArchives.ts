@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import path from 'path'
 import { getSnapshotArchives } from '../../files/helpers'
 import { SNAPSHOT_FOLDER } from '../../../constants'
+import { ArchiveStore } from '../ArchiveStore'
 
 type Query = {
   name: string
@@ -16,7 +17,13 @@ const routeFetchArchives = async (
   if (!snapshotName) return reply.send({ success: false, message: 'Snapshot name missing' })
 
   try {
+    const archiveStore = await ArchiveStore.create()
+
     const archives = await getSnapshotArchives(path.join(SNAPSHOT_FOLDER, snapshotName))
+    archives.forEach((archive) => {
+      if (!archive.totalFileSize)
+        archive.totalFileSize = archiveStore.getArchiveDetail(archive.uid)?.totalFileSize
+    })
 
     return reply.send({ success: true, archives })
   } catch (error) {

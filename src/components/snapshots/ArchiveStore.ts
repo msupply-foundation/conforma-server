@@ -43,6 +43,10 @@ export class ArchiveStore {
     return Object.values(this.store).map(({ archiveFolder }) => archiveFolder)
   }
 
+  public getArchiveDetail(uid: string) {
+    return this.store[uid]
+  }
+
   public getSnapshots() {
     return this.snapshots
   }
