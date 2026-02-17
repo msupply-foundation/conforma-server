@@ -24,7 +24,7 @@ export const convertSnapshotToNewStructure = async (
       archives
         .filter((item) => item !== 'archive.json' && item !== 'info.json')
         .map((archiveFolder) => ({ archiveFolder }) as ArchiveInfo),
-      path.join(snapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME)
+      path.join(snapshotFolder)
     )
 
     return true // indicates this was an archive-only snapshot, so calling function shouldn't continue
