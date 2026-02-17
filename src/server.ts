@@ -187,8 +187,6 @@ const startServer = async () => {
           // look in the zip cache folder instead of querying uid in the
           // database
 
-          console.log('zipFile', zipFile)
-
           if (zipFile) {
             const zipFilePath = path.join(ZIP_CACHE_FOLDER, zipFile)
             console.log('zipFilePath', zipFilePath)
@@ -231,8 +229,6 @@ const startServer = async () => {
               originalFilename
             )}"; filename*=UTF-8''${encodeURIComponent(originalFilename)}`
           )
-
-          console.log('actualPath', actualPath)
 
           // TO-DO Check for permission to access file
           try {
