@@ -10,7 +10,7 @@ import fs from 'fs'
 import fsx from 'fs-extra'
 import { pipeline } from 'stream'
 import { promisify } from 'util'
-import { timestampStringExpression } from './helpers'
+import { convertSnapshotToNewStructure, timestampStringExpression } from './helpers'
 import { DateTime } from 'luxon'
 import StreamZip from 'node-stream-zip'
 import config from '../../../config'
@@ -73,15 +73,6 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
       snapshotName.startsWith('ARCHIVE_') ||
       files.some((name) => name.startsWith(`files/${ARCHIVE_SUBFOLDER_NAME}/`))
 
-    if (isOldStructure) {
-      // TO-DO -- handle this
-      return reply.send({
-        success: true,
-        message: `uploaded snapshot ${snapshotName}`,
-        snapshot: snapshotName,
-      })
-    }
-
     if (!hasSnapshot && !hasArchives) {
       return reply.send({
         ...errorMessageBase,
@@ -118,6 +109,22 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
     await fsx.ensureDir(snapshotDestination)
     await zip.extract(null, snapshotDestination)
 
+    if (isOldStructure) {
+      console.log('Converting to new snapshot structure...')
+      const isArchiveOnly = await convertSnapshotToNewStructure(
+        snapshotDestination,
+        await ArchiveStore.create()
+      )
+      if (isArchiveOnly) {
+        await fsx.remove(snapshotDestination)
+        return reply.send({
+          success: true,
+          message: `Uploaded archive-only snapshot ${snapshotName}`,
+          snapshot: snapshotName,
+        })
+      }
+    }
+
     if (hasArchives) {
       const archiveStore = await ArchiveStore.create()
       // Copy the archives to the archive store, then remove from snapshot
@@ -125,14 +132,14 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
         await fsx.readdir(path.join(snapshotDestination, SNAPSHOT_ARCHIVES_FOLDER_NAME), 'utf-8')
       ).map((archiveFolder) => ({ archiveFolder }))
 
-      archiveStore.copyTo(archiveFolders as ArchiveInfo[])
+      await archiveStore.copyTo(archiveFolders as ArchiveInfo[])
       await fsx.remove(path.join(snapshotDestination, SNAPSHOT_ARCHIVES_FOLDER_NAME))
     }
 
     await zip.close()
 
     // Remove original zip file
-    await fsx.remove(snapshotDestination)
+    await fsx.remove(path.join(SNAPSHOT_FOLDER, TEMP_ZIP_FILE))
   } catch (e) {
     console.log(e)
     return reply.send({ ...errorMessageBase, error: errorMessage(e) })

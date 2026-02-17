@@ -79,3 +79,38 @@ export const getSnapshotList = async (archiveStore: ArchiveStore) => {
 
   return snapshots
 }
+
+export const convertSnapshotToNewStructure = async (
+  snapshotFolder: string,
+  archiveStore: ArchiveStore
+) => {
+  const snapshotFolderName = path.basename(snapshotFolder)
+
+  if (snapshotFolderName.startsWith('ARCHIVE_')) {
+    // Archive-only snapshot, just move the contents to the new location
+    const archives = await fsx.readdir(path.join(snapshotFolder))
+
+    await archiveStore.copyTo(
+      archives
+        .filter((item) => item !== 'archive.json' && item !== 'info.json')
+        .map((archiveFolder) => ({ archiveFolder }) as ArchiveInfo)
+    )
+
+    return true // indicates this was an archive-only snapshot, so calling function shouldn't continue
+  }
+
+  const archives = await fsx.readdir(path.join(snapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME))
+
+  await archiveStore.copyTo(
+    archives
+      .filter((item) => item !== 'archive.json')
+      .map((archiveFolder) => ({ archiveFolder }) as ArchiveInfo)
+  )
+
+  await fsx.move(
+    path.join(snapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME, 'archive.json'),
+    path.join(snapshotFolder, 'archive.json')
+  )
+
+  await fsx.remove(path.join(snapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME))
+}
