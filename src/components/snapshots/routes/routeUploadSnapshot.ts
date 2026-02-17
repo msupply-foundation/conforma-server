@@ -55,6 +55,8 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
       // Restrict filename to alpha-numeric chars (and "-"/"_")
       .replace(/[^\w\d-]/g, '_')
 
+    console.log('Uploading snapshot:', snapshotName)
+
     const tempZipLocation = path.join(SNAPSHOT_FOLDER, TEMP_ZIP_FILE)
 
     await pump(upload.file, fs.createWriteStream(tempZipLocation))
