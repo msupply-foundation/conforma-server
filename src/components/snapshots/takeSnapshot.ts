@@ -13,7 +13,6 @@ import {
   PREFERENCES_FILE,
   ARCHIVE_SUBFOLDER_NAME,
   GENERIC_THUMBNAILS_FOLDER,
-  SNAPSHOT_ARCHIVES_FOLDER_NAME,
   ARCHIVE_FOLDER,
 } from '../../constants'
 import DBConnect from '../../../src/components/database/databaseConnect'
