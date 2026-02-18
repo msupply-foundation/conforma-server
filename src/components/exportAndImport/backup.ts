@@ -11,11 +11,10 @@ import {
   SNAPSHOT_FOLDER,
   BACKUPS_FOLDER,
   SNAPSHOT_ARCHIVES_FOLDER_NAME,
-  FILES_FOLDER,
-  ARCHIVE_SUBFOLDER_NAME,
+  ARCHIVE_FOLDER,
 } from '../../constants'
 import { execSync } from 'child_process'
-import { ArchiveData, ArchiveInfo } from '../files/archive'
+import { getCurrentArchives } from '../files/helpers'
 
 interface ArchiveBackupInfo {
   uid: string
@@ -54,65 +53,27 @@ const createBackup = async (password?: string) => {
   }
 
   // Get ids of all existing archive backups (and confirm snapshots still exist)
-  const existingArchiveBackupIds = await getArchiveBackups(backupInfo)
+  const existingArchiveBackups = await getArchiveBackups(backupInfo)
 
   // Get ids of all current system archives
-  let currentSystemArchives: ArchiveInfo[]
-  try {
-    const archiveInfo: ArchiveData = await fsx.readJSON(
-      path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME, 'archive.json')
-    )
-    currentSystemArchives = archiveInfo.history
-  } catch {
-    currentSystemArchives = []
-  }
+  const currentSystemArchives = await getCurrentArchives()
 
   // Compare them and collect all missing
   const archivesNotBackedUp = currentSystemArchives.filter(
-    (archive) => !existingArchiveBackupIds.includes(archive.uid)
+    (archive) => !existingArchiveBackups.map((a) => a.uid).includes(archive.uid)
   )
 
-  const zipSources: string[] = []
-
-  // Make new archive snapshot with missing archives
-  if (archivesNotBackedUp.length > 0) {
-    const archiveFrom = Math.min(...archivesNotBackedUp.map((a) => a.timestamp))
-    const archiveTo = Math.max(...archivesNotBackedUp.map((a) => a.timestamp))
-
-    const { snapshot: archiveSnapshot, error } = await takeSnapshot({
-      snapshotName: `archive_${snapshotName}`,
-      // snapshotType: 'archive',
-      // archive: { from: archiveFrom, to: archiveTo },
-      // TO-DO: Figure this out
-      // isArchiveSnapshot: true,
-    })
-
-    if (!archiveSnapshot || error) {
-      console.log('ERROR CREATING BACKUP: ' + error)
-      return
-    }
-
-    zipSources.push(path.join(SNAPSHOT_ARCHIVES_FOLDER_NAME, archiveSnapshot))
-
-    const archiveInfo = await fsx.readJSON(
-      path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME, archiveSnapshot, 'info.json')
-    )
-
-    backupInfo.archives.push(
-      ...archivesNotBackedUp.map(({ uid }) => ({
-        uid,
-        archiveSnapshot,
-        from: archiveInfo.archive.from,
-        to: archiveInfo.archive.to,
-      }))
-    )
-  } else console.log('No new archives to back up')
+  existingArchiveBackups.push(
+    ...archivesNotBackedUp.map((archive) => ({
+      uid: archive.uid,
+      archiveSnapshot: archive.archiveFolder,
+    }))
+  )
 
   // Make new snapshot with no archives
   const { snapshot, error } = await takeSnapshot({
     snapshotName,
     snapshotType: 'backup',
-    // archive: 'none',
   })
 
   if (!snapshot || error) {
@@ -120,12 +81,28 @@ const createBackup = async (password?: string) => {
     return
   }
 
-  zipSources.push(snapshot)
+  const zipSources: { source: string; destination: string }[] = []
+
+  zipSources.push({
+    source: path.join(SNAPSHOT_FOLDER, snapshot),
+    destination: path.join(BACKUPS_FOLDER, `${snapshot}.zip`),
+  })
+
+  zipSources.push(
+    ...archivesNotBackedUp.map((archive) => ({
+      source: path.join(ARCHIVE_FOLDER, archive.archiveFolder),
+      destination: path.join(
+        BACKUPS_FOLDER,
+        SNAPSHOT_ARCHIVES_FOLDER_NAME,
+        `${archive.archiveFolder}.zip`
+      ),
+    }))
+  )
 
   // Zip them using password (or unencrypted if no password)
   console.log('Zipping backups...')
-  for (const source of zipSources) {
-    const output = fs.createWriteStream(path.join(BACKUPS_FOLDER, `${source}.zip`))
+  for (const item of zipSources) {
+    const output = fs.createWriteStream(item.destination)
     const archive = password
       ? archiver.create('zip-encrypted', {
           zlib: { level: 9 },
@@ -134,26 +111,26 @@ const createBackup = async (password?: string) => {
         } as any)
       : archiver('zip', { zlib: { level: 9 } })
 
-    output.on('close', () => {
-      fsx.remove(path.join(SNAPSHOT_FOLDER, source))
-    })
-
     output.on('error', (err) => {
       console.log('Problem creating backup: ', err.message)
-      fsx.remove(path.join(SNAPSHOT_FOLDER, source))
+      fsx.remove(item.destination)
     })
 
     await archive.pipe(output)
-    await archive.directory(path.join(SNAPSHOT_FOLDER, source), false)
+    await archive.directory(item.source, item.destination)
     await archive.finalize()
 
     // Make it read-writeable by everyone (so Dropbox can sync it)
-    execSync(`chmod 666 ${BACKUPS_FOLDER}/${source}.zip`)
+    execSync(`chmod 666 ${item.destination}`)
   }
+  // Remove snapshot folder
+  await fsx.remove(path.join(SNAPSHOT_FOLDER, snapshot))
+
   console.log('Zipping backups...done')
 
   // Update backup.json
   backupInfo.latestBackup = snapshot
+  backupInfo.archives = existingArchiveBackups
   await fsx.writeJSON(path.join(BACKUPS_FOLDER, 'backup.json'), backupInfo, { spaces: 2 })
   execSync(`chmod 666 ${BACKUPS_FOLDER}/backup.json`)
 
@@ -199,19 +176,20 @@ const cleanUpBackups = async () => {
 
 export default createBackup
 
+// Pulls the list of archive backups from backup.json, but also checks which
+// ones actually exist in the backup folder (and doesn't return any that are
+// missing, so they'll be backed up on the next pass)
 const getArchiveBackups = async (backupInfo: BackupInfo) => {
   const existingArchiveIds: string[] = []
   const toRemove: string[] = []
   for (const archive of backupInfo.archives) {
     if (
-      await fsx.pathExists(
+      !(await fsx.pathExists(
         path.join(BACKUPS_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME, `${archive.archiveSnapshot}.zip`)
-      )
+      ))
     )
-      existingArchiveIds.push(archive.uid)
-    else toRemove.push(archive.uid)
+      toRemove.push(archive.uid)
   }
-  backupInfo.archives = backupInfo.archives.filter((a) => !toRemove.includes(a.uid))
 
-  return existingArchiveIds
+  return backupInfo.archives.filter((a) => !toRemove.includes(a.uid))
 }
