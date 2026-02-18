@@ -52,96 +52,100 @@ const createBackup = async (password?: string) => {
     backupInfo = { latestBackup: null, archives: [] }
   }
 
-  // Get ids of all existing archive backups (and confirm snapshots still exist)
-  const existingArchiveBackups = await getArchiveBackups(backupInfo)
+  try {
+    // Get existing archive backups (and confirm snapshots still exist)
+    const existingArchiveBackups = await getArchiveBackups(backupInfo)
 
-  // Get ids of all current system archives
-  const currentSystemArchives = await getCurrentArchives()
+    // Get ids of all current system archives
+    const currentSystemArchives = await getCurrentArchives()
 
-  // Compare them and collect all missing
-  const archivesNotBackedUp = currentSystemArchives.filter(
-    (archive) => !existingArchiveBackups.map((a) => a.uid).includes(archive.uid)
-  )
+    // Compare them and collect all missing
+    const archivesNotBackedUp = currentSystemArchives.filter(
+      (archive) => !existingArchiveBackups.map((a) => a.uid).includes(archive.uid)
+    )
 
-  existingArchiveBackups.push(
-    ...archivesNotBackedUp.map((archive) => ({
-      uid: archive.uid,
-      archiveSnapshot: archive.archiveFolder,
-    }))
-  )
+    existingArchiveBackups.push(
+      ...archivesNotBackedUp.map((archive) => ({
+        uid: archive.uid,
+        archiveSnapshot: archive.archiveFolder,
+      }))
+    )
 
-  // Make new snapshot with no archives
-  const { snapshot, error } = await takeSnapshot({
-    snapshotName,
-    snapshotType: 'backup',
-  })
-
-  if (!snapshot || error) {
-    console.log('ERROR CREATING SNAPSHOT: ' + error)
-    return
-  }
-
-  const zipSources: { source: string; destination: string }[] = []
-
-  zipSources.push({
-    source: path.join(SNAPSHOT_FOLDER, snapshot),
-    destination: path.join(BACKUPS_FOLDER, `${snapshot}.zip`),
-  })
-
-  zipSources.push(
-    ...archivesNotBackedUp.map((archive) => ({
-      source: path.join(ARCHIVE_FOLDER, archive.archiveFolder),
-      destination: path.join(
-        BACKUPS_FOLDER,
-        SNAPSHOT_ARCHIVES_FOLDER_NAME,
-        `${archive.archiveFolder}.zip`
-      ),
-    }))
-  )
-
-  // Zip them using password (or unencrypted if no password)
-  console.log('Zipping backups...')
-  for (const item of zipSources) {
-    const output = fs.createWriteStream(item.destination)
-    const archive = password
-      ? archiver.create('zip-encrypted', {
-          zlib: { level: 9 },
-          encryptionMethod: 'aes256',
-          password,
-        } as any)
-      : archiver('zip', { zlib: { level: 9 } })
-
-    output.on('error', (err) => {
-      console.log('Problem creating backup: ', err.message)
-      fsx.remove(item.destination)
+    // Make new snapshot with no archives
+    const { snapshot, error } = await takeSnapshot({
+      snapshotName,
+      snapshotType: 'backup',
     })
 
-    await archive.pipe(output)
-    await archive.directory(item.source, false)
-    await archive.finalize()
+    if (!snapshot || error) {
+      console.log('ERROR CREATING SNAPSHOT: ' + error)
+      return
+    }
 
-    // Make it read-writeable by everyone (so Dropbox can sync it)
-    execSync(`chmod 666 ${item.destination}`)
+    const zipSources: { source: string; destination: string }[] = []
+
+    zipSources.push({
+      source: path.join(SNAPSHOT_FOLDER, snapshot),
+      destination: path.join(BACKUPS_FOLDER, `${snapshot}.zip`),
+    })
+
+    zipSources.push(
+      ...archivesNotBackedUp.map((archive) => ({
+        source: path.join(ARCHIVE_FOLDER, archive.archiveFolder),
+        destination: path.join(
+          BACKUPS_FOLDER,
+          SNAPSHOT_ARCHIVES_FOLDER_NAME,
+          `${archive.archiveFolder}.zip`
+        ),
+      }))
+    )
+
+    // Zip them using password (or unencrypted if no password)
+    console.log('Zipping backups...')
+    for (const item of zipSources) {
+      const output = fs.createWriteStream(item.destination)
+      const archive = password
+        ? archiver.create('zip-encrypted', {
+            zlib: { level: 9 },
+            encryptionMethod: 'aes256',
+            password,
+          } as any)
+        : archiver('zip', { zlib: { level: 9 } })
+
+      output.on('error', (err) => {
+        console.log('Problem creating backup: ', err.message)
+        fsx.remove(item.destination)
+      })
+
+      await archive.pipe(output)
+      await archive.directory(item.source, false)
+      await archive.finalize()
+
+      // Make it read-writeable by everyone (so Dropbox can sync it)
+      execSync(`chmod 666 ${item.destination}`)
+    }
+    // Remove snapshot folder
+    await fsx.remove(path.join(SNAPSHOT_FOLDER, snapshot))
+
+    console.log('Zipping backups...done')
+
+    // Update backup.json
+    backupInfo.latestBackup = snapshot
+    backupInfo.archives = existingArchiveBackups
+    await fsx.writeJSON(path.join(BACKUPS_FOLDER, 'backup.json'), backupInfo, { spaces: 2 })
+    execSync(`chmod 666 ${BACKUPS_FOLDER}/backup.json`)
+
+    await cleanUpBackups()
+
+    console.log(
+      DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
+      `Backup complete!`
+    )
+
+    if (isManualBackup) setTimeout(() => process.exit(0), 2000)
+  } catch (error) {
+    console.log('ERROR CREATING BACKUP: ', error)
   }
-  // Remove snapshot folder
-  await fsx.remove(path.join(SNAPSHOT_FOLDER, snapshot))
-
-  console.log('Zipping backups...done')
-
-  // Update backup.json
-  backupInfo.latestBackup = snapshot
-  backupInfo.archives = existingArchiveBackups
-  await fsx.writeJSON(path.join(BACKUPS_FOLDER, 'backup.json'), backupInfo, { spaces: 2 })
-  execSync(`chmod 666 ${BACKUPS_FOLDER}/backup.json`)
-
-  await cleanUpBackups()
-
-  console.log(
-    DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
-    `Backup complete!`
-  )
-
-  if (isManualBackup) setTimeout(() => process.exit(0), 2000)
 }
 
 // For running backup manually using `yarn backup`
