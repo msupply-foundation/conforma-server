@@ -344,9 +344,9 @@ const startServer = async () => {
     console.log(`\nServer listening at ${address}`)
   })
 
-  cleanUpFiles() // Runs on schedule as well as startup\
+  cleanUpFiles() // Runs on schedule as well as startup
 
-  createBackup() // Runs on schedule as well as startup
+  // createBackup(process.env.BACKUPS_PASSWORD) // Runs on schedule as well as startup
 }
 
 startServer()

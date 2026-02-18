@@ -117,7 +117,7 @@ const createBackup = async (password?: string) => {
     })
 
     await archive.pipe(output)
-    await archive.directory(item.source, item.destination)
+    await archive.directory(item.source, false)
     await archive.finalize()
 
     // Make it read-writeable by everyone (so Dropbox can sync it)
