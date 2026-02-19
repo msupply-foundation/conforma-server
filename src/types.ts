@@ -312,6 +312,7 @@ export interface ServerPreferences {
   externalApiConfigs?: ExternalApiConfigs
   envVars?: string[]
   maintenanceSite?: string
+  freeSpaceRequiredForZips?: number // GB, used in file cleanup to determine when to prune zip cache to prevent issues with new zip file creation. Default: not implemented (i.e. won't prune zip cache based on space)
 }
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
@@ -338,6 +339,7 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'externalApiConfigs',
   'envVars',
   'maintenanceSite',
+  'freeSpaceRequiredForZips',
 ]
 
 export interface WebAppPrefs {
