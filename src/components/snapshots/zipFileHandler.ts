@@ -47,9 +47,8 @@ export const getZippedSnapshot = async ({
 
   if (!fsx.existsSync(snapshotFolder)) throw new Error('Snapshot missing: ' + snapshotName)
 
-  let info: SnapshotInfo
   try {
-    info = await fsx.readJSON(path.join(snapshotFolder, `${INFO_FILE_NAME}.json`))
+    await fsx.readJSON(path.join(snapshotFolder, `${INFO_FILE_NAME}.json`))
   } catch {
     throw new Error('Snapshot info file missing: ' + snapshotName)
   }

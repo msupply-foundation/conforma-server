@@ -1,10 +1,6 @@
-import fs from 'fs/promises'
-import fsSync from 'fs'
 import fsx from 'fs-extra'
-import getFolderSize from 'get-folder-size'
 import { ARCHIVE_SUBFOLDER_NAME, INFO_FILE_NAME, SNAPSHOT_FOLDER } from '../../../constants'
 import path from 'path'
-import { SnapshotInfo } from '../../exportAndImport/types'
 import { ArchiveInfo } from '../../files/archive'
 import type { ArchiveStore } from '../ArchiveStore'
 
@@ -29,6 +25,11 @@ export const convertSnapshotToNewStructure = async (
 
     return true // indicates this was an archive-only snapshot, so calling function shouldn't continue
   }
+
+  // Remove the `archive` field from the info.json
+  const info = await fsx.readJSON(path.join(snapshotFolder, `${INFO_FILE_NAME}.json`))
+  delete info.archive
+  await fsx.writeJSON(path.join(snapshotFolder, `${INFO_FILE_NAME}.json`), info, { spaces: 2 })
 
   const archives = await getDirectoryList(
     path.join(snapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME)

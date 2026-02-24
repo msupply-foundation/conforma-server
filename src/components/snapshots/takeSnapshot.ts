@@ -24,8 +24,6 @@ import { errorMessage } from '../utilityFunctions'
 import { cleanupDataTables } from '../../lookup-table/utils/cleanupDataTables'
 import { ArchiveStore } from './ArchiveStore'
 
-const TEMP_SNAPSHOT_FOLDER_NAME = '__tempSnapshot'
-
 const takeSnapshot: SnapshotOperation = async ({
   snapshotName = DEFAULT_SNAPSHOT_NAME,
   snapshotType = 'normal',
@@ -36,6 +34,8 @@ const takeSnapshot: SnapshotOperation = async ({
   createDefaultDataFolders()
 
   await cleanupDataTables()
+
+  const TEMP_SNAPSHOT_FOLDER_NAME = `tempSnapshot_${Math.random().toString(36).substring(2, 8)}`
 
   try {
     console.log(`Taking snapshot: ${snapshotName}`)
