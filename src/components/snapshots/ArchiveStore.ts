@@ -1,7 +1,6 @@
 import fs from 'fs/promises'
 import fsx from 'fs-extra'
 import {
-  ARCHIVE_FOLDER,
   INFO_FILE_NAME,
   SNAPSHOT_ARCHIVE_FOLDER,
   SNAPSHOT_FOLDER,
@@ -54,7 +53,7 @@ export class ArchiveStore {
   // Copies the provided archive folders from the source location (defaults to
   // current archive folder) to the snapshot archive folder, and adds them to
   // the store if they are not already present.
-  public copyTo = async (archives: ArchiveInfo[], basePath: string = ARCHIVE_FOLDER) => {
+  public copyTo = async (archives: ArchiveInfo[], basePath: string = SNAPSHOT_ARCHIVE_FOLDER) => {
     for (const { archiveFolder } of archives) {
       const info = await fsx.readJson(path.join(basePath, archiveFolder, `${INFO_FILE_NAME}.json`))
       const { uid } = info

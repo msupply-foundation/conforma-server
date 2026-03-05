@@ -1,6 +1,6 @@
 import { readJSON } from 'fs-extra'
 import path from 'path'
-import { ARCHIVE_FOLDER } from '../../constants'
+import { SNAPSHOT_ARCHIVE_FOLDER } from '../../constants'
 import { ArchiveData, ArchiveInfo } from './archive'
 import { ArchiveOption } from '../exportAndImport/types'
 
@@ -16,7 +16,7 @@ export const loadArchiveData = async (source: string) => {
 
 // Gets archive data for the current system
 export const getCurrentArchives = async () => {
-  const currentArchives: ArchiveData = await readJSON(path.join(ARCHIVE_FOLDER, 'archive.json'))
+  const currentArchives: ArchiveData = await readJSON(path.join(SNAPSHOT_ARCHIVE_FOLDER, 'archive.json'))
 
   return currentArchives.history
 }
@@ -35,7 +35,7 @@ export const getSnapshotArchives = async (snapshotFolder: string) => {
 // Gets a list of system archive sub-folders to export as part of snapshot
 export const getArchiveFolders = async (option: ArchiveOption = 0) => {
   // Load archive history
-  const { archives, history } = (await loadArchiveData(ARCHIVE_FOLDER)) ?? {}
+  const { archives, history } = (await loadArchiveData(SNAPSHOT_ARCHIVE_FOLDER)) ?? {}
   if (!history || !archives) return []
 
   const from = typeof option === 'object' ? option.from ?? 0 : option

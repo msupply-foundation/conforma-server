@@ -220,6 +220,7 @@ const startServer = async () => {
             filePath,
             thumbnailPath,
             mimeType = 'application/octet-stream',
+            root,
           } = await getFilePath(uid, thumbnail)
 
           const actualPath = thumbnail ? thumbnailPath : filePath
@@ -234,7 +235,7 @@ const startServer = async () => {
           // TO-DO Check for permission to access file
           try {
             // TO-DO: Rename file back to original for download
-            return reply.sendFile(actualPath)
+            return reply.sendFile(actualPath, root)
           } catch {
             return reply.send({ success: false, message: 'Unable to retrieve file' })
           }

@@ -16,7 +16,7 @@ import fs from 'fs'
 import path from 'path'
 import { clearEmptyDirectories, crawlFileSystem, errorMessage } from '../utilityFunctions'
 import { deleteFile } from '../files/deleteFiles'
-import { ARCHIVE_FOLDER, FILES_FOLDER, GENERIC_THUMBNAILS_FOLDER } from '../../constants'
+import { FILES_FOLDER, GENERIC_THUMBNAILS_FOLDER } from '../../constants'
 import { pruneZipCacheForRequiredSpace } from '../snapshots/zipFileHandler'
 import config from '../../config'
 
@@ -33,7 +33,7 @@ const processMissingFileLinks = async () => {
 
   while (filePaths.length > 0) {
     filePaths.forEach(({ id, filePath }) => {
-      if (!fs.existsSync(path.join(FILES_FOLDER, filePath))) fileIdsToBeDeleted.push(id)
+      if (!fs.existsSync(filePath)) fileIdsToBeDeleted.push(id)
     })
     offset += BATCH_SIZE
     filePaths = await DBConnect.getFilePaths(BATCH_SIZE, offset)
@@ -50,7 +50,6 @@ export const cleanUpFiles = async () => {
     // Check if file in database and delete if not
     const checkFile = async (filePath: string) => {
       if (path.dirname(filePath) === GENERIC_THUMBNAILS_FOLDER) return
-      if (path.dirname(filePath).startsWith(ARCHIVE_FOLDER)) return
 
       const relativeFilePath = filePath.replace(FILES_FOLDER + '/', '')
       const isFileInDatabase = await DBConnect.checkIfInFileTable(relativeFilePath)

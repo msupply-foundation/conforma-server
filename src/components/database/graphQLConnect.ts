@@ -2,6 +2,7 @@ import fetch from 'node-fetch'
 import config from '../../config'
 import { getAdminJWT } from '../permissions/loginHelpers'
 import path from 'path'
+import { FILES_FOLDER, SNAPSHOT_ARCHIVE_FOLDER } from '../../constants'
 
 const endpoint = config.graphQLendpoint
 
@@ -243,7 +244,9 @@ class GraphQLdb {
     )
     return (
       data?.files?.nodes.map(({ archivePath, filePath, id }: any) => ({
-        filePath: path.join(archivePath ?? '', filePath),
+        filePath: archivePath
+          ? path.join(SNAPSHOT_ARCHIVE_FOLDER, archivePath, filePath)
+          : path.join(FILES_FOLDER, filePath),
         id,
       })) || []
     )

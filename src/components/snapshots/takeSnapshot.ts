@@ -11,18 +11,15 @@ import {
   FILES_FOLDER,
   LOCALISATION_FOLDER,
   PREFERENCES_FILE,
-  ARCHIVE_SUBFOLDER_NAME,
   GENERIC_THUMBNAILS_FOLDER,
-  ARCHIVE_FOLDER,
+  SNAPSHOT_ARCHIVE_FOLDER,
 } from '../../constants'
 import DBConnect from '../../../src/components/database/databaseConnect'
 import config from '../../config'
 import { DateTime } from 'luxon'
 import { createDefaultDataFolders } from '../files/createDefaultFolders'
-import { getCurrentArchives } from '../files/helpers'
 import { errorMessage } from '../utilityFunctions'
 import { cleanupDataTables } from '../../lookup-table/utils/cleanupDataTables'
-import { ArchiveStore } from './ArchiveStore'
 
 const takeSnapshot: SnapshotOperation = async ({
   snapshotName = DEFAULT_SNAPSHOT_NAME,
@@ -58,16 +55,11 @@ const takeSnapshot: SnapshotOperation = async ({
     // Copy main files (not archives)
     await copyFiles(tempFolder)
 
-    const archiveStore = await ArchiveStore.create()
-
-    const currentArchives = await getCurrentArchives()
-
-    await archiveStore.copyTo(currentArchives)
-
-    // Copy archive.json file to snapshot
+    // Copy archive.json metadata file to snapshot (archives themselves live in the
+    // shared archive store and don't need to be copied)
     try {
       await fsx.copy(
-        path.join(ARCHIVE_FOLDER, 'archive.json'),
+        path.join(SNAPSHOT_ARCHIVE_FOLDER, 'archive.json'),
         path.join(tempFolder, 'archive.json')
       )
     } catch {
@@ -147,14 +139,11 @@ const copyFiles = async (newSnapshotFolder: string) => {
   console.log('Exporting files...')
   const fileCopyStartTime = Date.now()
 
-  const archiveRegex = new RegExp(`.+${config.filesFolder}\/${ARCHIVE_SUBFOLDER_NAME}.*`)
-
-  // Copy files but not archive
   await fsx.copy(FILES_FOLDER, path.join(newSnapshotFolder, 'files'), {
     filter: (src) => {
       if (src === FILES_FOLDER) return true
       if (src === GENERIC_THUMBNAILS_FOLDER) return false
-      return !archiveRegex.test(src)
+      return true
     },
   })
 

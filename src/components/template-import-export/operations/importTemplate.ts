@@ -4,7 +4,7 @@ import semverCompare from 'semver/functions/compare'
 import { ApiError } from '../../../ApiError'
 import db from '../databaseMethods'
 import { filterModifiedData, getTemplateLinkedEntities } from '../utilities'
-import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../../constants'
+import { FILES_FOLDER, FILES_TEMP_FOLDER, SNAPSHOT_ARCHIVE_FOLDER } from '../../../constants'
 import config from '../../../config'
 import {
   CombinedLinkedEntities,
@@ -550,15 +550,17 @@ export const installTemplate = async (
           }
           await db.updateRecord('file', file, 'unique_id')
         }
-        const existingFilePath = path.join(FILES_FOLDER, archive_path ?? '', file_path)
+        const existingFilePath = archive_path
+          ? path.join(SNAPSHOT_ARCHIVE_FOLDER, archive_path, file_path)
+          : path.join(FILES_FOLDER, file_path)
         const incomingFileSourcePath = path.join(sourceFolder, 'files', file_path)
         if (!(await fsx.exists(existingFilePath))) {
           let destination: string
           if (
             archive_path &&
-            (await fsx.exists(path.join(FILES_FOLDER, archive_path, file_path)))
+            (await fsx.exists(path.join(SNAPSHOT_ARCHIVE_FOLDER, archive_path, file_path)))
           ) {
-            destination = path.join(FILES_FOLDER, archive_path, file_path)
+            destination = path.join(SNAPSHOT_ARCHIVE_FOLDER, archive_path, file_path)
           } else {
             destination = path.join(FILES_FOLDER, file_path)
             await db.updateRecord('file', { unique_id, archive_path: null }, 'unique_id')

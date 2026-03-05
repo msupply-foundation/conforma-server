@@ -1408,6 +1408,46 @@ const migrateData = async () => {
     await DB.changeSchema(`
       ALTER TYPE public.application_response_status ADD VALUE IF NOT EXISTS
       'REVIEW' AFTER  'SUBMITTED';`)
+
+    // Migrate archive_path values and move filesystem archives to archive
+    // store.
+    // Old format: "_ARCHIVE/{folder}/files"  →  New: "{folder}/files"
+    console.log(' - Updating archive_path values to use archive store paths')
+    await DB.changeSchema(`
+      UPDATE public.file
+        SET archive_path = REPLACE(archive_path, '_ARCHIVE/', '')
+        WHERE archive_path IS NOT NULL
+          AND archive_path LIKE '_ARCHIVE/%';
+    `)
+
+    console.log(' - Moving archive folders from files/_ARCHIVE/ to archive store')
+    const { ARCHIVE_FOLDER, SNAPSHOT_ARCHIVE_FOLDER } = await import('../../src/constants')
+    const fsx = (await import('fs-extra')).default
+    if (fsx.existsSync(ARCHIVE_FOLDER)) {
+      const entries = await fsx.readdir(ARCHIVE_FOLDER)
+      for (const entry of entries) {
+        if (entry === 'archive.json') continue
+        const src = path.join(ARCHIVE_FOLDER, entry)
+        const dest = path.join(SNAPSHOT_ARCHIVE_FOLDER, entry)
+        if (!(await fsx.pathExists(dest))) {
+          console.log(`   Moving archive: ${entry}`)
+          await fsx.move(src, dest)
+        } else {
+          // Already in store from a previous store-archives run; safe to remove
+          await fsx.remove(src)
+        }
+      }
+      // Move archive.json to the store if the store doesn't already have one
+      const srcJson = path.join(ARCHIVE_FOLDER, 'archive.json')
+      const destJson = path.join(SNAPSHOT_ARCHIVE_FOLDER, 'archive.json')
+      if ((await fsx.pathExists(srcJson)) && !(await fsx.pathExists(destJson))) {
+        await fsx.move(srcJson, destJson)
+      } else if (await fsx.pathExists(srcJson)) {
+        await fsx.remove(srcJson)
+      }
+      // Remove the now-empty _ARCHIVE directory
+      await fsx.remove(ARCHIVE_FOLDER)
+    }
   }
 
   // Other version migrations continue here...

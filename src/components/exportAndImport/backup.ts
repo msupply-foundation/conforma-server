@@ -11,7 +11,7 @@ import {
   SNAPSHOT_FOLDER,
   BACKUPS_FOLDER,
   SNAPSHOT_ARCHIVES_FOLDER_NAME,
-  ARCHIVE_FOLDER,
+  SNAPSHOT_ARCHIVE_FOLDER,
 } from '../../constants'
 import { execSync } from 'child_process'
 import { getCurrentArchives } from '../files/helpers'
@@ -91,7 +91,7 @@ const createBackup = async (password?: string) => {
 
     zipSources.push(
       ...archivesNotBackedUp.map((archive) => ({
-        source: path.join(ARCHIVE_FOLDER, archive.archiveFolder),
+        source: path.join(SNAPSHOT_ARCHIVE_FOLDER, archive.archiveFolder),
         destination: path.join(
           BACKUPS_FOLDER,
           SNAPSHOT_ARCHIVES_FOLDER_NAME,

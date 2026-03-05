@@ -8,7 +8,7 @@ import { DateTime } from 'luxon'
 import fsx from 'fs-extra'
 import path from 'path'
 import { clearEmptyDirectories } from '../utilityFunctions'
-import { ARCHIVE_FOLDER, ARCHIVE_SUBFOLDER_NAME, FILES_FOLDER } from '../../constants'
+import { FILES_FOLDER, SNAPSHOT_ARCHIVE_FOLDER } from '../../constants'
 import config from '../../config'
 import { nanoid } from 'nanoid'
 
@@ -40,7 +40,7 @@ export const archiveFiles = async (days: number = config.archiveFileAgeMinimum ?
   // Load archive history
   let archiveData: ArchiveData
   try {
-    archiveData = await fsx.readJSON(path.join(ARCHIVE_FOLDER, 'archive.json'))
+    archiveData = await fsx.readJSON(path.join(SNAPSHOT_ARCHIVE_FOLDER, 'archive.json'))
   } catch {
     archiveData = { archives: {}, history: [] }
   }
@@ -67,33 +67,32 @@ export const archiveFiles = async (days: number = config.archiveFileAgeMinimum ?
     return null
   }
 
-  // Create archive subfolder
+  // Create archive subfolder in the archive store
   const timestamp = DateTime.now()
   const timestampString = timestamp.toFormat('yyyy-LL-dd_HH-mm-ss')
   const uid = nanoid()
   const folderName = `${timestampString}_${uid.slice(0, 6)}`
-  const archivePath = path.join(ARCHIVE_SUBFOLDER_NAME, folderName)
-  await fsx.mkdirp(path.join(FILES_FOLDER, archivePath))
+  const archiveFilesPath = path.join(SNAPSHOT_ARCHIVE_FOLDER, folderName, 'files')
+  await fsx.mkdirp(archiveFilesPath)
 
-  // Move files
+  // Move files from FILES_FOLDER into SNAPSHOT_ARCHIVE_FOLDER
   for (const file of files) {
-    const newFilePath = path.join(archivePath, 'files', file.file_path)
     try {
-      await fsx.move(path.join(FILES_FOLDER, file.file_path), path.join(FILES_FOLDER, newFilePath))
-      file.archive_path = path.join(archivePath, 'files')
+      await fsx.move(
+        path.join(FILES_FOLDER, file.file_path),
+        path.join(archiveFilesPath, file.file_path)
+      )
+      file.archive_path = path.join(folderName, 'files')
     } catch {
       console.log('Problem moving', file.file_path)
     }
     const shouldMoveThumbnail = !file.thumbnail_path.startsWith(config.genericThumbnailsFolderName)
 
-    const newThumbnailPath = shouldMoveThumbnail
-      ? path.join(archivePath, 'files', file.thumbnail_path)
-      : file.thumbnail_path
     if (shouldMoveThumbnail)
       try {
         await fsx.move(
           path.join(FILES_FOLDER, file.thumbnail_path),
-          path.join(FILES_FOLDER, newThumbnailPath)
+          path.join(archiveFilesPath, file.thumbnail_path)
         )
       } catch {
         console.log('Problem moving thumbnail', file.file_path)
@@ -119,17 +118,19 @@ export const archiveFiles = async (days: number = config.archiveFileAgeMinimum ?
     totalFileSize,
   }
 
-  await fsx.writeJSON(path.join(FILES_FOLDER, archivePath, 'info.json'), archiveInfo, { spaces: 2 })
+  await fsx.writeJSON(
+    path.join(SNAPSHOT_ARCHIVE_FOLDER, folderName, 'info.json'),
+    archiveInfo,
+    { spaces: 2 }
+  )
 
   // Update archive.json
   archives[uid] = archiveInfo
   history.push(archiveInfo)
   await fsx.writeJSON(
-    path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME, 'archive.json'),
+    path.join(SNAPSHOT_ARCHIVE_FOLDER, 'archive.json'),
     { archives, history },
-    {
-      spaces: 2,
-    }
+    { spaces: 2 }
   )
 
   // Update system info
