@@ -8,7 +8,9 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 // editing. There is no "upload" endpoint, as data must be updated via
 // "modifyRecord" action to ensure changelog is written.
 export const routeRawData = async (request: FastifyRequest<any>, reply: FastifyReply) => {
-  const dataTable = `${config.dataTablePrefix}${snakeCase((request.params as any).dataTable)}`
+  const dataTable = ['organisation', 'user'].includes((request.params as any).dataTable)
+    ? (request.params as any).dataTable
+    : `${config.dataTablePrefix}${snakeCase((request.params as any).dataTable)}`
   const recordId = Number((request.params as any).id)
 
   const text = `
