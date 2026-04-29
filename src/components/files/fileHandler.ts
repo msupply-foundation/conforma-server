@@ -34,7 +34,7 @@ export async function getFilePath(uid: string, thumbnail = false) {
 
   const filePath = path.join(fileData.archive_path ?? '', fileData.file_path)
   const thumbnailPath = path.join(
-    !isGenericThumbnail ? fileData.archive_path ?? '' : '',
+    !isGenericThumbnail ? (fileData.archive_path ?? '') : '',
     fileData.thumbnail_path
   )
   const mimeType = thumbnail
@@ -164,6 +164,7 @@ export async function saveToDB({
   application_note_id,
   is_output_doc = false,
   to_be_deleted = false,
+  is_protected = false,
   mimetype,
 }: any) {
   try {
@@ -182,6 +183,7 @@ export async function saveToDB({
         file_path,
         thumbnail_path,
         file_size,
+        is_protected,
         mimetype: file ? file.mimetype : mimetype,
       }) as FilePayload
     )
