@@ -25,6 +25,7 @@ The available properties are as follows (almost  are optional, as the system has
 - **`managerCanEditLookupTables`**: If `true`, then users with the above management permission are also allowed to view/edit lookup tables. (Default: `true`)
 - **`managerCanEditLocalisation`**: Same as `managerCanEditLookupTables` but for managing [localisation configuration](https://github.com/msupply-foundation/conforma-web-app/wiki/Localisation).
 - **`previewDocsMinKeepTime`**: Documents generated as part of the Preview functionality will be periodically cleaned up, as they have no lasting use. It should be a Postgres duration string. (Default: "2 hours").
+- **`protectedFilesKeepDays`**: Files marked as "protected" (i.e. not to be permanently kept or archived) will be deleted after being in the system for this many days (days since first uploaded) (Default: 90) 
 - **`fileCleanupSchedule`**: The schedule for cleaning up (deleting) and missing files, orphan file database records, and files marked as "to be deleted" (e.g Preview docs), as per the node-schedule syntax above. (Default: daily at 1:05am UTC)
 - **`backupSchedule`**: How often system backups should run, as per the node-schedule syntax above. (Default: daily at 1:15am UTC)
 - **`backupFilePrefix`**: System backups are saved with the name format `backupFilePrefix_date_time.zip`, e.g. `conforma_backup_2023-04-04_01-00-00.zip`. (Default: "conforma_backup")

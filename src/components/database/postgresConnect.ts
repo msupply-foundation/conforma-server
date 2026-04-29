@@ -556,6 +556,7 @@ class PostgresDB {
       FROM file
       WHERE archive_path IS NULL
       AND to_be_deleted = FALSE
+      AND is_protected = FALSE
       AND timestamp < now() - interval '${duration}' 
     `
     try {

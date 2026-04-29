@@ -1408,6 +1408,11 @@ const migrateData = async () => {
     await DB.changeSchema(`
       ALTER TYPE public.application_response_status ADD VALUE IF NOT EXISTS
       'REVIEW' AFTER  'SUBMITTED';`)
+
+    console.log(' - Adding is_protected flag to file table')
+
+    await DB.changeSchema(`ALTER TABLE public.file
+        ADD COLUMN IF NOT EXISTS is_protected BOOLEAN NOT NULL DEFAULT FALSE;`)
   }
 
   // Other version migrations continue here...
