@@ -62,7 +62,6 @@ import { convertHandler, pgMiddleware } from './postgraphile'
 import { routeGetFragments } from './components/fig-tree-evaluator/routes'
 import { loadStartupSnapshot } from './components/snapshots/loadStartupSnapshot'
 import databaseConnect from './components/database/databaseConnect'
-import createBackup from './components/exportAndImport/backup'
 
 require('dotenv').config()
 
@@ -189,7 +188,14 @@ const startServer = async () => {
           // database
 
           if (zipFile) {
-            const zipFilePath = path.join(ZIP_CACHE_FOLDER, zipFile)
+            // Resolve and confirm the requested path stays inside the zip
+            // cache folder, so a crafted `?zipFile=../../etc/passwd` can't
+            // read arbitrary files via this public endpoint.
+            const zipFilePath = path.resolve(ZIP_CACHE_FOLDER, zipFile)
+            const cacheRoot = path.resolve(ZIP_CACHE_FOLDER) + path.sep
+            if (!zipFilePath.startsWith(cacheRoot)) {
+              return reply.code(400).send({ success: false, message: 'Invalid zipFile' })
+            }
             console.log('zipFilePath', zipFilePath)
 
             console.log('filename', filename)
@@ -346,8 +352,6 @@ const startServer = async () => {
   })
 
   cleanUpFiles() // Runs on schedule as well as startup
-
-  // createBackup(process.env.BACKUPS_PASSWORD) // Runs on schedule as well as startup
 }
 
 startServer()

@@ -147,7 +147,10 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
         await fsx.readdir(path.join(snapshotDestination, SNAPSHOT_ARCHIVES_FOLDER_NAME), 'utf-8')
       ).map((archiveFolder) => ({ archiveFolder }))
 
-      await archiveStore.copyTo(archiveFolders as ArchiveInfo[])
+      await archiveStore.copyTo(
+        archiveFolders as ArchiveInfo[],
+        path.join(snapshotDestination, SNAPSHOT_ARCHIVES_FOLDER_NAME)
+      )
       await fsx.remove(path.join(snapshotDestination, SNAPSHOT_ARCHIVES_FOLDER_NAME))
     }
 

@@ -3,6 +3,7 @@ import path from 'path'
 import { getSnapshotArchives } from '../../files/helpers'
 import { SNAPSHOT_FOLDER } from '../../../constants'
 import { ArchiveStore } from '../ArchiveStore'
+import { errorMessage } from '../../utilityFunctions'
 
 type Query = {
   name: string
@@ -27,9 +28,11 @@ const routeFetchArchives = async (
 
     return reply.send({ success: true, archives })
   } catch (error) {
+    console.error('Error fetching archives:', error)
     return reply.send({
       success: false,
       message: 'Error fetching archives',
+      error: errorMessage(error),
     })
   }
 }

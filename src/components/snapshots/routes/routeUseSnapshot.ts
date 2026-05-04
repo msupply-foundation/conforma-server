@@ -22,7 +22,10 @@ const routeUseSnapshot = async (
     // prefix and make a copy with the new structure before loading
     const oldSnapshotName = `OLD_${snapshotName}`
     const oldSnapshotPath = path.join(SNAPSHOT_FOLDER, oldSnapshotName)
-    await fsx.copy(fullPath, oldSnapshotPath, { overwrite: true })
+    // Don't overwrite an existing OLD_ copy — if a previous conversion was
+    // interrupted, that copy may be the only intact version of the legacy
+    // snapshot.
+    await fsx.copy(fullPath, oldSnapshotPath, { overwrite: false, errorOnExist: false })
     await convertSnapshotToNewStructure(fullPath, await ArchiveStore.create())
   }
 

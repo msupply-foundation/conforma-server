@@ -1416,14 +1416,9 @@ const migrateData = async () => {
     // Migrate archive_path values and move filesystem archives to archive
     // store.
     // Old format: "_ARCHIVE/{folder}/files"  →  New: "{folder}/files"
-    console.log(' - Updating archive_path values to use archive store paths')
-    await DB.changeSchema(`
-      UPDATE public.file
-        SET archive_path = REPLACE(archive_path, '_ARCHIVE/', '')
-        WHERE archive_path IS NOT NULL
-          AND archive_path LIKE '_ARCHIVE/%';
-    `)
-
+    // We move files first so that, if the move loop fails, the DB still
+    // references the old layout and the system keeps working until the
+    // migration is re-run.
     console.log(' - Moving archive folders from files/_ARCHIVE/ to archive store')
     const { ARCHIVE_FOLDER, SNAPSHOT_ARCHIVE_FOLDER } = await import('../../src/constants')
     const fsx = (await import('fs-extra')).default
@@ -1452,6 +1447,14 @@ const migrateData = async () => {
       // Remove the now-empty _ARCHIVE directory
       await fsx.remove(ARCHIVE_FOLDER)
     }
+
+    console.log(' - Updating archive_path values to use archive store paths')
+    await DB.changeSchema(`
+      UPDATE public.file
+        SET archive_path = REPLACE(archive_path, '_ARCHIVE/', '')
+        WHERE archive_path IS NOT NULL
+          AND archive_path LIKE E'\\_ARCHIVE/%' ESCAPE '\\';
+    `)
   }
 
   // Other version migrations continue here...
