@@ -1,0 +1,29 @@
+{
+  "cSpell.words": [
+    "Analysing",
+    "Authorised",
+    "citext",
+    "dirents",
+    "dockerise",
+    "dockerised",
+    "graphile",
+    "Initialise",
+    "initialised",
+    "luxon",
+    "Mailhog",
+    "normalised",
+    "organises",
+    "Uids",
+    "unsubmitted",
+    "userid"
+  ],
+  "files.exclude": {},
+  "cSpell.ignoreWords": ["dataviews", "statfs"],
+  "terminal.integrated.profiles.osx": {
+    "zsh (nvm)": {
+      "path": "zsh",
+      "args": ["-l", "-c", "source ~/.nvm/nvm.sh && nvm use && exec zsh"]
+    }
+  },
+  "terminal.integrated.defaultProfile.osx": "zsh (nvm)"
+}
