@@ -1,6 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { ArchiveStore } from '../ArchiveStore'
-import { getCurrentArchives } from '../../files/helpers'
 import { errorMessage } from '../../utilityFunctions'
 
 const routeListSnapshots = async (_: FastifyRequest, reply: FastifyReply) => {
@@ -10,14 +9,8 @@ const routeListSnapshots = async (_: FastifyRequest, reply: FastifyReply) => {
 
   const orphanArchives = archiveStore.getOrphans()
 
-  const fullArchiveList = archiveStore.getArchiveList()
-
-  const currentArchives = (await getCurrentArchives()).map((archive) => archive.archiveFolder)
-
-  const archivesNotInStore = currentArchives.filter((archive) => !fullArchiveList.includes(archive))
-
   try {
-    return reply.send({ snapshots, orphanArchives, archivesNotInStore })
+    return reply.send({ snapshots, orphanArchives })
   } catch (e) {
     return reply.send({
       success: false,

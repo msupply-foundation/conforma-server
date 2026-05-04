@@ -1432,7 +1432,7 @@ const migrateData = async () => {
           console.log(`   Moving archive: ${entry}`)
           await fsx.move(src, dest)
         } else {
-          // Already in store from a previous store-archives run; safe to remove
+          // Already in store from a prior migration attempt; safe to remove
           await fsx.remove(src)
         }
       }
