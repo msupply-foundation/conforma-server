@@ -506,15 +506,27 @@ class PostgresDB {
   }
 
   public cleanUpFiles = async () => {
-    const text = `
+    const toBeDeletedQuery = `
       DELETE FROM file
       WHERE to_be_deleted = true
       AND timestamp < now() - interval '${config?.previewDocsMinKeepTime ?? '2 hours'}'
       RETURNING id;
     `
+    const protectedKeepDays = config?.protectedFilesKeepDays ?? 90
+    const expiredProtectedQuery = `
+      DELETE FROM file
+      WHERE is_protected = true
+      AND timestamp < now() - interval '${protectedKeepDays} days'
+      RETURNING id;
+    `
+
     try {
-      const result = await this.query({ text })
-      return result.rows.length
+      const toBeDeletedResult = await this.query({ text: toBeDeletedQuery })
+      const expiredProtectedResult = await this.query({ text: expiredProtectedQuery })
+      return {
+        toBeDeleted: toBeDeletedResult.rows.length,
+        expiredProtected: expiredProtectedResult.rows.length,
+      }
     } catch (err) {
       throw err
     }
@@ -556,6 +568,7 @@ class PostgresDB {
       FROM file
       WHERE archive_path IS NULL
       AND to_be_deleted = FALSE
+      AND is_protected = FALSE
       AND timestamp < now() - interval '${duration}' 
     `
     try {

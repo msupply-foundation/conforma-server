@@ -65,11 +65,12 @@ export const cleanUpFiles = async () => {
     await crawlFileSystem(FILES_FOLDER, checkFile)
     await clearEmptyDirectories(FILES_FOLDER)
     const recordsMissingFiles = await processMissingFileLinks()
-    const filesCleanedUp = await DBConnect.cleanUpFiles()
+    const { toBeDeleted, expiredProtected } = await DBConnect.cleanUpFiles()
 
     console.log(`\nFiles deleted that weren't in database: ${filesMissingRecords}`)
     console.log(`File records removed due to missing files: ${recordsMissingFiles}`)
-    console.log(`Additional files cleaned up (e.g. previews): ${filesCleanedUp}`)
+    console.log(`Additional files cleaned up (e.g. previews): ${toBeDeleted}`)
+    console.log(`Expired protected files cleaned up: ${expiredProtected}`)
 
     const freeSpaceRequiredForZips = config.freeSpaceRequiredForZips
     if (freeSpaceRequiredForZips)

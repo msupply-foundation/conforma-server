@@ -296,6 +296,7 @@ export interface ServerPreferences {
   managerCanEditLookupTables?: boolean
   managerCanEditLocalisation?: boolean
   previewDocsMinKeepTime?: string
+  protectedFilesKeepDays?: number
   fileCleanupSchedule?: number[] | ScheduleObject
   staleApplicationsCleanupSchedule?: number[] | ScheduleObject
   backupSchedule?: number[] | ScheduleObject
@@ -325,6 +326,7 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'systemManagerPermissionName',
   'managerCanEditLookupTables',
   'previewDocsMinKeepTime',
+  'protectedFilesKeepDays',
   'fileCleanupSchedule',
   'backupSchedule',
   'backupFilePrefix',

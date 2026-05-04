@@ -25,6 +25,7 @@ The available properties are as follows (almost  are optional, as the system has
 - **`managerCanEditLookupTables`**: If `true`, then users with the above management permission are also allowed to view/edit lookup tables. (Default: `true`)
 - **`managerCanEditLocalisation`**: Same as `managerCanEditLookupTables` but for managing [localisation configuration](https://github.com/msupply-foundation/conforma-web-app/wiki/Localisation).
 - **`previewDocsMinKeepTime`**: Documents generated as part of the Preview functionality will be periodically cleaned up, as they have no lasting use. It should be a Postgres duration string. (Default: "2 hours").
+- **`protectedFilesKeepDays`**: Files marked as "protected" (i.e. not to be permanently kept or archived) will be deleted after being in the system for this many days (days since first uploaded) (Default: 90) 
 - **`fileCleanupSchedule`**: The schedule for cleaning up (deleting) and missing files, orphan file database records, and files marked as "to be deleted" (e.g Preview docs), as per the node-schedule syntax above. (Default: daily at 1:05am UTC)
 - **`backupSchedule`**: How often system backups should run, as per the node-schedule syntax above. (Default: daily at 1:15am UTC)
 - **`backupFilePrefix`**: System backups are saved with the name format `backupFilePrefix_date_time.zip`, e.g. `conforma_backup_2023-04-04_01-00-00.zip`. (Default: "conforma_backup")
@@ -33,7 +34,7 @@ The available properties are as follows (almost  are optional, as the system has
 - **`testingEmail`**: During development and on a testing server, we don't want emails being sent to real people. If this property is set, and the site is not running on the designated host (as defined in `siteHost` below), then all emails will be send to this address instead. (If no `testingEmail` is specified, no emails will be sent at all)
 - **`emailTestMode`**: Can be set to `false` to override the `testingEmail` behaviour -- i.e. emails will be sent to live recipients regardless of which host it's running on. (Default: `true`)
 - **`archiveSchedule`**: Schedule for [archiving system files](File-Archiving.md), as per the node-schedule syntax above. (Default: twice per week on Weds/Sun at 1:10am UTC)
-- **`archiveMinSize`**: Archive-able files much reach a total size of at least this value (in `MB`), otherwise archiving will be skipped. (Default: `100`)
+- **`archiveMinSize`**: Archive-able files must reach a total size of at least this value (in `MB`), otherwise archiving will be skipped. (Default: `100`)
 - **`archiveFileAgeMinimum`**: The number of days old a file needs to be before it is archived. (Default: 7)
 - **`locale`**: The BCP 47 locale string used for displaying date/times (in the console). See the [Luxon documentation](https://www.science.co.il/language/Locale-codes.php) for more explanation. (Default: "en-US" probably, may depend on host system.) Note that this is distinct from the "locale" value stored in localisations, which affects how dates, etc. appear in the front end.
 - **`timezone`**: The for displaying date/times as well as for the event schedulers (above). See [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) for a full list of available timezone codes. (Default: host system timezone)
