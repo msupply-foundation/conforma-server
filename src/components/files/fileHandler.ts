@@ -16,7 +16,7 @@ import DBConnect from '../database/databaseConnect'
 import createThumbnail from './createThumbnails'
 import { FilePayload } from '../../types'
 import { File } from '../../generated/graphql'
-import { FILES_FOLDER } from '../../constants'
+import { FILES_FOLDER, SNAPSHOT_ARCHIVE_FOLDER } from '../../constants'
 
 export const { filesFolder, imagesFolder, genericThumbnailsFolderName } = config
 export const filesPath = path.join(getAppEntryPointDir(), filesFolder)
@@ -32,6 +32,9 @@ export async function getFilePath(uid: string, thumbnail = false) {
   const isGenericThumbnail =
     thumbnail && fileData.thumbnail_path.startsWith(config.genericThumbnailsFolderName)
 
+  const isArchived = !!fileData.archive_path
+  const root = isArchived ? SNAPSHOT_ARCHIVE_FOLDER : FILES_FOLDER
+
   const filePath = path.join(fileData.archive_path ?? '', fileData.file_path)
   const thumbnailPath = path.join(
     !isGenericThumbnail ? (fileData.archive_path ?? '') : '',
@@ -45,6 +48,7 @@ export async function getFilePath(uid: string, thumbnail = false) {
     thumbnailPath,
     originalFilename: fileData.original_filename,
     mimeType,
+    root,
   }
 }
 

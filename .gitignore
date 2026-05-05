@@ -48,6 +48,7 @@ typings/
 /preferences
 /snapshot_test_scripts
 /backups
+/__zip_cache
 
 # Folder where local config files can be stored
 /local

@@ -3,12 +3,12 @@ import fsSync from 'fs'
 import fsx from 'fs-extra'
 import path from 'path'
 import { execSync } from 'child_process'
-import StreamZip from 'node-stream-zip'
 import DBConnect from '../../../src/components/database/databaseConnect'
 import { updateRowPolicies } from '../permissions/rowLevelPolicyHelpers'
 import { SnapshotOperation } from '../exportAndImport/types'
 import semverCompare from 'semver/functions/compare'
-import config, { refreshConfig } from '../../../src/config'
+import config from '../../../src/config'
+import { refreshConfig } from '../../../src/refreshConfig'
 // @ts-ignore
 import delay from 'delay-sync'
 import { createDefaultDataFolders } from '../files/createDefaultFolders'
@@ -19,13 +19,10 @@ import {
   PREFERENCES_FILE,
   INFO_FILE_NAME,
   PREFERENCES_FOLDER,
-  ARCHIVE_TEMP_FOLDER,
-  ARCHIVE_SUBFOLDER_NAME,
   LOCALISATION_FOLDER,
-  ARCHIVE_FOLDER,
-  ARCHIVE_TEMP_FOLDER_NAME,
+  SNAPSHOT_ARCHIVE_FOLDER,
 } from '../../constants'
-import { findArchiveSources } from '../files/helpers'
+import { getSnapshotArchives } from '../files/helpers'
 import { errorMessage } from '../utilityFunctions'
 import { cleanupDataTables } from '../../lookup-table/utils/cleanupDataTables'
 import { getTimeString } from './takeSnapshot'
@@ -41,18 +38,7 @@ const useSnapshot: SnapshotOperation = async ({ snapshotName }) => {
 
     const snapshotFolder = path.join(SNAPSHOT_FOLDER, snapshotName)
 
-    if (!fsx.existsSync(snapshotFolder)) {
-      if (!fsx.existsSync(`${snapshotFolder}.zip`))
-        throw new Error('Snapshot missing: ' + snapshotName)
-
-      // If the folder doesn't exist, but the .zip file does, then unzip it and
-      // carry on
-      console.log('Unzipping ' + `${snapshotFolder}.zip`)
-      await fsx.ensureDir(snapshotFolder)
-      const zip = new StreamZip.async({ file: `${snapshotFolder}.zip` })
-      await zip.extract(null, snapshotFolder)
-      await zip.close()
-    }
+    if (!fsx.existsSync(snapshotFolder)) throw new Error('Snapshot missing: ' + snapshotName)
 
     // Don't proceed if snapshot version higher than current installation
     const infoFile = path.join(snapshotFolder, `${INFO_FILE_NAME}.json`)
@@ -161,57 +147,50 @@ const useSnapshot: SnapshotOperation = async ({ snapshotName }) => {
 }
 
 const copyFiles = async (snapshotFolder: string) => {
-  // Copy files but not archive
-  const archiveRegex = new RegExp(`.+\/${ARCHIVE_SUBFOLDER_NAME}.*`)
-  await fsx.copy(path.join(snapshotFolder, 'files'), FILES_FOLDER, {
-    filter: (src) => {
-      if (src === FILES_FOLDER) return true
-      return !archiveRegex.test(src)
-    },
-    overwrite: true,
-  })
-  // Restore the temp archives folder
-  await fsx.emptyDir(path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME))
-  await fsx.move(ARCHIVE_TEMP_FOLDER, path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME), {
-    overwrite: true,
-  })
+  await fsx.copy(path.join(snapshotFolder, 'files'), FILES_FOLDER, { overwrite: true })
 
-  // Restore "archive.json" from snapshot
+  // Restore "archive.json" from snapshot into the archive store
   try {
     await fsx.copy(
-      path.join(snapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME, 'archive.json'),
-      path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME, 'archive.json')
+      path.join(snapshotFolder, 'archive.json'),
+      path.join(SNAPSHOT_ARCHIVE_FOLDER, 'archive.json')
     )
   } catch {
     console.log('No archive.json in snapshot')
   }
 }
 
-// Removes the contents of the "files" folder, *except* for the Temp Archives
+// Removes the contents of the "files" folder
 const removeFiles = async () => {
   const contents = await fsx.readdir(FILES_FOLDER)
   for (const item of contents) {
-    if (item === ARCHIVE_TEMP_FOLDER_NAME) continue
     await fsx.remove(path.join(FILES_FOLDER, item))
   }
 }
 
+// Verifies that all archives required by the snapshot are present in the
+// archive store. Archives live permanently in SNAPSHOT_ARCHIVE_FOLDER so no
+// moving is needed — we just confirm nothing is missing.
 const collectArchives = async (snapshotFolder: string) => {
-  const archiveSources = await findArchiveSources(snapshotFolder)
-  // Copy all archives to temp folder
-  await fsx.emptyDir(ARCHIVE_TEMP_FOLDER)
-  for (const [source, folder] of archiveSources) {
-    // For archives that are already in the current active system
-    // (`/files/_ARCHIVE`), it's a lot faster to just MOVE them rather than
-    // copy. Archives found elsewhere must be copied, as we don't want to
-    // destroy the source.
-    if (source.startsWith(ARCHIVE_FOLDER)) {
-      console.log('Moving current archive:', folder)
-      await fsx.move(path.join(source, folder), path.join(ARCHIVE_TEMP_FOLDER, folder))
-    } else {
-      console.log('Copying stored archive:', folder)
-      await fsx.copy(path.join(source, folder), path.join(ARCHIVE_TEMP_FOLDER, folder))
+  const requiredArchiveFolders = (await getSnapshotArchives(snapshotFolder)).map(
+    ({ archiveFolder }) => archiveFolder
+  )
+
+  if (requiredArchiveFolders.length === 0) {
+    console.log('No archives associated with this snapshot')
+    return
+  }
+
+  const missingArchives: string[] = []
+
+  for (const folder of requiredArchiveFolders) {
+    if (!(await fsx.pathExists(path.join(SNAPSHOT_ARCHIVE_FOLDER, folder)))) {
+      missingArchives.push(folder)
     }
+  }
+
+  if (missingArchives.length > 0) {
+    throw new Error(`Missing archive folders:\n    ${missingArchives.join('\n    ')}`)
   }
 }
 

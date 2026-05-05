@@ -5,6 +5,7 @@ import fastifyCors from '@fastify/cors'
 import fastifyWebsocket from '@fastify/websocket'
 import { DateTime, Settings } from 'luxon'
 import path from 'path'
+import fs from 'fs'
 import { loadActionPlugins } from './components/pluginsConnect'
 import {
   routeUserInfo,
@@ -46,7 +47,7 @@ import migrateData from '../database/migration/migrateData'
 import routeArchiveFiles from './components/files/routeArchiveFiles'
 import { Schedulers } from './components/scheduler'
 import { AccessExternalApiQuery, routeAccessExternalApi } from './components/external-apis/routes'
-import { DEFAULT_LOGOUT_TIME } from './constants'
+import { DEFAULT_LOGOUT_TIME, ZIP_CACHE_FOLDER } from './constants'
 import { updateRowPolicies } from './components/permissions/rowLevelPolicyHelpers'
 import { routeRawData } from './components/other/routeRawData'
 import {
@@ -181,19 +182,58 @@ const startServer = async () => {
         server.get('/verify', routeVerification)
         // File download endpoint (get by unique ID)
         server.get('/file', async function (request: any, reply: any) {
-          const { uid, thumbnail = false } = request.query
+          const { uid, thumbnail = false, zipFile, filename } = request.query
+          // zipFile is used when downloading files from a snapshot zip, so we
+          // look in the zip cache folder instead of querying uid in the
+          // database
+
+          if (zipFile) {
+            // Resolve and confirm the requested path stays inside the zip
+            // cache folder, so a crafted `?zipFile=../../etc/passwd` can't
+            // read arbitrary files via this public endpoint.
+            const zipFilePath = path.resolve(ZIP_CACHE_FOLDER, zipFile)
+            const cacheRoot = path.resolve(ZIP_CACHE_FOLDER) + path.sep
+            if (!zipFilePath.startsWith(cacheRoot)) {
+              return reply.code(400).send({ success: false, message: 'Invalid zipFile' })
+            }
+            console.log('zipFilePath', zipFilePath)
+
+            console.log('filename', filename)
+
+            try {
+              const stats = fs.statSync(zipFilePath)
+              const downloadFilename = filename || zipFile
+              reply.header('Content-Type', 'application/zip')
+              reply.header('Content-Length', stats.size)
+              reply.header(
+                'Content-Disposition',
+                `attachment; filename="${encodeURIComponent(
+                  downloadFilename
+                )}"; filename*=UTF-8''${encodeURIComponent(downloadFilename)}`
+              )
+              const stream = fs.createReadStream(zipFilePath)
+              stream.on('error', () => {
+                reply.send({ success: false, message: 'Unable to retrieve file' })
+              })
+              return reply.send(stream)
+            } catch {
+              return reply.send({ success: false, message: 'Unable to retrieve file' })
+            }
+          }
+
           const {
             originalFilename,
             filePath,
             thumbnailPath,
             mimeType = 'application/octet-stream',
+            root,
           } = await getFilePath(uid, thumbnail)
 
           const actualPath = thumbnail ? thumbnailPath : filePath
           reply.header('Content-Type', mimeType)
           reply.header(
             'Content-Disposition',
-            `inline; filename="${encodeURIComponent(
+            `attachment; filename="${encodeURIComponent(
               originalFilename
             )}"; filename*=UTF-8''${encodeURIComponent(originalFilename)}`
           )
@@ -201,12 +241,14 @@ const startServer = async () => {
           // TO-DO Check for permission to access file
           try {
             // TO-DO: Rename file back to original for download
-            return reply.sendFile(actualPath)
+            return reply.sendFile(actualPath, root)
           } catch {
             return reply.send({ success: false, message: 'Unable to retrieve file' })
           }
         })
+
         server.get('/fragments', routeGetFragments)
+
         done()
       },
       { prefix: '/public' }

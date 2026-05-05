@@ -1410,9 +1410,51 @@ const migrateData = async () => {
       'REVIEW' AFTER  'SUBMITTED';`)
 
     console.log(' - Adding is_protected flag to file table')
-
     await DB.changeSchema(`ALTER TABLE public.file
         ADD COLUMN IF NOT EXISTS is_protected BOOLEAN NOT NULL DEFAULT FALSE;`)
+
+    // Migrate archive_path values and move filesystem archives to archive
+    // store.
+    // Old format: "_ARCHIVE/{folder}/files"  →  New: "{folder}/files"
+    // We move files first so that, if the move loop fails, the DB still
+    // references the old layout and the system keeps working until the
+    // migration is re-run.
+    console.log(' - Moving archive folders from files/_ARCHIVE/ to archive store')
+    const { ARCHIVE_FOLDER, SNAPSHOT_ARCHIVE_FOLDER } = await import('../../src/constants')
+    const fsx = (await import('fs-extra')).default
+    if (fsx.existsSync(ARCHIVE_FOLDER)) {
+      const entries = await fsx.readdir(ARCHIVE_FOLDER)
+      for (const entry of entries) {
+        if (entry === 'archive.json') continue
+        const src = path.join(ARCHIVE_FOLDER, entry)
+        const dest = path.join(SNAPSHOT_ARCHIVE_FOLDER, entry)
+        if (!(await fsx.pathExists(dest))) {
+          console.log(`   Moving archive: ${entry}`)
+          await fsx.move(src, dest)
+        } else {
+          // Already in store from a prior migration attempt; safe to remove
+          await fsx.remove(src)
+        }
+      }
+      // Move archive.json to the store if the store doesn't already have one
+      const srcJson = path.join(ARCHIVE_FOLDER, 'archive.json')
+      const destJson = path.join(SNAPSHOT_ARCHIVE_FOLDER, 'archive.json')
+      if ((await fsx.pathExists(srcJson)) && !(await fsx.pathExists(destJson))) {
+        await fsx.move(srcJson, destJson)
+      } else if (await fsx.pathExists(srcJson)) {
+        await fsx.remove(srcJson)
+      }
+      // Remove the now-empty _ARCHIVE directory
+      await fsx.remove(ARCHIVE_FOLDER)
+    }
+
+    console.log(' - Updating archive_path values to use archive store paths')
+    await DB.changeSchema(`
+      UPDATE public.file
+        SET archive_path = REPLACE(archive_path, '_ARCHIVE/', '')
+        WHERE archive_path IS NOT NULL
+          AND archive_path LIKE E'\\_ARCHIVE/%' ESCAPE '\\';
+    `)
   }
 
   // Other version migrations continue here...

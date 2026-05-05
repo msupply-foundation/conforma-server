@@ -1,6 +1,7 @@
 import { readJSONSync, writeJson } from 'fs-extra'
 import { combineRequestParams, errorMessage, isObject } from '../../components/utilityFunctions'
-import config, { refreshConfig } from '../../config'
+import config from '../../config'
+import { refreshConfig } from '../../refreshConfig'
 import { DEFAULT_LOGOUT_TIME, PREFERENCES_FILE } from '../../constants'
 import { Preferences } from '../../types'
 import databaseConnect from '../database/databaseConnect'

@@ -42,6 +42,7 @@ The available properties are as follows (almost  are optional, as the system has
 If set to `0`, auto logout will be disabled.
 - **`envVars`**: System environment variables can be made available to `applicationData` (so can be used in actions). However, we don't want to expose the entire environment state in this way, so only environment variables that are explicitly listed here (as an array of strings) will be passed through. These will be accessible at `environmentData.env` within the `applicationData` object.
 - **`maintenanceSite`**: When the server is put into "Maintenance" mode (by an Admin), users will be re-directed to this site. (Default: `https://msupply.foundation/projects/conforma`)
+- **`freeSpaceRequiredForZips`**: When downloading [snapshots](Snapshots.md), files are zipped, and the zips are stored in `__zip_cache` folder for quicker access on subsequent downloads. If this property is set (a number in GB), the file cleanup routine will delete larger files from the zip cache to ensure we have this amount of disk space free.
 
 ### Web app
 

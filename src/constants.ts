@@ -10,6 +10,7 @@ export const SNAPSHOT_FILE_NAME = 'snapshot'
 export const ARCHIVE_SUBFOLDER_NAME = '_ARCHIVE'
 export const ARCHIVE_TEMP_FOLDER_NAME = '__TEMP_Archives'
 export const SNAPSHOT_ARCHIVES_FOLDER_NAME = '_archives'
+export const SNAPSHOT_ARCHIVE_STORE_FOLDER_NAME = '_archive_store'
 export const OPTIONS_FILE_NAME = 'options'
 export const FILES_TEMP_FOLDER_NAME = '__TEMP_Files'
 export const INFO_FILE_NAME = 'info'
@@ -25,10 +26,14 @@ export const MAX_32_BIT_INT = 2_147_483_647
 export const ROOT_FOLDER = path.join(getAppEntryPointDir(), '../')
 export const DATABASE_FOLDER = path.join(getAppEntryPointDir(), config.databaseFolder)
 export const SNAPSHOT_FOLDER = path.join(DATABASE_FOLDER, SNAPSHOT_SUBFOLDER)
-export const SNAPSHOT_ARCHIVE_FOLDER = path.join(SNAPSHOT_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME)
+export const SNAPSHOT_ARCHIVE_FOLDER = path.join(
+  SNAPSHOT_FOLDER,
+  SNAPSHOT_ARCHIVE_STORE_FOLDER_NAME
+)
 export const BACKUPS_FOLDER = path.join(getAppEntryPointDir(), config.backupsFolder)
 export const FILES_FOLDER = path.join(getAppEntryPointDir(), config.filesFolder)
 export const ARCHIVE_FOLDER = path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME)
+export const ZIP_CACHE_FOLDER = path.join(getAppEntryPointDir(), config.zipCacheFolder)
 // We want to keep ARCHIVE_TEMP_FOLDER inside FILES_FOLDER so that, when
 // dockerised, the archives are "collected" within the same volume. This
 // substantially speeds up restoring a large snapshot when most of the required
