@@ -30,7 +30,8 @@ const routeUseSnapshot = async (
       if (await fsx.pathExists(targetPath)) {
         return reply.send({
           success: false,
-          message: `Snapshot already exists: ${targetName}`,
+          message: 'There was a problem loading this snapshot',
+          error: `Snapshot already exists: ${targetName}`,
         })
       }
       await fsx.copy(requestedPath, targetPath)
