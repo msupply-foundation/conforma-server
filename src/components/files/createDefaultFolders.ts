@@ -17,11 +17,10 @@ import {
   SNAPSHOT_ARCHIVE_FOLDER,
   ZIP_CACHE_FOLDER,
 } from '../../constants'
-import fs from 'fs'
+import fsx from 'fs-extra'
 import path from 'path'
 import { execSync } from 'child_process'
 import { makeFolder } from '../utilityFunctions'
-import { zipSnapshot } from '../snapshots/takeSnapshot'
 
 export function createDefaultDataFolders() {
   try {
@@ -30,13 +29,16 @@ export function createDefaultDataFolders() {
     makeFolder(BACKUPS_FOLDER, 'Creating BACKUPS folder')
     makeFolder(ZIP_CACHE_FOLDER, 'Creating ZIP CACHE folder')
     // Copy core_templates to snapshots folder
-    // execSync(`cp -r '${DATABASE_FOLDER}/${BASE_SNAPSHOT_NAME}' '${SNAPSHOT_FOLDER}'`)
+    fsx.copySync(
+      path.join(DATABASE_FOLDER, BASE_SNAPSHOT_NAME),
+      path.join(SNAPSHOT_FOLDER, BASE_SNAPSHOT_NAME)
+    )
   } catch {
     console.log('\nProblem creating SNAPSHOTS folder\n')
   }
 
   try {
-    if (!fs.existsSync(FILES_FOLDER)) {
+    if (!fsx.existsSync(FILES_FOLDER)) {
       makeFolder(FILES_FOLDER, 'Creating FILES folder')
       execSync(`cp -r '${BASE_SNAPSHOT_FOLDER}/files/.' '${FILES_FOLDER}'`)
     }
@@ -51,8 +53,8 @@ export function createDefaultDataFolders() {
   // fetch them (and preferences) from core templates
   try {
     if (
-      !fs.existsSync(LOCALISATION_FOLDER) ||
-      !fs.existsSync(path.join(LOCALISATION_FOLDER, 'languages.json'))
+      !fsx.existsSync(LOCALISATION_FOLDER) ||
+      !fsx.existsSync(path.join(LOCALISATION_FOLDER, 'languages.json'))
     ) {
       makeFolder(LOCALISATION_FOLDER, 'Restoring LOCALISATIONS and PREFERENCES')
       execSync(`cp -r '${BASE_SNAPSHOT_FOLDER}/localisation/.' '${LOCALISATION_FOLDER}'`)
