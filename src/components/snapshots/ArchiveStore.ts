@@ -1,6 +1,7 @@
 import fs from 'fs/promises'
 import fsx from 'fs-extra'
 import {
+  ARCHIVE_SUBFOLDER_NAME,
   INFO_FILE_NAME,
   SNAPSHOT_ARCHIVE_FOLDER,
   SNAPSHOT_FOLDER,
@@ -19,6 +20,7 @@ type SnapshotWithArchiveInfo = SnapshotInfo & {
   timestamp: string
   missingArchives: string[]
   archiveSize: number
+  isLegacy: boolean
 }
 export class ArchiveStore {
   private store: Store = {}
@@ -144,6 +146,10 @@ export class ArchiveStore {
 
       const missingArchives = this.getMissing(archives)
 
+      const isLegacy = await fsx.pathExists(
+        path.join(SNAPSHOT_FOLDER, dirent.name, 'files', ARCHIVE_SUBFOLDER_NAME, 'archive.json')
+      )
+
       const name = dirent.name.replace(timestampStringExpression, '')
 
       snapshots.push({
@@ -154,6 +160,7 @@ export class ArchiveStore {
         timestamp,
         missingArchives,
         archiveSize,
+        isLegacy,
       })
     }
 
