@@ -39,7 +39,6 @@ export type ExportAndImportOptions = {
 export interface SnapshotInfo {
   timestamp: string
   version: string
-  // archive?: ArchiveInfo[]
 }
 
 export type SnapshotType = 'normal' | 'backup'
@@ -47,7 +46,6 @@ export type SnapshotType = 'normal' | 'backup'
 export type SnapshotOperation = (props: {
   snapshotName: string
   snapshotType?: SnapshotType
-  // archive?: ArchiveOption
 }) => Promise<{ success: boolean; message: string; error?: string; snapshot?: string }>
 
 export type ArchiveSnapshotOperation = (props: {

@@ -11,26 +11,44 @@ const routeUseSnapshot = async (
   request: FastifyRequest<{ Querystring: { name?: string } }>,
   reply: FastifyReply
 ) => {
-  const snapshotName = request.query.name
+  const requestedName = request.query.name
 
-  if (!snapshotName) return reply.send({ success: false, message: 'Snapshot name missing' })
+  if (!requestedName) return reply.send({ success: false, message: 'Snapshot name missing' })
 
-  const fullPath = path.join(SNAPSHOT_FOLDER, snapshotName)
+  const requestedPath = path.join(SNAPSHOT_FOLDER, requestedName)
+  let nameToLoad = requestedName
 
-  if (await fsx.pathExists(path.join(fullPath, 'files', ARCHIVE_SUBFOLDER_NAME, 'archive.json'))) {
-    // This is an OLD structure snapshot, so we'll make a copy with "OLD_"
-    // prefix and make a copy with the new structure before loading
-    const oldSnapshotName = `OLD_${snapshotName}`
-    const oldSnapshotPath = path.join(SNAPSHOT_FOLDER, oldSnapshotName)
-    // Don't overwrite an existing OLD_ copy — if a previous conversion was
-    // interrupted, that copy may be the only intact version of the legacy
-    // snapshot.
-    await fsx.copy(fullPath, oldSnapshotPath, { overwrite: false, errorOnExist: false })
-    await convertSnapshotToNewStructure(fullPath, await ArchiveStore.create())
+  if (
+    await fsx.pathExists(path.join(requestedPath, 'files', ARCHIVE_SUBFOLDER_NAME, 'archive.json'))
+  ) {
+    if (requestedName.startsWith('OLD_')) {
+      // Loading an already-prefixed OLD_ legacy snapshot: convert into a
+      // sibling without the OLD_ prefix instead of stacking another OLD_ on
+      // top. The original OLD_ folder stays as the intact legacy copy.
+      const targetName = requestedName.replace(/^OLD_/, '')
+      const targetPath = path.join(SNAPSHOT_FOLDER, targetName)
+      if (await fsx.pathExists(targetPath)) {
+        return reply.send({
+          success: false,
+          message: `Snapshot already exists: ${targetName}`,
+        })
+      }
+      await fsx.copy(requestedPath, targetPath)
+      await convertSnapshotToNewStructure(targetPath, await ArchiveStore.create())
+      nameToLoad = targetName
+    } else {
+      // Standard case: back the legacy snapshot up to OLD_<name>, then
+      // convert the original in place. Don't overwrite an existing OLD_ copy
+      // — if a previous conversion was interrupted, that copy may be the
+      // only intact version of the legacy snapshot.
+      const oldSnapshotPath = path.join(SNAPSHOT_FOLDER, `OLD_${requestedName}`)
+      await fsx.copy(requestedPath, oldSnapshotPath, { overwrite: false, errorOnExist: false })
+      await convertSnapshotToNewStructure(requestedPath, await ArchiveStore.create())
+    }
   }
 
   try {
-    reply.send(await useSnapshot({ snapshotName }))
+    reply.send(await useSnapshot({ snapshotName: nameToLoad }))
   } catch (e) {
     console.error('Error loading snapshot:', e)
     reply.send({
