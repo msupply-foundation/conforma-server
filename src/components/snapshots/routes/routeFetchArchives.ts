@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import path from 'path'
 import { getSnapshotArchives } from '../../files/helpers'
 import { SNAPSHOT_FOLDER } from '../../../constants'
-import { ArchiveStore } from '../ArchiveStore'
+import { listArchives } from '../snapshotStore'
 import { errorMessage } from '../../utilityFunctions'
 
 type Query = {
@@ -18,15 +18,14 @@ const routeFetchArchives = async (
   if (!snapshotName) return reply.send({ success: false, message: 'Snapshot name missing' })
 
   try {
-    const archiveStore = await ArchiveStore.create()
+    const archives = await listArchives()
 
-    const archives = await getSnapshotArchives(path.join(SNAPSHOT_FOLDER, snapshotName))
-    archives.forEach((archive) => {
-      if (!archive.totalFileSize)
-        archive.totalFileSize = archiveStore.getArchiveDetail(archive.uid)?.totalFileSize
+    const snapshotArchives = await getSnapshotArchives(path.join(SNAPSHOT_FOLDER, snapshotName))
+    snapshotArchives.forEach((archive) => {
+      if (!archive.totalFileSize) archive.totalFileSize = archives[archive.uid]?.totalFileSize
     })
 
-    return reply.send({ success: true, archives })
+    return reply.send({ success: true, archives: snapshotArchives })
   } catch (error) {
     console.error('Error fetching archives:', error)
     return reply.send({

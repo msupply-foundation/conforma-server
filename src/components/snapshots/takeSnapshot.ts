@@ -20,6 +20,7 @@ import { DateTime } from 'luxon'
 import { createDefaultDataFolders } from '../files/createDefaultFolders'
 import { errorMessage } from '../utilityFunctions'
 import { cleanupDataTables } from '../../lookup-table/utils/cleanupDataTables'
+import { listArchives, measureSnapshotSizes } from './snapshotStore'
 
 const takeSnapshot: SnapshotOperation = async ({
   snapshotName = DEFAULT_SNAPSHOT_NAME,
@@ -72,8 +73,13 @@ const takeSnapshot: SnapshotOperation = async ({
     // Copy prefs
     execSync(`cp '${PREFERENCES_FILE}' '${tempFolder}'`)
 
-    // Save snapshot info (version, timestamp, etc)
-    const info = getSnapshotInfo()
+    // Save snapshot info (version, timestamp, sizes). Measure before writing
+    // info.json so the size reflects the snapshot's data content; the
+    // ~hundred-byte info.json itself isn't counted, which is rounding noise
+    // against multi-MB database dumps.
+    const archives = await listArchives()
+    const { snapshotSize, archiveSize } = await measureSnapshotSizes(tempFolder, archives)
+    const info = getSnapshotInfo({ snapshotSize, archiveSize })
     await fs.promises.writeFile(
       path.join(tempFolder, `${INFO_FILE_NAME}.json`),
       JSON.stringify(info, null, ' ')
@@ -126,10 +132,12 @@ export const getTimeString = (startTime: number) => {
   return `${Math.round(timeInMs / 100) / 10} seconds`
 }
 
-const getSnapshotInfo = () => {
+const getSnapshotInfo = (sizes: { snapshotSize: number; archiveSize: number }) => {
   const snapshotInfo: SnapshotInfo = {
     timestamp: DateTime.now().toISO(),
     version: config.version,
+    snapshotSize: sizes.snapshotSize,
+    archiveSize: sizes.archiveSize,
   }
 
   return snapshotInfo

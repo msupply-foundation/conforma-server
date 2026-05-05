@@ -1,26 +1,20 @@
 import fsx from 'fs-extra'
 import { ARCHIVE_SUBFOLDER_NAME, INFO_FILE_NAME, SNAPSHOT_FOLDER } from '../../../constants'
 import path from 'path'
-import { ArchiveInfo } from '../../files/archive'
-import type { ArchiveStore } from '../ArchiveStore'
+import { copyArchivesIfMissing, listArchives, rewriteSnapshotSizes } from '../snapshotStore'
 
 export const timestampStringExpression = /_\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d$/
 
-export const convertSnapshotToNewStructure = async (
-  snapshotFolder: string,
-  archiveStore: ArchiveStore
-) => {
+export const convertSnapshotToNewStructure = async (snapshotFolder: string) => {
   const snapshotFolderName = path.basename(snapshotFolder)
 
   if (snapshotFolderName.startsWith('ARCHIVE_')) {
     // Archive-only snapshot, just move the contents to the new location
     const archives = await getDirectoryList(snapshotFolder)
 
-    await archiveStore.copyTo(
-      archives
-        .filter((item) => item !== 'archive.json' && item !== 'info.json')
-        .map((archiveFolder) => ({ archiveFolder }) as ArchiveInfo),
-      path.join(snapshotFolder)
+    await copyArchivesIfMissing(
+      archives.filter((item) => item !== 'archive.json' && item !== 'info.json'),
+      snapshotFolder
     )
 
     return true // indicates this was an archive-only snapshot, so calling function shouldn't continue
@@ -36,18 +30,18 @@ export const convertSnapshotToNewStructure = async (
 
   const oldArchiveFolder = path.join(snapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME)
 
-  // Old-format snapshot with no archives — nothing more to do
+  // Old-format snapshot with no archives — nothing more to do besides
+  // backfilling the size fields, since the snapshot's contents are now final.
   if (!(await fsx.pathExists(oldArchiveFolder))) {
     await fsx.remove(path.join(SNAPSHOT_FOLDER, `${snapshotFolderName}.zip`))
+    await rewriteSnapshotSizes(snapshotFolder, await listArchives())
     return
   }
 
   const archives = await getDirectoryList(oldArchiveFolder)
 
-  await archiveStore.copyTo(
-    archives
-      .filter((item) => item !== 'archive.json')
-      .map((archiveFolder) => ({ archiveFolder }) as ArchiveInfo),
+  await copyArchivesIfMissing(
+    archives.filter((item) => item !== 'archive.json'),
     oldArchiveFolder
   )
 
@@ -58,6 +52,10 @@ export const convertSnapshotToNewStructure = async (
 
   await fsx.remove(oldArchiveFolder)
   await fsx.remove(path.join(SNAPSHOT_FOLDER, `${snapshotFolderName}.zip`))
+
+  // The in-place mutation above changed the snapshot folder size and may
+  // have populated archive.json — recompute both size fields.
+  await rewriteSnapshotSizes(snapshotFolder, await listArchives())
 }
 
 const getDirectoryList = async (directory: string): Promise<string[]> => {

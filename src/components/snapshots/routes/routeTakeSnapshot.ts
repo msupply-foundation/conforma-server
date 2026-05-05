@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { ArchiveOption, SnapshotType } from '../../exportAndImport/types'
+import { SnapshotType } from '../../exportAndImport/types'
 import takeSnapshot from '../takeSnapshot'
 import { errorMessage } from '../../utilityFunctions'
 

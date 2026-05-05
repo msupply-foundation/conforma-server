@@ -1,15 +1,13 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { ArchiveStore } from '../ArchiveStore'
+import { findOrphanArchives, listArchives, listSnapshots } from '../snapshotStore'
 import { errorMessage } from '../../utilityFunctions'
 
 const routeListSnapshots = async (_: FastifyRequest, reply: FastifyReply) => {
-  const archiveStore = await ArchiveStore.create()
-
-  const snapshots = archiveStore.getSnapshots()
-
-  const orphanArchives = archiveStore.getOrphans()
-
   try {
+    const archives = await listArchives()
+    const snapshots = await listSnapshots(archives)
+    const orphanArchives = findOrphanArchives(archives, snapshots)
+
     return reply.send({ snapshots, orphanArchives })
   } catch (e) {
     return reply.send({

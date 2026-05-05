@@ -149,13 +149,16 @@ const useSnapshot: SnapshotOperation = async ({ snapshotName }) => {
 const copyFiles = async (snapshotFolder: string) => {
   await fsx.copy(path.join(snapshotFolder, 'files'), FILES_FOLDER, { overwrite: true })
 
-  // Restore "archive.json" from snapshot into the archive store
-  try {
-    await fsx.copy(
-      path.join(snapshotFolder, 'archive.json'),
-      path.join(SNAPSHOT_ARCHIVE_FOLDER, 'archive.json')
-    )
-  } catch {
+  // Sync archive.json in the central archive store with the snapshot. If the
+  // snapshot has no archive.json, the central one must be removed — otherwise
+  // a stale list left over from a previously loaded snapshot would be picked
+  // up by the next takeSnapshot.
+  const sourceArchiveJson = path.join(snapshotFolder, 'archive.json')
+  const targetArchiveJson = path.join(SNAPSHOT_ARCHIVE_FOLDER, 'archive.json')
+  if (await fsx.pathExists(sourceArchiveJson)) {
+    await fsx.copy(sourceArchiveJson, targetArchiveJson)
+  } else {
+    await fsx.remove(targetArchiveJson)
     console.log('No archive.json in snapshot')
   }
 }
