@@ -15,8 +15,7 @@ import { DateTime } from 'luxon'
 import StreamZip from 'node-stream-zip'
 import config from '../../../config'
 import { errorMessage } from '../../utilityFunctions'
-import { ArchiveStore } from '../ArchiveStore'
-import { ArchiveInfo } from '../../files/archive'
+import { copyArchivesIfMissing, ensureSnapshotSizes, listArchives } from '../snapshotStore'
 
 const pump = promisify(pipeline)
 
@@ -126,10 +125,7 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
 
     if (isOldStructure) {
       console.log('Converting to new snapshot structure...')
-      const isArchiveOnly = await convertSnapshotToNewStructure(
-        snapshotDestination,
-        await ArchiveStore.create()
-      )
+      const isArchiveOnly = await convertSnapshotToNewStructure(snapshotDestination)
       if (isArchiveOnly) {
         await fsx.remove(snapshotDestination)
         return reply.send({
@@ -141,14 +137,15 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
     }
 
     if (hasArchives && !isOldStructure) {
-      const archiveStore = await ArchiveStore.create()
-      // Copy the archives to the archive store, then remove from snapshot
-      const archiveFolders = (
-        await fsx.readdir(path.join(snapshotDestination, SNAPSHOT_ARCHIVES_FOLDER_NAME), 'utf-8')
-      ).map((archiveFolder) => ({ archiveFolder }))
+      // Copy the archives into the central archive store, then remove from
+      // the snapshot.
+      const archiveFolders = await fsx.readdir(
+        path.join(snapshotDestination, SNAPSHOT_ARCHIVES_FOLDER_NAME),
+        'utf-8'
+      )
 
-      await archiveStore.copyTo(
-        archiveFolders as ArchiveInfo[],
+      await copyArchivesIfMissing(
+        archiveFolders,
         path.join(snapshotDestination, SNAPSHOT_ARCHIVES_FOLDER_NAME)
       )
       await fsx.remove(path.join(snapshotDestination, SNAPSHOT_ARCHIVES_FOLDER_NAME))
@@ -158,6 +155,14 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
 
     // Remove original zip file
     await fsx.remove(path.join(SNAPSHOT_FOLDER, TEMP_ZIP_FILE))
+
+    // Snapshots from older servers may lack snapshotSize/archiveSize. Now
+    // that the snapshot folder is in its final shape and any archives have
+    // been moved into the central store, populate any missing fields.
+    // Legacy conversions already wrote their sizes via convertSnapshotToNewStructure.
+    if (hasSnapshot && !isOldStructure) {
+      await ensureSnapshotSizes(snapshotDestination, await listArchives())
+    }
   } catch (e) {
     console.log(e)
     return reply.send({ ...errorMessageBase, error: errorMessage(e) })

@@ -30,10 +30,7 @@ export function createDefaultDataFolders() {
     makeFolder(BACKUPS_FOLDER, 'Creating BACKUPS folder')
     makeFolder(ZIP_CACHE_FOLDER, 'Creating ZIP CACHE folder')
     // Copy core_templates to snapshots folder
-    execSync(`cp -r '${DATABASE_FOLDER}/${BASE_SNAPSHOT_NAME}' '${SNAPSHOT_FOLDER}'`)
-    // Make sure there is a zipped copy of core_templates too
-    if (!fs.existsSync(path.join(SNAPSHOT_FOLDER, `${BASE_SNAPSHOT_NAME}.zip`)))
-      zipSnapshot(path.join(SNAPSHOT_FOLDER, BASE_SNAPSHOT_NAME), BASE_SNAPSHOT_NAME)
+    // execSync(`cp -r '${DATABASE_FOLDER}/${BASE_SNAPSHOT_NAME}' '${SNAPSHOT_FOLDER}'`)
   } catch {
     console.log('\nProblem creating SNAPSHOTS folder\n')
   }

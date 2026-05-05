@@ -5,6 +5,7 @@ import semverCompare from 'semver/functions/compare'
 import { execSync } from 'child_process'
 import path from 'path'
 import { readFileSync } from 'fs'
+import fsx from 'fs-extra'
 import bcrypt from 'bcrypt'
 import { errorMessage, getAppEntryPointDir } from '../../src/components/utilityFunctions'
 import { loadCurrentPrefs, setPreferences } from '../../src/components/preferences'
@@ -14,6 +15,8 @@ import {
   hashLookupTable,
   hashRecord,
 } from '../../src/components/template-import-export'
+import { SNAPSHOT_FOLDER } from '../../src/constants'
+import { ensureSnapshotSizes, listArchives } from '../../src/components/snapshots/snapshotStore'
 
 // CONSTANTS
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
@@ -1421,7 +1424,6 @@ const migrateData = async () => {
     // migration is re-run.
     console.log(' - Moving archive folders from files/_ARCHIVE/ to archive store')
     const { ARCHIVE_FOLDER, SNAPSHOT_ARCHIVE_FOLDER } = await import('../../src/constants')
-    const fsx = (await import('fs-extra')).default
     if (fsx.existsSync(ARCHIVE_FOLDER)) {
       const entries = await fsx.readdir(ARCHIVE_FOLDER)
       for (const entry of entries) {
@@ -1455,6 +1457,31 @@ const migrateData = async () => {
         WHERE archive_path IS NOT NULL
           AND archive_path LIKE E'\\_ARCHIVE/%' ESCAPE '\\';
     `)
+
+    // Backfill size fields on existing snapshots and archives so that the
+    // /list endpoint can read sizes from info.json instead of measuring
+    // folders live. Two passes: archives first (so each snapshot's
+    // archiveSize sums against accurate per-archive totals), snapshots
+    // second. Idempotent — re-running skips entries that are already done.
+    console.log(' - Backfilling size fields on archives and snapshots')
+    const archives = await listArchives() // also writes back any missing totalFileSize
+    console.log(`   Archive sizes: ${Object.keys(archives).length} archive(s) ready`)
+
+    if (fsx.existsSync(SNAPSHOT_FOLDER)) {
+      const snapshotEntries = await fsx.readdir(SNAPSHOT_FOLDER, { withFileTypes: true })
+      let backfilled = 0
+      for (const entry of snapshotEntries) {
+        if (!entry.isDirectory()) continue
+        const folder = path.join(SNAPSHOT_FOLDER, entry.name)
+        const infoFile = path.join(folder, 'info.json')
+        if (!(await fsx.pathExists(infoFile))) continue
+        const info = await fsx.readJson(infoFile)
+        if (info.snapshotSize !== undefined && info.archiveSize !== undefined) continue
+        await ensureSnapshotSizes(folder, archives)
+        backfilled++
+      }
+      console.log(`   Snapshot sizes: ${backfilled} snapshot(s) backfilled`)
+    }
   }
 
   // Other version migrations continue here...
