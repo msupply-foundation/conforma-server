@@ -3,8 +3,9 @@ import fsx from 'fs-extra'
 import useSnapshot from '../useSnapshot'
 import { errorMessage } from '../../utilityFunctions'
 import path from 'path'
-import { ARCHIVE_SUBFOLDER_NAME, SNAPSHOT_FOLDER } from '../../../constants'
+import { ARCHIVE_SUBFOLDER_NAME, INFO_FILE_NAME, SNAPSHOT_FOLDER } from '../../../constants'
 import { convertSnapshotToNewStructure } from './helpers'
+import config from '../../../config'
 
 const routeUseSnapshot = async (
   request: FastifyRequest<{ Querystring: { name?: string } }>,
@@ -44,6 +45,14 @@ const routeUseSnapshot = async (
       const oldSnapshotPath = path.join(SNAPSHOT_FOLDER, `OLD_${requestedName}`)
       await fsx.copy(requestedPath, oldSnapshotPath, { overwrite: false, errorOnExist: false })
       await convertSnapshotToNewStructure(requestedPath)
+
+      // Stamp the converted snapshot with the current app version. After
+      // in-place conversion this folder IS the live snapshot on this server;
+      // the original version belongs to the OLD_ backup, not to this copy.
+      const infoPath = path.join(requestedPath, `${INFO_FILE_NAME}.json`)
+      const info = await fsx.readJson(infoPath)
+      info.version = config.version
+      await fsx.writeJson(infoPath, info, { spaces: 2 })
     }
   }
 
