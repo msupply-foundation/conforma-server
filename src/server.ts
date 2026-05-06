@@ -273,7 +273,7 @@ const startServer = async () => {
             }
 
             const filepath = getStagedFilePath(token)
-            if (!fs.existsSync(filepath)) {
+            if (!filepath || !fs.existsSync(filepath)) {
               return reply.code(404).send({ success: false, message: 'File not found or expired' })
             }
 

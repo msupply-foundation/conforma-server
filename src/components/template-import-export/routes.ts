@@ -18,6 +18,7 @@ import {
 } from './operations'
 import path from 'path'
 import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../constants'
+import { stageFileForDownload } from '../stagedDownloads'
 import StreamZip from 'node-stream-zip'
 import { customAlphabet } from 'nanoid'
 import { CombinedLinkedEntities } from './types'
@@ -31,7 +32,7 @@ export const templateRoutes: FastifyPluginCallback<{ prefix: string }> = (server
   server.post('/commit/:id', routeCommitTemplate)
   server.post('/duplicate/new/:id', routeDuplicateTemplateNew)
   server.post('/duplicate/version/:id', routeDuplicateTemplateVersion)
-  server.get('/export/:id', routeTemplateExport)
+  server.post('/prepare-export/:id', routeTemplatePrepareExport)
   server.get('/check/:id', routeTemplateCheck)
   server.post('/import/upload', routeImportTemplateUpload)
   server.get('/import/get-full-entity-diff/:uid', routeImportGetDiff)
@@ -77,7 +78,7 @@ const routeTemplateCheck = async (
   }
 }
 
-const routeTemplateExport = async (
+const routeTemplatePrepareExport = async (
   request: FastifyRequest<{ Params: { id: string } }>,
   reply: FastifyReply
 ) => {
@@ -87,11 +88,13 @@ const routeTemplateExport = async (
   }
 
   try {
-    const filepath = await exportTemplate(templateId)
-    // @ts-ignore -- "sendFile" method does exist on reply
-    reply.sendFile(filepath)
-    fsx.remove(path.join(FILES_FOLDER, filepath))
-    return reply
+    const filename = await exportTemplate(templateId)
+    const { url } = await stageFileForDownload(
+      path.join(FILES_FOLDER, filename),
+      filename,
+      { consumeSource: true }
+    )
+    return reply.send({ url, filename })
   } catch (err) {
     returnApiError(err, reply)
   }

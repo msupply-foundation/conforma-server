@@ -33,19 +33,39 @@ const generateToken = customAlphabet(TOKEN_ALPHABET, TOKEN_LENGTH)
 interface TimerEntry {
   hardTimer: NodeJS.Timeout
   softTimer?: NodeJS.Timeout
+  onDiskName: string
 }
 
 const timers = new Map<string, TimerEntry>()
 
+const sanitizeBaseName = (name: string): string => {
+  const cleaned = name
+    .replace(/[\\/]/g, '_') // path separators
+    .replace(/\.{2,}/g, '_') // collapse runs of dots (path-traversal)
+    .replace(/[\x00-\x1f<>:"|?*]/g, '_') // control + Windows-reserved
+    .replace(/\s+/g, '_')
+    .replace(/^[._]+|[._]+$/g, '')
+    .slice(0, 80)
+  return cleaned || 'file'
+}
+
+const sanitizeExtension = (ext: string): string =>
+  // path.parse(...).ext includes the leading dot; cap to keep things tidy
+  ext.replace(/[^A-Za-z0-9.]/g, '').slice(0, 16)
+
+const buildOnDiskName = (token: string, displayFilename: string): string => {
+  const parsed = path.parse(displayFilename)
+  return `${sanitizeBaseName(parsed.name)}_${token}${sanitizeExtension(parsed.ext)}`
+}
+
 const forceDelete = async (token: string) => {
   const entry = timers.get(token)
-  if (entry) {
-    clearTimeout(entry.hardTimer)
-    if (entry.softTimer) clearTimeout(entry.softTimer)
-    timers.delete(token)
-  }
+  if (!entry) return
+  clearTimeout(entry.hardTimer)
+  if (entry.softTimer) clearTimeout(entry.softTimer)
+  timers.delete(token)
   try {
-    await fsx.remove(path.join(STAGED_DOWNLOAD_FOLDER, token))
+    await fsx.remove(path.join(STAGED_DOWNLOAD_FOLDER, entry.onDiskName))
   } catch {
     // already gone
   }
@@ -54,14 +74,26 @@ const forceDelete = async (token: string) => {
 export const isValidStagedToken = (token: unknown): token is string =>
   typeof token === 'string' && TOKEN_PATTERN.test(token)
 
-export const getStagedFilePath = (token: string): string =>
-  path.join(STAGED_DOWNLOAD_FOLDER, token)
+/**
+ * Returns the absolute on-disk path for a staged file, or `null` if the
+ * token is unknown (already-served + cleaned, expired, or never existed).
+ */
+export const getStagedFilePath = (token: string): string | null => {
+  const entry = timers.get(token)
+  if (!entry) return null
+  return path.join(STAGED_DOWNLOAD_FOLDER, entry.onDiskName)
+}
 
 /**
  * Place a file in the staging folder and return the public URL the client
  * should download it from. By default the source file is preserved (copied);
  * pass `consumeSource: true` for callers that produced a throwaway temp file
  * and don't need it kept (cheaper — a rename within the same filesystem).
+ *
+ * `displayFilename` is what the user sees when the browser saves the file
+ * (the client supplies it as `?filename=` on the download URL), and it also
+ * shapes the on-disk filename — `<sanitized-base>_<token><.ext>` — so an
+ * operator inspecting the staging folder can tell at a glance what's there.
  */
 export const stageFileForDownload = async (
   sourcePath: string,
@@ -69,7 +101,8 @@ export const stageFileForDownload = async (
   { consumeSource = false }: { consumeSource?: boolean } = {}
 ): Promise<{ url: string }> => {
   const token = generateToken()
-  const stagedPath = path.join(STAGED_DOWNLOAD_FOLDER, token)
+  const onDiskName = buildOnDiskName(token, displayFilename)
+  const stagedPath = path.join(STAGED_DOWNLOAD_FOLDER, onDiskName)
 
   if (consumeSource) await fsx.move(sourcePath, stagedPath)
   else await fsx.copy(sourcePath, stagedPath)
@@ -78,10 +111,9 @@ export const stageFileForDownload = async (
     forceDelete(token)
   }, HARD_TIMEOUT_MS)
   hardTimer.unref()
-  timers.set(token, { hardTimer })
+  timers.set(token, { hardTimer, onDiskName })
 
-  const url = `/public/staged-download/${token}?filename=${encodeURIComponent(displayFilename)}`
-  return { url }
+  return { url: `/public/staged-download/${token}` }
 }
 
 /**
