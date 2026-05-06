@@ -34,6 +34,10 @@ export const BACKUPS_FOLDER = path.join(getAppEntryPointDir(), config.backupsFol
 export const FILES_FOLDER = path.join(getAppEntryPointDir(), config.filesFolder)
 export const ARCHIVE_FOLDER = path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME)
 export const ZIP_CACHE_FOLDER = path.join(getAppEntryPointDir(), config.zipCacheFolder)
+export const STAGED_DOWNLOAD_FOLDER = path.join(
+  getAppEntryPointDir(),
+  config.stagedDownloadsFolder
+)
 // We want to keep ARCHIVE_TEMP_FOLDER inside FILES_FOLDER so that, when
 // dockerised, the archives are "collected" within the same volume. This
 // substantially speeds up restoring a large snapshot when most of the required

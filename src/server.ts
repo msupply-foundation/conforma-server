@@ -58,6 +58,11 @@ import {
 import { routeFileLists } from './components/files/routes'
 import { cleanupDataTables } from './lookup-table/utils/cleanupDataTables'
 import { templateRoutes } from './components/template-import-export'
+import {
+  isValidStagedToken,
+  getStagedFilePath,
+  markStagedDownloadServed,
+} from './components/stagedDownloads'
 import { convertHandler, pgMiddleware } from './postgraphile'
 import { routeGetFragments } from './components/fig-tree-evaluator/routes'
 import { loadStartupSnapshot } from './components/snapshots/loadStartupSnapshot'
@@ -248,6 +253,50 @@ const startServer = async () => {
         })
 
         server.get('/fragments', routeGetFragments)
+
+        // Capability-style download endpoint for files prepared by an
+        // authenticated upstream route via `stageFileForDownload`. The token
+        // in the URL is the only auth — the staging helper handles lifecycle
+        // (5 min after serve, 30 min hard cap).
+        server.get(
+          '/staged-download/:token',
+          async (
+            request: FastifyRequest<{
+              Params: { token: string }
+              Querystring: { filename?: string }
+            }>,
+            reply
+          ) => {
+            const { token } = request.params
+            if (!isValidStagedToken(token)) {
+              return reply.code(400).send({ success: false, message: 'Invalid token' })
+            }
+
+            const filepath = getStagedFilePath(token)
+            if (!fs.existsSync(filepath)) {
+              return reply.code(404).send({ success: false, message: 'File not found or expired' })
+            }
+
+            const downloadFilename = request.query.filename || token
+            const stats = fs.statSync(filepath)
+            reply.header('Content-Type', 'application/octet-stream')
+            reply.header('Content-Length', stats.size)
+            reply.header(
+              'Content-Disposition',
+              `attachment; filename="${encodeURIComponent(
+                downloadFilename
+              )}"; filename*=UTF-8''${encodeURIComponent(downloadFilename)}`
+            )
+
+            reply.raw.on('close', () => markStagedDownloadServed(token))
+
+            const stream = fs.createReadStream(filepath)
+            stream.on('error', () => {
+              reply.send({ success: false, message: 'Unable to retrieve file' })
+            })
+            return reply.send(stream)
+          }
+        )
 
         done()
       },

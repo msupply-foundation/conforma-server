@@ -16,6 +16,7 @@ import {
   BASE_SNAPSHOT_NAME,
   SNAPSHOT_ARCHIVE_FOLDER,
   ZIP_CACHE_FOLDER,
+  STAGED_DOWNLOAD_FOLDER,
 } from '../../constants'
 import fsx from 'fs-extra'
 import path from 'path'
@@ -28,6 +29,9 @@ export function createDefaultDataFolders() {
     makeFolder(SNAPSHOT_ARCHIVE_FOLDER)
     makeFolder(BACKUPS_FOLDER, 'Creating BACKUPS folder')
     makeFolder(ZIP_CACHE_FOLDER, 'Creating ZIP CACHE folder')
+    // Wipe staged-downloads on every boot — in-progress downloads don't
+    // survive a restart, and we don't want lingering files from previous runs.
+    fsx.emptyDirSync(STAGED_DOWNLOAD_FOLDER)
     // Copy core_templates to snapshots folder
     fsx.copySync(
       path.join(DATABASE_FOLDER, BASE_SNAPSHOT_NAME),
