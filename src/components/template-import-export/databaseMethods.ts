@@ -1,6 +1,6 @@
 import DBConnect from '../database/databaseConnect'
 import { errorMessage, isObject } from '../../components/utilityFunctions'
-import { CombinedLinkedEntities, PgDataTable, PgDataView, PgEvaluatorFragment } from './types'
+import { CombinedLinkedEntities, PgDataTable, PgDataView } from './types'
 import { ApiError } from '../../ApiError'
 
 const databaseMethods = {

@@ -184,7 +184,6 @@ export default createBackup
 // ones actually exist in the backup folder (and doesn't return any that are
 // missing, so they'll be backed up on the next pass)
 const getArchiveBackups = async (backupInfo: BackupInfo) => {
-  const existingArchiveIds: string[] = []
   const toRemove: string[] = []
   for (const archive of backupInfo.archives) {
     if (

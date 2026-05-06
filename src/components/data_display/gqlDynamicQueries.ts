@@ -140,9 +140,8 @@ export const updateRecord = async (
   const graphQLquery = `mutation UpdateRecord($id: Int!, $patch: ${tableTypeName}Patch!) {update${tableTypeName}(input: { patch: $patch, id: $id }) {${tableName} {id}}}`
   const variables = { id, patch }
 
-  let queryResult
   try {
-    queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
+    await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
   } catch (err) {
     return {
       error: { error: true, message: 'Problem with Filter List query', detail: errorMessage(err) },

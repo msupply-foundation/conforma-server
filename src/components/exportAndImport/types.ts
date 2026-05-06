@@ -1,5 +1,3 @@
-import { ArchiveInfo } from '../files/archive'
-
 export type DatabaseColumn = {
   columnName: string
   isPrimary: boolean

@@ -159,14 +159,6 @@ class GraphQLdb {
     return data?.organisation?.isSystemOrg ?? false
   }
 
-  public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
-    switch (tableName) {
-      default:
-        throw new Error('Method not yet implemented for this table')
-    }
-    // Not implemented yet -- needs more data in DB
-  }
-
   public getAllApplicationTriggers = async (serial: string) => {
     const data = await this.gqlQuery(
       `

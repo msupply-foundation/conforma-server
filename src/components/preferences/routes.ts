@@ -23,7 +23,7 @@ export const setPreferences = async (prefs: Preferences) => {
 }
 
 // Serve prefs to front-end
-export const routeGetPrefs = async (request: any, reply: any) => {
+export const routeGetPrefs = async (_request: any, reply: any) => {
   const prefs = loadCurrentPrefs()
   const languageOptions = readLanguageOptions()
   const latestSnapshot = await databaseConnect.getSystemInfo('snapshot')
@@ -44,7 +44,7 @@ export const routeGetPrefs = async (request: any, reply: any) => {
 }
 
 // Return all prefs for editing (Admin only)
-export const routeGetAllPrefs = async (request: any, reply: any) => {
+export const routeGetAllPrefs = async (_request: any, reply: any) => {
   const preferences = loadCurrentPrefs()
   const overrides = process.env.PREFERENCE_OVERRIDES
     ? readJSONSync(process.env.PREFERENCE_OVERRIDES)

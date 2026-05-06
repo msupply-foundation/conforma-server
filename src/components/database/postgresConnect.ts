@@ -331,7 +331,7 @@ class PostgresDB {
   public updateActionParametersEvaluated = async (action_id: number, parameters: any) => {
     const text = 'UPDATE action_queue SET parameters_evaluated = $1 WHERE id = $2'
     try {
-      const result = await this.query({
+      await this.query({
         text,
         values: [parameters, action_id],
       })
@@ -383,7 +383,7 @@ class PostgresDB {
         AND is_active = true
     `
     try {
-      const result = await this.query({ text })
+      await this.query({ text })
       return true
     } catch (err) {
       throw err
@@ -398,7 +398,7 @@ class PostgresDB {
     const triggerStatus = fail ? Trigger.Error : null
     const text = `UPDATE ${table} SET trigger = $1 WHERE id = $2`
     try {
-      const result = await this.query({
+      await this.query({
         text,
         values: [triggerStatus, record_id],
       })
@@ -445,7 +445,7 @@ class PostgresDB {
   public setScheduledActionDone = async (table: string, record_id: number): Promise<boolean> => {
     const text = `UPDATE ${table} SET is_active = false WHERE id = $1`
     try {
-      const result = await this.query({
+      await this.query({
         text,
         values: [record_id],
       })

@@ -10,7 +10,6 @@ import {
   SNAPSHOT_FOLDER,
   ZIP_CACHE_FOLDER,
 } from '../../constants'
-import { SnapshotInfo } from '../exportAndImport/types'
 import { ArchiveData } from '../files/archive'
 import { getHash } from '../template-import-export'
 import { getTimeString } from './takeSnapshot'
