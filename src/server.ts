@@ -107,7 +107,9 @@ const startServer = async () => {
 
   server.register(fastifyMultipart, { limits: { fileSize: config.fileUploadLimit } })
 
-  server.register(fastifyCors, { origin: '*' }) // Allow all origin (TODO change in PROD)
+  server.register(fastifyCors, {
+    origin: config.isProductionBuild ? config.webHostUrl : '*',
+  })
 
   server.register(fastifyWebsocket)
 
@@ -207,9 +209,7 @@ const startServer = async () => {
               stats = await fsx.stat(zipFilePath)
             } catch (err: any) {
               const code = err?.code === 'ENOENT' ? 404 : 500
-              return reply
-                .code(code)
-                .send({ success: false, message: 'Unable to retrieve file' })
+              return reply.code(code).send({ success: false, message: 'Unable to retrieve file' })
             }
 
             const downloadFilename = filename || zipFile
