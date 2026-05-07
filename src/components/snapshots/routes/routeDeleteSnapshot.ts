@@ -11,7 +11,7 @@ type Query = { name?: string }
 
 const routeDeleteSnapshot = async (request: FastifyRequest, reply: FastifyReply) => {
   const snapshotName = (request.query as Query)?.name as string
-  if (!snapshotName) reply.send({ success: false, message: 'No snapshot name provided' })
+  if (!snapshotName) return reply.send({ success: false, message: 'No snapshot name provided' })
 
   console.log('Deleting snapshot:', snapshotName)
   try {

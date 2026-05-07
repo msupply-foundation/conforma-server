@@ -42,6 +42,8 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
     })
 
   let snapshotName: string = ''
+  const tempZipLocation = path.join(SNAPSHOT_FOLDER, TEMP_ZIP_FILE)
+  let zip: InstanceType<typeof StreamZip.async> | null = null
   try {
     snapshotName = upload.filename
       // Remove ".zip" file extension
@@ -56,11 +58,9 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
 
     console.log('Uploading snapshot:', snapshotName)
 
-    const tempZipLocation = path.join(SNAPSHOT_FOLDER, TEMP_ZIP_FILE)
-
     await pump(upload.file, fs.createWriteStream(tempZipLocation))
 
-    const zip = new StreamZip.async({ file: tempZipLocation })
+    zip = new StreamZip.async({ file: tempZipLocation })
 
     const zipEntries = Object.values(await zip.entries())
     const files = zipEntries.map(({ name }) => name)
@@ -111,13 +111,10 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
 
     // Make sure snapshot doesn't already exist
     if (hasSnapshot && fs.existsSync(snapshotDestination)) {
-      fs.unlink(path.join(SNAPSHOT_FOLDER, TEMP_ZIP_FILE), () => {})
-      {
-        return reply.send({
-          ...errorMessageBase,
-          error: `Snapshot already exists: ${snapshotName}`,
-        })
-      }
+      return reply.send({
+        ...errorMessageBase,
+        error: `Snapshot already exists: ${snapshotName}`,
+      })
     }
 
     await fsx.ensureDir(snapshotDestination)
@@ -153,11 +150,6 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
       await fsx.remove(path.join(snapshotDestination, SNAPSHOT_ARCHIVES_FOLDER_NAME))
     }
 
-    await zip.close()
-
-    // Remove original zip file
-    await fsx.remove(path.join(SNAPSHOT_FOLDER, TEMP_ZIP_FILE))
-
     if (isArchiveOnly) {
       // Archives have been moved into the central store; the extraction
       // folder was just a temp staging area, so clean it up.
@@ -178,6 +170,11 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
   } catch (e) {
     console.log(e)
     return reply.send({ ...errorMessageBase, error: errorMessage(e) })
+  } finally {
+    if (zip) await zip.close().catch((err) => console.error('Failed to close zip:', err))
+    await fsx
+      .remove(tempZipLocation)
+      .catch((err) => console.error('Failed to remove temp zip:', err))
   }
 
   reply.send({

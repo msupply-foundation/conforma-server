@@ -59,7 +59,6 @@ export const ensureSnapshotSizes = async (
   const { snapshotSize, archiveSize } = await measureSnapshotSizes(snapshotFolder, archives)
   info.snapshotSize = snapshotSize
   info.archiveSize = archiveSize
-  console.log(snapshotFolder, info)
   await fsx.writeJson(infoFile(snapshotFolder), info, { spaces: 2 })
   return info
 }

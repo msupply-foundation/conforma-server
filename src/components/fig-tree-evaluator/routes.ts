@@ -20,7 +20,7 @@ export const routeGetFragments = async (
       return returnApiError('Either front-end or back-end must be specified', reply, 400)
 
     const getFrontEnd = request.query.frontEnd === 'true'
-    const getBackEnd = request.query.backEnd === 'true' && permissionNames.includes('admin')
+    const getBackEnd = request.query.backEnd === 'true' && tokenData.isAdmin === true
     const getBoth = getFrontEnd && getBackEnd
 
     if (!getFrontEnd && !getBackEnd)

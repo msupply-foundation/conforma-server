@@ -35,6 +35,8 @@ getAdminJWT().then((result) =>
   })
 )
 
+// Also called at runtime from postgresConnect when the evaluator_fragment
+// table changes — log and continue rather than killing the server.
 export const reloadFragments = () => {
   console.log('Loading Evaluator Fragments from database...')
   FigTree.evaluate({
@@ -43,14 +45,22 @@ export const reloadFragments = () => {
               FROM evaluator_fragment
             WHERE back_end = TRUE;`,
     fallback: [],
-  }).then((result) => {
-    const fragments = (result as any[]).reduce((acc, fragment) => {
-      return { ...acc, [fragment.name]: fragment.expression }
-    }, {})
-    FigTree.updateOptions({ fragments })
   })
+    .then((result) => {
+      const fragments = (result as any[]).reduce((acc, fragment) => {
+        return { ...acc, [fragment.name]: fragment.expression }
+      }, {})
+      FigTree.updateOptions({ fragments })
+    })
+    .catch((err) => console.error('Failed to load FigTree fragments:', err))
 }
 
-databaseConnection.connect().then(reloadFragments)
+databaseConnection
+  .connect()
+  .then(reloadFragments)
+  .catch((err) => {
+    console.error('FigTree DB connect failed at startup:', err)
+    process.exit(1)
+  })
 
 export default FigTree
