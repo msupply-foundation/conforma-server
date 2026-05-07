@@ -1383,7 +1383,7 @@ const migrateData = async () => {
     await DB.changeSchema(`
       CREATE TABLE IF NOT EXISTS public.evaluator_fragment (
         id serial PRIMARY KEY,
-        name varchar UNIQUE NOT NULL,
+        name varchar UNIQUE NOT NULL CHECK (name ~ '^[A-Za-z0-9_ ]+$'),
         expression jsonb NOT NULL,
         metadata jsonb,
         front_end boolean NOT NULL DEFAULT TRUE,
@@ -1392,6 +1392,21 @@ const migrateData = async () => {
         checksum varchar,
         last_modified timestamptz
       );`)
+
+    // For dev databases that already had `evaluator_fragment` (from an earlier
+    // 2.0.0-dev migration without the CHECK), sanitize any existing names and
+    // add the CHECK if it isn't already present. Disallowed chars become `_`.
+    // (If a sanitized name collides with another row, the UNIQUE constraint
+    // will throw — manual rename required in that case.)
+    await DB.changeSchema(`
+      UPDATE public.evaluator_fragment
+        SET name = regexp_replace(name, '[^A-Za-z0-9_ ]', '_', 'g')
+        WHERE name !~ '^[A-Za-z0-9_ ]+$';
+      ALTER TABLE public.evaluator_fragment
+        DROP CONSTRAINT IF EXISTS evaluator_fragment_name_check;
+      ALTER TABLE public.evaluator_fragment
+        ADD CONSTRAINT evaluator_fragment_name_check CHECK (name ~ '^[A-Za-z0-9_ ]+$');
+    `)
 
     await DB.changeSchema(`
      CREATE TABLE IF NOT EXISTS public.template_evaluator_fragment_join (

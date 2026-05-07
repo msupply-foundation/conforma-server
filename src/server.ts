@@ -6,6 +6,7 @@ import fastifyWebsocket from '@fastify/websocket'
 import { DateTime, Settings } from 'luxon'
 import path from 'path'
 import fs from 'fs'
+import fsx from 'fs-extra'
 import { loadActionPlugins } from './components/pluginsConnect'
 import {
   routeUserInfo,
@@ -201,29 +202,32 @@ const startServer = async () => {
             if (!zipFilePath.startsWith(cacheRoot)) {
               return reply.code(400).send({ success: false, message: 'Invalid zipFile' })
             }
-            console.log('zipFilePath', zipFilePath)
 
-            console.log('filename', filename)
-
+            let stats
             try {
-              const stats = fs.statSync(zipFilePath)
-              const downloadFilename = filename || zipFile
-              reply.header('Content-Type', 'application/zip')
-              reply.header('Content-Length', stats.size)
-              reply.header(
-                'Content-Disposition',
-                `attachment; filename="${encodeURIComponent(
-                  downloadFilename
-                )}"; filename*=UTF-8''${encodeURIComponent(downloadFilename)}`
-              )
-              const stream = fs.createReadStream(zipFilePath)
-              stream.on('error', () => {
-                reply.send({ success: false, message: 'Unable to retrieve file' })
-              })
-              return reply.send(stream)
-            } catch {
-              return reply.send({ success: false, message: 'Unable to retrieve file' })
+              stats = await fsx.stat(zipFilePath)
+            } catch (err: any) {
+              const code = err?.code === 'ENOENT' ? 404 : 500
+              return reply
+                .code(code)
+                .send({ success: false, message: 'Unable to retrieve file' })
             }
+
+            const downloadFilename = filename || zipFile
+            reply.header('Content-Type', 'application/zip')
+            reply.header('Content-Length', stats.size)
+            reply.header(
+              'Content-Disposition',
+              `attachment; filename="${encodeURIComponent(
+                downloadFilename
+              )}"; filename*=UTF-8''${encodeURIComponent(downloadFilename)}`
+            )
+            const stream = fsx.createReadStream(zipFilePath)
+            stream.on('error', () => {
+              // Headers may already be flushed; best-effort error reply.
+              reply.send({ success: false, message: 'Unable to retrieve file' })
+            })
+            return reply.send(stream)
           }
 
           const {

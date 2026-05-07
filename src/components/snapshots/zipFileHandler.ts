@@ -46,8 +46,9 @@ export const getZippedSnapshot = async ({
 
   if (!fsx.existsSync(snapshotFolder)) throw new Error('Snapshot missing: ' + snapshotName)
 
+  let info: { snapshotSize?: number }
   try {
-    await fsx.readJSON(path.join(snapshotFolder, `${INFO_FILE_NAME}.json`))
+    info = await fsx.readJSON(path.join(snapshotFolder, `${INFO_FILE_NAME}.json`))
   } catch {
     throw new Error('Snapshot info file missing: ' + snapshotName)
   }
@@ -87,7 +88,9 @@ export const getZippedSnapshot = async ({
   if (includeSnapshot)
     filesToInclude.push({
       name: snapshotFolder,
-      size: (await fsx.stat(snapshotFolder)).size,
+      // Use the recursive snapshot size persisted in info.json, not
+      // fsx.stat(...).size (which is just the directory inode size).
+      size: info.snapshotSize ?? 0,
       outputPath: '',
     })
 

@@ -17,14 +17,14 @@ export const routeGetFragments = async (
     const { frontEnd, backEnd } = request.query
 
     if (!frontEnd && !backEnd)
-      returnApiError('Either front-end or back-end must be specified', reply, 400)
+      return returnApiError('Either front-end or back-end must be specified', reply, 400)
 
     const getFrontEnd = request.query.frontEnd === 'true'
     const getBackEnd = request.query.backEnd === 'true' && permissionNames.includes('admin')
     const getBoth = getFrontEnd && getBackEnd
 
     if (!getFrontEnd && !getBackEnd)
-      returnApiError('Must have Admin permissions to access back-end Fragments', reply, 403)
+      return returnApiError('Must have Admin permissions to access back-end Fragments', reply, 403)
 
     const sqlClause = getBoth
       ? 'AND (front_end = TRUE OR back_end = TRUE)'

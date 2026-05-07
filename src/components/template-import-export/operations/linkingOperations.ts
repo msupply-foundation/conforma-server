@@ -105,6 +105,9 @@ export const getFragmentDetails = async (templateId: number) => {
   const accessibleFragmentNames = applicantAccessibleFragments.map(({ name }) => name)
   const allFragmentNames = allFragments.map(({ name }) => name)
 
+  // N+1: one COUNT per fragment per table. Fine while fragment counts are
+  // small; revisit if this becomes a bottleneck (could pull each table's JSON
+  // once and walk it in JS to collect referenced fragment names).
   const fragmentsInFormElements: string[] = []
   for (const fragment of allFragmentNames) {
     const elementCount = await db.getFragmentCountForTemplate(

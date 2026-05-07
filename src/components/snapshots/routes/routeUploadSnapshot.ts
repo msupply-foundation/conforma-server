@@ -136,6 +136,8 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
       }
     }
 
+    const isArchiveOnly = !hasSnapshot && hasArchives && !isOldStructure
+
     if (hasArchives && !isOldStructure) {
       // Copy the archives into the central archive store, then remove from
       // the snapshot.
@@ -155,6 +157,16 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
 
     // Remove original zip file
     await fsx.remove(path.join(SNAPSHOT_FOLDER, TEMP_ZIP_FILE))
+
+    if (isArchiveOnly) {
+      // Archives have been moved into the central store; the extraction
+      // folder was just a temp staging area, so clean it up.
+      await fsx.remove(snapshotDestination)
+      return reply.send({
+        success: true,
+        message: 'Uploaded archives',
+      })
+    }
 
     // Snapshots from older servers may lack snapshotSize/archiveSize. Now
     // that the snapshot folder is in its final shape and any archives have

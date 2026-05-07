@@ -40,17 +40,14 @@ Valid types: ${releaseTypes.join(', ')}`)
   try {
     console.log(`🚀 Bumping version with: yarn version ${releaseType}`)
     await exec(`yarn version ${releaseType}`)
-
-    // Import updated package.json to get the new version
-    const pkg = require('../package.json')
-    console.log(`\nServer version bumped to: v${pkg.version}\n`)
   } catch (error) {
-    console.error(`Error bumping version: ${error}`)
+    exitWithError(`Error bumping version: ${error}`)
   }
 
   const pkg = require('../package.json')
   const tag = `v${pkg.version}`
-  console.log(`\nPushing tag ${tag} to Github...`)
+  console.log(`\nServer version bumped to: ${tag}\n`)
+  console.log(`\nPushing tag ${tag} to GitHub...`)
   try {
     await exec(`git push origin ${tag}`)
   } catch {
