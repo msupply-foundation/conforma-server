@@ -2,7 +2,7 @@ import { FastifyPluginCallback, FastifyReply, FastifyRequest } from 'fastify'
 import fsx from 'fs-extra'
 import { pipeline } from 'stream'
 import { promisify } from 'util'
-import { returnApiError } from '../../ApiError'
+import { ApiError } from '../../ApiError'
 import {
   exportTemplate,
   duplicateTemplate,
@@ -48,17 +48,11 @@ const routeCommitTemplate = async (
   reply: FastifyReply
 ) => {
   const templateId = Number(request.params.id)
-  if (!templateId || isNaN(templateId)) {
-    returnApiError('Invalid template id', reply, 400)
-  }
-  const comment = request.body?.comment ?? null
+  if (!templateId) throw new ApiError('Invalid template id', 400)
 
-  try {
-    const result = await commitTemplate(templateId, comment)
-    return reply.send(result)
-  } catch (err) {
-    returnApiError(err, reply)
-  }
+  const comment = request.body?.comment ?? null
+  const result = await commitTemplate(templateId, comment)
+  return reply.send(result)
 }
 
 const routeTemplateCheck = async (
@@ -66,16 +60,10 @@ const routeTemplateCheck = async (
   reply: FastifyReply
 ) => {
   const templateId = Number(request.params.id)
-  if (!templateId || isNaN(templateId)) {
-    returnApiError('Invalid template id', reply, 400)
-  }
+  if (!templateId) throw new ApiError('Invalid template id', 400)
 
-  try {
-    const result = await checkTemplate(templateId)
-    return reply.send(result)
-  } catch (err) {
-    returnApiError(err, reply)
-  }
+  const result = await checkTemplate(templateId)
+  return reply.send(result)
 }
 
 const routeTemplatePrepareExport = async (
@@ -83,21 +71,13 @@ const routeTemplatePrepareExport = async (
   reply: FastifyReply
 ) => {
   const templateId = Number(request.params.id)
-  if (!templateId || isNaN(templateId)) {
-    returnApiError('Invalid template id', reply, 400)
-  }
+  if (!templateId) throw new ApiError('Invalid template id', 400)
 
-  try {
-    const filename = await exportTemplate(templateId)
-    const { url } = await stageFileForDownload(
-      path.join(FILES_FOLDER, filename),
-      filename,
-      { consumeSource: true }
-    )
-    return reply.send({ url, filename })
-  } catch (err) {
-    returnApiError(err, reply)
-  }
+  const filename = await exportTemplate(templateId)
+  const { url } = await stageFileForDownload(path.join(FILES_FOLDER, filename), filename, {
+    consumeSource: true,
+  })
+  return reply.send({ url, filename })
 }
 
 const routeDuplicateTemplateNew = async (
@@ -105,21 +85,13 @@ const routeDuplicateTemplateNew = async (
   reply: FastifyReply
 ) => {
   const templateId = Number(request.params.id)
-  if (!templateId || isNaN(templateId)) {
-    returnApiError('Invalid template id', reply, 400)
-  }
+  if (!templateId) throw new ApiError('Invalid template id', 400)
 
   const code = request.body?.code
-  if (!code) {
-    returnApiError('New template code missing', reply, 400)
-  }
+  if (!code) throw new ApiError('New template code missing', 400)
 
-  try {
-    const result = await duplicateTemplate(templateId, code)
-    return reply.send(result)
-  } catch (err) {
-    returnApiError(err, reply)
-  }
+  const result = await duplicateTemplate(templateId, code)
+  return reply.send(result)
 }
 
 const routeDuplicateTemplateVersion = async (
@@ -127,16 +99,10 @@ const routeDuplicateTemplateVersion = async (
   reply: FastifyReply
 ) => {
   const templateId = Number(request.params.id)
-  if (!templateId || isNaN(templateId)) {
-    returnApiError('Invalid template id', reply, 400)
-  }
+  if (!templateId) throw new ApiError('Invalid template id', 400)
 
-  try {
-    const result = await duplicateTemplate(templateId)
-    return reply.send(result)
-  } catch (err) {
-    returnApiError(err, reply)
-  }
+  const result = await duplicateTemplate(templateId)
+  return reply.send(result)
 }
 
 const routeImportTemplateUpload = async (request: FastifyRequest, reply: FastifyReply) => {
@@ -145,15 +111,12 @@ const routeImportTemplateUpload = async (request: FastifyRequest, reply: Fastify
     // @ts-ignore
     upload = await request.file()
   } catch (err) {
-    returnApiError('No file attached', reply, 400)
+    throw new ApiError('No file attached', 400)
   }
 
-  if (!upload) {
-    returnApiError('No file attached', reply, 400)
-    return
-  }
+  if (!upload) throw new ApiError('No file attached', 400)
 
-  if (upload?.mimetype !== 'application/zip') returnApiError('File is not a ZIP file', reply, 400)
+  if (upload.mimetype !== 'application/zip') throw new ApiError('File is not a ZIP file', 400)
 
   const tempZipLocation = path.join(FILES_TEMP_FOLDER, 'templateUpload.zip')
   await fsx.ensureDir(FILES_TEMP_FOLDER)
@@ -169,7 +132,7 @@ const routeImportTemplateUpload = async (request: FastifyRequest, reply: Fastify
     await zip.close()
     await fsx.remove(tempZipLocation)
   } catch (err) {
-    returnApiError(`Problem unzipping uploaded file: ${(err as Error).message}`, reply, 400)
+    throw new ApiError(`Problem unzipping uploaded file: ${(err as Error).message}`, 400)
   }
 
   const modifiedEntities = await importTemplateUpload(folderName)
@@ -181,11 +144,7 @@ const routeImportTemplateUpload = async (request: FastifyRequest, reply: Fastify
   // Cleanup temp upload if not installed within next 10 mins
   config.scheduledJobs?.manuallySchedule('fileCleanup', 10)
 
-  try {
-    return reply.send({ uid: folderName, modifiedEntities, ready })
-  } catch (err) {
-    returnApiError(err, reply)
-  }
+  return reply.send({ uid: folderName, modifiedEntities, ready })
 }
 
 const routeImportGetDiff = async (
@@ -196,18 +155,11 @@ const routeImportGetDiff = async (
   reply: FastifyReply
 ) => {
   const uid = request.params.uid
-  if (!uid) {
-    returnApiError('No UID specified for imported template', reply, 400)
-  }
+  if (!uid) throw new ApiError('No UID specified for imported template', 400)
 
   const { type, value } = request.query
-
-  try {
-    const result = await getSingleEntityDiff(uid, type, value)
-    return reply.send(result)
-  } catch (err) {
-    returnApiError(err, reply)
-  }
+  const result = await getSingleEntityDiff(uid, type, value)
+  return reply.send(result)
 }
 
 const routeImportTemplateInstall = async (
@@ -218,9 +170,7 @@ const routeImportTemplateInstall = async (
   reply: FastifyReply
 ) => {
   const uid = request.params.uid
-  if (!uid) {
-    returnApiError('No UID specified for template install', reply, 400)
-  }
+  if (!uid) throw new ApiError('No UID specified for template install', 400)
 
   const preserveExistingEntities = request.body ?? {}
 
@@ -230,12 +180,8 @@ const routeImportTemplateInstall = async (
       .map(([key, value]) => [key, key === 'category' ? value : new Set(value)])
   )
 
-  try {
-    const result = await importTemplateInstall(uid, preserveExistingEntitySets)
-    return reply.send(result)
-  } catch (err) {
-    returnApiError(err, reply)
-  }
+  const result = await importTemplateInstall(uid, preserveExistingEntitySets)
+  return reply.send(result)
 }
 
 const routeGetDataViewDetails = async (
@@ -243,16 +189,10 @@ const routeGetDataViewDetails = async (
   reply: FastifyReply
 ) => {
   const templateId = Number(request.params.id)
-  if (!templateId || isNaN(templateId)) {
-    returnApiError('Invalid template id', reply, 400)
-  }
+  if (!templateId) throw new ApiError('Invalid template id', 400)
 
-  try {
-    const dataViews = await getDataViewDetails(templateId)
-    return reply.send(dataViews)
-  } catch (err) {
-    returnApiError(err, reply)
-  }
+  const dataViews = await getDataViewDetails(templateId)
+  return reply.send(dataViews)
 }
 
 const routeGetFragmentDetails = async (
@@ -260,16 +200,10 @@ const routeGetFragmentDetails = async (
   reply: FastifyReply
 ) => {
   const templateId = Number(request.params.id)
-  if (!templateId || isNaN(templateId)) {
-    returnApiError('Invalid template id', reply, 400)
-  }
+  if (!templateId) throw new ApiError('Invalid template id', 400)
 
-  try {
-    const fragments = await getFragmentDetails(templateId)
-    return reply.send(fragments)
-  } catch (err) {
-    returnApiError(err, reply)
-  }
+  const fragments = await getFragmentDetails(templateId)
+  return reply.send(fragments)
 }
 
 const routeGetLinkedFiles = async (
@@ -277,16 +211,10 @@ const routeGetLinkedFiles = async (
   reply: FastifyReply
 ) => {
   const templateId = Number(request.params.id)
-  if (!templateId || isNaN(templateId)) {
-    returnApiError('Invalid template id', reply, 400)
-  }
+  if (!templateId) throw new ApiError('Invalid template id', 400)
 
-  try {
-    const files = await getLinkedFiles(templateId)
-    return reply.send(files)
-  } catch (err) {
-    returnApiError(err, reply)
-  }
+  const files = await getLinkedFiles(templateId)
+  return reply.send(files)
 }
 
 const getRandomTemplateFolderName = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 24)

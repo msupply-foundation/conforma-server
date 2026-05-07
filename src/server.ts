@@ -67,6 +67,7 @@ import { convertHandler, pgMiddleware } from './postgraphile'
 import { routeGetFragments } from './components/fig-tree-evaluator/routes'
 import { loadStartupSnapshot } from './components/snapshots/loadStartupSnapshot'
 import databaseConnect from './components/database/databaseConnect'
+import { apiErrorHandler } from './ApiError'
 
 require('dotenv').config()
 
@@ -99,6 +100,8 @@ const startServer = async () => {
   config.latestSnapshot = await databaseConnect.getSystemInfo('snapshot')
 
   const server = fastify()
+
+  server.setErrorHandler(apiErrorHandler)
 
   // For serving static files from "Files" folder
   server.register(fastifyStatic, {
