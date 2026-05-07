@@ -624,6 +624,7 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -2398,10 +2399,16 @@ export type ApplicationNoteOrgIdFkeyOrganisationCreateInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -2422,6 +2429,7 @@ export type ApplicationNoteOrgIdFkeyOrganisationCreateInput = {
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
   tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** Represents an update to a `ApplicationNote`. Fields that are set will be updated. */
@@ -3351,10 +3359,16 @@ export type ApplicationOrgIdFkeyOrganisationCreateInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -3375,6 +3389,7 @@ export type ApplicationOrgIdFkeyOrganisationCreateInput = {
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
   tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 export enum ApplicationOutcome {
@@ -3813,6 +3828,7 @@ export type ApplicationResponsePatch = {
 
 export enum ApplicationResponseStatus {
   Draft = 'DRAFT',
+  Review = 'REVIEW',
   Submitted = 'SUBMITTED'
 }
 
@@ -5441,6 +5457,7 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -7754,6 +7771,39 @@ export type CreateDataTableStorageConditionsSimplifiedPayloadDataTableStorageCon
   orderBy?: InputMaybe<Array<DataTableStorageConditionsSimplifiedsOrderBy>>;
 };
 
+/** All input for the create `DataTableTownsDivisionsIsland` mutation. */
+export type CreateDataTableTownsDivisionsIslandInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `DataTableTownsDivisionsIsland` to be created by this mutation. */
+  dataTableTownsDivisionsIsland: DataTableTownsDivisionsIslandInput;
+};
+
+/** The output of our create `DataTableTownsDivisionsIsland` mutation. */
+export type CreateDataTableTownsDivisionsIslandPayload = {
+  __typename?: 'CreateDataTableTownsDivisionsIslandPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `DataTableTownsDivisionsIsland` that was created by this mutation. */
+  dataTableTownsDivisionsIsland?: Maybe<DataTableTownsDivisionsIsland>;
+  /** An edge for our `DataTableTownsDivisionsIsland`. May be used by Relay 1. */
+  dataTableTownsDivisionsIslandEdge?: Maybe<DataTableTownsDivisionsIslandsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `DataTableTownsDivisionsIsland` mutation. */
+export type CreateDataTableTownsDivisionsIslandPayloadDataTableTownsDivisionsIslandEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableTownsDivisionsIslandsOrderBy>>;
+};
+
 /** All input for the create `DataTableUnitsOfProportion` mutation. */
 export type CreateDataTableUnitsOfProportionInput = {
   /**
@@ -7917,6 +7967,39 @@ export type CreateElementTypePluginPayload = {
 /** The output of our create `ElementTypePlugin` mutation. */
 export type CreateElementTypePluginPayloadElementTypePluginEdgeArgs = {
   orderBy?: InputMaybe<Array<ElementTypePluginsOrderBy>>;
+};
+
+/** All input for the create `EvaluatorFragment` mutation. */
+export type CreateEvaluatorFragmentInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `EvaluatorFragment` to be created by this mutation. */
+  evaluatorFragment: EvaluatorFragmentInput;
+};
+
+/** The output of our create `EvaluatorFragment` mutation. */
+export type CreateEvaluatorFragmentPayload = {
+  __typename?: 'CreateEvaluatorFragmentPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `EvaluatorFragment` that was created by this mutation. */
+  evaluatorFragment?: Maybe<EvaluatorFragment>;
+  /** An edge for our `EvaluatorFragment`. May be used by Relay 1. */
+  evaluatorFragmentEdge?: Maybe<EvaluatorFragmentsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `EvaluatorFragment` mutation. */
+export type CreateEvaluatorFragmentPayloadEvaluatorFragmentEdgeArgs = {
+  orderBy?: InputMaybe<Array<EvaluatorFragmentsOrderBy>>;
 };
 
 /** All input for the create `File` mutation. */
@@ -8680,6 +8763,43 @@ export type CreateTemplateElementPayload = {
 /** The output of our create `TemplateElement` mutation. */
 export type CreateTemplateElementPayloadTemplateElementEdgeArgs = {
   orderBy?: InputMaybe<Array<TemplateElementsOrderBy>>;
+};
+
+/** All input for the create `TemplateEvaluatorFragmentJoin` mutation. */
+export type CreateTemplateEvaluatorFragmentJoinInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `TemplateEvaluatorFragmentJoin` to be created by this mutation. */
+  templateEvaluatorFragmentJoin: TemplateEvaluatorFragmentJoinInput;
+};
+
+/** The output of our create `TemplateEvaluatorFragmentJoin` mutation. */
+export type CreateTemplateEvaluatorFragmentJoinPayload = {
+  __typename?: 'CreateTemplateEvaluatorFragmentJoinPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `EvaluatorFragment` that is related to this `TemplateEvaluatorFragmentJoin`. */
+  evaluatorFragment?: Maybe<EvaluatorFragment>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Template` that is related to this `TemplateEvaluatorFragmentJoin`. */
+  template?: Maybe<Template>;
+  /** The `TemplateEvaluatorFragmentJoin` that was created by this mutation. */
+  templateEvaluatorFragmentJoin?: Maybe<TemplateEvaluatorFragmentJoin>;
+  /** An edge for our `TemplateEvaluatorFragmentJoin`. May be used by Relay 1. */
+  templateEvaluatorFragmentJoinEdge?: Maybe<TemplateEvaluatorFragmentJoinsEdge>;
+};
+
+
+/** The output of our create `TemplateEvaluatorFragmentJoin` mutation. */
+export type CreateTemplateEvaluatorFragmentJoinPayloadTemplateEvaluatorFragmentJoinEdgeArgs = {
+  orderBy?: InputMaybe<Array<TemplateEvaluatorFragmentJoinsOrderBy>>;
 };
 
 /** All input for the create `TemplateFileJoin` mutation. */
@@ -9532,10 +9652,16 @@ export type DataChangelogOrgIdFkeyOrganisationCreateInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -9556,6 +9682,7 @@ export type DataChangelogOrgIdFkeyOrganisationCreateInput = {
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
   tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** Represents an update to a `DataChangelog`. Fields that are set will be updated. */
@@ -15345,6 +15472,102 @@ export enum DataTableStorageConditionsSimplifiedsOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
+export type DataTableTownsDivisionsIsland = Node & {
+  __typename?: 'DataTableTownsDivisionsIsland';
+  division?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  island?: Maybe<Scalars['String']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID']['output'];
+  town?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * A condition to be used against `DataTableTownsDivisionsIsland` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
+ */
+export type DataTableTownsDivisionsIslandCondition = {
+  /** Checks for equality with the object’s `division` field. */
+  division?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `island` field. */
+  island?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `town` field. */
+  town?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A filter to be used against `DataTableTownsDivisionsIsland` object types. All fields are combined with a logical ‘and.’ */
+export type DataTableTownsDivisionsIslandFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<DataTableTownsDivisionsIslandFilter>>;
+  /** Filter by the object’s `division` field. */
+  division?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `island` field. */
+  island?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<DataTableTownsDivisionsIslandFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<DataTableTownsDivisionsIslandFilter>>;
+  /** Filter by the object’s `town` field. */
+  town?: InputMaybe<StringFilter>;
+};
+
+/** An input for mutations affecting `DataTableTownsDivisionsIsland` */
+export type DataTableTownsDivisionsIslandInput = {
+  division?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
+  town?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents an update to a `DataTableTownsDivisionsIsland`. Fields that are set will be updated. */
+export type DataTableTownsDivisionsIslandPatch = {
+  division?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
+  town?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A connection to a list of `DataTableTownsDivisionsIsland` values. */
+export type DataTableTownsDivisionsIslandsConnection = {
+  __typename?: 'DataTableTownsDivisionsIslandsConnection';
+  /** A list of edges which contains the `DataTableTownsDivisionsIsland` and cursor to aid in pagination. */
+  edges: Array<DataTableTownsDivisionsIslandsEdge>;
+  /** A list of `DataTableTownsDivisionsIsland` objects. */
+  nodes: Array<Maybe<DataTableTownsDivisionsIsland>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `DataTableTownsDivisionsIsland` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `DataTableTownsDivisionsIsland` edge in the connection. */
+export type DataTableTownsDivisionsIslandsEdge = {
+  __typename?: 'DataTableTownsDivisionsIslandsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `DataTableTownsDivisionsIsland` at the end of the edge. */
+  node?: Maybe<DataTableTownsDivisionsIsland>;
+};
+
+/** Methods to use when ordering `DataTableTownsDivisionsIsland`. */
+export enum DataTableTownsDivisionsIslandsOrderBy {
+  DivisionAsc = 'DIVISION_ASC',
+  DivisionDesc = 'DIVISION_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  IslandAsc = 'ISLAND_ASC',
+  IslandDesc = 'ISLAND_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  TownAsc = 'TOWN_ASC',
+  TownDesc = 'TOWN_DESC'
+}
+
 export type DataTableUnitsOfProportion = Node & {
   __typename?: 'DataTableUnitsOfProportion';
   code?: Maybe<Scalars['String']['output']>;
@@ -18128,6 +18351,50 @@ export type DeleteDataTableStorageConditionsSimplifiedPayloadDataTableStorageCon
   orderBy?: InputMaybe<Array<DataTableStorageConditionsSimplifiedsOrderBy>>;
 };
 
+/** All input for the `deleteDataTableTownsDivisionsIslandByNodeId` mutation. */
+export type DeleteDataTableTownsDivisionsIslandByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `DataTableTownsDivisionsIsland` to be deleted. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteDataTableTownsDivisionsIsland` mutation. */
+export type DeleteDataTableTownsDivisionsIslandInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+/** The output of our delete `DataTableTownsDivisionsIsland` mutation. */
+export type DeleteDataTableTownsDivisionsIslandPayload = {
+  __typename?: 'DeleteDataTableTownsDivisionsIslandPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `DataTableTownsDivisionsIsland` that was deleted by this mutation. */
+  dataTableTownsDivisionsIsland?: Maybe<DataTableTownsDivisionsIsland>;
+  /** An edge for our `DataTableTownsDivisionsIsland`. May be used by Relay 1. */
+  dataTableTownsDivisionsIslandEdge?: Maybe<DataTableTownsDivisionsIslandsEdge>;
+  deletedDataTableTownsDivisionsIslandNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `DataTableTownsDivisionsIsland` mutation. */
+export type DeleteDataTableTownsDivisionsIslandPayloadDataTableTownsDivisionsIslandEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableTownsDivisionsIslandsOrderBy>>;
+};
+
 /** All input for the `deleteDataTableUnitsOfProportionByNodeId` mutation. */
 export type DeleteDataTableUnitsOfProportionByNodeIdInput = {
   /**
@@ -18367,6 +18634,60 @@ export type DeleteElementTypePluginPayload = {
 /** The output of our delete `ElementTypePlugin` mutation. */
 export type DeleteElementTypePluginPayloadElementTypePluginEdgeArgs = {
   orderBy?: InputMaybe<Array<ElementTypePluginsOrderBy>>;
+};
+
+/** All input for the `deleteEvaluatorFragmentByName` mutation. */
+export type DeleteEvaluatorFragmentByNameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+};
+
+/** All input for the `deleteEvaluatorFragmentByNodeId` mutation. */
+export type DeleteEvaluatorFragmentByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `EvaluatorFragment` to be deleted. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteEvaluatorFragment` mutation. */
+export type DeleteEvaluatorFragmentInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+/** The output of our delete `EvaluatorFragment` mutation. */
+export type DeleteEvaluatorFragmentPayload = {
+  __typename?: 'DeleteEvaluatorFragmentPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedEvaluatorFragmentNodeId?: Maybe<Scalars['ID']['output']>;
+  /** The `EvaluatorFragment` that was deleted by this mutation. */
+  evaluatorFragment?: Maybe<EvaluatorFragment>;
+  /** An edge for our `EvaluatorFragment`. May be used by Relay 1. */
+  evaluatorFragmentEdge?: Maybe<EvaluatorFragmentsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `EvaluatorFragment` mutation. */
+export type DeleteEvaluatorFragmentPayloadEvaluatorFragmentEdgeArgs = {
+  orderBy?: InputMaybe<Array<EvaluatorFragmentsOrderBy>>;
 };
 
 /** All input for the `deleteFileByNodeId` mutation. */
@@ -19445,6 +19766,65 @@ export type DeleteTemplateElementPayloadTemplateElementEdgeArgs = {
   orderBy?: InputMaybe<Array<TemplateElementsOrderBy>>;
 };
 
+/** All input for the `deleteTemplateEvaluatorFragmentJoinByNodeId` mutation. */
+export type DeleteTemplateEvaluatorFragmentJoinByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `TemplateEvaluatorFragmentJoin` to be deleted. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentId` mutation. */
+export type DeleteTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  evaluatorFragmentId: Scalars['Int']['input'];
+  templateId: Scalars['Int']['input'];
+};
+
+/** All input for the `deleteTemplateEvaluatorFragmentJoin` mutation. */
+export type DeleteTemplateEvaluatorFragmentJoinInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+/** The output of our delete `TemplateEvaluatorFragmentJoin` mutation. */
+export type DeleteTemplateEvaluatorFragmentJoinPayload = {
+  __typename?: 'DeleteTemplateEvaluatorFragmentJoinPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedTemplateEvaluatorFragmentJoinNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Reads a single `EvaluatorFragment` that is related to this `TemplateEvaluatorFragmentJoin`. */
+  evaluatorFragment?: Maybe<EvaluatorFragment>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Template` that is related to this `TemplateEvaluatorFragmentJoin`. */
+  template?: Maybe<Template>;
+  /** The `TemplateEvaluatorFragmentJoin` that was deleted by this mutation. */
+  templateEvaluatorFragmentJoin?: Maybe<TemplateEvaluatorFragmentJoin>;
+  /** An edge for our `TemplateEvaluatorFragmentJoin`. May be used by Relay 1. */
+  templateEvaluatorFragmentJoinEdge?: Maybe<TemplateEvaluatorFragmentJoinsEdge>;
+};
+
+
+/** The output of our delete `TemplateEvaluatorFragmentJoin` mutation. */
+export type DeleteTemplateEvaluatorFragmentJoinPayloadTemplateEvaluatorFragmentJoinEdgeArgs = {
+  orderBy?: InputMaybe<Array<TemplateEvaluatorFragmentJoinsOrderBy>>;
+};
+
 /** All input for the `deleteTemplateFileJoinByNodeId` mutation. */
 export type DeleteTemplateFileJoinByNodeIdInput = {
   /**
@@ -20181,6 +20561,231 @@ export enum ElementTypePluginsOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RequiredParametersAsc = 'REQUIRED_PARAMETERS_ASC',
   RequiredParametersDesc = 'REQUIRED_PARAMETERS_DESC'
+}
+
+export type EvaluatorFragment = Node & {
+  __typename?: 'EvaluatorFragment';
+  backEnd: Scalars['Boolean']['output'];
+  checksum?: Maybe<Scalars['String']['output']>;
+  expression: Scalars['JSON']['output'];
+  frontEnd: Scalars['Boolean']['output'];
+  id: Scalars['Int']['output'];
+  lastModified?: Maybe<Scalars['Datetime']['output']>;
+  metadata?: Maybe<Scalars['JSON']['output']>;
+  name: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID']['output'];
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** Reads and enables pagination through a set of `TemplateEvaluatorFragmentJoin`. */
+  templateEvaluatorFragmentJoins: TemplateEvaluatorFragmentJoinsConnection;
+};
+
+
+export type EvaluatorFragmentTemplateEvaluatorFragmentJoinsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<TemplateEvaluatorFragmentJoinCondition>;
+  filter?: InputMaybe<TemplateEvaluatorFragmentJoinFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TemplateEvaluatorFragmentJoinsOrderBy>>;
+};
+
+/**
+ * A condition to be used against `EvaluatorFragment` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type EvaluatorFragmentCondition = {
+  /** Checks for equality with the object’s `backEnd` field. */
+  backEnd?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `checksum` field. */
+  checksum?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `expression` field. */
+  expression?: InputMaybe<Scalars['JSON']['input']>;
+  /** Checks for equality with the object’s `frontEnd` field. */
+  frontEnd?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `lastModified` field. */
+  lastModified?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `metadata` field. */
+  metadata?: InputMaybe<Scalars['JSON']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `permissionNames` field. */
+  permissionNames?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+/** The fields on `evaluatorFragment` to look up the row to connect. */
+export type EvaluatorFragmentEvaluatorFragmentNameKeyConnect = {
+  name: Scalars['String']['input'];
+};
+
+/** The fields on `evaluatorFragment` to look up the row to delete. */
+export type EvaluatorFragmentEvaluatorFragmentNameKeyDelete = {
+  name: Scalars['String']['input'];
+};
+
+/** The fields on `evaluatorFragment` to look up the row to connect. */
+export type EvaluatorFragmentEvaluatorFragmentPkeyConnect = {
+  id: Scalars['Int']['input'];
+};
+
+/** The fields on `evaluatorFragment` to look up the row to delete. */
+export type EvaluatorFragmentEvaluatorFragmentPkeyDelete = {
+  id: Scalars['Int']['input'];
+};
+
+/** A filter to be used against `EvaluatorFragment` object types. All fields are combined with a logical ‘and.’ */
+export type EvaluatorFragmentFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<EvaluatorFragmentFilter>>;
+  /** Filter by the object’s `backEnd` field. */
+  backEnd?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `checksum` field. */
+  checksum?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `expression` field. */
+  expression?: InputMaybe<JsonFilter>;
+  /** Filter by the object’s `frontEnd` field. */
+  frontEnd?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `lastModified` field. */
+  lastModified?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `metadata` field. */
+  metadata?: InputMaybe<JsonFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<EvaluatorFragmentFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<EvaluatorFragmentFilter>>;
+  /** Filter by the object’s `permissionNames` field. */
+  permissionNames?: InputMaybe<StringListFilter>;
+  /** Filter by the object’s `templateEvaluatorFragmentJoins` relation. */
+  templateEvaluatorFragmentJoins?: InputMaybe<EvaluatorFragmentToManyTemplateEvaluatorFragmentJoinFilter>;
+  /** Some related `templateEvaluatorFragmentJoins` exist. */
+  templateEvaluatorFragmentJoinsExist?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** An input for mutations affecting `EvaluatorFragment` */
+export type EvaluatorFragmentInput = {
+  backEnd?: InputMaybe<Scalars['Boolean']['input']>;
+  checksum?: InputMaybe<Scalars['String']['input']>;
+  expression: Scalars['JSON']['input'];
+  frontEnd?: InputMaybe<Scalars['Boolean']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  lastModified?: InputMaybe<Scalars['Datetime']['input']>;
+  metadata?: InputMaybe<Scalars['JSON']['input']>;
+  name: Scalars['String']['input'];
+  permissionNames?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type EvaluatorFragmentNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `evaluatorFragment` to be connected. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type EvaluatorFragmentNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `evaluatorFragment` to be deleted. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type EvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `templateEvaluatorFragmentJoin` to be connected. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `templateEvaluatorFragmentJoin` being updated. */
+  patch: TemplateEvaluatorFragmentJoinPatch;
+};
+
+/** The fields on `evaluatorFragment` to look up the row to update. */
+export type EvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingEvaluatorFragmentNameKeyUpdate = {
+  name: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `evaluatorFragment` being updated. */
+  patch: UpdateEvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyPatch;
+};
+
+/** The fields on `evaluatorFragment` to look up the row to update. */
+export type EvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingEvaluatorFragmentPkeyUpdate = {
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `evaluatorFragment` being updated. */
+  patch: UpdateEvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyPatch;
+};
+
+/** Represents an update to a `EvaluatorFragment`. Fields that are set will be updated. */
+export type EvaluatorFragmentPatch = {
+  backEnd?: InputMaybe<Scalars['Boolean']['input']>;
+  checksum?: InputMaybe<Scalars['String']['input']>;
+  expression?: InputMaybe<Scalars['JSON']['input']>;
+  frontEnd?: InputMaybe<Scalars['Boolean']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  lastModified?: InputMaybe<Scalars['Datetime']['input']>;
+  metadata?: InputMaybe<Scalars['JSON']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  permissionNames?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInverseInput>;
+};
+
+/** A filter to be used against many `TemplateEvaluatorFragmentJoin` object types. All fields are combined with a logical ‘and.’ */
+export type EvaluatorFragmentToManyTemplateEvaluatorFragmentJoinFilter = {
+  /** Every related `TemplateEvaluatorFragmentJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TemplateEvaluatorFragmentJoinFilter>;
+  /** No related `TemplateEvaluatorFragmentJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TemplateEvaluatorFragmentJoinFilter>;
+  /** Some related `TemplateEvaluatorFragmentJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TemplateEvaluatorFragmentJoinFilter>;
+};
+
+/** A connection to a list of `EvaluatorFragment` values. */
+export type EvaluatorFragmentsConnection = {
+  __typename?: 'EvaluatorFragmentsConnection';
+  /** A list of edges which contains the `EvaluatorFragment` and cursor to aid in pagination. */
+  edges: Array<EvaluatorFragmentsEdge>;
+  /** A list of `EvaluatorFragment` objects. */
+  nodes: Array<Maybe<EvaluatorFragment>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `EvaluatorFragment` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `EvaluatorFragment` edge in the connection. */
+export type EvaluatorFragmentsEdge = {
+  __typename?: 'EvaluatorFragmentsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `EvaluatorFragment` at the end of the edge. */
+  node?: Maybe<EvaluatorFragment>;
+};
+
+/** Methods to use when ordering `EvaluatorFragment`. */
+export enum EvaluatorFragmentsOrderBy {
+  BackEndAsc = 'BACK_END_ASC',
+  BackEndDesc = 'BACK_END_DESC',
+  ChecksumAsc = 'CHECKSUM_ASC',
+  ChecksumDesc = 'CHECKSUM_DESC',
+  ExpressionAsc = 'EXPRESSION_ASC',
+  ExpressionDesc = 'EXPRESSION_DESC',
+  FrontEndAsc = 'FRONT_END_ASC',
+  FrontEndDesc = 'FRONT_END_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  LastModifiedAsc = 'LAST_MODIFIED_ASC',
+  LastModifiedDesc = 'LAST_MODIFIED_DESC',
+  MetadataAsc = 'METADATA_ASC',
+  MetadataDesc = 'METADATA_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  PermissionNamesAsc = 'PERMISSION_NAMES_ASC',
+  PermissionNamesDesc = 'PERMISSION_NAMES_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
 export enum EventType {
@@ -21926,6 +22531,8 @@ export type Mutation = {
   createDataTableStorageCondition?: Maybe<CreateDataTableStorageConditionPayload>;
   /** Creates a single `DataTableStorageConditionsSimplified`. */
   createDataTableStorageConditionsSimplified?: Maybe<CreateDataTableStorageConditionsSimplifiedPayload>;
+  /** Creates a single `DataTableTownsDivisionsIsland`. */
+  createDataTableTownsDivisionsIsland?: Maybe<CreateDataTableTownsDivisionsIslandPayload>;
   /** Creates a single `DataTableUnitsOfProportion`. */
   createDataTableUnitsOfProportion?: Maybe<CreateDataTableUnitsOfProportionPayload>;
   /** Creates a single `DataTableWorldHealthOrganisationPqListOfFpp`. */
@@ -21936,6 +22543,8 @@ export type Mutation = {
   createDataViewColumnDefinition?: Maybe<CreateDataViewColumnDefinitionPayload>;
   /** Creates a single `ElementTypePlugin`. */
   createElementTypePlugin?: Maybe<CreateElementTypePluginPayload>;
+  /** Creates a single `EvaluatorFragment`. */
+  createEvaluatorFragment?: Maybe<CreateEvaluatorFragmentPayload>;
   /** Creates a single `File`. */
   createFile?: Maybe<CreateFilePayload>;
   /** Creates a single `Filter`. */
@@ -21980,6 +22589,8 @@ export type Mutation = {
   createTemplateDataViewJoin?: Maybe<CreateTemplateDataViewJoinPayload>;
   /** Creates a single `TemplateElement`. */
   createTemplateElement?: Maybe<CreateTemplateElementPayload>;
+  /** Creates a single `TemplateEvaluatorFragmentJoin`. */
+  createTemplateEvaluatorFragmentJoin?: Maybe<CreateTemplateEvaluatorFragmentJoinPayload>;
   /** Creates a single `TemplateFileJoin`. */
   createTemplateFileJoin?: Maybe<CreateTemplateFileJoinPayload>;
   /** Creates a single `TemplateFilterJoin`. */
@@ -22174,6 +22785,10 @@ export type Mutation = {
   deleteDataTableStorageConditionsSimplified?: Maybe<DeleteDataTableStorageConditionsSimplifiedPayload>;
   /** Deletes a single `DataTableStorageConditionsSimplified` using its globally unique id. */
   deleteDataTableStorageConditionsSimplifiedByNodeId?: Maybe<DeleteDataTableStorageConditionsSimplifiedPayload>;
+  /** Deletes a single `DataTableTownsDivisionsIsland` using a unique key. */
+  deleteDataTableTownsDivisionsIsland?: Maybe<DeleteDataTableTownsDivisionsIslandPayload>;
+  /** Deletes a single `DataTableTownsDivisionsIsland` using its globally unique id. */
+  deleteDataTableTownsDivisionsIslandByNodeId?: Maybe<DeleteDataTableTownsDivisionsIslandPayload>;
   /** Deletes a single `DataTableUnitsOfProportion` using a unique key. */
   deleteDataTableUnitsOfProportion?: Maybe<DeleteDataTableUnitsOfProportionPayload>;
   /** Deletes a single `DataTableUnitsOfProportion` using its globally unique id. */
@@ -22198,6 +22813,12 @@ export type Mutation = {
   deleteElementTypePlugin?: Maybe<DeleteElementTypePluginPayload>;
   /** Deletes a single `ElementTypePlugin` using its globally unique id. */
   deleteElementTypePluginByNodeId?: Maybe<DeleteElementTypePluginPayload>;
+  /** Deletes a single `EvaluatorFragment` using a unique key. */
+  deleteEvaluatorFragment?: Maybe<DeleteEvaluatorFragmentPayload>;
+  /** Deletes a single `EvaluatorFragment` using a unique key. */
+  deleteEvaluatorFragmentByName?: Maybe<DeleteEvaluatorFragmentPayload>;
+  /** Deletes a single `EvaluatorFragment` using its globally unique id. */
+  deleteEvaluatorFragmentByNodeId?: Maybe<DeleteEvaluatorFragmentPayload>;
   /** Deletes a single `File` using a unique key. */
   deleteFile?: Maybe<DeleteFilePayload>;
   /** Deletes a single `File` using its globally unique id. */
@@ -22304,6 +22925,12 @@ export type Mutation = {
   deleteTemplateElementByNodeId?: Maybe<DeleteTemplateElementPayload>;
   /** Deletes a single `TemplateElement` using a unique key. */
   deleteTemplateElementByTemplateCodeAndCodeAndTemplateVersion?: Maybe<DeleteTemplateElementPayload>;
+  /** Deletes a single `TemplateEvaluatorFragmentJoin` using a unique key. */
+  deleteTemplateEvaluatorFragmentJoin?: Maybe<DeleteTemplateEvaluatorFragmentJoinPayload>;
+  /** Deletes a single `TemplateEvaluatorFragmentJoin` using its globally unique id. */
+  deleteTemplateEvaluatorFragmentJoinByNodeId?: Maybe<DeleteTemplateEvaluatorFragmentJoinPayload>;
+  /** Deletes a single `TemplateEvaluatorFragmentJoin` using a unique key. */
+  deleteTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentId?: Maybe<DeleteTemplateEvaluatorFragmentJoinPayload>;
   /** Deletes a single `TemplateFileJoin` using a unique key. */
   deleteTemplateFileJoin?: Maybe<DeleteTemplateFileJoinPayload>;
   /** Deletes a single `TemplateFileJoin` using its globally unique id. */
@@ -22523,6 +23150,10 @@ export type Mutation = {
   updateDataTableStorageConditionsSimplified?: Maybe<UpdateDataTableStorageConditionsSimplifiedPayload>;
   /** Updates a single `DataTableStorageConditionsSimplified` using its globally unique id and a patch. */
   updateDataTableStorageConditionsSimplifiedByNodeId?: Maybe<UpdateDataTableStorageConditionsSimplifiedPayload>;
+  /** Updates a single `DataTableTownsDivisionsIsland` using a unique key and a patch. */
+  updateDataTableTownsDivisionsIsland?: Maybe<UpdateDataTableTownsDivisionsIslandPayload>;
+  /** Updates a single `DataTableTownsDivisionsIsland` using its globally unique id and a patch. */
+  updateDataTableTownsDivisionsIslandByNodeId?: Maybe<UpdateDataTableTownsDivisionsIslandPayload>;
   /** Updates a single `DataTableUnitsOfProportion` using a unique key and a patch. */
   updateDataTableUnitsOfProportion?: Maybe<UpdateDataTableUnitsOfProportionPayload>;
   /** Updates a single `DataTableUnitsOfProportion` using its globally unique id and a patch. */
@@ -22547,6 +23178,12 @@ export type Mutation = {
   updateElementTypePlugin?: Maybe<UpdateElementTypePluginPayload>;
   /** Updates a single `ElementTypePlugin` using its globally unique id and a patch. */
   updateElementTypePluginByNodeId?: Maybe<UpdateElementTypePluginPayload>;
+  /** Updates a single `EvaluatorFragment` using a unique key and a patch. */
+  updateEvaluatorFragment?: Maybe<UpdateEvaluatorFragmentPayload>;
+  /** Updates a single `EvaluatorFragment` using a unique key and a patch. */
+  updateEvaluatorFragmentByName?: Maybe<UpdateEvaluatorFragmentPayload>;
+  /** Updates a single `EvaluatorFragment` using its globally unique id and a patch. */
+  updateEvaluatorFragmentByNodeId?: Maybe<UpdateEvaluatorFragmentPayload>;
   /** Updates a single `File` using a unique key and a patch. */
   updateFile?: Maybe<UpdateFilePayload>;
   /** Updates a single `File` using its globally unique id and a patch. */
@@ -22653,6 +23290,12 @@ export type Mutation = {
   updateTemplateElementByNodeId?: Maybe<UpdateTemplateElementPayload>;
   /** Updates a single `TemplateElement` using a unique key and a patch. */
   updateTemplateElementByTemplateCodeAndCodeAndTemplateVersion?: Maybe<UpdateTemplateElementPayload>;
+  /** Updates a single `TemplateEvaluatorFragmentJoin` using a unique key and a patch. */
+  updateTemplateEvaluatorFragmentJoin?: Maybe<UpdateTemplateEvaluatorFragmentJoinPayload>;
+  /** Updates a single `TemplateEvaluatorFragmentJoin` using its globally unique id and a patch. */
+  updateTemplateEvaluatorFragmentJoinByNodeId?: Maybe<UpdateTemplateEvaluatorFragmentJoinPayload>;
+  /** Updates a single `TemplateEvaluatorFragmentJoin` using a unique key and a patch. */
+  updateTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentId?: Maybe<UpdateTemplateEvaluatorFragmentJoinPayload>;
   /** Updates a single `TemplateFileJoin` using a unique key and a patch. */
   updateTemplateFileJoin?: Maybe<UpdateTemplateFileJoinPayload>;
   /** Updates a single `TemplateFileJoin` using its globally unique id and a patch. */
@@ -22953,6 +23596,12 @@ export type MutationCreateDataTableStorageConditionsSimplifiedArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDataTableTownsDivisionsIslandArgs = {
+  input: CreateDataTableTownsDivisionsIslandInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateDataTableUnitsOfProportionArgs = {
   input: CreateDataTableUnitsOfProportionInput;
 };
@@ -22979,6 +23628,12 @@ export type MutationCreateDataViewColumnDefinitionArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateElementTypePluginArgs = {
   input: CreateElementTypePluginInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateEvaluatorFragmentArgs = {
+  input: CreateEvaluatorFragmentInput;
 };
 
 
@@ -23111,6 +23766,12 @@ export type MutationCreateTemplateDataViewJoinArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateTemplateElementArgs = {
   input: CreateTemplateElementInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateTemplateEvaluatorFragmentJoinArgs = {
+  input: CreateTemplateEvaluatorFragmentJoinInput;
 };
 
 
@@ -23697,6 +24358,18 @@ export type MutationDeleteDataTableStorageConditionsSimplifiedByNodeIdArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableTownsDivisionsIslandArgs = {
+  input: DeleteDataTableTownsDivisionsIslandInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableTownsDivisionsIslandByNodeIdArgs = {
+  input: DeleteDataTableTownsDivisionsIslandByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteDataTableUnitsOfProportionArgs = {
   input: DeleteDataTableUnitsOfProportionInput;
 };
@@ -23765,6 +24438,24 @@ export type MutationDeleteElementTypePluginArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteElementTypePluginByNodeIdArgs = {
   input: DeleteElementTypePluginByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteEvaluatorFragmentArgs = {
+  input: DeleteEvaluatorFragmentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteEvaluatorFragmentByNameArgs = {
+  input: DeleteEvaluatorFragmentByNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteEvaluatorFragmentByNodeIdArgs = {
+  input: DeleteEvaluatorFragmentByNodeIdInput;
 };
 
 
@@ -24083,6 +24774,24 @@ export type MutationDeleteTemplateElementByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteTemplateElementByTemplateCodeAndCodeAndTemplateVersionArgs = {
   input: DeleteTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTemplateEvaluatorFragmentJoinArgs = {
+  input: DeleteTemplateEvaluatorFragmentJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTemplateEvaluatorFragmentJoinByNodeIdArgs = {
+  input: DeleteTemplateEvaluatorFragmentJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentIdArgs = {
+  input: DeleteTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentIdInput;
 };
 
 
@@ -24747,6 +25456,18 @@ export type MutationUpdateDataTableStorageConditionsSimplifiedByNodeIdArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableTownsDivisionsIslandArgs = {
+  input: UpdateDataTableTownsDivisionsIslandInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableTownsDivisionsIslandByNodeIdArgs = {
+  input: UpdateDataTableTownsDivisionsIslandByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateDataTableUnitsOfProportionArgs = {
   input: UpdateDataTableUnitsOfProportionInput;
 };
@@ -24815,6 +25536,24 @@ export type MutationUpdateElementTypePluginArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateElementTypePluginByNodeIdArgs = {
   input: UpdateElementTypePluginByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateEvaluatorFragmentArgs = {
+  input: UpdateEvaluatorFragmentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateEvaluatorFragmentByNameArgs = {
+  input: UpdateEvaluatorFragmentByNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateEvaluatorFragmentByNodeIdArgs = {
+  input: UpdateEvaluatorFragmentByNodeIdInput;
 };
 
 
@@ -25133,6 +25872,24 @@ export type MutationUpdateTemplateElementByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateTemplateElementByTemplateCodeAndCodeAndTemplateVersionArgs = {
   input: UpdateTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTemplateEvaluatorFragmentJoinArgs = {
+  input: UpdateTemplateEvaluatorFragmentJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTemplateEvaluatorFragmentJoinByNodeIdArgs = {
+  input: UpdateTemplateEvaluatorFragmentJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentIdArgs = {
+  input: UpdateTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentIdInput;
 };
 
 
@@ -25735,10 +26492,16 @@ export type Organisation = Node & {
   country?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `DataChangelog`. */
   dataChangelogsByOrgId: DataChangelogsConnection;
+  establishmentLicence?: Maybe<Scalars['JSON']['output']>;
   id: Scalars['Int']['output'];
   isChemicalImporter?: Maybe<Scalars['Boolean']['output']>;
+  isFreeMedProgram?: Maybe<Scalars['Boolean']['output']>;
+  isMedImporter?: Maybe<Scalars['Boolean']['output']>;
+  isMedPrequalifier?: Maybe<Scalars['Boolean']['output']>;
+  isMedProvRegister?: Maybe<Scalars['Boolean']['output']>;
   isSponsorCompany?: Maybe<Scalars['Boolean']['output']>;
   isSystemOrg?: Maybe<Scalars['Boolean']['output']>;
+  licenceExpiry?: Maybe<Scalars['Date']['output']>;
   license?: Maybe<Scalars['JSON']['output']>;
   localAgentBusinessAddress?: Maybe<Scalars['String']['output']>;
   localAgentEmail?: Maybe<Scalars['String']['output']>;
@@ -25766,6 +26529,7 @@ export type Organisation = Node & {
   tinNumber?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations: UserOrganisationsConnection;
+  wholesaleLicence?: Maybe<Scalars['JSON']['output']>;
 };
 
 
@@ -26142,10 +26906,16 @@ export type OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -26166,6 +26936,7 @@ export type OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
   tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** Represents an update to a `OrganisationApplicationJoin`. Fields that are set will be updated. */
@@ -26227,14 +26998,26 @@ export type OrganisationCondition = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `country` field. */
   country?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `establishmentLicence` field. */
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `isChemicalImporter` field. */
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isFreeMedProgram` field. */
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isMedImporter` field. */
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isMedPrequalifier` field. */
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isMedProvRegister` field. */
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isSponsorCompany` field. */
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isSystemOrg` field. */
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `licenceExpiry` field. */
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `license` field. */
   license?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `localAgentBusinessAddress` field. */
@@ -26265,6 +27048,8 @@ export type OrganisationCondition = {
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `tinNumber` field. */
   tinNumber?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `wholesaleLicence` field. */
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** A filter to be used against `Organisation` object types. All fields are combined with a logical ‘and.’ */
@@ -26293,14 +27078,26 @@ export type OrganisationFilter = {
   dataChangelogsByOrgId?: InputMaybe<OrganisationToManyDataChangelogFilter>;
   /** Some related `dataChangelogsByOrgId` exist. */
   dataChangelogsByOrgIdExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `establishmentLicence` field. */
+  establishmentLicence?: InputMaybe<JsonFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
   /** Filter by the object’s `isChemicalImporter` field. */
   isChemicalImporter?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `isFreeMedProgram` field. */
+  isFreeMedProgram?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `isMedImporter` field. */
+  isMedImporter?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `isMedPrequalifier` field. */
+  isMedPrequalifier?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `isMedProvRegister` field. */
+  isMedProvRegister?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `isSponsorCompany` field. */
   isSponsorCompany?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `isSystemOrg` field. */
   isSystemOrg?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `licenceExpiry` field. */
+  licenceExpiry?: InputMaybe<DateFilter>;
   /** Filter by the object’s `license` field. */
   license?: InputMaybe<JsonFilter>;
   /** Filter by the object’s `localAgentBusinessAddress` field. */
@@ -26355,6 +27152,8 @@ export type OrganisationFilter = {
   userOrganisations?: InputMaybe<OrganisationToManyUserOrganisationFilter>;
   /** Some related `userOrganisations` exist. */
   userOrganisationsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `wholesaleLicence` field. */
+  wholesaleLicence?: InputMaybe<JsonFilter>;
 };
 
 /** An input for mutations affecting `Organisation` */
@@ -26367,10 +27166,16 @@ export type OrganisationInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -26391,6 +27196,7 @@ export type OrganisationInput = {
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
   tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -26677,10 +27483,16 @@ export type OrganisationPatch = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -26701,6 +27513,7 @@ export type OrganisationPatch = {
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
   tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** A filter to be used against many `Application` object types. All fields are combined with a logical ‘and.’ */
@@ -26817,14 +27630,26 @@ export enum OrganisationsOrderBy {
   ContactPhoneDesc = 'CONTACT_PHONE_DESC',
   CountryAsc = 'COUNTRY_ASC',
   CountryDesc = 'COUNTRY_DESC',
+  EstablishmentLicenceAsc = 'ESTABLISHMENT_LICENCE_ASC',
+  EstablishmentLicenceDesc = 'ESTABLISHMENT_LICENCE_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
   IsChemicalImporterAsc = 'IS_CHEMICAL_IMPORTER_ASC',
   IsChemicalImporterDesc = 'IS_CHEMICAL_IMPORTER_DESC',
+  IsFreeMedProgramAsc = 'IS_FREE_MED_PROGRAM_ASC',
+  IsFreeMedProgramDesc = 'IS_FREE_MED_PROGRAM_DESC',
+  IsMedImporterAsc = 'IS_MED_IMPORTER_ASC',
+  IsMedImporterDesc = 'IS_MED_IMPORTER_DESC',
+  IsMedPrequalifierAsc = 'IS_MED_PREQUALIFIER_ASC',
+  IsMedPrequalifierDesc = 'IS_MED_PREQUALIFIER_DESC',
+  IsMedProvRegisterAsc = 'IS_MED_PROV_REGISTER_ASC',
+  IsMedProvRegisterDesc = 'IS_MED_PROV_REGISTER_DESC',
   IsSponsorCompanyAsc = 'IS_SPONSOR_COMPANY_ASC',
   IsSponsorCompanyDesc = 'IS_SPONSOR_COMPANY_DESC',
   IsSystemOrgAsc = 'IS_SYSTEM_ORG_ASC',
   IsSystemOrgDesc = 'IS_SYSTEM_ORG_DESC',
+  LicenceExpiryAsc = 'LICENCE_EXPIRY_ASC',
+  LicenceExpiryDesc = 'LICENCE_EXPIRY_DESC',
   LicenseAsc = 'LICENSE_ASC',
   LicenseDesc = 'LICENSE_DESC',
   LocalAgentBusinessAddressAsc = 'LOCAL_AGENT_BUSINESS_ADDRESS_ASC',
@@ -26857,7 +27682,9 @@ export enum OrganisationsOrderBy {
   TinLetterAsc = 'TIN_LETTER_ASC',
   TinLetterDesc = 'TIN_LETTER_DESC',
   TinNumberAsc = 'TIN_NUMBER_ASC',
-  TinNumberDesc = 'TIN_NUMBER_DESC'
+  TinNumberDesc = 'TIN_NUMBER_DESC',
+  WholesaleLicenceAsc = 'WHOLESALE_LICENCE_ASC',
+  WholesaleLicenceDesc = 'WHOLESALE_LICENCE_DESC'
 }
 
 /** Information about pagination in a connection. */
@@ -27134,10 +27961,16 @@ export type PermissionJoinOrganisationIdFkeyOrganisationCreateInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -27158,6 +27991,7 @@ export type PermissionJoinOrganisationIdFkeyOrganisationCreateInput = {
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
   tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** The `permissionJoin` to be created by this mutation. */
@@ -28303,7 +29137,7 @@ export type Query = Node & {
   applications?: Maybe<ApplicationsConnection>;
   assignableQuestionsCount?: Maybe<Scalars['BigInt']['output']>;
   assignedQuestions?: Maybe<AssignedQuestionsConnection>;
-  assignedQuestionsCount?: Maybe<Scalars['BigInt']['output']>;
+  assignedQuestionsCount?: Maybe<Scalars['Int']['output']>;
   /** Reads and enables pagination through a set of `AssignedSectionsByStageAndLevel`. */
   assignedSectionsByStageAndLevels?: Maybe<AssignedSectionsByStageAndLevelsConnection>;
   assignerList?: Maybe<AssignerListConnection>;
@@ -28460,6 +29294,11 @@ export type Query = Node & {
   dataTableStorageConditionsSimplifiedByNodeId?: Maybe<DataTableStorageConditionsSimplified>;
   /** Reads and enables pagination through a set of `DataTableStorageConditionsSimplified`. */
   dataTableStorageConditionsSimplifieds?: Maybe<DataTableStorageConditionsSimplifiedsConnection>;
+  dataTableTownsDivisionsIsland?: Maybe<DataTableTownsDivisionsIsland>;
+  /** Reads a single `DataTableTownsDivisionsIsland` using its globally unique `ID`. */
+  dataTableTownsDivisionsIslandByNodeId?: Maybe<DataTableTownsDivisionsIsland>;
+  /** Reads and enables pagination through a set of `DataTableTownsDivisionsIsland`. */
+  dataTableTownsDivisionsIslands?: Maybe<DataTableTownsDivisionsIslandsConnection>;
   dataTableUnitsOfProportion?: Maybe<DataTableUnitsOfProportion>;
   /** Reads a single `DataTableUnitsOfProportion` using its globally unique `ID`. */
   dataTableUnitsOfProportionByNodeId?: Maybe<DataTableUnitsOfProportion>;
@@ -28489,6 +29328,12 @@ export type Query = Node & {
   elementTypePluginByNodeId?: Maybe<ElementTypePlugin>;
   /** Reads and enables pagination through a set of `ElementTypePlugin`. */
   elementTypePlugins?: Maybe<ElementTypePluginsConnection>;
+  evaluatorFragment?: Maybe<EvaluatorFragment>;
+  evaluatorFragmentByName?: Maybe<EvaluatorFragment>;
+  /** Reads a single `EvaluatorFragment` using its globally unique `ID`. */
+  evaluatorFragmentByNodeId?: Maybe<EvaluatorFragment>;
+  /** Reads and enables pagination through a set of `EvaluatorFragment`. */
+  evaluatorFragments?: Maybe<EvaluatorFragmentsConnection>;
   file?: Maybe<File>;
   /** Reads a single `File` using its globally unique `ID`. */
   fileByNodeId?: Maybe<File>;
@@ -28593,13 +29438,13 @@ export type Query = Node & {
   /** Reads a single `ReviewStatusHistory` using its globally unique `ID`. */
   reviewStatusHistoryByNodeId?: Maybe<ReviewStatusHistory>;
   reviewableQuestions?: Maybe<ReviewableQuestionsConnection>;
-  reviewableQuestionsCount?: Maybe<Scalars['BigInt']['output']>;
+  reviewableQuestionsCount?: Maybe<Scalars['Int']['output']>;
   /** Reads and enables pagination through a set of `Review`. */
   reviews?: Maybe<ReviewsConnection>;
   /** Reads and enables pagination through a set of `SchemaColumn`. */
   schemaColumns?: Maybe<SchemaColumnsConnection>;
   singleApplicationDetail?: Maybe<SingleApplicationDetailConnection>;
-  submittedAssignedQuestionsCount?: Maybe<Scalars['BigInt']['output']>;
+  submittedAssignedQuestionsCount?: Maybe<Scalars['Int']['output']>;
   systemInfo?: Maybe<SystemInfo>;
   /** Reads a single `SystemInfo` using its globally unique `ID`. */
   systemInfoByNodeId?: Maybe<SystemInfo>;
@@ -28632,6 +29477,12 @@ export type Query = Node & {
   templateElementByTemplateCodeAndCodeAndTemplateVersion?: Maybe<TemplateElement>;
   /** Reads and enables pagination through a set of `TemplateElement`. */
   templateElements?: Maybe<TemplateElementsConnection>;
+  templateEvaluatorFragmentJoin?: Maybe<TemplateEvaluatorFragmentJoin>;
+  /** Reads a single `TemplateEvaluatorFragmentJoin` using its globally unique `ID`. */
+  templateEvaluatorFragmentJoinByNodeId?: Maybe<TemplateEvaluatorFragmentJoin>;
+  templateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentId?: Maybe<TemplateEvaluatorFragmentJoin>;
+  /** Reads and enables pagination through a set of `TemplateEvaluatorFragmentJoin`. */
+  templateEvaluatorFragmentJoins?: Maybe<TemplateEvaluatorFragmentJoinsConnection>;
   templateFileJoin?: Maybe<TemplateFileJoin>;
   /** Reads a single `TemplateFileJoin` using its globally unique `ID`. */
   templateFileJoinByNodeId?: Maybe<TemplateFileJoin>;
@@ -29923,6 +30774,31 @@ export type QueryDataTableStorageConditionsSimplifiedsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryDataTableTownsDivisionsIslandArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableTownsDivisionsIslandByNodeIdArgs = {
+  nodeId: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableTownsDivisionsIslandsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DataTableTownsDivisionsIslandCondition>;
+  filter?: InputMaybe<DataTableTownsDivisionsIslandFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DataTableTownsDivisionsIslandsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryDataTableUnitsOfProportionArgs = {
   id: Scalars['Int']['input'];
 };
@@ -30070,6 +30946,37 @@ export type QueryElementTypePluginsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ElementTypePluginsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEvaluatorFragmentArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEvaluatorFragmentByNameArgs = {
+  name: Scalars['String']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEvaluatorFragmentByNodeIdArgs = {
+  nodeId: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEvaluatorFragmentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<EvaluatorFragmentCondition>;
+  filter?: InputMaybe<EvaluatorFragmentFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EvaluatorFragmentsOrderBy>>;
 };
 
 
@@ -30807,6 +31714,38 @@ export type QueryTemplateElementsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TemplateElementsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTemplateEvaluatorFragmentJoinArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTemplateEvaluatorFragmentJoinByNodeIdArgs = {
+  nodeId: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentIdArgs = {
+  evaluatorFragmentId: Scalars['Int']['input'];
+  templateId: Scalars['Int']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTemplateEvaluatorFragmentJoinsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<TemplateEvaluatorFragmentJoinCondition>;
+  filter?: InputMaybe<TemplateEvaluatorFragmentJoinFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TemplateEvaluatorFragmentJoinsOrderBy>>;
 };
 
 
@@ -31822,10 +32761,16 @@ export type ReviewAssignmentAssignerJoinOrganisationIdFkeyOrganisationCreateInpu
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -31846,6 +32791,7 @@ export type ReviewAssignmentAssignerJoinOrganisationIdFkeyOrganisationCreateInpu
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
   tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** The `reviewAssignmentAssignerJoin` to be created by this mutation. */
@@ -32430,10 +33376,16 @@ export type ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -32454,6 +33406,7 @@ export type ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput = {
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
   tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** The `reviewAssignment` to be created by this mutation. */
@@ -32747,6 +33700,7 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -35305,7 +36259,7 @@ export type Template = Node & {
   /** Reads and enables pagination through a set of `ReviewAssignment`. */
   reviewAssignments: ReviewAssignmentsConnection;
   serialPattern?: Maybe<Scalars['String']['output']>;
-  staleDraftRetentionDays?: Maybe<Scalars['Int']['output']>;
+  staleDraftRetentionDays: Scalars['Int']['output'];
   startMessage?: Maybe<Scalars['JSON']['output']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']['output']>;
@@ -35316,6 +36270,8 @@ export type Template = Node & {
   templateCategoryId?: Maybe<Scalars['Int']['output']>;
   /** Reads and enables pagination through a set of `TemplateDataViewJoin`. */
   templateDataViewJoins: TemplateDataViewJoinsConnection;
+  /** Reads and enables pagination through a set of `TemplateEvaluatorFragmentJoin`. */
+  templateEvaluatorFragmentJoins: TemplateEvaluatorFragmentJoinsConnection;
   /** Reads and enables pagination through a set of `TemplateFileJoin`. */
   templateFileJoins: TemplateFileJoinsConnection;
   /** Reads and enables pagination through a set of `TemplateFilterJoin`. */
@@ -35392,6 +36348,18 @@ export type TemplateTemplateDataViewJoinsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TemplateDataViewJoinsOrderBy>>;
+};
+
+
+export type TemplateTemplateEvaluatorFragmentJoinsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<TemplateEvaluatorFragmentJoinCondition>;
+  filter?: InputMaybe<TemplateEvaluatorFragmentJoinFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TemplateEvaluatorFragmentJoinsOrderBy>>;
 };
 
 
@@ -35696,6 +36664,7 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -36339,6 +37308,7 @@ export type TemplateDataViewJoinTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -36794,6 +37764,7 @@ export type TemplateElementSectionIdFkeyTemplateSectionCreateInput = {
   code?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  isReviewSection?: InputMaybe<Scalars['Boolean']['input']>;
   templateElementsUsingId?: InputMaybe<TemplateElementSectionIdFkeyInverseInput>;
   templateId?: InputMaybe<Scalars['Int']['input']>;
   templateToTemplateId?: InputMaybe<TemplateSectionTemplateIdFkeyInput>;
@@ -36907,6 +37878,353 @@ export enum TemplateElementsOrderBy {
   ValidationMessageDesc = 'VALIDATION_MESSAGE_DESC',
   VisibilityConditionAsc = 'VISIBILITY_CONDITION_ASC',
   VisibilityConditionDesc = 'VISIBILITY_CONDITION_DESC'
+}
+
+export type TemplateEvaluatorFragmentJoin = Node & {
+  __typename?: 'TemplateEvaluatorFragmentJoin';
+  /** Reads a single `EvaluatorFragment` that is related to this `TemplateEvaluatorFragmentJoin`. */
+  evaluatorFragment?: Maybe<EvaluatorFragment>;
+  evaluatorFragmentId: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID']['output'];
+  /** Reads a single `Template` that is related to this `TemplateEvaluatorFragmentJoin`. */
+  template?: Maybe<Template>;
+  templateId: Scalars['Int']['output'];
+};
+
+/**
+ * A condition to be used against `TemplateEvaluatorFragmentJoin` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
+ */
+export type TemplateEvaluatorFragmentJoinCondition = {
+  /** Checks for equality with the object’s `evaluatorFragmentId` field. */
+  evaluatorFragmentId?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `templateId` field. */
+  templateId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** The `evaluatorFragment` to be created by this mutation. */
+export type TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyEvaluatorFragmentCreateInput = {
+  backEnd?: InputMaybe<Scalars['Boolean']['input']>;
+  checksum?: InputMaybe<Scalars['String']['input']>;
+  expression: Scalars['JSON']['input'];
+  frontEnd?: InputMaybe<Scalars['Boolean']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  lastModified?: InputMaybe<Scalars['Datetime']['input']>;
+  metadata?: InputMaybe<Scalars['JSON']['input']>;
+  name: Scalars['String']['input'];
+  permissionNames?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `evaluatorFragment` in the `TemplateEvaluatorFragmentJoinInput` mutation. */
+export type TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInput = {
+  /** The primary key(s) for `evaluatorFragment` for the far side of the relationship. */
+  connectById?: InputMaybe<EvaluatorFragmentEvaluatorFragmentPkeyConnect>;
+  /** The primary key(s) for `evaluatorFragment` for the far side of the relationship. */
+  connectByName?: InputMaybe<EvaluatorFragmentEvaluatorFragmentNameKeyConnect>;
+  /** The primary key(s) for `evaluatorFragment` for the far side of the relationship. */
+  connectByNodeId?: InputMaybe<EvaluatorFragmentNodeIdConnect>;
+  /** A `EvaluatorFragmentInput` object that will be created and connected to this object. */
+  create?: InputMaybe<TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyEvaluatorFragmentCreateInput>;
+  /** The primary key(s) for `evaluatorFragment` for the far side of the relationship. */
+  deleteById?: InputMaybe<EvaluatorFragmentEvaluatorFragmentPkeyDelete>;
+  /** The primary key(s) for `evaluatorFragment` for the far side of the relationship. */
+  deleteByName?: InputMaybe<EvaluatorFragmentEvaluatorFragmentNameKeyDelete>;
+  /** The primary key(s) for `evaluatorFragment` for the far side of the relationship. */
+  deleteByNodeId?: InputMaybe<EvaluatorFragmentNodeIdDelete>;
+  /** The primary key(s) and patch data for `evaluatorFragment` for the far side of the relationship. */
+  updateById?: InputMaybe<EvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingEvaluatorFragmentPkeyUpdate>;
+  /** The primary key(s) and patch data for `evaluatorFragment` for the far side of the relationship. */
+  updateByName?: InputMaybe<EvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingEvaluatorFragmentNameKeyUpdate>;
+  /** The primary key(s) and patch data for `evaluatorFragment` for the far side of the relationship. */
+  updateByNodeId?: InputMaybe<TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyNodeIdUpdate>;
+};
+
+/** Input for the nested mutation of `templateEvaluatorFragmentJoin` in the `EvaluatorFragmentInput` mutation. */
+export type TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInverseInput = {
+  /** The primary key(s) for `templateEvaluatorFragmentJoin` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJoinPkeyConnect>>;
+  /** The primary key(s) for `templateEvaluatorFragmentJoin` for the far side of the relationship. */
+  connectByNodeId?: InputMaybe<Array<TemplateEvaluatorFragmentJoinNodeIdConnect>>;
+  /** The primary key(s) for `templateEvaluatorFragmentJoin` for the far side of the relationship. */
+  connectByTemplateIdAndEvaluatorFragmentId?: InputMaybe<Array<TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyConnect>>;
+  /** A `TemplateEvaluatorFragmentJoinInput` object that will be created and connected to this object. */
+  create?: InputMaybe<Array<TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyTemplateEvaluatorFragmentJoinCreateInput>>;
+  /** The primary key(s) for `templateEvaluatorFragmentJoin` for the far side of the relationship. */
+  deleteById?: InputMaybe<Array<TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJoinPkeyDelete>>;
+  /** The primary key(s) for `templateEvaluatorFragmentJoin` for the far side of the relationship. */
+  deleteByNodeId?: InputMaybe<Array<TemplateEvaluatorFragmentJoinNodeIdDelete>>;
+  /** The primary key(s) for `templateEvaluatorFragmentJoin` for the far side of the relationship. */
+  deleteByTemplateIdAndEvaluatorFragmentId?: InputMaybe<Array<TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyDelete>>;
+  /** Flag indicating whether all other `templateEvaluatorFragmentJoin` records that match this relationship should be removed. */
+  deleteOthers?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The primary key(s) and patch data for `templateEvaluatorFragmentJoin` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingTemplateEvaluatorFragmentJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `templateEvaluatorFragmentJoin` for the far side of the relationship. */
+  updateByNodeId?: InputMaybe<Array<EvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyNodeIdUpdate>>;
+  /** The primary key(s) and patch data for `templateEvaluatorFragmentJoin` for the far side of the relationship. */
+  updateByTemplateIdAndEvaluatorFragmentId?: InputMaybe<Array<TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyUpdate>>;
+};
+
+/** The `templateEvaluatorFragmentJoin` to be created by this mutation. */
+export type TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyTemplateEvaluatorFragmentJoinCreateInput = {
+  evaluatorFragmentToEvaluatorFragmentId?: InputMaybe<TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  templateId?: InputMaybe<Scalars['Int']['input']>;
+  templateToTemplateId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInput>;
+};
+
+/** A filter to be used against `TemplateEvaluatorFragmentJoin` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateEvaluatorFragmentJoinFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<TemplateEvaluatorFragmentJoinFilter>>;
+  /** Filter by the object’s `evaluatorFragment` relation. */
+  evaluatorFragment?: InputMaybe<EvaluatorFragmentFilter>;
+  /** Filter by the object’s `evaluatorFragmentId` field. */
+  evaluatorFragmentId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<IntFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<TemplateEvaluatorFragmentJoinFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<TemplateEvaluatorFragmentJoinFilter>>;
+  /** Filter by the object’s `template` relation. */
+  template?: InputMaybe<TemplateFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: InputMaybe<IntFilter>;
+};
+
+/** An input for mutations affecting `TemplateEvaluatorFragmentJoin` */
+export type TemplateEvaluatorFragmentJoinInput = {
+  evaluatorFragmentId?: InputMaybe<Scalars['Int']['input']>;
+  evaluatorFragmentToEvaluatorFragmentId?: InputMaybe<TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  templateId?: InputMaybe<Scalars['Int']['input']>;
+  templateToTemplateId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type TemplateEvaluatorFragmentJoinNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `templateEvaluatorFragmentJoin` to be connected. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type TemplateEvaluatorFragmentJoinNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `templateEvaluatorFragmentJoin` to be deleted. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `evaluatorFragment` to be connected. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `evaluatorFragment` being updated. */
+  patch: EvaluatorFragmentPatch;
+};
+
+/** The fields on `templateEvaluatorFragmentJoin` to look up the row to update. */
+export type TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyUpdate = {
+  evaluatorFragmentId: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `templateEvaluatorFragmentJoin` being updated. */
+  patch: UpdateTemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyPatch;
+  templateId: Scalars['Int']['input'];
+};
+
+/** The fields on `templateEvaluatorFragmentJoin` to look up the row to update. */
+export type TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingTemplateEvaluatorFragmentJoinPkeyUpdate = {
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `templateEvaluatorFragmentJoin` being updated. */
+  patch: UpdateTemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyPatch;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `template` to be connected. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: TemplatePatch;
+};
+
+/** The fields on `templateEvaluatorFragmentJoin` to look up the row to update. */
+export type TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyUpdate = {
+  evaluatorFragmentId: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `templateEvaluatorFragmentJoin` being updated. */
+  patch: UpdateTemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyPatch;
+  templateId: Scalars['Int']['input'];
+};
+
+/** The fields on `templateEvaluatorFragmentJoin` to look up the row to update. */
+export type TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplateEvaluatorFragmentJoinPkeyUpdate = {
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `templateEvaluatorFragmentJoin` being updated. */
+  patch: UpdateTemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyPatch;
+};
+
+/** Represents an update to a `TemplateEvaluatorFragmentJoin`. Fields that are set will be updated. */
+export type TemplateEvaluatorFragmentJoinPatch = {
+  evaluatorFragmentId?: InputMaybe<Scalars['Int']['input']>;
+  evaluatorFragmentToEvaluatorFragmentId?: InputMaybe<TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  templateId?: InputMaybe<Scalars['Int']['input']>;
+  templateToTemplateId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInput>;
+};
+
+/** The fields on `templateEvaluatorFragmentJoin` to look up the row to connect. */
+export type TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyConnect = {
+  evaluatorFragmentId: Scalars['Int']['input'];
+  templateId: Scalars['Int']['input'];
+};
+
+/** The fields on `templateEvaluatorFragmentJoin` to look up the row to delete. */
+export type TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyDelete = {
+  evaluatorFragmentId: Scalars['Int']['input'];
+  templateId: Scalars['Int']['input'];
+};
+
+/** The fields on `templateEvaluatorFragmentJoin` to look up the row to connect. */
+export type TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJoinPkeyConnect = {
+  id: Scalars['Int']['input'];
+};
+
+/** The fields on `templateEvaluatorFragmentJoin` to look up the row to delete. */
+export type TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJoinPkeyDelete = {
+  id: Scalars['Int']['input'];
+};
+
+/** Input for the nested mutation of `template` in the `TemplateEvaluatorFragmentJoinInput` mutation. */
+export type TemplateEvaluatorFragmentJoinTemplateIdFkeyInput = {
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectByCodeAndVersionId?: InputMaybe<TemplateTemplateCodeVersionIdKeyConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectById?: InputMaybe<TemplateTemplatePkeyConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectByNodeId?: InputMaybe<TemplateNodeIdConnect>;
+  /** A `TemplateInput` object that will be created and connected to this object. */
+  create?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyTemplateCreateInput>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteByCodeAndVersionId?: InputMaybe<TemplateTemplateCodeVersionIdKeyDelete>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteById?: InputMaybe<TemplateTemplatePkeyDelete>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteByNodeId?: InputMaybe<TemplateNodeIdDelete>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateByCodeAndVersionId?: InputMaybe<TemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplateCodeVersionIdKeyUpdate>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateById?: InputMaybe<TemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplatePkeyUpdate>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateByNodeId?: InputMaybe<TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyNodeIdUpdate>;
+};
+
+/** Input for the nested mutation of `templateEvaluatorFragmentJoin` in the `TemplateInput` mutation. */
+export type TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput = {
+  /** The primary key(s) for `templateEvaluatorFragmentJoin` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJoinPkeyConnect>>;
+  /** The primary key(s) for `templateEvaluatorFragmentJoin` for the far side of the relationship. */
+  connectByNodeId?: InputMaybe<Array<TemplateEvaluatorFragmentJoinNodeIdConnect>>;
+  /** The primary key(s) for `templateEvaluatorFragmentJoin` for the far side of the relationship. */
+  connectByTemplateIdAndEvaluatorFragmentId?: InputMaybe<Array<TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyConnect>>;
+  /** A `TemplateEvaluatorFragmentJoinInput` object that will be created and connected to this object. */
+  create?: InputMaybe<Array<TemplateEvaluatorFragmentJoinTemplateIdFkeyTemplateEvaluatorFragmentJoinCreateInput>>;
+  /** The primary key(s) for `templateEvaluatorFragmentJoin` for the far side of the relationship. */
+  deleteById?: InputMaybe<Array<TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJoinPkeyDelete>>;
+  /** The primary key(s) for `templateEvaluatorFragmentJoin` for the far side of the relationship. */
+  deleteByNodeId?: InputMaybe<Array<TemplateEvaluatorFragmentJoinNodeIdDelete>>;
+  /** The primary key(s) for `templateEvaluatorFragmentJoin` for the far side of the relationship. */
+  deleteByTemplateIdAndEvaluatorFragmentId?: InputMaybe<Array<TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyDelete>>;
+  /** Flag indicating whether all other `templateEvaluatorFragmentJoin` records that match this relationship should be removed. */
+  deleteOthers?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The primary key(s) and patch data for `templateEvaluatorFragmentJoin` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplateEvaluatorFragmentJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `templateEvaluatorFragmentJoin` for the far side of the relationship. */
+  updateByNodeId?: InputMaybe<Array<TemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyNodeIdUpdate>>;
+  /** The primary key(s) and patch data for `templateEvaluatorFragmentJoin` for the far side of the relationship. */
+  updateByTemplateIdAndEvaluatorFragmentId?: InputMaybe<Array<TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyUpdate>>;
+};
+
+/** The `template` to be created by this mutation. */
+export type TemplateEvaluatorFragmentJoinTemplateIdFkeyTemplateCreateInput = {
+  actionQueuesUsingId?: InputMaybe<ActionQueueTemplateIdFkeyInverseInput>;
+  applicationsUsingId?: InputMaybe<ApplicationTemplateIdFkeyInverseInput>;
+  canApplicantMakeChanges?: InputMaybe<Scalars['Boolean']['input']>;
+  code: Scalars['String']['input'];
+  dashboardRestrictions?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  icon?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  isLinear?: InputMaybe<Scalars['Boolean']['input']>;
+  linkedEntityData?: InputMaybe<Scalars['JSON']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  namePlural?: InputMaybe<Scalars['String']['input']>;
+  parentVersionId?: InputMaybe<Scalars['String']['input']>;
+  priority?: InputMaybe<Scalars['Int']['input']>;
+  reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
+  startMessage?: InputMaybe<Scalars['JSON']['input']>;
+  status?: InputMaybe<TemplateStatus>;
+  submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
+  templateActionsUsingId?: InputMaybe<TemplateActionTemplateIdFkeyInverseInput>;
+  templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
+  templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
+  templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
+  templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
+  templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
+  templateSectionsUsingId?: InputMaybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateStagesUsingId?: InputMaybe<TemplateStageTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: InputMaybe<TriggerScheduleTemplateIdFkeyInverseInput>;
+  versionComment?: InputMaybe<Scalars['String']['input']>;
+  versionHistory?: InputMaybe<Scalars['JSON']['input']>;
+  versionId: Scalars['String']['input'];
+  versionTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** The `templateEvaluatorFragmentJoin` to be created by this mutation. */
+export type TemplateEvaluatorFragmentJoinTemplateIdFkeyTemplateEvaluatorFragmentJoinCreateInput = {
+  evaluatorFragmentId?: InputMaybe<Scalars['Int']['input']>;
+  evaluatorFragmentToEvaluatorFragmentId?: InputMaybe<TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  templateToTemplateId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInput>;
+};
+
+/** A connection to a list of `TemplateEvaluatorFragmentJoin` values. */
+export type TemplateEvaluatorFragmentJoinsConnection = {
+  __typename?: 'TemplateEvaluatorFragmentJoinsConnection';
+  /** A list of edges which contains the `TemplateEvaluatorFragmentJoin` and cursor to aid in pagination. */
+  edges: Array<TemplateEvaluatorFragmentJoinsEdge>;
+  /** A list of `TemplateEvaluatorFragmentJoin` objects. */
+  nodes: Array<Maybe<TemplateEvaluatorFragmentJoin>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `TemplateEvaluatorFragmentJoin` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `TemplateEvaluatorFragmentJoin` edge in the connection. */
+export type TemplateEvaluatorFragmentJoinsEdge = {
+  __typename?: 'TemplateEvaluatorFragmentJoinsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `TemplateEvaluatorFragmentJoin` at the end of the edge. */
+  node?: Maybe<TemplateEvaluatorFragmentJoin>;
+};
+
+/** Methods to use when ordering `TemplateEvaluatorFragmentJoin`. */
+export enum TemplateEvaluatorFragmentJoinsOrderBy {
+  EvaluatorFragmentIdAsc = 'EVALUATOR_FRAGMENT_ID_ASC',
+  EvaluatorFragmentIdDesc = 'EVALUATOR_FRAGMENT_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  TemplateIdAsc = 'TEMPLATE_ID_ASC',
+  TemplateIdDesc = 'TEMPLATE_ID_DESC'
 }
 
 export type TemplateFileJoin = Node & {
@@ -37215,6 +38533,7 @@ export type TemplateFileJoinTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -37336,6 +38655,10 @@ export type TemplateFilter = {
   templateDataViewJoins?: InputMaybe<TemplateToManyTemplateDataViewJoinFilter>;
   /** Some related `templateDataViewJoins` exist. */
   templateDataViewJoinsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `templateEvaluatorFragmentJoins` relation. */
+  templateEvaluatorFragmentJoins?: InputMaybe<TemplateToManyTemplateEvaluatorFragmentJoinFilter>;
+  /** Some related `templateEvaluatorFragmentJoins` exist. */
+  templateEvaluatorFragmentJoinsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `templateFileJoins` relation. */
   templateFileJoins?: InputMaybe<TemplateToManyTemplateFileJoinFilter>;
   /** Some related `templateFileJoins` exist. */
@@ -37619,6 +38942,7 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -37699,6 +39023,7 @@ export type TemplateInput = {
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -37836,6 +39161,29 @@ export type TemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateIdFkeyU
   id: Scalars['Int']['input'];
   /** An object where the defined keys will be set on the `template` being updated. */
   patch: UpdateTemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateIdFkeyPatch;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `templateEvaluatorFragmentJoin` to be connected. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `templateEvaluatorFragmentJoin` being updated. */
+  patch: TemplateEvaluatorFragmentJoinPatch;
+};
+
+/** The fields on `template` to look up the row to update. */
+export type TemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplateCodeVersionIdKeyUpdate = {
+  code: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: UpdateTemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyPatch;
+  versionId: Scalars['String']['input'];
+};
+
+/** The fields on `template` to look up the row to update. */
+export type TemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplatePkeyUpdate = {
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: UpdateTemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyPatch;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -38024,6 +39372,7 @@ export type TemplatePatch = {
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -38325,6 +39674,7 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -38413,6 +39763,7 @@ export type TemplateSection = Node & {
   code?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   index?: Maybe<Scalars['Int']['output']>;
+  isReviewSection: Scalars['Boolean']['output'];
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID']['output'];
   /** Reads a single `Template` that is related to this `TemplateSection`. */
@@ -38446,6 +39797,8 @@ export type TemplateSectionCondition = {
   id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `index` field. */
   index?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `isReviewSection` field. */
+  isReviewSection?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `title` field. */
@@ -38462,6 +39815,8 @@ export type TemplateSectionFilter = {
   id?: InputMaybe<IntFilter>;
   /** Filter by the object’s `index` field. */
   index?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `isReviewSection` field. */
+  isReviewSection?: InputMaybe<BooleanFilter>;
   /** Negates the expression. */
   not?: InputMaybe<TemplateSectionFilter>;
   /** Checks for any expressions in this list. */
@@ -38483,6 +39838,7 @@ export type TemplateSectionInput = {
   code?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  isReviewSection?: InputMaybe<Scalars['Boolean']['input']>;
   templateElementsUsingId?: InputMaybe<TemplateElementSectionIdFkeyInverseInput>;
   templateId?: InputMaybe<Scalars['Int']['input']>;
   templateToTemplateId?: InputMaybe<TemplateSectionTemplateIdFkeyInput>;
@@ -38552,6 +39908,7 @@ export type TemplateSectionPatch = {
   code?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  isReviewSection?: InputMaybe<Scalars['Boolean']['input']>;
   templateElementsUsingId?: InputMaybe<TemplateElementSectionIdFkeyInverseInput>;
   templateId?: InputMaybe<Scalars['Int']['input']>;
   templateToTemplateId?: InputMaybe<TemplateSectionTemplateIdFkeyInput>;
@@ -38633,6 +39990,7 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -38650,6 +40008,7 @@ export type TemplateSectionTemplateIdFkeyTemplateSectionCreateInput = {
   code?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  isReviewSection?: InputMaybe<Scalars['Boolean']['input']>;
   templateElementsUsingId?: InputMaybe<TemplateElementSectionIdFkeyInverseInput>;
   templateToTemplateId?: InputMaybe<TemplateSectionTemplateIdFkeyInput>;
   title?: InputMaybe<Scalars['String']['input']>;
@@ -38717,6 +40076,8 @@ export enum TemplateSectionsOrderBy {
   IdDesc = 'ID_DESC',
   IndexAsc = 'INDEX_ASC',
   IndexDesc = 'INDEX_DESC',
+  IsReviewSectionAsc = 'IS_REVIEW_SECTION_ASC',
+  IsReviewSectionDesc = 'IS_REVIEW_SECTION_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -39271,6 +40632,7 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -39497,6 +40859,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   templateActionsUsingId?: InputMaybe<TemplateActionTemplateIdFkeyInverseInput>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -39579,6 +40942,16 @@ export type TemplateToManyTemplateDataViewJoinFilter = {
   none?: InputMaybe<TemplateDataViewJoinFilter>;
   /** Some related `TemplateDataViewJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<TemplateDataViewJoinFilter>;
+};
+
+/** A filter to be used against many `TemplateEvaluatorFragmentJoin` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateToManyTemplateEvaluatorFragmentJoinFilter = {
+  /** Every related `TemplateEvaluatorFragmentJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TemplateEvaluatorFragmentJoinFilter>;
+  /** No related `TemplateEvaluatorFragmentJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TemplateEvaluatorFragmentJoinFilter>;
+  /** Some related `TemplateEvaluatorFragmentJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TemplateEvaluatorFragmentJoinFilter>;
 };
 
 /** A filter to be used against many `TemplateFileJoin` object types. All fields are combined with a logical ‘and.’ */
@@ -40470,6 +41843,7 @@ export type TriggerScheduleTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -42634,6 +44008,53 @@ export type UpdateDataTableStorageConditionsSimplifiedPayloadDataTableStorageCon
   orderBy?: InputMaybe<Array<DataTableStorageConditionsSimplifiedsOrderBy>>;
 };
 
+/** All input for the `updateDataTableTownsDivisionsIslandByNodeId` mutation. */
+export type UpdateDataTableTownsDivisionsIslandByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `DataTableTownsDivisionsIsland` to be updated. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `DataTableTownsDivisionsIsland` being updated. */
+  patch: DataTableTownsDivisionsIslandPatch;
+};
+
+/** All input for the `updateDataTableTownsDivisionsIsland` mutation. */
+export type UpdateDataTableTownsDivisionsIslandInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `DataTableTownsDivisionsIsland` being updated. */
+  patch: DataTableTownsDivisionsIslandPatch;
+};
+
+/** The output of our update `DataTableTownsDivisionsIsland` mutation. */
+export type UpdateDataTableTownsDivisionsIslandPayload = {
+  __typename?: 'UpdateDataTableTownsDivisionsIslandPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `DataTableTownsDivisionsIsland` that was updated by this mutation. */
+  dataTableTownsDivisionsIsland?: Maybe<DataTableTownsDivisionsIsland>;
+  /** An edge for our `DataTableTownsDivisionsIsland`. May be used by Relay 1. */
+  dataTableTownsDivisionsIslandEdge?: Maybe<DataTableTownsDivisionsIslandsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `DataTableTownsDivisionsIsland` mutation. */
+export type UpdateDataTableTownsDivisionsIslandPayloadDataTableTownsDivisionsIslandEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableTownsDivisionsIslandsOrderBy>>;
+};
+
 /** All input for the `updateDataTableUnitsOfProportionByNodeId` mutation. */
 export type UpdateDataTableUnitsOfProportionByNodeIdInput = {
   /**
@@ -42892,6 +44313,65 @@ export type UpdateElementTypePluginPayload = {
 /** The output of our update `ElementTypePlugin` mutation. */
 export type UpdateElementTypePluginPayloadElementTypePluginEdgeArgs = {
   orderBy?: InputMaybe<Array<ElementTypePluginsOrderBy>>;
+};
+
+/** All input for the `updateEvaluatorFragmentByName` mutation. */
+export type UpdateEvaluatorFragmentByNameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `EvaluatorFragment` being updated. */
+  patch: EvaluatorFragmentPatch;
+};
+
+/** All input for the `updateEvaluatorFragmentByNodeId` mutation. */
+export type UpdateEvaluatorFragmentByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `EvaluatorFragment` to be updated. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `EvaluatorFragment` being updated. */
+  patch: EvaluatorFragmentPatch;
+};
+
+/** All input for the `updateEvaluatorFragment` mutation. */
+export type UpdateEvaluatorFragmentInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `EvaluatorFragment` being updated. */
+  patch: EvaluatorFragmentPatch;
+};
+
+/** The output of our update `EvaluatorFragment` mutation. */
+export type UpdateEvaluatorFragmentPayload = {
+  __typename?: 'UpdateEvaluatorFragmentPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `EvaluatorFragment` that was updated by this mutation. */
+  evaluatorFragment?: Maybe<EvaluatorFragment>;
+  /** An edge for our `EvaluatorFragment`. May be used by Relay 1. */
+  evaluatorFragmentEdge?: Maybe<EvaluatorFragmentsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `EvaluatorFragment` mutation. */
+export type UpdateEvaluatorFragmentPayloadEvaluatorFragmentEdgeArgs = {
+  orderBy?: InputMaybe<Array<EvaluatorFragmentsOrderBy>>;
 };
 
 /** All input for the `updateFileByNodeId` mutation. */
@@ -44052,6 +45532,70 @@ export type UpdateTemplateElementPayload = {
 /** The output of our update `TemplateElement` mutation. */
 export type UpdateTemplateElementPayloadTemplateElementEdgeArgs = {
   orderBy?: InputMaybe<Array<TemplateElementsOrderBy>>;
+};
+
+/** All input for the `updateTemplateEvaluatorFragmentJoinByNodeId` mutation. */
+export type UpdateTemplateEvaluatorFragmentJoinByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `TemplateEvaluatorFragmentJoin` to be updated. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `TemplateEvaluatorFragmentJoin` being updated. */
+  patch: TemplateEvaluatorFragmentJoinPatch;
+};
+
+/** All input for the `updateTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentId` mutation. */
+export type UpdateTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  evaluatorFragmentId: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `TemplateEvaluatorFragmentJoin` being updated. */
+  patch: TemplateEvaluatorFragmentJoinPatch;
+  templateId: Scalars['Int']['input'];
+};
+
+/** All input for the `updateTemplateEvaluatorFragmentJoin` mutation. */
+export type UpdateTemplateEvaluatorFragmentJoinInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `TemplateEvaluatorFragmentJoin` being updated. */
+  patch: TemplateEvaluatorFragmentJoinPatch;
+};
+
+/** The output of our update `TemplateEvaluatorFragmentJoin` mutation. */
+export type UpdateTemplateEvaluatorFragmentJoinPayload = {
+  __typename?: 'UpdateTemplateEvaluatorFragmentJoinPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `EvaluatorFragment` that is related to this `TemplateEvaluatorFragmentJoin`. */
+  evaluatorFragment?: Maybe<EvaluatorFragment>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Template` that is related to this `TemplateEvaluatorFragmentJoin`. */
+  template?: Maybe<Template>;
+  /** The `TemplateEvaluatorFragmentJoin` that was updated by this mutation. */
+  templateEvaluatorFragmentJoin?: Maybe<TemplateEvaluatorFragmentJoin>;
+  /** An edge for our `TemplateEvaluatorFragmentJoin`. May be used by Relay 1. */
+  templateEvaluatorFragmentJoinEdge?: Maybe<TemplateEvaluatorFragmentJoinsEdge>;
+};
+
+
+/** The output of our update `TemplateEvaluatorFragmentJoin` mutation. */
+export type UpdateTemplateEvaluatorFragmentJoinPayloadTemplateEvaluatorFragmentJoinEdgeArgs = {
+  orderBy?: InputMaybe<Array<TemplateEvaluatorFragmentJoinsOrderBy>>;
 };
 
 /** All input for the `updateTemplateFileJoinByNodeId` mutation. */
@@ -45666,10 +47210,16 @@ export type UserOrganisationOrganisationIdFkeyOrganisationCreateInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -45690,6 +47240,7 @@ export type UserOrganisationOrganisationIdFkeyOrganisationCreateInput = {
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
   tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** The `userOrganisation` to be created by this mutation. */
@@ -47947,6 +49498,20 @@ export type UpdateDataViewOnTemplateDataViewJoinForTemplateDataViewJoinDataViewI
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** An object where the defined keys will be set on the `evaluatorFragment` being updated. */
+export type UpdateEvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyPatch = {
+  backEnd?: InputMaybe<Scalars['Boolean']['input']>;
+  checksum?: InputMaybe<Scalars['String']['input']>;
+  expression?: InputMaybe<Scalars['JSON']['input']>;
+  frontEnd?: InputMaybe<Scalars['Boolean']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  lastModified?: InputMaybe<Scalars['Datetime']['input']>;
+  metadata?: InputMaybe<Scalars['JSON']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  permissionNames?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInverseInput>;
+};
+
 /** An object where the defined keys will be set on the `file` being updated. */
 export type UpdateFileOnFileForFileApplicationNoteIdFkeyPatch = {
   applicationNoteToApplicationNoteId?: InputMaybe<FileApplicationNoteIdFkeyInput>;
@@ -48132,10 +49697,16 @@ export type UpdateOrganisationOnApplicationForApplicationOrgIdFkeyPatch = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -48156,6 +49727,7 @@ export type UpdateOrganisationOnApplicationForApplicationOrgIdFkeyPatch = {
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
   tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -48168,10 +49740,16 @@ export type UpdateOrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyPatch 
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -48192,6 +49770,7 @@ export type UpdateOrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyPatch 
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
   tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -48204,10 +49783,16 @@ export type UpdateOrganisationOnDataChangelogForDataChangelogOrgIdFkeyPatch = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -48228,6 +49813,7 @@ export type UpdateOrganisationOnDataChangelogForDataChangelogOrgIdFkeyPatch = {
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
   tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -48240,10 +49826,16 @@ export type UpdateOrganisationOnOrganisationApplicationJoinForOrganisationApplic
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -48264,6 +49856,7 @@ export type UpdateOrganisationOnOrganisationApplicationJoinForOrganisationApplic
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
   tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -48276,10 +49869,16 @@ export type UpdateOrganisationOnPermissionJoinForPermissionJoinOrganisationIdFke
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -48300,6 +49899,7 @@ export type UpdateOrganisationOnPermissionJoinForPermissionJoinOrganisationIdFke
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
   tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -48312,10 +49912,16 @@ export type UpdateOrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentA
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -48336,6 +49942,7 @@ export type UpdateOrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentA
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
   tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -48348,10 +49955,16 @@ export type UpdateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationI
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -48372,6 +49985,7 @@ export type UpdateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationI
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
   tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -48384,10 +49998,16 @@ export type UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationI
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
+  isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
   localAgentEmail?: InputMaybe<Scalars['String']['input']>;
@@ -48408,6 +50028,7 @@ export type UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationI
   tinLetter?: InputMaybe<Scalars['JSON']['input']>;
   tinNumber?: InputMaybe<Scalars['String']['input']>;
   userOrganisationsUsingId?: InputMaybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  wholesaleLicence?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** An object where the defined keys will be set on the `permissionJoin` being updated. */
@@ -49228,6 +50849,22 @@ export type UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFke
   visibilityCondition?: InputMaybe<Scalars['JSON']['input']>;
 };
 
+/** An object where the defined keys will be set on the `templateEvaluatorFragmentJoin` being updated. */
+export type UpdateTemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyPatch = {
+  evaluatorFragmentToEvaluatorFragmentId?: InputMaybe<TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  templateId?: InputMaybe<Scalars['Int']['input']>;
+  templateToTemplateId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `templateEvaluatorFragmentJoin` being updated. */
+export type UpdateTemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyPatch = {
+  evaluatorFragmentId?: InputMaybe<Scalars['Int']['input']>;
+  evaluatorFragmentToEvaluatorFragmentId?: InputMaybe<TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  templateToTemplateId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInput>;
+};
+
 /** An object where the defined keys will be set on the `templateFileJoin` being updated. */
 export type UpdateTemplateFileJoinOnTemplateFileJoinForTemplateFileJoinFileIdFkeyPatch = {
   fileToFileId?: InputMaybe<TemplateFileJoinFileIdFkeyInput>;
@@ -49285,6 +50922,7 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -49322,6 +50960,7 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -49359,6 +50998,7 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -49396,6 +51036,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -49433,6 +51074,45 @@ export type UpdateTemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateI
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
+  templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
+  templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
+  templateSectionsUsingId?: InputMaybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateStagesUsingId?: InputMaybe<TemplateStageTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: InputMaybe<TriggerScheduleTemplateIdFkeyInverseInput>;
+  versionComment?: InputMaybe<Scalars['String']['input']>;
+  versionHistory?: InputMaybe<Scalars['JSON']['input']>;
+  versionId?: InputMaybe<Scalars['String']['input']>;
+  versionTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An object where the defined keys will be set on the `template` being updated. */
+export type UpdateTemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyPatch = {
+  actionQueuesUsingId?: InputMaybe<ActionQueueTemplateIdFkeyInverseInput>;
+  applicationsUsingId?: InputMaybe<ApplicationTemplateIdFkeyInverseInput>;
+  canApplicantMakeChanges?: InputMaybe<Scalars['Boolean']['input']>;
+  code?: InputMaybe<Scalars['String']['input']>;
+  dashboardRestrictions?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  icon?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  isLinear?: InputMaybe<Scalars['Boolean']['input']>;
+  linkedEntityData?: InputMaybe<Scalars['JSON']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  namePlural?: InputMaybe<Scalars['String']['input']>;
+  parentVersionId?: InputMaybe<Scalars['String']['input']>;
+  priority?: InputMaybe<Scalars['Int']['input']>;
+  reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
+  startMessage?: InputMaybe<Scalars['JSON']['input']>;
+  status?: InputMaybe<TemplateStatus>;
+  submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
+  templateActionsUsingId?: InputMaybe<TemplateActionTemplateIdFkeyInverseInput>;
+  templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
+  templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
+  templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -49470,6 +51150,7 @@ export type UpdateTemplateOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyPat
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -49507,6 +51188,7 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -49543,6 +51225,7 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   templateActionsUsingId?: InputMaybe<TemplateActionTemplateIdFkeyInverseInput>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -49580,6 +51263,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -49617,6 +51301,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -49654,6 +51339,7 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -49691,6 +51377,7 @@ export type UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch
   templateCategoryId?: InputMaybe<Scalars['Int']['input']>;
   templateCategoryToTemplateCategoryId?: InputMaybe<TemplateTemplateCategoryIdFkeyInput>;
   templateDataViewJoinsUsingId?: InputMaybe<TemplateDataViewJoinTemplateIdFkeyInverseInput>;
+  templateEvaluatorFragmentJoinsUsingId?: InputMaybe<TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput>;
   templateFileJoinsUsingId?: InputMaybe<TemplateFileJoinTemplateIdFkeyInverseInput>;
   templateFilterJoinsUsingId?: InputMaybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: InputMaybe<TemplatePermissionTemplateIdFkeyInverseInput>;
@@ -49736,6 +51423,7 @@ export type UpdateTemplateSectionOnTemplateElementForTemplateElementSectionIdFke
   code?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  isReviewSection?: InputMaybe<Scalars['Boolean']['input']>;
   templateElementsUsingId?: InputMaybe<TemplateElementSectionIdFkeyInverseInput>;
   templateId?: InputMaybe<Scalars['Int']['input']>;
   templateToTemplateId?: InputMaybe<TemplateSectionTemplateIdFkeyInput>;
@@ -49747,6 +51435,7 @@ export type UpdateTemplateSectionOnTemplateSectionForTemplateSectionTemplateIdFk
   code?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  isReviewSection?: InputMaybe<Scalars['Boolean']['input']>;
   templateElementsUsingId?: InputMaybe<TemplateElementSectionIdFkeyInverseInput>;
   templateToTemplateId?: InputMaybe<TemplateSectionTemplateIdFkeyInput>;
   title?: InputMaybe<Scalars['String']['input']>;
@@ -49998,7 +51687,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = {
-  Node: ( ActionPlugin ) | ( ActionQueue ) | ( ActivityLog ) | ( Application ) | ( ApplicationNote ) | ( ApplicationResponse ) | ( ApplicationReviewerAction ) | ( ApplicationStageHistory ) | ( ApplicationStatusHistory ) | ( Counter ) | ( DataChangelog ) | ( DataTable ) | ( DataTableActiveIngredient ) | ( DataTableAdministrationRoute ) | ( DataTableAtcCode ) | ( DataTableContainer ) | ( DataTableCountry ) | ( DataTableDosageForm ) | ( DataTableDosageFormGroup ) | ( DataTableGenericIngredient ) | ( DataTableManufacturer ) | ( DataTableManufacturerApplicationJoin ) | ( DataTableManufacturerRepresentative ) | ( DataTableManufacturerRepresentativeApplicationJoin ) | ( DataTablePermitChemical ) | ( DataTablePermitChemicalApplicationJoin ) | ( DataTablePermitMedical ) | ( DataTablePermitMedicalApplicationJoin ) | ( DataTablePreRegisteredProductsProvisional ) | ( DataTablePrequalManufacturer ) | ( DataTablePrequalManufacturerApplicationJoin ) | ( DataTableProcessingStep ) | ( DataTableProduct ) | ( DataTableProductApplicationJoin ) | ( DataTableProvisionalProduct ) | ( DataTableProvisionalProductApplicationJoin ) | ( DataTableScheduledChemical ) | ( DataTableStorageCondition ) | ( DataTableStorageConditionsSimplified ) | ( DataTableUnitsOfProportion ) | ( DataTableWorldHealthOrganisationPqListOfFpp ) | ( DataView ) | ( DataViewColumnDefinition ) | ( ElementTypePlugin ) | ( File ) | ( Filter ) | ( GrafanaDashboardImage ) | ( Notification ) | ( Organisation ) | ( OrganisationApplicationJoin ) | ( PermissionJoin ) | ( PermissionName ) | ( PermissionPolicy ) | ( Omit<Query, 'actionPlugins' | 'node' | 'query'> & { actionPlugins?: Maybe<_RefType['ActionPluginsConnection']>, node?: Maybe<_RefType['Node']>, query: _RefType['Query'] } ) | ( Review ) | ( ReviewAssignment ) | ( ReviewAssignmentAssignerJoin ) | ( ReviewDecision ) | ( ReviewResponse ) | ( ReviewStatusHistory ) | ( SystemInfo ) | ( Template ) | ( TemplateAction ) | ( TemplateCategory ) | ( TemplateDataViewJoin ) | ( TemplateElement ) | ( TemplateFileJoin ) | ( TemplateFilterJoin ) | ( TemplatePermission ) | ( TemplateSection ) | ( TemplateStage ) | ( TemplateStageReviewLevel ) | ( TriggerQueue ) | ( TriggerSchedule ) | ( UserApplicationJoin ) | ( UserOrganisation ) | ( Verification );
+  Node: ( ActionPlugin ) | ( ActionQueue ) | ( ActivityLog ) | ( Application ) | ( ApplicationNote ) | ( ApplicationResponse ) | ( ApplicationReviewerAction ) | ( ApplicationStageHistory ) | ( ApplicationStatusHistory ) | ( Counter ) | ( DataChangelog ) | ( DataTable ) | ( DataTableActiveIngredient ) | ( DataTableAdministrationRoute ) | ( DataTableAtcCode ) | ( DataTableContainer ) | ( DataTableCountry ) | ( DataTableDosageForm ) | ( DataTableDosageFormGroup ) | ( DataTableGenericIngredient ) | ( DataTableManufacturer ) | ( DataTableManufacturerApplicationJoin ) | ( DataTableManufacturerRepresentative ) | ( DataTableManufacturerRepresentativeApplicationJoin ) | ( DataTablePermitChemical ) | ( DataTablePermitChemicalApplicationJoin ) | ( DataTablePermitMedical ) | ( DataTablePermitMedicalApplicationJoin ) | ( DataTablePreRegisteredProductsProvisional ) | ( DataTablePrequalManufacturer ) | ( DataTablePrequalManufacturerApplicationJoin ) | ( DataTableProcessingStep ) | ( DataTableProduct ) | ( DataTableProductApplicationJoin ) | ( DataTableProvisionalProduct ) | ( DataTableProvisionalProductApplicationJoin ) | ( DataTableScheduledChemical ) | ( DataTableStorageCondition ) | ( DataTableStorageConditionsSimplified ) | ( DataTableTownsDivisionsIsland ) | ( DataTableUnitsOfProportion ) | ( DataTableWorldHealthOrganisationPqListOfFpp ) | ( DataView ) | ( DataViewColumnDefinition ) | ( ElementTypePlugin ) | ( EvaluatorFragment ) | ( File ) | ( Filter ) | ( GrafanaDashboardImage ) | ( Notification ) | ( Organisation ) | ( OrganisationApplicationJoin ) | ( PermissionJoin ) | ( PermissionName ) | ( PermissionPolicy ) | ( Omit<Query, 'actionPlugins' | 'node' | 'query'> & { actionPlugins?: Maybe<_RefType['ActionPluginsConnection']>, node?: Maybe<_RefType['Node']>, query: _RefType['Query'] } ) | ( Review ) | ( ReviewAssignment ) | ( ReviewAssignmentAssignerJoin ) | ( ReviewDecision ) | ( ReviewResponse ) | ( ReviewStatusHistory ) | ( SystemInfo ) | ( Template ) | ( TemplateAction ) | ( TemplateCategory ) | ( TemplateDataViewJoin ) | ( TemplateElement ) | ( TemplateEvaluatorFragmentJoin ) | ( TemplateFileJoin ) | ( TemplateFilterJoin ) | ( TemplatePermission ) | ( TemplateSection ) | ( TemplateStage ) | ( TemplateStageReviewLevel ) | ( TriggerQueue ) | ( TriggerSchedule ) | ( UserApplicationJoin ) | ( UserOrganisation ) | ( Verification );
 };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -50501,6 +52190,8 @@ export type ResolversTypes = {
   CreateDataTableStorageConditionPayload: ResolverTypeWrapper<Omit<CreateDataTableStorageConditionPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   CreateDataTableStorageConditionsSimplifiedInput: CreateDataTableStorageConditionsSimplifiedInput;
   CreateDataTableStorageConditionsSimplifiedPayload: ResolverTypeWrapper<Omit<CreateDataTableStorageConditionsSimplifiedPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
+  CreateDataTableTownsDivisionsIslandInput: CreateDataTableTownsDivisionsIslandInput;
+  CreateDataTableTownsDivisionsIslandPayload: ResolverTypeWrapper<Omit<CreateDataTableTownsDivisionsIslandPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   CreateDataTableUnitsOfProportionInput: CreateDataTableUnitsOfProportionInput;
   CreateDataTableUnitsOfProportionPayload: ResolverTypeWrapper<Omit<CreateDataTableUnitsOfProportionPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   CreateDataTableWorldHealthOrganisationPqListOfFppInput: CreateDataTableWorldHealthOrganisationPqListOfFppInput;
@@ -50511,6 +52202,8 @@ export type ResolversTypes = {
   CreateDataViewPayload: ResolverTypeWrapper<Omit<CreateDataViewPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   CreateElementTypePluginInput: CreateElementTypePluginInput;
   CreateElementTypePluginPayload: ResolverTypeWrapper<Omit<CreateElementTypePluginPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
+  CreateEvaluatorFragmentInput: CreateEvaluatorFragmentInput;
+  CreateEvaluatorFragmentPayload: ResolverTypeWrapper<Omit<CreateEvaluatorFragmentPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   CreateFileInput: CreateFileInput;
   CreateFilePayload: ResolverTypeWrapper<Omit<CreateFilePayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   CreateFilterInput: CreateFilterInput;
@@ -50553,6 +52246,8 @@ export type ResolversTypes = {
   CreateTemplateDataViewJoinPayload: ResolverTypeWrapper<Omit<CreateTemplateDataViewJoinPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   CreateTemplateElementInput: CreateTemplateElementInput;
   CreateTemplateElementPayload: ResolverTypeWrapper<Omit<CreateTemplateElementPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
+  CreateTemplateEvaluatorFragmentJoinInput: CreateTemplateEvaluatorFragmentJoinInput;
+  CreateTemplateEvaluatorFragmentJoinPayload: ResolverTypeWrapper<Omit<CreateTemplateEvaluatorFragmentJoinPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   CreateTemplateFileJoinInput: CreateTemplateFileJoinInput;
   CreateTemplateFileJoinPayload: ResolverTypeWrapper<Omit<CreateTemplateFileJoinPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   CreateTemplateFilterJoinInput: CreateTemplateFilterJoinInput;
@@ -50975,6 +52670,14 @@ export type ResolversTypes = {
   DataTableStorageConditionsSimplifiedsConnection: ResolverTypeWrapper<DataTableStorageConditionsSimplifiedsConnection>;
   DataTableStorageConditionsSimplifiedsEdge: ResolverTypeWrapper<DataTableStorageConditionsSimplifiedsEdge>;
   DataTableStorageConditionsSimplifiedsOrderBy: DataTableStorageConditionsSimplifiedsOrderBy;
+  DataTableTownsDivisionsIsland: ResolverTypeWrapper<DataTableTownsDivisionsIsland>;
+  DataTableTownsDivisionsIslandCondition: DataTableTownsDivisionsIslandCondition;
+  DataTableTownsDivisionsIslandFilter: DataTableTownsDivisionsIslandFilter;
+  DataTableTownsDivisionsIslandInput: DataTableTownsDivisionsIslandInput;
+  DataTableTownsDivisionsIslandPatch: DataTableTownsDivisionsIslandPatch;
+  DataTableTownsDivisionsIslandsConnection: ResolverTypeWrapper<DataTableTownsDivisionsIslandsConnection>;
+  DataTableTownsDivisionsIslandsEdge: ResolverTypeWrapper<DataTableTownsDivisionsIslandsEdge>;
+  DataTableTownsDivisionsIslandsOrderBy: DataTableTownsDivisionsIslandsOrderBy;
   DataTableUnitsOfProportion: ResolverTypeWrapper<DataTableUnitsOfProportion>;
   DataTableUnitsOfProportionCondition: DataTableUnitsOfProportionCondition;
   DataTableUnitsOfProportionFilter: DataTableUnitsOfProportionFilter;
@@ -51149,6 +52852,9 @@ export type ResolversTypes = {
   DeleteDataTableStorageConditionsSimplifiedByNodeIdInput: DeleteDataTableStorageConditionsSimplifiedByNodeIdInput;
   DeleteDataTableStorageConditionsSimplifiedInput: DeleteDataTableStorageConditionsSimplifiedInput;
   DeleteDataTableStorageConditionsSimplifiedPayload: ResolverTypeWrapper<Omit<DeleteDataTableStorageConditionsSimplifiedPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
+  DeleteDataTableTownsDivisionsIslandByNodeIdInput: DeleteDataTableTownsDivisionsIslandByNodeIdInput;
+  DeleteDataTableTownsDivisionsIslandInput: DeleteDataTableTownsDivisionsIslandInput;
+  DeleteDataTableTownsDivisionsIslandPayload: ResolverTypeWrapper<Omit<DeleteDataTableTownsDivisionsIslandPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   DeleteDataTableUnitsOfProportionByNodeIdInput: DeleteDataTableUnitsOfProportionByNodeIdInput;
   DeleteDataTableUnitsOfProportionInput: DeleteDataTableUnitsOfProportionInput;
   DeleteDataTableUnitsOfProportionPayload: ResolverTypeWrapper<Omit<DeleteDataTableUnitsOfProportionPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
@@ -51166,6 +52872,10 @@ export type ResolversTypes = {
   DeleteElementTypePluginByNodeIdInput: DeleteElementTypePluginByNodeIdInput;
   DeleteElementTypePluginInput: DeleteElementTypePluginInput;
   DeleteElementTypePluginPayload: ResolverTypeWrapper<Omit<DeleteElementTypePluginPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
+  DeleteEvaluatorFragmentByNameInput: DeleteEvaluatorFragmentByNameInput;
+  DeleteEvaluatorFragmentByNodeIdInput: DeleteEvaluatorFragmentByNodeIdInput;
+  DeleteEvaluatorFragmentInput: DeleteEvaluatorFragmentInput;
+  DeleteEvaluatorFragmentPayload: ResolverTypeWrapper<Omit<DeleteEvaluatorFragmentPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   DeleteFileByNodeIdInput: DeleteFileByNodeIdInput;
   DeleteFileByUniqueIdInput: DeleteFileByUniqueIdInput;
   DeleteFileInput: DeleteFileInput;
@@ -51238,6 +52948,10 @@ export type ResolversTypes = {
   DeleteTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput: DeleteTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput;
   DeleteTemplateElementInput: DeleteTemplateElementInput;
   DeleteTemplateElementPayload: ResolverTypeWrapper<Omit<DeleteTemplateElementPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
+  DeleteTemplateEvaluatorFragmentJoinByNodeIdInput: DeleteTemplateEvaluatorFragmentJoinByNodeIdInput;
+  DeleteTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentIdInput: DeleteTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentIdInput;
+  DeleteTemplateEvaluatorFragmentJoinInput: DeleteTemplateEvaluatorFragmentJoinInput;
+  DeleteTemplateEvaluatorFragmentJoinPayload: ResolverTypeWrapper<Omit<DeleteTemplateEvaluatorFragmentJoinPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   DeleteTemplateFileJoinByNodeIdInput: DeleteTemplateFileJoinByNodeIdInput;
   DeleteTemplateFileJoinByTemplateIdAndFileIdInput: DeleteTemplateFileJoinByTemplateIdAndFileIdInput;
   DeleteTemplateFileJoinInput: DeleteTemplateFileJoinInput;
@@ -51286,6 +53000,24 @@ export type ResolversTypes = {
   ElementTypePluginsConnection: ResolverTypeWrapper<ElementTypePluginsConnection>;
   ElementTypePluginsEdge: ResolverTypeWrapper<ElementTypePluginsEdge>;
   ElementTypePluginsOrderBy: ElementTypePluginsOrderBy;
+  EvaluatorFragment: ResolverTypeWrapper<EvaluatorFragment>;
+  EvaluatorFragmentCondition: EvaluatorFragmentCondition;
+  EvaluatorFragmentEvaluatorFragmentNameKeyConnect: EvaluatorFragmentEvaluatorFragmentNameKeyConnect;
+  EvaluatorFragmentEvaluatorFragmentNameKeyDelete: EvaluatorFragmentEvaluatorFragmentNameKeyDelete;
+  EvaluatorFragmentEvaluatorFragmentPkeyConnect: EvaluatorFragmentEvaluatorFragmentPkeyConnect;
+  EvaluatorFragmentEvaluatorFragmentPkeyDelete: EvaluatorFragmentEvaluatorFragmentPkeyDelete;
+  EvaluatorFragmentFilter: EvaluatorFragmentFilter;
+  EvaluatorFragmentInput: EvaluatorFragmentInput;
+  EvaluatorFragmentNodeIdConnect: EvaluatorFragmentNodeIdConnect;
+  EvaluatorFragmentNodeIdDelete: EvaluatorFragmentNodeIdDelete;
+  EvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyNodeIdUpdate: EvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyNodeIdUpdate;
+  EvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingEvaluatorFragmentNameKeyUpdate: EvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingEvaluatorFragmentNameKeyUpdate;
+  EvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingEvaluatorFragmentPkeyUpdate: EvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingEvaluatorFragmentPkeyUpdate;
+  EvaluatorFragmentPatch: EvaluatorFragmentPatch;
+  EvaluatorFragmentToManyTemplateEvaluatorFragmentJoinFilter: EvaluatorFragmentToManyTemplateEvaluatorFragmentJoinFilter;
+  EvaluatorFragmentsConnection: ResolverTypeWrapper<EvaluatorFragmentsConnection>;
+  EvaluatorFragmentsEdge: ResolverTypeWrapper<EvaluatorFragmentsEdge>;
+  EvaluatorFragmentsOrderBy: EvaluatorFragmentsOrderBy;
   EventType: EventType;
   EventTypeFilter: EventTypeFilter;
   FakePublicApplicationForeignKey0ApplicationCreateInput: FakePublicApplicationForeignKey0ApplicationCreateInput;
@@ -51934,6 +53666,34 @@ export type ResolversTypes = {
   TemplateElementsConnection: ResolverTypeWrapper<TemplateElementsConnection>;
   TemplateElementsEdge: ResolverTypeWrapper<TemplateElementsEdge>;
   TemplateElementsOrderBy: TemplateElementsOrderBy;
+  TemplateEvaluatorFragmentJoin: ResolverTypeWrapper<TemplateEvaluatorFragmentJoin>;
+  TemplateEvaluatorFragmentJoinCondition: TemplateEvaluatorFragmentJoinCondition;
+  TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyEvaluatorFragmentCreateInput: TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyEvaluatorFragmentCreateInput;
+  TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInput: TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInput;
+  TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInverseInput: TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInverseInput;
+  TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyTemplateEvaluatorFragmentJoinCreateInput: TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyTemplateEvaluatorFragmentJoinCreateInput;
+  TemplateEvaluatorFragmentJoinFilter: TemplateEvaluatorFragmentJoinFilter;
+  TemplateEvaluatorFragmentJoinInput: TemplateEvaluatorFragmentJoinInput;
+  TemplateEvaluatorFragmentJoinNodeIdConnect: TemplateEvaluatorFragmentJoinNodeIdConnect;
+  TemplateEvaluatorFragmentJoinNodeIdDelete: TemplateEvaluatorFragmentJoinNodeIdDelete;
+  TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyNodeIdUpdate: TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyNodeIdUpdate;
+  TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyUpdate: TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyUpdate;
+  TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingTemplateEvaluatorFragmentJoinPkeyUpdate: TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingTemplateEvaluatorFragmentJoinPkeyUpdate;
+  TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyNodeIdUpdate: TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyNodeIdUpdate;
+  TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyUpdate: TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyUpdate;
+  TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplateEvaluatorFragmentJoinPkeyUpdate: TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplateEvaluatorFragmentJoinPkeyUpdate;
+  TemplateEvaluatorFragmentJoinPatch: TemplateEvaluatorFragmentJoinPatch;
+  TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyConnect: TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyConnect;
+  TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyDelete: TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyDelete;
+  TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJoinPkeyConnect: TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJoinPkeyConnect;
+  TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJoinPkeyDelete: TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJoinPkeyDelete;
+  TemplateEvaluatorFragmentJoinTemplateIdFkeyInput: TemplateEvaluatorFragmentJoinTemplateIdFkeyInput;
+  TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput: TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput;
+  TemplateEvaluatorFragmentJoinTemplateIdFkeyTemplateCreateInput: TemplateEvaluatorFragmentJoinTemplateIdFkeyTemplateCreateInput;
+  TemplateEvaluatorFragmentJoinTemplateIdFkeyTemplateEvaluatorFragmentJoinCreateInput: TemplateEvaluatorFragmentJoinTemplateIdFkeyTemplateEvaluatorFragmentJoinCreateInput;
+  TemplateEvaluatorFragmentJoinsConnection: ResolverTypeWrapper<TemplateEvaluatorFragmentJoinsConnection>;
+  TemplateEvaluatorFragmentJoinsEdge: ResolverTypeWrapper<TemplateEvaluatorFragmentJoinsEdge>;
+  TemplateEvaluatorFragmentJoinsOrderBy: TemplateEvaluatorFragmentJoinsOrderBy;
   TemplateFileJoin: ResolverTypeWrapper<TemplateFileJoin>;
   TemplateFileJoinCondition: TemplateFileJoinCondition;
   TemplateFileJoinFileIdFkeyFileCreateInput: TemplateFileJoinFileIdFkeyFileCreateInput;
@@ -52005,6 +53765,9 @@ export type ResolversTypes = {
   TemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateIdFkeyNodeIdUpdate;
   TemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateIdFkeyUsingTemplateCodeVersionIdKeyUpdate: TemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateIdFkeyUsingTemplateCodeVersionIdKeyUpdate;
   TemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateIdFkeyUsingTemplatePkeyUpdate;
+  TemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyNodeIdUpdate;
+  TemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplateCodeVersionIdKeyUpdate: TemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplateCodeVersionIdKeyUpdate;
+  TemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplatePkeyUpdate;
   TemplateOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyNodeIdUpdate;
   TemplateOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyUsingTemplateCodeVersionIdKeyUpdate: TemplateOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyUsingTemplateCodeVersionIdKeyUpdate;
   TemplateOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyUsingTemplatePkeyUpdate;
@@ -52139,6 +53902,7 @@ export type ResolversTypes = {
   TemplateToManyReviewAssignmentFilter: TemplateToManyReviewAssignmentFilter;
   TemplateToManyTemplateActionFilter: TemplateToManyTemplateActionFilter;
   TemplateToManyTemplateDataViewJoinFilter: TemplateToManyTemplateDataViewJoinFilter;
+  TemplateToManyTemplateEvaluatorFragmentJoinFilter: TemplateToManyTemplateEvaluatorFragmentJoinFilter;
   TemplateToManyTemplateFileJoinFilter: TemplateToManyTemplateFileJoinFilter;
   TemplateToManyTemplateFilterJoinFilter: TemplateToManyTemplateFilterJoinFilter;
   TemplateToManyTemplatePermissionFilter: TemplateToManyTemplatePermissionFilter;
@@ -52328,6 +54092,9 @@ export type ResolversTypes = {
   UpdateDataTableStorageConditionsSimplifiedByNodeIdInput: UpdateDataTableStorageConditionsSimplifiedByNodeIdInput;
   UpdateDataTableStorageConditionsSimplifiedInput: UpdateDataTableStorageConditionsSimplifiedInput;
   UpdateDataTableStorageConditionsSimplifiedPayload: ResolverTypeWrapper<Omit<UpdateDataTableStorageConditionsSimplifiedPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
+  UpdateDataTableTownsDivisionsIslandByNodeIdInput: UpdateDataTableTownsDivisionsIslandByNodeIdInput;
+  UpdateDataTableTownsDivisionsIslandInput: UpdateDataTableTownsDivisionsIslandInput;
+  UpdateDataTableTownsDivisionsIslandPayload: ResolverTypeWrapper<Omit<UpdateDataTableTownsDivisionsIslandPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   UpdateDataTableUnitsOfProportionByNodeIdInput: UpdateDataTableUnitsOfProportionByNodeIdInput;
   UpdateDataTableUnitsOfProportionInput: UpdateDataTableUnitsOfProportionInput;
   UpdateDataTableUnitsOfProportionPayload: ResolverTypeWrapper<Omit<UpdateDataTableUnitsOfProportionPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
@@ -52345,6 +54112,10 @@ export type ResolversTypes = {
   UpdateElementTypePluginByNodeIdInput: UpdateElementTypePluginByNodeIdInput;
   UpdateElementTypePluginInput: UpdateElementTypePluginInput;
   UpdateElementTypePluginPayload: ResolverTypeWrapper<Omit<UpdateElementTypePluginPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
+  UpdateEvaluatorFragmentByNameInput: UpdateEvaluatorFragmentByNameInput;
+  UpdateEvaluatorFragmentByNodeIdInput: UpdateEvaluatorFragmentByNodeIdInput;
+  UpdateEvaluatorFragmentInput: UpdateEvaluatorFragmentInput;
+  UpdateEvaluatorFragmentPayload: ResolverTypeWrapper<Omit<UpdateEvaluatorFragmentPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   UpdateFileByNodeIdInput: UpdateFileByNodeIdInput;
   UpdateFileByUniqueIdInput: UpdateFileByUniqueIdInput;
   UpdateFileInput: UpdateFileInput;
@@ -52417,6 +54188,10 @@ export type ResolversTypes = {
   UpdateTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput: UpdateTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput;
   UpdateTemplateElementInput: UpdateTemplateElementInput;
   UpdateTemplateElementPayload: ResolverTypeWrapper<Omit<UpdateTemplateElementPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
+  UpdateTemplateEvaluatorFragmentJoinByNodeIdInput: UpdateTemplateEvaluatorFragmentJoinByNodeIdInput;
+  UpdateTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentIdInput: UpdateTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentIdInput;
+  UpdateTemplateEvaluatorFragmentJoinInput: UpdateTemplateEvaluatorFragmentJoinInput;
+  UpdateTemplateEvaluatorFragmentJoinPayload: ResolverTypeWrapper<Omit<UpdateTemplateEvaluatorFragmentJoinPayload, 'query'> & { query?: Maybe<ResolversTypes['Query']> }>;
   UpdateTemplateFileJoinByNodeIdInput: UpdateTemplateFileJoinByNodeIdInput;
   UpdateTemplateFileJoinByTemplateIdAndFileIdInput: UpdateTemplateFileJoinByTemplateIdAndFileIdInput;
   UpdateTemplateFileJoinInput: UpdateTemplateFileJoinInput;
@@ -52615,6 +54390,7 @@ export type ResolversTypes = {
   updateDataTableProvisionalProductApplicationJoinOnDataTableProvisionalProductApplicationJoinForDataTableProvisionalProductApplicationApplicationIdFkeyPatch: UpdateDataTableProvisionalProductApplicationJoinOnDataTableProvisionalProductApplicationJoinForDataTableProvisionalProductApplicationApplicationIdFkeyPatch;
   updateDataTableProvisionalProductOnDataTableProvisionalProductApplicationJoinForDataTableProvisionalProducDataTableProvisionalProduFkeyPatch: UpdateDataTableProvisionalProductOnDataTableProvisionalProductApplicationJoinForDataTableProvisionalProducDataTableProvisionalProduFkeyPatch;
   updateDataViewOnTemplateDataViewJoinForTemplateDataViewJoinDataViewIdFkeyPatch: UpdateDataViewOnTemplateDataViewJoinForTemplateDataViewJoinDataViewIdFkeyPatch;
+  updateEvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyPatch: UpdateEvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyPatch;
   updateFileOnFileForFileApplicationNoteIdFkeyPatch: UpdateFileOnFileForFileApplicationNoteIdFkeyPatch;
   updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
   updateFileOnFileForFileApplicationSerialFkeyPatch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
@@ -52672,6 +54448,8 @@ export type ResolversTypes = {
   updateTemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyPatch: UpdateTemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyPatch;
   updateTemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch: UpdateTemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch;
   updateTemplateElementOnTemplateElementForTemplateElementSectionIdFkeyPatch: UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFkeyPatch;
+  updateTemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyPatch: UpdateTemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyPatch;
+  updateTemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyPatch: UpdateTemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyPatch;
   updateTemplateFileJoinOnTemplateFileJoinForTemplateFileJoinFileIdFkeyPatch: UpdateTemplateFileJoinOnTemplateFileJoinForTemplateFileJoinFileIdFkeyPatch;
   updateTemplateFileJoinOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyPatch: UpdateTemplateFileJoinOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyPatch;
   updateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
@@ -52681,6 +54459,7 @@ export type ResolversTypes = {
   updateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPatch: UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPatch;
   updateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch: UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch;
   updateTemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateIdFkeyPatch: UpdateTemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateIdFkeyPatch;
+  updateTemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyPatch: UpdateTemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyPatch;
   updateTemplateOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyPatch: UpdateTemplateOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyPatch;
   updateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch: UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch;
   updateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch: UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch;
@@ -53186,6 +54965,8 @@ export type ResolversParentTypes = {
   CreateDataTableStorageConditionPayload: Omit<CreateDataTableStorageConditionPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   CreateDataTableStorageConditionsSimplifiedInput: CreateDataTableStorageConditionsSimplifiedInput;
   CreateDataTableStorageConditionsSimplifiedPayload: Omit<CreateDataTableStorageConditionsSimplifiedPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
+  CreateDataTableTownsDivisionsIslandInput: CreateDataTableTownsDivisionsIslandInput;
+  CreateDataTableTownsDivisionsIslandPayload: Omit<CreateDataTableTownsDivisionsIslandPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   CreateDataTableUnitsOfProportionInput: CreateDataTableUnitsOfProportionInput;
   CreateDataTableUnitsOfProportionPayload: Omit<CreateDataTableUnitsOfProportionPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   CreateDataTableWorldHealthOrganisationPqListOfFppInput: CreateDataTableWorldHealthOrganisationPqListOfFppInput;
@@ -53196,6 +54977,8 @@ export type ResolversParentTypes = {
   CreateDataViewPayload: Omit<CreateDataViewPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   CreateElementTypePluginInput: CreateElementTypePluginInput;
   CreateElementTypePluginPayload: Omit<CreateElementTypePluginPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
+  CreateEvaluatorFragmentInput: CreateEvaluatorFragmentInput;
+  CreateEvaluatorFragmentPayload: Omit<CreateEvaluatorFragmentPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   CreateFileInput: CreateFileInput;
   CreateFilePayload: Omit<CreateFilePayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   CreateFilterInput: CreateFilterInput;
@@ -53238,6 +55021,8 @@ export type ResolversParentTypes = {
   CreateTemplateDataViewJoinPayload: Omit<CreateTemplateDataViewJoinPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   CreateTemplateElementInput: CreateTemplateElementInput;
   CreateTemplateElementPayload: Omit<CreateTemplateElementPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
+  CreateTemplateEvaluatorFragmentJoinInput: CreateTemplateEvaluatorFragmentJoinInput;
+  CreateTemplateEvaluatorFragmentJoinPayload: Omit<CreateTemplateEvaluatorFragmentJoinPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   CreateTemplateFileJoinInput: CreateTemplateFileJoinInput;
   CreateTemplateFileJoinPayload: Omit<CreateTemplateFileJoinPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   CreateTemplateFilterJoinInput: CreateTemplateFilterJoinInput;
@@ -53632,6 +55417,13 @@ export type ResolversParentTypes = {
   DataTableStorageConditionsSimplifiedPatch: DataTableStorageConditionsSimplifiedPatch;
   DataTableStorageConditionsSimplifiedsConnection: DataTableStorageConditionsSimplifiedsConnection;
   DataTableStorageConditionsSimplifiedsEdge: DataTableStorageConditionsSimplifiedsEdge;
+  DataTableTownsDivisionsIsland: DataTableTownsDivisionsIsland;
+  DataTableTownsDivisionsIslandCondition: DataTableTownsDivisionsIslandCondition;
+  DataTableTownsDivisionsIslandFilter: DataTableTownsDivisionsIslandFilter;
+  DataTableTownsDivisionsIslandInput: DataTableTownsDivisionsIslandInput;
+  DataTableTownsDivisionsIslandPatch: DataTableTownsDivisionsIslandPatch;
+  DataTableTownsDivisionsIslandsConnection: DataTableTownsDivisionsIslandsConnection;
+  DataTableTownsDivisionsIslandsEdge: DataTableTownsDivisionsIslandsEdge;
   DataTableUnitsOfProportion: DataTableUnitsOfProportion;
   DataTableUnitsOfProportionCondition: DataTableUnitsOfProportionCondition;
   DataTableUnitsOfProportionFilter: DataTableUnitsOfProportionFilter;
@@ -53800,6 +55592,9 @@ export type ResolversParentTypes = {
   DeleteDataTableStorageConditionsSimplifiedByNodeIdInput: DeleteDataTableStorageConditionsSimplifiedByNodeIdInput;
   DeleteDataTableStorageConditionsSimplifiedInput: DeleteDataTableStorageConditionsSimplifiedInput;
   DeleteDataTableStorageConditionsSimplifiedPayload: Omit<DeleteDataTableStorageConditionsSimplifiedPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
+  DeleteDataTableTownsDivisionsIslandByNodeIdInput: DeleteDataTableTownsDivisionsIslandByNodeIdInput;
+  DeleteDataTableTownsDivisionsIslandInput: DeleteDataTableTownsDivisionsIslandInput;
+  DeleteDataTableTownsDivisionsIslandPayload: Omit<DeleteDataTableTownsDivisionsIslandPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   DeleteDataTableUnitsOfProportionByNodeIdInput: DeleteDataTableUnitsOfProportionByNodeIdInput;
   DeleteDataTableUnitsOfProportionInput: DeleteDataTableUnitsOfProportionInput;
   DeleteDataTableUnitsOfProportionPayload: Omit<DeleteDataTableUnitsOfProportionPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
@@ -53817,6 +55612,10 @@ export type ResolversParentTypes = {
   DeleteElementTypePluginByNodeIdInput: DeleteElementTypePluginByNodeIdInput;
   DeleteElementTypePluginInput: DeleteElementTypePluginInput;
   DeleteElementTypePluginPayload: Omit<DeleteElementTypePluginPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
+  DeleteEvaluatorFragmentByNameInput: DeleteEvaluatorFragmentByNameInput;
+  DeleteEvaluatorFragmentByNodeIdInput: DeleteEvaluatorFragmentByNodeIdInput;
+  DeleteEvaluatorFragmentInput: DeleteEvaluatorFragmentInput;
+  DeleteEvaluatorFragmentPayload: Omit<DeleteEvaluatorFragmentPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   DeleteFileByNodeIdInput: DeleteFileByNodeIdInput;
   DeleteFileByUniqueIdInput: DeleteFileByUniqueIdInput;
   DeleteFileInput: DeleteFileInput;
@@ -53889,6 +55688,10 @@ export type ResolversParentTypes = {
   DeleteTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput: DeleteTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput;
   DeleteTemplateElementInput: DeleteTemplateElementInput;
   DeleteTemplateElementPayload: Omit<DeleteTemplateElementPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
+  DeleteTemplateEvaluatorFragmentJoinByNodeIdInput: DeleteTemplateEvaluatorFragmentJoinByNodeIdInput;
+  DeleteTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentIdInput: DeleteTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentIdInput;
+  DeleteTemplateEvaluatorFragmentJoinInput: DeleteTemplateEvaluatorFragmentJoinInput;
+  DeleteTemplateEvaluatorFragmentJoinPayload: Omit<DeleteTemplateEvaluatorFragmentJoinPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   DeleteTemplateFileJoinByNodeIdInput: DeleteTemplateFileJoinByNodeIdInput;
   DeleteTemplateFileJoinByTemplateIdAndFileIdInput: DeleteTemplateFileJoinByTemplateIdAndFileIdInput;
   DeleteTemplateFileJoinInput: DeleteTemplateFileJoinInput;
@@ -53936,6 +55739,23 @@ export type ResolversParentTypes = {
   ElementTypePluginPatch: ElementTypePluginPatch;
   ElementTypePluginsConnection: ElementTypePluginsConnection;
   ElementTypePluginsEdge: ElementTypePluginsEdge;
+  EvaluatorFragment: EvaluatorFragment;
+  EvaluatorFragmentCondition: EvaluatorFragmentCondition;
+  EvaluatorFragmentEvaluatorFragmentNameKeyConnect: EvaluatorFragmentEvaluatorFragmentNameKeyConnect;
+  EvaluatorFragmentEvaluatorFragmentNameKeyDelete: EvaluatorFragmentEvaluatorFragmentNameKeyDelete;
+  EvaluatorFragmentEvaluatorFragmentPkeyConnect: EvaluatorFragmentEvaluatorFragmentPkeyConnect;
+  EvaluatorFragmentEvaluatorFragmentPkeyDelete: EvaluatorFragmentEvaluatorFragmentPkeyDelete;
+  EvaluatorFragmentFilter: EvaluatorFragmentFilter;
+  EvaluatorFragmentInput: EvaluatorFragmentInput;
+  EvaluatorFragmentNodeIdConnect: EvaluatorFragmentNodeIdConnect;
+  EvaluatorFragmentNodeIdDelete: EvaluatorFragmentNodeIdDelete;
+  EvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyNodeIdUpdate: EvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyNodeIdUpdate;
+  EvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingEvaluatorFragmentNameKeyUpdate: EvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingEvaluatorFragmentNameKeyUpdate;
+  EvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingEvaluatorFragmentPkeyUpdate: EvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingEvaluatorFragmentPkeyUpdate;
+  EvaluatorFragmentPatch: EvaluatorFragmentPatch;
+  EvaluatorFragmentToManyTemplateEvaluatorFragmentJoinFilter: EvaluatorFragmentToManyTemplateEvaluatorFragmentJoinFilter;
+  EvaluatorFragmentsConnection: EvaluatorFragmentsConnection;
+  EvaluatorFragmentsEdge: EvaluatorFragmentsEdge;
   EventTypeFilter: EventTypeFilter;
   FakePublicApplicationForeignKey0ApplicationCreateInput: FakePublicApplicationForeignKey0ApplicationCreateInput;
   FakePublicApplicationForeignKey0Input: FakePublicApplicationForeignKey0Input;
@@ -54549,6 +56369,33 @@ export type ResolversParentTypes = {
   TemplateElementToManyReviewResponseFilter: TemplateElementToManyReviewResponseFilter;
   TemplateElementsConnection: TemplateElementsConnection;
   TemplateElementsEdge: TemplateElementsEdge;
+  TemplateEvaluatorFragmentJoin: TemplateEvaluatorFragmentJoin;
+  TemplateEvaluatorFragmentJoinCondition: TemplateEvaluatorFragmentJoinCondition;
+  TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyEvaluatorFragmentCreateInput: TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyEvaluatorFragmentCreateInput;
+  TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInput: TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInput;
+  TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInverseInput: TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyInverseInput;
+  TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyTemplateEvaluatorFragmentJoinCreateInput: TemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyTemplateEvaluatorFragmentJoinCreateInput;
+  TemplateEvaluatorFragmentJoinFilter: TemplateEvaluatorFragmentJoinFilter;
+  TemplateEvaluatorFragmentJoinInput: TemplateEvaluatorFragmentJoinInput;
+  TemplateEvaluatorFragmentJoinNodeIdConnect: TemplateEvaluatorFragmentJoinNodeIdConnect;
+  TemplateEvaluatorFragmentJoinNodeIdDelete: TemplateEvaluatorFragmentJoinNodeIdDelete;
+  TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyNodeIdUpdate: TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyNodeIdUpdate;
+  TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyUpdate: TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyUpdate;
+  TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingTemplateEvaluatorFragmentJoinPkeyUpdate: TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyUsingTemplateEvaluatorFragmentJoinPkeyUpdate;
+  TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyNodeIdUpdate: TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyNodeIdUpdate;
+  TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyUpdate: TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyUpdate;
+  TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplateEvaluatorFragmentJoinPkeyUpdate: TemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplateEvaluatorFragmentJoinPkeyUpdate;
+  TemplateEvaluatorFragmentJoinPatch: TemplateEvaluatorFragmentJoinPatch;
+  TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyConnect: TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyConnect;
+  TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyDelete: TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJTemplateIdEvaluatorFragmenKeyDelete;
+  TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJoinPkeyConnect: TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJoinPkeyConnect;
+  TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJoinPkeyDelete: TemplateEvaluatorFragmentJoinTemplateEvaluatorFragmentJoinPkeyDelete;
+  TemplateEvaluatorFragmentJoinTemplateIdFkeyInput: TemplateEvaluatorFragmentJoinTemplateIdFkeyInput;
+  TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput: TemplateEvaluatorFragmentJoinTemplateIdFkeyInverseInput;
+  TemplateEvaluatorFragmentJoinTemplateIdFkeyTemplateCreateInput: TemplateEvaluatorFragmentJoinTemplateIdFkeyTemplateCreateInput;
+  TemplateEvaluatorFragmentJoinTemplateIdFkeyTemplateEvaluatorFragmentJoinCreateInput: TemplateEvaluatorFragmentJoinTemplateIdFkeyTemplateEvaluatorFragmentJoinCreateInput;
+  TemplateEvaluatorFragmentJoinsConnection: TemplateEvaluatorFragmentJoinsConnection;
+  TemplateEvaluatorFragmentJoinsEdge: TemplateEvaluatorFragmentJoinsEdge;
   TemplateFileJoin: TemplateFileJoin;
   TemplateFileJoinCondition: TemplateFileJoinCondition;
   TemplateFileJoinFileIdFkeyFileCreateInput: TemplateFileJoinFileIdFkeyFileCreateInput;
@@ -54618,6 +56465,9 @@ export type ResolversParentTypes = {
   TemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateIdFkeyNodeIdUpdate;
   TemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateIdFkeyUsingTemplateCodeVersionIdKeyUpdate: TemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateIdFkeyUsingTemplateCodeVersionIdKeyUpdate;
   TemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateIdFkeyUsingTemplatePkeyUpdate;
+  TemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyNodeIdUpdate;
+  TemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplateCodeVersionIdKeyUpdate: TemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplateCodeVersionIdKeyUpdate;
+  TemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyUsingTemplatePkeyUpdate;
   TemplateOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyNodeIdUpdate;
   TemplateOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyUsingTemplateCodeVersionIdKeyUpdate: TemplateOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyUsingTemplateCodeVersionIdKeyUpdate;
   TemplateOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyUsingTemplatePkeyUpdate;
@@ -54747,6 +56597,7 @@ export type ResolversParentTypes = {
   TemplateToManyReviewAssignmentFilter: TemplateToManyReviewAssignmentFilter;
   TemplateToManyTemplateActionFilter: TemplateToManyTemplateActionFilter;
   TemplateToManyTemplateDataViewJoinFilter: TemplateToManyTemplateDataViewJoinFilter;
+  TemplateToManyTemplateEvaluatorFragmentJoinFilter: TemplateToManyTemplateEvaluatorFragmentJoinFilter;
   TemplateToManyTemplateFileJoinFilter: TemplateToManyTemplateFileJoinFilter;
   TemplateToManyTemplateFilterJoinFilter: TemplateToManyTemplateFilterJoinFilter;
   TemplateToManyTemplatePermissionFilter: TemplateToManyTemplatePermissionFilter;
@@ -54929,6 +56780,9 @@ export type ResolversParentTypes = {
   UpdateDataTableStorageConditionsSimplifiedByNodeIdInput: UpdateDataTableStorageConditionsSimplifiedByNodeIdInput;
   UpdateDataTableStorageConditionsSimplifiedInput: UpdateDataTableStorageConditionsSimplifiedInput;
   UpdateDataTableStorageConditionsSimplifiedPayload: Omit<UpdateDataTableStorageConditionsSimplifiedPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
+  UpdateDataTableTownsDivisionsIslandByNodeIdInput: UpdateDataTableTownsDivisionsIslandByNodeIdInput;
+  UpdateDataTableTownsDivisionsIslandInput: UpdateDataTableTownsDivisionsIslandInput;
+  UpdateDataTableTownsDivisionsIslandPayload: Omit<UpdateDataTableTownsDivisionsIslandPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   UpdateDataTableUnitsOfProportionByNodeIdInput: UpdateDataTableUnitsOfProportionByNodeIdInput;
   UpdateDataTableUnitsOfProportionInput: UpdateDataTableUnitsOfProportionInput;
   UpdateDataTableUnitsOfProportionPayload: Omit<UpdateDataTableUnitsOfProportionPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
@@ -54946,6 +56800,10 @@ export type ResolversParentTypes = {
   UpdateElementTypePluginByNodeIdInput: UpdateElementTypePluginByNodeIdInput;
   UpdateElementTypePluginInput: UpdateElementTypePluginInput;
   UpdateElementTypePluginPayload: Omit<UpdateElementTypePluginPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
+  UpdateEvaluatorFragmentByNameInput: UpdateEvaluatorFragmentByNameInput;
+  UpdateEvaluatorFragmentByNodeIdInput: UpdateEvaluatorFragmentByNodeIdInput;
+  UpdateEvaluatorFragmentInput: UpdateEvaluatorFragmentInput;
+  UpdateEvaluatorFragmentPayload: Omit<UpdateEvaluatorFragmentPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   UpdateFileByNodeIdInput: UpdateFileByNodeIdInput;
   UpdateFileByUniqueIdInput: UpdateFileByUniqueIdInput;
   UpdateFileInput: UpdateFileInput;
@@ -55018,6 +56876,10 @@ export type ResolversParentTypes = {
   UpdateTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput: UpdateTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput;
   UpdateTemplateElementInput: UpdateTemplateElementInput;
   UpdateTemplateElementPayload: Omit<UpdateTemplateElementPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
+  UpdateTemplateEvaluatorFragmentJoinByNodeIdInput: UpdateTemplateEvaluatorFragmentJoinByNodeIdInput;
+  UpdateTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentIdInput: UpdateTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentIdInput;
+  UpdateTemplateEvaluatorFragmentJoinInput: UpdateTemplateEvaluatorFragmentJoinInput;
+  UpdateTemplateEvaluatorFragmentJoinPayload: Omit<UpdateTemplateEvaluatorFragmentJoinPayload, 'query'> & { query?: Maybe<ResolversParentTypes['Query']> };
   UpdateTemplateFileJoinByNodeIdInput: UpdateTemplateFileJoinByNodeIdInput;
   UpdateTemplateFileJoinByTemplateIdAndFileIdInput: UpdateTemplateFileJoinByTemplateIdAndFileIdInput;
   UpdateTemplateFileJoinInput: UpdateTemplateFileJoinInput;
@@ -55210,6 +57072,7 @@ export type ResolversParentTypes = {
   updateDataTableProvisionalProductApplicationJoinOnDataTableProvisionalProductApplicationJoinForDataTableProvisionalProductApplicationApplicationIdFkeyPatch: UpdateDataTableProvisionalProductApplicationJoinOnDataTableProvisionalProductApplicationJoinForDataTableProvisionalProductApplicationApplicationIdFkeyPatch;
   updateDataTableProvisionalProductOnDataTableProvisionalProductApplicationJoinForDataTableProvisionalProducDataTableProvisionalProduFkeyPatch: UpdateDataTableProvisionalProductOnDataTableProvisionalProductApplicationJoinForDataTableProvisionalProducDataTableProvisionalProduFkeyPatch;
   updateDataViewOnTemplateDataViewJoinForTemplateDataViewJoinDataViewIdFkeyPatch: UpdateDataViewOnTemplateDataViewJoinForTemplateDataViewJoinDataViewIdFkeyPatch;
+  updateEvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyPatch: UpdateEvaluatorFragmentOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyPatch;
   updateFileOnFileForFileApplicationNoteIdFkeyPatch: UpdateFileOnFileForFileApplicationNoteIdFkeyPatch;
   updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
   updateFileOnFileForFileApplicationSerialFkeyPatch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
@@ -55267,6 +57130,8 @@ export type ResolversParentTypes = {
   updateTemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyPatch: UpdateTemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyPatch;
   updateTemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch: UpdateTemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch;
   updateTemplateElementOnTemplateElementForTemplateElementSectionIdFkeyPatch: UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFkeyPatch;
+  updateTemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyPatch: UpdateTemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinEvaluatorFragmentIdFkeyPatch;
+  updateTemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyPatch: UpdateTemplateEvaluatorFragmentJoinOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyPatch;
   updateTemplateFileJoinOnTemplateFileJoinForTemplateFileJoinFileIdFkeyPatch: UpdateTemplateFileJoinOnTemplateFileJoinForTemplateFileJoinFileIdFkeyPatch;
   updateTemplateFileJoinOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyPatch: UpdateTemplateFileJoinOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyPatch;
   updateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
@@ -55276,6 +57141,7 @@ export type ResolversParentTypes = {
   updateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPatch: UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPatch;
   updateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch: UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch;
   updateTemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateIdFkeyPatch: UpdateTemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateIdFkeyPatch;
+  updateTemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyPatch: UpdateTemplateOnTemplateEvaluatorFragmentJoinForTemplateEvaluatorFragmentJoinTemplateIdFkeyPatch;
   updateTemplateOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyPatch: UpdateTemplateOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyPatch;
   updateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch: UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch;
   updateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch: UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch;
@@ -56300,6 +58166,14 @@ export type CreateDataTableStorageConditionsSimplifiedPayloadResolvers<ContextTy
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateDataTableTownsDivisionsIslandPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateDataTableTownsDivisionsIslandPayload'] = ResolversParentTypes['CreateDataTableTownsDivisionsIslandPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataTableTownsDivisionsIsland?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIsland']>, ParentType, ContextType>;
+  dataTableTownsDivisionsIslandEdge?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIslandsEdge']>, ParentType, ContextType, RequireFields<CreateDataTableTownsDivisionsIslandPayloadDataTableTownsDivisionsIslandEdgeArgs, 'orderBy'>>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateDataTableUnitsOfProportionPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateDataTableUnitsOfProportionPayload'] = ResolversParentTypes['CreateDataTableUnitsOfProportionPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   dataTableUnitsOfProportion?: Resolver<Maybe<ResolversTypes['DataTableUnitsOfProportion']>, ParentType, ContextType>;
@@ -56336,6 +58210,14 @@ export type CreateElementTypePluginPayloadResolvers<ContextType = any, ParentTyp
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   elementTypePlugin?: Resolver<Maybe<ResolversTypes['ElementTypePlugin']>, ParentType, ContextType>;
   elementTypePluginEdge?: Resolver<Maybe<ResolversTypes['ElementTypePluginsEdge']>, ParentType, ContextType, RequireFields<CreateElementTypePluginPayloadElementTypePluginEdgeArgs, 'orderBy'>>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateEvaluatorFragmentPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateEvaluatorFragmentPayload'] = ResolversParentTypes['CreateEvaluatorFragmentPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  evaluatorFragment?: Resolver<Maybe<ResolversTypes['EvaluatorFragment']>, ParentType, ContextType>;
+  evaluatorFragmentEdge?: Resolver<Maybe<ResolversTypes['EvaluatorFragmentsEdge']>, ParentType, ContextType, RequireFields<CreateEvaluatorFragmentPayloadEvaluatorFragmentEdgeArgs, 'orderBy'>>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -56540,6 +58422,16 @@ export type CreateTemplateElementPayloadResolvers<ContextType = any, ParentType 
   section?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType>;
   templateElement?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType>;
   templateElementEdge?: Resolver<Maybe<ResolversTypes['TemplateElementsEdge']>, ParentType, ContextType, RequireFields<CreateTemplateElementPayloadTemplateElementEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateTemplateEvaluatorFragmentJoinPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateTemplateEvaluatorFragmentJoinPayload'] = ResolversParentTypes['CreateTemplateEvaluatorFragmentJoinPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  evaluatorFragment?: Resolver<Maybe<ResolversTypes['EvaluatorFragment']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  templateEvaluatorFragmentJoin?: Resolver<Maybe<ResolversTypes['TemplateEvaluatorFragmentJoin']>, ParentType, ContextType>;
+  templateEvaluatorFragmentJoinEdge?: Resolver<Maybe<ResolversTypes['TemplateEvaluatorFragmentJoinsEdge']>, ParentType, ContextType, RequireFields<CreateTemplateEvaluatorFragmentJoinPayloadTemplateEvaluatorFragmentJoinEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -57481,6 +59373,29 @@ export type DataTableStorageConditionsSimplifiedsEdgeResolvers<ContextType = any
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DataTableTownsDivisionsIslandResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTableTownsDivisionsIsland'] = ResolversParentTypes['DataTableTownsDivisionsIsland']> = {
+  division?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  island?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  town?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DataTableTownsDivisionsIslandsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTableTownsDivisionsIslandsConnection'] = ResolversParentTypes['DataTableTownsDivisionsIslandsConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['DataTableTownsDivisionsIslandsEdge']>, ParentType, ContextType>;
+  nodes?: Resolver<Array<Maybe<ResolversTypes['DataTableTownsDivisionsIsland']>>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DataTableTownsDivisionsIslandsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTableTownsDivisionsIslandsEdge'] = ResolversParentTypes['DataTableTownsDivisionsIslandsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIsland']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DataTableUnitsOfProportionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DataTableUnitsOfProportion'] = ResolversParentTypes['DataTableUnitsOfProportion']> = {
   code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -58016,6 +59931,15 @@ export type DeleteDataTableStorageConditionsSimplifiedPayloadResolvers<ContextTy
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DeleteDataTableTownsDivisionsIslandPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteDataTableTownsDivisionsIslandPayload'] = ResolversParentTypes['DeleteDataTableTownsDivisionsIslandPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataTableTownsDivisionsIsland?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIsland']>, ParentType, ContextType>;
+  dataTableTownsDivisionsIslandEdge?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIslandsEdge']>, ParentType, ContextType, RequireFields<DeleteDataTableTownsDivisionsIslandPayloadDataTableTownsDivisionsIslandEdgeArgs, 'orderBy'>>;
+  deletedDataTableTownsDivisionsIslandNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DeleteDataTableUnitsOfProportionPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteDataTableUnitsOfProportionPayload'] = ResolversParentTypes['DeleteDataTableUnitsOfProportionPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   dataTableUnitsOfProportion?: Resolver<Maybe<ResolversTypes['DataTableUnitsOfProportion']>, ParentType, ContextType>;
@@ -58057,6 +59981,15 @@ export type DeleteElementTypePluginPayloadResolvers<ContextType = any, ParentTyp
   deletedElementTypePluginNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   elementTypePlugin?: Resolver<Maybe<ResolversTypes['ElementTypePlugin']>, ParentType, ContextType>;
   elementTypePluginEdge?: Resolver<Maybe<ResolversTypes['ElementTypePluginsEdge']>, ParentType, ContextType, RequireFields<DeleteElementTypePluginPayloadElementTypePluginEdgeArgs, 'orderBy'>>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DeleteEvaluatorFragmentPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteEvaluatorFragmentPayload'] = ResolversParentTypes['DeleteEvaluatorFragmentPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  deletedEvaluatorFragmentNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  evaluatorFragment?: Resolver<Maybe<ResolversTypes['EvaluatorFragment']>, ParentType, ContextType>;
+  evaluatorFragmentEdge?: Resolver<Maybe<ResolversTypes['EvaluatorFragmentsEdge']>, ParentType, ContextType, RequireFields<DeleteEvaluatorFragmentPayloadEvaluatorFragmentEdgeArgs, 'orderBy'>>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -58276,6 +60209,17 @@ export type DeleteTemplateElementPayloadResolvers<ContextType = any, ParentType 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DeleteTemplateEvaluatorFragmentJoinPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteTemplateEvaluatorFragmentJoinPayload'] = ResolversParentTypes['DeleteTemplateEvaluatorFragmentJoinPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  deletedTemplateEvaluatorFragmentJoinNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  evaluatorFragment?: Resolver<Maybe<ResolversTypes['EvaluatorFragment']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  templateEvaluatorFragmentJoin?: Resolver<Maybe<ResolversTypes['TemplateEvaluatorFragmentJoin']>, ParentType, ContextType>;
+  templateEvaluatorFragmentJoinEdge?: Resolver<Maybe<ResolversTypes['TemplateEvaluatorFragmentJoinsEdge']>, ParentType, ContextType, RequireFields<DeleteTemplateEvaluatorFragmentJoinPayloadTemplateEvaluatorFragmentJoinEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DeleteTemplateFileJoinPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteTemplateFileJoinPayload'] = ResolversParentTypes['DeleteTemplateFileJoinPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   deletedTemplateFileJoinNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
@@ -58435,6 +60379,35 @@ export type ElementTypePluginsEdgeResolvers<ContextType = any, ParentType extend
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type EvaluatorFragmentResolvers<ContextType = any, ParentType extends ResolversParentTypes['EvaluatorFragment'] = ResolversParentTypes['EvaluatorFragment']> = {
+  backEnd?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  checksum?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  expression?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>;
+  frontEnd?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  lastModified?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  metadata?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  permissionNames?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  templateEvaluatorFragmentJoins?: Resolver<ResolversTypes['TemplateEvaluatorFragmentJoinsConnection'], ParentType, ContextType, RequireFields<EvaluatorFragmentTemplateEvaluatorFragmentJoinsArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EvaluatorFragmentsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['EvaluatorFragmentsConnection'] = ResolversParentTypes['EvaluatorFragmentsConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['EvaluatorFragmentsEdge']>, ParentType, ContextType>;
+  nodes?: Resolver<Array<Maybe<ResolversTypes['EvaluatorFragment']>>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EvaluatorFragmentsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['EvaluatorFragmentsEdge'] = ResolversParentTypes['EvaluatorFragmentsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['EvaluatorFragment']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type FileResolvers<ContextType = any, ParentType extends ResolversParentTypes['File'] = ResolversParentTypes['File']> = {
   applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   applicationNote?: Resolver<Maybe<ResolversTypes['ApplicationNote']>, ParentType, ContextType>;
@@ -58576,11 +60549,13 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createDataTableScheduledChemical?: Resolver<Maybe<ResolversTypes['CreateDataTableScheduledChemicalPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableScheduledChemicalArgs, 'input'>>;
   createDataTableStorageCondition?: Resolver<Maybe<ResolversTypes['CreateDataTableStorageConditionPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableStorageConditionArgs, 'input'>>;
   createDataTableStorageConditionsSimplified?: Resolver<Maybe<ResolversTypes['CreateDataTableStorageConditionsSimplifiedPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableStorageConditionsSimplifiedArgs, 'input'>>;
+  createDataTableTownsDivisionsIsland?: Resolver<Maybe<ResolversTypes['CreateDataTableTownsDivisionsIslandPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableTownsDivisionsIslandArgs, 'input'>>;
   createDataTableUnitsOfProportion?: Resolver<Maybe<ResolversTypes['CreateDataTableUnitsOfProportionPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableUnitsOfProportionArgs, 'input'>>;
   createDataTableWorldHealthOrganisationPqListOfFpp?: Resolver<Maybe<ResolversTypes['CreateDataTableWorldHealthOrganisationPqListOfFppPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataTableWorldHealthOrganisationPqListOfFppArgs, 'input'>>;
   createDataView?: Resolver<Maybe<ResolversTypes['CreateDataViewPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataViewArgs, 'input'>>;
   createDataViewColumnDefinition?: Resolver<Maybe<ResolversTypes['CreateDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationCreateDataViewColumnDefinitionArgs, 'input'>>;
   createElementTypePlugin?: Resolver<Maybe<ResolversTypes['CreateElementTypePluginPayload']>, ParentType, ContextType, RequireFields<MutationCreateElementTypePluginArgs, 'input'>>;
+  createEvaluatorFragment?: Resolver<Maybe<ResolversTypes['CreateEvaluatorFragmentPayload']>, ParentType, ContextType, RequireFields<MutationCreateEvaluatorFragmentArgs, 'input'>>;
   createFile?: Resolver<Maybe<ResolversTypes['CreateFilePayload']>, ParentType, ContextType, RequireFields<MutationCreateFileArgs, 'input'>>;
   createFilter?: Resolver<Maybe<ResolversTypes['CreateFilterPayload']>, ParentType, ContextType, RequireFields<MutationCreateFilterArgs, 'input'>>;
   createGrafanaDashboardImage?: Resolver<Maybe<ResolversTypes['CreateGrafanaDashboardImagePayload']>, ParentType, ContextType, RequireFields<MutationCreateGrafanaDashboardImageArgs, 'input'>>;
@@ -58603,6 +60578,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createTemplateCategory?: Resolver<Maybe<ResolversTypes['CreateTemplateCategoryPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateCategoryArgs, 'input'>>;
   createTemplateDataViewJoin?: Resolver<Maybe<ResolversTypes['CreateTemplateDataViewJoinPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateDataViewJoinArgs, 'input'>>;
   createTemplateElement?: Resolver<Maybe<ResolversTypes['CreateTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateElementArgs, 'input'>>;
+  createTemplateEvaluatorFragmentJoin?: Resolver<Maybe<ResolversTypes['CreateTemplateEvaluatorFragmentJoinPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateEvaluatorFragmentJoinArgs, 'input'>>;
   createTemplateFileJoin?: Resolver<Maybe<ResolversTypes['CreateTemplateFileJoinPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateFileJoinArgs, 'input'>>;
   createTemplateFilterJoin?: Resolver<Maybe<ResolversTypes['CreateTemplateFilterJoinPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateFilterJoinArgs, 'input'>>;
   createTemplatePermission?: Resolver<Maybe<ResolversTypes['CreateTemplatePermissionPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplatePermissionArgs, 'input'>>;
@@ -58700,6 +60676,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteDataTableStorageConditionByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTableStorageConditionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableStorageConditionByNodeIdArgs, 'input'>>;
   deleteDataTableStorageConditionsSimplified?: Resolver<Maybe<ResolversTypes['DeleteDataTableStorageConditionsSimplifiedPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableStorageConditionsSimplifiedArgs, 'input'>>;
   deleteDataTableStorageConditionsSimplifiedByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTableStorageConditionsSimplifiedPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableStorageConditionsSimplifiedByNodeIdArgs, 'input'>>;
+  deleteDataTableTownsDivisionsIsland?: Resolver<Maybe<ResolversTypes['DeleteDataTableTownsDivisionsIslandPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableTownsDivisionsIslandArgs, 'input'>>;
+  deleteDataTableTownsDivisionsIslandByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTableTownsDivisionsIslandPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableTownsDivisionsIslandByNodeIdArgs, 'input'>>;
   deleteDataTableUnitsOfProportion?: Resolver<Maybe<ResolversTypes['DeleteDataTableUnitsOfProportionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableUnitsOfProportionArgs, 'input'>>;
   deleteDataTableUnitsOfProportionByNodeId?: Resolver<Maybe<ResolversTypes['DeleteDataTableUnitsOfProportionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableUnitsOfProportionByNodeIdArgs, 'input'>>;
   deleteDataTableWorldHealthOrganisationPqListOfFpp?: Resolver<Maybe<ResolversTypes['DeleteDataTableWorldHealthOrganisationPqListOfFppPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataTableWorldHealthOrganisationPqListOfFppArgs, 'input'>>;
@@ -58712,6 +60690,9 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteDataViewColumnDefinitionByTableNameAndColumnName?: Resolver<Maybe<ResolversTypes['DeleteDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteDataViewColumnDefinitionByTableNameAndColumnNameArgs, 'input'>>;
   deleteElementTypePlugin?: Resolver<Maybe<ResolversTypes['DeleteElementTypePluginPayload']>, ParentType, ContextType, RequireFields<MutationDeleteElementTypePluginArgs, 'input'>>;
   deleteElementTypePluginByNodeId?: Resolver<Maybe<ResolversTypes['DeleteElementTypePluginPayload']>, ParentType, ContextType, RequireFields<MutationDeleteElementTypePluginByNodeIdArgs, 'input'>>;
+  deleteEvaluatorFragment?: Resolver<Maybe<ResolversTypes['DeleteEvaluatorFragmentPayload']>, ParentType, ContextType, RequireFields<MutationDeleteEvaluatorFragmentArgs, 'input'>>;
+  deleteEvaluatorFragmentByName?: Resolver<Maybe<ResolversTypes['DeleteEvaluatorFragmentPayload']>, ParentType, ContextType, RequireFields<MutationDeleteEvaluatorFragmentByNameArgs, 'input'>>;
+  deleteEvaluatorFragmentByNodeId?: Resolver<Maybe<ResolversTypes['DeleteEvaluatorFragmentPayload']>, ParentType, ContextType, RequireFields<MutationDeleteEvaluatorFragmentByNodeIdArgs, 'input'>>;
   deleteFile?: Resolver<Maybe<ResolversTypes['DeleteFilePayload']>, ParentType, ContextType, RequireFields<MutationDeleteFileArgs, 'input'>>;
   deleteFileByNodeId?: Resolver<Maybe<ResolversTypes['DeleteFilePayload']>, ParentType, ContextType, RequireFields<MutationDeleteFileByNodeIdArgs, 'input'>>;
   deleteFileByUniqueId?: Resolver<Maybe<ResolversTypes['DeleteFilePayload']>, ParentType, ContextType, RequireFields<MutationDeleteFileByUniqueIdArgs, 'input'>>;
@@ -58765,6 +60746,9 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteTemplateElement?: Resolver<Maybe<ResolversTypes['DeleteTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateElementArgs, 'input'>>;
   deleteTemplateElementByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateElementByNodeIdArgs, 'input'>>;
   deleteTemplateElementByTemplateCodeAndCodeAndTemplateVersion?: Resolver<Maybe<ResolversTypes['DeleteTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateElementByTemplateCodeAndCodeAndTemplateVersionArgs, 'input'>>;
+  deleteTemplateEvaluatorFragmentJoin?: Resolver<Maybe<ResolversTypes['DeleteTemplateEvaluatorFragmentJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateEvaluatorFragmentJoinArgs, 'input'>>;
+  deleteTemplateEvaluatorFragmentJoinByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTemplateEvaluatorFragmentJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateEvaluatorFragmentJoinByNodeIdArgs, 'input'>>;
+  deleteTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentId?: Resolver<Maybe<ResolversTypes['DeleteTemplateEvaluatorFragmentJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentIdArgs, 'input'>>;
   deleteTemplateFileJoin?: Resolver<Maybe<ResolversTypes['DeleteTemplateFileJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateFileJoinArgs, 'input'>>;
   deleteTemplateFileJoinByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTemplateFileJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateFileJoinByNodeIdArgs, 'input'>>;
   deleteTemplateFileJoinByTemplateIdAndFileId?: Resolver<Maybe<ResolversTypes['DeleteTemplateFileJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateFileJoinByTemplateIdAndFileIdArgs, 'input'>>;
@@ -58875,6 +60859,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateDataTableStorageConditionByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTableStorageConditionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableStorageConditionByNodeIdArgs, 'input'>>;
   updateDataTableStorageConditionsSimplified?: Resolver<Maybe<ResolversTypes['UpdateDataTableStorageConditionsSimplifiedPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableStorageConditionsSimplifiedArgs, 'input'>>;
   updateDataTableStorageConditionsSimplifiedByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTableStorageConditionsSimplifiedPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableStorageConditionsSimplifiedByNodeIdArgs, 'input'>>;
+  updateDataTableTownsDivisionsIsland?: Resolver<Maybe<ResolversTypes['UpdateDataTableTownsDivisionsIslandPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableTownsDivisionsIslandArgs, 'input'>>;
+  updateDataTableTownsDivisionsIslandByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTableTownsDivisionsIslandPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableTownsDivisionsIslandByNodeIdArgs, 'input'>>;
   updateDataTableUnitsOfProportion?: Resolver<Maybe<ResolversTypes['UpdateDataTableUnitsOfProportionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableUnitsOfProportionArgs, 'input'>>;
   updateDataTableUnitsOfProportionByNodeId?: Resolver<Maybe<ResolversTypes['UpdateDataTableUnitsOfProportionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableUnitsOfProportionByNodeIdArgs, 'input'>>;
   updateDataTableWorldHealthOrganisationPqListOfFpp?: Resolver<Maybe<ResolversTypes['UpdateDataTableWorldHealthOrganisationPqListOfFppPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataTableWorldHealthOrganisationPqListOfFppArgs, 'input'>>;
@@ -58887,6 +60873,9 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateDataViewColumnDefinitionByTableNameAndColumnName?: Resolver<Maybe<ResolversTypes['UpdateDataViewColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateDataViewColumnDefinitionByTableNameAndColumnNameArgs, 'input'>>;
   updateElementTypePlugin?: Resolver<Maybe<ResolversTypes['UpdateElementTypePluginPayload']>, ParentType, ContextType, RequireFields<MutationUpdateElementTypePluginArgs, 'input'>>;
   updateElementTypePluginByNodeId?: Resolver<Maybe<ResolversTypes['UpdateElementTypePluginPayload']>, ParentType, ContextType, RequireFields<MutationUpdateElementTypePluginByNodeIdArgs, 'input'>>;
+  updateEvaluatorFragment?: Resolver<Maybe<ResolversTypes['UpdateEvaluatorFragmentPayload']>, ParentType, ContextType, RequireFields<MutationUpdateEvaluatorFragmentArgs, 'input'>>;
+  updateEvaluatorFragmentByName?: Resolver<Maybe<ResolversTypes['UpdateEvaluatorFragmentPayload']>, ParentType, ContextType, RequireFields<MutationUpdateEvaluatorFragmentByNameArgs, 'input'>>;
+  updateEvaluatorFragmentByNodeId?: Resolver<Maybe<ResolversTypes['UpdateEvaluatorFragmentPayload']>, ParentType, ContextType, RequireFields<MutationUpdateEvaluatorFragmentByNodeIdArgs, 'input'>>;
   updateFile?: Resolver<Maybe<ResolversTypes['UpdateFilePayload']>, ParentType, ContextType, RequireFields<MutationUpdateFileArgs, 'input'>>;
   updateFileByNodeId?: Resolver<Maybe<ResolversTypes['UpdateFilePayload']>, ParentType, ContextType, RequireFields<MutationUpdateFileByNodeIdArgs, 'input'>>;
   updateFileByUniqueId?: Resolver<Maybe<ResolversTypes['UpdateFilePayload']>, ParentType, ContextType, RequireFields<MutationUpdateFileByUniqueIdArgs, 'input'>>;
@@ -58940,6 +60929,9 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateTemplateElement?: Resolver<Maybe<ResolversTypes['UpdateTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateElementArgs, 'input'>>;
   updateTemplateElementByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateElementByNodeIdArgs, 'input'>>;
   updateTemplateElementByTemplateCodeAndCodeAndTemplateVersion?: Resolver<Maybe<ResolversTypes['UpdateTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateElementByTemplateCodeAndCodeAndTemplateVersionArgs, 'input'>>;
+  updateTemplateEvaluatorFragmentJoin?: Resolver<Maybe<ResolversTypes['UpdateTemplateEvaluatorFragmentJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateEvaluatorFragmentJoinArgs, 'input'>>;
+  updateTemplateEvaluatorFragmentJoinByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTemplateEvaluatorFragmentJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateEvaluatorFragmentJoinByNodeIdArgs, 'input'>>;
+  updateTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentId?: Resolver<Maybe<ResolversTypes['UpdateTemplateEvaluatorFragmentJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentIdArgs, 'input'>>;
   updateTemplateFileJoin?: Resolver<Maybe<ResolversTypes['UpdateTemplateFileJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateFileJoinArgs, 'input'>>;
   updateTemplateFileJoinByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTemplateFileJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateFileJoinByNodeIdArgs, 'input'>>;
   updateTemplateFileJoinByTemplateIdAndFileId?: Resolver<Maybe<ResolversTypes['UpdateTemplateFileJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateFileJoinByTemplateIdAndFileIdArgs, 'input'>>;
@@ -58968,7 +60960,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'ActionPlugin' | 'ActionQueue' | 'ActivityLog' | 'Application' | 'ApplicationNote' | 'ApplicationResponse' | 'ApplicationReviewerAction' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'Counter' | 'DataChangelog' | 'DataTable' | 'DataTableActiveIngredient' | 'DataTableAdministrationRoute' | 'DataTableAtcCode' | 'DataTableContainer' | 'DataTableCountry' | 'DataTableDosageForm' | 'DataTableDosageFormGroup' | 'DataTableGenericIngredient' | 'DataTableManufacturer' | 'DataTableManufacturerApplicationJoin' | 'DataTableManufacturerRepresentative' | 'DataTableManufacturerRepresentativeApplicationJoin' | 'DataTablePermitChemical' | 'DataTablePermitChemicalApplicationJoin' | 'DataTablePermitMedical' | 'DataTablePermitMedicalApplicationJoin' | 'DataTablePreRegisteredProductsProvisional' | 'DataTablePrequalManufacturer' | 'DataTablePrequalManufacturerApplicationJoin' | 'DataTableProcessingStep' | 'DataTableProduct' | 'DataTableProductApplicationJoin' | 'DataTableProvisionalProduct' | 'DataTableProvisionalProductApplicationJoin' | 'DataTableScheduledChemical' | 'DataTableStorageCondition' | 'DataTableStorageConditionsSimplified' | 'DataTableUnitsOfProportion' | 'DataTableWorldHealthOrganisationPqListOfFpp' | 'DataView' | 'DataViewColumnDefinition' | 'ElementTypePlugin' | 'File' | 'Filter' | 'GrafanaDashboardImage' | 'Notification' | 'Organisation' | 'OrganisationApplicationJoin' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'Query' | 'Review' | 'ReviewAssignment' | 'ReviewAssignmentAssignerJoin' | 'ReviewDecision' | 'ReviewResponse' | 'ReviewStatusHistory' | 'SystemInfo' | 'Template' | 'TemplateAction' | 'TemplateCategory' | 'TemplateDataViewJoin' | 'TemplateElement' | 'TemplateFileJoin' | 'TemplateFilterJoin' | 'TemplatePermission' | 'TemplateSection' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'TriggerQueue' | 'TriggerSchedule' | 'UserApplicationJoin' | 'UserOrganisation' | 'Verification', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'ActionPlugin' | 'ActionQueue' | 'ActivityLog' | 'Application' | 'ApplicationNote' | 'ApplicationResponse' | 'ApplicationReviewerAction' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'Counter' | 'DataChangelog' | 'DataTable' | 'DataTableActiveIngredient' | 'DataTableAdministrationRoute' | 'DataTableAtcCode' | 'DataTableContainer' | 'DataTableCountry' | 'DataTableDosageForm' | 'DataTableDosageFormGroup' | 'DataTableGenericIngredient' | 'DataTableManufacturer' | 'DataTableManufacturerApplicationJoin' | 'DataTableManufacturerRepresentative' | 'DataTableManufacturerRepresentativeApplicationJoin' | 'DataTablePermitChemical' | 'DataTablePermitChemicalApplicationJoin' | 'DataTablePermitMedical' | 'DataTablePermitMedicalApplicationJoin' | 'DataTablePreRegisteredProductsProvisional' | 'DataTablePrequalManufacturer' | 'DataTablePrequalManufacturerApplicationJoin' | 'DataTableProcessingStep' | 'DataTableProduct' | 'DataTableProductApplicationJoin' | 'DataTableProvisionalProduct' | 'DataTableProvisionalProductApplicationJoin' | 'DataTableScheduledChemical' | 'DataTableStorageCondition' | 'DataTableStorageConditionsSimplified' | 'DataTableTownsDivisionsIsland' | 'DataTableUnitsOfProportion' | 'DataTableWorldHealthOrganisationPqListOfFpp' | 'DataView' | 'DataViewColumnDefinition' | 'ElementTypePlugin' | 'EvaluatorFragment' | 'File' | 'Filter' | 'GrafanaDashboardImage' | 'Notification' | 'Organisation' | 'OrganisationApplicationJoin' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'Query' | 'Review' | 'ReviewAssignment' | 'ReviewAssignmentAssignerJoin' | 'ReviewDecision' | 'ReviewResponse' | 'ReviewStatusHistory' | 'SystemInfo' | 'Template' | 'TemplateAction' | 'TemplateCategory' | 'TemplateDataViewJoin' | 'TemplateElement' | 'TemplateEvaluatorFragmentJoin' | 'TemplateFileJoin' | 'TemplateFilterJoin' | 'TemplatePermission' | 'TemplateSection' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'TriggerQueue' | 'TriggerSchedule' | 'UserApplicationJoin' | 'UserOrganisation' | 'Verification', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -59014,10 +61006,16 @@ export type OrganisationResolvers<ContextType = any, ParentType extends Resolver
   contactPhone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   dataChangelogsByOrgId?: Resolver<ResolversTypes['DataChangelogsConnection'], ParentType, ContextType, RequireFields<OrganisationDataChangelogsByOrgIdArgs, 'orderBy'>>;
+  establishmentLicence?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   isChemicalImporter?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isFreeMedProgram?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isMedImporter?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isMedPrequalifier?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isMedProvRegister?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   isSponsorCompany?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   isSystemOrg?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  licenceExpiry?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   license?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   localAgentBusinessAddress?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   localAgentEmail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -59039,6 +61037,7 @@ export type OrganisationResolvers<ContextType = any, ParentType extends Resolver
   tinLetter?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   tinNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   userOrganisations?: Resolver<ResolversTypes['UserOrganisationsConnection'], ParentType, ContextType, RequireFields<OrganisationUserOrganisationsArgs, 'orderBy'>>;
+  wholesaleLicence?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -59307,7 +61306,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applications?: Resolver<Maybe<ResolversTypes['ApplicationsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationsArgs, 'orderBy'>>;
   assignableQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, Partial<QueryAssignableQuestionsCountArgs>>;
   assignedQuestions?: Resolver<Maybe<ResolversTypes['AssignedQuestionsConnection']>, ParentType, ContextType, Partial<QueryAssignedQuestionsArgs>>;
-  assignedQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, Partial<QueryAssignedQuestionsCountArgs>>;
+  assignedQuestionsCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, Partial<QueryAssignedQuestionsCountArgs>>;
   assignedSectionsByStageAndLevels?: Resolver<Maybe<ResolversTypes['AssignedSectionsByStageAndLevelsConnection']>, ParentType, ContextType, RequireFields<QueryAssignedSectionsByStageAndLevelsArgs, 'orderBy'>>;
   assignerList?: Resolver<Maybe<ResolversTypes['AssignerListConnection']>, ParentType, ContextType, Partial<QueryAssignerListArgs>>;
   assignmentList?: Resolver<Maybe<ResolversTypes['AssignmentListConnection']>, ParentType, ContextType, Partial<QueryAssignmentListArgs>>;
@@ -59403,6 +61402,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   dataTableStorageConditionsSimplified?: Resolver<Maybe<ResolversTypes['DataTableStorageConditionsSimplified']>, ParentType, ContextType, RequireFields<QueryDataTableStorageConditionsSimplifiedArgs, 'id'>>;
   dataTableStorageConditionsSimplifiedByNodeId?: Resolver<Maybe<ResolversTypes['DataTableStorageConditionsSimplified']>, ParentType, ContextType, RequireFields<QueryDataTableStorageConditionsSimplifiedByNodeIdArgs, 'nodeId'>>;
   dataTableStorageConditionsSimplifieds?: Resolver<Maybe<ResolversTypes['DataTableStorageConditionsSimplifiedsConnection']>, ParentType, ContextType, RequireFields<QueryDataTableStorageConditionsSimplifiedsArgs, 'orderBy'>>;
+  dataTableTownsDivisionsIsland?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIsland']>, ParentType, ContextType, RequireFields<QueryDataTableTownsDivisionsIslandArgs, 'id'>>;
+  dataTableTownsDivisionsIslandByNodeId?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIsland']>, ParentType, ContextType, RequireFields<QueryDataTableTownsDivisionsIslandByNodeIdArgs, 'nodeId'>>;
+  dataTableTownsDivisionsIslands?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIslandsConnection']>, ParentType, ContextType, RequireFields<QueryDataTableTownsDivisionsIslandsArgs, 'orderBy'>>;
   dataTableUnitsOfProportion?: Resolver<Maybe<ResolversTypes['DataTableUnitsOfProportion']>, ParentType, ContextType, RequireFields<QueryDataTableUnitsOfProportionArgs, 'id'>>;
   dataTableUnitsOfProportionByNodeId?: Resolver<Maybe<ResolversTypes['DataTableUnitsOfProportion']>, ParentType, ContextType, RequireFields<QueryDataTableUnitsOfProportionByNodeIdArgs, 'nodeId'>>;
   dataTableUnitsOfProportions?: Resolver<Maybe<ResolversTypes['DataTableUnitsOfProportionsConnection']>, ParentType, ContextType, RequireFields<QueryDataTableUnitsOfProportionsArgs, 'orderBy'>>;
@@ -59421,6 +61423,10 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   elementTypePlugin?: Resolver<Maybe<ResolversTypes['ElementTypePlugin']>, ParentType, ContextType, RequireFields<QueryElementTypePluginArgs, 'code'>>;
   elementTypePluginByNodeId?: Resolver<Maybe<ResolversTypes['ElementTypePlugin']>, ParentType, ContextType, RequireFields<QueryElementTypePluginByNodeIdArgs, 'nodeId'>>;
   elementTypePlugins?: Resolver<Maybe<ResolversTypes['ElementTypePluginsConnection']>, ParentType, ContextType, RequireFields<QueryElementTypePluginsArgs, 'orderBy'>>;
+  evaluatorFragment?: Resolver<Maybe<ResolversTypes['EvaluatorFragment']>, ParentType, ContextType, RequireFields<QueryEvaluatorFragmentArgs, 'id'>>;
+  evaluatorFragmentByName?: Resolver<Maybe<ResolversTypes['EvaluatorFragment']>, ParentType, ContextType, RequireFields<QueryEvaluatorFragmentByNameArgs, 'name'>>;
+  evaluatorFragmentByNodeId?: Resolver<Maybe<ResolversTypes['EvaluatorFragment']>, ParentType, ContextType, RequireFields<QueryEvaluatorFragmentByNodeIdArgs, 'nodeId'>>;
+  evaluatorFragments?: Resolver<Maybe<ResolversTypes['EvaluatorFragmentsConnection']>, ParentType, ContextType, RequireFields<QueryEvaluatorFragmentsArgs, 'orderBy'>>;
   file?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFileArgs, 'id'>>;
   fileByNodeId?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFileByNodeIdArgs, 'nodeId'>>;
   fileByUniqueId?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFileByUniqueIdArgs, 'uniqueId'>>;
@@ -59485,11 +61491,11 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   reviewStatusHistory?: Resolver<Maybe<ResolversTypes['ReviewStatusHistory']>, ParentType, ContextType, RequireFields<QueryReviewStatusHistoryArgs, 'id'>>;
   reviewStatusHistoryByNodeId?: Resolver<Maybe<ResolversTypes['ReviewStatusHistory']>, ParentType, ContextType, RequireFields<QueryReviewStatusHistoryByNodeIdArgs, 'nodeId'>>;
   reviewableQuestions?: Resolver<Maybe<ResolversTypes['ReviewableQuestionsConnection']>, ParentType, ContextType, Partial<QueryReviewableQuestionsArgs>>;
-  reviewableQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, Partial<QueryReviewableQuestionsCountArgs>>;
+  reviewableQuestionsCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, Partial<QueryReviewableQuestionsCountArgs>>;
   reviews?: Resolver<Maybe<ResolversTypes['ReviewsConnection']>, ParentType, ContextType, RequireFields<QueryReviewsArgs, 'orderBy'>>;
   schemaColumns?: Resolver<Maybe<ResolversTypes['SchemaColumnsConnection']>, ParentType, ContextType, RequireFields<QuerySchemaColumnsArgs, 'orderBy'>>;
   singleApplicationDetail?: Resolver<Maybe<ResolversTypes['SingleApplicationDetailConnection']>, ParentType, ContextType, Partial<QuerySingleApplicationDetailArgs>>;
-  submittedAssignedQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, Partial<QuerySubmittedAssignedQuestionsCountArgs>>;
+  submittedAssignedQuestionsCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, Partial<QuerySubmittedAssignedQuestionsCountArgs>>;
   systemInfo?: Resolver<Maybe<ResolversTypes['SystemInfo']>, ParentType, ContextType, RequireFields<QuerySystemInfoArgs, 'id'>>;
   systemInfoByNodeId?: Resolver<Maybe<ResolversTypes['SystemInfo']>, ParentType, ContextType, RequireFields<QuerySystemInfoByNodeIdArgs, 'nodeId'>>;
   systemInfos?: Resolver<Maybe<ResolversTypes['SystemInfosConnection']>, ParentType, ContextType, RequireFields<QuerySystemInfosArgs, 'orderBy'>>;
@@ -59511,6 +61517,10 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   templateElementByNodeId?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType, RequireFields<QueryTemplateElementByNodeIdArgs, 'nodeId'>>;
   templateElementByTemplateCodeAndCodeAndTemplateVersion?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType, RequireFields<QueryTemplateElementByTemplateCodeAndCodeAndTemplateVersionArgs, 'code' | 'templateCode' | 'templateVersion'>>;
   templateElements?: Resolver<Maybe<ResolversTypes['TemplateElementsConnection']>, ParentType, ContextType, RequireFields<QueryTemplateElementsArgs, 'orderBy'>>;
+  templateEvaluatorFragmentJoin?: Resolver<Maybe<ResolversTypes['TemplateEvaluatorFragmentJoin']>, ParentType, ContextType, RequireFields<QueryTemplateEvaluatorFragmentJoinArgs, 'id'>>;
+  templateEvaluatorFragmentJoinByNodeId?: Resolver<Maybe<ResolversTypes['TemplateEvaluatorFragmentJoin']>, ParentType, ContextType, RequireFields<QueryTemplateEvaluatorFragmentJoinByNodeIdArgs, 'nodeId'>>;
+  templateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentId?: Resolver<Maybe<ResolversTypes['TemplateEvaluatorFragmentJoin']>, ParentType, ContextType, RequireFields<QueryTemplateEvaluatorFragmentJoinByTemplateIdAndEvaluatorFragmentIdArgs, 'evaluatorFragmentId' | 'templateId'>>;
+  templateEvaluatorFragmentJoins?: Resolver<Maybe<ResolversTypes['TemplateEvaluatorFragmentJoinsConnection']>, ParentType, ContextType, RequireFields<QueryTemplateEvaluatorFragmentJoinsArgs, 'orderBy'>>;
   templateFileJoin?: Resolver<Maybe<ResolversTypes['TemplateFileJoin']>, ParentType, ContextType, RequireFields<QueryTemplateFileJoinArgs, 'id'>>;
   templateFileJoinByNodeId?: Resolver<Maybe<ResolversTypes['TemplateFileJoin']>, ParentType, ContextType, RequireFields<QueryTemplateFileJoinByNodeIdArgs, 'nodeId'>>;
   templateFileJoinByTemplateIdAndFileId?: Resolver<Maybe<ResolversTypes['TemplateFileJoin']>, ParentType, ContextType, RequireFields<QueryTemplateFileJoinByTemplateIdAndFileIdArgs, 'fileId' | 'templateId'>>;
@@ -59918,7 +61928,7 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
   priority?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   reviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<TemplateReviewAssignmentsArgs, 'orderBy'>>;
   serialPattern?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  staleDraftRetentionDays?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  staleDraftRetentionDays?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   startMessage?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['TemplateStatus']>, ParentType, ContextType>;
   submissionMessage?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
@@ -59926,6 +61936,7 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
   templateCategory?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType>;
   templateCategoryId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   templateDataViewJoins?: Resolver<ResolversTypes['TemplateDataViewJoinsConnection'], ParentType, ContextType, RequireFields<TemplateTemplateDataViewJoinsArgs, 'orderBy'>>;
+  templateEvaluatorFragmentJoins?: Resolver<ResolversTypes['TemplateEvaluatorFragmentJoinsConnection'], ParentType, ContextType, RequireFields<TemplateTemplateEvaluatorFragmentJoinsArgs, 'orderBy'>>;
   templateFileJoins?: Resolver<ResolversTypes['TemplateFileJoinsConnection'], ParentType, ContextType, RequireFields<TemplateTemplateFileJoinsArgs, 'orderBy'>>;
   templateFilterJoins?: Resolver<ResolversTypes['TemplateFilterJoinsConnection'], ParentType, ContextType, RequireFields<TemplateTemplateFilterJoinsArgs, 'orderBy'>>;
   templatePermissions?: Resolver<ResolversTypes['TemplatePermissionsConnection'], ParentType, ContextType, RequireFields<TemplateTemplatePermissionsArgs, 'orderBy'>>;
@@ -60064,6 +62075,30 @@ export type TemplateElementsEdgeResolvers<ContextType = any, ParentType extends 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type TemplateEvaluatorFragmentJoinResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateEvaluatorFragmentJoin'] = ResolversParentTypes['TemplateEvaluatorFragmentJoin']> = {
+  evaluatorFragment?: Resolver<Maybe<ResolversTypes['EvaluatorFragment']>, ParentType, ContextType>;
+  evaluatorFragmentId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  templateId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TemplateEvaluatorFragmentJoinsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateEvaluatorFragmentJoinsConnection'] = ResolversParentTypes['TemplateEvaluatorFragmentJoinsConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['TemplateEvaluatorFragmentJoinsEdge']>, ParentType, ContextType>;
+  nodes?: Resolver<Array<Maybe<ResolversTypes['TemplateEvaluatorFragmentJoin']>>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TemplateEvaluatorFragmentJoinsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateEvaluatorFragmentJoinsEdge'] = ResolversParentTypes['TemplateEvaluatorFragmentJoinsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['TemplateEvaluatorFragmentJoin']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type TemplateFileJoinResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateFileJoin'] = ResolversParentTypes['TemplateFileJoin']> = {
   file?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType>;
   fileId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -60146,6 +62181,7 @@ export type TemplateSectionResolvers<ContextType = any, ParentType extends Resol
   code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   index?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  isReviewSection?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   templateElementsBySectionId?: Resolver<ResolversTypes['TemplateElementsConnection'], ParentType, ContextType, RequireFields<TemplateSectionTemplateElementsBySectionIdArgs, 'orderBy'>>;
@@ -60662,6 +62698,14 @@ export type UpdateDataTableStorageConditionsSimplifiedPayloadResolvers<ContextTy
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateDataTableTownsDivisionsIslandPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateDataTableTownsDivisionsIslandPayload'] = ResolversParentTypes['UpdateDataTableTownsDivisionsIslandPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dataTableTownsDivisionsIsland?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIsland']>, ParentType, ContextType>;
+  dataTableTownsDivisionsIslandEdge?: Resolver<Maybe<ResolversTypes['DataTableTownsDivisionsIslandsEdge']>, ParentType, ContextType, RequireFields<UpdateDataTableTownsDivisionsIslandPayloadDataTableTownsDivisionsIslandEdgeArgs, 'orderBy'>>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateDataTableUnitsOfProportionPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateDataTableUnitsOfProportionPayload'] = ResolversParentTypes['UpdateDataTableUnitsOfProportionPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   dataTableUnitsOfProportion?: Resolver<Maybe<ResolversTypes['DataTableUnitsOfProportion']>, ParentType, ContextType>;
@@ -60698,6 +62742,14 @@ export type UpdateElementTypePluginPayloadResolvers<ContextType = any, ParentTyp
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   elementTypePlugin?: Resolver<Maybe<ResolversTypes['ElementTypePlugin']>, ParentType, ContextType>;
   elementTypePluginEdge?: Resolver<Maybe<ResolversTypes['ElementTypePluginsEdge']>, ParentType, ContextType, RequireFields<UpdateElementTypePluginPayloadElementTypePluginEdgeArgs, 'orderBy'>>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UpdateEvaluatorFragmentPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateEvaluatorFragmentPayload'] = ResolversParentTypes['UpdateEvaluatorFragmentPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  evaluatorFragment?: Resolver<Maybe<ResolversTypes['EvaluatorFragment']>, ParentType, ContextType>;
+  evaluatorFragmentEdge?: Resolver<Maybe<ResolversTypes['EvaluatorFragmentsEdge']>, ParentType, ContextType, RequireFields<UpdateEvaluatorFragmentPayloadEvaluatorFragmentEdgeArgs, 'orderBy'>>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -60894,6 +62946,16 @@ export type UpdateTemplateElementPayloadResolvers<ContextType = any, ParentType 
   section?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType>;
   templateElement?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType>;
   templateElementEdge?: Resolver<Maybe<ResolversTypes['TemplateElementsEdge']>, ParentType, ContextType, RequireFields<UpdateTemplateElementPayloadTemplateElementEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UpdateTemplateEvaluatorFragmentJoinPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateTemplateEvaluatorFragmentJoinPayload'] = ResolversParentTypes['UpdateTemplateEvaluatorFragmentJoinPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  evaluatorFragment?: Resolver<Maybe<ResolversTypes['EvaluatorFragment']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  templateEvaluatorFragmentJoin?: Resolver<Maybe<ResolversTypes['TemplateEvaluatorFragmentJoin']>, ParentType, ContextType>;
+  templateEvaluatorFragmentJoinEdge?: Resolver<Maybe<ResolversTypes['TemplateEvaluatorFragmentJoinsEdge']>, ParentType, ContextType, RequireFields<UpdateTemplateEvaluatorFragmentJoinPayloadTemplateEvaluatorFragmentJoinEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -61295,11 +63357,13 @@ export type Resolvers<ContextType = any> = {
   CreateDataTableScheduledChemicalPayload?: CreateDataTableScheduledChemicalPayloadResolvers<ContextType>;
   CreateDataTableStorageConditionPayload?: CreateDataTableStorageConditionPayloadResolvers<ContextType>;
   CreateDataTableStorageConditionsSimplifiedPayload?: CreateDataTableStorageConditionsSimplifiedPayloadResolvers<ContextType>;
+  CreateDataTableTownsDivisionsIslandPayload?: CreateDataTableTownsDivisionsIslandPayloadResolvers<ContextType>;
   CreateDataTableUnitsOfProportionPayload?: CreateDataTableUnitsOfProportionPayloadResolvers<ContextType>;
   CreateDataTableWorldHealthOrganisationPqListOfFppPayload?: CreateDataTableWorldHealthOrganisationPqListOfFppPayloadResolvers<ContextType>;
   CreateDataViewColumnDefinitionPayload?: CreateDataViewColumnDefinitionPayloadResolvers<ContextType>;
   CreateDataViewPayload?: CreateDataViewPayloadResolvers<ContextType>;
   CreateElementTypePluginPayload?: CreateElementTypePluginPayloadResolvers<ContextType>;
+  CreateEvaluatorFragmentPayload?: CreateEvaluatorFragmentPayloadResolvers<ContextType>;
   CreateFilePayload?: CreateFilePayloadResolvers<ContextType>;
   CreateFilterPayload?: CreateFilterPayloadResolvers<ContextType>;
   CreateGrafanaDashboardImagePayload?: CreateGrafanaDashboardImagePayloadResolvers<ContextType>;
@@ -61321,6 +63385,7 @@ export type Resolvers<ContextType = any> = {
   CreateTemplateCategoryPayload?: CreateTemplateCategoryPayloadResolvers<ContextType>;
   CreateTemplateDataViewJoinPayload?: CreateTemplateDataViewJoinPayloadResolvers<ContextType>;
   CreateTemplateElementPayload?: CreateTemplateElementPayloadResolvers<ContextType>;
+  CreateTemplateEvaluatorFragmentJoinPayload?: CreateTemplateEvaluatorFragmentJoinPayloadResolvers<ContextType>;
   CreateTemplateFileJoinPayload?: CreateTemplateFileJoinPayloadResolvers<ContextType>;
   CreateTemplateFilterJoinPayload?: CreateTemplateFilterJoinPayloadResolvers<ContextType>;
   CreateTemplatePayload?: CreateTemplatePayloadResolvers<ContextType>;
@@ -61421,6 +63486,9 @@ export type Resolvers<ContextType = any> = {
   DataTableStorageConditionsSimplified?: DataTableStorageConditionsSimplifiedResolvers<ContextType>;
   DataTableStorageConditionsSimplifiedsConnection?: DataTableStorageConditionsSimplifiedsConnectionResolvers<ContextType>;
   DataTableStorageConditionsSimplifiedsEdge?: DataTableStorageConditionsSimplifiedsEdgeResolvers<ContextType>;
+  DataTableTownsDivisionsIsland?: DataTableTownsDivisionsIslandResolvers<ContextType>;
+  DataTableTownsDivisionsIslandsConnection?: DataTableTownsDivisionsIslandsConnectionResolvers<ContextType>;
+  DataTableTownsDivisionsIslandsEdge?: DataTableTownsDivisionsIslandsEdgeResolvers<ContextType>;
   DataTableUnitsOfProportion?: DataTableUnitsOfProportionResolvers<ContextType>;
   DataTableUnitsOfProportionsConnection?: DataTableUnitsOfProportionsConnectionResolvers<ContextType>;
   DataTableUnitsOfProportionsEdge?: DataTableUnitsOfProportionsEdgeResolvers<ContextType>;
@@ -61476,11 +63544,13 @@ export type Resolvers<ContextType = any> = {
   DeleteDataTableScheduledChemicalPayload?: DeleteDataTableScheduledChemicalPayloadResolvers<ContextType>;
   DeleteDataTableStorageConditionPayload?: DeleteDataTableStorageConditionPayloadResolvers<ContextType>;
   DeleteDataTableStorageConditionsSimplifiedPayload?: DeleteDataTableStorageConditionsSimplifiedPayloadResolvers<ContextType>;
+  DeleteDataTableTownsDivisionsIslandPayload?: DeleteDataTableTownsDivisionsIslandPayloadResolvers<ContextType>;
   DeleteDataTableUnitsOfProportionPayload?: DeleteDataTableUnitsOfProportionPayloadResolvers<ContextType>;
   DeleteDataTableWorldHealthOrganisationPqListOfFppPayload?: DeleteDataTableWorldHealthOrganisationPqListOfFppPayloadResolvers<ContextType>;
   DeleteDataViewColumnDefinitionPayload?: DeleteDataViewColumnDefinitionPayloadResolvers<ContextType>;
   DeleteDataViewPayload?: DeleteDataViewPayloadResolvers<ContextType>;
   DeleteElementTypePluginPayload?: DeleteElementTypePluginPayloadResolvers<ContextType>;
+  DeleteEvaluatorFragmentPayload?: DeleteEvaluatorFragmentPayloadResolvers<ContextType>;
   DeleteFilePayload?: DeleteFilePayloadResolvers<ContextType>;
   DeleteFilterPayload?: DeleteFilterPayloadResolvers<ContextType>;
   DeleteGrafanaDashboardImagePayload?: DeleteGrafanaDashboardImagePayloadResolvers<ContextType>;
@@ -61501,6 +63571,7 @@ export type Resolvers<ContextType = any> = {
   DeleteTemplateCategoryPayload?: DeleteTemplateCategoryPayloadResolvers<ContextType>;
   DeleteTemplateDataViewJoinPayload?: DeleteTemplateDataViewJoinPayloadResolvers<ContextType>;
   DeleteTemplateElementPayload?: DeleteTemplateElementPayloadResolvers<ContextType>;
+  DeleteTemplateEvaluatorFragmentJoinPayload?: DeleteTemplateEvaluatorFragmentJoinPayloadResolvers<ContextType>;
   DeleteTemplateFileJoinPayload?: DeleteTemplateFileJoinPayloadResolvers<ContextType>;
   DeleteTemplateFilterJoinPayload?: DeleteTemplateFilterJoinPayloadResolvers<ContextType>;
   DeleteTemplatePayload?: DeleteTemplatePayloadResolvers<ContextType>;
@@ -61517,6 +63588,9 @@ export type Resolvers<ContextType = any> = {
   ElementTypePlugin?: ElementTypePluginResolvers<ContextType>;
   ElementTypePluginsConnection?: ElementTypePluginsConnectionResolvers<ContextType>;
   ElementTypePluginsEdge?: ElementTypePluginsEdgeResolvers<ContextType>;
+  EvaluatorFragment?: EvaluatorFragmentResolvers<ContextType>;
+  EvaluatorFragmentsConnection?: EvaluatorFragmentsConnectionResolvers<ContextType>;
+  EvaluatorFragmentsEdge?: EvaluatorFragmentsEdgeResolvers<ContextType>;
   File?: FileResolvers<ContextType>;
   FilesConnection?: FilesConnectionResolvers<ContextType>;
   FilesEdge?: FilesEdgeResolvers<ContextType>;
@@ -61608,6 +63682,9 @@ export type Resolvers<ContextType = any> = {
   TemplateElement?: TemplateElementResolvers<ContextType>;
   TemplateElementsConnection?: TemplateElementsConnectionResolvers<ContextType>;
   TemplateElementsEdge?: TemplateElementsEdgeResolvers<ContextType>;
+  TemplateEvaluatorFragmentJoin?: TemplateEvaluatorFragmentJoinResolvers<ContextType>;
+  TemplateEvaluatorFragmentJoinsConnection?: TemplateEvaluatorFragmentJoinsConnectionResolvers<ContextType>;
+  TemplateEvaluatorFragmentJoinsEdge?: TemplateEvaluatorFragmentJoinsEdgeResolvers<ContextType>;
   TemplateFileJoin?: TemplateFileJoinResolvers<ContextType>;
   TemplateFileJoinsConnection?: TemplateFileJoinsConnectionResolvers<ContextType>;
   TemplateFileJoinsEdge?: TemplateFileJoinsEdgeResolvers<ContextType>;
@@ -61676,11 +63753,13 @@ export type Resolvers<ContextType = any> = {
   UpdateDataTableScheduledChemicalPayload?: UpdateDataTableScheduledChemicalPayloadResolvers<ContextType>;
   UpdateDataTableStorageConditionPayload?: UpdateDataTableStorageConditionPayloadResolvers<ContextType>;
   UpdateDataTableStorageConditionsSimplifiedPayload?: UpdateDataTableStorageConditionsSimplifiedPayloadResolvers<ContextType>;
+  UpdateDataTableTownsDivisionsIslandPayload?: UpdateDataTableTownsDivisionsIslandPayloadResolvers<ContextType>;
   UpdateDataTableUnitsOfProportionPayload?: UpdateDataTableUnitsOfProportionPayloadResolvers<ContextType>;
   UpdateDataTableWorldHealthOrganisationPqListOfFppPayload?: UpdateDataTableWorldHealthOrganisationPqListOfFppPayloadResolvers<ContextType>;
   UpdateDataViewColumnDefinitionPayload?: UpdateDataViewColumnDefinitionPayloadResolvers<ContextType>;
   UpdateDataViewPayload?: UpdateDataViewPayloadResolvers<ContextType>;
   UpdateElementTypePluginPayload?: UpdateElementTypePluginPayloadResolvers<ContextType>;
+  UpdateEvaluatorFragmentPayload?: UpdateEvaluatorFragmentPayloadResolvers<ContextType>;
   UpdateFilePayload?: UpdateFilePayloadResolvers<ContextType>;
   UpdateFilterPayload?: UpdateFilterPayloadResolvers<ContextType>;
   UpdateGrafanaDashboardImagePayload?: UpdateGrafanaDashboardImagePayloadResolvers<ContextType>;
@@ -61701,6 +63780,7 @@ export type Resolvers<ContextType = any> = {
   UpdateTemplateCategoryPayload?: UpdateTemplateCategoryPayloadResolvers<ContextType>;
   UpdateTemplateDataViewJoinPayload?: UpdateTemplateDataViewJoinPayloadResolvers<ContextType>;
   UpdateTemplateElementPayload?: UpdateTemplateElementPayloadResolvers<ContextType>;
+  UpdateTemplateEvaluatorFragmentJoinPayload?: UpdateTemplateEvaluatorFragmentJoinPayloadResolvers<ContextType>;
   UpdateTemplateFileJoinPayload?: UpdateTemplateFileJoinPayloadResolvers<ContextType>;
   UpdateTemplateFilterJoinPayload?: UpdateTemplateFilterJoinPayloadResolvers<ContextType>;
   UpdateTemplatePayload?: UpdateTemplatePayloadResolvers<ContextType>;

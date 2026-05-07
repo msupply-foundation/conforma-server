@@ -1,3 +1,4 @@
+import { get as extractProperty } from 'lodash'
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginOutput, ActionPluginType } from '../../types'
 import { action as modifyRecord } from '../../action_modify_record/src'
@@ -18,6 +19,7 @@ const modifyMultipleRecords: ActionPluginType = async ({
     data,
     records,
     keyMap,
+    delete: deleteRecord = false,
     ...otherCommonFields
   } = parameters
 
@@ -33,7 +35,15 @@ const modifyMultipleRecords: ActionPluginType = async ({
     newRecord.shouldCreateJoinTable = record.shouldCreateJoinTable ?? shouldCreateJoinTable ?? true
     newRecord.data = { ...data, ...record.data }
 
-    return { ...otherCommonFields, ...newRecord }
+    // If `delete` is set, we assume we want to delete all records in the
+    // `records` array, so we set the record's matchValue to its own matchField
+    // (or id by default) value
+    if (deleteRecord && newRecord.matchValue === undefined) {
+      const matchFieldName = newRecord.matchField || 'id'
+      newRecord.matchValue = newRecord[matchFieldName]
+    }
+
+    return { ...otherCommonFields, ...newRecord, delete: deleteRecord }
   })
 
   let status = ActionQueueStatus.Success
@@ -62,8 +72,10 @@ const constructMappedRecords = (
   keyMap: { [key: string]: string }
 ) => {
   const newRecord: { [key: string]: any } = {}
-  Object.entries(keyMap).forEach(([key, value]) => {
-    if (value in record) newRecord[key] = record?.[value]
+  Object.entries(keyMap).forEach(([key, path]) => {
+    const mappedValue = extractProperty(record, path, '__MAPPING_NOT_FOUND__')
+    console.log(path, mappedValue)
+    if (mappedValue !== '__MAPPING_NOT_FOUND__') newRecord[key] = mappedValue
   })
 
   return newRecord

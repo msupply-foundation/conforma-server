@@ -23,6 +23,7 @@ import {
   LinkedEntityInput,
   PgDataView,
   PgDataViewColumn,
+  PgEvaluatorFragment,
   PgFile,
   PgFilter,
   PgPermissionName,
@@ -52,10 +53,12 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
 
   const linkedDataViewColumns = await getDataViewColumnsFromDataViews(linkedDataViews)
 
+  type LinkedPermission = Omit<PgPermissionName, 'id' | 'permission_policy_id'> & {
+    permission_policy: object
+  }
+
   const linkedPermissions = (
-    await db.getJoinedEntities<
-      Omit<PgPermissionName, 'id' | 'permission_policy_id'> & { permission_policy: object }
-    >({
+    await db.getJoinedEntities<LinkedPermission>({
       templateId,
       table: 'permission_name',
       joinTable: 'template_permission',
@@ -68,6 +71,30 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
       'permission_policy_id',
       'permission_policy'
     )
+  }
+
+  // Also get permissions used in "grantPermissions" actions, since they're not
+  // joined (don't need ones from "revokePermissions" actions though, since it
+  // doesn't matter if they're missing)
+  const existingPermissionNames = linkedPermissions.map((p) => p.name)
+  const actionPermissions = (await db.getPermissionNamesFromGrantPermissions(templateId)).filter(
+    (p) => !existingPermissionNames.includes(p)
+  )
+  const additionalPermissions = (
+    await db.getRecordsByFieldWithMultipleValues<LinkedPermission>(
+      'permission_name',
+      'name',
+      actionPermissions
+    )
+  ).map(stripIds)
+  for (const permission of additionalPermissions) {
+    await replaceForeignKeyRef(
+      permission,
+      'permission_policy',
+      'permission_policy_id',
+      'permission_policy'
+    )
+    linkedPermissions.push(permission)
   }
 
   const linkedCategory = stripIds(
@@ -104,6 +131,14 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
       })
     )
 
+  const linkedFragments = (
+    await db.getJoinedEntities<PgEvaluatorFragment>({
+      templateId,
+      table: 'evaluator_fragment',
+      joinTable: 'template_evaluator_fragment_join',
+    })
+  ).map(stripIds)
+
   const linkedEntities: CombinedLinkedEntities = {
     filters: buildLinkedEntityObject(linkedFilters, 'code'),
     permissions: buildLinkedEntityObject(linkedPermissions, 'name'),
@@ -114,6 +149,7 @@ export const getTemplateLinkedEntities = async (templateId: number) => {
       : null,
     dataTables: buildLinkedEntityObject(linkedDataTables, 'table_name'),
     files: buildLinkedEntityObject(linkedFiles, 'unique_id'),
+    fragments: buildLinkedEntityObject(linkedFragments, 'name'),
   }
 
   return linkedEntities
@@ -145,7 +181,11 @@ export const buildLinkedEntityObject = <T extends LinkedEntityInput>(
 export const getDataViewColumnsFromDataViews = async (dataViews: Omit<PgDataView, 'id'>[]) => {
   const dataViewColumns = new Set<PgDataViewColumn>()
   for (const dataView of dataViews) {
-    const allColumns = await db.getDataViewColumns(dataView.table_name)
+    const allColumns = await db.getRecordsByField<PgDataViewColumn>(
+      'data_view_column_definition',
+      'table_name',
+      dataView.table_name
+    )
     const allColumnNames = allColumns.map((col) => col.column_name)
 
     ;['TABLE', 'DETAIL', 'FILTER', 'RAW'].forEach((type) => {

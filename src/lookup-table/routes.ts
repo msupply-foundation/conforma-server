@@ -1,4 +1,4 @@
-import { FastifyPluginCallback, FastifyReply, FastifyRequest } from 'fastify'
+import { FastifyPluginCallback, FastifyReply } from 'fastify'
 import { ImportCsvController, ImportCsvUpdateController } from './controllers'
 import config from '../config'
 import { routeExportLookupTable } from './export'

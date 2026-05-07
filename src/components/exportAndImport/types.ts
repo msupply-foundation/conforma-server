@@ -34,19 +34,23 @@ export type ExportAndImportOptions = {
   archive?: ArchiveOption
 }
 
-export type ArchiveInfo = { type: 'full' | 'none' | 'partial'; from?: string; to?: string } | null
 export interface SnapshotInfo {
   timestamp: string
   version: string
-  archive?: ArchiveInfo
+  // Bytes; size of the full snapshot folder (excluding info.json itself).
+  // Populated when the snapshot is created/uploaded and never recomputed.
+  // Optional for backward compatibility with snapshots written before 2.0.0;
+  // missing values are lazy-backfilled on read.
+  snapshotSize?: number
+  // Bytes; sum of totalFileSize across the archives this snapshot references.
+  archiveSize?: number
 }
 
-export type SnapshotType = 'normal' | 'archive' | 'backup'
+export type SnapshotType = 'normal' | 'backup'
 
 export type SnapshotOperation = (props: {
   snapshotName: string
   snapshotType?: SnapshotType
-  archive?: ArchiveOption
 }) => Promise<{ success: boolean; message: string; error?: string; snapshot?: string }>
 
 export type ArchiveSnapshotOperation = (props: {

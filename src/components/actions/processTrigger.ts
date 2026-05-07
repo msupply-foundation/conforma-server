@@ -1,12 +1,12 @@
 import { TriggerPayload, ActionResult } from '../../types'
 import DBConnect from '../database/databaseConnect'
 import { actionLibrary } from '../pluginsConnect'
-import { EvaluatorNode } from '../../modules/expression-evaluator'
 import { getCoreActions } from './coreActions'
 import { executeAction } from './executeAction'
 import { ActionQueueStatus, TriggerQueueStatus } from '../../generated/graphql'
 import { swapOutAliasedAction } from './helpers'
 import { errorMessage } from '../utilityFunctions'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 
 // Dev config
 const showActionOutcomeLog = false
@@ -119,6 +119,15 @@ export async function processTrigger(payload: TriggerPayload): Promise<ActionRes
         actionFailed = action.action_code
       }
     } catch (err) {
+      console.error('>> Error executing action:', action.action_code)
+      await DBConnect.executedActionStatusUpdate({
+        status: ActionQueueStatus.Fail,
+        error_log: "Couldn't execute Action: " + errorMessage(err),
+        parameters_evaluated: null,
+        output: null,
+        id: action.id,
+      })
+
       actionOutputs.push({
         action: action.action_code,
         status: ActionQueueStatus.Fail,

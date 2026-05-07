@@ -3,6 +3,7 @@ import { plural } from 'pluralize'
 import { camelCase, snakeCase, upperFirst } from 'lodash'
 import { LinkedApplication } from './types'
 import { capitaliseFirstLetter, errorMessage } from '../utilityFunctions'
+import { getDistinctRecords } from './helpers'
 
 export const queryDataTable = async (
   tableName: string,
@@ -11,7 +12,8 @@ export const queryDataTable = async (
   first: number,
   offset: number,
   orderBy: string,
-  ascending: boolean
+  ascending: boolean,
+  distinctField?: string
 ) => {
   const tableNamePlural = plural(tableName)
   const filterType = upperFirst(camelCase(tableName)) + 'Filter'
@@ -30,8 +32,11 @@ export const queryDataTable = async (
       error: { error: true, message: 'Problem with Data Table query', detail: errorMessage(err) },
     }
   }
-  const fetchedRecords = queryResult?.[tableNamePlural]?.nodes
-  const totalCount = queryResult?.[tableNamePlural]?.totalCount
+  const result = queryResult?.[tableNamePlural]?.nodes
+  const fetchedRecords = distinctField ? getDistinctRecords(result, distinctField) : result
+  const totalCount = distinctField
+    ? fetchedRecords.length
+    : queryResult?.[tableNamePlural]?.totalCount
   return { fetchedRecords, totalCount }
 }
 
@@ -137,9 +142,8 @@ export const updateRecord = async (
   const graphQLquery = `mutation UpdateRecord($id: Int!, $patch: ${tableTypeName}Patch!) {update${tableTypeName}(input: { patch: $patch, id: $id }) {${tableName} {id}}}`
   const variables = { id, patch }
 
-  let queryResult
   try {
-    queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
+    await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
   } catch (err) {
     return {
       error: { error: true, message: 'Problem with Filter List query', detail: errorMessage(err) },

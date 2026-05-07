@@ -45,45 +45,67 @@ type ScheduleType = 'action' | 'fileCleanup' | 'backup' | 'archive' | 'staleAppl
 type UnknownFunction = (...args: never[]) => unknown | void | Promise<void>
 
 export class Schedulers {
-  private actionSchedule: Scheduler.Job
-  private fileCleanupSchedule: Scheduler.Job
-  private backupSchedule: Scheduler.Job
-  private archiveSchedule: Scheduler.Job
-  private staleApplicationCleanupSchedule: Scheduler.Job
+  private actionSchedule?: Scheduler.Job
+  private fileCleanupSchedule?: Scheduler.Job
+  private backupSchedule?: Scheduler.Job
+  private archiveSchedule?: Scheduler.Job
+  private staleApplicationCleanupSchedule?: Scheduler.Job
   private manualScheduleTimers: Record<string, NodeJS.Timeout>
   constructor() {
     if (schedulerTestMode)
       console.log('Scheduler in test mode, will run a scheduled event every 30 seconds...')
-    this.actionSchedule = Scheduler.scheduleJob(
-      getSchedule('action', schedulerTestMode, config.actionSchedule ?? config?.hoursSchedule),
-      triggerScheduledActions
+
+    const actionScheduleRule = getSchedule(
+      'action',
+      schedulerTestMode,
+      config.actionSchedule ?? config?.hoursSchedule
     )
-    this.fileCleanupSchedule = Scheduler.scheduleJob(
-      getSchedule('fileCleanup', schedulerTestMode, config?.fileCleanupSchedule) as RecurrenceRule,
-      cleanUpFiles
+    if (actionScheduleRule) {
+      this.actionSchedule = Scheduler.scheduleJob(actionScheduleRule, triggerScheduledActions)
+    }
+
+    const fileCleanupScheduleRule = getSchedule(
+      'fileCleanup',
+      schedulerTestMode,
+      config?.fileCleanupSchedule
     )
-    this.backupSchedule = Scheduler.scheduleJob(
-      getSchedule('backup', schedulerTestMode, config?.backupSchedule) as RecurrenceRule,
-      () => {
+    if (fileCleanupScheduleRule) {
+      this.fileCleanupSchedule = Scheduler.scheduleJob(
+        fileCleanupScheduleRule as RecurrenceRule,
+        cleanUpFiles
+      )
+    }
+
+    const backupScheduleRule = getSchedule('backup', schedulerTestMode, config?.backupSchedule)
+    if (backupScheduleRule) {
+      this.backupSchedule = Scheduler.scheduleJob(backupScheduleRule as RecurrenceRule, () => {
         if (config.skipBackup) {
           console.log('Skipping automatic backup')
           return
         }
         createBackup(process.env.BACKUPS_PASSWORD)
-      }
+      })
+    }
+
+    const archiveScheduleRule = getSchedule('archive', schedulerTestMode, config?.archiveSchedule)
+    if (archiveScheduleRule) {
+      this.archiveSchedule = Scheduler.scheduleJob(archiveScheduleRule as RecurrenceRule, () =>
+        archiveFiles()
+      )
+    }
+
+    const staleApplicationCleanupScheduleRule = getSchedule(
+      'staleApplicationCleanup',
+      schedulerTestMode,
+      config?.staleApplicationsCleanupSchedule
     )
-    this.archiveSchedule = Scheduler.scheduleJob(
-      getSchedule('archive', schedulerTestMode, config?.archiveSchedule) as RecurrenceRule,
-      () => archiveFiles()
-    )
-    this.staleApplicationCleanupSchedule = Scheduler.scheduleJob(
-      getSchedule(
-        'staleApplicationCleanup',
-        schedulerTestMode,
-        config?.staleApplicationsCleanupSchedule
-      ) as RecurrenceRule,
-      cleanupStaleApplications
-    )
+    if (staleApplicationCleanupScheduleRule) {
+      this.staleApplicationCleanupSchedule = Scheduler.scheduleJob(
+        staleApplicationCleanupScheduleRule as RecurrenceRule,
+        cleanupStaleApplications
+      )
+    }
+
     this.manualScheduleTimers = {}
 
     console.log('\nScheduled jobs started:')
@@ -94,46 +116,83 @@ export class Schedulers {
     logNextAction(this.staleApplicationCleanupSchedule, 'staleApplicationCleanup')
   }
 
+  private updateSchedule(
+    type: ScheduleType,
+    scheduleRule: RecurrenceSpecObjLit | null,
+    currentJob: Scheduler.Job | undefined,
+    jobFunction: () => unknown
+  ): { job: Scheduler.Job | undefined; updated: boolean } {
+    // Case 1: No schedule rule and job exists -> cancel
+    if (!scheduleRule && currentJob) {
+      currentJob.cancel()
+      console.log(`${type} schedule cancelled (set to null)`)
+      return { job: undefined, updated: true }
+    }
+
+    // Case 2: Schedule rule exists and no job -> create new
+    if (scheduleRule && !currentJob) {
+      const newJob = Scheduler.scheduleJob(scheduleRule as RecurrenceRule, jobFunction)
+      return { job: newJob, updated: true }
+    }
+
+    // Case 3: Schedule rule exists and job exists -> reschedule
+    if (scheduleRule && currentJob) {
+      const result = currentJob.reschedule(scheduleRule as RecurrenceRule)
+      return { job: currentJob, updated: result }
+    }
+
+    // No change needed
+    return { job: currentJob, updated: false }
+  }
+
   public reschedule(
     type: ScheduleType,
     schedule?: number[] | ScheduleObject | RecurrenceSpecObjLit
   ) {
-    let result: boolean
-    let scheduler: Scheduler.Job
+    const scheduleRule = getSchedule(type, false, schedule)
+    let result: { job: Scheduler.Job | undefined; updated: boolean }
+
     switch (type) {
       case 'action':
-        result = this.actionSchedule.reschedule(
-          getSchedule('action', false, schedule) as RecurrenceRule
+        result = this.updateSchedule(
+          type,
+          scheduleRule,
+          this.actionSchedule,
+          triggerScheduledActions
         )
-        scheduler = this.actionSchedule
+        this.actionSchedule = result.job
         break
       case 'fileCleanup':
-        result = this.fileCleanupSchedule.reschedule(
-          getSchedule('fileCleanup', false, schedule) as RecurrenceRule
-        )
-        scheduler = this.fileCleanupSchedule
+        result = this.updateSchedule(type, scheduleRule, this.fileCleanupSchedule, cleanUpFiles)
+        this.fileCleanupSchedule = result.job
         break
       case 'backup':
-        result = this.backupSchedule.reschedule(
-          getSchedule('backup', false, schedule) as RecurrenceRule
-        )
-        scheduler = this.backupSchedule
+        result = this.updateSchedule(type, scheduleRule, this.backupSchedule, () => {
+          if (config.skipBackup) {
+            console.log('Skipping automatic backup')
+            return
+          }
+          createBackup(process.env.BACKUPS_PASSWORD)
+        })
+        this.backupSchedule = result.job
         break
       case 'archive':
-        result = this.archiveSchedule.reschedule(
-          getSchedule('archive', false, schedule) as RecurrenceRule
-        )
-        scheduler = this.archiveSchedule
+        result = this.updateSchedule(type, scheduleRule, this.archiveSchedule, () => archiveFiles())
+        this.archiveSchedule = result.job
         break
       case 'staleApplicationCleanup':
-        result = this.staleApplicationCleanupSchedule.reschedule(
-          getSchedule('staleApplicationCleanup', false, schedule) as RecurrenceRule
+        result = this.updateSchedule(
+          type,
+          scheduleRule,
+          this.staleApplicationCleanupSchedule,
+          cleanupStaleApplications
         )
-        scheduler = this.staleApplicationCleanupSchedule
+        this.staleApplicationCleanupSchedule = result.job
         break
     }
-    if (result) logNextAction(scheduler, type)
-    else console.log(`Problem updating ${type} schedule!`)
+
+    if (result.updated && result.job) logNextAction(result.job, type)
+    else if (!result.updated && scheduleRule) console.log(`Problem updating ${type} schedule!`)
   }
 
   public manuallySchedule = async (
@@ -209,8 +268,11 @@ export const triggerScheduledActions = async () => {
 function getSchedule(
   type: ScheduleType,
   testMode: boolean,
-  schedule?: number[] | ScheduleObject | RecurrenceSpecObjLit
-): RecurrenceSpecObjLit {
+  schedule?: number[] | ScheduleObject | RecurrenceSpecObjLit | null
+): RecurrenceSpecObjLit | null {
+  // Explicitly null means "never run"
+  if (schedule === null) return null
+
   if (testMode) {
     // Run each of these 30secs apart, on a 3-minute overall cycle
     switch (type) {
@@ -256,7 +318,11 @@ function getSchedule(
   return combinedSchedule
 }
 
-function logNextAction(scheduler: Scheduler.Job, name: ScheduleType) {
+function logNextAction(scheduler: Scheduler.Job | undefined, name: ScheduleType) {
+  if (!scheduler) {
+    console.log(`Next ${name} schedule: DISABLED`)
+    return
+  }
   // @ts-ignore -- the type of nextInvocation result is wrong, it's typed as Date but it's actually a "CronDate"
   const nextSchedule = scheduler.nextInvocation().toDate() as Date
   console.log(

@@ -76,7 +76,7 @@ export const routeGetLanguageFile = async (request: any, reply: any) => {
   reply.send(data)
 }
 
-export const routeGetAllLanguageFiles = async (request: any, reply: any) => {
+export const routeGetAllLanguageFiles = async (_request: any, reply: any) => {
   const languageOptions = readLanguageOptions()
   const output: { [key: string]: { [key: string]: string } } = {}
 

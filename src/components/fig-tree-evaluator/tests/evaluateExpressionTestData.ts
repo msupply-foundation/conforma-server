@@ -780,7 +780,7 @@ testData.getListOfTemplates = {
   operator: 'pgSQL',
   children: [
     {
-      value: 'SELECT name FROM template LIMIT 5',
+      value: 'SELECT name FROM template ORDER BY id LIMIT 5',
     },
   ],
 }
@@ -799,7 +799,7 @@ testData.getListOfTemplates_noType = {
   operator: 'pgSQL',
   children: [
     {
-      value: 'SELECT name FROM template LIMIT 5',
+      value: 'SELECT name FROM template ORDER BY id LIMIT 5',
     },
   ],
 }
@@ -808,7 +808,7 @@ testData.getListOfApplications_withId = {
   operator: 'pgSQL',
   children: [
     {
-      value: 'SELECT id, name FROM application LIMIT 5',
+      value: 'SELECT id, name FROM application ORDER BY id LIMIT 5',
     },
   ],
 }
@@ -872,7 +872,7 @@ testData.GraphQL_listOfApplications = {
   operator: 'graphQL',
   children: [
     `query Apps {
-      applications(first: 3, offset: 10) {
+      applications(first: 3, offset: 10, orderBy: ID_ASC) {
         nodes {
           name
         }
@@ -888,7 +888,7 @@ testData.GraphQL_listOfApplicationsWithId = {
   operator: 'graphQL',
   children: [
     `query Apps {
-      applications(first: 3, offset: 20) {
+      applications(first: 3, offset: 20, orderBy: ID_ASC) {
         nodes {
           name
           id

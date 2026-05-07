@@ -38,6 +38,16 @@ const databaseMethods = {
   getRecordsByField: async <T>(tableName: string, field: string, value: unknown): Promise<T[]> => {
     return await DBConnect.getRecordsByField(tableName, field, value)
   },
+  getRecordsByFieldWithMultipleValues: async <T>(
+    tableName: string,
+    field: string,
+    values: unknown[]
+  ): Promise<T[]> => {
+    return await DBConnect.getRecordsByFieldWithMultipleValues(tableName, field, values)
+  },
+  getAllRecords: async <T>(tableName: string): Promise<T[]> => {
+    return await DBConnect.getAllRecords(tableName)
+  },
   updateChecksum: async (tableName: string, id: number, checksum: string) => {
     try {
       const text = `
@@ -106,6 +116,25 @@ const databaseMethods = {
       throw err
     }
   },
+
+  // Gets a list of permissionNames used by "grantPermissions" actions
+  getPermissionNamesFromGrantPermissions: async (templateId: number): Promise<string[]> => {
+    const text = `
+      SELECT DISTINCT jsonb_array_elements_text
+        ((parameter_queries->'permissionNames')::jsonb) as permissions
+          FROM public.template_action
+          WHERE template_id = $1
+          AND action_code = 'grantPermissions'
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [templateId], rowMode: 'array' })
+      return result.rows.flat()
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
+
   // Gets a list of data tables used by "modifyRecord" actions
   getDataTablesFromModifyRecord: async (templateId: number): Promise<string[]> => {
     const text = `
@@ -124,6 +153,7 @@ const databaseMethods = {
       throw err
     }
   },
+
   getLinkedDataTables: async (tableNames: string[]): Promise<PgDataTable[]> => {
     const text = `
       SELECT table_name, display_name, field_map,
@@ -134,20 +164,6 @@ const databaseMethods = {
     `
     try {
       const result = await DBConnect.query({ text, values: [tableNames] })
-      return result.rows
-    } catch (err) {
-      console.log(errorMessage(err))
-      throw err
-    }
-  },
-  getDataViewColumns: async (tableName: string) => {
-    const text = `
-      SELECT *
-      FROM data_view_column_definition
-      WHERE table_name = $1
-    `
-    try {
-      const result = await DBConnect.query({ text, values: [tableName] })
       return result.rows
     } catch (err) {
       console.log(errorMessage(err))
@@ -183,7 +199,9 @@ const databaseMethods = {
     const fields = Object.keys(data)
     const fieldsString = fields.join(', ')
     const values = Object.values(data).map((value, index) =>
-      DBConnect.isJsonColumn(tableName, fields[index]) ? JSON.stringify(value) : value
+      DBConnect.isJsonColumn(tableName, fields[index]) && value !== null
+        ? JSON.stringify(value)
+        : value
     )
     try {
       const text = `
@@ -248,38 +266,6 @@ const databaseMethods = {
       throw err
     }
   },
-  getAllDataViews: async (): Promise<PgDataView[]> => {
-    const text = `
-      SELECT *
-      FROM data_view
-      ORDER BY table_name;
-    `
-    try {
-      const result = await DBConnect.query({ text })
-      return result.rows
-    } catch (err) {
-      console.log(errorMessage(err))
-      throw err
-    }
-  },
-  // Data views that can be accessed with the specified permissions. Used to
-  // determine if an applicant would be able to see a particular data view based
-  // on the template permissions
-  getAllAccessibleDataViews: async (permissions: string[]): Promise<PgDataView[]> => {
-    const text = `
-      SELECT *
-      FROM data_view
-      WHERE $1 && permission_names
-      OR array_length(permission_names, 1) IS NULL;
-    `
-    try {
-      const result = await DBConnect.query({ text, values: [permissions] })
-      return result.rows
-    } catch (err) {
-      console.log(errorMessage(err))
-      throw err
-    }
-  },
   getDataViewsUsingTables: async (tables: string[]): Promise<PgDataView[]> => {
     const text = `
         SELECT *
@@ -310,7 +296,7 @@ const databaseMethods = {
   },
   getTemplateElementCountUsingDataView: async (templateId: number, dataViewCode: string) => {
     const text = `
-      WITH a AS (SELECT '%/data-views/${dataViewCode}%' as val)
+      WITH a AS (SELECT '%${dataViewCode}%' as val)
         SELECT COUNT(*) FROM public.template_element
           WHERE (parameters::text LIKE (SELECT val FROM a)
           OR visibility_condition::text LIKE (SELECT val FROM a)
@@ -323,6 +309,35 @@ const databaseMethods = {
     `
     try {
       const result = await DBConnect.query({ text, values: [templateId] })
+      return result.rows[0].count
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  },
+  getFragmentCountForTemplate: async (
+    templateId: number,
+    fragment: string,
+    table: 'template_element' | 'template_action'
+  ) => {
+    const text = `
+      SELECT COUNT(*) FROM ${table}
+      ${
+        table === 'template_element'
+          ? `
+        WHERE section_id IN (
+        SELECT id FROM template_section
+        WHERE template_id = $1
+      )`
+          : 'WHERE template_id = $1'
+      }
+      AND (
+          to_jsonb(${table}) @? format('$.**."$%s"', $2::TEXT)::jsonpath
+          OR to_jsonb(${table}) @? format('$.**?((@.fragment == "%s"))', $2::TEXT)::jsonpath
+      );
+    `
+    try {
+      const result = await DBConnect.query({ text, values: [templateId, fragment] })
       return result.rows[0].count
     } catch (err) {
       console.log(errorMessage(err))

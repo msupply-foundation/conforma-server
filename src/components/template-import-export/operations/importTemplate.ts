@@ -3,8 +3,13 @@ import fsx from 'fs-extra'
 import semverCompare from 'semver/functions/compare'
 import { ApiError } from '../../../ApiError'
 import db from '../databaseMethods'
-import { filterModifiedData, getTemplateLinkedEntities } from '../utilities'
-import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../../constants'
+import {
+  filterModifiedData,
+  getTemplateLinkedEntities,
+  hashFile,
+  replaceForeignKeyRef,
+} from '../utilities'
+import { FILES_FOLDER, FILES_TEMP_FOLDER, SNAPSHOT_ARCHIVE_FOLDER } from '../../../constants'
 import config from '../../../config'
 import {
   CombinedLinkedEntities,
@@ -13,13 +18,14 @@ import {
   PgDataTable,
   PgDataView,
   PgDataViewColumn,
+  PgEvaluatorFragment,
   PgFile,
   PgFilter,
   PgPermissionName,
+  PgPermissionPolicy,
   PgTemplateCategory,
   TemplateStructure,
 } from '../types'
-import { hashFile, replaceForeignKeyRef } from '../utilities'
 
 interface InfoFile {
   timestamp: string
@@ -34,6 +40,7 @@ export type PreserveExistingEntities = {
   dataTables?: Set<string>
   category?: string
   files?: Set<string>
+  fragments?: Set<string>
 }
 
 export const entityDataMap = {
@@ -47,6 +54,7 @@ export const entityDataMap = {
   category: { table: 'template_category', keyField: 'code' },
   dataTables: { table: 'data_table', keyField: 'table_name' },
   files: { table: 'file', keyField: 'unique_id' },
+  fragments: { table: 'evaluator_fragment', keyField: 'name' },
 }
 
 export const importTemplateUpload = async (folderName: string) => {
@@ -95,8 +103,16 @@ export const importTemplateUpload = async (folderName: string) => {
       400
     )
 
-  const { filters, permissions, dataViews, dataViewColumns, category, dataTables, files } =
-    template.shared
+  const {
+    filters = {},
+    permissions = {},
+    dataViews = {},
+    dataViewColumns = {},
+    category = null,
+    dataTables = {},
+    files = {},
+    fragments = {},
+  } = template.shared
 
   const changedFilters = await getModifiedEntities(filters, 'filter', 'code')
   const changedPermissions = await getModifiedEntities(permissions, 'permission_name', 'name')
@@ -107,6 +123,7 @@ export const importTemplateUpload = async (folderName: string) => {
     ['table_name', 'column_name']
   )
   const changedFiles = await getModifiedEntities(files, 'file', 'unique_id')
+  const changedFragments = await getModifiedEntities(fragments, 'evaluator_fragment', 'name')
 
   const categoryCode = category ? (category.data as PgTemplateCategory).code : ''
   const changedCategory = category
@@ -127,6 +144,7 @@ export const importTemplateUpload = async (folderName: string) => {
     category: changedCategory,
     dataTables: changedDataTables,
     files: changedFiles,
+    fragments: changedFragments,
   }
 }
 
@@ -287,6 +305,7 @@ export const installTemplate = async (
         dataViewColumns = {},
         dataTables = {},
         files = {},
+        fragments = {},
       },
       ...templateRecord
     } = template
@@ -299,6 +318,7 @@ export const installTemplate = async (
       dataTables: preserveDataTables,
       category: preserveCategory,
       files: preserveFiles,
+      fragments: preserveFragments,
     } = installDetails
 
     console.log(`Importing template, code: ${template.code} (version ${template.version_id})`)
@@ -387,6 +407,18 @@ export const installTemplate = async (
       } = permissions[permissionName]
       let permission_name_id: number | null = null
 
+      const dbPermissionPolicy = await db.getRecordsByField<PgPermissionPolicy>(
+        'permission_policy',
+        'name',
+        (permission_policy as PgPermissionPolicy).name
+      )
+
+      const permission_policy_id =
+        dbPermissionPolicy.length > 0
+          ? dbPermissionPolicy[0].id
+          : // Policy should exist, but if it doesn't create it here
+            await db.insertRecord('permission_policy', permission_policy)
+
       const existing = await db.getRecord<PgPermissionName>(
         'permission_name',
         permissionName,
@@ -399,9 +431,13 @@ export const installTemplate = async (
             await db.updateRecord('permission_name', {
               ...permissionNameRecord,
               id: permission_name_id,
+              permission_policy_id,
             })
       } else {
-        permission_name_id = await db.insertRecord('permission_name', permissionNameRecord)
+        permission_name_id = await db.insertRecord('permission_name', {
+          ...permissionNameRecord,
+          permission_policy_id,
+        })
       }
 
       permissionNameIds[permissionName] = permission_name_id as number
@@ -452,6 +488,24 @@ export const installTemplate = async (
       } else await db.insertRecord('data_view_column_definition', data)
     }
 
+    for (const name of Object.keys(fragments)) {
+      const { checksum, data } = fragments[name]
+      let evaluator_fragment_id: number | null = null
+
+      const existing = await db.getRecord<PgEvaluatorFragment>('evaluator_fragment', name, 'name')
+      if (existing) {
+        evaluator_fragment_id = existing?.id
+        if (!preserveFragments?.has(name))
+          if (existing.checksum !== checksum)
+            await db.updateRecord('evaluator_fragment', { ...data, id: evaluator_fragment_id })
+      } else {
+        evaluator_fragment_id = await db.insertRecord('evaluator_fragment', data)
+      }
+
+      const fragmentJoinRecord = { evaluator_fragment_id, template_id: newTemplateId }
+      await db.insertRecord('template_evaluator_fragment_join', fragmentJoinRecord)
+    }
+
     for (const tableName of Object.keys(dataTables)) {
       const { checksum, data } = dataTables[tableName]
       const existing = await db.getRecord<PgDataTable>('data_table', tableName, 'table_name')
@@ -500,15 +554,17 @@ export const installTemplate = async (
           }
           await db.updateRecord('file', file, 'unique_id')
         }
-        const existingFilePath = path.join(FILES_FOLDER, archive_path ?? '', file_path)
+        const existingFilePath = archive_path
+          ? path.join(SNAPSHOT_ARCHIVE_FOLDER, archive_path, file_path)
+          : path.join(FILES_FOLDER, file_path)
         const incomingFileSourcePath = path.join(sourceFolder, 'files', file_path)
         if (!(await fsx.exists(existingFilePath))) {
           let destination: string
           if (
             archive_path &&
-            (await fsx.exists(path.join(FILES_FOLDER, archive_path, file_path)))
+            (await fsx.exists(path.join(SNAPSHOT_ARCHIVE_FOLDER, archive_path, file_path)))
           ) {
-            destination = path.join(FILES_FOLDER, archive_path, file_path)
+            destination = path.join(SNAPSHOT_ARCHIVE_FOLDER, archive_path, file_path)
           } else {
             destination = path.join(FILES_FOLDER, file_path)
             await db.updateRecord('file', { unique_id, archive_path: null }, 'unique_id')

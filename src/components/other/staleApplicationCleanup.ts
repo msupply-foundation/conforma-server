@@ -16,7 +16,7 @@ export const cleanupStaleApplications = async () => {
       if (!acc[code]) acc[code] = []
       acc[code].push({ id: template.id, days: template.stale_draft_retention_days })
       return acc
-    }, {} as { [code: string]: { id: number; days: number }[] })
+    }, {} as { [code: string]: { id: number; days: number | null }[] })
 
     for (const code of Object.keys(groupedTemplates)) {
       console.log('Processing template code:', code)

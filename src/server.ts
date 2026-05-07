@@ -5,6 +5,7 @@ import fastifyCors from '@fastify/cors'
 import fastifyWebsocket from '@fastify/websocket'
 import { DateTime, Settings } from 'luxon'
 import path from 'path'
+import fsx from 'fs-extra'
 import { loadActionPlugins } from './components/pluginsConnect'
 import {
   routeUserInfo,
@@ -46,7 +47,7 @@ import migrateData from '../database/migration/migrateData'
 import routeArchiveFiles from './components/files/routeArchiveFiles'
 import { Schedulers } from './components/scheduler'
 import { AccessExternalApiQuery, routeAccessExternalApi } from './components/external-apis/routes'
-import { DEFAULT_LOGOUT_TIME } from './constants'
+import { DEFAULT_LOGOUT_TIME, ZIP_CACHE_FOLDER } from './constants'
 import { updateRowPolicies } from './components/permissions/rowLevelPolicyHelpers'
 import { routeRawData } from './components/other/routeRawData'
 import {
@@ -57,8 +58,15 @@ import {
 import { routeFileLists } from './components/files/routes'
 import { cleanupDataTables } from './lookup-table/utils/cleanupDataTables'
 import { templateRoutes } from './components/template-import-export'
+import {
+  isValidStagedToken,
+  getStagedFilePath,
+  markStagedDownloadServed,
+} from './components/stagedDownloads'
 import { convertHandler, pgMiddleware } from './postgraphile'
+import { routeGetFragments } from './components/fig-tree-evaluator/routes'
 import { loadStartupSnapshot } from './components/snapshots/loadStartupSnapshot'
+import databaseConnect from './components/database/databaseConnect'
 
 require('dotenv').config()
 
@@ -87,6 +95,8 @@ const startServer = async () => {
   // Add schedulers to global "config" object so we can update them. There
   // should only be a single global instance of Schedulers -- this one!
   config.scheduledJobs = new Schedulers()
+
+  config.latestSnapshot = await databaseConnect.getSystemInfo('snapshot')
 
   const server = fastify()
 
@@ -177,19 +187,61 @@ const startServer = async () => {
         server.get('/verify', routeVerification)
         // File download endpoint (get by unique ID)
         server.get('/file', async function (request: any, reply: any) {
-          const { uid, thumbnail = false } = request.query
+          const { uid, thumbnail = false, zipFile, filename } = request.query
+          // zipFile is used when downloading files from a snapshot zip, so we
+          // look in the zip cache folder instead of querying uid in the
+          // database
+
+          if (zipFile) {
+            // Resolve and confirm the requested path stays inside the zip
+            // cache folder, so a crafted `?zipFile=../../etc/passwd` can't
+            // read arbitrary files via this public endpoint.
+            const zipFilePath = path.resolve(ZIP_CACHE_FOLDER, zipFile)
+            const cacheRoot = path.resolve(ZIP_CACHE_FOLDER) + path.sep
+            if (!zipFilePath.startsWith(cacheRoot)) {
+              return reply.code(400).send({ success: false, message: 'Invalid zipFile' })
+            }
+
+            let stats
+            try {
+              stats = await fsx.stat(zipFilePath)
+            } catch (err: any) {
+              const code = err?.code === 'ENOENT' ? 404 : 500
+              return reply
+                .code(code)
+                .send({ success: false, message: 'Unable to retrieve file' })
+            }
+
+            const downloadFilename = filename || zipFile
+            reply.header('Content-Type', 'application/zip')
+            reply.header('Content-Length', stats.size)
+            reply.header(
+              'Content-Disposition',
+              `attachment; filename="${encodeURIComponent(
+                downloadFilename
+              )}"; filename*=UTF-8''${encodeURIComponent(downloadFilename)}`
+            )
+            const stream = fsx.createReadStream(zipFilePath)
+            stream.on('error', () => {
+              // Headers may already be flushed; best-effort error reply.
+              reply.send({ success: false, message: 'Unable to retrieve file' })
+            })
+            return reply.send(stream)
+          }
+
           const {
             originalFilename,
             filePath,
             thumbnailPath,
             mimeType = 'application/octet-stream',
+            root,
           } = await getFilePath(uid, thumbnail)
 
           const actualPath = thumbnail ? thumbnailPath : filePath
           reply.header('Content-Type', mimeType)
           reply.header(
             'Content-Disposition',
-            `inline; filename="${encodeURIComponent(
+            `attachment; filename="${encodeURIComponent(
               originalFilename
             )}"; filename*=UTF-8''${encodeURIComponent(originalFilename)}`
           )
@@ -197,11 +249,69 @@ const startServer = async () => {
           // TO-DO Check for permission to access file
           try {
             // TO-DO: Rename file back to original for download
-            return reply.sendFile(actualPath)
+            return reply.sendFile(actualPath, root)
           } catch {
             return reply.send({ success: false, message: 'Unable to retrieve file' })
           }
         })
+
+        server.get('/fragments', routeGetFragments)
+
+        // Capability-style download endpoint for files prepared by an
+        // authenticated upstream route via `stageFileForDownload`. The token
+        // in the URL is the only auth — the staging helper handles lifecycle
+        // (5 min after serve, 30 min hard cap).
+        server.get(
+          '/staged-download/:token',
+          async (
+            request: FastifyRequest<{
+              Params: { token: string }
+              Querystring: { filename?: string }
+            }>,
+            reply
+          ) => {
+            const { token } = request.params
+            if (!isValidStagedToken(token)) {
+              return reply.code(400).send({ success: false, message: 'Invalid token' })
+            }
+
+            const filepath = getStagedFilePath(token)
+            if (!filepath) {
+              return reply.code(404).send({ success: false, message: 'File not found or expired' })
+            }
+
+            let stats
+            try {
+              stats = await fsx.stat(filepath)
+            } catch (err: any) {
+              if (err?.code === 'ENOENT') {
+                return reply
+                  .code(404)
+                  .send({ success: false, message: 'File not found or expired' })
+              }
+              throw err
+            }
+
+            const downloadFilename = request.query.filename || token
+            reply.header('Content-Type', 'application/octet-stream')
+            reply.header('Content-Length', stats.size)
+            reply.header(
+              'Content-Disposition',
+              `attachment; filename="${encodeURIComponent(
+                downloadFilename
+              )}"; filename*=UTF-8''${encodeURIComponent(downloadFilename)}`
+            )
+
+            reply.raw.on('close', () => markStagedDownloadServed(token))
+
+            const stream = fsx.createReadStream(filepath)
+            stream.on('error', () => {
+              reply.send({ success: false, message: 'Unable to retrieve file' })
+            })
+            return reply.send(stream)
+          }
+        )
+
         done()
       },
       { prefix: '/public' }

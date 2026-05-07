@@ -1,6 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { ArchiveOption, SnapshotType } from '../../exportAndImport/types'
+import { SnapshotType } from '../../exportAndImport/types'
 import takeSnapshot from '../takeSnapshot'
+import { errorMessage } from '../../utilityFunctions'
 
 type Query = {
   name?: string
@@ -8,16 +9,24 @@ type Query = {
 }
 
 const routeTakeSnapshot = async (
-  request: FastifyRequest<{ Querystring: Query; Body?: { archive: ArchiveOption } }>,
+  request: FastifyRequest<{ Querystring: Query }>,
   reply: FastifyReply
 ) => {
   const snapshotType = request.query.type
   const snapshotName = request.query.name
-  const archive = request?.body?.archive
 
   if (!snapshotName) return reply.send({ success: false, message: 'error while loading snapshot' })
 
-  reply.send(await takeSnapshot({ snapshotName, snapshotType, archive }))
+  try {
+    reply.send(await takeSnapshot({ snapshotName, snapshotType }))
+  } catch (e) {
+    console.error('Error taking snapshot:', e)
+    reply.send({
+      success: false,
+      message: 'There was a problem saving this snapshot',
+      error: errorMessage(e),
+    })
+  }
 }
 
 export default routeTakeSnapshot

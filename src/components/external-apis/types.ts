@@ -1,4 +1,4 @@
-import { EvaluatorNode } from '../../modules/expression-evaluator'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 
 type ApiAuthentication =
   | { type: 'Basic'; username: string; password: string }

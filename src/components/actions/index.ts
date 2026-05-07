@@ -1,4 +1,3 @@
-export * from './evaluatorFunctions'
 export * from './getApplicationData'
 export * from './helpers'
 export * from './getApplicationDataRoute'

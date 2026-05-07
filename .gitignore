@@ -48,6 +48,8 @@ typings/
 /preferences
 /snapshot_test_scripts
 /backups
+/__zip_cache
+/__staged_downloads
 
 # Folder where local config files can be stored
 /local
@@ -58,6 +60,7 @@ database/schema.json
 
 # Build folders
 build
+build-web-app
 lib
 
 # Docker related
@@ -72,7 +75,8 @@ src/modules/expression-evaluator/expression-evaluate-gui/src/expression-evaluato
 #Snapshots working folder
 database/_snapshots
 database/snapshot_path_aliases.json
-.vscode/settings.json
+.vscode/*
+!.vscode/settings.json
 docker/snapshots
 
 #Other secrets

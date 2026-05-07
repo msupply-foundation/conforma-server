@@ -2,7 +2,7 @@ import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import databaseMethods, { DatabaseMethodsType } from './databaseMethods'
 import { DBConnectType } from '../../../src/components/database/databaseConnect'
-import { mapValues, get, snakeCase } from 'lodash'
+import { mapValues, get, snakeCase, mapKeys } from 'lodash'
 import {
   objectKeysToSnakeCase,
   getValidTableName,
@@ -28,6 +28,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     delete: deleteRecord = false,
     data,
     patch,
+    databaseTypes = {},
     ...record
   } = parameters
 
@@ -54,7 +55,14 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
   }
 
   try {
-    await createOrUpdateTable(DBConnect, db, tableNameProper, fullRecord, tableName)
+    await createOrUpdateTable(
+      DBConnect,
+      db,
+      tableNameProper,
+      fullRecord,
+      tableName,
+      mapKeys(databaseTypes, (_, k) => snakeCase(k))
+    )
 
     const recordIds: number[] = await db.getRecordIds(tableNameProper, fieldToMatch, valueToMatch)
 
@@ -149,15 +157,19 @@ const createOrUpdateTable = async (
   db: DatabaseMethodsType,
   tableName: string,
   record: { [key: string]: object | string },
-  tableNameOriginal: string
+  tableNameOriginal: string,
+  databaseTypes: Record<string, string>
 ) => {
   const tableAndFields = await DBConnect.getDatabaseInfo(tableName)
 
   if (tableAndFields.length === 0) await db.createTable(tableName, tableNameOriginal)
 
-  const fieldsToCreate = Object.entries(record)
+  const fieldsToCreate = Object.entries({ ...record, ...databaseTypes })
     .filter(([fieldName]) => !tableAndFields.find(({ column_name }) => column_name === fieldName))
-    .map(([fieldName, value]) => ({ fieldName, fieldType: getPostgresType(value) }))
+    .map(([fieldName, value]) => ({
+      fieldName,
+      fieldType: databaseTypes?.[fieldName] ?? getPostgresType(value),
+    }))
 
   if (fieldsToCreate.length > 0) {
     if (config.allowedTablesNoColumns.includes(tableName))

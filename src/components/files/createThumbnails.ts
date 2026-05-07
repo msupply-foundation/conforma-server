@@ -40,7 +40,7 @@ const createThumbnail = async ({
   subfolder,
   mimetype,
 }: ThumbnailInput) => {
-  const { type, subtype } = splitMimetype(mimetype)
+  const { type } = splitMimetype(mimetype)
 
   const fullFilePath = path.join(filesPath, subfolder, `${basename}_${unique_id}${ext}`)
   const thumbnailFilePath = path.join(filesPath, subfolder, `${basename}_${unique_id}_thumb`) // No ext, added after conversion -- could be different

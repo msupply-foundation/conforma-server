@@ -1,6 +1,6 @@
 {
   "name": "conforma-server",
-  "version": "1.7.2-2",
+  "version": "2.0.0-dev.43",
   "main": "server.js",
   "license": "MIT",
   "repository": {
@@ -8,7 +8,7 @@
     "url": "https://github.com/msupply-foundation/conforma-server"
   },
   "engines": {
-    "node": ">=18.18.2 <19.0.0"
+    "node": ">=20.0.0 <21.0.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.2",
@@ -88,7 +88,9 @@
     "dotenv": "^10.0.0",
     "fast-csv": "^4.3.6",
     "fastify": "^4.28.1",
+    "fig-tree-evaluator": "^2.21.3",
     "fs-extra": "^11.1.1",
+    "get-folder-size": "^5.0.0",
     "json-sql-builder2": "^1.0.24",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
@@ -97,7 +99,7 @@
     "nanoid": "^3.1.21",
     "node-schedule": "^2.1.0",
     "node-stream-zip": "^1.15.0",
-    "pg": "^8.11.1",
+    "pg": "^8.16.0",
     "pg-diff-cli": "^2.4.0",
     "pluralize": "^8.0.0",
     "postgraphile": "^4.13.0",

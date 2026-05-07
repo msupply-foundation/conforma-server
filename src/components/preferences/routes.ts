@@ -1,6 +1,7 @@
 import { readJSONSync, writeJson } from 'fs-extra'
 import { combineRequestParams, errorMessage, isObject } from '../../components/utilityFunctions'
-import config, { refreshConfig } from '../../config'
+import config from '../../config'
+import { refreshConfig } from '../../refreshConfig'
 import { DEFAULT_LOGOUT_TIME, PREFERENCES_FILE } from '../../constants'
 import { Preferences } from '../../types'
 import databaseConnect from '../database/databaseConnect'
@@ -22,7 +23,7 @@ export const setPreferences = async (prefs: Preferences) => {
 }
 
 // Serve prefs to front-end
-export const routeGetPrefs = async (request: any, reply: any) => {
+export const routeGetPrefs = async (_request: any, reply: any) => {
   const prefs = loadCurrentPrefs()
   const languageOptions = readLanguageOptions()
   const latestSnapshot = await databaseConnect.getSystemInfo('snapshot')
@@ -43,7 +44,7 @@ export const routeGetPrefs = async (request: any, reply: any) => {
 }
 
 // Return all prefs for editing (Admin only)
-export const routeGetAllPrefs = async (request: any, reply: any) => {
+export const routeGetAllPrefs = async (_request: any, reply: any) => {
   const preferences = loadCurrentPrefs()
   const overrides = process.env.PREFERENCE_OVERRIDES
     ? readJSONSync(process.env.PREFERENCE_OVERRIDES)
@@ -61,7 +62,7 @@ export const routeSetPrefs = async (request: any, reply: any) => {
   try {
     await setPreferences({ server, web })
 
-    refreshConfig(config)
+    await refreshConfig(config)
 
     return reply.send({ success: true, preferences: { server, web } })
   } catch (err) {

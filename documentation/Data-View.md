@@ -113,6 +113,7 @@ Query parameters are (currently) as follows:
 - `order-by` -- field to sort by (default: `id`),
 - `ascending` -- whether to sort ascending or descending (default: `true`)
 - `raw` -- set to `true` and the table data will be returned as just a single array of objects, i.e. no column or data definitions. This is useful when making queries to a table in an application form (e.g. a list of countries in a drop-down) -- you just want simple access to the data, not its display definitions.
+- `distinct` -- if specified, the list of records is restricted to one per unique value of this field, so you can get a list of *distinct* values for a given field. If specified, the `first` and `offset` parameters are ignored.
 
 ##### Filter / search
 Additional filtering is primarily done via JSON in the request body. The JSON object is a GraphQL filter object. However, an additional `search` query parameter can be provided, which will be converted to and merged with the Filter JSON (the `search` parameter adds a filter for the `table_search_columns` that are [defined](#data_view-table)).
@@ -285,6 +286,7 @@ The input fields are as follows:
 The additional formatting field is intended to be an extensible field, where we can add new "custom formatting" definitions as required. Currently, the following properties are supported:
 
 - `dateFormat`: Out of the box, if the returned value is a Date type, then it will be displayed in a nice "short date" format (DD/MM/YY) (locale-dependent). However, if you want a different date format, the value here should either be one of the Luxon date/time presets (see [here](https://moment.github.io/luxon/#/formatting?id=presets)) or a whole Luxon date format object.
+- `numberFormat`: Numbers can be presented using formatting options of the [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat) object. For example, to display a number as a rounded currency value, you'd use: `{"numberFormat": {"style": "currency", "currency": "NZD"}}`
 - `substitution`: A string value with `${<property>}` substitution parameters, the same technique used by the "listBuilder" and "search" plugins for displaying complex input data. If the value returned by the column this applies to is an object, then `<property>` refers to a property of that object.  
 For example, if the returned value was `{name: "John", age: 35}` and you wanted to display it with the name in bold and the age after it in brackets, the substitution string value would be:  
   `**${name}** (${age})`

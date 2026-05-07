@@ -16,7 +16,7 @@ import DBConnect from '../database/databaseConnect'
 import createThumbnail from './createThumbnails'
 import { FilePayload } from '../../types'
 import { File } from '../../generated/graphql'
-import { FILES_FOLDER } from '../../constants'
+import { FILES_FOLDER, SNAPSHOT_ARCHIVE_FOLDER } from '../../constants'
 
 export const { filesFolder, imagesFolder, genericThumbnailsFolderName } = config
 export const filesPath = path.join(getAppEntryPointDir(), filesFolder)
@@ -32,19 +32,31 @@ export async function getFilePath(uid: string, thumbnail = false) {
   const isGenericThumbnail =
     thumbnail && fileData.thumbnail_path.startsWith(config.genericThumbnailsFolderName)
 
+  const isArchived = !!fileData.archive_path
+
   const filePath = path.join(fileData.archive_path ?? '', fileData.file_path)
   const thumbnailPath = path.join(
-    !isGenericThumbnail ? fileData.archive_path ?? '' : '',
+    !isGenericThumbnail ? (fileData.archive_path ?? '') : '',
     fileData.thumbnail_path
   )
   const mimeType = thumbnail
     ? `image/${path.extname(thumbnailPath).toLowerCase().slice(1)}`
     : fileData.mimetype
+  // Generic thumbnails always live in FILES_FOLDER even when the underlying
+  // file has been archived — they're shared assets that aren't copied into
+  // the archive store.
+  const root =
+    thumbnail && isGenericThumbnail
+      ? FILES_FOLDER
+      : isArchived
+        ? SNAPSHOT_ARCHIVE_FOLDER
+        : FILES_FOLDER
   return {
     filePath,
     thumbnailPath,
     originalFilename: fileData.original_filename,
     mimeType,
+    root,
   }
 }
 
@@ -164,6 +176,7 @@ export async function saveToDB({
   application_note_id,
   is_output_doc = false,
   to_be_deleted = false,
+  is_protected = false,
   mimetype,
 }: any) {
   try {
@@ -182,6 +195,7 @@ export async function saveToDB({
         file_path,
         thumbnail_path,
         file_size,
+        is_protected,
         mimetype: file ? file.mimetype : mimetype,
       }) as FilePayload
     )

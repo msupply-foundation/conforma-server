@@ -16,7 +16,9 @@ import fs from 'fs'
 import path from 'path'
 import { clearEmptyDirectories, crawlFileSystem, errorMessage } from '../utilityFunctions'
 import { deleteFile } from '../files/deleteFiles'
-import { ARCHIVE_FOLDER, FILES_FOLDER, GENERIC_THUMBNAILS_FOLDER } from '../../constants'
+import { FILES_FOLDER, GENERIC_THUMBNAILS_FOLDER } from '../../constants'
+import { pruneZipCacheForRequiredSpace } from '../snapshots/zipFileHandler'
+import config from '../../config'
 
 const isManualCleanup: boolean = process.argv[2] === '--cleanup'
 
@@ -31,7 +33,7 @@ const processMissingFileLinks = async () => {
 
   while (filePaths.length > 0) {
     filePaths.forEach(({ id, filePath }) => {
-      if (!fs.existsSync(path.join(FILES_FOLDER, filePath))) fileIdsToBeDeleted.push(id)
+      if (!fs.existsSync(filePath)) fileIdsToBeDeleted.push(id)
     })
     offset += BATCH_SIZE
     filePaths = await DBConnect.getFilePaths(BATCH_SIZE, offset)
@@ -48,7 +50,6 @@ export const cleanUpFiles = async () => {
     // Check if file in database and delete if not
     const checkFile = async (filePath: string) => {
       if (path.dirname(filePath) === GENERIC_THUMBNAILS_FOLDER) return
-      if (path.dirname(filePath).startsWith(ARCHIVE_FOLDER)) return
 
       const relativeFilePath = filePath.replace(FILES_FOLDER + '/', '')
       const isFileInDatabase = await DBConnect.checkIfInFileTable(relativeFilePath)
@@ -64,11 +65,16 @@ export const cleanUpFiles = async () => {
     await crawlFileSystem(FILES_FOLDER, checkFile)
     await clearEmptyDirectories(FILES_FOLDER)
     const recordsMissingFiles = await processMissingFileLinks()
-    const filesCleanedUp = await DBConnect.cleanUpFiles()
+    const { toBeDeleted, expiredProtected } = await DBConnect.cleanUpFiles()
 
     console.log(`\nFiles deleted that weren't in database: ${filesMissingRecords}`)
     console.log(`File records removed due to missing files: ${recordsMissingFiles}`)
-    console.log(`Additional files cleaned up (e.g. previews): ${filesCleanedUp}`)
+    console.log(`Additional files cleaned up (e.g. previews): ${toBeDeleted}`)
+    console.log(`Expired protected files cleaned up: ${expiredProtected}`)
+
+    const freeSpaceRequiredForZips = config.freeSpaceRequiredForZips
+    if (freeSpaceRequiredForZips)
+      await pruneZipCacheForRequiredSpace(freeSpaceRequiredForZips * 1024 * 1024 * 1024) // Prune cache if less than specified GB available, to prevent issues with new zip file creation
   } catch (err) {
     console.log('ERROR', errorMessage(err))
   }

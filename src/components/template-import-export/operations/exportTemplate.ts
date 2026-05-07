@@ -2,7 +2,7 @@ import path from 'path'
 import fsx from 'fs-extra'
 import { ApiError } from '../../../ApiError'
 import db from '../databaseMethods'
-import { FILES_FOLDER, FILES_TEMP_FOLDER } from '../../../constants'
+import { FILES_FOLDER, FILES_TEMP_FOLDER, SNAPSHOT_ARCHIVE_FOLDER } from '../../../constants'
 import { DateTime } from 'luxon'
 import config from '../../../config'
 import archiver from 'archiver'
@@ -43,7 +43,9 @@ export const exportTemplate = async (templateId: number) => {
     for (const file of files) {
       const { file_path, archive_path } = file
       await fsx.copy(
-        path.join(FILES_FOLDER, archive_path ?? '', file_path),
+        archive_path
+          ? path.join(SNAPSHOT_ARCHIVE_FOLDER, archive_path, file_path)
+          : path.join(FILES_FOLDER, file_path),
         path.join(fullOutputPath, 'files', file_path)
       )
     }

@@ -25,6 +25,7 @@ import { Template as PgTemplate } from '../../generated/postgres'
 import { errorMessage } from '../utilityFunctions'
 import { updateReviewerStatsFromDBEvent } from './updateReviewerStats'
 import { hashRecord } from '../template-import-export'
+import { reloadFragments } from '../fig-tree-evaluator/FigTree'
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -120,7 +121,10 @@ class PostgresDB {
           })
           break
         case 'recalculate_checksum_notification':
-          hashRecord(payloadObject)
+          hashRecord(payloadObject).then(() => {
+            if (payloadObject?.tableName === 'evaluator_fragment') reloadFragments()
+          })
+
           break
       }
     })
@@ -189,6 +193,45 @@ class PostgresDB {
             SELECT * FROM ${tableName} WHERE ${field} = $1
           `
       const result = await this.query({ text, values: [value] })
+      return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  // Generic method to return multiple full records from any table by matching
+  // an ARRAY of values against any field.
+  public getRecordsByFieldWithMultipleValues = async <T>(
+    tableName: string,
+    field: string,
+    values: unknown[]
+  ): Promise<T[]> => {
+    try {
+      const text = `
+            SELECT * FROM ${tableName} WHERE ${field} = ANY($1)
+          `
+      const result = await this.query({ text, values: [values] })
+      return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  // Generic method to return ALL full records for a particular table
+  // CAUTION: Only use on tables with a small number of records!
+  public getAllRecords = async <T>(tableName: string): Promise<T[]> => {
+    try {
+      const text = `
+            SELECT * FROM ${tableName}
+          `
+      const result = await this.query({ text })
+      if (result.rowCount > 500) {
+        console.log(
+          `WARNING: getAllRecords called on table ${tableName} with more than 500 records, this may cause performance issues.`
+        )
+      }
       return result.rows
     } catch (err) {
       console.log(errorMessage(err))
@@ -287,7 +330,7 @@ class PostgresDB {
   public updateActionParametersEvaluated = async (action_id: number, parameters: any) => {
     const text = 'UPDATE action_queue SET parameters_evaluated = $1 WHERE id = $2'
     try {
-      const result = await this.query({
+      await this.query({
         text,
         values: [parameters, action_id],
       })
@@ -339,7 +382,7 @@ class PostgresDB {
         AND is_active = true
     `
     try {
-      const result = await this.query({ text })
+      await this.query({ text })
       return true
     } catch (err) {
       throw err
@@ -354,7 +397,7 @@ class PostgresDB {
     const triggerStatus = fail ? Trigger.Error : null
     const text = `UPDATE ${table} SET trigger = $1 WHERE id = $2`
     try {
-      const result = await this.query({
+      await this.query({
         text,
         values: [triggerStatus, record_id],
       })
@@ -401,7 +444,7 @@ class PostgresDB {
   public setScheduledActionDone = async (table: string, record_id: number): Promise<boolean> => {
     const text = `UPDATE ${table} SET is_active = false WHERE id = $1`
     try {
-      const result = await this.query({
+      await this.query({
         text,
         values: [record_id],
       })
@@ -462,15 +505,27 @@ class PostgresDB {
   }
 
   public cleanUpFiles = async () => {
-    const text = `
+    const toBeDeletedQuery = `
       DELETE FROM file
       WHERE to_be_deleted = true
       AND timestamp < now() - interval '${config?.previewDocsMinKeepTime ?? '2 hours'}'
       RETURNING id;
     `
+    const protectedKeepDays = config?.protectedFilesKeepDays ?? 90
+    const expiredProtectedQuery = `
+      DELETE FROM file
+      WHERE is_protected = true
+      AND timestamp < now() - interval '${protectedKeepDays} days'
+      RETURNING id;
+    `
+
     try {
-      const result = await this.query({ text })
-      return result.rows.length
+      const toBeDeletedResult = await this.query({ text: toBeDeletedQuery })
+      const expiredProtectedResult = await this.query({ text: expiredProtectedQuery })
+      return {
+        toBeDeleted: toBeDeletedResult.rows.length,
+        expiredProtected: expiredProtectedResult.rows.length,
+      }
     } catch (err) {
       throw err
     }
@@ -512,6 +567,7 @@ class PostgresDB {
       FROM file
       WHERE archive_path IS NULL
       AND to_be_deleted = FALSE
+      AND is_protected = FALSE
       AND timestamp < now() - interval '${duration}' 
     `
     try {
@@ -1374,6 +1430,7 @@ class PostgresDB {
     FROM application_response ar JOIN template_element te
     ON ar.template_element_id = te.id
     WHERE application_id = $1
+    AND status != 'REVIEW'
     ORDER BY time_updated
     `
     try {

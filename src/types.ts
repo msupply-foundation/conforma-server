@@ -1,4 +1,3 @@
-import { BasicObject, EvaluatorNode } from './modules/expression-evaluator'
 import {
   ActionQueueStatus,
   ApplicationOutcome,
@@ -11,6 +10,7 @@ import { PoolConfig } from 'pg'
 import { Schedulers } from './components/scheduler'
 import { ExternalApiConfigs } from './components/external-apis/types'
 import { EventThrottle } from './components/actions/throttle'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 
 export interface ActionInTemplate {
   code: string
@@ -72,13 +72,13 @@ export interface ActionQueueExecutePayload {
   error_log: string | null
   parameters_evaluated: { [key: string]: any } | null
   status: ActionQueueStatus
-  output: BasicObject | null
+  output: Record<string, any> | null
 }
 
 export interface ActionResult {
   action: string // code
   status: ActionQueueStatus
-  output: BasicObject | null
+  output: Record<string, any> | null
   errorLog: string | null
 }
 
@@ -296,6 +296,7 @@ export interface ServerPreferences {
   managerCanEditLookupTables?: boolean
   managerCanEditLocalisation?: boolean
   previewDocsMinKeepTime?: string
+  protectedFilesKeepDays?: number
   fileCleanupSchedule?: number[] | ScheduleObject
   staleApplicationsCleanupSchedule?: number[] | ScheduleObject
   backupSchedule?: number[] | ScheduleObject
@@ -312,6 +313,7 @@ export interface ServerPreferences {
   externalApiConfigs?: ExternalApiConfigs
   envVars?: string[]
   maintenanceSite?: string
+  freeSpaceRequiredForZips?: number // GB, used in file cleanup to determine when to prune zip cache to prevent issues with new zip file creation. Default: not implemented (i.e. won't prune zip cache based on space)
 }
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
@@ -324,6 +326,7 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'systemManagerPermissionName',
   'managerCanEditLookupTables',
   'previewDocsMinKeepTime',
+  'protectedFilesKeepDays',
   'fileCleanupSchedule',
   'backupSchedule',
   'backupFilePrefix',
@@ -338,6 +341,7 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'externalApiConfigs',
   'envVars',
   'maintenanceSite',
+  'freeSpaceRequiredForZips',
 ]
 
 export interface WebAppPrefs {
@@ -359,6 +363,12 @@ export interface WebAppPrefs {
     string,
     string | { code: string; urlQuery: Record<string, string | number | boolean> }
   >
+  appDataTestApplications?: string[]
+  figTreeDefaults?: {
+    defaultNewOperatorExpression?: EvaluatorNode
+    defaultNewFragment?: string
+    defaultNewCustomOperator?: string
+  }
 }
 
 export interface Preferences {
@@ -377,6 +387,8 @@ interface ConfigBase {
   localisationsFolder: string
   preferencesFolder: string
   preferencesFileName: string
+  zipCacheFolder: string
+  stagedDownloadsFolder: string
   backupsFolder: string
   genericThumbnailsFolderName: string
   defaultUnderMaintenanceSite: string
@@ -395,6 +407,7 @@ interface ConfigBase {
   webHostUrl?: string
   productionHost?: string
   isLiveServer: boolean
+  latestSnapshot?: string
   emailMode: EmailOperationMode
   maintenanceMode: boolean
   Throttle: EventThrottle

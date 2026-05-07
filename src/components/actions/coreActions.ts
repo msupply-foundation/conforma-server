@@ -150,7 +150,7 @@ const coreActions: CoreActions = {
       name: 'Generate Review Assignment Records',
       trigger: 'ON_APPLICATION_SUBMIT',
       event_code: null,
-      sequence: -4,
+      sequence: -5,
       condition: true,
       parameter_queries: {},
     },
@@ -162,7 +162,7 @@ const coreActions: CoreActions = {
       name: 'Clean up application files',
       trigger: 'ON_APPLICATION_SUBMIT',
       event_code: null,
-      sequence: -3,
+      sequence: -4,
       condition: true,
       parameter_queries: {},
     },
@@ -174,7 +174,7 @@ const coreActions: CoreActions = {
       name: 'Update Review Statuses',
       trigger: 'ON_APPLICATION_SUBMIT',
       event_code: null,
-      sequence: -2,
+      sequence: -3,
       condition: true,
       parameter_queries: {
         changedResponses: {
@@ -192,7 +192,7 @@ const coreActions: CoreActions = {
       name: 'Change Outcome',
       trigger: 'ON_APPLICATION_SUBMIT',
       event_code: null,
-      sequence: -1,
+      sequence: -2,
       // Condition checks that the templates is not reviewable (no associated
       // templateStageReviewLevels) and that there are no other "changeOutcome"
       // actions implemented
@@ -241,6 +241,20 @@ const coreActions: CoreActions = {
       },
       parameter_queries: {
         newOutcome: 'APPROVED',
+      },
+    },
+    // Cancel applicant deadline when (re-)submitting
+    {
+      code: 'scheduleAction',
+      path: '../plugins/action_schedule_action/src/index.ts',
+      name: 'Create Scheduled Action',
+      trigger: 'ON_APPLICATION_SUBMIT',
+      event_code: null,
+      sequence: -1,
+      condition: true,
+      parameter_queries: {
+        cancel: true,
+        eventCode: 'applicantDeadline',
       },
     },
   ],
@@ -306,7 +320,7 @@ const coreActions: CoreActions = {
       name: 'Change Status',
       trigger: 'ON_REVIEW_SUBMIT',
       event_code: '',
-      sequence: -6,
+      sequence: -7,
       condition: true,
       parameter_queries: { newStatus: 'SUBMITTED' },
     },
@@ -319,12 +333,9 @@ const coreActions: CoreActions = {
       name: 'Trim duplicate review responses',
       trigger: 'ON_REVIEW_SUBMIT',
       event_code: '',
-      sequence: -5,
+      sequence: -6,
       condition: true,
-      parameter_queries: {
-        operator: 'objectProperties',
-        children: ['outputCumulative.reviewStatusHistoryTimestamp'],
-      },
+      parameter_queries: {},
     },
     // Update other review status to PENDING or CHANGES REQUESTED after one
     // review is submitted to another reviewer in the chain of review-levels
@@ -334,7 +345,7 @@ const coreActions: CoreActions = {
       name: 'Update Review Statuses',
       trigger: 'ON_REVIEW_SUBMIT',
       event_code: null,
-      sequence: -4,
+      sequence: -5,
       condition: true,
       parameter_queries: {
         changedResponses: {
@@ -352,7 +363,7 @@ const coreActions: CoreActions = {
       name: "Update Applicant's Review Visibility",
       trigger: 'ON_REVIEW_SUBMIT',
       event_code: '',
-      sequence: -3,
+      sequence: -4,
       condition: {
         operator: 'AND',
         children: [
@@ -381,7 +392,7 @@ const coreActions: CoreActions = {
       name: 'Change Status',
       trigger: 'ON_REVIEW_SUBMIT',
       event_code: null,
-      sequence: -2,
+      sequence: -3,
       condition: {
         operator: 'AND',
         children: [
@@ -404,6 +415,51 @@ const coreActions: CoreActions = {
       parameter_queries: {
         isReview: false,
         newStatus: 'CHANGES_REQUIRED',
+      },
+    },
+    // Change outcome to REJECTED if review rejects application at an earlier
+    // stage (still needs to be last level of that stage)
+    {
+      code: 'changeOutcome',
+      path: '../plugins/action_change_outcome/src/index.ts',
+      name: 'Change Outcome',
+      trigger: 'ON_REVIEW_SUBMIT',
+      event_code: null,
+      sequence: -2,
+      condition: {
+        operator: 'AND',
+        values: [
+          {
+            operator: '!=',
+            values: [
+              {
+                operator: 'getData',
+                property: 'applicationData.reviewData.isLastStage',
+                fallback: false,
+              },
+              true,
+            ],
+          },
+          {
+            operator: 'getData',
+            property: 'applicationData.reviewData.isLastLevel',
+            fallback: false,
+          },
+          {
+            operator: '=',
+            values: [
+              {
+                operator: 'getData',
+                property: 'applicationData.reviewData.latestDecision.decision',
+                fallback: null,
+              },
+              'NON_CONFORM',
+            ],
+          },
+        ],
+      },
+      parameter_queries: {
+        newOutcome: 'REJECTED',
       },
     },
     // Change outcome accordingly if final level and stage is CONFORM or

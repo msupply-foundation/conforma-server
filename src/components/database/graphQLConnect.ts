@@ -2,6 +2,7 @@ import fetch from 'node-fetch'
 import config from '../../config'
 import { getAdminJWT } from '../permissions/loginHelpers'
 import path from 'path'
+import { FILES_FOLDER, SNAPSHOT_ARCHIVE_FOLDER } from '../../constants'
 
 const endpoint = config.graphQLendpoint
 
@@ -52,10 +53,6 @@ class GraphQLdb {
             fullName
             username
             email
-            address
-            country
-            dateOfBirth
-            phone
           }
         }
       }`,
@@ -162,14 +159,6 @@ class GraphQLdb {
     return data?.organisation?.isSystemOrg ?? false
   }
 
-  public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
-    switch (tableName) {
-      default:
-        throw new Error('Method not yet implemented for this table')
-    }
-    // Not implemented yet -- needs more data in DB
-  }
-
   public getAllApplicationTriggers = async (serial: string) => {
     const data = await this.gqlQuery(
       `
@@ -247,7 +236,9 @@ class GraphQLdb {
     )
     return (
       data?.files?.nodes.map(({ archivePath, filePath, id }: any) => ({
-        filePath: path.join(archivePath ?? '', filePath),
+        filePath: archivePath
+          ? path.join(SNAPSHOT_ARCHIVE_FOLDER, archivePath, filePath)
+          : path.join(FILES_FOLDER, filePath),
         id,
       })) || []
     )
