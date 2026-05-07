@@ -1,11 +1,16 @@
-import { FastifyReply } from 'fastify'
+import { FastifyError, FastifyReply, FastifyRequest } from 'fastify'
 
 /**
- * A standardised Error object to return from the API whenever something is
- * incorrect. We should eventually move to using this for all API routes.
+ * A standardised Error object to throw from anywhere in the API request
+ * lifecycle when something is incorrect. Pair it with `apiErrorHandler`
+ * (registered via `fastify.setErrorHandler`) to translate into a response.
  *
- * Currently only implemented for:
- * - Template Import/Export
+ * Throw from route handlers, operations, or utilities:
+ *
+ *   throw new ApiError('Invalid template id', 400)
+ *
+ * Fastify auto-catches throws from async handlers and routes them through
+ * the error handler below.
  */
 
 export class ApiError extends Error {
@@ -15,44 +20,25 @@ export class ApiError extends Error {
     super(message)
     this.status = status
     if (name) this.name = name
-    console.log(`API Error: ${message}`)
   }
 }
 
-const logError = (message: string) => console.log('ERROR: ' + message)
-
-/**
- * Sends an error response on `reply` and returns the reply object. The `return`
- * inside this function only exits *this* function — it does NOT stop the
- * calling route handler. So in a route, prefer:
- *
- *   return returnApiError(...)            // or: returnApiError(...); return
- *
- * whenever there is any code (or a try/catch) after the call that could reach
- * another `reply.send()`. Fastify silently drops the second send and logs
- * "Reply already sent", but the intervening code still runs (wasted DB work,
- * misleading error logs).
- *
- * It's only safe to call `returnApiError(...)` without an explicit return when
- * nothing else in the handler can reach another send — e.g. the last line of
- * a `catch` block at the end of the function.
- */
-export const returnApiError = (err: unknown, reply: FastifyReply, statusCode?: number) => {
+export const apiErrorHandler = (
+  err: FastifyError,
+  _request: FastifyRequest,
+  reply: FastifyReply
+) => {
   if (err instanceof ApiError) {
-    reply.statusCode = err.status
-    logError(err.message)
-    return reply.send({ message: err.message })
+    console.log(`API Error (${err.status}): ${err.message}`)
+    return reply.status(err.status).send({ message: err.message })
   }
 
-  reply.statusCode = statusCode ?? 500
-
-  if (err instanceof Error) {
-    logError(err.message)
-    return reply.send({ message: err.message })
+  // Fastify's own 4xx (schema validation, body limits, etc.) carry statusCode
+  if (err.statusCode && err.statusCode < 500) {
+    return reply.status(err.statusCode).send({ message: err.message })
   }
 
-  if (typeof err === 'string') {
-    logError(err)
-    return reply.send({ message: err })
-  }
+  // Anything else is unexpected — log loudly, mask details from the client
+  console.error('Unhandled server error:', err)
+  return reply.status(500).send({ message: 'Internal server error' })
 }
