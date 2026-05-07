@@ -33,7 +33,7 @@ export const apiErrorHandler = (
     return reply.status(err.status).send({ message: err.message })
   }
 
-  // Fastify's own 4xx (schema validation, body limits, 404, etc.) carry statusCode
+  // Fastify's own 4xx (schema validation, body limits, etc.) carry statusCode
   if (err.statusCode && err.statusCode < 500) {
     return reply.status(err.statusCode).send({ message: err.message })
   }
