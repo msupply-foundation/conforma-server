@@ -34,8 +34,11 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-*.env
+.env
 .env.test
+**/env_files/*
+!**/env_files/example.env
+**/custom_demo/*.env
 
 # File storage folder
 /files
@@ -45,6 +48,11 @@ typings/
 /preferences
 /snapshot_test_scripts
 /backups
+/__zip_cache
+/__staged_downloads
+
+# Folder where local config files can be stored
+/local
 
 #GraphQL schema auto-generated
 database/schema.graphql
@@ -52,6 +60,7 @@ database/schema.json
 
 # Build folders
 build
+build-web-app
 lib
 
 # Docker related
@@ -66,7 +75,8 @@ src/modules/expression-evaluator/expression-evaluate-gui/src/expression-evaluato
 #Snapshots working folder
 database/_snapshots
 database/snapshot_path_aliases.json
-.vscode/settings.json
+.vscode/*
+!.vscode/settings.json
 docker/snapshots
 
 #Other secrets

@@ -1,12 +1,21 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { getCurrentArchiveList, getSnapshotList } from './helpers'
+import { findOrphanArchives, listArchives, listSnapshots } from '../snapshotStore'
+import { errorMessage } from '../../utilityFunctions'
 
-const routeListSnapshots = async (request: FastifyRequest, reply: FastifyReply) => {
-  const currentArchives = await getCurrentArchiveList()
-  const type = (request.query as { archive?: 'true' })?.archive ? 'archives' : 'snapshots'
-  const snapshots = type === 'snapshots' ? await getSnapshotList() : await getSnapshotList(true)
+const routeListSnapshots = async (_: FastifyRequest, reply: FastifyReply) => {
+  try {
+    const archives = await listArchives()
+    const snapshots = await listSnapshots(archives)
+    const orphanArchives = findOrphanArchives(archives, snapshots)
 
-  return reply.send({ snapshots, currentArchives })
+    return reply.send({ snapshots, orphanArchives })
+  } catch (e) {
+    return reply.send({
+      success: false,
+      message: 'Error fetching snapshot list',
+      error: errorMessage(e),
+    })
+  }
 }
 
 export default routeListSnapshots

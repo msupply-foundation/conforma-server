@@ -1,6 +1,6 @@
 {
   "name": "conforma-server",
-  "version": "1.3.0",
+  "version": "2.0.0-dev.43",
   "main": "server.js",
   "license": "MIT",
   "repository": {
@@ -8,7 +8,7 @@
     "url": "https://github.com/msupply-foundation/conforma-server"
   },
   "engines": {
-    "node": ">=10.16.0"
+    "node": ">=20.0.0 <21.0.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.2",
@@ -39,6 +39,7 @@
     "markdown-toc": "^1.2.0",
     "node-fetch": "^2.6.1",
     "nodemon": "^2.0.4",
+    "pg-to-ts": "^4.1.1",
     "postgraphile-plugin-nested-mutations": "^1.1.0",
     "readline-sync": "^1.4.10",
     "rimraf": "^3.0.2",
@@ -50,17 +51,14 @@
     "dev": "nodemon",
     "start": "yarn build && cd build && node server.js",
     "build": "./utils/build_all.sh",
+    "serve": "cp -R preferences ./build && cp postgraphile.tags.json5 ./build && cp -R .env ./build && cd build && node src/server.js",
     "test": "jest --runInBand",
-    "pg": "exec ./utils/postgraphile_launch.sh",
-    "pg_permissions": "exec ./utils/postgraphile_launch_permissions.sh",
-    "dev_pg": "concurrently --kill-others-on-fail \"yarn dev\"  \"yarn pg\"",
-    "dev_pg_permissions": "concurrently --kill-others-on-fail \"yarn dev\"  \"yarn pg_permissions\"",
     "database_init": "yarn snapshot use",
-    "postdatabase_init": "./database/post_data_insert.sh",
     "build_plugins": "node ./utils/pluginScripts/buildPlugins.js",
     "push_docs": "exec ./utils/push_docs_to_wiki.sh",
     "gui": "cd ./src/modules/expression-evaluator && yarn gui",
     "generate": "graphql-codegen --config codegen.yml",
+    "generate_pg": "ts-node ./utils/postgresCodegen.ts",
     "postinstall": "node ./utils/pluginScripts/yarnInstallPlugins.js",
     "snapshot": "ts-node ./database/snapshotCLI.ts",
     "dockerise": "cd docker && ./dockerise.sh",
@@ -70,6 +68,7 @@
     "cleanup": "ts-node ./src/components/files/cleanup.ts --cleanup",
     "backup": "ts-node ./src/components/exportAndImport/backup.ts --backup",
     "archive": "ts-node ./src/components/files/archive.ts --archive",
+    "staleApplications": "ts-node ./src/components/other/staleApplicationCleanup.ts --staleApplications",
     "update-reviewer-stats": "ts-node ./src/components/database/updateReviewerStats.ts --update-reviewer-stats"
   },
   "dependencies": {
@@ -82,15 +81,16 @@
     "archiver-zip-encrypted": "^1.0.11",
     "axios": "^1.5.1",
     "bcrypt": "^5.1.0",
-    "carbone": "^3.2.3",
+    "carbone": "3.2.3",
     "comment-json": "^4.1.0",
-    "concurrently": "^5.3.0",
     "deep-equal": "^2.0.5",
     "delay-sync": "^1.0.2",
     "dotenv": "^10.0.0",
     "fast-csv": "^4.3.6",
     "fastify": "^4.28.1",
+    "fig-tree-evaluator": "^2.21.3",
     "fs-extra": "^11.1.1",
+    "get-folder-size": "^5.0.0",
     "json-sql-builder2": "^1.0.24",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
@@ -99,7 +99,7 @@
     "nanoid": "^3.1.21",
     "node-schedule": "^2.1.0",
     "node-stream-zip": "^1.15.0",
-    "pg": "^8.11.1",
+    "pg": "^8.16.0",
     "pg-diff-cli": "^2.4.0",
     "pluralize": "^8.0.0",
     "postgraphile": "^4.13.0",

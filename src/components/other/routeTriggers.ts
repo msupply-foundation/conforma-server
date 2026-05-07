@@ -2,11 +2,6 @@ import databaseConnect from '../database/databaseConnect'
 import { Trigger } from '../../generated/graphql'
 import { errorMessage } from '../utilityFunctions'
 
-interface TriggerError {
-  type: 'trigger' | 'timeout' | 'apollo'
-  result: TriggerData[]
-}
-
 type TriggerStatus = 'ready' | 'processing' | 'error'
 
 interface TriggerData {

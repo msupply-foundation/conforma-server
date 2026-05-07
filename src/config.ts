@@ -1,8 +1,8 @@
 require('dotenv').config()
-import { DateTime, Settings } from 'luxon'
 import { version } from '../package.json'
-import { serverPrefKeys, ServerPreferences, WebAppPrefs, Config } from './types'
+import { ServerPreferences, WebAppPrefs, Config } from './types'
 import { EventThrottle } from './components/actions/throttle'
+import PostgresConfig from './components/database/postgresConfig.json'
 import { readJsonSync } from 'fs-extra'
 import path from 'path'
 import { getAppEntryPointDir } from './components/utilityFunctions'
@@ -21,6 +21,8 @@ const isLiveServer = getIsLiveServer(webHostUrl, siteHost)
 
 // Change to true to force email server to use local Mailhog
 const USE_MAIL_HOG = false
+
+console.log('isProductionBuild', isProductionBuild)
 
 export type EmailOperationMode = 'LIVE' | 'TEST' | 'NONE' | 'MAILHOG'
 /*
@@ -43,27 +45,17 @@ const Throttle = new EventThrottle()
 
 // Global config object
 const config: Config = {
-  pg_database_connection: {
-    user: 'postgres',
-    host: 'localhost',
-    database: 'tmf_app_manager',
-    password: '',
-    port: 5432,
-    max: 20,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 20000,
-  },
+  pg_database_connection: PostgresConfig,
   version,
-  // In production postgraphile is started with -q and -i /postgraphile/...
-  graphQLendpoint: isProductionBuild
-    ? 'http://localhost:5000/postgraphile/graphql'
-    : 'http://localhost:5000/graphql',
+  graphQLendpoint: 'http://localhost:8080/graphql',
   // 'Folder path from perspective of server.ts/js'
   filesFolder: '../files',
   pluginsFolder: '../plugins',
   imagesFolder: '../images',
   databaseFolder: '../database',
   localisationsFolder: '../localisation',
+  zipCacheFolder: '../__zip_cache',
+  stagedDownloadsFolder: '../__staged_downloads',
   preferencesFolder,
   preferencesFileName,
   backupsFolder: '../backups',
@@ -85,7 +77,7 @@ const config: Config = {
   filterListMaxLength: 10,
   filterListBatchSize: 1000,
   filterColumnSuffix: '_filter_data', // snake_case,
-  fileUploadLimit: 2_147_483_648, // 2GB, fastify-multipart
+  fileUploadLimit: 5 * 1024 * 1024 * 1024, // 5GB
   isProductionBuild,
   defaultSystemManagerPermissionName: 'systemManager',
   ...serverPrefs,
@@ -114,51 +106,6 @@ function loadPrefs() {
       return mainPrefs
     }
   } else return mainPrefs
-}
-
-// Mutate the global config object to inject new preferences
-export const refreshConfig = (config: Config) => {
-  console.log('\nUpdating system configuration...')
-  const prefs = loadPrefs()
-  const serverPrefs: ServerPreferences = prefs.server
-  const webAppPrefs: WebAppPrefs = prefs.web
-  serverPrefKeys.forEach((key) => {
-    if (serverPrefs[key] !== undefined) {
-      config[key] = serverPrefs[key] as never
-    } else delete config[key]
-  })
-
-  if (webAppPrefs.siteHost) config.productionHost = webAppPrefs.siteHost
-  else config.productionHost = undefined
-
-  config.isLiveServer = getIsLiveServer(webHostUrl, webAppPrefs.siteHost)
-  config.emailMode = getEmailOperationMode(serverPrefs.emailTestMode, serverPrefs.testingEmail)
-
-  // Update locale and timezone if changed
-  const newLocale = serverPrefs.locale ?? Intl.DateTimeFormat().resolvedOptions().locale
-  if (newLocale !== Settings.defaultLocale) {
-    console.log(`Changing locale to: ${newLocale}`)
-    Settings.defaultLocale = newLocale
-  }
-
-  const newTimezone = serverPrefs?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone
-  if (newTimezone !== Settings.defaultZoneName) {
-    console.log(`Changing timezone to: ${newTimezone}`)
-    Settings.defaultZoneName = newTimezone
-  }
-
-  //Update scheduled jobs from prefs
-  if (config.scheduledJobs) {
-    config.scheduledJobs.reschedule('action', serverPrefs.actionSchedule)
-    config.scheduledJobs.reschedule('backup', serverPrefs.backupSchedule)
-    config.scheduledJobs.reschedule('cleanup', serverPrefs.fileCleanupSchedule)
-    config.scheduledJobs.reschedule('archive', serverPrefs.archiveSchedule)
-  }
-
-  console.log('Email mode:', config.emailMode)
-  if (config.emailMode === 'TEST') console.log('All Email sent to:', config.testingEmail)
-  console.log('Current time:', DateTime.now().toLocaleString(DateTime.DATETIME_HUGE_WITH_SECONDS))
-  console.log('Configuration refreshed with updated preferences\n')
 }
 
 function getIsLiveServer(webHostUrl: string | undefined, productionHost?: string | null) {

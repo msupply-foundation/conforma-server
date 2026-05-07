@@ -15,6 +15,7 @@ interface FormatOptions {
   elementParameters: object
   markdown?: boolean
   dateFormat?: string
+  numberFormat?: Intl.NumberFormatOptions
   // Add more as required
 }
 

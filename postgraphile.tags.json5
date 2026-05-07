@@ -60,7 +60,7 @@
       /**
        * Two additional views are created in Postgres:
        * - "user_list": same as the "user" table, but only exposing the name and
-       *   id columns. This is publically accessible (no row-level security), so
+       *   id columns. This is publicly accessible (no row-level security), so
        *   important not to expose personal information. This view is what is
        *   included in the GraphQL schema (as above). Any requests for data
        *   other than these name fields must go through the 'data view'

@@ -97,7 +97,8 @@ const routeUserPermissions = async (request: any, reply: any) => {
       message: 'Missing username or orgId in query.',
     })
 
-  const username = query?.username === '' ? null : query?.username ?? null
+  const username =
+    query?.username === '' || query?.username === 'null' ? null : query?.username ?? null
   const orgId: number | null =
     query?.orgId === 'null' || query?.orgId === '0'
       ? null
@@ -190,7 +191,7 @@ const routeUserPermissions = async (request: any, reply: any) => {
   })
 }
 
-const routeUpdateRowPolicies = async (request: any, reply: any) => {
+const routeUpdateRowPolicies = async (_request: any, reply: any) => {
   // TODO, add parameters to only drop specific policies, for now drop and reinstate them all
 
   return reply.send(await updateRowPolicies())

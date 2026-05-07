@@ -5,15 +5,58 @@ IMAGE_NAME='conforma'
 ACCOUNT='msupplyfoundation'
 INITIAL_DATA_LOCALE=''
 PUSH=${2:-nopush} # Default won't push to Docker hub
+SKIP_BUILD=${3:-false} # Default will skip compilation into local "build" folders
 
-NODE_VERSION='18'
+CURRENT_BRANCH=$(git branch --show-current)
+CURRENT_DIR=$(pwd)
+
+NODE_VERSION='20'
 POSTGRES_VERSION='16'
 
-# Generate a random ID so Images built on same day with same branch
-# have a unique name
-RANDOM_ID=$(openssl rand -hex 3)
+IMAGE_TAG="${BRANCH_NAME}_$(date +"%Y-%m-%d_%H-%M-%S")"
 
-IMAGE_TAG="build-${BRANCH_NAME}_$(date +"%Y-%m-%d")_${RANDOM_ID}"
+source ../.env
+
+if [ "$SKIP_BUILD" = false ]; then
+   if [ -z "$FRONT_END_PATH" ]; then
+      echo "FRONT_END_PATH is not set. Please set it in the .env file."
+      exit 1
+   fi
+
+   # We build the bundles locally and then copy then into the docker image
+   # after. This is faster and more reliable than building inside docker. The
+   # only thing that needs to be built inside docker is the native modules for
+   # the correct platform, which we do by running `yarn install` in the
+   # Dockerfile
+
+   echo -e "\nBuilding back-end"
+   git stash push -u -m "Auto-stash before checkout" && git checkout ${BRANCH_NAME}
+   yarn build
+   git checkout ${CURRENT_BRANCH}
+
+   echo -e "\nBuilding front-end"
+   cd ${FRONT_END_PATH}
+   CURRENT_BRANCH=$(git branch --show-current)
+   git stash push -u -m "Auto-stash before checkout" && git checkout ${BRANCH_NAME}
+   yarn build
+   git checkout ${CURRENT_BRANCH}
+   cd ${CURRENT_DIR}
+fi
+
+rm -rf ./build-web-app
+rm -rf ./build
+
+echo -e "\nCopying builds to docker context..."
+mkdir -p ./build-web-app
+mkdir -p ./build
+cp -r $FRONT_END_PATH/dist/* ./build-web-app
+cp -r ../build/* ./build
+
+if [ $? -ne 0 ]; then
+   echo "Build failed. Please fix the errors and try again."
+   exit 1
+fi
+
 
 echo -e "\nBuilding image: ${IMAGE_TAG}\n"
 

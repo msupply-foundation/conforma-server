@@ -55,9 +55,7 @@ export const testTrigger = async (params: RequestProps) => {
 
   const triggerFull = mapTriggerShortcut(trigger)
 
-  const { configId, configSerial, templateId, sectionCodes } = await db.getConfigApplicationInfo(
-    templateCode
-  )
+  const { configId, configSerial, sectionCodes } = await db.getConfigApplicationInfo(templateCode)
 
   if (!configId) return 'Invalid template code, or no config application available'
 

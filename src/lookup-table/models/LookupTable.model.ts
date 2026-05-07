@@ -247,10 +247,14 @@ const LookupTableModel = () => {
   }
 
   const getDataViews = async (tableName: string, dataViewCode: string): Promise<DataView[]> => {
+    const camelTableName = camelCase(tableName)
     const text = `
       SELECT id FROM public.data_view
-      WHERE table_name = $1 AND code = $2;`
-    const result = await DBConnect.query({ text, values: [tableName, dataViewCode] })
+      WHERE (table_name = $1 OR table_name = $2) AND code = $3;`
+    const result = await DBConnect.query({
+      text,
+      values: [tableName, camelTableName, dataViewCode],
+    })
     return result.rows
   }
 
@@ -280,6 +284,22 @@ const LookupTableModel = () => {
     await DBConnect.query({ text, values })
   }
 
+  const updateDataTableHash = async (tableName: string, hash: string) => {
+    const text = `UPDATE data_table SET
+      checksum = $2,
+      last_modified = NOW()
+      WHERE table_name = $1`
+    try {
+      await DBConnect.query({
+        text,
+        values: [tableName, hash],
+      })
+      return true
+    } catch (err) {
+      throw err
+    }
+  }
+
   return {
     createStructure,
     getStructureById,
@@ -293,6 +313,7 @@ const LookupTableModel = () => {
     getDataViews,
     updateDataView,
     createDataView,
+    updateDataTableHash,
   }
 }
 export default LookupTableModel

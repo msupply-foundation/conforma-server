@@ -1,16 +1,14 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import db from '../database/databaseConnect'
-import path from 'path'
+import { URL } from 'url'
 import config from '../../config'
 import { get as extractProperty } from 'lodash'
-import { getPermissionNamesFromJWT } from '../data_display/helpers'
 import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import { constructAuthHeader, constructQueryObject, validateResult } from './helpers'
 import { ExternalApiConfigs, QueryParameters } from './types'
 import { getApplicationData } from '../actions'
-import { getUserInfo } from '../permissions/loginHelpers'
+import { getPermissionNamesFromJWT, getUserInfo } from '../permissions/loginHelpers'
 import { ActionApplicationData } from '../../types'
-import functions from '../actions/evaluatorFunctions'
 import { errorMessage } from '../utilityFunctions'
 
 export type AccessExternalApiQuery = {
@@ -49,7 +47,9 @@ export const routeAccessExternalApi = async (
   } = routeConfig
 
   if (permissions) {
-    const { permissionNames } = await getPermissionNamesFromJWT(request)
+    const { permissionNames } = await getPermissionNamesFromJWT(
+      (request as FastifyRequest & { auth: { userId: number; orgId: number } }).auth
+    )
     const validPermissions = permissions.filter((permission) =>
       permissionNames.includes(permission)
     )
@@ -71,8 +71,7 @@ export const routeAccessExternalApi = async (
   const evaluatorData: {
     user: typeof user
     applicationData?: ActionApplicationData
-    functions: typeof functions
-  } = { user, functions }
+  } = { user }
 
   // ApplicationData only available if an applicationId is provided as a query
   // parameter, and only if user has permission to view that application
@@ -89,7 +88,7 @@ export const routeAccessExternalApi = async (
 
   const axiosRequest = {
     method,
-    url: path.join(baseUrl, url),
+    url: new URL(url, baseUrl).toString(),
     ...additionalAxiosProperties,
   } as AxiosRequestConfig
 

@@ -16,7 +16,7 @@ import DBConnect from '../database/databaseConnect'
 import createThumbnail from './createThumbnails'
 import { FilePayload } from '../../types'
 import { File } from '../../generated/graphql'
-import { FILES_FOLDER } from '../../constants'
+import { FILES_FOLDER, SNAPSHOT_ARCHIVE_FOLDER } from '../../constants'
 
 export const { filesFolder, imagesFolder, genericThumbnailsFolderName } = config
 export const filesPath = path.join(getAppEntryPointDir(), filesFolder)
@@ -32,11 +32,32 @@ export async function getFilePath(uid: string, thumbnail = false) {
   const isGenericThumbnail =
     thumbnail && fileData.thumbnail_path.startsWith(config.genericThumbnailsFolderName)
 
-  const filePath = percentEncodeFilePath(path.join(fileData.archive_path ?? '', fileData.file_path))
-  const thumbnailPath = percentEncodeFilePath(
-    path.join(!isGenericThumbnail ? fileData.archive_path ?? '' : '', fileData.thumbnail_path)
+  const isArchived = !!fileData.archive_path
+
+  const filePath = path.join(fileData.archive_path ?? '', fileData.file_path)
+  const thumbnailPath = path.join(
+    !isGenericThumbnail ? (fileData.archive_path ?? '') : '',
+    fileData.thumbnail_path
   )
-  return { filePath, thumbnailPath, originalFilename: fileData.original_filename }
+  const mimeType = thumbnail
+    ? `image/${path.extname(thumbnailPath).toLowerCase().slice(1)}`
+    : fileData.mimetype
+  // Generic thumbnails always live in FILES_FOLDER even when the underlying
+  // file has been archived — they're shared assets that aren't copied into
+  // the archive store.
+  const root =
+    thumbnail && isGenericThumbnail
+      ? FILES_FOLDER
+      : isArchived
+        ? SNAPSHOT_ARCHIVE_FOLDER
+        : FILES_FOLDER
+  return {
+    filePath,
+    thumbnailPath,
+    originalFilename: fileData.original_filename,
+    mimeType,
+    root,
+  }
 }
 
 const pump = util.promisify(pipeline)
@@ -73,7 +94,7 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
       })
 
       // Save file info to database
-      await saveToDB({
+      const { id } = await saveToDB({
         unique_id,
         file,
         file_path,
@@ -83,6 +104,7 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
       })
 
       filesInfo.push({
+        id,
         filename: file.filename,
         uniqueId: unique_id,
         fileUrl: `/file?uid=${unique_id}`,
@@ -154,10 +176,11 @@ export async function saveToDB({
   application_note_id,
   is_output_doc = false,
   to_be_deleted = false,
+  is_protected = false,
   mimetype,
 }: any) {
   try {
-    await DBConnect.addFile(
+    const result = await DBConnect.addFile(
       filterObject({
         user_id,
         unique_id,
@@ -172,41 +195,12 @@ export async function saveToDB({
         file_path,
         thumbnail_path,
         file_size,
+        is_protected,
         mimetype: file ? file.mimetype : mimetype,
       }) as FilePayload
     )
+    return result
   } catch (err) {
     throw err
   }
 }
-
-// If any of these characters are in a filename, they should be replaced with
-// percent-encoded chars in the "filePath" parameter to Fastify `sendFile`
-// method.
-// Reference: https://developer.mozilla.org/en-US/docs/Glossary/Percent-encoding
-const encodedCharMap = {
-  ':': '%3A',
-  // '/': '%2F', -- don't want slash in paths at all, asking for trouble!
-  '?': '%3F',
-  '#': '%23',
-  '[': '%5B',
-  ']': '%5D',
-  '@': '%40',
-  '!': '%21',
-  $: '%24',
-  '&': '%26',
-  "'": '%27',
-  '(': '%28',
-  ')': '%29',
-  '*': '%2A',
-  '+': '%2B',
-  ',': '%2C',
-  ';': '%3B',
-  '=': '%3D',
-  '%': '%25',
-  // ' ': '+',
-} as Record<string, string>
-
-const illegalCharacterDetect = /[:?#\[\]@!$&'()*+,;=%]/g
-const percentEncodeFilePath = (path: string) =>
-  path.replace(illegalCharacterDetect, (m) => encodedCharMap[m])

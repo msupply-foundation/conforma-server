@@ -1,0 +1,232 @@
+/**
+ * Provides linked data view, linked fragments, and linked file data to the
+ * respective routes
+ */
+
+import path from 'path'
+import db from '../databaseMethods'
+import { filterObject } from '../../utilityFunctions'
+import { DataView } from '../../../generated/graphql'
+import { PgDataView, PgEvaluatorFragment, PgFile } from '../types'
+
+const dataViewReturnColumns = [
+  'id',
+  'table_name',
+  'title',
+  'code',
+  // 'permission_names',
+  'priority',
+  'identifier',
+] as const
+
+type PgDataViewField = (typeof dataViewReturnColumns)[number]
+
+/**
+ * Provides a list of data views connected to a template. Contains metadata
+ * about the dataview itself, as well as how it's used in the template:
+ * - applicantAccessible (applicant has permission to access data view, so safe
+ *   to use in template elements)
+ * - inTemplateElements,
+ * - inOutputTables
+ */
+
+export const getDataViewDetails = async (templateId: number) => {
+  const allDataViews = await db.getAllRecords<PgDataView>('data_view')
+
+  const permissions = await db.getApplyPermissionsForTemplate(templateId)
+  const applicantAccessibleDataViews = allDataViews.filter(
+    (dv) =>
+      dv.permission_names === null ||
+      (Array.isArray(dv.permission_names) && dv.permission_names.length === 0) ||
+      dv.permission_names.some((name) => permissions.includes(name))
+  )
+
+  const accessibleIdentifiers = applicantAccessibleDataViews.map(({ identifier }) => identifier)
+
+  const distinctCodes = new Set(applicantAccessibleDataViews.map((dv) => dv.code))
+  const dataViewCodesUsed: string[] = []
+  for (const code of distinctCodes) {
+    const elementCount = await db.getTemplateElementCountUsingDataView(templateId, code)
+    if (elementCount > 0 && code !== '') dataViewCodesUsed.push(code)
+  }
+
+  const dataTablesReferencedInModifyRecord = await db.getDataTablesFromModifyRecord(templateId)
+  const dataViewsInOutcomeTables = await db.getDataViewsUsingTables(
+    dataTablesReferencedInModifyRecord
+  )
+
+  const fullData = allDataViews.map((data) => {
+    const applicantAccessible = accessibleIdentifiers.includes(data.identifier)
+    const { table_name, ...rest } = filterObject(data, (key) =>
+      dataViewReturnColumns.includes(key as PgDataViewField)
+    )
+    return {
+      data: { tableName: table_name, ...rest } as DataView,
+      applicantAccessible,
+      inTemplateElements: applicantAccessible && dataViewCodesUsed.includes(data.code),
+      inOutputTables: dataViewsInOutcomeTables.some((dv) => dv.id === data.id),
+    }
+  })
+  return fullData
+}
+
+export const getSuggestedDataViews = async (templateId: number) =>
+  (await getDataViewDetails(templateId))
+    .filter((dv) => dv.inTemplateElements || dv.inOutputTables)
+    .map(({ data }) => data)
+
+/**
+ * Same as getDataViewDetails, but for FigTree Evaluator fragments. We only consider fragments found in Form Elements or Actions.
+ */
+
+const fragmentReturnColumns = [
+  'id',
+  'name',
+  // 'expression',
+  'metadata',
+  // 'front-end',
+  // 'back-end',
+  // 'permission_names',
+] as const
+
+type PgFragmentField = (typeof fragmentReturnColumns)[number]
+
+export const getFragmentDetails = async (templateId: number) => {
+  const allFragments = await db.getAllRecords<PgEvaluatorFragment>('evaluator_fragment')
+
+  const permissions = await db.getApplyPermissionsForTemplate(templateId)
+  const applicantAccessibleFragments = allFragments.filter(
+    (fragment) =>
+      fragment.permission_names === null ||
+      (Array.isArray(fragment.permission_names) && fragment.permission_names.length === 0) ||
+      fragment.permission_names.some((name) => permissions.includes(name))
+  )
+
+  const accessibleFragmentNames = applicantAccessibleFragments.map(({ name }) => name)
+  const allFragmentNames = allFragments.map(({ name }) => name)
+
+  // N+1: one COUNT per fragment per table. Fine while fragment counts are
+  // small; revisit if this becomes a bottleneck (could pull each table's JSON
+  // once and walk it in JS to collect referenced fragment names).
+  const fragmentsInFormElements: string[] = []
+  for (const fragment of allFragmentNames) {
+    const elementCount = await db.getFragmentCountForTemplate(
+      templateId,
+      fragment,
+      'template_element'
+    )
+    if (elementCount > 0) fragmentsInFormElements.push(fragment)
+  }
+
+  const fragmentsInActions: string[] = []
+
+  for (const fragment of allFragmentNames) {
+    const elementCount = await db.getFragmentCountForTemplate(
+      templateId,
+      fragment,
+      'template_action'
+    )
+    if (elementCount > 0) fragmentsInActions.push(fragment)
+  }
+
+  const fullData = allFragments.map((frag) => {
+    const applicantAccessible = accessibleFragmentNames.includes(frag.name)
+    const data = filterObject(frag, (key) => fragmentReturnColumns.includes(key as PgFragmentField))
+    return {
+      data,
+      applicantAccessible,
+      inTemplateElements: applicantAccessible && fragmentsInFormElements.includes(frag.name),
+      inActions: fragmentsInActions.includes(frag.name),
+    }
+  })
+  return fullData
+}
+
+export const getSuggestedFragments = async (templateId: number) =>
+  (await getFragmentDetails(templateId))
+    .filter((dv) => dv.inTemplateElements || dv.inActions)
+    .map(({ data }) => data)
+
+interface LinkedFile {
+  unique_id: string
+  id?: number
+  joinId?: number
+  original_filename?: string
+  subfolder?: string
+  description?: string | null
+  timestamp?: Date
+  file_size?: number | null
+  linkedInDatabase: boolean
+  usedInAction: boolean
+  missingFromDatabase?: boolean
+}
+
+/**
+ * Provides a list of files connected to a template. Contains standard file
+ * metadata, as well as:
+ * - linkedInDatabase (is the file linked via the file join table, as opposed to
+ *   used in an action but not yet linked)
+ * - usedInAction (file is in use in one of the generateDocument actions)
+ * - missingFromDatabase (file is not present in the database, but is referenced
+ *   in an action)
+ */
+
+export const getLinkedFiles = async (templateId: number) => {
+  const files: LinkedFile[] = (
+    await db.getJoinedEntities<PgFile>({
+      templateId,
+      table: 'file',
+      joinTable: 'template_file_join',
+    })
+  ).map(({ id, unique_id, original_filename, description, timestamp, file_size, file_path }) => {
+    return {
+      id,
+      unique_id,
+      original_filename,
+      description,
+      timestamp,
+      file_size,
+      subfolder: path.dirname(file_path),
+      linkedInDatabase: true,
+      usedInAction: false,
+    }
+  })
+
+  for (const file of files) {
+    file.joinId = await db.getFileJoinId(templateId, file?.id ?? 0)
+  }
+
+  const fileUidsUsedInActions = await db.getFilesFromDocAction(templateId)
+  for (const fileId of fileUidsUsedInActions) {
+    const file = await db.getRecord<PgFile>('file', fileId, 'unique_id')
+    if (!file) {
+      files.push({
+        unique_id: fileId,
+        linkedInDatabase: false,
+        usedInAction: true,
+        missingFromDatabase: true,
+      })
+      continue
+    }
+
+    const existing = files.find((f) => f.unique_id === fileId)
+    if (existing) existing.usedInAction = true
+    else {
+      const { id, unique_id, original_filename, description, timestamp, file_size, file_path } =
+        file
+      files.push({
+        id,
+        unique_id,
+        original_filename,
+        description,
+        timestamp,
+        file_size,
+        subfolder: path.dirname(file_path),
+        linkedInDatabase: false,
+        usedInAction: true,
+      })
+    }
+  }
+
+  return files
+}

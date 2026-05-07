@@ -4,9 +4,7 @@ import {
   getValidTableName,
   capitaliseFirstLetter,
 } from '../utilityFunctions'
-import evaluateExpression from '../../modules/expression-evaluator'
-import functions from '../actions/evaluatorFunctions'
-import fetch from 'node-fetch'
+import FigTree from '../fig-tree-evaluator/FigTree'
 import { camelCase, snakeCase, startCase } from 'lodash'
 // @ts-ignore
 import mapValuesDeep from 'map-values-deep'
@@ -28,25 +26,10 @@ import { DataView, DataViewColumnDefinition } from '../../generated/graphql'
 import dataTypeMap, { JSDataType, PostgresDataType } from './postGresToJSDataTypes'
 import config from '../../config'
 import { plural } from 'pluralize'
-import { getAdminJWT } from '../permissions/loginHelpers'
 
 // CONSTANTS
 const REST_OF_DATAVIEW_FIELDS = '...'
-const graphQLEndpoint = config.graphQLendpoint
 const FILTER_COLUMN_SUFFIX = capitaliseFirstLetter(camelCase(config.filterColumnSuffix))
-
-type JWTData = {
-  userId: number
-  orgId?: number
-  permissionNames: string[]
-}
-export const getPermissionNamesFromJWT = async (request: any): Promise<JWTData> => {
-  const { userId, orgId } = request.auth
-  const permissionNames = await (
-    await DBConnect.getUserOrgPermissionNames(userId, orgId)
-  ).map((result) => result.permissionName)
-  return { userId, orgId, permissionNames }
-}
 
 export const buildAllColumnDefinitions = async ({
   permissionNames,
@@ -202,7 +185,7 @@ const getSortColumn = (
   return undefined
 }
 
-const buildColumnList = (
+export const buildColumnList = (
   dataView: DataView,
   allColumns: string[],
   type: 'TABLE' | 'DETAIL' | 'FILTER' | 'RAW'
@@ -401,12 +384,8 @@ export const constructTableResponse = async (
       else if (!columnDefinition?.valueExpression) return 'Field not defined'
       else {
         evaluationPromiseArray.push(
-          evaluateExpression(columnDefinition?.valueExpression ?? {}, {
-            objects: { ...record, thisField: record[columnName], functions },
-            // pgConnection: DBConnect, probably don't want to allow SQL
-            APIfetch: fetch,
-            // TO-DO: Need to pass Auth headers to evaluator API calls
-            graphQLConnection: { fetch, endpoint: graphQLEndpoint },
+          FigTree.evaluate(columnDefinition?.valueExpression ?? {}, {
+            data: { ...record, thisField: record[columnName] },
           })
         )
       }
@@ -487,7 +466,6 @@ export const constructDetailsResponse = async (
       {}
     )
 
-  const adminJWT = await getAdminJWT()
   // Build item, keeping unresolved Promises in separate array (as above)
   const evaluationPromiseArray: Promise<any>[] = []
   const evaluationFieldArray: string[] = []
@@ -498,15 +476,8 @@ export const constructDetailsResponse = async (
       else if (!columnDefinition?.valueExpression) obj[columnName] = 'Field not defined'
       else {
         evaluationPromiseArray.push(
-          evaluateExpression(columnDefinition?.valueExpression ?? {}, {
-            objects: { ...fetchedRecord, thisField: fetchedRecord[columnName] },
-            // pgConnection: DBConnect, probably don't want to allow SQL
-            APIfetch: fetch,
-            // TO-DO: Need to pass Auth headers to evaluator API calls
-            graphQLConnection: { fetch, endpoint: graphQLEndpoint },
-            headers: {
-              Authorization: `Bearer ${adminJWT}`,
-            },
+          FigTree.evaluate(columnDefinition?.valueExpression ?? {}, {
+            data: { ...fetchedRecord, thisField: fetchedRecord[columnName] },
           })
         )
         obj[columnName] = 'Awaiting promise...'
@@ -543,12 +514,8 @@ export const constructDetailsResponse = async (
   else if (!headerDefinition?.columnDefinition?.valueExpression) header.value = 'Field not defined'
   else {
     evaluationPromiseArray.push(
-      evaluateExpression(headerDefinition?.columnDefinition?.valueExpression ?? {}, {
-        objects: { ...fetchedRecord, thisField: fetchedRecord[headerDefinition.columnName] },
-        // pgConnection: DBConnect, probably don't want to allow SQL
-        APIfetch: fetch,
-        // TO-DO: Need to pass Auth headers to evaluator API calls
-        graphQLConnection: { fetch, endpoint: graphQLEndpoint },
+      FigTree.evaluate(headerDefinition?.columnDefinition?.valueExpression ?? {}, {
+        data: { ...fetchedRecord, thisField: fetchedRecord[headerDefinition.columnName] },
       })
     )
     evaluationFieldArray.push('HEADER')
@@ -573,4 +540,17 @@ export const constructDetailsResponse = async (
     item,
     linkedApplications,
   }
+}
+
+export const getDistinctRecords = (records: Record<string, unknown>[], distinctField: string) => {
+  const seen = new Set()
+  return records.filter((record) => {
+    const fieldValue = record[distinctField]
+    if (seen.has(fieldValue)) {
+      return false
+    } else {
+      seen.add(fieldValue)
+      return true
+    }
+  })
 }

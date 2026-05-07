@@ -13,8 +13,6 @@ import {
   FilePayload,
   TriggerQueueUpdatePayload,
   UserOrg,
-  ActionResult,
-  TriggerPayload,
   DBOperationType,
 } from '../../types'
 import {
@@ -23,12 +21,16 @@ import {
   ReviewStatus,
   Trigger,
 } from '../../generated/graphql'
+import { Template as PgTemplate } from '../../generated/postgres'
 import { errorMessage } from '../utilityFunctions'
 import { updateReviewerStatsFromDBEvent } from './updateReviewerStats'
+import { hashRecord } from '../template-import-export'
+import { reloadFragments } from '../fig-tree-evaluator/FigTree'
 
 class PostgresDB {
   private static _instance: PostgresDB
   private pool: Pool
+  public tableJsonColumns: Record<string, Set<string>>
 
   constructor() {
     this.pool = new Pool(config.pg_database_connection)
@@ -42,6 +44,24 @@ class PostgresDB {
     })
 
     this.startListener()
+
+    // When updating a row generically, JSON data must be handled differently,
+    // so this is a reference we can use to check which columns are JSON type
+    this.tableJsonColumns = {}
+    this.query({
+      text: `SELECT c.table_name, column_name
+          FROM information_schema.columns c
+          LEFT JOIN information_schema.tables t
+          ON c.table_name = t.table_name
+          WHERE
+          data_type = 'jsonb'
+          AND table_type = 'BASE TABLE'`,
+    }).then((result) => {
+      result.rows.forEach(({ table_name, column_name }) => {
+        if (table_name in this.tableJsonColumns) this.tableJsonColumns[table_name].add(column_name)
+        else this.tableJsonColumns[table_name] = new Set([column_name])
+      })
+    })
   }
 
   private startListener = async () => {
@@ -51,6 +71,7 @@ class PostgresDB {
     listener.query('LISTEN action_notifications')
     listener.query('LISTEN file_notifications')
     listener.query('LISTEN update_reviewer_stats_notification')
+    listener.query('LISTEN recalculate_checksum_notification')
     listener.on('notification', async ({ channel, payload }) => {
       if (!payload) {
         console.log(`Notification ${channel} received with no payload!`)
@@ -89,6 +110,7 @@ class PostgresDB {
           }
         case 'file_notifications':
           deleteFile(payloadObject)
+          break
         case 'update_reviewer_stats_notification':
           // Time delay so this aggregation process doesn't slow down Action
           // execution
@@ -97,6 +119,13 @@ class PostgresDB {
             data: payloadObject,
             action: updateReviewerStatsFromDBEvent,
           })
+          break
+        case 'recalculate_checksum_notification':
+          hashRecord(payloadObject).then(() => {
+            if (payloadObject?.tableName === 'evaluator_fragment') reloadFragments()
+          })
+
+          break
       }
     })
   }
@@ -123,8 +152,100 @@ class PostgresDB {
     }
   }
 
-  public getValuesPlaceholders = (object: { [key: string]: any }) =>
-    Object.keys(object).map((key, index) => `$${index + 1}`)
+  // Generic method to fetch a single full record from any table, by any field
+  // (defaults to "id"). If more than one record matches the query, only the
+  // first one is returned (so try and make sure you only query by a unique
+  // field)
+  public getRecord = async <T>(
+    tableName: string,
+    value: number | string | (number | string)[],
+    field: string | string[] = 'id'
+  ): Promise<T> => {
+    try {
+      const text = Array.isArray(field)
+        ? `SELECT * FROM ${tableName} WHERE ${field
+            .map((val, index) =>
+              index === 0 ? `${val} = $${index + 1}` : `AND ${val} = $${index + 1}`
+            )
+            .join(' ')}`
+        : `SELECT * FROM ${tableName} WHERE ${field} = $1`
+
+      const result = await this.query({
+        text,
+        values: Array.isArray(value) ? [...value] : [value],
+      })
+      return result.rows[0]
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  // Generic method to return multiple full records from any table by matching
+  // against any field.
+  public getRecordsByField = async <T>(
+    tableName: string,
+    field: string,
+    value: unknown
+  ): Promise<T[]> => {
+    try {
+      const text = `
+            SELECT * FROM ${tableName} WHERE ${field} = $1
+          `
+      const result = await this.query({ text, values: [value] })
+      return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  // Generic method to return multiple full records from any table by matching
+  // an ARRAY of values against any field.
+  public getRecordsByFieldWithMultipleValues = async <T>(
+    tableName: string,
+    field: string,
+    values: unknown[]
+  ): Promise<T[]> => {
+    try {
+      const text = `
+            SELECT * FROM ${tableName} WHERE ${field} = ANY($1)
+          `
+      const result = await this.query({ text, values: [values] })
+      return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  // Generic method to return ALL full records for a particular table
+  // CAUTION: Only use on tables with a small number of records!
+  public getAllRecords = async <T>(tableName: string): Promise<T[]> => {
+    try {
+      const text = `
+            SELECT * FROM ${tableName}
+          `
+      const result = await this.query({ text })
+      if (result.rowCount > 500) {
+        console.log(
+          `WARNING: getAllRecords called on table ${tableName} with more than 500 records, this may cause performance issues.`
+        )
+      }
+      return result.rows
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  public isJsonColumn = (tableName: string, columnName: string) => {
+    if (!(tableName in this.tableJsonColumns)) return false
+    return this.tableJsonColumns[tableName].has(columnName)
+  }
+
+  public getValuesPlaceholders = (object: { [key: string]: any }, offset: number = 1) =>
+    Object.keys(object).map((_, index) => `$${index + offset}`)
 
   public static get Instance() {
     return this._instance || (this._instance = new this())
@@ -209,7 +330,7 @@ class PostgresDB {
   public updateActionParametersEvaluated = async (action_id: number, parameters: any) => {
     const text = 'UPDATE action_queue SET parameters_evaluated = $1 WHERE id = $2'
     try {
-      const result = await this.query({
+      await this.query({
         text,
         values: [parameters, action_id],
       })
@@ -261,7 +382,7 @@ class PostgresDB {
         AND is_active = true
     `
     try {
-      const result = await this.query({ text })
+      await this.query({ text })
       return true
     } catch (err) {
       throw err
@@ -276,7 +397,7 @@ class PostgresDB {
     const triggerStatus = fail ? Trigger.Error : null
     const text = `UPDATE ${table} SET trigger = $1 WHERE id = $2`
     try {
-      const result = await this.query({
+      await this.query({
         text,
         values: [triggerStatus, record_id],
       })
@@ -323,7 +444,7 @@ class PostgresDB {
   public setScheduledActionDone = async (table: string, record_id: number): Promise<boolean> => {
     const text = `UPDATE ${table} SET is_active = false WHERE id = $1`
     try {
-      const result = await this.query({
+      await this.query({
         text,
         values: [record_id],
       })
@@ -333,15 +454,26 @@ class PostgresDB {
     }
   }
 
-  public addFile = async (payload: FilePayload): Promise<string> => {
-    const text = `INSERT INTO file (${Object.keys(payload)}) 
-      VALUES (${this.getValuesPlaceholders(payload)})
+  public addFile = async (payload: FilePayload): Promise<{ unique_id: string; id: string }> => {
+    const { template_id, ...file } = payload
+    const text = `INSERT INTO file (${Object.keys(file)}) 
+      VALUES (${this.getValuesPlaceholders(file)})
       ON CONFLICT (unique_id) DO UPDATE
-        SET (${Object.keys(payload)}) = (${this.getValuesPlaceholders(payload)})
-        RETURNING unique_id`
+        SET (${Object.keys(file)}) = (${this.getValuesPlaceholders(file)})
+        RETURNING id, unique_id`
     try {
-      const result = await this.query({ text, values: Object.values(payload) })
-      return result.rows[0].unique_id
+      const result = await this.query({ text, values: Object.values(file) })
+      const { unique_id, id } = result.rows[0]
+      if (template_id) {
+        // Create a template_join record
+        await this.query({
+          text: `
+          INSERT INTO template_file_join (template_id, file_id)
+          VALUES ($1, $2);`,
+          values: [template_id, id],
+        })
+      }
+      return { unique_id, id }
     } catch (err) {
       throw err
     }
@@ -363,7 +495,7 @@ class PostgresDB {
   }
 
   public getFileDownloadInfo = async (uid: string): Promise<FileDownloadInfo | undefined> => {
-    const text = `SELECT original_filename, file_path, thumbnail_path, archive_path FROM file WHERE unique_id = $1`
+    const text = `SELECT original_filename, file_path, thumbnail_path, archive_path, mimetype FROM file WHERE unique_id = $1`
     try {
       const result = await this.query({ text, values: [uid] })
       return result.rows[0] as FileDownloadInfo
@@ -373,15 +505,27 @@ class PostgresDB {
   }
 
   public cleanUpFiles = async () => {
-    const text = `
+    const toBeDeletedQuery = `
       DELETE FROM file
       WHERE to_be_deleted = true
       AND timestamp < now() - interval '${config?.previewDocsMinKeepTime ?? '2 hours'}'
       RETURNING id;
     `
+    const protectedKeepDays = config?.protectedFilesKeepDays ?? 90
+    const expiredProtectedQuery = `
+      DELETE FROM file
+      WHERE is_protected = true
+      AND timestamp < now() - interval '${protectedKeepDays} days'
+      RETURNING id;
+    `
+
     try {
-      const result = await this.query({ text })
-      return result.rows.length
+      const toBeDeletedResult = await this.query({ text: toBeDeletedQuery })
+      const expiredProtectedResult = await this.query({ text: expiredProtectedQuery })
+      return {
+        toBeDeleted: toBeDeletedResult.rows.length,
+        expiredProtected: expiredProtectedResult.rows.length,
+      }
     } catch (err) {
       throw err
     }
@@ -423,6 +567,7 @@ class PostgresDB {
       FROM file
       WHERE archive_path IS NULL
       AND to_be_deleted = FALSE
+      AND is_protected = FALSE
       AND timestamp < now() - interval '${duration}' 
     `
     try {
@@ -492,7 +637,8 @@ class PostgresDB {
       status_history_id as "statusHistoryId", status, status_history_time_created as "statusHistoryTimeCreated",
       user_id as "userId",
       org_id as "orgId",
-      outcome
+      outcome,
+      application_url_properties as "urlProperties"
       FROM application_stage_status_latest
       WHERE application_id = $1
     `
@@ -669,6 +815,89 @@ class PostgresDB {
     }
   }
 
+  public getAllTemplatesRetentionTimes = async (): Promise<
+    Pick<PgTemplate, 'id' | 'code' | 'stale_draft_retention_days'>[]
+  > => {
+    const text = `
+      SELECT id, code, stale_draft_retention_days
+      FROM template
+      ORDER BY code;
+    `
+    const result = await this.query({ text })
+    return result.rows
+  }
+
+  /**
+   * Gets "stale" applications for a given template ID, i.e. applications that
+   * have never been submitted and have had no activity for a certain number of
+   * days. We consider these "abandoned" and so can be deleted.
+   *
+   * We use the latest of the Draft status update timestamp or the latest
+   * response timestamp to determine last activity.
+   */
+  public getStaleApplications = async (templateId: number, days: number) => {
+    const text = `
+      -- Query to get applications with only DRAFT/NULL status and their
+      -- most recent responses (older than n days)
+      WITH draft_only_applications AS (
+          -- Find applications that have only one status and it's DRAFT
+        SELECT 
+            application_id,
+            COUNT(DISTINCT status) as status_count,
+            MAX(status) as only_status,
+            COUNT(CASE WHEN status IS NULL THEN 1 END) as null_count
+        FROM application_stage_status_all 
+        WHERE template_id = $1        
+        GROUP BY application_id
+        HAVING (COUNT(DISTINCT status) = 1 AND MAX(status) = 'DRAFT')
+            OR COUNT(CASE WHEN status IS NULL THEN 1 END) > 0
+      ),
+      latest_responses AS (
+          -- Get the most recent response for each application
+          SELECT 
+              application_id,
+              id as response_id,
+              template_element_id,
+              stage_number,
+              status,
+              value,
+              time_updated,
+              ROW_NUMBER() OVER (
+                  PARTITION BY application_id 
+                  ORDER BY time_updated DESC
+              ) as rn
+          FROM application_response
+          WHERE application_id IN (SELECT application_id FROM draft_only_applications)
+      )
+      SELECT 
+          a.id,
+          a.serial,
+          a.name,
+          doa.only_status as status,
+          lr.time_updated as last_updated
+      FROM draft_only_applications doa
+      JOIN latest_responses lr ON doa.application_id = lr.application_id
+      JOIN application a ON doa.application_id = a.id
+      WHERE lr.rn = 1 
+        AND a.template_id = $1
+        AND lr.time_updated < NOW() - ($2 || ' days')::INTERVAL
+        AND a.is_config = false
+      ORDER BY lr.time_updated DESC;
+    `
+    const result = await this.query({ text, values: [templateId, days] })
+    return result.rows
+  }
+
+  public deleteApplications = async (applicationIds: number[]) => {
+    const text = `
+      DELETE FROM application
+      WHERE id = ANY($1)
+      RETURNING id;
+    `
+    const result = await this.query({ text, values: [applicationIds] })
+    return result.rows.map((row) => row.id)
+  }
+
   public getVerification = async (uid: string) => {
     const text = `
       SELECT unique_id, time_expired, is_verified, message
@@ -701,6 +930,21 @@ class PostgresDB {
     organisation_id: number
     user_role?: string
   }): Promise<object> => {
+    // First check if exists
+    const result = await this.query({
+      text: `
+        SELECT id FROM user_organisation
+        WHERE user_id = $1
+        AND organisation_id = $2
+      `,
+      values: [userOrg.user_id, userOrg.organisation_id],
+    })
+    const id = result.rows[0]?.id
+    if (id) {
+      console.log('User already exists in organisation:', id)
+      return { userOrgId: result.rows[0].id, success: true }
+    }
+
     const text = `INSERT INTO user_organisation (${Object.keys(userOrg)}) 
       VALUES (${this.getValuesPlaceholders(userOrg)})
       RETURNING id`
@@ -1026,8 +1270,23 @@ class PostgresDB {
   }
 
   public getTemplatePermissions = async (isSystemOrgPermission: boolean = false) => {
-    const text = `SELECT * FROM permissions_all
+    const text = `
+      SELECT
+        "permissionNameId",
+        "permissionName",
+        description, 
+        "policyName",
+        "isSystemOrgPermission",
+        "templateCode"
+      FROM permissions_all
       WHERE  "isSystemOrgPermission" = $1
+      GROUP BY 
+        "permissionNameId",
+        "permissionName",
+        description, 
+        "policyName",
+        "isSystemOrgPermission",
+        "templateCode"
       ORDER BY "permissionName"
       `
     try {
@@ -1171,6 +1430,7 @@ class PostgresDB {
     FROM application_response ar JOIN template_element te
     ON ar.template_element_id = te.id
     WHERE application_id = $1
+    AND status != 'REVIEW'
     ORDER BY time_updated
     `
     try {

@@ -24,13 +24,13 @@ export const localisationRoutes: FastifyPluginCallback<{ prefix: string }> = (se
     if (managerCanEditLocalisation) {
       if (!(isAdmin || isManager)) {
         reply.statusCode = 401
-        return reply.send({ sucess: false, message: 'Unauthorized: not admin or manager' })
+        return reply.send({ success: false, message: 'Unauthorized: not admin or manager' })
       }
     }
 
     if (!managerCanEditLocalisation && !isAdmin) {
       reply.statusCode = 401
-      return reply.send({ sucess: false, message: 'Unauthorized: not admin' })
+      return reply.send({ success: false, message: 'Unauthorized: not admin' })
     }
   })
   server.post('/enable', routeEnableLanguage)
@@ -76,7 +76,7 @@ export const routeGetLanguageFile = async (request: any, reply: any) => {
   reply.send(data)
 }
 
-export const routeGetAllLanguageFiles = async (request: any, reply: any) => {
+export const routeGetAllLanguageFiles = async (_request: any, reply: any) => {
   const languageOptions = readLanguageOptions()
   const output: { [key: string]: { [key: string]: string } } = {}
 

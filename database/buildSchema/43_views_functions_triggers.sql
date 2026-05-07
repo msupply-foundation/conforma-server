@@ -97,7 +97,8 @@ SELECT
     status.status,
     status.time_created AS status_history_time_created,
     status.is_current AS status_is_current,
-    application.outcome
+    application.outcome,
+    COALESCE(application.url_properties, '{}') AS application_url_properties
 FROM
     application
     JOIN TEMPLATE ON application.template_id = template.id
@@ -207,18 +208,6 @@ BEGIN
             code = NEW.code
             AND status = 'AVAILABLE'
             AND id != NEW.id;
-        UPDATE
-            public.file
-        SET
-            template_id = NEW.id
-        WHERE
-            template_id IN (
-                SELECT
-                    id
-                FROM
-                    TEMPLATE
-                WHERE
-                    code = NEW.code);
     END IF;
     RETURN NULL;
 END;
@@ -1142,6 +1131,7 @@ CREATE OR REPLACE FUNCTION public.reviewable_questions (app_id int)
                 AND te.reviewability = 'OPTIONAL_IF_NO_RESPONSE')
             OR (ar.value IS NOT NULL
                 AND te.reviewability != 'NEVER'))
+            AND ar.status != 'REVIEW'
     GROUP BY
         te.code,
         ar.time_submitted,
@@ -1216,8 +1206,10 @@ LANGUAGE sql
 STABLE;
 
 -- Function to return TOTAL of reviewable questions (per application)
-CREATE OR REPLACE FUNCTION public.reviewable_questions_count (app_id int)
-    RETURNS bigint
+DROP FUNCTION IF EXISTS public.reviewable_questions_count;
+
+CREATE FUNCTION public.reviewable_questions_count (app_id int)
+    RETURNS integer
     AS $$
     SELECT
         COUNT(*)
@@ -1232,7 +1224,7 @@ STABLE;
 DROP FUNCTION IF EXISTS public.assigned_questions_count;
 
 CREATE FUNCTION public.assigned_questions_count (app_id int, stage_id int, level_number int)
-    RETURNS bigint
+    RETURNS integer
     AS $$
     SELECT
         COUNT(*)
@@ -1243,8 +1235,10 @@ LANGUAGE sql
 STABLE;
 
 -- Function to return TOTAL of assigned and submitted (element that can't be re-assigned)
-CREATE OR REPLACE FUNCTION public.submitted_assigned_questions_count (app_id int, stage_id int, level_number int)
-    RETURNS bigint
+DROP FUNCTION IF EXISTS public.submitted_assigned_questions_count;
+
+CREATE FUNCTION public.submitted_assigned_questions_count (app_id int, stage_id int, level_number int)
+    RETURNS integer
     AS $$
     SELECT
         COUNT(*)
@@ -2320,3 +2314,130 @@ CREATE OR REPLACE view permission_flattened as
     JOIN permission_name ON permission_name.id = permission_join.permission_name_id
     JOIN permission_policy ON permission_policy.id = permission_name.permission_policy_id
     JOIN template_permission ON template_permission.permission_name_id = permission_name.id;
+
+-- CHECKSUMS
+-- FUNCTION to update Checksums for template-connected tables (for
+-- export/import)
+CREATE OR REPLACE FUNCTION public.notify_server_to_update_checksum ()
+    RETURNS TRIGGER
+    AS $trigger_event$
+BEGIN
+    PERFORM
+        pg_notify('recalculate_checksum_notification', json_build_object('tableName', TG_TABLE_NAME, 'id', NEW.id)::text);
+    RETURN NULL;
+END;
+$trigger_event$
+LANGUAGE plpgsql;
+
+-- Triggers to launch the above function
+DROP TRIGGER IF EXISTS recalculate_permission_checksum_insert ON public.permission_name;
+CREATE TRIGGER recalculate_permission_checksum_insert
+    AFTER INSERT ON public.permission_name
+    FOR EACH ROW
+    EXECUTE FUNCTION public.notify_server_to_update_checksum ();
+
+DROP TRIGGER IF EXISTS recalculate_permission_checksum_update ON public.permission_name;
+CREATE TRIGGER recalculate_permission_checksum_update
+    AFTER UPDATE ON public.permission_name
+    FOR EACH ROW
+    WHEN (NEW.checksum = OLD.checksum OR NEW.checksum IS NULL)
+    EXECUTE FUNCTION public.notify_server_to_update_checksum ();
+
+DROP TRIGGER IF EXISTS recalculate_data_view_checksum_insert ON public.data_view;
+CREATE TRIGGER recalculate_data_view_checksum_insert
+    AFTER INSERT ON public.data_view
+    FOR EACH ROW
+    EXECUTE FUNCTION public.notify_server_to_update_checksum ();
+
+DROP TRIGGER IF EXISTS recalculate_data_view_checksum_update ON public.data_view;
+CREATE TRIGGER recalculate_data_view_checksum_update
+    AFTER UPDATE ON public.data_view
+    FOR EACH ROW
+    WHEN (NEW.checksum = OLD.checksum OR NEW.checksum IS NULL)
+    EXECUTE FUNCTION public.notify_server_to_update_checksum ();
+
+DROP TRIGGER IF EXISTS recalculate_data_view_column_checksum_insert ON public.data_view_column_definition;
+CREATE TRIGGER recalculate_data_view_column_checksum_insert
+    AFTER INSERT ON public.data_view_column_definition
+    FOR EACH ROW
+    EXECUTE FUNCTION public.notify_server_to_update_checksum ();
+
+DROP TRIGGER IF EXISTS recalculate_data_view_column_checksum_update ON public.data_view_column_definition;
+CREATE TRIGGER recalculate_data_view_column_checksum_update
+    AFTER UPDATE ON public.data_view_column_definition
+    FOR EACH ROW
+    WHEN (NEW.checksum = OLD.checksum OR NEW.checksum IS NULL)
+    EXECUTE FUNCTION public.notify_server_to_update_checksum ();
+
+DROP TRIGGER IF EXISTS recalculate_category_checksum_insert ON public.template_category;
+CREATE TRIGGER recalculate_category_checksum_insert
+    AFTER INSERT ON public.template_category
+    FOR EACH ROW
+    EXECUTE FUNCTION public.notify_server_to_update_checksum ();
+
+DROP TRIGGER IF EXISTS recalculate_category_checksum_update ON public.template_category;
+CREATE TRIGGER recalculate_category_checksum_update
+    AFTER UPDATE ON public.template_category
+    FOR EACH ROW
+    WHEN (NEW.checksum = OLD.checksum OR NEW.checksum IS NULL)
+    EXECUTE FUNCTION public.notify_server_to_update_checksum ();
+
+DROP TRIGGER IF EXISTS recalculate_filter_checksum_insert ON public.filter;
+CREATE TRIGGER recalculate_filter_checksum_insert
+    AFTER INSERT ON public.filter
+    FOR EACH ROW
+    EXECUTE FUNCTION public.notify_server_to_update_checksum ();
+
+DROP TRIGGER IF EXISTS recalculate_filter_checksum_update ON public.filter;
+CREATE TRIGGER recalculate_filter_checksum_update
+    AFTER UPDATE ON public.filter
+    FOR EACH ROW
+    WHEN (NEW.checksum = OLD.checksum OR NEW.checksum IS NULL)
+    EXECUTE FUNCTION public.notify_server_to_update_checksum ();
+
+DROP TRIGGER IF EXISTS recalculate_file_checksum_insert ON public.file;
+CREATE TRIGGER recalculate_file_checksum_insert
+    AFTER INSERT ON public.file
+    FOR EACH ROW
+    EXECUTE FUNCTION public.notify_server_to_update_checksum ();
+
+DROP TRIGGER IF EXISTS recalculate_file_checksum_update ON public.file;
+CREATE TRIGGER recalculate_file_checksum_update
+    AFTER UPDATE ON public.file
+    FOR EACH ROW
+    WHEN (NEW.checksum = OLD.checksum OR NEW.checksum IS NULL)
+    EXECUTE FUNCTION public.notify_server_to_update_checksum ();
+        
+DROP TRIGGER IF EXISTS recalculate_evaluator_fragment_checksum_insert ON public.evaluator_fragment;
+CREATE TRIGGER recalculate_evaluator_fragment_checksum_insert
+    AFTER INSERT ON public.evaluator_fragment
+    FOR EACH ROW
+    EXECUTE FUNCTION public.notify_server_to_update_checksum ();
+
+DROP TRIGGER IF EXISTS recalculate_evaluator_fragment_checksum_update ON public.evaluator_fragment;
+CREATE TRIGGER recalculate_evaluator_fragment_checksum_update
+    AFTER UPDATE ON public.evaluator_fragment
+    FOR EACH ROW
+    WHEN (NEW.checksum = OLD.checksum OR NEW.checksum IS NULL)
+    EXECUTE FUNCTION public.notify_server_to_update_checksum ();
+
+-- FILE LIST
+-- FUNCTION to return a list of files associated with an Application Note
+-- This will be exposed automatically by Postgraphile as the node "fileList" on
+-- `applicationNode`.
+-- The reason for this is that the "file" table is locked down with Row-level
+-- security, so this provides a way for the correct files for a note to be
+-- retrieved without adding additional complex policies.
+CREATE OR REPLACE FUNCTION public.application_note_file_list(note_row application_note)
+ RETURNS SETOF file
+ SECURITY DEFINER
+ LANGUAGE plpgsql
+ STABLE
+AS $function$
+BEGIN
+  RETURN QUERY
+  SELECT f.*
+  FROM file f
+  WHERE f.application_note_id = note_row.id;
+END;
+$function$;

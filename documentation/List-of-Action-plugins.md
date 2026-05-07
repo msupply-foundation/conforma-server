@@ -119,9 +119,14 @@ Creates or updates a database record on any table, and creates/updates a related
 | `regenerateDataTableFilters` (default `false`) |                                               |
 | `data` (shorthand for multiple fields at once) |                                               |
 | `patch` (pre-constructed data object)          |                                               |
+| `databaseTypes`                                |                                               |
 | `...fields for database record`                |                                               |
 
-The Action first checks if `<tableName>` exists in the database and creates it if not. It creates fields matching the incoming record and makes a best match of the data type from one of the following postGres data types:
+The Action first checks if `<tableName>` exists in the database and creates it if not. It then creates fields one of two ways:
+- If a type is defined in `databaseTypes` parameter (e.g. `{ finalTotal: "double precision" }`),
+- Properties of the incoming record are inspected and it makes a best match based on the data type.
+
+Normally, the latter approach is sufficient, but if data can be ambiguous (e.g. incoming value is an `integer` but later values might be `double precision`), then it's best to explicitly define a type. The auto-generated fields are created from the following possible types, and it's probably best to stick with these when defining explicitly, although the full range of available types can be found [here](https://www.postgresql.org/docs/current/datatype.html)
 
 - `date`
 - `time with timezone`
@@ -130,7 +135,7 @@ The Action first checks if `<tableName>` exists in the database and creates it i
 - `boolean`
 - `integer` (number)
 - `double precision` (number)
-- `varchar` (string)
+- `citext` (a case-insensitive variant of `varchar`)
 - `array` (whose element type is any of the above)
 
 Any time a record is inserted or updated on a table, if the field name doesn't exist it will be created accordingly. (See below for detail on how the record is constructed)
@@ -262,7 +267,7 @@ Most of these parameters are the same as for `modifyRecord`. The `records` param
 
 The output `records` property is an array of results, each structured as per a single `modifyRecord` output.
 
-The `keyMap` property is used if the `records` have field names different from what you need the database field to be named. You provide an object which maps record field names to database field names -- the `keys` are the names of the fields in the database, and the `values` are the record fields that get mapped to them. 
+The `keyMap` property is used if the `records` have field names different from what you need the database field to be named. You provide an object which maps record field names to database field names -- the `keys` are the names of the fields in the database, and the `values` are the record fields that get mapped to them. The `value` can be a full path in a nested object, e.g. `medSearch.value.selection[0].unit`
 
 For example:
 
@@ -603,7 +608,7 @@ Generates a PDF file based on a [Carbone](https://carbone.io/api-reference.html)
 | ---------------------------------------- | ------------------------------------------ |
 | `docTemplateId`\*                        | `document: {uniqueId, filename, filepath}` |
 | `options`                                |                                            |
-| `appicationSerial`                       |                                            |
+| `applicationSerial`                      |                                            |
 | `templateId`                             |                                            |
 | `userId`                                 |                                            |
 | `data`                                   |                                            |
@@ -727,6 +732,8 @@ A "special" action that allows other actions to be triggered at some time in the
 | `applicationId`                          |                   |
 | `templateId`                             |                   |
 | `cancel`                                 |                   |
+| `extend`                                 |                   |
+| `active`                                 |                   |
 | `data`                                   |                   |
 
 *Either* of `duration` or `date` is required
@@ -739,9 +746,14 @@ By default, when an event is saved, the `outputCumulative` object from the `sche
 
 The `cancel` parameter is a way to prevent a previously scheduled event from occurring. Passing in `cancel: true` will, instead of creating a new event, find any *existing* event that has matching `applicationId` and `eventCode` and set to to inactive without it ever firing. In practice, though, targeting an event by `applicationId` is often not feasible, so the preferred way to cancel a scheduled event is to just apply an appropriate Condition to the subsequent action -- so the event is still triggered, but the matching action won't occur if the condition is not met (e.g. don't expire a product if registration has been renewed)
 
+If `extend` is `true`, then, if the event matches one already in the system (matched by `applicationId` and `eventCode`), then the duration will be added to *that* date rather than the current time. (Assuming the event date is in the future, otherwise it will use the current time.) Can be used to add extensions to events.
+
+New events are always `active` (i.e. they will fire at the scheduled time) and they are set to inactive after firing. However, you can create a new event already inactive (`active = false`). The use case for this is if an event is not currently required, but you wish to add an extension to it in future, initialise it in an inactive state and update it somewhere else.
+
 Note:
 - the `duration` value can be *either* a number (representing time in weeks) or an object in [Luxon Duration format](https://moment.github.io/luxon/api-docs/index.html#duration).
 - the `date` value can be *either* an ISO string, a JS Date object or an object in [Luxon DateTime format](https://moment.github.io/luxon/api-docs/index.html#datetime)
+- if a `date` AND a `duration` are provided, the duration will be added to this date rather than the current time (or the previous event time if using `extend`)
 
 
 ---

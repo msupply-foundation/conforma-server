@@ -5,10 +5,18 @@ import semverCompare from 'semver/functions/compare'
 import { execSync } from 'child_process'
 import path from 'path'
 import { readFileSync } from 'fs'
+import fsx from 'fs-extra'
 import bcrypt from 'bcrypt'
 import { errorMessage, getAppEntryPointDir } from '../../src/components/utilityFunctions'
 import { loadCurrentPrefs, setPreferences } from '../../src/components/preferences'
 import { updateReviewerStats } from '../../src/components/database/updateReviewerStats'
+import {
+  getTemplateLinkedEntities,
+  hashLookupTable,
+  hashRecord,
+} from '../../src/components/template-import-export'
+import { SNAPSHOT_FOLDER } from '../../src/constants'
+import { ensureSnapshotSizes, listArchives } from '../../src/components/snapshots/snapshotStore'
 
 // CONSTANTS
 const FUNCTIONS_FILENAME = '43_views_functions_triggers.sql'
@@ -17,7 +25,7 @@ const RLS_FILENAME = '45_row_level_security.sql'
 const DISABLE_RLS_FILENAME = '46_disable_row_level_security.sql'
 
 const { version } = config
-const isManualMigration: Boolean = process.argv[2] === '--migrate'
+const isManualMigration: boolean = process.argv[2] === '--migrate'
 const simulatedVersion: string | undefined = process.argv[3]
 
 const functionsScript = readFileSync(
@@ -1167,6 +1175,14 @@ const migrateData = async () => {
 
     console.log(' - Regenerating all reviewer actions (This may take a while)')
 
+    // Note: this is actually a v1.5.0 migration, but is needed in order to run
+    // the functionsScript, which now references this new field
+    console.log(' - Adding url_properties to application table')
+    await DB.changeSchema(`
+      ALTER TABLE public.application   
+        ADD COLUMN IF NOT EXISTS url_properties jsonb;
+    `)
+
     await DB.changeSchema(functionsScript)
 
     try {
@@ -1185,6 +1201,301 @@ const migrateData = async () => {
       }
     } catch (err) {
       console.log('ERROR regenerating reviewer actions')
+    }
+  }
+
+  if (databaseVersionLessThan('1.4.0')) {
+    console.log('Migrating to v1.4.0...')
+
+    console.log(' - Making permission_name_id field on template_permission non-nullable')
+
+    await DB.changeSchema(`
+      ALTER TABLE template_permission ALTER COLUMN permission_name_id SET NOT NULL;`)
+
+    console.log(' - Adding checksum fields to template-connected tables')
+
+    const tables = [
+      'permission_name',
+      'data_view',
+      'data_view_column_definition',
+      'data_table',
+      'template_category',
+      'filter',
+      'file',
+    ]
+
+    for (const table of tables) {
+      await DB.changeSchema(`ALTER TABLE ${table}
+        ADD COLUMN IF NOT EXISTS checksum varchar,
+        ADD COLUMN IF NOT EXISTS last_modified timestamptz;`)
+    }
+
+    for (const tableName of tables) {
+      if (tableName === 'data_table') continue
+      try {
+        const ids = (
+          await DB.query({
+            text: `
+              SELECT id
+              FROM ${tableName}
+              ORDER BY id;
+          `,
+            rowMode: 'array',
+          })
+        ).rows.flat()
+        for (const id of ids) {
+          await hashRecord({ tableName, id })
+        }
+      } catch (err) {
+        console.log('ERROR generating checksums')
+      }
+    }
+
+    console.log(' - Updating checksum hashes for lookup tables')
+
+    try {
+      const lookupTableIds = (
+        await DB.query({
+          text: `SELECT id FROM public.data_table
+                  WHERE is_lookup_table = TRUE;`,
+          rowMode: 'array',
+        })
+      ).rows.flat()
+
+      for (const tableId of lookupTableIds) {
+        await hashLookupTable(tableId)
+      }
+    } catch (err) {
+      console.log('ERROR generating checksums for lookup tables')
+    }
+
+    console.log(' - Creating JOIN tables for template-related entities')
+    await DB.changeSchema(`
+     CREATE TABLE IF NOT EXISTS public.template_data_view_join (
+        id serial PRIMARY KEY,
+        template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL,
+        data_view_id integer REFERENCES public.data_view (id) ON DELETE CASCADE NOT NULL,
+        UNIQUE (template_id, data_view_id)
+      );
+      CREATE TABLE IF NOT EXISTS public.template_file_join (
+        id serial PRIMARY KEY,
+        template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL,
+        file_id integer REFERENCES public.file (id) ON DELETE CASCADE NOT NULL,
+        UNIQUE (template_id, file_id)
+      );
+      `)
+    console.log(' - Adding join entries for existing files, then removing template_id column')
+    try {
+      const filesToUpdate = (
+        await DB.query({
+          text: `
+          SELECT id, template_id FROM public.file
+          WHERE template_id IS NOT NULL;`,
+        })
+      ).rows
+      for (const file of filesToUpdate) {
+        await DB.query({
+          text: `
+          INSERT INTO public.template_file_join (template_id, file_id)
+          VALUES ($1, $2)
+          ON CONFLICT(template_id, file_id) DO NOTHING;`,
+          values: [file.template_id, file.id],
+        })
+      }
+      await DB.changeSchema(`ALTER TABLE public.file
+        DROP COLUMN IF EXISTS template_id;`)
+    } catch (err) {
+      console.log('ERROR creating Join tables - ' + (err as Error).message)
+    }
+
+    console.log(' - Adding linked_entities column to template')
+    await DB.changeSchema(`ALTER TABLE public.template
+      ADD COLUMN IF NOT EXISTS linked_entity_data jsonb;`)
+
+    console.log(' - Generating linked_entity data for existing templates')
+    try {
+      const templateIds = (
+        await DB.query({
+          text: `
+        SELECT id FROM public.template
+          WHERE version_id NOT LIKE '*%'
+          AND linked_entity_data IS NULL;
+        `,
+          rowMode: 'array',
+        })
+      ).rows.flat()
+
+      for (const templateId of templateIds) {
+        try {
+          const linkedEntities = await getTemplateLinkedEntities(templateId)
+          await DB.query({
+            text: `
+          UPDATE template SET linked_entity_data = $2
+          WHERE id = $1
+          `,
+            values: [templateId, JSON.stringify(linkedEntities)],
+          })
+        } catch (err) {
+          console.log(
+            `ERROR: Unable to generate linked entity data for template ${templateId} - ${
+              (err as Error).message
+            }`
+          )
+        }
+      }
+    } catch (err) {
+      console.log('ERROR generating linked entity data for templates - ' + (err as Error).message)
+    }
+  }
+
+  if (databaseVersionLessThan('1.5.0')) {
+    console.log('Migrating to v1.5.0...')
+
+    console.log(' - Adding url_properties to application table')
+
+    await DB.changeSchema(`
+      ALTER TABLE public.application   
+        ADD COLUMN IF NOT EXISTS url_properties jsonb;
+    `)
+  }
+
+  if (databaseVersionLessThan('1.7.0')) {
+    console.log('Migrating to v1.7.0...')
+
+    console.log(' - Adding stale application timeout to template table')
+
+    await DB.changeSchema(`
+      ALTER TABLE public.template
+        ADD COLUMN IF NOT EXISTS stale_draft_retention_days
+        INTEGER DEFAULT 90;
+    `)
+  }
+
+  /**
+   * V 2.0 -- introducing FigTree Evaluator, the successor to the
+   * "expressionEvaluator" module
+   */
+  if (databaseVersionLessThan('2.0.0')) {
+    console.log('Migrating to v2.0.0...')
+
+    console.log(' - Adding Evaluator Fragments table')
+
+    await DB.changeSchema(`
+      CREATE TABLE IF NOT EXISTS public.evaluator_fragment (
+        id serial PRIMARY KEY,
+        name varchar UNIQUE NOT NULL CHECK (name ~ '^[A-Za-z0-9_ ]+$'),
+        expression jsonb NOT NULL,
+        metadata jsonb,
+        front_end boolean NOT NULL DEFAULT TRUE,
+        back_end boolean NOT NULL DEFAULT TRUE,
+        permission_names varchar[],
+        checksum varchar,
+        last_modified timestamptz
+      );`)
+
+    // For dev databases that already had `evaluator_fragment` (from an earlier
+    // 2.0.0-dev migration without the CHECK), sanitize any existing names and
+    // add the CHECK if it isn't already present. Disallowed chars become `_`.
+    // (If a sanitized name collides with another row, the UNIQUE constraint
+    // will throw — manual rename required in that case.)
+    await DB.changeSchema(`
+      UPDATE public.evaluator_fragment
+        SET name = regexp_replace(name, '[^A-Za-z0-9_ ]', '_', 'g')
+        WHERE name !~ '^[A-Za-z0-9_ ]+$';
+      ALTER TABLE public.evaluator_fragment
+        DROP CONSTRAINT IF EXISTS evaluator_fragment_name_check;
+      ALTER TABLE public.evaluator_fragment
+        ADD CONSTRAINT evaluator_fragment_name_check CHECK (name ~ '^[A-Za-z0-9_ ]+$');
+    `)
+
+    await DB.changeSchema(`
+     CREATE TABLE IF NOT EXISTS public.template_evaluator_fragment_join (
+        id serial PRIMARY KEY,
+        template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL,
+        evaluator_fragment_id integer REFERENCES public.evaluator_fragment (id) ON DELETE CASCADE NOT NULL,
+        UNIQUE (template_id, evaluator_fragment_id)
+      );`)
+
+    console.log(
+      ' - Adding reviewer section flag to template_section table and new application_response status'
+    )
+
+    await DB.changeSchema(`ALTER TABLE public.template_section
+        ADD COLUMN IF NOT EXISTS is_review_section BOOLEAN NOT NULL DEFAULT FALSE;`)
+
+    await DB.changeSchema(`
+      ALTER TYPE public.application_response_status ADD VALUE IF NOT EXISTS
+      'REVIEW' AFTER  'SUBMITTED';`)
+
+    console.log(' - Adding is_protected flag to file table')
+    await DB.changeSchema(`ALTER TABLE public.file
+        ADD COLUMN IF NOT EXISTS is_protected BOOLEAN NOT NULL DEFAULT FALSE;`)
+
+    // Migrate archive_path values and move filesystem archives to archive
+    // store.
+    // Old format: "_ARCHIVE/{folder}/files"  →  New: "{folder}/files"
+    // We move files first so that, if the move loop fails, the DB still
+    // references the old layout and the system keeps working until the
+    // migration is re-run.
+    console.log(' - Moving archive folders from files/_ARCHIVE/ to archive store')
+    const { ARCHIVE_FOLDER, SNAPSHOT_ARCHIVE_FOLDER } = await import('../../src/constants')
+    if (fsx.existsSync(ARCHIVE_FOLDER)) {
+      const entries = await fsx.readdir(ARCHIVE_FOLDER)
+      for (const entry of entries) {
+        if (entry === 'archive.json') continue
+        const src = path.join(ARCHIVE_FOLDER, entry)
+        const dest = path.join(SNAPSHOT_ARCHIVE_FOLDER, entry)
+        if (!(await fsx.pathExists(dest))) {
+          console.log(`   Moving archive: ${entry}`)
+          await fsx.move(src, dest)
+        } else {
+          // Already in store from a prior migration attempt; safe to remove
+          await fsx.remove(src)
+        }
+      }
+      // Move archive.json to the store if the store doesn't already have one
+      const srcJson = path.join(ARCHIVE_FOLDER, 'archive.json')
+      const destJson = path.join(SNAPSHOT_ARCHIVE_FOLDER, 'archive.json')
+      if ((await fsx.pathExists(srcJson)) && !(await fsx.pathExists(destJson))) {
+        await fsx.move(srcJson, destJson)
+      } else if (await fsx.pathExists(srcJson)) {
+        await fsx.remove(srcJson)
+      }
+      // Remove the now-empty _ARCHIVE directory
+      await fsx.remove(ARCHIVE_FOLDER)
+    }
+
+    console.log(' - Updating archive_path values to use archive store paths')
+    await DB.changeSchema(`
+      UPDATE public.file
+        SET archive_path = REPLACE(archive_path, '_ARCHIVE/', '')
+        WHERE archive_path IS NOT NULL
+          AND archive_path LIKE E'\\_ARCHIVE/%' ESCAPE '\\';
+    `)
+
+    // Backfill size fields on existing snapshots and archives so that the
+    // /list endpoint can read sizes from info.json instead of measuring
+    // folders live. Two passes: archives first (so each snapshot's
+    // archiveSize sums against accurate per-archive totals), snapshots
+    // second. Idempotent — re-running skips entries that are already done.
+    console.log(' - Backfilling size fields on archives and snapshots')
+    const archives = await listArchives() // also writes back any missing totalFileSize
+    console.log(`   Archive sizes: ${Object.keys(archives).length} archive(s) ready`)
+
+    if (fsx.existsSync(SNAPSHOT_FOLDER)) {
+      const snapshotEntries = await fsx.readdir(SNAPSHOT_FOLDER, { withFileTypes: true })
+      let backfilled = 0
+      for (const entry of snapshotEntries) {
+        if (!entry.isDirectory()) continue
+        const folder = path.join(SNAPSHOT_FOLDER, entry.name)
+        const infoFile = path.join(folder, 'info.json')
+        if (!(await fsx.pathExists(infoFile))) continue
+        const info = await fsx.readJson(infoFile)
+        if (info.snapshotSize !== undefined && info.archiveSize !== undefined) continue
+        await ensureSnapshotSizes(folder, archives)
+        backfilled++
+      }
+      console.log(`   Snapshot sizes: ${backfilled} snapshot(s) backfilled`)
     }
   }
 

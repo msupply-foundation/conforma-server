@@ -1,9 +1,8 @@
-# DO NOT LAUNCH DOCKER-COMPOSE DIRECTLY. PLEASE USE THE `launch.sh` SCRIPT WHICH
+# DO NOT LAUNCH DOCKER-COMPOSE DIRECTLY. PLEASE USE THE `launch.mjs` SCRIPT WHICH
 # WILL ENSURE ALL REQUIRED ENV VARIABLES ARE PRESENT
 
-# Last updated: 11/09/2024
+# Last updated: 21/11/2024
 
-version: '3.9'
 services:
   app:
     image: 'msupplyfoundation/conforma:${TAG}'
@@ -17,7 +16,7 @@ services:
       JWT_SECRET: '${JWT_SECRET}'
       # passwords override will be ignored if <30 chars
       # REMOVE THIS LINE ON LIVE SERVERS!
-      USER_PASSWORD_OVERRIDE: '${USER_PASSWORD_OVERRIDE:-"ignore"}'
+      # USER_PASSWORD_OVERRIDE: '${USER_PASSWORD_OVERRIDE:-"ignore"}'
     restart: always
     volumes:
       - postgres:/var/lib/postgresql/16/main/
