@@ -230,11 +230,18 @@ export const zipSnapshot = async ({
   const output = fsx.createWriteStream(path.join(destination, `${zipName}.zip`))
   const archive = archiver('zip', { zlib: { level: zlibCompression } })
 
-  await archive.pipe(output)
-  for (const { name, outputPath } of sources) {
-    console.log('Archiving:', name)
-    await archive.directory(name, outputPath)
-  }
-  await archive.finalize()
+  await new Promise<void>((resolve, reject) => {
+    output.on('close', () => resolve())
+    output.on('error', reject)
+    archive.on('error', reject)
+
+    archive.pipe(output)
+    for (const { name, outputPath } of sources) {
+      console.log('Archiving:', name)
+      archive.directory(name, outputPath)
+    }
+    archive.finalize()
+  })
+
   console.log(`Zipping snapshot...done in ${getTimeString(zipStartTime)}`)
 }

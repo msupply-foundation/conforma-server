@@ -72,7 +72,6 @@ class PostgresDB {
     listener.query('LISTEN file_notifications')
     listener.query('LISTEN update_reviewer_stats_notification')
     listener.query('LISTEN recalculate_checksum_notification')
-    listener.query('LISTEN evaluator_fragment_notification')
     listener.on('notification', async ({ channel, payload }) => {
       if (!payload) {
         console.log(`Notification ${channel} received with no payload!`)

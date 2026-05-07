@@ -5,7 +5,6 @@ import fastifyCors from '@fastify/cors'
 import fastifyWebsocket from '@fastify/websocket'
 import { DateTime, Settings } from 'luxon'
 import path from 'path'
-import fs from 'fs'
 import fsx from 'fs-extra'
 import { loadActionPlugins } from './components/pluginsConnect'
 import {
@@ -277,12 +276,23 @@ const startServer = async () => {
             }
 
             const filepath = getStagedFilePath(token)
-            if (!filepath || !fs.existsSync(filepath)) {
+            if (!filepath) {
               return reply.code(404).send({ success: false, message: 'File not found or expired' })
             }
 
+            let stats
+            try {
+              stats = await fsx.stat(filepath)
+            } catch (err: any) {
+              if (err?.code === 'ENOENT') {
+                return reply
+                  .code(404)
+                  .send({ success: false, message: 'File not found or expired' })
+              }
+              throw err
+            }
+
             const downloadFilename = request.query.filename || token
-            const stats = fs.statSync(filepath)
             reply.header('Content-Type', 'application/octet-stream')
             reply.header('Content-Length', stats.size)
             reply.header(
@@ -294,7 +304,7 @@ const startServer = async () => {
 
             reply.raw.on('close', () => markStagedDownloadServed(token))
 
-            const stream = fs.createReadStream(filepath)
+            const stream = fsx.createReadStream(filepath)
             stream.on('error', () => {
               reply.send({ success: false, message: 'Unable to retrieve file' })
             })

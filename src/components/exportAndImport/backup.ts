@@ -112,14 +112,21 @@ const createBackup = async (password?: string) => {
           } as any)
         : archiver('zip', { zlib: { level: 9 } })
 
-      output.on('error', (err) => {
-        console.log('Problem creating backup: ', err.message)
-        fsx.remove(item.destination)
-      })
+      try {
+        await new Promise<void>((resolve, reject) => {
+          output.on('close', () => resolve())
+          output.on('error', reject)
+          archive.on('error', reject)
 
-      await archive.pipe(output)
-      await archive.directory(item.source, false)
-      await archive.finalize()
+          archive.pipe(output)
+          archive.directory(item.source, false)
+          archive.finalize()
+        })
+      } catch (err) {
+        console.log('Problem creating backup: ', (err as Error).message)
+        await fsx.remove(item.destination).catch(() => {})
+        throw err
+      }
 
       // Make it read-writeable by everyone (so Dropbox can sync it)
       execSync(`chmod 666 ${item.destination}`)

@@ -24,8 +24,6 @@ const errorMessageBase = {
   message: 'Failed to upload snapshot',
 }
 
-const TEMP_ZIP_FILE = 'tempUpload.zip'
-
 const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply) => {
   let upload
   try {
@@ -42,7 +40,9 @@ const routeUploadSnapshot = async (request: FastifyRequest, reply: FastifyReply)
     })
 
   let snapshotName: string = ''
-  const tempZipLocation = path.join(SNAPSHOT_FOLDER, TEMP_ZIP_FILE)
+  // Per-request temp filename so concurrent uploads can't clobber each other.
+  const tempZipName = `tempUpload_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.zip`
+  const tempZipLocation = path.join(SNAPSHOT_FOLDER, tempZipName)
   let zip: InstanceType<typeof StreamZip.async> | null = null
   try {
     snapshotName = upload.filename

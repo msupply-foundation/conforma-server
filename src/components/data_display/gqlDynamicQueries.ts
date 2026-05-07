@@ -34,7 +34,9 @@ export const queryDataTable = async (
   }
   const result = queryResult?.[tableNamePlural]?.nodes
   const fetchedRecords = distinctField ? getDistinctRecords(result, distinctField) : result
-  const totalCount = queryResult?.[tableNamePlural]?.totalCount
+  const totalCount = distinctField
+    ? fetchedRecords.length
+    : queryResult?.[tableNamePlural]?.totalCount
   return { fetchedRecords, totalCount }
 }
 
