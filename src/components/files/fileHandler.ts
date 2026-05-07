@@ -33,7 +33,6 @@ export async function getFilePath(uid: string, thumbnail = false) {
     thumbnail && fileData.thumbnail_path.startsWith(config.genericThumbnailsFolderName)
 
   const isArchived = !!fileData.archive_path
-  const root = isArchived ? SNAPSHOT_ARCHIVE_FOLDER : FILES_FOLDER
 
   const filePath = path.join(fileData.archive_path ?? '', fileData.file_path)
   const thumbnailPath = path.join(
@@ -43,6 +42,15 @@ export async function getFilePath(uid: string, thumbnail = false) {
   const mimeType = thumbnail
     ? `image/${path.extname(thumbnailPath).toLowerCase().slice(1)}`
     : fileData.mimetype
+  // Generic thumbnails always live in FILES_FOLDER even when the underlying
+  // file has been archived — they're shared assets that aren't copied into
+  // the archive store.
+  const root =
+    thumbnail && isGenericThumbnail
+      ? FILES_FOLDER
+      : isArchived
+        ? SNAPSHOT_ARCHIVE_FOLDER
+        : FILES_FOLDER
   return {
     filePath,
     thumbnailPath,
