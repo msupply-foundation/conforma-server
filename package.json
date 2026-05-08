@@ -1,6 +1,6 @@
 {
   "name": "conforma-server",
-  "version": "2.0.0-dev.44",
+  "version": "2.0.0-dev.46",
   "main": "server.js",
   "license": "MIT",
   "repository": {
@@ -63,7 +63,7 @@
     "snapshot": "ts-node ./database/snapshotCLI.ts",
     "dockerise": "cd docker && ./dockerise.sh",
     "docker_run": "cd docker && ./run.sh",
-    "release": "./utils/release.sh",
+    "release": "ts-node ./utils/release.ts",
     "migrate": "ts-node ./database/migration/migrateData.ts --migrate",
     "cleanup": "ts-node ./src/components/files/cleanup.ts --cleanup",
     "backup": "ts-node ./src/components/exportAndImport/backup.ts --backup",
