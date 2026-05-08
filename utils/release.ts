@@ -31,22 +31,42 @@ Valid types: ${releaseTypes.join(', ')}`)
   const branch = await getGitBranch()
   if (!branch) exitWithError('Invalid git branch')
 
-  console.log(
-    `\nYou are about to create a new version of type: ${releaseType} on branch ${branch}\nPlease ensure you have added the front-end file path to your .env file and the front-end has the correct branch checked out.\n\nAre you sure you wish to proceed?`
-  )
+  const { stdout: dirty } = await exec(`git status --porcelain`)
+  if (dirty.trim())
+    exitWithError(
+      `Working tree has uncommitted changes — please commit or stash before running a release:\n${dirty}`
+    )
 
-  if (!(await userRespondsYes())) process.exit(0)
-
+  // Bump package.json without committing/tagging yet, so the user can
+  // see the resulting version and confirm before it's locked in.
   try {
-    console.log(`🚀 Bumping version with: yarn version ${releaseType}`)
-    await exec(`yarn version ${releaseType}`)
+    await exec(`yarn version ${releaseType} --no-git-tag-version`)
   } catch (error) {
     exitWithError(`Error bumping version: ${error}`)
   }
 
   const pkg = require('../package.json')
   const tag = `v${pkg.version}`
+
+  console.log(
+    `\nYou are about to create a new version of type: ${releaseType} (${tag}) on branch ${branch}\nPlease ensure you have added the front-end file path to your .env file and the front-end has the correct branch checked out.\n\nAre you sure you wish to proceed?`
+  )
+
+  if (!userRespondsYes()) {
+    console.log('Aborted — reverting package.json.')
+    await exec(`git checkout -- package.json`)
+    process.exit(0)
+  }
+
   console.log(`\nServer version bumped to: ${tag}\n`)
+  try {
+    await exec(`git add package.json`)
+    await exec(`git commit -m ${tag}`)
+    await exec(`git tag ${tag}`)
+  } catch (error) {
+    exitWithError(`Error committing version: ${error}`)
+  }
+
   console.log(`\nPushing tag ${tag} to GitHub...`)
   try {
     await exec(`git push origin ${tag}`)
