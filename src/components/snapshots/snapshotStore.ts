@@ -95,6 +95,9 @@ export const ensureArchiveSize = async (archiveFolder: string): Promise<ArchiveI
 // Scans SNAPSHOT_ARCHIVE_FOLDER and returns a uid → ArchiveInfo map.
 // Backfills totalFileSize on disk for any legacy archive missing it.
 export const listArchives = async (): Promise<Record<string, ArchiveInfo>> => {
+  // Ensure the folder exists — migrations and other early-startup callers
+  // can run before createDefaultDataFolders has set it up.
+  await fsx.ensureDir(SNAPSHOT_ARCHIVE_FOLDER)
   const store: Record<string, ArchiveInfo> = {}
   const dirents = await fs.readdir(SNAPSHOT_ARCHIVE_FOLDER, {
     encoding: 'utf-8',
