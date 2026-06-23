@@ -26,6 +26,7 @@ import { getSnapshotArchives } from '../files/helpers'
 import { errorMessage } from '../utilityFunctions'
 import { cleanupDataTables } from '../../lookup-table/utils/cleanupDataTables'
 import { getTimeString } from './takeSnapshot'
+import { reloadFragments } from '../fig-tree-evaluator/FigTree'
 
 const useSnapshot: SnapshotOperation = async ({ snapshotName }) => {
   const startTime = Date.now()
@@ -136,6 +137,8 @@ const useSnapshot: SnapshotOperation = async ({ snapshotName }) => {
     await cleanupDataTables()
 
     await refreshConfig(config)
+
+    reloadFragments()
 
     console.log('...Snapshot load complete!')
     console.log('Total time:', getTimeString(startTime))
