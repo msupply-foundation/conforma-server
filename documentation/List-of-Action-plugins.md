@@ -59,18 +59,19 @@ Set the Outcome of an application to the input parameter ("Pending", "Approved",
 
 ### Increment Stage
 
-Changes the application Stage to the next in the sequence
+Changes the application Stage to the next in the sequence, or to a specific stage if `stageNumber` is supplied
 
 - _Action Code:_ **`incrementStage`**
 
   - If a new application, will create a corresponding Status set to "Draft"
   - If application is already on final stage, will leave unchanged
   - If application outcome is anything other than PENDING, will leave unchanged
+  - If `stageNumber` is supplied, sets the application to that specific stage (forwards or backwards) instead of just the next one. Leaves unchanged if the stage doesn't exist for the template, or if the application is already on that stage.
 
 | Input parameters<br />(\*required) <br/> | Output properties |
 | ---------------------------------------- | ----------------- |
 | `applicationId`                          | `applicationId`   |
-|                                          | `stageNumber`     |
+| `stageNumber`                            | `stageNumber`     |
 |                                          | `stageName`       |
 |                                          | `stageId`         |
 |                                          | `status`          |

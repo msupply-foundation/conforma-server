@@ -1159,6 +1159,19 @@ class PostgresDB {
     }
   }
 
+  public getStageByNumber = async (templateId: number, stageNumber: number) => {
+    const text = `SELECT id as stage_id, number as stage_number, title from template_stage
+    WHERE template_id = $1
+    AND number = $2`
+    try {
+      const result = await this.query({ text, values: [templateId, stageNumber] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
   public addNewStageHistory = async (applicationId: number, stageId: number) => {
     // Note: switching is_current of previous stage_histories to False is done automatically by a Postgres trigger function
     const text =

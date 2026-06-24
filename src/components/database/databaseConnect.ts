@@ -138,6 +138,8 @@ class DBConnect {
 
   public getNextStage = PostgresDB.getNextStage
 
+  public getStageByNumber = PostgresDB.getStageByNumber
+
   public addNewStageHistory = PostgresDB.addNewStageHistory
 
   public getReviewCurrentStatusHistory = PostgresDB.getReviewCurrentStatusHistory
