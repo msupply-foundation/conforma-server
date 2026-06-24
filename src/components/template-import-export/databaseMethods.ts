@@ -125,6 +125,7 @@ const databaseMethods = {
           FROM public.template_action
           WHERE template_id = $1
           AND action_code = 'grantPermissions'
+          AND jsonb_typeof((parameter_queries->'permissionNames')::jsonb) = 'array'
     `
     try {
       const result = await DBConnect.query({ text, values: [templateId], rowMode: 'array' })
