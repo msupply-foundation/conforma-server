@@ -98,13 +98,13 @@ const routeUserPermissions = async (request: any, reply: any) => {
     })
 
   const username =
-    query?.username === '' || query?.username === 'null' ? null : query?.username ?? null
+    query?.username === '' || query?.username === 'null' ? null : (query?.username ?? null)
   const orgId: number | null =
     query?.orgId === 'null' || query?.orgId === '0'
       ? null
       : query?.orgId
-      ? Number(query.orgId)
-      : null
+        ? Number(query.orgId)
+        : null
 
   if (auth.error) return reply.send({ success: false, message: auth.console.error })
 
