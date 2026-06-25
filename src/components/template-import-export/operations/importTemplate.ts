@@ -407,6 +407,12 @@ export const installTemplate = async (
       } = permissions[permissionName]
       let permission_name_id: number | null = null
 
+      // Shouldn't be null, but it is, skip passed rather than throw
+      if (permission_policy === null) {
+        console.log(`WARNING: permission_policy for ${permissionName} is null, skipping`)
+        continue
+      }
+
       const dbPermissionPolicy = await db.getRecordsByField<PgPermissionPolicy>(
         'permission_policy',
         'name',
@@ -442,8 +448,8 @@ export const installTemplate = async (
 
       permissionNameIds[permissionName] = permission_name_id as number
     }
-
     for (const { permissionName, ...permissionsJoin } of permissionJoins) {
+      if (!permissionNameIds[permissionName]) continue // Same skip as above
       await db.insertRecord('template_permission', {
         ...permissionsJoin,
         permission_name_id: permissionNameIds[permissionName],
