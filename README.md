@@ -3,7 +3,7 @@
 Install dependencies:  
 `yarn install`
 
-Note: In order to install the [expression-evaluator](https://github.com/msupply-foundation/conforma-server/wiki/Query-Syntax) package, you'll need to authenticate with the Github package registry. See instructions for this [here](https://github.com/msupply-foundation/conforma-server/wiki/Query-Syntax#installation)
+Note: The dynamic expression evaluator is now the public [`fig-tree-evaluator`](https://github.com/CarlosNZ/fig-tree-evaluator) npm package (see [Query-Syntax](https://github.com/msupply-foundation/conforma-server/wiki/Query-Syntax)), so a standard `yarn install` needs no special package-registry authentication.
 
 Initialise database:  
 `yarn database_init`
@@ -12,22 +12,11 @@ Needs:
 
 - `psql` command-line tool to be installed, and a super-user named `postgres` -- [here](https://gist.github.com/ibraheem4/ce5ccd3e4d7a65589ce84f2a3b7c23a3) for instructions.  
   Creates a database named `tmf_app_manager` and populates it with minimal data.)
-- need to have both `graphile` (with postgres user) and `server` running (easiest way is to do `yarn dev_pg`, see below)
 
 To run in dev mode:  
 `yarn dev`
 
-To launch Postgraphile server (in a new Terminal process):  
-`yarn pg`
-
-To launch Postgraphile server as graphile_user (in a new Terminal process), this will enforce row level permissions:  
-`yarn pg_permissions`
-
-To launch in dev mode _with_ Postgraphile server:  
-`yarn dev_pg`
-
-To launch in dev mode _with_ Postgraphile server and graphile_user:  
-`yarn dev_pg_permissions`
+Note: PostGraphile now runs **in-process** — `yarn dev` serves both the REST API and the GraphQL endpoint (`/graphql`, `/graphiql`) from a single process. (The old separate-process commands `yarn pg` / `yarn pg_permissions` / `yarn dev_pg` / `yarn dev_pg_permissions` no longer exist.) Row-level security is always enforced via PostGraphile's `graphile_user` default role plus per-request JWT claims; see [src/postgraphile.ts](src/postgraphile.ts) and [src/components/permissions/CLAUDE.md](src/components/permissions/CLAUDE.md).
 
 To build (compiles all .ts files to .js in `build` folder):  
 `yarn build`
@@ -102,13 +91,13 @@ Also, check the `action_plugin` table to see a couple of extra dummy plugins tha
 
 See [Triggers and Actions documentation](https://github.com/msupply-foundation/conforma-server/wiki/Triggers-and-Actions) for in-depth explanation
 
-## evaluateExpression
+## Expression evaluation (fig-tree)
 
-Documented in the `Query-Syntax.md` in the documentation folder.
+Documented in `Query-Syntax.md` in the documentation folder.
 
-Code is in the `modules` folder.
+The evaluator is the [`fig-tree-evaluator`](https://github.com/CarlosNZ/fig-tree-evaluator) npm package; the server-side wrapper and custom functions are in [src/components/fig-tree-evaluator/](src/components/fig-tree-evaluator/).
 
-To test (using Jest), must be running graphile as postgres user (i.e. `yarn pg` not `yarn pg_permmissions`) :  
+To run the test suite (Jest), with the database running:  
 `yarn test`
 
 ## Documentation
