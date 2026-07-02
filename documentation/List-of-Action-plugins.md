@@ -601,7 +601,12 @@ The logic is as follows:
 
 ### Generate Document
 
-Generates a PDF file based on a [Carbone](https://carbone.io/api-reference.html) document template.
+Generates a PDF file from a document template. Two templating engines are supported, selected automatically by the template file's extension:
+
+- **[Carbone](https://carbone.io/api-reference.html)** — `.odt` (and other office-format) templates, rendered via LibreOffice. The original engine, which we are aiming to **deprecate** — please use Typst for all new templates.
+- **[Typst](https://typst.app/)** — `.typzip` template bundles (or bare `.typ` files), rendered with the Typst compiler. See [Typst Document Templates](Typst-Document-Templates.md) for the bundle format, data handling, fonts and validation tooling.
+
+Apart from the template file itself, the two engines behave identically from the action's point of view — same parameters, same data assembly, same output file handling.
 
 - _Action Code:_ **`generateDoc`**
 
@@ -620,15 +625,15 @@ Generates a PDF file based on a [Carbone](https://carbone.io/api-reference.html)
 
 The Action utilises the internal `generatePDF` function, which is also accessible via the [`/generate-pdf` endpoint](API.md)
 
-`docTemplateId` specifies the uniqueId of the carbone template file (from the "file" table) and `options` optional can define a localisatiion to be used for dates and currency formatting.
+`docTemplateId` specifies the uniqueId of the template file (from the "file" table) and the optional `options` can define a localisation to be used for dates and currency formatting (Carbone only — ignored for Typst templates).
 
-The data used by the action primarily comes from `applicationData` and `outputCumulative`, which are flattened/spread into a combined object to the carbone processer. Extra data (such as from individual responses, or other expressions) can be provided in one of two ways:
+The data used by the action primarily comes from `applicationData` and `outputCumulative`, which are flattened/spread into a combined object passed to the templating engine. Extra data (such as from individual responses, or other expressions) can be provided in one of two ways:
 
 - `data`: this parameter is an object in which you can define a simple mapping between field names required by Carbone and fields on `applicationData`. This is the same as the mapping available in `modifyRecord`, so please [see modifyRecord plugin](#modify-record) info for more detail and examples.
 - `additionalData`: another object, but does no mapping, so each value must either be a literal value or an evaluator expression. In the latter case, you'll need to create the object using the [`buildObject` operator](Query-Syntax.md#buildobject).
 
 
-The full data object is constructed and sent to the Carbone processor like so:
+The full data object is constructed and sent to the templating engine like so:
 
 ```
 data: { ...applicationData, ...outputCumulative, ...data(mapped), additionalData }
