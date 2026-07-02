@@ -4,7 +4,6 @@ import fsx from 'fs-extra'
 import path from 'path'
 import { execFile } from 'child_process'
 import { promisify } from 'util'
-// @ts-ignore -- node:timers/promises isn't declared by the pinned @types/node@14, but exists at runtime (Node 20)
 import { setTimeout as sleep } from 'node:timers/promises'
 import DBConnect from '../../../src/components/database/databaseConnect'
 import { updateRowPolicies } from '../permissions/rowLevelPolicyHelpers'

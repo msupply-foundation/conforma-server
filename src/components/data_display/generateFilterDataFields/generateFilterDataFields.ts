@@ -5,7 +5,6 @@ import { queryDataTable, updateRecord } from '../gqlDynamicQueries'
 import config from '../../../config'
 import { errorMessage, getValidTableName } from '../../utilityFunctions'
 import { camelCase, snakeCase } from 'lodash'
-// @ts-ignore -- node:timers/promises isn't declared by the pinned @types/node@14, but exists at runtime (Node 20)
 import { setTimeout as sleep } from 'node:timers/promises'
 
 const blockSize = 100 // How many database records to process at once
