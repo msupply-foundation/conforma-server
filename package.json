@@ -69,7 +69,9 @@
     "backup": "ts-node ./src/components/exportAndImport/backup.ts --backup",
     "archive": "ts-node ./src/components/files/archive.ts --archive",
     "staleApplications": "ts-node ./src/components/other/staleApplicationCleanup.ts --staleApplications",
-    "update-reviewer-stats": "ts-node ./src/components/database/updateReviewerStats.ts --update-reviewer-stats"
+    "update-reviewer-stats": "ts-node ./src/components/database/updateReviewerStats.ts --update-reviewer-stats",
+    "validateTypst": "ts-node ./utils/validateTypstBundles.ts",
+    "listFonts": "typst fonts --ignore-system-fonts --font-path fonts"
   },
   "dependencies": {
     "@fastify/cors": "^9.0.1",

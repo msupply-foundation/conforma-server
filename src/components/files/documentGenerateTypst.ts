@@ -83,8 +83,11 @@ export const renderTypstPDF = async ({
 
   try {
     const { stderr } = await execFileAsync(TYPST_BIN, args, { timeout: TYPST_TIMEOUT_MS })
-    // Typst emits non-fatal diagnostics (e.g. unknown font family) on stderr
+    // Typst emits non-fatal diagnostics (e.g. unknown font family) on stderr.
+    // Returned as well as logged so the bundle validation script can inspect
+    // them (a successful render is not necessarily a *correct* render).
     if (stderr) console.log(`Typst warnings for ${fileId}:\n${stderr}`)
+    return { warnings: stderr || null }
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === 'ENOENT')
       throw new Error(
@@ -162,21 +165,43 @@ const applyDefaults = async (bundleFolder: string, data: object) => {
     throw new Error(`Invalid ${DEFAULTS_NAME} in template bundle: ${(err as Error).message}`)
   }
 
-  return mergeWithDefaults(data, defaults)
+  const missing: string[] = []
+  const merged = mergeWithDefaults(data, defaults, '', missing)
+  if (missing.length > 0)
+    console.log(
+      `WARNING: Data fields missing for Typst template ${path.basename(
+        bundleFolder
+      )}, defaults used for:\n  - ${missing.join('\n  - ')}`
+    )
+  return merged
 }
 
 // Fills gaps in `data` from `defaults`: objects are merged recursively, but
 // arrays and scalars present in `data` are used wholesale (a naive deep merge
 // would blend default array entries into real rows, item by item). Defaults
-// only apply where the live value is missing or null.
-export const mergeWithDefaults = (data: unknown, defaults: unknown): unknown => {
-  if (data === undefined || data === null) return defaults === undefined ? data : defaults
+// only apply where the live value is missing or null. The (dotted) path of
+// every substitution made is appended to `missing`, for runtime warnings.
+export const mergeWithDefaults = (
+  data: unknown,
+  defaults: unknown,
+  path: string = '',
+  missing: string[] = []
+): unknown => {
+  if (data === undefined || data === null) {
+    if (defaults === undefined) return data
+    missing.push(path || '(root)')
+    return defaults
+  }
   if (isObject(data) && isObject(defaults)) {
     const dataObj = data as Record<string, unknown>
     const defaultsObj = defaults as Record<string, unknown>
     const result: Record<string, unknown> = { ...defaultsObj, ...dataObj }
-    for (const key of Object.keys(defaultsObj))
-      if (key in dataObj) result[key] = mergeWithDefaults(dataObj[key], defaultsObj[key])
+    for (const key of Object.keys(defaultsObj)) {
+      const childPath = path ? `${path}.${key}` : key
+      if (key in dataObj)
+        result[key] = mergeWithDefaults(dataObj[key], defaultsObj[key], childPath, missing)
+      else missing.push(childPath)
+    }
     return result
   }
   return data
