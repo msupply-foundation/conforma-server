@@ -117,7 +117,7 @@ Creates or updates a database record on any table, and creates/updates a related
 | `ignoreNull` (default `true`)                  |                                               |
 | `shouldCreateJoinTable` (default `true`)       |                                               |
 | `noChangeLog` (default `false`)                |                                               |
-| `regenerateDataTableFilters` (default `false`) |                                               |
+| `regenerateDataTableFilters` (default `true` for CREATE, else `false`) |                     |
 | `data` (shorthand for multiple fields at once) |                                               |
 | `patch` (pre-constructed data object)          |                                               |
 | `databaseTypes`                                |                                               |
@@ -234,7 +234,7 @@ It is recommended to use the `data` parameter object, or `patch` when possible. 
 
 `ignoreNull`: By default, any `null` values in the incoming data are ignored -- they won't replace existing values, nor creating new fields. This is preferable in most cases, as it can be hard to create an expression that conditional omits a field, and so setting it to `null` is usually the easiest way to handle it if we don't want a certain field changed under certain conditions. However, this behaviour can be over-ridden by setting `ignoreNull: false`, in which case `null` values are treated the same as any other.
 
-`regenerateDataTableFilters`: if you have ["filter data" columns](Data-View-Filters.md#handling-complex-data-structures) defined for filtering this data table, the `regenerateDataTableFilters` flag will ensure that the "generateFilterDataFields" script will run and compute the relevant filter data values for the new record. By default this is `false`, but you should enable it for all instances of `modifyRecord` where you are inserting data that can be viewed in [Data Views](Data-View.md). Even if you have no filter data filters defined currently, having this set to `true` ensures that any definitions you configure in the future will automatically create the appropriate filter data values for new records.
+`regenerateDataTableFilters`: if you have ["filter data" columns](Data-View-Filters.md#handling-complex-data-structures) defined for this data table, this flag runs the "generateFilterDataFields" script to compute their values for the affected record. It defaults to `true` for creation (`CREATE`) and `false` for updates and deletes, but you can override it explicitly in either direction. (It's a cheap no-op for tables with no filter data definitions.)
 
 `noChangeLog`: The `modifyRecord` action causes an entry to be added to the `data_changelog` database table so we have a record of all data modifications (after record's initial creation) done in the system. This can be over-ridden by setting `noChangeLog: true` (or `noChangeLog: false` if you need to add a log for new record creation). It is not recommended to change the default in most cases -- we want an audit trail. It is mostly used by a few core actions so we don't clutter up the changelog table with common application table changes, etc. 
 

@@ -96,6 +96,19 @@ export const generateFilterDataFields = async (table: string, fullUpdate: boolea
       await db.dropColumn(tableNameFullSnake, name)
     }
 
+    // If there are no filter columns to populate, we're done. Any stale columns
+    // have been dropped above, so there's nothing left to do -- bail out before
+    // the sleep + full-table scan below, which would otherwise run an empty
+    // update against every record in the table.
+    if (filterTextColumnDefinitions.length === 0)
+      return {
+        success: true,
+        table: tableNameFullSnake,
+        updatedDatabaseColumns: changedColumns,
+        unchangedDatabaseColumns: [],
+        recordsProcessed: 0,
+      }
+
     // Iterate over all data table records and update their filter field values
     const allFields = (await DBConnect.getDataTableColumns(tableNameFullSnake)).map(({ name }) =>
       camelCase(name)
@@ -141,6 +154,10 @@ export const generateFilterDataFields = async (table: string, fullUpdate: boolea
             // If evaluation fails, just continue with next record
           }
         }
+        // Skip records where nothing evaluated -- an empty patch would be
+        // rejected by the update mutation and abort the whole run
+        if (Object.keys(patch).length === 0) continue
+
         const result = await updateRecord(camelCase(tableNameFullSnake), record.id, patch, '')
 
         if (result?.error) return result.error

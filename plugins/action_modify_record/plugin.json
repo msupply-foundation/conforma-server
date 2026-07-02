@@ -7,7 +7,15 @@
   "optional_parameters": [
     "matchField",
     "matchValue",
+    "delete",
+    "ignoreNull",
     "shouldCreateJoinTable",
+    "noChangeLog",
+    "changeLogComment",
+    "regenerateDataTableFilters",
+    "data",
+    "patch",
+    "databaseTypes",
     "<other record fields>"
   ],
   "output_properties": ["<tableName>"],
@@ -24,6 +32,6 @@
     "links": [],
     "screenshots": [],
     "version": "1.0.0",
-    "updated": "2021-05-10"
+    "updated": "2026-07-03"
   }
 }
