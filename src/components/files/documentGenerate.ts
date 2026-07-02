@@ -11,6 +11,9 @@ import { getFilePath, saveToDB } from '../../../src/components/files/fileHandler
 import { nanoid } from 'nanoid'
 import config from '../../config'
 import { render, RenderCallback, RenderOptions } from 'carbone'
+import { renderTypstPDF } from './documentGenerateTypst'
+
+const TYPST_EXTENSIONS = ['.typ', '.typzip']
 
 const appRootFolder = getAppEntryPointDir()
 const filesFolder = config.filesFolder
@@ -77,13 +80,19 @@ export async function generatePDF({
 
   console.log('Generating document: ' + originalFilename)
 
+  const outputFullPath = path.join(appRootFolder, filesFolder, outputFilePath)
+
   try {
-    const result = await carboneRender(templateFullPath, data, {
-      convertTo: 'pdf',
-      lang: 'en-nz',
-      ...options,
-    })
-    await fs.promises.writeFile(path.join(appRootFolder, filesFolder, outputFilePath), result)
+    if (TYPST_EXTENSIONS.includes(path.extname(templatePath as string).toLowerCase())) {
+      await renderTypstPDF({ fileId, templateFullPath, data, outputFullPath })
+    } else {
+      const result = await carboneRender(templateFullPath, data, {
+        convertTo: 'pdf',
+        lang: 'en-nz',
+        ...options,
+      })
+      await fs.promises.writeFile(outputFullPath, result)
+    }
     await saveToDB(
       objectKeysToSnakeCase({
         uniqueId,

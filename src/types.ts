@@ -388,6 +388,8 @@ interface ConfigBase {
   preferencesFolder: string
   preferencesFileName: string
   zipCacheFolder: string
+  typstCacheFolder: string
+  fontsFolder: string
   stagedDownloadsFolder: string
   backupsFolder: string
   genericThumbnailsFolderName: string

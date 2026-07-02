@@ -34,6 +34,8 @@ export const BACKUPS_FOLDER = path.join(getAppEntryPointDir(), config.backupsFol
 export const FILES_FOLDER = path.join(getAppEntryPointDir(), config.filesFolder)
 export const ARCHIVE_FOLDER = path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME)
 export const ZIP_CACHE_FOLDER = path.join(getAppEntryPointDir(), config.zipCacheFolder)
+export const TYPST_CACHE_FOLDER = path.join(getAppEntryPointDir(), config.typstCacheFolder)
+export const FONTS_FOLDER = path.join(getAppEntryPointDir(), config.fontsFolder)
 export const STAGED_DOWNLOAD_FOLDER = path.join(
   getAppEntryPointDir(),
   config.stagedDownloadsFolder
