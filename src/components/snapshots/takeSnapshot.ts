@@ -2,7 +2,8 @@ import fs from 'fs'
 import fsx from 'fs-extra'
 import archiver from 'archiver'
 import path from 'path'
-import { execSync } from 'child_process'
+import { execFile } from 'child_process'
+import { promisify } from 'util'
 import { SnapshotInfo, SnapshotOperation } from '../exportAndImport/types'
 import {
   DEFAULT_SNAPSHOT_NAME,
@@ -22,6 +23,8 @@ import { errorMessage } from '../utilityFunctions'
 import { cleanupDataTables } from '../../lookup-table/utils/cleanupDataTables'
 import { listArchives, measureSnapshotSizes } from './snapshotStore'
 
+const execFileAsync = promisify(execFile)
+
 const takeSnapshot: SnapshotOperation = async ({
   snapshotName = DEFAULT_SNAPSHOT_NAME,
   snapshotType = 'normal',
@@ -29,7 +32,7 @@ const takeSnapshot: SnapshotOperation = async ({
   const startTime = Date.now()
 
   // Ensure relevant folders exist
-  createDefaultDataFolders()
+  await createDefaultDataFolders()
 
   await cleanupDataTables()
 
@@ -45,7 +48,11 @@ const takeSnapshot: SnapshotOperation = async ({
     // Write snapshot/database to folder
     console.log('Dumping database...')
     const databaseStartTime = Date.now()
-    execSync(`pg_dump -U postgres tmf_app_manager --format=custom -f ${tempFolder}/database.dump`)
+    await execFileAsync(
+      'pg_dump',
+      ['-U', 'postgres', 'tmf_app_manager', '--format=custom', '-f', `${tempFolder}/database.dump`],
+      { maxBuffer: 1024 * 1024 * 100 }
+    )
     // This plain-text .sql script is NOT used for re-import, but could be
     // useful for debugging when dealing with troublesome snapshots
     // execSync(
@@ -68,10 +75,10 @@ const takeSnapshot: SnapshotOperation = async ({
     }
 
     // Copy localisation
-    execSync(`cp -r '${LOCALISATION_FOLDER}/' '${tempFolder}/localisation'`)
+    await fsx.copy(LOCALISATION_FOLDER, path.join(tempFolder, 'localisation'))
 
     // Copy prefs
-    execSync(`cp '${PREFERENCES_FILE}' '${tempFolder}'`)
+    await fsx.copy(PREFERENCES_FILE, path.join(tempFolder, path.basename(PREFERENCES_FILE)))
 
     // Save snapshot info (version, timestamp, sizes). Measure before writing
     // info.json so the size reflects the snapshot's data content; the

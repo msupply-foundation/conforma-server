@@ -83,7 +83,7 @@ export async function generatePDF({
       lang: 'en-nz',
       ...options,
     })
-    fs.writeFileSync(path.join(appRootFolder, filesFolder, outputFilePath), result)
+    await fs.promises.writeFile(path.join(appRootFolder, filesFolder, outputFilePath), result)
     await saveToDB(
       objectKeysToSnakeCase({
         uniqueId,

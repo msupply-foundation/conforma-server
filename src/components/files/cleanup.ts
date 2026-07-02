@@ -26,15 +26,27 @@ interface FilePathData {
   id: number
   filePath: string
 }
+
+const fileExists = async (filePath: string) => {
+  try {
+    await fs.promises.access(filePath)
+    return true
+  } catch {
+    return false
+  }
+}
+
 const processMissingFileLinks = async () => {
   const fileIdsToBeDeleted: number[] = []
   let offset = 0
   let filePaths: FilePathData[] = await DBConnect.getFilePaths(BATCH_SIZE, offset)
 
   while (filePaths.length > 0) {
-    filePaths.forEach(({ id, filePath }) => {
-      if (!fs.existsSync(filePath)) fileIdsToBeDeleted.push(id)
-    })
+    await Promise.all(
+      filePaths.map(async ({ id, filePath }) => {
+        if (!(await fileExists(filePath))) fileIdsToBeDeleted.push(id)
+      })
+    )
     offset += BATCH_SIZE
     filePaths = await DBConnect.getFilePaths(BATCH_SIZE, offset)
   }

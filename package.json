@@ -84,7 +84,6 @@
     "carbone": "3.2.3",
     "comment-json": "^4.1.0",
     "deep-equal": "^2.0.5",
-    "delay-sync": "^1.0.2",
     "dotenv": "^10.0.0",
     "fast-csv": "^4.3.6",
     "fastify": "^4.28.1",

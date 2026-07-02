@@ -97,19 +97,18 @@ export const crawlFileSystem = async (
   directory: string,
   fileOperation: (filePath: string) => void
 ) => {
-  const files = fs.readdirSync(directory)
-  for (const file of files) {
-    const subPath = path.join(directory, file)
-    if (fs.statSync(subPath).isDirectory()) await crawlFileSystem(subPath, fileOperation)
+  const entries = await fsProm.readdir(directory, { withFileTypes: true })
+  for (const entry of entries) {
+    const subPath = path.join(directory, entry.name)
+    if (entry.isDirectory()) await crawlFileSystem(subPath, fileOperation)
     else await fileOperation(subPath)
   }
 }
 
 // Recursively crawl a directory and remove any empty directories within
 export const clearEmptyDirectories = async (directory: string) => {
-  const directories = (await fsProm.readdir(directory)).filter((dir) =>
-    fs.statSync(path.join(directory, dir)).isDirectory()
-  )
+  const entries = await fsProm.readdir(directory, { withFileTypes: true })
+  const directories = entries.filter((entry) => entry.isDirectory()).map((entry) => entry.name)
   for (const dir of directories) {
     await clearEmptyDirectories(path.join(directory, dir))
     const files = await fsProm.readdir(path.join(directory, dir))

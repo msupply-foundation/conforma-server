@@ -13,8 +13,11 @@ import {
   SNAPSHOT_ARCHIVES_FOLDER_NAME,
   SNAPSHOT_ARCHIVE_FOLDER,
 } from '../../constants'
-import { execSync } from 'child_process'
+import { execFile } from 'child_process'
+import { promisify } from 'util'
 import { getCurrentArchives } from '../files/helpers'
+
+const execFileAsync = promisify(execFile)
 
 interface ArchiveBackupInfo {
   uid: string
@@ -36,7 +39,11 @@ const createBackup = async (password?: string) => {
   // Take snapshot
   const snapshotName = backupFilePrefix
   await fsx.ensureDir(path.join(BACKUPS_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME))
-  execSync(`chmod -R 777 ${BACKUPS_FOLDER}/${SNAPSHOT_ARCHIVES_FOLDER_NAME}`)
+  await execFileAsync('chmod', [
+    '-R',
+    '777',
+    path.join(BACKUPS_FOLDER, SNAPSHOT_ARCHIVES_FOLDER_NAME),
+  ])
 
   console.log(
     DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
@@ -129,7 +136,7 @@ const createBackup = async (password?: string) => {
       }
 
       // Make it read-writeable by everyone (so Dropbox can sync it)
-      execSync(`chmod 666 ${item.destination}`)
+      await fs.promises.chmod(item.destination, 0o666)
     }
     // Remove snapshot folder
     await fsx.remove(path.join(SNAPSHOT_FOLDER, snapshot))
@@ -140,7 +147,7 @@ const createBackup = async (password?: string) => {
     backupInfo.latestBackup = snapshot
     backupInfo.archives = existingArchiveBackups
     await fsx.writeJSON(path.join(BACKUPS_FOLDER, 'backup.json'), backupInfo, { spaces: 2 })
-    execSync(`chmod 666 ${BACKUPS_FOLDER}/backup.json`)
+    await fs.promises.chmod(path.join(BACKUPS_FOLDER, 'backup.json'), 0o666)
 
     await cleanUpBackups()
 

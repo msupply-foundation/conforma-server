@@ -5,8 +5,8 @@ import { queryDataTable, updateRecord } from '../gqlDynamicQueries'
 import config from '../../../config'
 import { errorMessage, getValidTableName } from '../../utilityFunctions'
 import { camelCase, snakeCase } from 'lodash'
-// @ts-ignore
-import delay from 'delay-sync'
+// @ts-ignore -- node:timers/promises isn't declared by the pinned @types/node@14, but exists at runtime (Node 20)
+import { setTimeout as sleep } from 'node:timers/promises'
 
 const blockSize = 100 // How many database records to process at once
 
@@ -103,7 +103,7 @@ export const generateFilterDataFields = async (table: string, fullUpdate: boolea
     )
 
     // Pause to allow postgraphile "watch" to detect changed schema
-    delay(1000)
+    await sleep(1000)
 
     let fetchedCount = 0
     let total = Infinity
