@@ -65,7 +65,10 @@ export async function generatePDF({
   // Existing Carbone Template properties
   const templateFileInfo = await getFilePath(fileId)
   const templatePath = templateFileInfo?.filePath
-  const templateFullPath = path.join(appRootFolder, filesFolder, templatePath as string)
+  // The template file may have been archived, in which case it lives in the
+  // archive store, not the files folder — so resolve it against the "root"
+  // returned by getFilePath rather than assuming the files folder.
+  const templateFullPath = path.join(templateFileInfo.root, templatePath as string)
   const templateName = path.parse(templateFileInfo?.originalFilename).name
 
   // Output file/folder properties
