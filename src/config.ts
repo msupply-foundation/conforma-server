@@ -29,9 +29,9 @@ export type EmailOperationMode = 'LIVE' | 'TEST' | 'NONE' | 'MAILHOG'
 Operation modes:
 
 - LIVE: Emails are sent normally according to action configurations
-- TEST: All emails are sent to a single address, defined in server
-  preferences "testingEmail" property. Used on testing servers or in
-  development.
+- TEST: All emails are sent to the address (or array of addresses) defined
+  in server preferences "testingEmail" property. Used on testing servers or
+  in development.
 - NONE: No emails are sent at all. Used for automated testing, or when a
   "testingEmail" address is not provided.
 - MAILHOG: All emails are relayed through a local MailHog SMTP server (so not
@@ -120,18 +120,20 @@ function getIsLiveServer(webHostUrl: string | undefined, productionHost?: string
 
 function getEmailOperationMode(
   emailTestMode: boolean | undefined,
-  testingEmail: string | undefined
+  testingEmail: string | string[] | undefined
 ): EmailOperationMode {
+  // An empty array is truthy, so must be checked explicitly
+  const hasTestingEmail = Array.isArray(testingEmail) ? testingEmail.length > 0 : !!testingEmail
   switch (true) {
     case emailTestMode === false:
       return 'LIVE'
-    case emailTestMode === true && !!testingEmail:
+    case emailTestMode === true && hasTestingEmail:
       return 'TEST'
     case USE_MAIL_HOG as boolean:
       return 'MAILHOG'
     case isLiveServer:
       return 'LIVE'
-    case !!testingEmail:
+    case hasTestingEmail:
       return 'TEST'
     default:
       return 'NONE'

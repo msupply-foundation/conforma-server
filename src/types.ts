@@ -154,7 +154,7 @@ export interface ActionApplicationData extends BaseApplicationData {
     webHostUrl: string
     SMTPConfig?: SMTPConfig
     emailMode: EmailOperationMode
-    testingEmail: string | null
+    testingEmail: string | string[] | null
     productionHost: string | null
   }
   other?: {
@@ -307,7 +307,7 @@ export interface ServerPreferences {
   archiveFileAgeMinimum?: number
   archiveMinSize?: number // MB
   emailTestMode?: boolean
-  testingEmail?: string
+  testingEmail?: string | string[]
   locale?: string
   timezone?: string
   externalApiConfigs?: ExternalApiConfigs
