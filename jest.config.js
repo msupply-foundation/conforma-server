@@ -5,6 +5,10 @@ module.exports = {
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
   },
+  moduleNameMapper: {
+    // ESM-only package that Jest cannot parse; folder sizes don't matter in tests
+    '^get-folder-size$': '<rootDir>/jest.stubs/get-folder-size.js',
+  },
   verbose: true,
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
 }
