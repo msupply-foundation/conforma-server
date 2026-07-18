@@ -39,7 +39,6 @@ import {
   APP_DRAFT_LATER,
   APP_TWO_LEVELS,
   APP_REVOKED,
-  REVIEW_ON_REVOKED,
   T0_LITERAL,
 } from './testHelpers/fixtures'
 import {
@@ -67,10 +66,12 @@ beforeAll(async () => {
   await drainThrottle()
 })
 
+// No DBConnect.end(): the LISTEN client can't be closed and keeps reacting to
+// later suites' DB events -- an ended pool would then throw unhandled
+// rejections into whichever suite runs next. --forceExit cleans up instead.
 afterAll(async () => {
   await drainThrottle()
   await DBConnect.query({ text: CLEANUP_SQL })
-  await DBConnect.end()
 })
 
 // The complete expected set of U's review_assignment rows after the refresh,
@@ -308,7 +309,7 @@ test('revoke: assignments deleted where permission no longer exists, review casc
     (r: any) => r.application_id === APP_REVOKED
   )
   expect(rows).toEqual([])
-  expect(await countRows('review', `id = ${REVIEW_ON_REVOKED}`)).toBe(0)
+  expect(await countRows('review', `application_id = ${APP_REVOKED}`)).toBe(0)
   // V's assignment on the same application is untouched
   expect(
     await countRows(

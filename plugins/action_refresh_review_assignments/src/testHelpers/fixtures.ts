@@ -36,8 +36,6 @@ export const APP_DRAFT_LATER = 90005 // S1 DRAFT but assignments exist (changes-
 export const APP_TWO_LEVELS = 90006 // S2 with existing L1+L2 rows; U rows created at both levels
 export const APP_REVOKED = 90007 // T2; U has stale ASSIGNED row + review; U has no T2 permission
 
-export const REVIEW_ON_REVOKED = 90001 // review hanging off U's stale assignment (cascade check)
-
 // Fixed timestamps so time_stage_created literals are stable
 export const T0 = '2026-01-01T00:00:00Z'
 export const T0_LITERAL = '2026-01-01T00:00:00' // as read back via to_char UTC
@@ -168,27 +166,29 @@ INSERT INTO public.application_status_history (id, application_stage_history_id,
          (90006, 90008, 'SUBMITTED', '${T0}', TRUE),
          (90007, 90009, 'SUBMITTED', '${T0}', TRUE);
 
+-- Ids are sequence-assigned (explicit ids could collide with real data);
 -- level_id and template_id are filled by DB triggers.
 -- V rows are seeded exactly as regeneration would produce them.
 INSERT INTO public.review_assignment
-    (id, reviewer_id, organisation_id, stage_id, stage_number, time_stage_created, status,
+    (reviewer_id, organisation_id, stage_id, stage_number, time_stage_created, status,
      application_id, allowed_sections, assigned_sections, level_number,
      is_last_level, is_last_stage, is_final_decision, is_self_assignable)
   VALUES
-    (90001, ${USER_V}, NULL, ${T1_STAGE_1}, 1, '${T0}', 'AVAILABLE', ${APP_GRANT}, NULL, '{}', 1, TRUE, FALSE, FALSE, FALSE),
-    (90002, ${USER_U}, NULL, ${T1_STAGE_1}, 1, '${T0}', 'AVAILABLE', ${APP_APPROVED}, '{a}', '{}', 1, TRUE, FALSE, FALSE, FALSE),
-    (90003, ${USER_V}, NULL, ${T1_STAGE_1}, 1, '${T0}', 'AVAILABLE', ${APP_APPROVED}, NULL, '{}', 1, TRUE, FALSE, FALSE, FALSE),
-    (90004, ${USER_U}, NULL, ${T1_STAGE_2}, 2, '${T0}', 'ASSIGNED', ${APP_ASSIGNED}, '{a}', '{a}', 1, FALSE, TRUE, FALSE, FALSE),
-    (90005, ${USER_V}, NULL, ${T1_STAGE_2}, 2, '${T0}', 'AVAILABLE', ${APP_ASSIGNED}, NULL, '{}', 1, FALSE, TRUE, FALSE, FALSE),
-    (90006, ${USER_V}, NULL, ${T1_STAGE_1}, 1, '${T0}', 'AVAILABLE', ${APP_DRAFT_LATER}, NULL, '{}', 1, TRUE, FALSE, FALSE, FALSE),
-    (90007, ${USER_V}, NULL, ${T1_STAGE_2}, 2, '${T0}', 'AVAILABLE', ${APP_TWO_LEVELS}, NULL, '{}', 1, FALSE, TRUE, FALSE, FALSE),
-    (90008, ${USER_V}, NULL, ${T1_STAGE_2}, 2, '${T0}', 'AVAILABLE', ${APP_TWO_LEVELS}, NULL, '{}', 2, TRUE, TRUE, FALSE, TRUE),
-    (90009, ${USER_U}, NULL, ${T2_STAGE_1}, 1, '${T0}', 'ASSIGNED', ${APP_REVOKED}, NULL, '{a}', 1, TRUE, TRUE, FALSE, FALSE),
-    (90010, ${USER_V}, NULL, ${T2_STAGE_1}, 1, '${T0}', 'AVAILABLE', ${APP_REVOKED}, NULL, '{}', 1, TRUE, TRUE, FALSE, FALSE);
+    (${USER_V}, NULL, ${T1_STAGE_1}, 1, '${T0}', 'AVAILABLE', ${APP_GRANT}, NULL, '{}', 1, TRUE, FALSE, FALSE, FALSE),
+    (${USER_U}, NULL, ${T1_STAGE_1}, 1, '${T0}', 'AVAILABLE', ${APP_APPROVED}, '{a}', '{}', 1, TRUE, FALSE, FALSE, FALSE),
+    (${USER_V}, NULL, ${T1_STAGE_1}, 1, '${T0}', 'AVAILABLE', ${APP_APPROVED}, NULL, '{}', 1, TRUE, FALSE, FALSE, FALSE),
+    (${USER_U}, NULL, ${T1_STAGE_2}, 2, '${T0}', 'ASSIGNED', ${APP_ASSIGNED}, '{a}', '{a}', 1, FALSE, TRUE, FALSE, FALSE),
+    (${USER_V}, NULL, ${T1_STAGE_2}, 2, '${T0}', 'AVAILABLE', ${APP_ASSIGNED}, NULL, '{}', 1, FALSE, TRUE, FALSE, FALSE),
+    (${USER_V}, NULL, ${T1_STAGE_1}, 1, '${T0}', 'AVAILABLE', ${APP_DRAFT_LATER}, NULL, '{}', 1, TRUE, FALSE, FALSE, FALSE),
+    (${USER_V}, NULL, ${T1_STAGE_2}, 2, '${T0}', 'AVAILABLE', ${APP_TWO_LEVELS}, NULL, '{}', 1, FALSE, TRUE, FALSE, FALSE),
+    (${USER_V}, NULL, ${T1_STAGE_2}, 2, '${T0}', 'AVAILABLE', ${APP_TWO_LEVELS}, NULL, '{}', 2, TRUE, TRUE, FALSE, TRUE),
+    (${USER_U}, NULL, ${T2_STAGE_1}, 1, '${T0}', 'ASSIGNED', ${APP_REVOKED}, NULL, '{a}', 1, TRUE, TRUE, FALSE, FALSE),
+    (${USER_V}, NULL, ${T2_STAGE_1}, 1, '${T0}', 'AVAILABLE', ${APP_REVOKED}, NULL, '{}', 1, TRUE, TRUE, FALSE, FALSE);
 
 -- Review on U's stale assignment; deleting the assignment must cascade here
-INSERT INTO public.review (id, review_assignment_id)
-  VALUES (${REVIEW_ON_REVOKED}, 90009);
+INSERT INTO public.review (review_assignment_id)
+  SELECT id FROM public.review_assignment
+    WHERE application_id = ${APP_REVOKED} AND reviewer_id = ${USER_U};
 `
 
 // ----- New-behaviour (gated) suite ids --------------------------------------
@@ -267,15 +267,16 @@ INSERT INTO public.application_status_history (id, application_stage_history_id,
          (90103, 90103, 'SUBMITTED', '${T0}', TRUE);
 
 INSERT INTO public.review_assignment
-    (id, reviewer_id, organisation_id, stage_id, stage_number, time_stage_created, status,
+    (reviewer_id, organisation_id, stage_id, stage_number, time_stage_created, status,
      application_id, allowed_sections, assigned_sections, level_number,
      is_last_level, is_last_stage, is_final_decision, is_self_assignable)
   VALUES
-    (90101, ${NB_USER_V}, NULL, ${NB_STAGE}, 1, '${T0}', 'AVAILABLE', ${NB_APP_STALE_JOIN}, NULL, '{}', 1, TRUE, TRUE, FALSE, FALSE),
-    (90102, ${NB_USER_U}, NULL, ${NB_STAGE}, 1, '${T0}', 'ASSIGNED', ${NB_APP_ASSIGNED}, NULL, '{a}', 1, TRUE, TRUE, FALSE, FALSE),
-    (90103, ${NB_USER_V}, NULL, ${NB_STAGE}, 1, '${T0}', 'AVAILABLE', ${NB_APP_ASSIGNED}, NULL, '{}', 1, TRUE, TRUE, FALSE, FALSE);
+    (${NB_USER_V}, NULL, ${NB_STAGE}, 1, '${T0}', 'AVAILABLE', ${NB_APP_STALE_JOIN}, NULL, '{}', 1, TRUE, TRUE, FALSE, FALSE),
+    (${NB_USER_U}, NULL, ${NB_STAGE}, 1, '${T0}', 'ASSIGNED', ${NB_APP_ASSIGNED}, NULL, '{a}', 1, TRUE, TRUE, FALSE, FALSE),
+    (${NB_USER_V}, NULL, ${NB_STAGE}, 1, '${T0}', 'AVAILABLE', ${NB_APP_ASSIGNED}, NULL, '{}', 1, TRUE, TRUE, FALSE, FALSE);
 
 -- Stale assigner join: U is not an assigner anywhere, so this must be deleted
-INSERT INTO public.review_assignment_assigner_join (id, assigner_id, organisation_id, review_assignment_id)
-  VALUES (90101, ${NB_USER_U}, NULL, 90101);
+INSERT INTO public.review_assignment_assigner_join (assigner_id, organisation_id, review_assignment_id)
+  SELECT ${NB_USER_U}, NULL, id FROM public.review_assignment
+    WHERE application_id = ${NB_APP_STALE_JOIN} AND reviewer_id = ${NB_USER_V};
 `

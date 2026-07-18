@@ -1,11 +1,7 @@
 /**
  * Tests for DELIBERATE behavioral improvements of the set-based user-scoped
- * refresh implementation. These do NOT pass against the legacy implementation,
- * so they are gated behind NEW_REFRESH_IMPL=1 until the refactor lands:
- *
- *   NEW_REFRESH_IMPL=1 npx jest --runInBand --forceExit plugins/action_refresh_review_assignments
- *
- * Differences pinned here:
+ * refresh implementation (they did not hold for the legacy per-application
+ * implementation it replaced):
  *  1. Stale assigner joins are deleted when the user holds no ASSIGN
  *     permission (legacy never cleaned them — old TO-DO).
  *  2. Other users' rows are never touched (legacy incidentally regenerated
@@ -45,11 +41,9 @@ import {
   countRows,
 } from './testHelpers/helpers'
 
-const describeNew = process.env.NEW_REFRESH_IMPL === '1' ? describe : describe.skip
-
 jest.setTimeout(120000)
 
-describeNew('set-based refresh: new-behaviour guarantees', () => {
+describe('set-based refresh: new-behaviour guarantees', () => {
   let vPreState: any[]
 
   beforeAll(async () => {
@@ -60,10 +54,10 @@ describeNew('set-based refresh: new-behaviour guarantees', () => {
     await drainThrottle()
   })
 
+  // No DBConnect.end() -- see refreshReviewAssignments.test.ts
   afterAll(async () => {
     await drainThrottle()
     await DBConnect.query({ text: CLEANUP_SQL })
-    await DBConnect.end()
   })
 
   const baseRow = {
@@ -107,7 +101,6 @@ describeNew('set-based refresh: new-behaviour guarantees', () => {
 
   test('stale assigner joins are deleted when no ASSIGN permission exists', async () => {
     expect(await getUserAssignerJoins(NB_USER_U)).toEqual([])
-    expect(await countRows('review_assignment_assigner_join', 'id = 90101')).toBe(0)
   })
 
   test('other users are never touched: no drift repair, no rewrites', async () => {
@@ -147,7 +140,3 @@ describeNew('set-based refresh: new-behaviour guarantees', () => {
     ).toEqual(before)
   })
 })
-
-// Keep Jest happy when the suite is skipped (no tests in file otherwise)
-if (process.env.NEW_REFRESH_IMPL !== '1')
-  test.skip('new-behaviour suite skipped (set NEW_REFRESH_IMPL=1 after the refactor)', () => {})

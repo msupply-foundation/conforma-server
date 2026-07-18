@@ -525,7 +525,7 @@ Should be run whenever an application or review is submitted or re-submitted, an
 
 ### Refresh Review Assignments
 
-A "super-action", which regenerates all `review_assignment` and `review_assignment_assigner_join` records associated with a specific user, or group of users (or all users). It does this by figuring out which active applications are associated with the input user(s), and then running [`generateReviewAssignments`](#generate-review-assignments) on each of them.
+Brings the `review_assignment` and `review_assignment_assigner_join` records for a specific user (or group of users) into line with their current REVIEW/ASSIGN permissions, across all active applications: missing assignments are created, revoked ones (and their assigner joins) are deleted, and section restrictions are re-merged. Only the specified users' records are touched, via a handful of set-based SQL statements — other users and unchanged records are not rewritten, so it stays fast on large systems.
 
 Should be run whenever the permissions for any user are changed.
 
@@ -539,7 +539,8 @@ Should be run whenever the permissions for any user are changed.
 **Notes**:
 
 - `userId` can be a single user (number) _OR_ an array of `userId`s
-- if `userId` is omitted completely, then ALL active applications will have their review assignments re-generated. Useful for manually running and fully updating the system assignments.
+- if `userId` is omitted completely, then ALL active applications will have their review assignments re-generated for **all** users, by running [`generateReviewAssignments`](#generate-review-assignments) on each of them. Useful for manually running and fully updating the system assignments (slow — avoid triggering from templates).
+- `updatedApplications` output: with `userId`, one record of change counts per affected application (`assignmentsCreated/Updated/Deleted`, `assignerJoinsCreated/Deleted`); without, the per-application `generateReviewAssignments` results.
 
 ---
 

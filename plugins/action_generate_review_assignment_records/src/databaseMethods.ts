@@ -117,12 +117,15 @@ const databaseMethods = (DBConnect: any) => ({
       // Needs a slightly different query with different CONFLICT restrictions
       // depending on whether orgId exists or not.
       // On conflict, existing records have their Section Restrictions updated,
-      // but assignment status remains unchanged.
+      // but assignment status remains unchanged. Rows whose allowed_sections
+      // are already correct are not rewritten at all -- an unguarded update
+      // fires the section-revalidation and reviewer-stats DB triggers for
+      // every row (one all-staff stats job each), even when nothing changed.
       const text = `
         INSERT INTO review_assignment (
           reviewer_id, stage_id, stage_number, time_stage_created,
           status, application_id, allowed_sections,
-          level_number, organisation_id, 
+          level_number, organisation_id,
           is_last_level, is_last_stage,
           is_final_decision,
           is_self_assignable, assigned_sections
@@ -134,6 +137,7 @@ const databaseMethods = (DBConnect: any) => ({
           WHERE organisation_id IS ${organisationId ? 'NOT ' : ''}NULL
         DO
           UPDATE SET allowed_sections = $7
+          WHERE review_assignment.allowed_sections IS DISTINCT FROM $7
         RETURNING id`
 
       try {
@@ -156,7 +160,21 @@ const databaseMethods = (DBConnect: any) => ({
             assignedSections || [],
           ],
         })
-        reviewAssignmentIds.push(result.rows[0].id)
+        let id = result.rows[0]?.id
+        // A conflicting row that needed no update returns nothing -- fetch its
+        // id so downstream assigner-join generation still covers it
+        if (id === undefined) {
+          const existing = await DBConnect.query({
+            text: `
+              SELECT id FROM review_assignment
+              WHERE reviewer_id = $1 AND application_id = $2
+                AND stage_number = $3 AND level_number = $4
+                AND organisation_id IS NOT DISTINCT FROM $5`,
+            values: [reviewerId, applicationId, stageNumber, levelNumber, organisationId],
+          })
+          id = existing.rows[0]?.id
+        }
+        if (id !== undefined) reviewAssignmentIds.push(id)
 
         // TO-DO: What to do with existing records that don't match the
         // generated ones? Delete them? Set their status = "Not Available"?

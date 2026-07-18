@@ -3,6 +3,7 @@ import databaseMethods from './databaseMethods'
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { SingleApplicationResult, OutputObject } from './types'
 import generateReviewAssignments from '../../action_generate_review_assignment_records/src/generateReviewAssignments'
+import refreshAssignmentsForUsers from './setBasedRefresh'
 import { errorMessage } from '../../../src/components/utilityFunctions'
 
 async function refreshReviewAssignments({
@@ -18,26 +19,32 @@ async function refreshReviewAssignments({
   // Can handle input of either single userId or an array of userIds
   const userIds = Array.isArray(parameters?.userId) ? parameters?.userId : [parameters?.userId]
 
-  try {
-    const getApplicationsToUpdate = async (userIds: number[]) => {
-      // Get active applications with existing review assignments for users
-      const applicationIds = await db.getApplicationsWithExistingReviewAssignments(userIds)
-
-      // Get active applications based on users' permissions
-      applicationIds.push(...(await db.getApplicationsFromUserPermissions(userIds)))
-
-      return Array.from(new Set(applicationIds)) // Makes list elements unique
+  // User-scoped refresh: a set-based diff of the users' current permissions
+  // against their existing assignment records -- a handful of SQL statements
+  // instead of re-generating every reviewer on every application they can
+  // access. The full refresh below remains for bulk repair (no userId).
+  if (!shouldRefreshAll) {
+    try {
+      console.log('Refreshing review_assignments for user(s): ' + userIds.join(', '))
+      const updatedApplications = await refreshAssignmentsForUsers(DBConnect, userIds)
+      return {
+        status: ActionQueueStatus.Success,
+        error_log: '',
+        output: { updatedApplications },
+      }
+    } catch (error) {
+      console.log(errorMessage(error))
+      return {
+        status: ActionQueueStatus.Fail,
+        error_log: 'Problem refreshing review_assignments: ' + errorMessage(error),
+      }
     }
+  }
 
-    const applicationIds = shouldRefreshAll
-      ? await db.getAllActiveApplications()
-      : await getApplicationsToUpdate(userIds)
+  try {
+    const applicationIds = await db.getAllActiveApplications()
 
-    console.log(
-      shouldRefreshAll
-        ? 'Refreshing review_assignments for ALL active applications...'
-        : 'Refreshing review_assignments for applications: ' + applicationIds
-    )
+    console.log('Refreshing review_assignments for ALL active applications...')
 
     const results: OutputObject = {
       status: ActionQueueStatus.Success,

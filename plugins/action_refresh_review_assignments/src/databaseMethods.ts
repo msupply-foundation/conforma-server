@@ -1,40 +1,6 @@
 import { errorMessage } from '../../../src/components/utilityFunctions'
 
 const databaseMethods = (DBConnect: any) => ({
-  getApplicationsWithExistingReviewAssignments: async (userIds: number[]) => {
-    const text = `SELECT DISTINCT application_id
-      FROM review_assignment ra JOIN application app
-      ON ra.application_id = app.id
-      WHERE app.outcome = 'PENDING'
-      AND reviewer_id = ANY($1)
-    `
-    try {
-      const result = await DBConnect.query({ text, values: [userIds] })
-      return result.rows.map(({ application_id }: { application_id: number }) => application_id)
-    } catch (err) {
-      console.log(errorMessage(err))
-      throw err
-    }
-  },
-  getApplicationsFromUserPermissions: async (userIds: number[]) => {
-    const text = `SELECT DISTINCT app.application_id
-      FROM permissions_all perm
-      JOIN application_stage_status_latest app
-      ON perm."templateId" = app.template_id
-      WHERE "userId" = ANY($1)
-      AND "permissionType" = ANY('{REVIEW, ASSIGN}')
-      AND app.outcome = 'PENDING'
-    `
-    // We should also exclude applications in DRAFT, but only when its a *first*
-    // draft, so this check is done in `generateReviewAssignments` action
-    try {
-      const result = await DBConnect.query({ text, values: [userIds] })
-      return result.rows.map(({ application_id }: { application_id: number }) => application_id)
-    } catch (err) {
-      console.log(errorMessage(err))
-      throw err
-    }
-  },
   getAllActiveApplications: async () => {
     const text = `SELECT application_id FROM
       application_stage_status_latest
