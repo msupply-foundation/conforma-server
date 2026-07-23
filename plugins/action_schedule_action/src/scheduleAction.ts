@@ -82,6 +82,14 @@ const scheduleAction: ActionPluginType = async ({
 
 export default scheduleAction
 
+// Postgres renders timestamps as e.g. "2027-03-31 00:00:00+13" (SQL format,
+// with a space instead of "T"), which fromISO() rejects, so fall back to
+// fromSQL() for strings in that shape
+const parseDateString = (input: string) => {
+  const isoDate = DateTime.fromISO(input)
+  return isoDate.isValid ? isoDate : DateTime.fromSQL(input)
+}
+
 const getScheduledDateTime = ({
   date,
   duration,
@@ -100,13 +108,15 @@ const getScheduledDateTime = ({
   if (date) {
     let luxDate =
       typeof date === 'string'
-        ? DateTime.fromISO(date)
+        ? parseDateString(date)
         : date instanceof Date
-        ? DateTime.fromJSDate(date)
-        : DateTime.fromObject(date)
+          ? DateTime.fromJSDate(date)
+          : DateTime.fromObject(date)
 
-    if (!DateTime.isDateTime(luxDate))
-      throw new Error('"date" must be ISO string, JS Date or object in Luxon DateTime format')
+    if (!luxDate.isValid)
+      throw new Error(
+        `"date" must be ISO string, JS Date or object in Luxon DateTime format: ${luxDate.invalidExplanation}`
+      )
 
     // If a date AND a duration is provided, add the duration to the date
     if (luxDuration) luxDate = luxDate.plus(luxDuration)
