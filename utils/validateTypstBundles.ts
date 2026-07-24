@@ -58,6 +58,10 @@ const displayPath = (fullPath: string) => {
 const MAIN_TEMPLATE_NAME = 'main.typ'
 const DEFAULTS_NAME = 'defaults.json'
 const SAMPLE_NAME = 'sample.json'
+// Optional folder holding the original source document(s) a template was
+// converted from, kept in the bundle so future edits can diff against it.
+// Not read by rendering; travels with the bundle purely for maintenance.
+const SOURCE_FOLDER = '_source'
 
 interface Result {
   name: string
@@ -133,17 +137,18 @@ const validateBundle = async (bundlePath: string): Promise<Result> => {
 
   let defaults: unknown
   let sample: unknown
+  let source: string[] = []
 
   try {
     if (isBareTyp) {
       console.log(`  (bare .typ template: no ${DEFAULTS_NAME} possible, validating with no data)`)
     } else if (isFolder) {
-      ;({ defaults, sample } = readDataFilesFromFolder(bundlePath, problems))
+      ;({ defaults, sample, source } = readDataFilesFromFolder(bundlePath, problems))
       tempFolder = fs.mkdtempSync(path.join(os.tmpdir(), 'typzip_validate_'))
       typzipPath = path.join(tempFolder, `${name}.typzip`)
       await zipBundleFolder(bundlePath, typzipPath)
     } else {
-      ;({ defaults, sample } = await readDataFilesFromZip(bundlePath, problems))
+      ;({ defaults, sample, source } = await readDataFilesFromZip(bundlePath, problems))
     }
   } catch (err) {
     problems.push(errorMessage(err))
@@ -192,6 +197,13 @@ const validateBundle = async (bundlePath: string): Promise<Result> => {
   await compile('Compile with defaults alone', (defaults as object) ?? {}, 'defaults.pdf')
   if (sample !== undefined) await compile('Compile with sample data', sample as object, 'sample.pdf')
 
+  if (!isBareTyp)
+    console.log(
+      source.length > 0
+        ? `  ✓ Source document embedded: ${source.join(', ')}`
+        : `  ⚠ No ${SOURCE_FOLDER}/ document embedded (recommended: keep the original source for future edits)`
+    )
+
   // For unpacked-folder input, emit the uploadable bundle on success
   if (isFolder && problems.length === 0) {
     const readyZipPath = bundlePath.replace(/[/\\]+$/, '') + '.typzip'
@@ -211,12 +223,17 @@ const readDataFilesFromFolder = (bundleFolder: string, problems: string[]) => {
   else defaults = parseJson(fs.readFileSync(path.join(bundleFolder, DEFAULTS_NAME), 'utf8'), DEFAULTS_NAME, problems)
   if (fs.existsSync(path.join(bundleFolder, SAMPLE_NAME)))
     sample = parseJson(fs.readFileSync(path.join(bundleFolder, SAMPLE_NAME), 'utf8'), SAMPLE_NAME, problems)
-  return { defaults, sample }
+  const sourceDir = path.join(bundleFolder, SOURCE_FOLDER)
+  const source = fs.existsSync(sourceDir)
+    ? fs.readdirSync(sourceDir).map((f) => `${SOURCE_FOLDER}/${f}`)
+    : []
+  return { defaults, sample, source }
 }
 
 const readDataFilesFromZip = async (zipPath: string, problems: string[]) => {
   let defaults: unknown
   let sample: unknown
+  let source: string[] = []
   const zip = new StreamZip.async({ file: zipPath })
   try {
     const entries = await zip.entries()
@@ -225,10 +242,13 @@ const readDataFilesFromZip = async (zipPath: string, problems: string[]) => {
     else defaults = parseJson((await zip.entryData(DEFAULTS_NAME)).toString(), DEFAULTS_NAME, problems)
     if (entries[SAMPLE_NAME])
       sample = parseJson((await zip.entryData(SAMPLE_NAME)).toString(), SAMPLE_NAME, problems)
+    source = Object.values(entries)
+      .filter((e) => !e.isDirectory && e.name.startsWith(`${SOURCE_FOLDER}/`))
+      .map((e) => e.name)
   } finally {
     await zip.close()
   }
-  return { defaults, sample }
+  return { defaults, sample, source }
 }
 
 const parseJson = (raw: string, filename: string, problems: string[]): unknown => {

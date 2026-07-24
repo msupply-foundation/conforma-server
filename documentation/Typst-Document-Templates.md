@@ -15,11 +15,25 @@ A Typst document template is uploaded to Conforma as a single **`.typzip`** file
 | `main.typ`      | yes      | The template entry point                                                                                                     |
 | `defaults.json` | yes      | Fallback values for **every** data field the template reads — guarantees missing data can never crash a render (see below)  |
 | `sample.json`   | no       | Realistic sample data, used by the validation script and for previewing                                                      |
+| `_source/`      | no       | The original document(s) the template was converted from (e.g. a Word `.docx`), kept for maintenance — see below            |
 | anything else   | no       | Images, fonts, partial `.typ` files — referenced from `main.typ` by path relative to the bundle root                        |
 
 All files must sit at the **root** of the zip (no enclosing folder — zip the files, not the folder containing them; subfolders for assets are fine). A bare `.typ` file can also be uploaded and is treated as a bundle-of-one — only suitable for experiments, since it can carry no images and, more importantly, no `defaults.json`.
 
 Unlike `.odt` files (which are themselves zips carrying their images), a `.typ` file is plain text — that's why assets travel alongside it in the bundle, and why the bundle is the unit of upload.
+
+### Keeping the source document (`_source/`)
+
+Templates are usually converted from a Word/OpenOffice design supplied by a
+non-technical author. When that author later edits the original and hands over a
+new version, the cleanest way to update the template is to **diff the new
+document against the one the template was built from** and patch `main.typ`
+accordingly — far safer than re-converting from scratch, which risks regressing
+hand-tuned layout. To make that baseline always available, the original
+source document is kept inside the bundle under `_source/` (e.g.
+`_source/Certificate_DRAFT1.docx`). It is never read by rendering — it just
+travels with the bundle so the "before" version is always on hand. `yarn
+validateTypst` reports whether a bundle has one.
 
 ## Writing a template
 
