@@ -190,12 +190,30 @@ Translation cheat-sheet:
 | Embedded image         | `#image("logo.png", width: 3cm)`                             |
 | Absolutely-placed box  | `#place(top + left, dx: .., dy: .., block(width: ..)[ .. ])` |
 
-Fonts: map the source's fonts to bundled families — Arial → **Liberation Sans**,
-Times New Roman → **Liberation Serif**, Calibri → **Carlito**, Cambria →
-**Caladea**. Word's default (Calibri/Aptos) → Carlito is the close match. Never
-rely on a system font; the server ignores them. `yarn listFonts` shows the full
-set (heading/display faces like Montserrat, Playfair Display, EB Garamond are
-available too).
+**Fonts — inspect the source's actual faces, then match each to the closest
+bundled family.** Don't assume one font for the whole document: faces often vary
+by element. (In this project's certificate the body was Arial but the table body
+inherited the doc's Times New Roman default → serif, which had to be reproduced.)
+Read the real face for each block from `<w:rFonts>` on its runs and from its
+paragraph style in `word/styles.xml` — the same style-vs-default care as font
+size. Then map each to the closest metric-compatible family that's actually in
+the repo:
+
+| Source font | Bundled match |
+| --- | --- |
+| Arial / Helvetica | **Liberation Sans** |
+| Times New Roman | **Liberation Serif** |
+| Calibri (Word default), Aptos | **Carlito** |
+| Cambria | **Caladea** |
+| Courier New | **Liberation Mono** |
+
+Run **`yarn listFonts`** for the full available set — the *authoritative* list of
+what will resolve (also heading/display faces: Noto, Montserrat, Playfair
+Display, EB Garamond, …). **Never rely on a system font** — the server renders
+with `--ignore-system-fonts`, so anything not in the repo `fonts/` folder or the
+bundle silently falls back. If the source uses a face with no close bundled
+match, pick the nearest available and note the substitution, or add the font to
+`fonts/` (see that folder's README for the licensing requirement).
 
 ### 4. Write `defaults.json` (the critical file)
 
@@ -273,6 +291,35 @@ formats — expect to hand-tune `#v()`, alignment, and `#place()`.
 - **A big header/footer margin shrinks the body** — if content overflows to a
   second page after enlarging the bottom margin to raise the footer, ease the
   bottom margin or the inter-section `#v()` gaps until it fits on one page.
+- **Repeating footer vs. once-at-the-end block — ASK, don't assume.** A source's
+  header/footer looks identical whether it's meant to repeat on every page or
+  appear only once at the end; the doc doesn't encode the intent. Word "footers"
+  repeat per page by default, but for a certificate/permit that may spill to
+  several pages, the contact/signature block often belongs only at the *end*.
+  **Clarify with the user which they want** (and the same for the header). The
+  two implementations:
+  - *Per-page* (repeats on every page): `page(header: …)` / `page(footer: …)`.
+  - *Once, at the bottom of the LAST page*: use a page footer that renders only
+    on the final page, via a `context` check —
+    ```typ
+    footer: context {
+      if counter(page).at(here()).first() == counter(page).final().first() {
+        contactBlock
+      }
+    }
+    ```
+    Because it's still a page footer, it lives in the bottom margin: it never
+    splits across a page break and never overlaps content, and it's cleanly
+    anchored at the bottom of whatever page turns out to be last. Size the bottom
+    `margin` to hold it (reserved on every page).
+  A common mix (used by the Tonga certificate) is a *repeating header* + a
+  *last-page-only footer* — but confirm it fits the document at hand.
+
+  > Do NOT use the tempting `#v(1fr)` + block-at-end-of-body trick for this. It
+  > works when everything fits on one page, but in the middle case — content
+  > *just* over one page — the block splits across the page boundary (or, if made
+  > `breakable: false`, jumps to the *top* of the overflow page). The last-page
+  > page-footer above is the robust fix.
 
 ## Updating an existing template
 

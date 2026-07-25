@@ -89,10 +89,12 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
       hasValidEmails &&
       transporter
     ) {
+      const isTest = emailMode === 'TEST'
       console.log(
-        `Sending email to: ${toAddresses}\ncc:${ccAddresses}\nbcc: ${bccAddresses}\nSubject: ${
-          subject || ''
-        }\n`
+        `Sending email to: ${isTest ? testingEmail : toAddresses}` +
+          (isTest ? `  (TEST mode — original recipient: ${toAddresses})` : '') +
+          `\ncc: ${isTest ? '' : ccAddresses}\nbcc: ${isTest ? testingEmail : bccAddresses}` +
+          `\nSubject: ${subject || ''}\n`
       )
       transporter
         .sendMail({
