@@ -24,6 +24,15 @@ Read
 first — it is the source of truth for the bundle format, data handling, fonts,
 and validation. This skill is the *conversion procedure*; that doc is the *spec*.
 
+**Ask for a PDF export of the source up front, and use it as the visual target.**
+A rendered PDF (`File ▸ Export/Save As ▸ PDF` from Word) is the ground truth for
+how the document should look — sizes, spacing, and layout are all *visible*,
+so you match what you see instead of reverse-engineering Word's box model. You
+can view PDFs directly (render them to images). The `.docx` is still needed for
+clean asset extraction, exact marker paths, and as the diffable source — so work
+from **both**: the PDF as the visual target, the docx for measurements/assets.
+Embed both in `_source/` when done (see step 1).
+
 ## What you're producing
 
 A folder that validates into a `.typzip`:
@@ -72,6 +81,20 @@ sed -e 's/<\/w:p>/\n/g' -e 's/<[^>]*>//g' word/document.xml > document_text.txt
   is `w:w="11906" w:h="16838"`.
 - Fonts appear as `<w:rFonts w:ascii="Arial"/>` on runs, or in
   `word/styles.xml`.
+- **Font SIZE lives in the paragraph STYLE, not the document default** — this is
+  the #1 spacing/sizing mistake. `<w:sz w:val="X"/>` (half-points → `/2` for pt)
+  can appear in `docDefaults`, in a *paragraph style* (`<w:style>` in
+  `styles.xml`), or as a *run override*. The default (often 12pt) is usually NOT
+  what the body renders at — the body paragraphs reference a style (e.g. via
+  `<w:pStyle w:val="BodyA"/>`) whose `w:sz` is the real size (often 11pt). To get
+  each block's true size: find its paragraph's `w:pStyle`, then look up that
+  style's `w:sz` in `styles.xml` (falling back to run overrides, then the
+  default). Cross-check against the PDF — the sizes must look right there.
+- **Vertical rhythm often comes from EMPTY paragraphs**, not paragraph-spacing
+  settings. A `<w:p>` with no text is a deliberate blank-line gap; two of them
+  is a big section break (e.g. before a heading). Count them and reproduce with
+  explicit `#v()` in Typst. List the paragraph spacing to see the structure:
+  `grep -c '<w:p ' ...` and inspect empties between sections.
 
 **1b. Carbone `.odt`** (porting an existing template):
 
@@ -92,17 +115,25 @@ visual target while you get the text content from the user.
 (`logo.png`, `seal.png`). Typst templates reference assets by path — they can't
 be embedded in the plain-text `.typ` the way office zips embed their images.
 
-**Copy the original source document into `<template-name>/_source/`** (keeping
-its real filename). It's never rendered — it rides along in the bundle so a
-future edit can be done by diffing the author's new version against this
-baseline (see "Updating an existing template" below).
+**Copy the original source into `<template-name>/_source/`** (keeping real
+filenames) — both the editable doc (`.docx`) AND the PDF export. Neither is
+rendered; they ride along so a future edit can diff the author's new doc against
+this baseline (text changes) and compare the new PDF against the old (restyling a
+text-diff misses). See "Updating an existing template" below.
 
-> **Optional accelerator:** `pandoc` (3.x) has a Typst writer and can scaffold a
-> rough `.typ` from a Word doc: `pandoc design.docx -t typst -o scaffold.typ`.
-> It's not installed here by default (`brew install pandoc`), and the output
-> always needs manual cleanup and the data-wiring below — but it can save typing
-> for text-heavy documents. Skip it for layout-precise designs; hand-translation
-> is more reliable there.
+> **Pandoc — tried, not worth it for our documents.** `pandoc -t typst` was
+> tested on a real certificate and rejected: it converts *content/structure*
+> (text, tables, bold/italic, links) but discards *all* layout — the running
+> header, logo, footer positioning, fonts, title sizing, page margins, and
+> spacing rhythm were gone, and it broke the numbered list. Since layout is ~90%
+> of the work for the layout-precise one-pagers we build (certificates, permits),
+> pandoc saves no real effort — you rebuild the whole layout by hand anyway, on
+> top of untangling its `#figure`/table wrapping and escaped markers. Its one
+> genuine bonus was extracting table column widths as percentages. **Default to
+> hand-translation against the PDF.** Only reach for pandoc on a genuinely
+> prose-heavy document (a multi-page policy/guidance doc that's mostly flowing
+> text and headings with little bespoke layout), where content extraction is a
+> real head start.
 
 ### 2. Inventory the data (where the dynamic content goes)
 
@@ -199,14 +230,18 @@ sample data, checks for unknown fonts, and on success writes the ready-to-upload
 If "defaults alone" fails with `dictionary does not contain key "X"`, your
 `defaults.json` is missing path `X` — add it and re-run. Iterate until green.
 
-### 7. Visual review
+### 7. Visual review — compare against the target PDF, side by side
 
-Open `sample.pdf` (and `defaults.pdf` — it should be a clean blank skeleton, no
-errors) and compare against the original. Positioned frames, exact tab stops,
-and letter-spacing rarely map 1:1 from office formats — expect to hand-tune
-spacing (`#v()`), alignment, and `#place()` for absolutely-positioned elements.
-Render a PNG for your own inspection with
-`typst compile --ignore-system-fonts --font-path fonts --input datafile=/sample.json <bundle>/main.typ preview.png`.
+Render your output and **put it next to the source's PDF export** (step 0). View
+both as images and compare block by block: logo size, font sizes, the gap after
+the title, gaps between blocks, indent of each value, the section break before
+headings, and footer position. Iterate on the numbers until they line up — this
+visual match is the real quality bar, not the XML. Render a PNG (higher-res than
+inspecting the PDF) with:
+`typst compile --ignore-system-fonts --font-path fonts --input datafile=/sample.json <bundle>/main.typ preview.png`
+Also open `defaults.pdf` — it should be a clean blank skeleton with no errors.
+Positioned frames, exact tab stops, and letter-spacing rarely map 1:1 from office
+formats — expect to hand-tune `#v()`, alignment, and `#place()`.
 
 ## Gotchas (learned the hard way)
 
@@ -226,6 +261,18 @@ Render a PNG for your own inspection with
   parent family — select weights via `weight:` on the base family instead.
 - **Word twips**: page/margin numbers in `.docx` are 1440-per-inch; don't paste
   them into Typst as-is (which reads pt/cm/mm/in).
+- **Running header/footer positioning is counter-intuitive in Typst.** The
+  header/footer live in the page *margin*, not the body. `header-ascent` /
+  `footer-descent` are the gap between the header/footer and the body edge —
+  and a LARGER `footer-descent` pushes the footer DOWN toward the paper edge (it
+  does not raise it). To place a footer high with clear space beneath it (the
+  common design), use a LARGE bottom `margin` and a SMALL `footer-descent`. If a
+  tall header (e.g. a big logo) gets clamped to the top edge, the top margin is
+  too small to contain it — increase `margin.top` until `margin.top −
+  header-ascent − header-height` is the gap you want above the header.
+- **A big header/footer margin shrinks the body** — if content overflows to a
+  second page after enlarging the bottom margin to raise the footer, ease the
+  bottom margin or the inter-section `#v()` gaps until it fits on one page.
 
 ## Updating an existing template
 
@@ -239,14 +286,14 @@ The bundle carries its own baseline in `_source/`, so:
 2. The diff shows exactly which text/markers/fields changed — make the matching
    surgical edits to `main.typ` (and `defaults.json`/`sample.json` if a field
    was added/removed).
-3. Replace the doc in `_source/` with the new version.
-4. Re-run `yarn validateTypst` and eyeball the render.
+3. Replace the doc AND the PDF in `_source/` with the new versions.
+4. Re-run `yarn validateTypst` and compare the render against the new PDF.
 
 Caveat: a text diff catches content, markers, and structure — but NOT pure
-restyling (font/colour/bold changes). For those, compare the *rendered* PDFs
-(LibreOffice-render the new source, or just check the new Typst output against
-it). Re-convert from scratch only for a structural redesign, where patching is
-more error-prone than rebuilding.
+restyling (font/colour/bold/size/spacing changes). For those, compare the new
+PDF export against the embedded `_source/` PDF (and against your Typst output).
+Re-convert from scratch only for a structural redesign, where patching is more
+error-prone than rebuilding.
 
 ## Reference: the first converted template
 
