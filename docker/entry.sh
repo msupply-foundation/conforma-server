@@ -28,6 +28,7 @@ echo '---'
 if [ ! -s "$PG_DATA/PG_VERSION" ]; then
   if [ -d "$SEED_DB" ]; then
     echo '    - DB volume empty: restoring cluster from fresh_db'
+    mkdir -p "$PG_DATA"
     cp -a "$SEED_DB/." "$PG_DATA/"
     chown -R postgres:postgres "$PG_DATA"
     chmod 700 "$PG_DATA"

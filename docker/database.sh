@@ -31,3 +31,9 @@ sleep 2
 # mounts empty). See docker/entry.sh.
 echo '--- COPY CLEAN DATABASE (used to seed an empty DB volume on first launch)'
 cp -R /var/lib/postgresql/16/main/ ./fresh_db
+
+# Empty the image's data dir so Docker's implicit named-volume seeding brings
+# nothing, making entry.sh's fresh_db restore the single, deterministic DB-seed
+# path (covers both compose volumes and the no-volume run.sh case).
+echo '--- EMPTYING image data dir (entry.sh seeds it from fresh_db at launch)'
+find /var/lib/postgresql/16/main -mindepth 1 -delete
