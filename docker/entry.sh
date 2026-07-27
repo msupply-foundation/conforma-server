@@ -70,6 +70,34 @@ service postgresql status
 
 echo '---'
 echo '---'
+echo '--- ENSURING BASE DATA (restore core_templates if the DB is empty)'
+echo '---'
+echo '---'
+# Wait for Postgres to accept connections
+for _ in $(seq 1 30); do
+  psql -U postgres -c '\q' 2>/dev/null && break
+  sleep 1
+done
+# fresh_db gives us a bootable cluster, but its app data may be empty (e.g. the
+# build-time restore didn't populate it). If the app schema is missing, restore
+# the base "core_templates" snapshot shipped in the image -- via the same code
+# path as an admin "restore snapshot", reading the reliable build/database copy.
+# This is deterministic and independent of the build-time DB restore. On an
+# already-populated DB it's a no-op.
+psql -U postgres -tc "SELECT 1 FROM pg_database WHERE datname='tmf_app_manager'" | grep -q 1 \
+  || psql -U postgres -c "CREATE DATABASE tmf_app_manager"
+HAS_SCHEMA=$(psql -U postgres -d tmf_app_manager -tAc \
+  "SELECT to_regclass('public.system_info') IS NOT NULL" 2>/dev/null | tr -d '[:space:]')
+if [ "$HAS_SCHEMA" = "t" ]; then
+  echo '    - database already populated: skipping base snapshot restore'
+else
+  echo '    - empty database: restoring core_templates'
+  cd "$APP_DIR"
+  NODE_ENV=production node build/database/snapshotCLI.js use core_templates
+fi
+
+echo '---'
+echo '---'
 echo '--- STARTING NGINX'
 echo '---'
 echo '---'
