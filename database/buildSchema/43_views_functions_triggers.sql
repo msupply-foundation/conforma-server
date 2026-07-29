@@ -1141,7 +1141,14 @@ CREATE OR REPLACE FUNCTION public.reviewable_questions (app_id int)
         ar.value
     ORDER BY
         code,
-        ar.time_submitted DESC
+        -- NULLS LAST is critical: an application_response that has never been
+        -- submitted (time_submitted IS NULL) would otherwise sort FIRST under
+        -- DESC and shadow the genuinely submitted response. That happens
+        -- whenever a restarted application leaves behind duplicate DRAFT
+        -- responses, and it breaks any review lookup keyed on response_id.
+        ar.time_submitted DESC NULLS LAST,
+        -- Deterministic tie-break (e.g. nothing submitted yet): newest wins
+        ar.id DESC
 $$
 LANGUAGE sql
 STABLE;
@@ -1200,7 +1207,10 @@ GROUP BY
     rq.response_id
 ORDER BY
     review_response_code,
-    is_latest_review DESC
+    -- is_latest_review is NULL when the LEFT JOINs found no review_response.
+    -- Without NULLS LAST those unreviewed rows sort ahead of TRUE and hide a
+    -- real decision when one question is assigned to more than one reviewer.
+    is_latest_review DESC NULLS LAST
 $$
 LANGUAGE sql
 STABLE;
