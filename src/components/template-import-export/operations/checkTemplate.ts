@@ -53,6 +53,15 @@ export const checkTemplate = async (templateId: number) => {
     return { committed, unconnectedDataViews, unconnectedFragments, ready }
   }
 
+  // Self-heal historical records where linked_entity_data failed to save on
+  // commit/import: persist the freshly-computed entity data as the new
+  // baseline (in which case the diff is necessarily empty)
+  if (template.linked_entity_data === null) {
+    console.log(`Saving missing linked_entity_data for template ${templateId}...`)
+    await db.updateRecord('template', { linked_entity_data: linkedEntities, id: templateId })
+    template.linked_entity_data = linkedEntities
+  }
+
   const diff = getDiff(template.linked_entity_data as CombinedLinkedEntities, linkedEntities)
 
   const ready =

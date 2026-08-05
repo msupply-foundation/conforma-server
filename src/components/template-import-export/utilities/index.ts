@@ -1,4 +1,5 @@
 export * from './buildTemplateStructure'
+export * from './ensureLinkedEntityData'
 export * from './getDiff'
 export * from './getTemplateLinkedEntities'
 export * from './updateHashes'
