@@ -17,7 +17,7 @@ Extensive developer docs live in [documentation/](documentation/) (also publishe
 
 ## Commands
 
-Run from the repo root with **yarn** (Node 20 — see `.nvmrc`).
+Run from the repo root with **yarn** (Node 20 or later — `.nvmrc` has the baseline version).
 
 | Command | What it does |
 | --- | --- |
