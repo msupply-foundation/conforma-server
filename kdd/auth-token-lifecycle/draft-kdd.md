@@ -5,7 +5,7 @@
 
 - **Add an `exp` claim to the JWT**, so REST and GraphQL both reject expired tokens through the same check — replacing REST's hand-rolled expiry calculation, which GraphQL never had (§1).
 - **Browser sessions get a refresh token and a session table** — a second, longer-lived credential held in a cookie JavaScript cannot read, exchanged for a new access token when the old one runs out (§2).
-- **Machine clients send the access token in an `Authorization` header.** For the web app the leaning answer is a cookie for *both* tokens, with a thin middleware translating cookie → header in front of PostGraphile — the one **open question** left for review (§3, and the [Open question](#open-question-1-how-the-web-app-carries-and-renews-its-access-token) section).
+- **The refresh token is always an HttpOnly cookie.** How the *access* token is carried — in a response body and an `Authorization` header, or as a cookie with a thin middleware translating cookie → header in front of PostGraphile — is the first **open question** for review, and it applies to every caller, not only the web app. The lean is the cookie (§3, and [Open question 1](#open-question-1-how-the-access-token-is-carried-and-renewed)).
 - **Machine clients (mSupply, a peer Conforma server) are ordinary users** — a dedicated non-admin service account, the same login endpoint, the same access token with the same claims, holding one durable secret and re-authenticating when the server rejects the token. Whether that secret is a password or a provisioned session credential is the **second open question** for review (§4).
 - **Renewal is triggered by rejection, not by a clock** — no timers, no scheduled refresh; the session's expiry is the real limit. Who performs it follows from the open question; the leaning answer is the server, silently (§5).
 - **`externalApiConfigs` supports credentials that expire** — Conforma can log in to an external API, reuse the token it gets back, and acquire a fresh one when that API rejects it, instead of only ever sending a fixed secret (§6).
@@ -70,7 +70,7 @@ Option B   login   → both tokens via Set-Cookie; no token in any response body
            request → access cookie, translated to a bearer header by middleware
 ```
 
-What is **not** settled is how the web app carries its access token, and therefore who renews it. The lean is a cookie for that too — both tokens as cookies, with a thin middleware in front of PostGraphile translating cookie → `Authorization: Bearer` — leaving no token in JavaScript at all. See [Open question](#open-question-1-how-the-web-app-carries-and-renews-its-access-token) below.
+What is **not** settled is how the access token is carried — by any caller — and therefore who renews it. The lean is a cookie for that too — both tokens as cookies, with a thin middleware in front of PostGraphile translating cookie → `Authorization: Bearer` — leaving no token in JavaScript at all. See [Open question](#open-question-1-how-the-access-token-is-carried-and-renewed) below.
 
 Independent of that choice: in development the web app and server are different origins, so locally the refresh cookie needs `SameSite=None; Secure` plus CORS credentials. And `updateFigTree(JWT)` needs attention either way: under Option A it is a **second storage site for the same token** and moves with it; under Option B the web app has no token to give it, so it goes away entirely — provided FigTree's own fetch is made with credentials, so the browser attaches the access cookie.
 
@@ -138,7 +138,7 @@ Expiry metadata from a remote API is advisory — often absent, sometimes wrong,
 
 **(d) Secrets stay out of `preferences.json`.** `externalApiConfigs` is editable through the admin prefs UI and lands in a JSON file that snapshots and template exports may carry. `password` and `token` fields should require `env.` indirection, or at minimum warn on a literal.
 
-## Open question 1: how the web app carries and renews its access token
+## Open question 1: how the access token is carried and renewed
 
 Two coherent packages. Everything else in this KDD holds either way. The lean is recorded at the end of this section, but it is a lean, not a decision.
 
@@ -169,7 +169,7 @@ Not "silent refresh versus an interceptor" — that framing under-prices B, beca
 
 **Leaning B.** The deciding argument is that under B no portable credential exists in the browser at any point, whereas A always has one and merely shortens its life. The cost is bounded and well-understood: a middleware whose translation half is a few lines, in a path we can test directly, sitting in front of a library that has never had any of our code in it. That is a real risk and the reason A stays on the table — but it is a one-time, inspectable cost, against a class of exposure that otherwise never goes away.
 
-**Reviewers: this is the call to comment on.** Everything outside this section holds either way, and machine clients are unaffected — they use the header and re-login regardless.
+**Reviewers: this is the call to comment on.** Everything outside this section holds either way. Note the choice reaches machine clients too — not just the web app: under A they read the token from the response body and send a header; under B they read it from `Set-Cookie` and may send either. What does not change for them is that they hold one durable credential and re-authenticate when it is rejected.
 
 ## Open question 2: what durable credential a machine client holds
 
