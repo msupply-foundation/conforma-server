@@ -236,7 +236,7 @@ Both integrations turn out to need a **static** credential, so the relay needs o
 
 **mSupply-as-server is Basic auth**, which [`external-apis/types.ts:3`](../../src/components/external-apis/types.ts#L3) already supports. Nothing to add.
 
-**Conforma-as-server is the mechanism from §4, pointed the other way.** A peer Conforma provisions a long-lived session credential; we store it and send it as the refresh cookie. Because that server treats a **missing** access token exactly as an expired one, it mints one per request and hands it back — so this side never holds, refreshes or reasons about an access token at all. It is the same asymmetry mSupply enjoys when calling us, and it is why no login step is needed here either:
+**Conforma-as-server is the mechanism from §4, pointed the other way.** A peer Conforma provisions a long-lived session credential; we store it and send it as the refresh cookie. Because that server treats a **missing** access token exactly as an expired one, it mints one and hands it back — so this side never has to fetch or renew one, only return the cookie it was last given. It is the same asymmetry mSupply enjoys when calling us, and it is why no login step is needed here either:
 
 ```ts
 type ApiAuthentication =
@@ -246,6 +246,8 @@ type ApiAuthentication =
       baseUrl: string
       token: string }                // provisioned refresh token, sent as a cookie
 ```
+
+**We simply send back whatever the far server sets.** The relay presents the provisioned refresh token; the server mints an access token and returns it as a cookie, and we send that back on every subsequent request. When it expires the server mints another and we carry that instead.
 
 **No token cache, no in-flight de-duplication, no re-authentication retry.** Those were all costs of *acquiring* a credential that expires — a login to perform, a result to cache, concurrent callers to collapse into one login, a rejection to react to. With a static credential on both routes, none of it exists to build. The relay stays a pure per-request function of config, which also removes the cache-invalidation-on-prefs-reload problem an acquired credential would have introduced.
 
