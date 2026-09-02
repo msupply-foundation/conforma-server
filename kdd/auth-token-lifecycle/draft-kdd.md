@@ -136,6 +136,16 @@ The refresh token is stored **hashed**, and that hash is the primary key: a sess
 
 **Multiple concurrent sessions per user are required.** No unique index on `user_id` — logging in from a second browser must not evict the first. Org is not part of identity either, since switching org updates `org_id` on the same row.
 
+**Snapshots skip it on export, and carry exactly one row across on import.** Sessions are local state, not data. A snapshot may be restored onto a different client's system entirely, so its sessions must not travel with it — but the admin who *triggers* a restore should not be logged out by their own action. The two halves need different mechanisms, and only one is a `pg_dump` flag.
+
+*Export* is a flag: [`takeSnapshot.ts:52`](../../src/components/snapshots/takeSnapshot.ts#L52) gains `--exclude-table-data=public.user_session`, which omits the rows while still dumping the table definition. (`--exclude-table` would drop the definition too, so a restore would not recreate it.)
+
+*Import* is not, and no restore flag can help: [`useSnapshot.ts:84`](../../src/components/snapshots/useSnapshot.ts#L84) deliberately runs `DROP SCHEMA public CASCADE` before `pg_restore`, so nothing in `public` survives. Instead, at the start of `useSnapshot` the **restoring admin's own session row is read out, together with their username**, and re-inserted afterwards. Nothing else is preserved.
+
+**It is re-resolved by username, not re-inserted verbatim.** A restore replaces the whole dataset, so the stored `user_id` may now identify a different person — the hazard `routeUserInfo` already guards against by re-checking the JWT's username against a fresh lookup. So the row goes back only if that username exists in the restored data, rewritten to whatever `user_id` it now has, with `org_id` cleared so the org is re-picked. If the username is absent, nothing is re-inserted and the admin logs in against the restored system, which is the honest outcome — they have no account on it. That case is already recoverable on non-live servers through the existing `USER_PASSWORD_OVERRIDE` reset ([`migrateData.ts:1535`](../../database/migration/migrateData.ts#L1535)).
+
+This is a correctness measure rather than a security one: `useSnapshot` is admin-only, and `isAdmin` already carries `role: 'postgres'`, so the actor cannot gain access they lack. What it prevents is an admin silently continuing as whichever user now holds that id.
+
 **A database table rather than an in-memory store.** In-memory would log everyone out on every restart — every dev reload and every production deploy — and revocation that does not survive a restart is not revocation. Persistence costs little: the sweep is a plain `setInterval` launched from [`server.ts`](../../src/server.ts), and it does double duty as the expiry notifier (§5). Not [`scheduler.ts`](../../src/components/scheduler.ts) — that exists for customisable, user-editable schedules, and this is a fixed internal poll.
 
 ### 3. Transport: both tokens as cookies
