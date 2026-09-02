@@ -9,7 +9,7 @@
 - **Machine clients (mSupply, a peer Conforma server) are ordinary users** — a dedicated non-admin service account holding one admin-provisioned, long-lived session credential. It sends that as its refresh cookie and never logs in: a **missing** access token is treated exactly as an expired one, so the ordinary renewal path serves it with no machine-specific code (§4).
 - **Renewal is triggered by rejection, not by a clock**, and extends the session each time a token is minted. Expiry is pushed to idle clients over the existing websocket (§5).
 - **Public forms keep working unchanged.** They share one account and are isolated from each other by an RLS policy on `sessionId`, which makes that claim an access-control input the session must preserve exactly (§6).
-- **`externalApiConfigs` supports credentials that expire** — Conforma can log in to an external API, reuse the token, and acquire a fresh one when that API rejects it, invisibly to its own caller (§7).
+- **`externalApiConfigs` needs one new auth type and nothing else** — mSupply is Basic auth, already supported; a peer Conforma is the §4 mechanism reversed, sending a provisioned long-lived credential as a cookie. Neither acquires an expiring token, so no cache, de-duplication or retry is built (§7).
 
 > Driven by [conforma-templates#342](https://github.com/msupply-foundation/conforma-templates/issues/342) (mSupply ↔ Conforma bidirectional integration), whose Challenge 1 is exactly this question in both directions: _"What authorization schemes does each of these APIs use, and how do we persist login info while allowing for re-login if necessary?"_ Background: [`src/components/permissions/CLAUDE.md`](../../src/components/permissions/CLAUDE.md) and [`documentation/External-API-Access.md`](../../documentation/External-API-Access.md).
 
@@ -230,36 +230,28 @@ Two adjacent findings, both pre-existing and out of scope, recorded so they do n
 
 Expiring a public session does orphan any in-progress application, since re-logging in mints a new `sessionId` and RLS then hides the old one. That is accepted: `staleApplicationCleanup` ([`scheduler.ts:8`](../../src/components/scheduler.ts#L8)) already removes old never-submitted drafts, so orphans are swept rather than accumulating.
 
-### 7. `externalApiConfigs` supports credentials that expire
+### 7. `externalApiConfigs`: neither direction acquires an expiring credential
 
-Conforma-as-client must handle a credential it has to fetch and that later stops working, whatever software is on the far end. Knowing the far end is often Conforma means a preset, not the removal of the problem.
+Both integrations turn out to need a **static** credential, so the relay needs one new auth type and none of the acquisition machinery an expiring one would have demanded.
 
-**(a) Widen the auth union** ([`external-apis/types.ts`](../../src/components/external-apis/types.ts)). `Basic` and `Bearer` are untouched — a static shared secret is still right for plenty of APIs:
+**mSupply-as-server is Basic auth**, which [`external-apis/types.ts:3`](../../src/components/external-apis/types.ts#L3) already supports. Nothing to add.
+
+**Conforma-as-server is the mechanism from §4, pointed the other way.** A peer Conforma provisions a long-lived session credential; we store it and send it as the refresh cookie. Because that server treats a **missing** access token exactly as an expired one, it mints one per request and hands it back — so this side never holds, refreshes or reasons about an access token at all. It is the same asymmetry mSupply enjoys when calling us, and it is why no login step is needed here either:
 
 ```ts
 type ApiAuthentication =
-  | { type: 'Basic';  username: string; password: string }   // unchanged
+  | { type: 'Basic';  username: string; password: string }   // unchanged — mSupply
   | { type: 'Bearer'; token: string }                        // unchanged
-  | { type: 'ConformaLogin'                                  // peer Conforma server
-      baseUrl: string; username: string; password: string }
-  | { type: 'LoginEndpoint'                                  // general case, e.g. mSupply
-      loginUrl: string
-      body: QueryParameters          // FigTree-evaluable, so env.* works
-      tokenPath: string              // lodash path, e.g. 'data.token'
-      expiryPath?: string
-      defaultTtlSeconds?: number
-      headerTemplate?: string }      // default 'Bearer {{token}}'
+  | { type: 'ConformaSession'                                // peer Conforma server
+      baseUrl: string
+      token: string }                // provisioned refresh token, sent as a cookie
 ```
 
-`ConformaLogin` is `LoginEndpoint` with everything known: POST `/api/public/login`, read the token. The union should stay open to `ApiKey` and `OAuth2ClientCredentials` shapes, but neither is being built.
+**No token cache, no in-flight de-duplication, no re-authentication retry.** Those were all costs of *acquiring* a credential that expires — a login to perform, a result to cache, concurrent callers to collapse into one login, a rejection to react to. With a static credential on both routes, none of it exists to build. The relay stays a pure per-request function of config, which also removes the cache-invalidation-on-prefs-reload problem an acquired credential would have introduced.
 
-**(b) Cache the token, and share one login between callers that arrive together** — `tokenManager.ts` exposing `getToken(apiName, authConfig)` over an in-memory `Map<name, { token, expiresAt, inFlight?: Promise<string> }>`, with a 60 s safety margin. If twenty relay requests arrive at once just after the cached token expired, the obvious cache starts twenty logins: each checks the cache, finds nothing usable, and begins its own before any has finished. So the map holds the **login already in progress** (`inFlight`), stored before the first `await`. One login, twenty waiters — without it, this is the "hammer each other's server for every little user interaction" failure #342's Challenge 3 names. In-memory rather than persisted: one process today, and it keeps third-party tokens out of snapshots and backups.
+Should a future API genuinely require login-and-refresh, the shape is a `LoginEndpoint` type (login URL, a FigTree-evaluable body, a path to the token) behind a small token manager that caches by API name and stores the *in-progress* login rather than only its result — otherwise twenty concurrent relay requests against a cold cache start twenty logins, which is exactly the "hammer each other's server for every little user interaction" failure #342's Challenge 3 names. Nothing needs it today, so it is not being built.
 
-**(c) Exactly one retry on 401/403.** Expiry metadata from a remote API is advisory — often absent, sometimes wrong, always subject to server-side revocation — so its rejection is the only authoritative signal. Bounded to one retry, and **only for acquired types**: a 401 on static `Basic`/`Bearer` is a configuration error.
-
-**(d) All of this is invisible to the relay's own caller.** Acquisition, caching and the retry happen inside `routeAccessExternalApi`; the front end makes one request and gets one correct response, whatever re-authentication had to happen behind it.
-
-**(e) Warn when secrets are written into `preferences.json`.** It is editable through the admin prefs UI and lands in a JSON file that snapshots and template exports may carry, so a literal `password` or `token` should log a warning recommending `env.` indirection. A warning, not a refusal — hard-coding a password there is fine for development and testing.
+**Warn when secrets are written into `preferences.json`.** It is editable through the admin prefs UI and lands in a JSON file that snapshots and template exports may carry, so a literal `password` or `token` should log a warning recommending `env.` indirection. A warning, not a refusal — hard-coding a password there is fine for development and testing.
 
 ## Rejected alternatives
 
@@ -267,7 +259,7 @@ type ApiAuthentication =
 - **Ship `exp` now and defer the session table.** Attractive on sequencing — `exp` is a one-liner, the session table is a migration across two repos. Rejected because `exp` without a session makes a lapse *unrecoverable*, which forces compensating client machinery (focus-triggered refresh, `exp`-derived scheduling, careful never-let-it-lapse logic) whose entire purpose evaporates the moment §2 lands. Doing both together is less total work than doing them in order.
 - **Access token in a header, renewed by the client** (a `/refresh` call plus a 401 interceptor). The genuine alternative to §3, and it keeps two real advantages: no code of ours in the GraphQL auth path, and CSRF confined to a single route. Rejected because it always leaves a portable credential in the browser and merely shortens its life, whereas the cookie transport removes the class of exposure. The cost — a middleware whose translation half is a few lines, in a path we can test directly — is one-time and inspectable.
 - **Access token in a header, renewed by the server via a response header** (`X-New-Access-Token`, client swaps it in). Raised in review as a way to keep silent renewal without cookies, and it is possible: HTTP simply has no way for a server to update a client's *header* state, so the client must participate — about ten lines, far less than the option above. Rejected as dominated: it needs the **same** middleware in front of PostGraphile, the refresh cookie still cannot be path-scoped, **and** a portable credential is back in JavaScript. Its one real advantage over §3 is that CSRF stays confined to `/refresh`.
-- **Reuse or share JWTs between Conforma instances.** Superficially appealing once the far end is known to be Conforma. Rejected on two independent grounds: instances have different `JWT_SECRET`s (sharing one lets either forge the other's tokens; avoiding that means moving to a scheme where each server signs with its own private key and publishes a matching public one, and then distributing those keys), and **the payload is not portable** — `pp<policyId>` claims are database primary keys, so server A's `pp3` is a different policy on server B, or none. Conforma→Conforma is therefore just a normal client login, which is what `ConformaLogin` is.
+- **Reuse or share JWTs between Conforma instances.** Superficially appealing once the far end is known to be Conforma. Rejected on two independent grounds: instances have different `JWT_SECRET`s (sharing one lets either forge the other's tokens; avoiding that means moving to a scheme where each server signs with its own private key and publishes a matching public one, and then distributing those keys), and **the payload is not portable** — `pp<policyId>` claims are database primary keys, so server A's `pp3` is a different policy on server B, or none. Conforma→Conforma therefore uses a credential the far server provisions for us, which is what `ConformaSession` is.
 
 ## Consequences
 
@@ -280,7 +272,7 @@ type ApiAuthentication =
 - **The web app gains a logout request and loses its token handling.** Logout stops being a local flush; `updateFigTree` and the `localStorage` token both go.
 - **CSRF applies to the whole surface**, where nothing is cookie-authenticated today. `SameSite=Strict` is load-bearing, and GraphQL over GET must stay unreachable cross-site.
 - **Local development needs cookie handling.** Different origins in dev means `SameSite=None; Secure` plus CORS credentials — a setup cost and a divergence from production worth documenting rather than discovering.
-- **`externalApiConfigs` gains state.** The relay stops being a pure per-request function of config. A credential change may not take effect until the cached token expires — invalidate on prefs reload, [`refreshConfig.ts`](../../src/refreshConfig.ts) is the hook — and acquisition failure is a new failure mode that must not echo a login response body into logs or to the client.
+- **`externalApiConfigs` stays stateless.** Because both routes use a static credential, the relay remains a pure per-request function of config: a credential edit takes effect immediately, with no cache to invalidate on prefs reload and no acquisition step that could fail or leak a login response into logs.
 - **Two adjacent bugs fall out of touching `constructAuthHeader`**: `getEnvVariableReplacement` is applied to `Basic.password` but not `Basic.username`, so `username: "env.FOO"` is sent literally; and the `Bearer` branch assigns `axiosRequest.headers = {...}` rather than merging, clobbering any `additionalAxiosProperties.headers`.
 - **Suggested order:** §1 + §2 + §3 together (they are one change — `exp` is not safe to ship alone) → §5 → §6 → §4 (unblocks mSupply → Conforma) → §7 (unblocks Conforma → mSupply, #342's "little tweaking").
 - **Re-openable** if a third-party integrator list appears (revisit a dedicated key table with rate limiting, and OAuth2 client-credentials for inbound), or if Conforma is deployed multi-instance (the in-memory token cache becomes one login per instance — still correct, but a shared cache may be worth it).
