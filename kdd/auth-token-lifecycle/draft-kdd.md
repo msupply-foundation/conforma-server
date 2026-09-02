@@ -6,7 +6,7 @@
 - **Add an `exp` claim to the JWT**, so REST and GraphQL both reject expired tokens through the same check — replacing REST's hand-rolled expiry calculation, which GraphQL never had (§1).
 - **A `user_session` table backs browser sessions** — a refresh token held in a cookie JavaScript cannot read, exchanged for a new access token when the old one runs out. Revocation is row deletion (§2).
 - **Both tokens are HttpOnly cookies.** A thin middleware in front of PostGraphile translates the access cookie into an `Authorization: Bearer` header, and renews it silently when it has expired, so no token ever enters JavaScript and no endpoint returns one in a response body (§3).
-- **Machine clients (mSupply, a peer Conforma server) are ordinary users** — a dedicated non-admin service account using the same login endpoint and the same access token with the same claims. Whether its durable secret is a password or a provisioned session credential is the one **open question** left for review (§4).
+- **Machine clients (mSupply, a peer Conforma server) are ordinary users** — a dedicated non-admin service account holding one admin-provisioned, long-lived session credential. It sends that as its refresh cookie and never logs in: a **missing** access token is treated exactly as an expired one, so the ordinary renewal path serves it with no machine-specific code (§4).
 - **Renewal is triggered by rejection, not by a clock**, and extends the session each time a token is minted. Expiry is pushed to idle clients over the existing websocket (§5).
 - **Public forms keep working unchanged.** They share one account and are isolated from each other by an RLS policy on `sessionId`, which makes that claim an access-control input the session must preserve exactly (§6).
 - **`externalApiConfigs` supports credentials that expire** — Conforma can log in to an external API, reuse the token, and acquire a fresh one when that API rejects it, invisibly to its own caller (§7).
@@ -20,7 +20,7 @@ Conforma's auth was built for one caller — a human in a browser. Login signs a
 - **The JWT has no `exp`, and the two surfaces diverge as a result.** [`getSignedJWT`](../../src/components/permissions/loginHelpers.ts#L160) signs with no options, so the only time data is the `iat` jsonwebtoken adds automatically. REST *does* expire tokens, but not via the JWT — the `preValidation` hook recomputes the deadline itself, `iat * 1000 + logoutAfterInactivity * 60_000` ([`server.ts:160`](../../src/server.ts#L160)), and only when `config.isProductionBuild`. **GraphQL expires nothing, anywhere**: PostGraphile's only check is `jsonwebtoken.verify`, which rejects on `exp`, and there is none. GraphQL is the entire data surface, so in practice a leaked Conforma JWT has never expired.
 - **Nothing is revocable.** No session state exists server-side, so a token cannot be withdrawn once issued. Changing `JWT_SECRET` is the only kill switch, and it logs out everyone. (`sessionId` does **not** serve this purpose — see §6; it identifies an applicant, not a login.)
 - **The access token is its own renewal credential, so a lapse is unrecoverable.** Renewal means presenting the still-valid token to `/api/user-info`; once expired there is nothing left to present. A `setInterval` ([`UserState.tsx:167`](../../../conforma-web-app/src/contexts/UserState/UserState.tsx#L167)) is therefore the only thing between a user and a logout — and browsers throttle background-tab timers and freeze them once a tab has been hidden a while.
-- **Server-as-client can only hold a fixed secret.** The relay at `POST /api/external-api/:name/:route` ([`server.ts:368`](../../src/server.ts#L368)) supports `Basic` or `Bearer` only ([`external-apis/types.ts:3`](../../src/components/external-apis/types.ts#L3)), applied verbatim by [`constructAuthHeader`](../../src/components/external-apis/helpers.ts#L9). No OAuth2, no re-login, no 401 handling anywhere in the codebase. But mSupply hands out a session token from a login call — a credential that expires, which the config cannot express.
+- **Server-as-client can only hold a fixed secret.** The relay at `POST /api/external-api/:name/:route` ([`server.ts:368`](../../src/server.ts#L368)) supports `Basic` or `Bearer` only ([`external-apis/types.ts:3`](../../src/components/external-apis/types.ts#L3)), applied verbatim by [`constructAuthHeader`](../../src/components/external-apis/helpers.ts#L9). No OAuth2, no re-login, no 401 handling anywhere in the codebase. But mSupply hands out a session token from a login call — a credential that expires, which the config cannot express. §7 adds that: a username/password auth type that performs its own login step transparently when not currently authenticated.
 
 #342 needs both directions: Conforma calling mSupply's item API, and mSupply calling Conforma's `/data-views` ([`server.ts:360-363`](../../src/server.ts#L360-L363)), which sits in the authenticated tier and so needs a Conforma access token and a way to keep having one.
 
@@ -73,21 +73,25 @@ scheduled job, every minute
   → DELETE FROM user_session WHERE expires_at < now()
   → for each deleted session holding a live socket: send { type: 'session-expired' }
 
-POST /api/logout       → DELETE this session row
-POST /api/logout-all   → DELETE all rows for this user_id
-                         (shared public account: collapses to /logout — §6)
-both                   ← Set-Cookie: access & refresh, expired
+POST /api/logout       → DELETE all rows for this user_id
+                         (shared public account: this row only — §6)
+                       ← Set-Cookie: access & refresh, expired
 ```
 
 **5 — Machine client** (mSupply, or a peer Conforma server)
 
 ```
-POST /api/public/login   { <durable credential> }
-  ← access token  (same shape, same claims, same RLS)
-  ← org comes from the session row — NULL or set, no branch either way
+one-time: an admin provisions a long-lived user_session row for the service
+          account and shows the token once
 
-on rejection → present the durable credential again, exactly once
+every request →  Cookie: refresh=<provisioned token>     (no access cookie)
+  → middleware: no access token — treated exactly as expired
+  → look up session → still exists?
+  → mint access token, set it on the response, continue
 ```
+
+No login call, no credentials, no token handling: the client sends one value and
+the server does the rest through the ordinary renewal path.
 
 ## Why it is shaped this way
 
@@ -132,7 +136,7 @@ The refresh token is stored **hashed**, and that hash is the primary key: a sess
 
 **Multiple concurrent sessions per user are required.** No unique index on `user_id` — logging in from a second browser must not evict the first. Org is not part of identity either, since switching org updates `org_id` on the same row.
 
-**A database table rather than an in-memory store.** In-memory would log everyone out on every restart — every dev reload and every production deploy — and revocation that does not survive a restart is not revocation. Persistence also costs little here: [`scheduler.ts`](../../src/components/scheduler.ts) already exists to run the cleanup, and it does double duty as the expiry notifier (§5).
+**A database table rather than an in-memory store.** In-memory would log everyone out on every restart — every dev reload and every production deploy — and revocation that does not survive a restart is not revocation. Persistence costs little: the sweep is a plain `setInterval` launched from [`server.ts`](../../src/server.ts), and it does double duty as the expiry notifier (§5). Not [`scheduler.ts`](../../src/components/scheduler.ts) — that exists for customisable, user-editable schedules, and this is a fixed internal poll.
 
 ### 3. Transport: both tokens as cookies
 
@@ -143,7 +147,7 @@ refresh token  → Set-Cookie, HttpOnly, Secure, SameSite=Strict, Path=/
 
 **No endpoint ever returns a token in a response body — login included.** Tokens are delivered exclusively by `Set-Cookie`. This withholds the **token and nothing else**: `user`, `templatePermissions` and `orgList` keep coming back in the body exactly as now; only the `JWT` field goes. Without the rule, injected script calls a renewal endpoint, the cookie is attached automatically, and it reads a valid token out of the body — at which point `HttpOnly` provides no protection at all.
 
-PostGraphile 4 reads the JWT *only* from `Authorization: Bearer` (`authorizationBearerRex`, [`createPostGraphileHttpRequestHandler.js:950`](../../node_modules/postgraphile/build/postgraphile/http/createPostGraphileHttpRequestHandler.js#L950)); library mode offers no cookie source. So a middleware in front of it reads the access cookie and sets that header. The translation half should stay trivial — read one cookie, set one header, touch nothing else — with the renewal logic beside it rather than tangled into it. `/graphql` currently sits entirely outside the `/api` preValidation hook, so this is the first code of ours in the GraphQL auth path, and that is the main cost of this choice.
+PostGraphile 4 reads the JWT *only* from `Authorization: Bearer` (`authorizationBearerRex`, [`createPostGraphileHttpRequestHandler.js:950`](../../node_modules/postgraphile/build/postgraphile/http/createPostGraphileHttpRequestHandler.js#L950)); library mode offers no cookie source. So a middleware in front of it reads the access cookie and sets that header. Its renewal rule is *"no usable access token, but a live session → mint one"*, where **missing and expired are the same case** — which is what lets a machine client work with no code of its own (§4). The translation half should stay trivial — read one cookie, set one header, touch nothing else — with the renewal logic beside it rather than tangled into it. `/graphql` currently sits entirely outside the `/api` preValidation hook, so this is the first code of ours in the GraphQL auth path, and that is the main cost of this choice.
 
 **State the security limit honestly.** Injected script can still *use* the cookie: the browser attaches it, so it can act as the user for as long as the page lives. What it cannot do is lift a portable credential and replay it later or elsewhere. Session-bound rather than exfiltratable — a real gain, not "XSS is handled".
 
@@ -157,7 +161,13 @@ mSupply — and a peer Conforma server — get a **dedicated non-admin service a
 
 The **non-admin** part is the guardrail, not a detail: `isAdmin` sets `role: 'postgres'` and bypasses every RLS policy, so an admin service account is a permanent superuser credential in a partner's config file.
 
-**They may use the identical mechanism.** Nothing stops a machine client keeping a cookie jar and renewing exactly as a browser does. They simply do not need to: re-presenting a durable credential is one call, so the cookie transport and the silent-renewal middleware buy them nothing. **Exactly one retry** on re-authentication, or a bad credential produces repeated failed logins against whatever lockout policy applies.
+**The credential is a provisioned long-lived session, not a password.** An admin — and only an admin — creates a `user_session` row for the service account with a far-future `expires_at`, and the token is shown once. mSupply stores that single value and sends it as the refresh cookie on every request. There is no login call, no username or password at its end, and no token lifecycle for it to implement: its entire configuration is a base URL and one token.
+
+**Absence of an access token is treated exactly as expiry.** That is the whole mechanism, and the reason no machine-specific code exists. The middleware's rule is *"no usable access token, but a live session → mint one"*, and a request that never carried an access cookie satisfies it identically to one whose cookie has aged out. A machine client is therefore not a case the auth path knows about; it is the same path with one branch already true.
+
+A client that keeps a cookie jar picks up the minted access token and behaves exactly like a browser. One that ignores `Set-Cookie` simply has a token minted per request — an indexed lookup and a signature, with no bcrypt anywhere, so the degradation is cheap and needs no special handling either.
+
+Revocation is deleting that row, which cuts the integration without touching the account. The credential cannot log into the web UI, and it does not rotate: a crash between receiving a replacement and persisting it would leave the client with nothing and no self-service recovery, and a grace window over two tokens is unavailable since `token_hash` is the primary key.
 
 **Org scope is a configuration choice.** The account can run without an organisation — no dummy org is needed — provided its permission is granted to the service *user* with no org attached. `getUserOrgPermissionNames` ([`postgresConnect.ts:1360`](../../src/components/database/postgresConnect.ts#L1360)) resolves `WHERE ("userId" = $1) AND "orgId" IS NULL` for a no-org session, and `WHERE ("userId" = $1 OR "userId" IS NULL) AND "orgId" = $2` when an org is set, so a `permission_join` row carrying an `org_id` is not returned to a no-org session. If the grant is wired through an organisation instead, login still succeeds and the data-view list comes back empty.
 
@@ -165,17 +175,23 @@ The **non-admin** part is the guardrail, not a detail: `isAdmin` sets `role: 'po
 
 | Clock | What it means | Lifetime | When it changes |
 | --- | --- | --- | --- |
-| access token `exp` | how long a stateless token is honoured | short — minutes | set at mint, never updated; a new token is minted instead |
+| access token `exp` | how long a stateless token is honoured | `Math.min(logoutAfterInactivity / 12, 60)` minutes — so a 1 h session gives 5 min, 6 h gives 30 min, and anything from 12 h up is capped at 1 h | set at mint, never updated; a new token is minted instead |
 | session `expires_at` | the inactivity window | `logoutAfterInactivity` — may be days on deployments that expect no auto-timeout | **extended every time an access token is minted** |
 | session `expires_at`, shared public account | same | **1 day** | same (§6) |
 
 Extending on mint rather than on every request is the point: one database write per access-TTL per active session, not one per request. Renewal is triggered by **rejection, not by a schedule**, so the `setInterval`, the clock-driven renewal window, and any focus- or visibility-based triggers all disappear.
 
-**"Active" must mean user activity, not requests.** The server only sees requests, so a user typing into a long form for twenty minutes would be logged out while actively working — a regression, because today's `LoginInactivityTimer` watches mouse and keyboard. It therefore stays, but changes job: instead of logging the user out, it fires a **debounced** lightweight renewal when the user is interacting and nothing has gone to the server. The debounce matters — this must not become a request per keystroke.
+**"Active" must mean user activity, not requests.** The server only sees requests, so a user typing into a long form for twenty minutes would be logged out while actively working — a regression, because today's `LoginInactivityTimer` watches mouse and keyboard. **The existing idle tracker is reused rather than replaced**; it simply changes job. Instead of logging the user out when the deadline passes, it calls `GET /api/user-info` while the user is interacting, which keeps the session alive and — should the access cookie have expired — has it silently replaced by the same middleware as any other request.
 
-**Expiry is pushed, not polled by the client.** An idle client makes no requests, so nothing would tell it the session ended. The once-a-minute cleanup job that deletes expired rows also emits a `session-expired` event to any live socket for those sessions, over the existing `@fastify/websocket` setup ([`routeServerStatus.ts`](../../src/components/other/routeServerStatus.ts), consumed by `ServerStatusListener`). Up to sixty seconds of lag is immaterial here. One gap to close: the current broadcast goes to **every** client (`websocketServer.clients.forEach`) and the socket route does not authenticate, so connections must be tagged with their session at connect time — with cookie transport the handshake carries the cookie, so identifying the connection is free.
+For that call to keep the session alive it must extend `expires_at` **whether or not a token was minted**: `/api/user-info` is the designated "still here" call, and is the one place expiry is refreshed without a mint. Everything else extends it only as a side effect of minting.
 
-**Logout becomes a server call.** Today the web app only flushes local storage. `POST /api/logout` deletes the current session; `POST /api/logout-all` deletes every session for that user. Both must also send expired `Set-Cookie` headers, or the browser keeps presenting a cookie whose row is gone. Note the deliberate asymmetry: **logging in elsewhere revokes nothing** — multiple browsers must keep working — while an explicit logout does.
+**The tracker deliberately does not know the access token's expiry**, and needs no new machinery to compensate. Nothing about the token is visible to JavaScript — that is the point of §3, and exposing `exp` in a readable cookie would start unpicking it. It does not need to: calling *periodically while active* keeps the session alive wherever the access token happens to be in its own cycle, and the period itself is what stops this becoming a request per interaction. The cadence comes from `logoutAfterInactivity`, which the front end already receives from `/api/public/get-prefs` and which is not a secret — a few calls per session window is ample. No debouncing and no second monitor: the tracker keeps its current shape and swaps its action.
+
+**Expiry is pushed, not polled by the client.** An idle client makes no requests, so nothing would tell it the session ended. The once-a-minute cleanup job that deletes expired rows also emits a `session-expired` event to any live socket for those sessions, over the existing `@fastify/websocket` setup ([`routeServerStatus.ts`](../../src/components/other/routeServerStatus.ts), consumed by `ServerStatusListener`). It is a plain `setInterval` from `server.ts`, not a `scheduler.ts` job — nothing about it is configurable. Up to sixty seconds of lag is immaterial here. One gap to close: the current broadcast goes to **every** client (`websocketServer.clients.forEach`) and the socket route does not authenticate, so connections must be tagged with their session at connect time. Cookie transport helps — the handshake carries the cookie like any other request, so the server can resolve the session at connect and hold it against the socket.
+
+**If that matching proves fiddly, drop it rather than build around it.** The fallback is to send nothing: a client discovers the ended session on its next request, which 401s and returns it to login. All that is lost is prompt logout of a tab nobody is looking at — which is no worse than today, where the client-side timer is the only thing that notices. Targeted delivery is a refinement on the reactive path, not load-bearing, and should not be allowed to grow complicated.
+
+**Logout becomes a server call.** Today the web app only flushes local storage. A single `POST /api/logout` deletes **every** session for that user — there is one Logout action in the UI and no appetite for a second, so logout means everywhere. It must also send expired `Set-Cookie` headers, or the browser keeps presenting a cookie whose row is gone. Note the deliberate asymmetry: **logging in elsewhere revokes nothing** — multiple browsers must keep working — while an explicit logout ends all of them.
 
 ### 6. Public forms and the shared account
 
@@ -202,7 +218,7 @@ So `sessionId` is **an access-control input evaluated by Postgres on every read*
 
 Two adjacent findings, both pre-existing and out of scope, recorded so they do not read as considered-and-accepted. The `sessionId` is a **bearer capability**: anyone can log in as the shared account with any `sessionId` and RLS will honour it. It is a `nanoid(16)`, so unguessable, and it travels in email links — the same trust model as a password-reset link — but it never expires and lands in browser history. And the policy carries `# TO-DO: Add CREATE and UPDATE restrictions`, so isolation between public applicants is **read-only** today, consistent with the permissive-write gotcha noted in the permissions guide.
 
-One consequence to design around: because a fresh public form mints its `sessionId` at login and never puts it in the URL, session expiry **orphans the in-progress application permanently** — re-logging in produces a new `sessionId`, and RLS then hides the old one. The cheap fix is to put the `sessionId` into the URL once a public session starts, which is the mechanism the email-link flow already relies on.
+Expiring a public session does orphan any in-progress application, since re-logging in mints a new `sessionId` and RLS then hides the old one. That is accepted: `staleApplicationCleanup` ([`scheduler.ts:8`](../../src/components/scheduler.ts#L8)) already removes old never-submitted drafts, so orphans are swept rather than accumulating.
 
 ### 7. `externalApiConfigs` supports credentials that expire
 
@@ -233,40 +249,11 @@ type ApiAuthentication =
 
 **(d) All of this is invisible to the relay's own caller.** Acquisition, caching and the retry happen inside `routeAccessExternalApi`; the front end makes one request and gets one correct response, whatever re-authentication had to happen behind it.
 
-**(e) Secrets stay out of `preferences.json`.** It is editable through the admin prefs UI and lands in a JSON file that snapshots and template exports may carry, so `password` and `token` fields should require `env.` indirection, or at minimum warn on a literal.
-
-## Open question: what durable credential a machine client holds
-
-Settled in §4 and unaffected by this: mSupply is a **dedicated non-admin service account**, authorised by the same RLS policies as anyone else, holding exactly one durable secret and re-authenticating when it is rejected. Only the *kind* of secret is open — and because both options sit on the same service account, switching later costs a config change at the mSupply end and nothing structural at ours.
-
-### Option A — username and password
-
-- **No new mechanism.** No provisioning route, no admin UI; it is the login path that already exists.
-- **Recovery is an existing flow** — an admin resets the password, the operator updates mSupply's config.
-- **The credential is more powerful than the job needs.** A password also grants web UI login, so a leak is full account takeover rather than API access. It is also what password-rotation policies target, and a routine rotation silently breaks the integration.
-- **Revocation is coarse** — disable the account or change the password; there is no way to cut one integration while leaving the account usable.
-- **Re-authentication forks on org scope.** `/api/public/login` always returns a *no-org* token, so an org-scoped service account must follow it with `/api/login-org` — a conditional second step the integrator has to implement and keep correct.
-
-### Option B — a provisioned, non-rotating session credential
-
-An admin mints a long-lived `user_session` row and shows the token once; mSupply stores that instead of a password. No `api_key` table and no second verification path — this is the API-key idea implemented on machinery §2 already builds.
-
-- **API-only.** It cannot log into the web UI, so a leak is bounded to what the service account can read.
-- **Individually revocable.** Deleting one row cuts one integration without touching the account or any other client — the capability Option A cannot offer at all.
-- **Re-authentication is one call regardless of org scope**, because the session row carries `org_id`. The integrator's client is identical either way and never needs to know which mode it is in.
-- **It does not rotate**, consistently with §2 — and here that matters more than for a browser: a crash between receiving a replacement and persisting it would leave mSupply with no credential and, having no password, no self-service recovery. A grace window over two valid tokens is not available as a fallback, since `token_hash` is the primary key and a session holds exactly one.
-- **Cost: a provisioning path** — an admin route or UI to mint the credential and display it once, plus a documented re-provisioning procedure, because recovery is out-of-band.
-
-### Where the review stands
-
-**Review so far leans A**, on the grounds that another server being "just another user" is not a problem, with the pull toward B being that it can be long-lived without re-authenticating.
-
-That last argument does dissolve if session lifetimes run to days, as they would on a deployment that expects no auto-timeout — so it should not be the deciding factor either way. What survives is narrower: B's credential cannot log into the web UI, and B can be revoked in isolation. **Long sessions arguably strengthen B rather than A** — a leaked credential that lives for days is one you want to be able to withdraw without disabling the account.
-
-Both are defensible; this needs a decision, not more analysis.
+**(e) Warn when secrets are written into `preferences.json`.** It is editable through the admin prefs UI and lands in a JSON file that snapshots and template exports may carry, so a literal `password` or `token` should log a warning recommending `env.` indirection. A warning, not a refusal — hard-coding a password there is fine for development and testing.
 
 ## Rejected alternatives
 
+- **A username and password for machine clients**, rather than a provisioned session credential. Genuinely cheaper — no provisioning route, no admin UI, and password reset is an existing recovery flow. Rejected on three counts: a password also grants web UI login, so a leak is account takeover rather than API access; it cannot be revoked in isolation, only by disabling the account or changing the password, which a rotation policy may do on its own schedule and silently break the integration; and it forces the client to implement a login call and, if the account is org-scoped, a conditional second call to `/api/login-org`. The provisioned credential removes all three, and the client's whole configuration becomes a base URL and one token.
 - **Ship `exp` now and defer the session table.** Attractive on sequencing — `exp` is a one-liner, the session table is a migration across two repos. Rejected because `exp` without a session makes a lapse *unrecoverable*, which forces compensating client machinery (focus-triggered refresh, `exp`-derived scheduling, careful never-let-it-lapse logic) whose entire purpose evaporates the moment §2 lands. Doing both together is less total work than doing them in order.
 - **Access token in a header, renewed by the client** (a `/refresh` call plus a 401 interceptor). The genuine alternative to §3, and it keeps two real advantages: no code of ours in the GraphQL auth path, and CSRF confined to a single route. Rejected because it always leaves a portable credential in the browser and merely shortens its life, whereas the cookie transport removes the class of exposure. The cost — a middleware whose translation half is a few lines, in a path we can test directly — is one-time and inspectable.
 - **Access token in a header, renewed by the server via a response header** (`X-New-Access-Token`, client swaps it in). Raised in review as a way to keep silent renewal without cookies, and it is possible: HTTP simply has no way for a server to update a client's *header* state, so the client must participate — about ten lines, far less than the option above. Rejected as dominated: it needs the **same** middleware in front of PostGraphile, the refresh cookie still cannot be path-scoped, **and** a portable credential is back in JavaScript. Its one real advantage over §3 is that CSRF stays confined to `/refresh`.
@@ -278,6 +265,8 @@ Both are defensible; this needs a decision, not more analysis.
 - **Two lifetimes now exist where there was one.** Anything reasoning about `logoutAfterInactivity` as a token property — the web app's `tokenExpiry`, the prefs UI — needs re-pointing at the session, and the shared public account needs its own shorter value.
 - **The two-step login survives, but step two changes shape.** `POST /api/login-org` becomes a session update rather than a token trade, and the server — not whichever token the client happens to hold — becomes authoritative about which org a session is in.
 - **`sessionId` keeps its current meaning and its current API.** It stays a JWT claim, still settable by the client at login, still written onto `application.session_id`. This work adds a column to carry it across renewal; it does not repurpose it. The claim in [`src/components/permissions/CLAUDE.md`](../../src/components/permissions/CLAUDE.md) that it "lets the server invalidate a token if the user logs in elsewhere" is wrong and should be corrected — not implemented, since logging in elsewhere must *not* invalidate anything.
+- **Machine access is revoked by deleting its session row**, cutting one integration without touching the account. Revocation is not instant: checking a revocation list per request would mean a database lookup each time, defeating a token that verifies on its own — so latency equals the access TTL.
+- **Provisioning is new admin surface.** An admin-only route or UI to mint a service session and display its token once, plus a documented re-provisioning procedure, since recovery is out-of-band.
 - **The web app gains a logout request and loses its token handling.** Logout stops being a local flush; `updateFigTree` and the `localStorage` token both go.
 - **CSRF applies to the whole surface**, where nothing is cookie-authenticated today. `SameSite=Strict` is load-bearing, and GraphQL over GET must stay unreachable cross-site.
 - **Local development needs cookie handling.** Different origins in dev means `SameSite=None; Secure` plus CORS credentials — a setup cost and a divergence from production worth documenting rather than discovering.
