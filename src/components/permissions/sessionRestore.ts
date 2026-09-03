@@ -53,8 +53,10 @@ Writes the captured session back once the restored database is migrated and its
 policies are in place.
 
 Only the system org survives. Every other org id addresses a row in the dataset
-that has just been replaced, so it is cleared and the user picks an org again;
-keeping it would either break the foreign key or silently place them in an
+that has just been replaced, so it is cleared and the user picks an org again.
+Keeping it could not break the foreign key -- reinstateUserSession resolves an
+org that is absent from the restored data to NULL, which is where clearing it
+lands anyway -- but where that id does exist it would silently place them in an
 unrelated organisation.
 */
 export const reinstateCapturedSession = async (session: CapturedSession | null) => {
