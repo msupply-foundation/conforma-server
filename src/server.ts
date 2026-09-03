@@ -47,7 +47,7 @@ import migrateData from '../database/migration/migrateData'
 import routeArchiveFiles from './components/files/routeArchiveFiles'
 import { Schedulers } from './components/scheduler'
 import { AccessExternalApiQuery, routeAccessExternalApi } from './components/external-apis/routes'
-import { DEFAULT_LOGOUT_TIME, ZIP_CACHE_FOLDER } from './constants'
+import { ZIP_CACHE_FOLDER } from './constants'
 import { updateRowPolicies } from './components/permissions/rowLevelPolicyHelpers'
 import { routeRawData } from './components/other/routeRawData'
 import {
@@ -142,7 +142,11 @@ const startServer = async () => {
 
   const api: FastifyPluginCallback = (server, _, done) => {
     // Here we parse JWT, and set it in request.auth, which is available for
-    // downstream routes
+    // downstream routes. Expiry needs no check of its own here: the token
+    // carries an "exp" claim, so getTokenData's verify() rejects an expired one
+    // and the error branch below returns 401. Postgraphile verifies the same
+    // claim, so both surfaces expire tokens by the same rule, in dev as well as
+    // production.
     server.addHook('preValidation', async (request: any, reply: FastifyReply) => {
       if (request.url.startsWith('/api/public')) return
 
@@ -154,18 +158,6 @@ const startServer = async () => {
       if (error) {
         reply.statusCode = 401
         return reply.send({ success: false, message: error })
-      }
-
-      // Check if token is too old
-      if (config.logoutAfterInactivity !== 0 && config.isProductionBuild) {
-        const expiryTime =
-          tokenData.iat * 1000 + (config.logoutAfterInactivity ?? DEFAULT_LOGOUT_TIME) * 60_000
-
-        if (Date.now() > expiryTime && !config.maintenanceMode) {
-          reply.statusCode = 401
-          console.log('Expired token from:', tokenData.username)
-          return reply.send({ success: false, message: 'Expired token' })
-        }
       }
 
       // All endpoints become admin-only in Maintenance mode

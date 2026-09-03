@@ -1,6 +1,8 @@
 import databaseConnect from '../database/databaseConnect'
 import { getUserInfo } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
+import { createSession, setSessionOrg } from './userSessions'
+import { getRefreshToken, setRefreshCookie } from './sessionCookies'
 import bcrypt from 'bcrypt'
 import { UserOrg } from '../../types'
 import { PermissionDetails } from '../permissions/types'
@@ -41,9 +43,19 @@ const routeLogin = async (request: any, reply: any) => {
       return reply.send({ success: false })
 
     // Login successful
+    const userInfo = await getUserInfo({ userId, sessionId })
+
+    // Back the login with a server-side session, so it can be renewed after the
+    // access token expires and revoked by deleting its row. The session records
+    // the sessionId that was actually used (getUserInfo mints one if the client
+    // didn't supply it), since row-level security evaluates that claim for
+    // public applicants and a renewal has to reproduce it exactly.
+    const { token } = await createSession({ userId, sessionId: userInfo.user.sessionId })
+    setRefreshCookie(reply, token)
+
     reply.send({
       success: true,
-      ...(await getUserInfo({ userId, sessionId })),
+      ...userInfo,
     })
   } catch (err) {
     return reply.send({ success: false, error: errorMessage(err) })
@@ -63,6 +75,14 @@ const routeLoginOrg = async (request: any, reply: any) => {
   if (error) return reply.send({ success: false, message: error })
 
   const userInfo = await getUserInfo({ userId, orgId, sessionId })
+
+  // Org is a field on the existing session, not a new session -- same login,
+  // same refresh token. Without it on the row, a silent renewal would drop the
+  // user back to no organisation (and so lose their org-granted permissions)
+  // mid-session. Runs unchanged when switching org or picking "no organisation".
+  const refreshToken = getRefreshToken(request)
+  if (refreshToken) await setSessionOrg(refreshToken, orgId ?? null)
+  else console.log('login-org: no refresh token provided, org not stored against a session')
 
   reply.send({ success: true, ...userInfo })
 }

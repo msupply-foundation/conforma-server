@@ -18,6 +18,29 @@ export const SCHEMA_FILE_NAME = 'schema_init'
 export const PREFERENCES_FILE_NAME = config.preferencesFileName
 export const DEFAULT_LOGOUT_TIME = 60 // Minutes
 
+// Access tokens are short-lived and silently renewed against the session, so
+// their lifetime is a fraction of the inactivity window rather than the whole
+// of it -- capped, so that a deployment with a very long window (or none at
+// all) still issues tokens that go stale in an hour.
+// See kdd/auth-token-lifecycle/draft-kdd.md
+export const ACCESS_TOKEN_TIME_DIVISOR = 12
+export const MAX_ACCESS_TOKEN_TIME = 60 // Minutes
+export const MIN_ACCESS_TOKEN_TIME = 1 // Minutes
+
+// Every hit on a public form URL (bots included) creates a session, and they
+// all share one account, so they get a shorter window than staff logins.
+export const PUBLIC_SESSION_TIME = 24 * 60 // Minutes (1 day)
+
+// When "logoutAfterInactivity" is 0, auto-logout is disabled, so sessions are
+// kept alive indefinitely rather than expiring.
+export const NO_EXPIRY_SESSION_TIME = 100 * 365 * 24 * 60 // Minutes (100 years)
+
+// The single shared account behind all public forms (UserRegistration,
+// PasswordReset). It is seeded first specifically so that it always gets id 1,
+// which the "applyNonRegistered" row-level policy relies on.
+export const NON_REGISTERED_USER_ID = 1
+export const NON_REGISTERED_USERNAME = 'nonRegistered'
+
 export const DEFAULT_THUMBNAIL_MAX_WIDTH = 300
 export const DEFAULT_THUMBNAIL_MAX_HEIGHT = 300
 
@@ -36,10 +59,7 @@ export const ARCHIVE_FOLDER = path.join(FILES_FOLDER, ARCHIVE_SUBFOLDER_NAME)
 export const ZIP_CACHE_FOLDER = path.join(getAppEntryPointDir(), config.zipCacheFolder)
 export const TYPST_CACHE_FOLDER = path.join(getAppEntryPointDir(), config.typstCacheFolder)
 export const FONTS_FOLDER = path.join(getAppEntryPointDir(), config.fontsFolder)
-export const STAGED_DOWNLOAD_FOLDER = path.join(
-  getAppEntryPointDir(),
-  config.stagedDownloadsFolder
-)
+export const STAGED_DOWNLOAD_FOLDER = path.join(getAppEntryPointDir(), config.stagedDownloadsFolder)
 // We want to keep ARCHIVE_TEMP_FOLDER inside FILES_FOLDER so that, when
 // dockerised, the archives are "collected" within the same volume. This
 // substantially speeds up restoring a large snapshot when most of the required

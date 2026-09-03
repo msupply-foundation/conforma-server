@@ -166,6 +166,10 @@ class DBConnect {
 
   public getUserAdminStatus = PostgresDB.getUserAdminStatus
 
+  public createUserSession = PostgresDB.createUserSession
+
+  public setUserSessionOrg = PostgresDB.setUserSessionOrg
+
   public getAllGeneratedRowPolicies = PostgresDB.getAllGeneratedRowPolicies
 
   public getUserOrgPermissionNames = PostgresDB.getUserOrgPermissionNames

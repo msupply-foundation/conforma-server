@@ -13,6 +13,7 @@ import {
   FilePayload,
   TriggerQueueUpdatePayload,
   UserOrg,
+  UserSession,
   DBOperationType,
 } from '../../types'
 import {
@@ -1333,6 +1334,52 @@ class PostgresDB {
       const isAdmin = result.rows.some((row) => row.name === 'admin')
       const isManager = result.rows.some((row) => row.name === managementPrefName)
       return { isAdmin, isManager }
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  /**
+   * Creates a new record in the user_session table
+   * @param userSession the {@link UserSession} object that will be persisted 
+   */
+  public createUserSession = async ({
+    tokenHash,
+    userId,
+    orgId,
+    sessionId,
+    expiresAt,
+  }: UserSession) => {
+    const text = `
+      INSERT INTO user_session (token_hash, user_id, org_id, session_id, expires_at)
+      VALUES ($1, $2, $3, $4, $5)
+    `
+    try {
+      await this.query({ text, values: [tokenHash, userId, orgId, sessionId, expiresAt] })
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  /**
+   * Updates the org_id in the user_session table for a session
+   * @param tokenHash that uniquely identifies a session
+   * @param orgId to be updated
+   * @returns a promise that resolves to true if successfully updated, 
+   * false if no rows were updated errors if failed
+   */ 
+  public setUserSessionOrg = async (tokenHash: string, orgId: number | null) => {
+    const text = `
+      UPDATE user_session
+      SET org_id = $2
+      WHERE token_hash = $1
+      RETURNING token_hash
+    `
+    try {
+      const result = await this.query({ text, values: [tokenHash, orgId] })
+      return result.rowCount > 0
     } catch (err) {
       console.log(errorMessage(err))
       throw err

@@ -15,7 +15,7 @@ A user's effective access = the policies reachable through their permission join
 
 ## Login & JWT
 
-- `routeLogin` ([routes.ts](routes.ts)) verifies username/password (bcrypt) and calls `getUserInfo` ([loginHelpers.ts](loginHelpers.ts)), which gathers the user, orgs, and template permissions and signs a JWT. `routeLoginOrg` re-issues a JWT scoped to a chosen org.
+- `routeLogin` ([routes.ts](routes.ts)) verifies username/password (bcrypt) and calls `getUserInfo` ([loginHelpers.ts](loginHelpers.ts)), which gathers the user, orgs, and template permissions and signs a JWT. It then opens a **session** ([userSessions.ts](userSessions.ts)) and returns its refresh token as an HttpOnly cookie ([sessionCookies.ts](sessionCookies.ts)). `routeLoginOrg` re-issues a JWT scoped to a chosen org and writes that org onto the **existing** session row — same login, same refresh token.
 - **JWT shape** (`compileJWT` in [rowLevelPolicyHelpers.ts](rowLevelPolicyHelpers.ts)):
   ```
   aud: 'postgraphile'
@@ -24,9 +24,23 @@ A user's effective access = the policies reachable through their permission join
   role: 'postgres'            // ONLY when isAdmin — bypasses ALL RLS
   pp<policyId>: 't'           // user holds this policy
   pp<policyId>_template_ids: "1,2,3"   // templates the policy applies to
+  iat, exp                    // access-token lifetime (see below)
   ```
 - Verified with `config.jwtSecret` (env `JWT_SECRET`, default `'devsecret'`). The REST `preValidation` hook in [../../server.ts](../../server.ts) populates `request.auth`; PostGraphile independently verifies the same token for GraphQL and exposes claims as `current_setting('jwt.claims.*')`.
-- `sessionId` (a `nanoid`) lets the server invalidate a token if the user logs in elsewhere; `config.logoutAfterInactivity` bounds token age.
+- `sessionId` (a `nanoid`, settable by the client at login) identifies an **applicant**, not a login. It is written onto `application.session_id` and evaluated by RLS, which is what isolates one public applicant from the next on the shared `nonRegistered` account — so a renewal has to reproduce it exactly. It is **not** a revocation handle, and logging in elsewhere invalidates nothing.
+- **Two clocks, both derived from `config.logoutAfterInactivity`** ([userSessions.ts](userSessions.ts)):
+  - the access token's `exp` — a fraction of the inactivity window (`/12`, capped at an hour), set at mint and never updated. Both surfaces enforce it through the same check, since `jsonwebtoken.verify` rejects on `exp` and PostGraphile already calls verify. There is no hand-rolled expiry in the REST hook any more, and no `isProductionBuild` gate: dev expires tokens too.
+  - the session's `expires_at` — the inactivity window itself, in the `user_session` table.
+  `getAdminJWT()` is deliberately left unexpiring: it is cached for the life of the process by `graphQLConnect.ts` and `FigTree.ts`.
+
+## Sessions ([userSessions.ts](userSessions.ts))
+
+- A row in `user_session` is **one login**. Its primary key is the SHA-256 hash of a random refresh token, so a session has exactly one live token and revocation is deleting the row — revoked, expired and never-existed all collapse to "no row".
+- The row carries `org_id` and `session_id` because both are authorisation state a renewed token must reproduce: `getUserInfo` merges org-granted permissions, and RLS reads `sessionId`.
+- Multiple concurrent sessions per user are **required** (a second browser must not evict the first), so there is no unique index on `user_id`, and `session_id` is deliberately not unique either.
+- Public (`nonRegistered`) sessions get a shorter window, since every hit on a public form URL creates a row.
+- The table is hidden from GraphQL ([postgraphile.tags.json5](../../../postgraphile.tags.json5)) and has RLS enabled with no policies. **Snapshots still carry session rows** — excluding them on export, and preserving the restoring admin's own session on import, is still to do.
+- Full rationale: [kdd/auth-token-lifecycle/draft-kdd.md](../../../kdd/auth-token-lifecycle/draft-kdd.md).
 
 ## RLS generation (`updateRowPolicies` in [rowLevelPolicyHelpers.ts](rowLevelPolicyHelpers.ts))
 

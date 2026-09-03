@@ -263,6 +263,18 @@ export interface UserOrg extends User, Organisation {
   id: number
 }
 
+// One row of the "user_session" table -- a single login, keyed by the hash of
+// its refresh token. See kdd/auth-token-lifecycle/draft-kdd.md
+export interface UserSession {
+  tokenHash: string
+  userId: number
+  orgId: number | null
+  // The JWT "sessionId" claim, which row-level security evaluates for public
+  // applicants, so renewal must reproduce it exactly. Not unique.
+  sessionId: string
+  expiresAt: Date
+}
+
 // node-scheduler recurrence rule format
 export interface ScheduleObject {
   date?: number | number[] | null

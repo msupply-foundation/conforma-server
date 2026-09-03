@@ -90,6 +90,15 @@
           foreignKey: '(user_id) references user_list_admin(id)|@foreignFieldName userOrganisations',
         },
       },
+      /**
+       * Login sessions (hashed refresh tokens). Purely server-side state, and
+       * never part of the API — hidden from the GraphQL schema entirely. The
+       * table also has row-level security enabled with no policies, so
+       * "graphile_user" cannot read it even if this tag were removed.
+       */
+      user_session: {
+        tags: { omit: 'read,update,create,delete,all,many' },
+      },
     },
   },
 }

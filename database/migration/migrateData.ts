@@ -15,7 +15,7 @@ import {
   hashLookupTable,
   hashRecord,
 } from '../../src/components/template-import-export'
-import { SNAPSHOT_FOLDER } from '../../src/constants'
+import { NON_REGISTERED_USERNAME, SNAPSHOT_FOLDER } from '../../src/constants'
 import { ensureSnapshotSizes, listArchives } from '../../src/components/snapshots/snapshotStore'
 
 // CONSTANTS
@@ -1431,6 +1431,21 @@ const migrateData = async () => {
     await DB.changeSchema(`ALTER TABLE public.file
         ADD COLUMN IF NOT EXISTS is_protected BOOLEAN NOT NULL DEFAULT FALSE;`)
 
+    // Backs browser (and machine-client) sessions: the refresh token is stored
+    // hashed and that hash is the primary key, so a session has exactly one
+    // live token and revocation is simply deleting the row. See
+    // kdd/auth-token-lifecycle/draft-kdd.md §2, and
+    // database/buildSchema/04B_user_session.sql for the full rationale.
+    console.log(' - Adding user_session table')
+    await DB.changeSchema(`
+      CREATE TABLE IF NOT EXISTS public.user_session (
+        token_hash varchar PRIMARY KEY,
+        user_id integer REFERENCES public.user (id) ON DELETE CASCADE NOT NULL,
+        org_id integer REFERENCES public.organisation (id) ON DELETE SET NULL,
+        session_id varchar NOT NULL,
+        expires_at timestamptz NOT NULL
+      );`)
+
     // Migrate archive_path values and move filesystem archives to archive
     // store.
     // Old format: "_ARCHIVE/{folder}/files"  →  New: "{folder}/files"
@@ -1539,7 +1554,7 @@ const migrateData = async () => {
       UPDATE public."user" SET password_hash = '${await bcrypt.hash(
         passwordOverride,
         10
-      )}' WHERE username != 'nonRegistered';
+      )}' WHERE username != '${NON_REGISTERED_USERNAME}';
     `)
   }
 }

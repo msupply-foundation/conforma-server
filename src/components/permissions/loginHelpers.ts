@@ -7,7 +7,7 @@ import { PermissionRow, TemplatePermissions } from './types'
 import { baseJWT, compileJWT } from './rowLevelPolicyHelpers'
 import { Organisation, UserOrg } from '../../types'
 import { errorMessage } from '../utilityFunctions'
-import { DEFAULT_LOGOUT_TIME } from '../../constants'
+import { getAccessTokenLifetimeMinutes, getSessionLifetimeMinutes } from './userSessions'
 import { FastifyRequest } from 'fastify'
 
 const verifyPromise: any = promisify(verify)
@@ -138,9 +138,10 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
       isManager,
     },
     orgList,
+    // The deadline that actually ends the login. NOT the access token's "exp",
+    // which is shorter and renewed silently -- see userSessions.ts
     tokenExpiry:
-      parseInt(String(Date.now() / 1000)) +
-      (config.logoutAfterInactivity ?? DEFAULT_LOGOUT_TIME) * 60,
+      parseInt(String(Date.now() / 1000)) + getSessionLifetimeMinutes(userId ?? newUserId) * 60,
   }
 }
 
@@ -157,10 +158,19 @@ const buildTemplatePermissions = (templatePermissionRows: Array<PermissionRow>) 
   return templatePermissions
 }
 
+// Access tokens carry a real "exp", which both surfaces enforce through the
+// same check: jsonwebtoken.verify rejects on it, and Postgraphile already calls
+// verify, so GraphQL expires tokens with no config of its own.
 const getSignedJWT = async (JWTelements: object) => {
-  return await signPromise(compileJWT(JWTelements), config.jwtSecret)
+  return await signPromise(compileJWT(JWTelements), config.jwtSecret, {
+    expiresIn: getAccessTokenLifetimeMinutes() * 60,
+  })
 }
 
+// Deliberately left unexpiring: this is an immortal superuser token, cached for
+// the life of the process (see graphQLConnect.ts and FigTree.ts). Giving it an
+// expiry would need re-acquisition logic at both of those cache sites, or
+// internal GraphQL starts failing once the TTL passes.
 const getAdminJWT = async () => {
   return await signPromise({ ...baseJWT, isAdmin: true, role: 'postgres' }, config.jwtSecret)
 }
