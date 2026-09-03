@@ -1431,17 +1431,25 @@ const migrateData = async () => {
     await DB.changeSchema(`ALTER TABLE public.file
         ADD COLUMN IF NOT EXISTS is_protected BOOLEAN NOT NULL DEFAULT FALSE;`)
 
-    // Backs browser (and machine-client) sessions: the refresh token is stored
-    // hashed and that hash is the primary key, so a session has exactly one
-    // live token and revocation is simply deleting the row. See
-    // kdd/auth-token-lifecycle §2, and
-    // database/buildSchema/04B_user_session.sql for the full rationale.
+    // Backs browser (and machine-client) sessions -- one row per login. See
+    // kdd/auth-token-lifecycle §2 for the full rationale; in short:
+    //
+    //  - The refresh token is stored hashed (SHA-256) and that hash is the
+    //    primary key, so a session has exactly one live token by construction
+    //    and renewal lookups use the key's own index.
+    //  - There is deliberately no "id", "created_at" or "revoked_at":
+    //    revocation is row deletion, so revoked, expired and never-existed all
+    //    collapse to "no row".
+    //  - session_id is the JWT "sessionId" claim, which row-level security
+    //    evaluates for public (shared-account) applicants. It is NOT unique:
+    //    one applicant may resume a form on several devices, giving rows that
+    //    share a (user_id, session_id) pair.
     console.log(' - Adding user_session table')
     await DB.changeSchema(`
       CREATE TABLE IF NOT EXISTS public.user_session (
         token_hash varchar PRIMARY KEY,
         user_id integer REFERENCES public.user (id) ON DELETE CASCADE NOT NULL,
-        org_id integer REFERENCES public.organisation (id) ON DELETE SET NULL,
+        org_id integer REFERENCES public.organisation (id) ON DELETE CASCADE,
         session_id varchar NOT NULL,
         expires_at timestamptz NOT NULL
       );`)
