@@ -1342,7 +1342,7 @@ class PostgresDB {
 
   /**
    * Creates a new record in the user_session table
-   * @param userSession the {@link UserSession} object that will be persisted 
+   * @param userSession the {@link UserSession} object that will be persisted
    */
   public createUserSession = async ({
     tokenHash,
@@ -1367,9 +1367,9 @@ class PostgresDB {
    * Updates the org_id in the user_session table for a session
    * @param tokenHash that uniquely identifies a session
    * @param orgId to be updated
-   * @returns a promise that resolves to true if successfully updated, 
+   * @returns a promise that resolves to true if successfully updated,
    * false if no rows were updated errors if failed
-   */ 
+   */
   public setUserSessionOrg = async (tokenHash: string, orgId: number | null) => {
     const text = `
       UPDATE user_session
@@ -1380,6 +1380,87 @@ class PostgresDB {
     try {
       const result = await this.query({ text, values: [tokenHash, orgId] })
       return result.rowCount > 0
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  /**
+   * Renews a session: pushes its expiry out and hands back the row, in one
+   * statement. Coalesced deliberately -- doing it as a lookup followed by an
+   * update costs two round trips on a path that runs whenever an access token
+   * lapses, and leaves a window in which a logout between the two could delete
+   * the session after we had already decided it was live.
+   *
+   * Expiry is applied in the WHERE clause rather than checked by the caller, so
+   * revoked, expired and never-existed all collapse to "no session".
+   *
+   * GREATEST is load-bearing: extending must never SHORTEN a session. A machine
+   * client is an admin-provisioned session with a far-future expiry that sends
+   * no access token, so it takes this path on every request -- without the
+   * clamp, its first request would collapse a multi-year credential to one
+   * inactivity window. It is also what makes it safe for the caller to fall
+   * back to the standard window when it cannot tell whose session this is: the
+   * worst case is under-extending, never cutting a session short.
+   * @param tokenHash that uniquely identifies a session
+   * @param lifetimeMinutes how far past now to push the expiry
+   * @returns the renewed {@link UserSession}, or undefined if none was live
+   */
+  public extendUserSessionIfValid = async (
+    tokenHash: string,
+    lifetimeMinutes: number
+  ): Promise<UserSession | undefined> => {
+    const text = `
+      UPDATE user_session
+      SET expires_at = GREATEST(expires_at, NOW() + make_interval(mins => $2::int))
+      WHERE token_hash = $1
+      AND expires_at > NOW()
+      RETURNING token_hash AS "tokenHash",
+        user_id AS "userId",
+        org_id AS "orgId",
+        session_id AS "sessionId",
+        expires_at AS "expiresAt"
+    `
+    const values = [tokenHash, lifetimeMinutes]
+    try {
+      const result = await this.query({ text, values })
+      return result.rows[0]
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  /**
+   * Ends a single session. Deleting the row IS the revocation -- there is no
+   * "revoked" flag to set.
+   * @param tokenHash that uniquely identifies a session
+   * @returns a promise that resolves to the number of sessions deleted
+   */
+  public deleteUserSession = async (tokenHash: string) => {
+    const text = `DELETE FROM user_session WHERE token_hash = $1`
+    try {
+      const result = await this.query({ text, values: [tokenHash] })
+      return result.rowCount
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  /**
+   * Ends every session belonging to a user, so an explicit logout logs them out
+   * everywhere. Must never be called for the shared public account, whose rows
+   * belong to unrelated applicants -- see endSessions() in userSessions.ts
+   * @param userId whose sessions are being ended
+   * @returns a promise that resolves to the number of sessions deleted
+   */
+  public deleteUserSessionsByUserId = async (userId: number) => {
+    const text = `DELETE FROM user_session WHERE user_id = $1`
+    try {
+      const result = await this.query({ text, values: [userId] })
+      return result.rowCount
     } catch (err) {
       console.log(errorMessage(err))
       throw err

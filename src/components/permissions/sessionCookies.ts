@@ -1,53 +1,92 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
 /*
-Transport for the refresh token -- see kdd/auth-token-lifecycle/draft-kdd.md §3
+Transport for both auth tokens -- see kdd/auth-token-lifecycle/draft-kdd.md §3
 
-The refresh token is delivered only as an HttpOnly cookie, never in a response
-body: without that rule, injected script could call an endpoint, have the
-browser attach the cookie automatically, and read a usable token straight out of
-the response -- at which point HttpOnly protects nothing.
+Tokens are delivered only as HttpOnly cookies, never in a response body: without
+that rule, injected script could call an endpoint, have the browser attach the
+cookie automatically, and read a usable token straight out of the response -- at
+which point HttpOnly protects nothing.
 
-SameSite=Strict (not Lax) because every API and GraphQL request becomes
+Two cookies, and not for leak isolation (both live in the same jar under the
+same flags). The split is structural: the access token must be a JWT, because
+every RLS policy reads its claims; the refresh token cannot be, because its job
+is to be looked up in a table and deleted.
+
+SameSite=Strict (not Lax) because every API and GraphQL request is now
 cookie-authenticated, and PostGraphile answers GET queries, which Lax would
 leave forgeable cross-site.
-
-NOTE: this is only the half needed to create and identify a session at login.
-Reading the access token, silently renewing it, and the CORS "credentials"
-handling that cross-origin dev needs are all still to come (§3).
 */
 
+export const ACCESS_COOKIE_NAME = 'access'
 export const REFRESH_COOKIE_NAME = 'refresh'
 
-// The session row, not the cookie, is what expires: "expires_at" is extended
-// every time an access token is minted, and the token itself is never reissued.
-// So the cookie is given the longest life browsers will honour (Chrome caps
-// persistent cookies at 400 days) and the server decides when it stops working.
-const REFRESH_COOKIE_MAX_AGE = 400 * 24 * 60 * 60 // Seconds
+// Neither cookie's own lifetime is the authority on anything. The access token
+// carries its own "exp", and the session row carries the refresh token's -- so
+// both cookies are given the longest life browsers will honour (Chrome caps
+// persistent cookies at 400 days) and the server decides when they stop
+// working.
+const COOKIE_MAX_AGE = 400 * 24 * 60 * 60 // Seconds
 
 const COOKIE_FLAGS = ['Path=/', 'HttpOnly', 'Secure', 'SameSite=Strict']
 
-export const setRefreshCookie = (reply: FastifyReply, token: string) => {
+/*
+Fastify APPENDS repeated Set-Cookie headers rather than replacing them, which is
+what lets both cookies go out on one reply -- but it also means a cookie set
+twice in one request is sent twice. That happens routinely: the middleware mints
+an access token so the route can authenticate, and the route then issues a
+fresher one of its own. So any earlier value for this cookie name is dropped
+first, leaving exactly one Set-Cookie per name, last write winning.
+*/
+const setCookie = (reply: FastifyReply, name: string, value: string, maxAge: number) => {
+  const existing = reply.getHeader('set-cookie')
+
+  if (existing) {
+    const otherCookies = (Array.isArray(existing) ? existing : [existing])
+      .map(String)
+      .filter((cookie) => !cookie.startsWith(`${name}=`))
+
+    reply.removeHeader('set-cookie')
+    otherCookies.forEach((cookie) => reply.header('Set-Cookie', cookie))
+  }
+
   reply.header(
     'Set-Cookie',
-    [
-      `${REFRESH_COOKIE_NAME}=${encodeURIComponent(token)}`,
-      `Max-Age=${REFRESH_COOKIE_MAX_AGE}`,
-      ...COOKIE_FLAGS,
-    ].join('; ')
+    [`${name}=${encodeURIComponent(value)}`, `Max-Age=${maxAge}`, ...COOKIE_FLAGS].join('; ')
   )
 }
 
-export const getRefreshToken = (request: FastifyRequest): string | null => {
+const getCookie = (request: FastifyRequest, name: string): string | null => {
   const cookieHeader = request.headers.cookie
   if (!cookieHeader) return null
 
   for (const cookie of cookieHeader.split(';')) {
     const separator = cookie.indexOf('=')
     if (separator === -1) continue
-    if (cookie.slice(0, separator).trim() !== REFRESH_COOKIE_NAME) continue
+    if (cookie.slice(0, separator).trim() !== name) continue
     return decodeURIComponent(cookie.slice(separator + 1).trim())
   }
 
   return null
+}
+
+export const setAccessCookie = (reply: FastifyReply, token: string) =>
+  setCookie(reply, ACCESS_COOKIE_NAME, token, COOKIE_MAX_AGE)
+
+export const setRefreshCookie = (reply: FastifyReply, token: string) =>
+  setCookie(reply, REFRESH_COOKIE_NAME, token, COOKIE_MAX_AGE)
+
+export const getAccessToken = (request: FastifyRequest) => getCookie(request, ACCESS_COOKIE_NAME)
+
+export const getRefreshToken = (request: FastifyRequest) => getCookie(request, REFRESH_COOKIE_NAME)
+
+/*
+Logout has to expire both cookies as well as deleting the session, or the
+browser keeps presenting a cookie whose row is gone. Max-Age=0 tells the browser
+to discard immediately; the flags must match those the cookie was set with, or
+it is treated as a different cookie and left in place.
+*/
+export const clearAuthCookies = (reply: FastifyReply) => {
+  setCookie(reply, ACCESS_COOKIE_NAME, '', 0)
+  setCookie(reply, REFRESH_COOKIE_NAME, '', 0)
 }

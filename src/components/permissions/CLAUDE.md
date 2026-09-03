@@ -27,11 +27,21 @@ A user's effective access = the policies reachable through their permission join
   iat, exp                    // access-token lifetime (see below)
   ```
 - Verified with `config.jwtSecret` (env `JWT_SECRET`, default `'devsecret'`). The REST `preValidation` hook in [../../server.ts](../../server.ts) populates `request.auth`; PostGraphile independently verifies the same token for GraphQL and exposes claims as `current_setting('jwt.claims.*')`.
+- **Both tokens travel as HttpOnly cookies, never in a response body** ([sessionCookies.ts](sessionCookies.ts)). An `onRequest` hook ([accessTokenMiddleware.ts](accessTokenMiddleware.ts)) turns the access cookie into an `Authorization: Bearer` header before every request, so neither surface needs to know cookies exist.
 - `sessionId` (a `nanoid`, settable by the client at login) identifies an **applicant**, not a login. It is written onto `application.session_id` and evaluated by RLS, which is what isolates one public applicant from the next on the shared `nonRegistered` account — so a renewal has to reproduce it exactly. It is **not** a revocation handle, and logging in elsewhere invalidates nothing.
 - **Two clocks, both derived from `config.logoutAfterInactivity`** ([userSessions.ts](userSessions.ts)):
   - the access token's `exp` — a fraction of the inactivity window (`/12`, capped at an hour), set at mint and never updated. Both surfaces enforce it through the same check, since `jsonwebtoken.verify` rejects on `exp` and PostGraphile already calls verify. There is no hand-rolled expiry in the REST hook any more, and no `isProductionBuild` gate: dev expires tokens too.
   - the session's `expires_at` — the inactivity window itself, in the `user_session` table.
   `getAdminJWT()` is deliberately left unexpiring: it is cached for the life of the process by `graphQLConnect.ts` and `FigTree.ts`.
+
+## Renewal ([accessTokenMiddleware.ts](accessTokenMiddleware.ts))
+
+- Registered as a root-level `onRequest` hook, so it runs before **both** the REST `preValidation` hook and PostGraphile. PostGraphile 4 reads the JWT only from `Authorization: Bearer` and offers no cookie source in library mode, which is why translation happens here rather than in either surface.
+- The rule is *"no usable access token, but a live session → mint one"*, where **missing and expired are the same case**. That is what lets a machine client work with no code of its own: it sends only a provisioned refresh token, never logs in, and takes the ordinary renewal path.
+- A token presented in the `Authorization` header wins over the cookie, so scripted callers and internal requests are unaffected.
+- Renewal is triggered by **rejection, not a clock**. Every claim is rebuilt from the session row (never from the expired token), and minting extends `expires_at` — so an active client costs one write per access-token lifetime, not one per request.
+- `GET /api/user-info` is the designated "still here" call and extends the session *whether or not* a token was minted; everything else extends it only as a side effect of minting.
+- Failures here are logged and swallowed: the hook runs on every request including public ones, so it must never turn into a 500.
 
 ## Sessions ([userSessions.ts](userSessions.ts))
 
@@ -51,7 +61,9 @@ A user's effective access = the policies reachable through their permission join
 
 ## Routes (registered in [../../server.ts](../../server.ts))
 
-`POST /api/public/login`, `GET /api/public/verify` (public — email verification), `POST /api/login-org`, `GET /api/user-info`, `GET /api/user-permissions`, `POST /api/create-hash`, `GET /api/check-unique`, and admin `GET /api/admin/updateRowPolicies`.
+`POST /api/public/login`, `GET /api/public/verify` (public — email verification), `POST /api/login-org`, `POST /api/logout`, `GET /api/user-info`, `GET /api/user-permissions`, `POST /api/create-hash`, `GET /api/check-unique`, and admin `GET /api/admin/updateRowPolicies`.
+
+`POST /api/logout` deletes **every** session for the user (logging in elsewhere revokes nothing, but an explicit logout ends everything) and expires both cookies. Revocation is not instant for other browsers: their access token is stateless, so it keeps working until its own `exp` passes — after which renewal finds no session. On the shared public account it collapses to ending just the calling session.
 
 ## Tests
 

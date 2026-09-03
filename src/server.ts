@@ -12,6 +12,7 @@ import {
   routeUserPermissions,
   routeLogin,
   routeLoginOrg,
+  routeLogout,
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
@@ -43,6 +44,7 @@ import snapshotRoutes from './components/snapshots/routes'
 import { routeGetLanguageFile, localisationRoutes } from './components/localisation/routes'
 import { routeTriggers } from './components/other/routeTriggers'
 import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
+import { resolveAccessToken } from './components/permissions/accessTokenMiddleware'
 import migrateData from '../database/migration/migrateData'
 import routeArchiveFiles from './components/files/routeArchiveFiles'
 import { Schedulers } from './components/scheduler'
@@ -107,11 +109,21 @@ const startServer = async () => {
 
   server.register(fastifyMultipart, { limits: { fileSize: config.fileUploadLimit } })
 
+  // "credentials" is required for the auth cookies to be sent at all, and a
+  // wildcard origin is rejected by browsers once credentials are in play -- so
+  // in development the request's own origin is reflected back instead of "*".
   server.register(fastifyCors, {
-    origin: config.isProductionBuild ? config.webHostUrl : '*',
+    origin: config.isProductionBuild ? config.webHostUrl : true,
+    credentials: true,
   })
 
   server.register(fastifyWebsocket)
+
+  // Translates the access cookie into an Authorization header for BOTH surfaces
+  // (REST's preValidation hook and Postgraphile read the same header), and
+  // silently re-mints the token against the session when it has expired or was
+  // never sent. Registered on the root instance so it runs before every route.
+  server.addHook('onRequest', resolveAccessToken)
 
   // Register Postgraphile Middleware
   server.options(pgMiddleware.graphqlRoute, convertHandler(pgMiddleware.graphqlRouteHandler))
@@ -347,6 +359,7 @@ const startServer = async () => {
     server.get('/user-info', routeUserInfo)
     server.get('/user-permissions', routeUserPermissions)
     server.post('/login-org', routeLoginOrg)
+    server.post('/logout', routeLogout)
     server.post('/create-hash', routeCreateHash)
     server.post('/generate-pdf', routeGeneratePDF)
     server.get('/data-views', routeDataViews)
