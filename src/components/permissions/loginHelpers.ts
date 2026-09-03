@@ -145,9 +145,10 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
       isManager,
     },
     orgList,
-    // The deadline that actually ends the login. NOT the access token's "exp",
-    // which is shorter and renewed silently -- see userSessions.ts
-    tokenExpiry:
+    // The deadline that actually ends the login, as unix seconds. NOT the
+    // access token's "exp", which is shorter and renewed silently -- see
+    // userSessions.ts
+    sessionExpiry:
       parseInt(String(Date.now() / 1000)) + getSessionLifetimeMinutes(userId ?? newUserId) * 60,
   }
 }
