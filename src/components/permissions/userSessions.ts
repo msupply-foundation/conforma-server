@@ -1,4 +1,5 @@
-import { createHash, randomBytes } from 'crypto'
+import { createHash } from 'crypto'
+import { nanoid } from 'nanoid'
 import databaseConnect from '../database/databaseConnect'
 import config from '../../config'
 import { UserSession } from '../../types'
@@ -28,7 +29,10 @@ Two clocks:
     access token is minted for it.
 */
 
-const REFRESH_TOKEN_BYTES = 32
+// 32 characters from nanoid's 64-character alphabet, so 192 bits from the same
+// CSPRNG the rest of the codebase's ids use -- longer than a nanoid identifier
+// because this one is a credential, not just a unique string.
+const REFRESH_TOKEN_LENGTH = 32
 
 const getInactivityTime = () => config.logoutAfterInactivity ?? DEFAULT_LOGOUT_TIME
 
@@ -82,7 +86,7 @@ export const createSession = async ({
   // lapses whenever the integration goes quiet.
   lifetimeMinutes?: number
 }) => {
-  const token = randomBytes(REFRESH_TOKEN_BYTES).toString('base64url')
+  const token = nanoid(REFRESH_TOKEN_LENGTH)
   const tokenHash = hashRefreshToken(token)
   const expiresAt = new Date(
     Date.now() + (lifetimeMinutes ?? getSessionLifetimeMinutes(userId)) * 60_000
