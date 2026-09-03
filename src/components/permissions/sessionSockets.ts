@@ -2,6 +2,7 @@ import { FastifyRequest } from 'fastify'
 import { WebSocket } from '@fastify/websocket'
 import { getRefreshToken } from './sessionCookies'
 import { hashRefreshToken } from './userSessions'
+import { authLog, sessionRef } from './authLog'
 import { errorMessage } from '../utilityFunctions'
 
 /*
@@ -36,9 +37,17 @@ tracked, and gets no expiry notification.
 */
 export const trackSessionSocket = (socket: WebSocket, request: FastifyRequest) => {
   const refreshToken = getRefreshToken(request)
-  if (!refreshToken) return
+  if (!refreshToken) {
+    // Worth saying out loud rather than passing over in silence: a socket that
+    // isn't matched to a session gets no expiry notification, and the reason is
+    // usually that the handshake didn't carry the cookies -- which is a
+    // deployment question (origin, scheme) rather than anything the client did.
+    authLog('Socket connected with no refresh cookie -- it cannot be notified of expiry')
+    return
+  }
 
   const tokenHash = hashRefreshToken(refreshToken)
+  authLog(`Socket connected (session ${sessionRef(tokenHash)})`)
 
   const sockets = socketsBySession.get(tokenHash) ?? new Set<WebSocket>()
   sockets.add(socket)
@@ -69,6 +78,7 @@ session the database no longer has.
 */
 export const notifyExpiredSessions = (tokenHashes: string[]) => {
   let notified = 0
+  const notifiedSessions: string[] = []
 
   for (const tokenHash of tokenHashes) {
     const sockets = socketsBySession.get(tokenHash)
@@ -80,11 +90,18 @@ export const notifyExpiredSessions = (tokenHashes: string[]) => {
         notified++
       } catch (err) {
         // A socket that has gone away shouldn't stop the others being told
-        console.log('Could not notify expired session:', errorMessage(err))
+        authLog('Could not notify expired session:', errorMessage(err))
       }
     }
+    if (notified > 0) notifiedSessions.push(sessionRef(tokenHash))
     socketsBySession.delete(tokenHash)
   }
+
+  if (notified > 0)
+    authLog(
+      `Told ${notified} client(s) their session ended`,
+      `(sessions ${notifiedSessions.join(', ')})`
+    )
 
   return notified
 }

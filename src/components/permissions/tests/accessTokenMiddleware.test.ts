@@ -101,7 +101,7 @@ const authHeaderOf = (request: FastifyRequest) => request.raw.headers.authorizat
 
 beforeEach(() => {
   jest.clearAllMocks()
-  getUserInfo.mockResolvedValue({ JWT: MINTED_JWT })
+  getUserInfo.mockResolvedValue({ JWT: MINTED_JWT, user: { username: 'staff-user' } })
   renewSession.mockResolvedValue(LIVE_SESSION)
 })
 

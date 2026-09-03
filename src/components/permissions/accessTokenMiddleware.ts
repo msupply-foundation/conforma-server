@@ -6,7 +6,8 @@ import {
   getRefreshToken,
   setAccessCookie,
 } from './sessionCookies'
-import { renewSession } from './userSessions'
+import { hashRefreshToken, renewSession } from './userSessions'
+import { asTime, authLog, quoted, sessionRef } from './authLog'
 import { errorMessage } from '../utilityFunctions'
 
 /*
@@ -76,6 +77,11 @@ export const resolveAccessToken = async (request: FastifyRequest, reply: Fastify
     // client that notices its session has ended and posts a logout has, by
     // then, no valid access token to authenticate that post with.
     if (!session) {
+      authLog(
+        `Session expired or revoked (session ${sessionRef(hashRefreshToken(refreshToken))})`,
+        '-- cookies cleared,',
+        `${request.method} ${request.url} continues unauthenticated`
+      )
       clearAuthCookies(reply)
       return
     }
@@ -85,11 +91,21 @@ export const resolveAccessToken = async (request: FastifyRequest, reply: Fastify
     // RLS evaluates it directly for public applicants, so it has to be
     // reproduced byte-for-byte or an applicant loses access to their own
     // in-progress application.
-    const { JWT } = await getUserInfo({
+    const { JWT, user } = await getUserInfo({
       userId: session.userId,
       orgId: session.orgId ?? undefined,
       sessionId: session.sessionId,
     })
+
+    authLog(
+      presented ? 'Access token expired for' : 'No access token presented by',
+      // Optional, so that nothing about a log line can throw on the path that
+      // authenticates every request -- the catch below would swallow it and
+      // quietly leave the request unauthenticated
+      `${quoted(user?.username)} -- minted a new one`,
+      `(session ${sessionRef(hashRefreshToken(refreshToken))},`,
+      `expires ${asTime(session.expiresAt)})`
+    )
 
     setAccessCookie(reply, JWT)
     setAuthorizationHeader(request, JWT)

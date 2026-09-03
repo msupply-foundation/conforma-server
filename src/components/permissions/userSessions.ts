@@ -83,12 +83,13 @@ export const createSession = async ({
   lifetimeMinutes?: number
 }) => {
   const token = randomBytes(REFRESH_TOKEN_BYTES).toString('base64url')
+  const tokenHash = hashRefreshToken(token)
   const expiresAt = new Date(
     Date.now() + (lifetimeMinutes ?? getSessionLifetimeMinutes(userId)) * 60_000
   )
 
   await databaseConnect.createUserSession({
-    tokenHash: hashRefreshToken(token),
+    tokenHash,
     userId,
     // null only at the database boundary, where it is the column's value
     orgId: orgId ?? null,
@@ -96,7 +97,9 @@ export const createSession = async ({
     expiresAt,
   })
 
-  return { token, expiresAt }
+  // The hash is returned alongside the token so callers can identify the
+  // session -- in a log, say -- without handling the credential itself
+  return { token, tokenHash, expiresAt }
 }
 
 /*

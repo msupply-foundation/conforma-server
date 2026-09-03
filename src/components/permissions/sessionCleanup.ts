@@ -1,6 +1,7 @@
 import databaseConnect from '../database/databaseConnect'
 import { SESSION_CLEANUP_INTERVAL } from '../../constants'
 import { notifyExpiredSessions, trackedSessionHashes } from './sessionSockets'
+import { authLog } from './authLog'
 import { errorMessage } from '../utilityFunctions'
 
 /*
@@ -35,18 +36,15 @@ const sweepExpiredSessions = async () => {
     const liveHashes = new Set(live)
     const gone = tracked.filter((tokenHash) => !liveHashes.has(tokenHash))
 
-    const notified = gone.length > 0 ? notifyExpiredSessions(gone) : 0
+    // Notifying logs what it told whom, so only the housekeeping is reported
+    // here -- and only when there was any, since this runs forever on a timer
+    if (gone.length > 0) notifyExpiredSessions(gone)
 
-    if (expired.length === 0 && notified === 0) return
-
-    console.log(
-      `Removed ${expired.length} expired session(s)` +
-        (notified > 0 ? `, notified ${notified} connected client(s)` : '')
-    )
+    if (expired.length > 0) authLog(`Swept ${expired.length} expired session(s)`)
   } catch (err) {
     // Runs forever on a timer, so a transient database problem must not kill
     // the loop -- the next tick will pick up whatever this one missed
-    console.log('Problem sweeping expired sessions:', errorMessage(err))
+    authLog('Problem sweeping expired sessions:', errorMessage(err))
   }
 }
 

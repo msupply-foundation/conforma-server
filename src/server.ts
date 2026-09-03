@@ -45,6 +45,7 @@ import { routeGetLanguageFile, localisationRoutes } from './components/localisat
 import { routeTriggers } from './components/other/routeTriggers'
 import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
 import { resolveAccessToken } from './components/permissions/accessTokenMiddleware'
+import { authLog } from './components/permissions/authLog'
 import migrateData from '../database/migration/migrateData'
 import routeArchiveFiles from './components/files/routeArchiveFiles'
 import { Schedulers } from './components/scheduler'
@@ -173,6 +174,10 @@ const startServer = async () => {
       request.auth = tokenData
 
       if (error) {
+        // Reaching here means the cookie-to-header hook found nothing usable
+        // and had no live session to mint against, so the reason is worth
+        // recording with the route that was refused
+        authLog(`401 ${request.method} ${request.url}: ${error}`)
         reply.statusCode = 401
         return reply.send({ success: false, message: error })
       }

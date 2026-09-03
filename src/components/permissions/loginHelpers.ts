@@ -16,12 +16,15 @@ const signPromise: any = promisify(sign)
 const extractJWTfromHeader = (request: any) =>
   (request?.headers?.authorization || '').replace('Bearer ', '')
 
+// The error is returned rather than logged, because the commonplace reason to
+// be here is an access token that has simply aged out -- which the caller
+// handles by minting a new one, and which would otherwise log a line without
+// context on every renewal. Callers that actually reject say so themselves.
 const getTokenData = async (jwtToken: string, options?: VerifyOptions) => {
   try {
     const data = await verifyPromise(jwtToken, config.jwtSecret, options)
     return data
   } catch (err) {
-    console.log('Cannot parse JWT')
     return { error: errorMessage(err) }
   }
 }
