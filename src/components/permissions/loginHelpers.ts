@@ -66,10 +66,15 @@ type UserOrgParameters = {
   // deliberately by an admin (a GraphQL client, a support session), which have
   // no session behind them to renew against.
   accessTokenLifetimeMinutes?: number
+  // The session row's own "expires_at", from the caller that just created or
+  // renewed it. Callers with a session to hand should always pass it, so the
+  // client is told the deadline the database actually holds.
+  sessionExpiresAt?: Date
 }
 
 const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
-  const { username, userId, orgId, sessionId, accessTokenLifetimeMinutes } = userOrgParameters
+  const { username, userId, orgId, sessionId, accessTokenLifetimeMinutes, sessionExpiresAt } =
+    userOrgParameters
 
   const userOrgData: UserOrg[] = await databaseConnect.getUserOrgData({
     userId,
@@ -148,8 +153,16 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
     // The deadline that actually ends the login, as unix seconds. NOT the
     // access token's "exp", which is shorter and renewed silently -- see
     // userSessions.ts
-    sessionExpiry:
-      parseInt(String(Date.now() / 1000)) + getSessionLifetimeMinutes(userId ?? newUserId) * 60,
+    //
+    // Taken from the session row wherever the caller has one, so the client
+    // works from the deadline the database holds rather than a second
+    // calculation of it. "expires_at" is only ever pushed later (see
+    // extendUserSessionIfValid), so a computed value can also be an
+    // over-estimate: on a route that doesn't renew, the row still carries the
+    // deadline set by whatever renewed it last.
+    sessionExpiry: sessionExpiresAt
+      ? Math.floor(sessionExpiresAt.getTime() / 1000)
+      : parseInt(String(Date.now() / 1000)) + getSessionLifetimeMinutes(userId ?? newUserId) * 60,
   }
 }
 

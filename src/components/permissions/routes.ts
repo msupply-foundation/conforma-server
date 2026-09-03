@@ -55,7 +55,10 @@ const routeLogin = async (request: any, reply: any) => {
     // the sessionId that was actually used (getUserInfo mints one if the client
     // didn't supply it), since row-level security evaluates that claim for
     // public applicants and a renewal has to reproduce it exactly.
-    const { token } = await createSession({ userId, sessionId: userInfo.user.sessionId })
+    const { token, expiresAt } = await createSession({
+      userId,
+      sessionId: userInfo.user.sessionId,
+    })
 
     // Both tokens are delivered by Set-Cookie and never in the body -- see
     // sessionCookies.ts. Everything else the client needs (user, orgList,
@@ -66,6 +69,10 @@ const routeLogin = async (request: any, reply: any) => {
     reply.send({
       success: true,
       ...userInfo,
+      // getUserInfo runs before the session exists, so it can only calculate
+      // this. The row is created moments later from the same lifetime, so its
+      // value is the one to report.
+      sessionExpiry: Math.floor(expiresAt.getTime() / 1000),
     })
   } catch (err) {
     return reply.send({ success: false, error: errorMessage(err) })
@@ -84,15 +91,34 @@ const routeLoginOrg = async (request: any, reply: any) => {
   const { userId, error } = request.auth
   if (error) return reply.send({ success: false, message: error })
 
-  const { JWT, ...userInfo } = await getUserInfo({ userId, orgId, sessionId })
-
   // Org is a field on the existing session, not a new session -- same login,
   // same refresh token. Without it on the row, a silent renewal would drop the
   // user back to no organisation (and so lose their org-granted permissions)
   // mid-session. Runs unchanged when switching org or picking "no organisation".
+  //
+  // Picking an organisation is deliberate user activity, so the session is
+  // renewed as well, which is also what makes the row's real deadline available
+  // to report back.
   const refreshToken = getRefreshToken(request)
-  if (refreshToken) await setSessionOrg(refreshToken, orgId ?? null)
-  else console.log('login-org: no refresh token provided, org not stored against a session')
+  let session = null
+
+  if (refreshToken) {
+    await setSessionOrg(refreshToken, orgId ?? null)
+    session = await renewSession(refreshToken, userId)
+
+    if (!session) {
+      reply.statusCode = 401
+      // Revoked, expired and never-existed are deliberately indistinguishable
+      return reply.send({ success: false, message: 'Session expired' })
+    }
+  } else console.log('login-org: no refresh token provided, org not stored against a session')
+
+  const { JWT, ...userInfo } = await getUserInfo({
+    userId,
+    orgId,
+    sessionId,
+    sessionExpiresAt: session?.expiresAt,
+  })
 
   // Only the access token is reissued -- it is the one carrying the org claims.
   setAccessCookie(reply, JWT)
@@ -110,10 +136,29 @@ const routeUserInfo = async (request: any, reply: any) => {
 
   if (error) return reply.send({ success: false, message: error })
 
+  // This is the designated "still here" call: the front end's activity timer
+  // hits it while the user is actually interacting, so it must extend the
+  // session whether or not a token happened to be minted for this request.
+  // Everything else extends expiry only as a side effect of minting.
+  //
+  // Renewed before anything else is looked up, so a caller whose session has
+  // gone is told immediately rather than being handed a fresh deadline for a
+  // session that no longer exists -- which would leave it sitting quietly until
+  // that deadline, making no valid requests.
+  const refreshToken = getRefreshToken(request)
+  const session = refreshToken ? await renewSession(refreshToken, userId) : null
+
+  if (refreshToken && !session) {
+    reply.statusCode = 401
+    // Revoked, expired and never-existed are deliberately indistinguishable
+    return reply.send({ success: false, message: 'Session expired' })
+  }
+
   const { JWT, ...userData } = await getUserInfo({
     userId,
     orgId,
     sessionId: sessionId ?? returnSessionId,
+    sessionExpiresAt: session?.expiresAt,
   })
 
   // This check is to prevent a user remaining logged in as a different user if
@@ -122,13 +167,6 @@ const routeUserInfo = async (request: any, reply: any) => {
   // JWT too, and return error if no match
   if (userData.user.username !== username)
     return reply.send({ success: false, message: 'Invalid username' })
-
-  // This is the designated "still here" call: the front end's idle tracker hits
-  // it while the user is actually interacting, so it must extend the session
-  // whether or not a token happened to be minted for this request. Everything
-  // else extends expiry only as a side effect of minting.
-  const refreshToken = getRefreshToken(request)
-  if (refreshToken) await renewSession(refreshToken, userId)
 
   setAccessCookie(reply, JWT)
 
