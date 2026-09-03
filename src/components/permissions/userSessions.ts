@@ -13,7 +13,7 @@ import {
 } from '../../constants'
 
 /*
-Server-side login sessions -- see kdd/auth-token-lifecycle/draft-kdd.md
+Server-side login sessions -- see kdd/auth-token-lifecycle
 
 A session is one login, held in the "user_session" table and identified by a
 long random refresh token. Only the SHA-256 hash of that token is stored (as the
@@ -71,13 +71,20 @@ export const createSession = async ({
   userId,
   sessionId,
   orgId,
+  lifetimeMinutes,
 }: {
   userId: number
   sessionId: string
   orgId?: number
+  // Overrides the usual inactivity window. Only for admin-provisioned sessions
+  // (machine clients), which need a far-future expiry rather than one that
+  // lapses whenever the integration goes quiet.
+  lifetimeMinutes?: number
 }) => {
   const token = randomBytes(REFRESH_TOKEN_BYTES).toString('base64url')
-  const expiresAt = new Date(Date.now() + getSessionLifetimeMinutes(userId) * 60_000)
+  const expiresAt = new Date(
+    Date.now() + (lifetimeMinutes ?? getSessionLifetimeMinutes(userId)) * 60_000
+  )
 
   await databaseConnect.createUserSession({
     tokenHash: hashRefreshToken(token),

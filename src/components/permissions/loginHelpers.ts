@@ -62,10 +62,14 @@ type UserOrgParameters = {
   userId?: number
   orgId?: number
   sessionId?: string
+  // Overrides the usual short access-token lifetime. Only for tokens issued
+  // deliberately by an admin (a GraphQL client, a support session), which have
+  // no session behind them to renew against.
+  accessTokenLifetimeMinutes?: number
 }
 
 const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
-  const { username, userId, orgId, sessionId } = userOrgParameters
+  const { username, userId, orgId, sessionId, accessTokenLifetimeMinutes } = userOrgParameters
 
   const userOrgData: UserOrg[] = await databaseConnect.getUserOrgData({
     userId,
@@ -113,15 +117,18 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
 
   return {
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
-    JWT: await getSignedJWT({
-      userId: userId || newUserId,
-      username: username || newUsername,
-      orgId,
-      templatePermissionRows,
-      sessionId: returnSessionId,
-      isAdmin,
-      isManager,
-    }),
+    JWT: await getSignedJWT(
+      {
+        userId: userId || newUserId,
+        username: username || newUsername,
+        orgId,
+        templatePermissionRows,
+        sessionId: returnSessionId,
+        isAdmin,
+        isManager,
+      },
+      accessTokenLifetimeMinutes
+    ),
     user: {
       userId: userId || newUserId,
       username: username || newUsername,
@@ -161,9 +168,9 @@ const buildTemplatePermissions = (templatePermissionRows: Array<PermissionRow>) 
 // Access tokens carry a real "exp", which both surfaces enforce through the
 // same check: jsonwebtoken.verify rejects on it, and Postgraphile already calls
 // verify, so GraphQL expires tokens with no config of its own.
-const getSignedJWT = async (JWTelements: object) => {
+const getSignedJWT = async (JWTelements: object, lifetimeMinutes?: number) => {
   return await signPromise(compileJWT(JWTelements), config.jwtSecret, {
-    expiresIn: getAccessTokenLifetimeMinutes() * 60,
+    expiresIn: (lifetimeMinutes ?? getAccessTokenLifetimeMinutes()) * 60,
   })
 }
 
