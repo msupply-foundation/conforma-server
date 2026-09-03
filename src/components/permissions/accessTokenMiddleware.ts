@@ -1,6 +1,11 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { extractJWTfromHeader, getTokenData, getUserInfo } from './loginHelpers'
-import { getAccessToken, getRefreshToken, setAccessCookie } from './sessionCookies'
+import {
+  clearAuthCookies,
+  getAccessToken,
+  getRefreshToken,
+  setAccessCookie,
+} from './sessionCookies'
 import { renewSession } from './userSessions'
 import { errorMessage } from '../utilityFunctions'
 
@@ -63,7 +68,17 @@ export const resolveAccessToken = async (request: FastifyRequest, reply: Fastify
     const session = await renewSession(refreshToken, userId)
     // No live session: leave the request unauthenticated and let the route
     // reject it. A 401 here would also reject public routes.
-    if (!session) return
+    //
+    // The cookies are expired on the way out, because they can no longer
+    // resolve to anything and the client cannot clear them itself -- HttpOnly
+    // means script can neither read them nor overwrite them. Doing it here
+    // rather than in the logout route covers the case that route cannot: a
+    // client that notices its session has ended and posts a logout has, by
+    // then, no valid access token to authenticate that post with.
+    if (!session) {
+      clearAuthCookies(reply)
+      return
+    }
 
     // Every claim comes from the session row, not from the expired token: the
     // org because RLS reads org-granted permissions, and the sessionId because

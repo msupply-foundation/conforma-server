@@ -56,8 +56,16 @@ export const trackSessionSocket = (socket: WebSocket, request: FastifyRequest) =
 }
 
 /*
+The sessions currently holding at least one socket. The sweep asks the database
+which of these still exist, so a client whose session went by a route that
+announces nothing -- an admin, direct SQL, a snapshot restore -- is still told.
+*/
+export const trackedSessionHashes = () => Array.from(socketsBySession.keys())
+
+/*
 Tells any live socket belonging to these sessions that they have ended. Called
-by the sweep with the sessions it just deleted.
+with the sessions a delete just removed, and by the sweep with any tracked
+session the database no longer has.
 */
 export const notifyExpiredSessions = (tokenHashes: string[]) => {
   let notified = 0

@@ -7,6 +7,7 @@ const setUserSessionOrg = jest.fn()
 const extendUserSessionIfValid = jest.fn()
 const deleteUserSession = jest.fn()
 const deleteUserSessionsByUserId = jest.fn()
+const notifyExpiredSessions = jest.fn()
 
 /*
 userSessions imports databaseConnect, which opens a Postgres pool as a side
@@ -27,6 +28,13 @@ jest.doMock('../../database/databaseConnect', () => ({
     deleteUserSession,
     deleteUserSessionsByUserId,
   },
+}))
+
+// Ending a session tells the browsers behind it, over a websocket this has no
+// need of here
+jest.doMock('../sessionSockets', () => ({
+  __esModule: true,
+  notifyExpiredSessions,
 }))
 
 const {
@@ -262,11 +270,20 @@ test('An inactivity window of 0 renews with the indefinite lifetime', async () =
 // One Logout action in the UI means logout everywhere -- note the deliberate
 // asymmetry with login, which revokes nothing.
 test('Logging out ends every session the user has', async () => {
-  deleteUserSessionsByUserId.mockResolvedValue(3)
+  deleteUserSessionsByUserId.mockResolvedValue(['hash-1', 'hash-2', 'hash-3'])
   expect(await endSessions(ANY_OTHER_USER, 'raw-token')).toBe(3)
 
   expect(deleteUserSessionsByUserId).toHaveBeenCalledWith(ANY_OTHER_USER)
   expect(deleteUserSession).not.toHaveBeenCalled()
+})
+
+// The browsers behind the other sessions are told immediately, rather than
+// waiting for the sweep -- which only reports the sessions it deletes itself
+test('Logging out tells the sessions it ended', async () => {
+  deleteUserSessionsByUserId.mockResolvedValue(['hash-1', 'hash-2'])
+  await endSessions(ANY_OTHER_USER, 'raw-token')
+
+  expect(notifyExpiredSessions).toHaveBeenCalledWith(['hash-1', 'hash-2'])
 })
 
 /*
@@ -274,7 +291,7 @@ Every public applicant shares the one account, so ending "all" of its sessions
 would end every in-progress public form on the system at once.
 */
 test('The shared public account only ever ends the session that asked', async () => {
-  deleteUserSession.mockResolvedValue(1)
+  deleteUserSession.mockResolvedValue(['hash-1'])
   expect(await endSessions(NON_REGISTERED_USER, 'raw-token')).toBe(1)
 
   expect(deleteUserSession).toHaveBeenCalledWith(hashRefreshToken('raw-token'))

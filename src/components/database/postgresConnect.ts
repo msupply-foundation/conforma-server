@@ -1461,11 +1461,11 @@ class PostgresDB {
    * @param tokenHash that uniquely identifies a session
    * @returns a promise that resolves to the number of sessions deleted
    */
-  public deleteUserSession = async (tokenHash: string) => {
-    const text = `DELETE FROM user_session WHERE token_hash = $1`
+  public deleteUserSession = async (tokenHash: string): Promise<string[]> => {
+    const text = `DELETE FROM user_session WHERE token_hash = $1 RETURNING token_hash`
     try {
       const result = await this.query({ text, values: [tokenHash] })
-      return result.rowCount
+      return result.rows.map((row) => row.token_hash)
     } catch (err) {
       console.log(errorMessage(err))
       throw err
@@ -1477,13 +1477,37 @@ class PostgresDB {
    * everywhere. Must never be called for the shared public account, whose rows
    * belong to unrelated applicants -- see endSessions() in userSessions.ts
    * @param userId whose sessions are being ended
-   * @returns a promise that resolves to the number of sessions deleted
+   * @returns the token hashes of the sessions that were deleted
    */
-  public deleteUserSessionsByUserId = async (userId: number) => {
-    const text = `DELETE FROM user_session WHERE user_id = $1`
+  public deleteUserSessionsByUserId = async (userId: number): Promise<string[]> => {
+    const text = `DELETE FROM user_session WHERE user_id = $1 RETURNING token_hash`
     try {
       const result = await this.query({ text, values: [userId] })
-      return result.rowCount
+      return result.rows.map((row) => row.token_hash)
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  /**
+   * Of the sessions asked about, reports which are still live. This is how a
+   * connected client learns its session has gone by a route that doesn't
+   * report anything -- an admin, direct SQL, a snapshot restore -- since only
+   * the deletions this server performs itself can announce what they removed.
+   * @param tokenHashes the sessions to ask about
+   * @returns the subset that still exists and has not expired
+   */
+  public getLiveUserSessions = async (tokenHashes: string[]): Promise<string[]> => {
+    const text = `
+      SELECT token_hash
+      FROM user_session
+      WHERE token_hash = ANY($1)
+      AND expires_at > NOW()
+    `
+    try {
+      const result = await this.query({ text, values: [tokenHashes] })
+      return result.rows.map((row) => row.token_hash)
     } catch (err) {
       console.log(errorMessage(err))
       throw err

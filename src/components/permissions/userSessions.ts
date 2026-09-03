@@ -11,6 +11,7 @@ import {
   NO_EXPIRY_SESSION_TIME,
   PUBLIC_SESSION_TIME,
 } from '../../constants'
+import { notifyExpiredSessions } from './sessionSockets'
 
 /*
 Server-side login sessions -- see kdd/auth-token-lifecycle
@@ -134,12 +135,20 @@ one -- a defined behaviour rather than an exclusion, so it cannot be invoked by
 accident.
 */
 export const endSessions = async (userId: number, refreshToken: string | null) => {
-  if (userId === NON_REGISTERED_USER_ID)
-    return refreshToken
-      ? await databaseConnect.deleteUserSession(hashRefreshToken(refreshToken))
-      : 0
+  const ended =
+    userId === NON_REGISTERED_USER_ID
+      ? refreshToken
+        ? await databaseConnect.deleteUserSession(hashRefreshToken(refreshToken))
+        : []
+      : await databaseConnect.deleteUserSessionsByUserId(userId)
 
-  return await databaseConnect.deleteUserSessionsByUserId(userId)
+  // Logging out ends every session for the user, so the browsers behind the
+  // other ones are told straight away rather than waiting for the sweep to
+  // notice. The sweep only reports what it deletes itself, so without this a
+  // logout elsewhere would go unannounced for up to its interval.
+  notifyExpiredSessions(ended)
+
+  return ended.length
 }
 
 /*

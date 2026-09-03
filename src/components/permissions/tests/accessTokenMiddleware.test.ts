@@ -252,13 +252,32 @@ test('No credentials at all is a no-op, not a rejection', async () => {
 test('A refresh token with no live session leaves the request unauthenticated', async () => {
   renewSession.mockResolvedValue(null)
   const request = fakeRequest({ cookies: { [REFRESH_COOKIE_NAME]: 'revoked-token' } })
-  const { reply, cookies } = fakeReply()
+  const { reply } = fakeReply()
 
   await resolveAccessToken(request, reply)
 
   expect(authHeaderOf(request)).toBeUndefined()
   expect(getUserInfo).not.toHaveBeenCalled()
-  expect(cookies()).toHaveLength(0)
+})
+
+/*
+The cookies can no longer resolve to anything, and the client can't clear them
+itself -- HttpOnly means script can neither read nor overwrite them. Doing it
+here covers the case the logout route can't: a client that notices its session
+has ended has, by then, no valid access token to authenticate a logout with.
+*/
+test('A refresh token with no live session has its cookies expired', async () => {
+  renewSession.mockResolvedValue(null)
+  const request = fakeRequest({ cookies: { [REFRESH_COOKIE_NAME]: 'revoked-token' } })
+  const { reply, cookies } = fakeReply()
+
+  await resolveAccessToken(request, reply)
+
+  const expired = cookies().map(String)
+  expect(expired).toHaveLength(2)
+  expect(expired.every((cookie) => cookie.includes('Max-Age=0'))).toBe(true)
+  expect(expired.some((cookie) => cookie.startsWith(`${ACCESS_COOKIE_NAME}=`))).toBe(true)
+  expect(expired.some((cookie) => cookie.startsWith(`${REFRESH_COOKIE_NAME}=`))).toBe(true)
 })
 
 // Login issues its own cookies; renewing an older session first would race with

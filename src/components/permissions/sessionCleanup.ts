@@ -1,6 +1,6 @@
 import databaseConnect from '../database/databaseConnect'
 import { SESSION_CLEANUP_INTERVAL } from '../../constants'
-import { notifyExpiredSessions } from './sessionSockets'
+import { notifyExpiredSessions, trackedSessionHashes } from './sessionSockets'
 import { errorMessage } from '../utilityFunctions'
 
 /*
@@ -20,9 +20,25 @@ gives idle clients a nudge they would otherwise never get.
 const sweepExpiredSessions = async () => {
   try {
     const expired = await databaseConnect.deleteExpiredUserSessions()
-    if (expired.length === 0) return
 
-    const notified = notifyExpiredSessions(expired)
+    // Notifying is driven by what the connected clients believe, not by what
+    // this delete removed, so that a session which went some other way -- an
+    // admin, direct SQL, a snapshot restore -- is caught too. Deleting a
+    // session announces itself where we control the delete (see endSessions),
+    // which is faster; this is the net under everything else.
+    //
+    // The query is bounded by the number of connected sockets rather than the
+    // size of the table, and token_hash is the primary key, so it is a handful
+    // of index probes.
+    const tracked = trackedSessionHashes()
+    const live = tracked.length > 0 ? await databaseConnect.getLiveUserSessions(tracked) : []
+    const liveHashes = new Set(live)
+    const gone = tracked.filter((tokenHash) => !liveHashes.has(tokenHash))
+
+    const notified = gone.length > 0 ? notifyExpiredSessions(gone) : 0
+
+    if (expired.length === 0 && notified === 0) return
+
     console.log(
       `Removed ${expired.length} expired session(s)` +
         (notified > 0 ? `, notified ${notified} connected client(s)` : '')
