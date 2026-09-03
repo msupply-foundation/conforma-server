@@ -1,8 +1,13 @@
 import databaseConnect from '../database/databaseConnect'
 import { getUserInfo } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
-import { createSession, setSessionOrg } from './userSessions'
-import { getRefreshToken, setRefreshCookie } from './sessionCookies'
+import { createSession, endSessions, renewSession, setSessionOrg } from './userSessions'
+import {
+  clearAuthCookies,
+  getRefreshToken,
+  setAccessCookie,
+  setRefreshCookie,
+} from './sessionCookies'
 import bcrypt from 'bcrypt'
 import { UserOrg } from '../../types'
 import { PermissionDetails } from '../permissions/types'
@@ -43,7 +48,7 @@ const routeLogin = async (request: any, reply: any) => {
       return reply.send({ success: false })
 
     // Login successful
-    const userInfo = await getUserInfo({ userId, sessionId })
+    const { JWT, ...userInfo } = await getUserInfo({ userId, sessionId })
 
     // Back the login with a server-side session, so it can be renewed after the
     // access token expires and revoked by deleting its row. The session records
@@ -51,7 +56,12 @@ const routeLogin = async (request: any, reply: any) => {
     // didn't supply it), since row-level security evaluates that claim for
     // public applicants and a renewal has to reproduce it exactly.
     const { token } = await createSession({ userId, sessionId: userInfo.user.sessionId })
+
+    // Both tokens are delivered by Set-Cookie and never in the body -- see
+    // sessionCookies.ts. Everything else the client needs (user, orgList,
+    // templatePermissions) is unchanged.
     setRefreshCookie(reply, token)
+    setAccessCookie(reply, JWT)
 
     reply.send({
       success: true,
@@ -74,7 +84,7 @@ const routeLoginOrg = async (request: any, reply: any) => {
   const { userId, error } = request.auth
   if (error) return reply.send({ success: false, message: error })
 
-  const userInfo = await getUserInfo({ userId, orgId, sessionId })
+  const { JWT, ...userInfo } = await getUserInfo({ userId, orgId, sessionId })
 
   // Org is a field on the existing session, not a new session -- same login,
   // same refresh token. Without it on the row, a silent renewal would drop the
@@ -83,6 +93,9 @@ const routeLoginOrg = async (request: any, reply: any) => {
   const refreshToken = getRefreshToken(request)
   if (refreshToken) await setSessionOrg(refreshToken, orgId ?? null)
   else console.log('login-org: no refresh token provided, org not stored against a session')
+
+  // Only the access token is reissued -- it is the one carrying the org claims.
+  setAccessCookie(reply, JWT)
 
   reply.send({ success: true, ...userInfo })
 }
@@ -97,7 +110,11 @@ const routeUserInfo = async (request: any, reply: any) => {
 
   if (error) return reply.send({ success: false, message: error })
 
-  const userData = await getUserInfo({ userId, orgId, sessionId: sessionId ?? returnSessionId })
+  const { JWT, ...userData } = await getUserInfo({
+    userId,
+    orgId,
+    sessionId: sessionId ?? returnSessionId,
+  })
 
   // This check is to prevent a user remaining logged in as a different user if
   // the snapshot changes and their userId corresponds to a different username
@@ -106,7 +123,34 @@ const routeUserInfo = async (request: any, reply: any) => {
   if (userData.user.username !== username)
     return reply.send({ success: false, message: 'Invalid username' })
 
+  // This is the designated "still here" call: the front end's idle tracker hits
+  // it while the user is actually interacting, so it must extend the session
+  // whether or not a token happened to be minted for this request. Everything
+  // else extends expiry only as a side effect of minting.
+  const refreshToken = getRefreshToken(request)
+  if (refreshToken) await renewSession(refreshToken, userId)
+
+  setAccessCookie(reply, JWT)
+
   return reply.send({ success: true, ...userData })
+}
+
+/*
+Ends the user's sessions and expires their cookies. Note the deliberate
+asymmetry with login: logging in elsewhere revokes nothing (several browsers
+must keep working), while an explicit logout ends them all 
+*/
+const routeLogout = async (request: any, reply: any) => {
+  const { userId, error } = request.auth
+  if (error) return reply.send({ success: false, message: error })
+
+  const refreshToken = getRefreshToken(request)
+  const sessionsEnded = await endSessions(userId, refreshToken)
+
+  // Without this the browser keeps presenting a cookie whose row is gone
+  clearAuthCookies(reply)
+
+  return reply.send({ success: true, sessionsEnded })
 }
 
 const routeUserPermissions = async (request: any, reply: any) => {
@@ -298,6 +342,7 @@ export {
   routeUserPermissions,
   routeLogin,
   routeLoginOrg,
+  routeLogout,
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,

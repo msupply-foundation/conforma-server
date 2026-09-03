@@ -170,6 +170,12 @@ class DBConnect {
 
   public setUserSessionOrg = PostgresDB.setUserSessionOrg
 
+  public extendUserSessionIfValid = PostgresDB.extendUserSessionIfValid
+
+  public deleteUserSession = PostgresDB.deleteUserSession
+
+  public deleteUserSessionsByUserId = PostgresDB.deleteUserSessionsByUserId
+
   public getAllGeneratedRowPolicies = PostgresDB.getAllGeneratedRowPolicies
 
   public getUserOrgPermissionNames = PostgresDB.getUserOrgPermissionNames

@@ -1,6 +1,6 @@
 import databaseConnect from '../database/databaseConnect'
 import config from '../../config'
-import { verify, sign } from 'jsonwebtoken'
+import { VerifyOptions, verify, sign } from 'jsonwebtoken'
 import { promisify } from 'util'
 import { nanoid } from 'nanoid'
 import { PermissionRow, TemplatePermissions } from './types'
@@ -16,9 +16,9 @@ const signPromise: any = promisify(sign)
 const extractJWTfromHeader = (request: any) =>
   (request?.headers?.authorization || '').replace('Bearer ', '')
 
-const getTokenData = async (jwtToken: string) => {
+const getTokenData = async (jwtToken: string, options?: VerifyOptions) => {
   try {
-    const data = await verifyPromise(jwtToken, config.jwtSecret)
+    const data = await verifyPromise(jwtToken, config.jwtSecret, options)
     return data
   } catch (err) {
     console.log('Cannot parse JWT')

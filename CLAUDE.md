@@ -56,6 +56,8 @@ Run from the repo root with **yarn** (Node 20 or later — `.nvmrc` has the base
    - Route handlers live in `src/components/<feature>/routes.ts` and are imported into `server.ts`. To add a route, write the handler in its component and register it in the `api` plugin callback under the right tier.
 2. **GraphQL** at `/graphql` (+ `/graphiql` IDE in dev). This is **not** behind the REST `preValidation` hook — PostGraphile verifies the JWT itself and enforces access purely through Postgres RLS. **A direct GraphQL call bypasses REST route guards**; never assume a REST-layer check protects data reachable via GraphQL.
 
+Both surfaces sit behind one root-level `onRequest` hook that turns the auth cookie into an `Authorization: Bearer` header and silently re-mints an expired token against the session table (`src/components/permissions/accessTokenMiddleware.ts`). It is *not* a guard — it only supplies the token; RLS and the REST tiers still decide what that token can do.
+
 ### The core idea: schema-driven API + RLS
 
 The Postgres schema *is* the API. PostGraphile reflects tables/views into GraphQL. Security is mostly **not** in application code — it's RLS policies generated from the permissions configuration and evaluated against `jwt.claims.*`. See [database/CLAUDE.md](database/CLAUDE.md) and [src/components/permissions/CLAUDE.md](src/components/permissions/CLAUDE.md).

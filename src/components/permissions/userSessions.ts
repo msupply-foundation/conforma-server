@@ -1,6 +1,7 @@
 import { createHash, randomBytes } from 'crypto'
 import databaseConnect from '../database/databaseConnect'
 import config from '../../config'
+import { UserSession } from '../../types'
 import {
   ACCESS_TOKEN_TIME_DIVISOR,
   DEFAULT_LOGOUT_TIME,
@@ -32,12 +33,17 @@ const getInactivityTime = () => config.logoutAfterInactivity ?? DEFAULT_LOGOUT_T
 
 // How long a session survives without activity. A "logoutAfterInactivity" of 0
 // means auto-logout is disabled, so the session is kept effectively forever.
-export const getSessionLifetimeMinutes = (userId: number) => {
-  if (userId === NON_REGISTERED_USER_ID) return PUBLIC_SESSION_TIME
-
+const getStandardSessionLifetimeMinutes = () => {
   const inactivityTime = getInactivityTime()
   return inactivityTime === 0 ? NO_EXPIRY_SESSION_TIME : inactivityTime
 }
+
+// An unknown user gets the standard window. That is only ever a fallback for
+// renewal, where the session may belong to a caller that presented no access
+// token to identify itself -- and it is safe because extending can never
+// shorten a session (see extendUserSessionIfValid).
+export const getSessionLifetimeMinutes = (userId?: number) =>
+  userId === NON_REGISTERED_USER_ID ? PUBLIC_SESSION_TIME : getStandardSessionLifetimeMinutes()
 
 // A fraction of the inactivity window, since an expired access token is renewed
 // silently against the session rather than logging the user out. Capped at
@@ -83,6 +89,50 @@ export const createSession = async ({
   })
 
   return { token, expiresAt }
+}
+
+/*
+Renews the session a refresh token belongs to: extends its inactivity window and
+returns the row, in a single statement (see extendUserSessionIfValid). Returns
+null when there is no live session -- revoked, expired and never-existed are
+deliberately indistinguishable from here.
+
+"userId" only sets how long to extend by, and may be omitted when the caller has
+no way to tell whose session it is. It is never used to find the session -- the
+token hash alone does that.
+
+This is the only session read on the request path, and it only happens when
+there is no usable access token: a valid one verifies on its own signature and
+never reaches the table. So an active client costs one write per access-token
+lifetime, not one per request.
+*/
+export const renewSession = async (
+  refreshToken: string,
+  userId?: number
+): Promise<UserSession | null> =>
+  (await databaseConnect.extendUserSessionIfValid(
+    hashRefreshToken(refreshToken),
+    getSessionLifetimeMinutes(userId)
+  )) ?? null
+
+/*
+Ends sessions on logout. There is one Logout action in the UI, so logging 
+out ends every session for that user -- note the deliberate asymmetry with 
+login, which revokes nothing.
+
+The shared public account is the exception, and it has to be: every public
+applicant shares its user_id, so ending "all" of its sessions would end every
+in-progress public form on the system at once. It collapses to ending just this
+one -- a defined behaviour rather than an exclusion, so it cannot be invoked by
+accident.
+*/
+export const endSessions = async (userId: number, refreshToken: string | null) => {
+  if (userId === NON_REGISTERED_USER_ID)
+    return refreshToken
+      ? await databaseConnect.deleteUserSession(hashRefreshToken(refreshToken))
+      : 0
+
+  return await databaseConnect.deleteUserSessionsByUserId(userId)
 }
 
 /*
