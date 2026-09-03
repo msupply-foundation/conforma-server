@@ -22,7 +22,7 @@ export const DEFAULT_LOGOUT_TIME = 60 // Minutes
 // their lifetime is a fraction of the inactivity window rather than the whole
 // of it -- capped, so that a deployment with a very long window (or none at
 // all) still issues tokens that go stale in an hour.
-// See kdd/auth-token-lifecycle/draft-kdd.md
+// See kdd/auth-token-lifecycle
 export const ACCESS_TOKEN_TIME_DIVISOR = 12
 export const MAX_ACCESS_TOKEN_TIME = 60 // Minutes
 export const MIN_ACCESS_TOKEN_TIME = 1 // Minutes
@@ -40,6 +40,13 @@ export const NO_EXPIRY_SESSION_TIME = 100 * 365 * 24 * 60 // Minutes (100 years)
 // which the "applyNonRegistered" row-level policy relies on.
 export const NON_REGISTERED_USER_ID = 1
 export const NON_REGISTERED_USERNAME = 'nonRegistered'
+
+// How often expired sessions are swept and idle clients told their session has
+// ended. A fixed internal poll, not a user-editable schedule, so it is a plain
+// setInterval rather than a scheduler.ts job. Up to a minute of lag is
+// immaterial: an expired session stops working the instant it expires, because
+// every lookup filters on expires_at.
+export const SESSION_CLEANUP_INTERVAL = 60_000 // Milliseconds
 
 export const DEFAULT_THUMBNAIL_MAX_WIDTH = 300
 export const DEFAULT_THUMBNAIL_MAX_HEIGHT = 300

@@ -1433,6 +1433,29 @@ class PostgresDB {
   }
 
   /**
+   * Deletes every session whose inactivity window has passed, and reports which
+   * ones went. Runs on a fixed once-a-minute poll: sessions are already
+   * unusable the moment they expire (every lookup filters on expires_at), so
+   * this is housekeeping plus the trigger for notifying idle clients -- not a
+   * security boundary.
+   * @returns the token hashes of the sessions that were deleted
+   */
+  public deleteExpiredUserSessions = async (): Promise<string[]> => {
+    const text = `
+      DELETE FROM user_session
+      WHERE expires_at < NOW()
+      RETURNING token_hash
+    `
+    try {
+      const result = await this.query({ text, values: [] })
+      return result.rows.map((row) => row.token_hash)
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  /**
    * Ends a single session. Deleting the row IS the revocation -- there is no
    * "revoked" flag to set.
    * @param tokenHash that uniquely identifies a session

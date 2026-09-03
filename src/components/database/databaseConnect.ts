@@ -176,6 +176,8 @@ class DBConnect {
 
   public deleteUserSessionsByUserId = PostgresDB.deleteUserSessionsByUserId
 
+  public deleteExpiredUserSessions = PostgresDB.deleteExpiredUserSessions
+
   public getAllGeneratedRowPolicies = PostgresDB.getAllGeneratedRowPolicies
 
   public getUserOrgPermissionNames = PostgresDB.getUserOrgPermissionNames

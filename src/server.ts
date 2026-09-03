@@ -51,6 +51,7 @@ import { Schedulers } from './components/scheduler'
 import { AccessExternalApiQuery, routeAccessExternalApi } from './components/external-apis/routes'
 import { ZIP_CACHE_FOLDER } from './constants'
 import { updateRowPolicies } from './components/permissions/rowLevelPolicyHelpers'
+import { startSessionCleanup } from './components/permissions/sessionCleanup'
 import { routeRawData } from './components/other/routeRawData'
 import {
   routeServerStatusWebsocket,
@@ -97,6 +98,10 @@ const startServer = async () => {
   // Add schedulers to global "config" object so we can update them. There
   // should only be a single global instance of Schedulers -- this one!
   config.scheduledJobs = new Schedulers()
+
+  // A fixed internal poll, so deliberately NOT one of the above schedulers,
+  // which exist for user-editable schedules
+  startSessionCleanup()
 
   config.latestSnapshot = await databaseConnect.getSystemInfo('snapshot')
 
@@ -392,8 +397,8 @@ const startServer = async () => {
   })
 
   server.register(async function (fastify) {
-    fastify.get('/server-status', { websocket: true }, (socket, _) =>
-      routeServerStatusWebsocket(socket, server)
+    fastify.get('/server-status', { websocket: true }, (socket, request) =>
+      routeServerStatusWebsocket(socket, server, request)
     )
   })
 
