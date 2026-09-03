@@ -84,16 +84,22 @@ export const notifyExpiredSessions = (tokenHashes: string[]) => {
     const sockets = socketsBySession.get(tokenHash)
     if (!sockets) continue
 
+    // Counted per session rather than across the batch, so that the log names
+    // only the sessions whose own sockets were reached -- a running total would
+    // stay above zero once any earlier session succeeded, and claim the rest
+    let notifiedHere = 0
     for (const socket of sockets) {
       try {
         socket.send(SESSION_EXPIRED_MESSAGE)
-        notified++
+        notifiedHere++
       } catch (err) {
         // A socket that has gone away shouldn't stop the others being told
         authLog('Could not notify expired session:', errorMessage(err))
       }
     }
-    if (notified > 0) notifiedSessions.push(sessionRef(tokenHash))
+
+    notified += notifiedHere
+    if (notifiedHere > 0) notifiedSessions.push(sessionRef(tokenHash))
     socketsBySession.delete(tokenHash)
   }
 

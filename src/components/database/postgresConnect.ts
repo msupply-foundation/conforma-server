@@ -1459,7 +1459,8 @@ class PostgresDB {
    * Ends a single session. Deleting the row IS the revocation -- there is no
    * "revoked" flag to set.
    * @param tokenHash that uniquely identifies a session
-   * @returns a promise that resolves to the number of sessions deleted
+   * @returns the token hash of the session that was deleted, or empty if there
+   * was none
    */
   public deleteUserSession = async (tokenHash: string): Promise<string[]> => {
     const text = `DELETE FROM user_session WHERE token_hash = $1 RETURNING token_hash`

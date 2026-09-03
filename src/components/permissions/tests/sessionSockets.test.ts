@@ -1,6 +1,7 @@
 import { FastifyRequest } from 'fastify'
 import { WebSocket } from '@fastify/websocket'
 import { REFRESH_COOKIE_NAME } from '../sessionCookies'
+import { sessionRef } from '../authLog'
 import type * as SessionSocketsModule from '../sessionSockets'
 
 // See userSessions.test.ts for why this is doMock + require rather than
@@ -150,6 +151,41 @@ test('A socket that throws on send does not block the others', () => {
 
   expect(() => expire('token-a')).not.toThrow()
   expect(working.sent).toHaveLength(1)
+
+  working.close()
+})
+
+/*
+The log line names the sessions it reached, and a batch is the normal case --
+the sweep notifies every tracked session the database no longer has at once. A
+count kept across the batch rather than per session would stay above zero once
+any earlier session succeeded, and so claim every later one whose sockets all
+failed.
+*/
+test('A session whose sockets all fail is not reported as told', () => {
+  const broken = {
+    send: () => {
+      throw new Error('socket is gone')
+    },
+    on: () => {},
+  } as unknown as WebSocket
+  const working = fakeSocket()
+
+  // Order matters: the working session is notified first, so a batch-wide count
+  // would already be above zero by the time the broken one is reached
+  trackSessionSocket(working.socket, requestWith('token-a'))
+  trackSessionSocket(broken, requestWith('token-b'))
+
+  const logged = jest.spyOn(console, 'log').mockImplementation(() => {})
+  const notified = notifyExpiredSessions([hashRefreshToken('token-a'), hashRefreshToken('token-b')])
+  const lines = logged.mock.calls.map((call) => call.join(' '))
+  logged.mockRestore()
+
+  expect(notified).toBe(1)
+
+  const told = lines.find((line) => line.includes('their session ended')) ?? ''
+  expect(told).toContain(sessionRef(hashRefreshToken('token-a')))
+  expect(told).not.toContain(sessionRef(hashRefreshToken('token-b')))
 
   working.close()
 })
