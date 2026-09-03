@@ -1434,7 +1434,7 @@ const migrateData = async () => {
     // Backs browser (and machine-client) sessions: the refresh token is stored
     // hashed and that hash is the primary key, so a session has exactly one
     // live token and revocation is simply deleting the row. See
-    // kdd/auth-token-lifecycle/draft-kdd.md §2, and
+    // kdd/auth-token-lifecycle §2, and
     // database/buildSchema/04B_user_session.sql for the full rationale.
     console.log(' - Adding user_session table')
     await DB.changeSchema(`

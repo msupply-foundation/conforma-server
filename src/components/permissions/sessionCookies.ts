@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
 /*
-Transport for both auth tokens -- see kdd/auth-token-lifecycle/draft-kdd.md §3
+Transport for both auth tokens -- see kdd/auth-token-lifecycle §3
 
 Tokens are delivered only as HttpOnly cookies, never in a response body: without
 that rule, injected script could call an endpoint, have the browser attach the

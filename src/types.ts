@@ -264,7 +264,7 @@ export interface UserOrg extends User, Organisation {
 }
 
 // One row of the "user_session" table -- a single login, keyed by the hash of
-// its refresh token. See kdd/auth-token-lifecycle/draft-kdd.md
+// its refresh token. See kdd/auth-token-lifecycle
 export interface UserSession {
   tokenHash: string
   userId: number

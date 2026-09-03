@@ -6,7 +6,7 @@ import { errorMessage } from '../utilityFunctions'
 
 /*
 Turns the access cookie into an Authorization header, and silently replaces it
-when it has run out -- see kdd/auth-token-lifecycle/draft-kdd.md §3 and §5.
+when it has run out -- see kdd/auth-token-lifecycle §3 and §5.
 
 PostGraphile 4 reads the JWT *only* from `Authorization: Bearer`, with no cookie
 source available in library mode, and the REST tier's preValidation hook reads

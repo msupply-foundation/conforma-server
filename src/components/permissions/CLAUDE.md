@@ -50,7 +50,7 @@ A user's effective access = the policies reachable through their permission join
 - Multiple concurrent sessions per user are **required** (a second browser must not evict the first), so there is no unique index on `user_id`, and `session_id` is deliberately not unique either.
 - Public (`nonRegistered`) sessions get a shorter window, since every hit on a public form URL creates a row.
 - The table is hidden from GraphQL ([postgraphile.tags.json5](../../../postgraphile.tags.json5)) and has RLS enabled with no policies. **Snapshots still carry session rows** — excluding them on export, and preserving the restoring admin's own session on import, is still to do.
-- Full rationale: [kdd/auth-token-lifecycle/draft-kdd.md](../../../kdd/auth-token-lifecycle/draft-kdd.md).
+- Full rationale: [kdd/auth-token-lifecycle](../../../kdd/auth-token-lifecycle/kdd.md).
 
 ## RLS generation (`updateRowPolicies` in [rowLevelPolicyHelpers.ts](rowLevelPolicyHelpers.ts))
 

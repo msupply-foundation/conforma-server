@@ -1,6 +1,6 @@
 # KDD: Authentication refactor
 
-**Status:** Draft (2026-09-02)
+**Status:** Accepted (2026-09-03)
 **Decision:**
 
 - **Add an `exp` claim to the JWT**, so REST and GraphQL both reject expired tokens through the same check — replacing REST's hand-rolled expiry calculation, which GraphQL never had (§1).
@@ -171,7 +171,7 @@ mSupply — and a peer Conforma server — get a **dedicated non-admin service a
 
 The **non-admin** part is the guardrail, not a detail: `isAdmin` sets `role: 'postgres'` and bypasses every RLS policy, so an admin service account is a permanent superuser credential in a partner's config file.
 
-**The credential is a provisioned long-lived session, not a password.** An admin — and only an admin — creates a `user_session` row for the service account with a far-future `expires_at`, and the token is shown once. mSupply stores that single value and sends it as the refresh cookie on every request. There is no login call, no username or password at its end, and no token lifecycle for it to implement: its entire configuration is a base URL and one token.
+**The credential is a provisioned long-lived session, not a password.** An admin — and only an admin — creates a `user_session` row for the service account with a far-future `expires_at` — which the clamp in §5 preserves — and the token is shown once. mSupply stores that single value and sends it as the refresh cookie on every request. There is no login call, no username or password at its end, and no token lifecycle for it to implement: its entire configuration is a base URL and one token.
 
 **Absence of an access token is treated exactly as expiry.** That is the whole mechanism, and the reason no machine-specific code exists. The middleware's rule is *"no usable access token, but a live session → mint one"*, and a request that never carried an access cookie satisfies it identically to one whose cookie has aged out. A machine client is therefore not a case the auth path knows about; it is the same path with one branch already true.
 
@@ -186,10 +186,14 @@ Revocation is deleting that row, which cuts the integration without touching the
 | Clock | What it means | Lifetime | When it changes |
 | --- | --- | --- | --- |
 | access token `exp` | how long a stateless token is honoured | `Math.min(logoutAfterInactivity / 12, 60)` minutes — so a 1 h session gives 5 min, 6 h gives 30 min, and anything from 12 h up is capped at 1 h | set at mint, never updated; a new token is minted instead |
-| session `expires_at` | the inactivity window | `logoutAfterInactivity` — may be days on deployments that expect no auto-timeout | **extended every time an access token is minted** |
+| session `expires_at` | the inactivity window | `logoutAfterInactivity` — may be days on deployments that expect no auto-timeout | **extended every time an access token is minted, and never shortened** |
 | session `expires_at`, shared public account | same | **1 day** | same (§6) |
 
-Extending on mint rather than on every request is the point: one database write per access-TTL per active session, not one per request. Renewal is triggered by **rejection, not by a schedule**, so the `setInterval`, the clock-driven renewal window, and any focus- or visibility-based triggers all disappear.
+Extending on mint rather than on every request is the point: one database write per access-TTL per active session, not one per request.
+
+Renewal is triggered by **rejection, not by a schedule**, so the `setInterval`, the clock-driven renewal window, and any focus- or visibility-based triggers all disappear.
+
+**Extending must never shorten**, which is why the write is a clamp (`GREATEST(expires_at, now + window)`) rather than an assignment. A machine client is a provisioned session with a far-future expiry that sends no access token, so it takes the renewal path on *every* request — a plain assignment would collapse its multi-year credential to one inactivity window on first use, and re-provisioning is out-of-band (§4). The clamp also makes it safe for renewal to fall back to the standard window when the caller presented no token to identify itself: the worst case is under-extending, never cutting a session short.
 
 **"Active" must mean user activity, not requests.** The server only sees requests, so a user typing into a long form for twenty minutes would be logged out while actively working — a regression, because today's `LoginInactivityTimer` watches mouse and keyboard. **The existing idle tracker is reused rather than replaced**; it simply changes job. Instead of logging the user out when the deadline passes, it calls `GET /api/user-info` while the user is interacting, which keeps the session alive and — should the access cookie have expired — has it silently replaced by the same middleware as any other request.
 
