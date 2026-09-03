@@ -41,6 +41,11 @@ export const NO_EXPIRY_SESSION_TIME = 100 * 365 * 24 * 60 // Minutes (100 years)
 export const NON_REGISTERED_USER_ID = 1
 export const NON_REGISTERED_USERNAME = 'nonRegistered'
 
+// The system organisation, baked into every snapshot at id 1. The only org id
+// that means the same thing in one dataset as it does in another, so the only
+// one worth carrying across a database restore.
+export const DEFAULT_SYSTEM_ORG_ID = 1
+
 // How often expired sessions are swept and idle clients told their session has
 // ended. A fixed internal poll, not a user-editable schedule, so it is a plain
 // setInterval rather than a scheduler.ts job. Up to a minute of lag is

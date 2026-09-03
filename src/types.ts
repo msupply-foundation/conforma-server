@@ -275,6 +275,13 @@ export interface UserSession {
   expiresAt: Date
 }
 
+// A session read out ahead of a database restore so it can be put back
+// afterwards. It carries the username in place of the user id, because an id is
+// only meaningful within the dataset it was read from -- see sessionRestore.ts
+export interface CapturedSession extends Omit<UserSession, 'userId'> {
+  username: string
+}
+
 // node-scheduler recurrence rule format
 export interface ScheduleObject {
   date?: number | number[] | null

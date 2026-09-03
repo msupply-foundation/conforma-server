@@ -81,12 +81,24 @@ export const getAccessToken = (request: FastifyRequest) => getCookie(request, AC
 export const getRefreshToken = (request: FastifyRequest) => getCookie(request, REFRESH_COOKIE_NAME)
 
 /*
+Expiring a cookie is setting it with Max-Age=0, which tells the browser to
+discard it immediately. The flags must match those it was set with, or it is
+treated as a different cookie and the original is left in place.
+
+Expiring the access cookie on its own discards a token without ending the
+session behind it: the next request finds no usable access token, takes the
+ordinary renewal path, and is issued one built from the session row. That is how
+a snapshot restore hands the admin claims describing the restored database
+rather than the one it replaced.
+*/
+export const clearAccessCookie = (reply: FastifyReply) =>
+  setCookie(reply, ACCESS_COOKIE_NAME, '', 0)
+
+/*
 Logout has to expire both cookies as well as deleting the session, or the
-browser keeps presenting a cookie whose row is gone. Max-Age=0 tells the browser
-to discard immediately; the flags must match those the cookie was set with, or
-it is treated as a different cookie and left in place.
+browser keeps presenting a cookie whose row is gone.
 */
 export const clearAuthCookies = (reply: FastifyReply) => {
-  setCookie(reply, ACCESS_COOKIE_NAME, '', 0)
+  clearAccessCookie(reply)
   setCookie(reply, REFRESH_COOKIE_NAME, '', 0)
 }

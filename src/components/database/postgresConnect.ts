@@ -14,6 +14,7 @@ import {
   TriggerQueueUpdatePayload,
   UserOrg,
   UserSession,
+  CapturedSession,
   DBOperationType,
 } from '../../types'
 import {
@@ -1357,6 +1358,90 @@ class PostgresDB {
     `
     try {
       await this.query({ text, values: [tokenHash, userId, orgId, sessionId, expiresAt] })
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  /**
+   * Reads a session together with the username it belongs to, so it can be
+   * carried across a database restore. The username is what makes it portable:
+   * the stored user_id only identifies anyone within the dataset it was read
+   * from. This is a plain read, unlike extendUserSessionIfValid, because
+   * nothing about being about to destroy the database should extend a session.
+   * @param tokenHash that uniquely identifies a session
+   * @returns the {@link CapturedSession}, or undefined if there is no such row
+   */
+  public getUserSessionForRestore = async (
+    tokenHash: string
+  ): Promise<CapturedSession | undefined> => {
+    const text = `
+      SELECT s.token_hash AS "tokenHash",
+        s.org_id AS "orgId",
+        s.session_id AS "sessionId",
+        s.expires_at AS "expiresAt",
+        u.username
+      FROM user_session s
+      JOIN "user" u ON u.id = s.user_id
+      WHERE s.token_hash = $1
+    `
+    try {
+      const result = await this.query({ text, values: [tokenHash] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  /**
+   * Puts a captured session back after a database restore, re-resolved against
+   * the restored data. One statement, so there is no window between resolving
+   * the username and writing the row.
+   *
+   * INSERT...SELECT is doing the work of a conditional: no user with that
+   * username means no source row, so nothing is inserted and the caller learns
+   * the session could not be carried across. The org is resolved the same way,
+   * to NULL rather than to nothing, since a session without an org is valid.
+   *
+   * ON CONFLICT is needed because the restored dump may already contain this
+   * very token_hash -- a snapshot taken from this same server carries the
+   * session that is now asking to be reinstated, pointing at whichever user
+   * held that id when the snapshot was taken.
+   *
+   * GREATEST covers a restore that outlasts the inactivity window: reinstating
+   * the captured expiry alone could put back a row that has already expired,
+   * which every later lookup would then refuse.
+   * @param session the {@link CapturedSession} to reinstate. Its orgId is taken
+   * as given -- deciding which orgs survive a restore is the caller's call
+   * @param lifetimeMinutes floor for the reinstated expiry, measured from now
+   * @returns the user id the session now belongs to, or undefined if the
+   * username no longer exists in the restored data
+   */
+  public reinstateUserSession = async (
+    { tokenHash, username, orgId, sessionId, expiresAt }: CapturedSession,
+    lifetimeMinutes: number
+  ): Promise<number | undefined> => {
+    const text = `
+      INSERT INTO user_session (token_hash, user_id, org_id, session_id, expires_at)
+      SELECT $1, u.id,
+        (SELECT id FROM organisation WHERE id = $3),
+        $4,
+        GREATEST($5::timestamptz, NOW() + make_interval(mins => $6::int))
+      FROM "user" u
+      WHERE u.username = $2
+      ON CONFLICT (token_hash) DO UPDATE
+      SET user_id = EXCLUDED.user_id,
+        org_id = EXCLUDED.org_id,
+        session_id = EXCLUDED.session_id,
+        expires_at = EXCLUDED.expires_at
+      RETURNING user_id AS "userId"
+    `
+    const values = [tokenHash, username, orgId, sessionId, expiresAt, lifetimeMinutes]
+    try {
+      const result = await this.query({ text, values })
+      return result.rows[0]?.userId
     } catch (err) {
       console.log(errorMessage(err))
       throw err

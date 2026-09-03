@@ -18,7 +18,28 @@ accumulating (every hit on a public form URL creates one, bots included) and
 gives idle clients a nudge they would otherwise never get.
 */
 
+/*
+A database restore replaces the whole dataset, and for its duration the session
+table is either absent or the incoming snapshot's -- neither of which says
+anything about the sessions this server's clients are holding. Sweeping then
+would find every connected client's session "gone" and tell them all so, which
+for the admin running the restore would undo the very session being preserved
+for them (see sessionRestore.ts). The restore is long enough to span several
+ticks, so it has to suspend the sweep rather than race it.
+*/
+let sweepPaused = false
+
+export const pauseSessionSweep = () => {
+  sweepPaused = true
+}
+
+export const resumeSessionSweep = () => {
+  sweepPaused = false
+}
+
 const sweepExpiredSessions = async () => {
+  if (sweepPaused) return
+
   try {
     const expired = await databaseConnect.deleteExpiredUserSessions()
 

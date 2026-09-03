@@ -168,6 +168,10 @@ class DBConnect {
 
   public createUserSession = PostgresDB.createUserSession
 
+  public getUserSessionForRestore = PostgresDB.getUserSessionForRestore
+
+  public reinstateUserSession = PostgresDB.reinstateUserSession
+
   public setUserSessionOrg = PostgresDB.setUserSessionOrg
 
   public extendUserSessionIfValid = PostgresDB.extendUserSessionIfValid

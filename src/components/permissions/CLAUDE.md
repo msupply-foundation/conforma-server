@@ -49,7 +49,8 @@ A user's effective access = the policies reachable through their permission join
 - The row carries `org_id` and `session_id` because both are authorisation state a renewed token must reproduce: `getUserInfo` merges org-granted permissions, and RLS reads `sessionId`.
 - Multiple concurrent sessions per user are **required** (a second browser must not evict the first), so there is no unique index on `user_id`, and `session_id` is deliberately not unique either.
 - Public (`nonRegistered`) sessions get a shorter window, since every hit on a public form URL creates a row.
-- The table is hidden from GraphQL ([postgraphile.tags.json5](../../../postgraphile.tags.json5)) and has RLS enabled with no policies. **Snapshots still carry session rows** — excluding them on export, and preserving the restoring admin's own session on import, is still to do.
+- The table is hidden from GraphQL ([postgraphile.tags.json5](../../../postgraphile.tags.json5)) and has RLS enabled with no policies.
+- **Snapshots dump and restore it like any other table** — a snapshot is a faithful copy of the database, so another system's sessions do come across with its snapshot. On top of that, [sessionRestore.ts](sessionRestore.ts) carries the restoring admin's *own* session across the `DROP SCHEMA` that `useSnapshot` runs, re-resolved **by username** (the user id may now be someone else) with `org_id` kept only when it is the system org. Two supporting pieces are easy to overlook: the sweep is suspended for the duration (`pauseSessionSweep`), or it would tell every connected client its session had ended; and [routeUseSnapshot](../snapshots/routes/routeUseSnapshot.ts) expires the access cookie on success, or the admin keeps pre-restore claims until it lapses.
 - Full rationale: [kdd/auth-token-lifecycle](../../../kdd/auth-token-lifecycle/kdd.md).
 
 ## RLS generation (`updateRowPolicies` in [rowLevelPolicyHelpers.ts](rowLevelPolicyHelpers.ts))
