@@ -5,9 +5,13 @@ import { sessionRef } from '../authLog'
 import type * as SessionSocketsModule from '../sessionSockets'
 
 // See userSessions.test.ts for why this is doMock + require rather than
-// jest.mock. sessionSockets reaches the database only through hashRefreshToken's
-// module, which does not touch it, but userSessions imports databaseConnect.
-jest.doMock('../../database/databaseConnect', () => ({ __esModule: true, default: {} }))
+// jest.mock. Tracking asks the database whether the session behind a socket is
+// still live, and userSessions (for hashRefreshToken) imports databaseConnect too.
+const getLiveUserSessions = jest.fn()
+jest.doMock('../../database/databaseConnect', () => ({
+  __esModule: true,
+  default: { getLiveUserSessions },
+}))
 
 const {
   notifyExpiredSessions,
@@ -37,14 +41,20 @@ const fakeSocket = () => {
 
 const expire = (refreshToken: string) => notifyExpiredSessions([hashRefreshToken(refreshToken)])
 
+beforeEach(() => {
+  // Live unless a test says otherwise -- the query returns the hashes it found
+  getLiveUserSessions.mockImplementation(async (hashes: string[]) => hashes)
+})
+
 // The registry is module state, so each test has to leave it empty
 afterEach(() => {
+  jest.clearAllMocks()
   expect(trackedSessionCount()).toBe(0)
 })
 
-test('A tracked socket is told when its session expires', () => {
+test('A tracked socket is told when its session expires', async () => {
   const { socket, sent, close } = fakeSocket()
-  trackSessionSocket(socket, requestWith('token-a'))
+  await trackSessionSocket(socket, requestWith('token-a'))
 
   expect(expire('token-a')).toBe(1)
   expect(sent).toEqual([JSON.stringify({ type: 'session-expired' })])
@@ -56,11 +66,11 @@ The existing broadcast (notifyClients) goes to EVERY connected client. Telling
 every browser on the system that a session expired because one did would be
 worse than saying nothing, so delivery has to be per-session.
 */
-test('Only the expired session is notified, not every connected client', () => {
+test('Only the expired session is notified, not every connected client', async () => {
   const a = fakeSocket()
   const b = fakeSocket()
-  trackSessionSocket(a.socket, requestWith('token-a'))
-  trackSessionSocket(b.socket, requestWith('token-b'))
+  await trackSessionSocket(a.socket, requestWith('token-a'))
+  await trackSessionSocket(b.socket, requestWith('token-b'))
 
   expire('token-a')
 
@@ -72,11 +82,11 @@ test('Only the expired session is notified, not every connected client', () => {
 })
 
 // One login can have several tabs open
-test('Every socket on a session is notified', () => {
+test('Every socket on a session is notified', async () => {
   const first = fakeSocket()
   const second = fakeSocket()
-  trackSessionSocket(first.socket, requestWith('token-a'))
-  trackSessionSocket(second.socket, requestWith('token-a'))
+  await trackSessionSocket(first.socket, requestWith('token-a'))
+  await trackSessionSocket(second.socket, requestWith('token-a'))
 
   expect(expire('token-a')).toBe(2)
   expect(first.sent).toHaveLength(1)
@@ -88,21 +98,52 @@ test('Every socket on a session is notified', () => {
 
 // A client that connected before logging in has nothing to match on, and simply
 // finds out on its next request instead
-test('A socket with no refresh cookie is not tracked', () => {
+test('A socket with no refresh cookie is not tracked', async () => {
   const { socket, sent } = fakeSocket()
-  trackSessionSocket(socket, requestWith())
+  await trackSessionSocket(socket, requestWith())
 
   expect(trackedSessionCount()).toBe(0)
   expect(sent).toHaveLength(0)
 })
 
-test('Expiring a session nobody is connected to is harmless', () => {
+/*
+A browser cannot discard an HttpOnly cookie itself, and the 101 upgrade response
+cannot clear it either, so a client already back at the login screen may still
+present the cookie for a session that has gone. Tracking it would have the sweep
+report the same dead session on every pass -- and the client reload that follows
+brings back another socket with the same cookie, so it never ends.
+*/
+test('A socket whose session has gone is not tracked', async () => {
+  const { socket, sent } = fakeSocket()
+  getLiveUserSessions.mockResolvedValue([])
+
+  await trackSessionSocket(socket, requestWith('token-a'))
+
+  expect(trackedSessionCount()).toBe(0)
+  expect(expire('token-a')).toBe(0)
+  expect(sent).toHaveLength(0)
+})
+
+// Not tracking costs a prompt notification, and the client still finds out on
+// its next request. Tracking a session we failed to confirm risks the loop above
+test('A socket is not tracked when the session cannot be confirmed', async () => {
+  const { socket } = fakeSocket()
+  getLiveUserSessions.mockRejectedValue(new Error('database is down'))
+
+  const logged = jest.spyOn(console, 'log').mockImplementation(() => {})
+  await expect(trackSessionSocket(socket, requestWith('token-a'))).resolves.toBeUndefined()
+  logged.mockRestore()
+
+  expect(trackedSessionCount()).toBe(0)
+})
+
+test('Expiring a session nobody is connected to is harmless', async () => {
   expect(notifyExpiredSessions(['no-such-hash'])).toBe(0)
 })
 
-test('Closing a socket stops it being tracked', () => {
+test('Closing a socket stops it being tracked', async () => {
   const { socket, sent, close } = fakeSocket()
-  trackSessionSocket(socket, requestWith('token-a'))
+  await trackSessionSocket(socket, requestWith('token-a'))
   expect(trackedSessionCount()).toBe(1)
 
   close()
@@ -113,11 +154,11 @@ test('Closing a socket stops it being tracked', () => {
 })
 
 // Otherwise the map grows for the life of the process as clients come and go
-test('A session is forgotten only once its last socket closes', () => {
+test('A session is forgotten only once its last socket closes', async () => {
   const first = fakeSocket()
   const second = fakeSocket()
-  trackSessionSocket(first.socket, requestWith('token-a'))
-  trackSessionSocket(second.socket, requestWith('token-a'))
+  await trackSessionSocket(first.socket, requestWith('token-a'))
+  await trackSessionSocket(second.socket, requestWith('token-a'))
 
   first.close()
   expect(trackedSessionCount()).toBe(1)
@@ -126,9 +167,9 @@ test('A session is forgotten only once its last socket closes', () => {
   expect(trackedSessionCount()).toBe(0)
 })
 
-test('Notifying releases the session, so nothing is left behind', () => {
+test('Notifying releases the session, so nothing is left behind', async () => {
   const { socket, close } = fakeSocket()
-  trackSessionSocket(socket, requestWith('token-a'))
+  await trackSessionSocket(socket, requestWith('token-a'))
 
   expire('token-a')
 
@@ -137,7 +178,7 @@ test('Notifying releases the session, so nothing is left behind', () => {
 })
 
 // One dead socket must not stop the rest of a session being told
-test('A socket that throws on send does not block the others', () => {
+test('A socket that throws on send does not block the others', async () => {
   const broken = {
     send: () => {
       throw new Error('socket is gone')
@@ -146,8 +187,8 @@ test('A socket that throws on send does not block the others', () => {
   } as unknown as WebSocket
   const working = fakeSocket()
 
-  trackSessionSocket(broken, requestWith('token-a'))
-  trackSessionSocket(working.socket, requestWith('token-a'))
+  await trackSessionSocket(broken, requestWith('token-a'))
+  await trackSessionSocket(working.socket, requestWith('token-a'))
 
   expect(() => expire('token-a')).not.toThrow()
   expect(working.sent).toHaveLength(1)
@@ -162,7 +203,7 @@ count kept across the batch rather than per session would stay above zero once
 any earlier session succeeded, and so claim every later one whose sockets all
 failed.
 */
-test('A session whose sockets all fail is not reported as told', () => {
+test('A session whose sockets all fail is not reported as told', async () => {
   const broken = {
     send: () => {
       throw new Error('socket is gone')
@@ -173,8 +214,8 @@ test('A session whose sockets all fail is not reported as told', () => {
 
   // Order matters: the working session is notified first, so a batch-wide count
   // would already be above zero by the time the broken one is reached
-  trackSessionSocket(working.socket, requestWith('token-a'))
-  trackSessionSocket(broken, requestWith('token-b'))
+  await trackSessionSocket(working.socket, requestWith('token-a'))
+  await trackSessionSocket(broken, requestWith('token-b'))
 
   const logged = jest.spyOn(console, 'log').mockImplementation(() => {})
   const notified = notifyExpiredSessions([hashRefreshToken('token-a'), hashRefreshToken('token-b')])

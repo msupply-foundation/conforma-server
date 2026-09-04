@@ -206,7 +206,14 @@ const routeUserInfo = async (request: any, reply: any) => {
     : null
 
   if (refreshToken && !session) {
-    authLog(`Session expired or revoked for ${quoted(username)}`)
+    authLog(`Session expired or revoked for ${quoted(username)} -- cookies cleared`)
+    // This is where a lapsed session is usually discovered, and the client
+    // can't discard the cookies itself. Leaving them in place leaves the
+    // browser presenting a refresh cookie whose row is gone -- which the
+    // expiry sweep keeps recognising and reporting, long after the app has
+    // returned to the login screen. The middleware only clears them on the
+    // renewal path, which a still-valid access token skips.
+    clearAuthCookies(reply)
     reply.statusCode = 401
     // Revoked, expired and never-existed are deliberately indistinguishable
     return reply.send({ success: false, message: 'Session expired' })
@@ -250,7 +257,10 @@ must keep working), while an explicit logout ends them all
 const routeLogout = async (request: any, reply: any) => {
   const { userId, username, error } = request.auth
   if (error) {
-    authLog(`Logout rejected: ${error}`)
+    // Nothing to end, but a caller asking to log out has no use for whatever
+    // cookies it still holds, and cannot discard them itself
+    authLog(`Logout rejected: ${error} -- cookies cleared`)
+    clearAuthCookies(reply)
     return reply.send({ success: false, message: error })
   }
 

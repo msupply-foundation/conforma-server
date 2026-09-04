@@ -1,5 +1,6 @@
 import { FastifyRequest } from 'fastify'
 import { WebSocket } from '@fastify/websocket'
+import databaseConnect from '../database/databaseConnect'
 import { getRefreshToken } from './sessionCookies'
 import { hashRefreshToken } from './userSessions'
 import { authLog, sessionRef } from './authLog'
@@ -34,8 +35,16 @@ const socketsBySession = new Map<string, Set<WebSocket>>()
 Called when a socket connects. A connection with no refresh cookie -- an
 anonymous client, or one that connected before logging in -- is simply not
 tracked, and gets no expiry notification.
+
+Neither is one whose cookie names a session that no longer exists. A browser
+cannot discard an HttpOnly cookie itself, and the handshake is one response that
+cannot clear it either -- the 101 upgrade is written by the websocket library, so
+any Set-Cookie set for it is dropped. So a client that has already returned to
+the login screen may well still present the cookie, and tracking it would have
+the sweep report the same dead session on every pass, to a client with nothing
+left to end.
 */
-export const trackSessionSocket = (socket: WebSocket, request: FastifyRequest) => {
+export const trackSessionSocket = async (socket: WebSocket, request: FastifyRequest) => {
   const refreshToken = getRefreshToken(request)
   if (!refreshToken) {
     // Worth saying out loud rather than passing over in silence: a socket that
@@ -47,6 +56,23 @@ export const trackSessionSocket = (socket: WebSocket, request: FastifyRequest) =
   }
 
   const tokenHash = hashRefreshToken(refreshToken)
+
+  try {
+    const live = await databaseConnect.getLiveUserSessions([tokenHash])
+    if (live.length === 0) {
+      authLog(
+        `Socket connected for a session that has gone (${sessionRef(tokenHash)}) -- not tracked`
+      )
+      return
+    }
+  } catch (err) {
+    // Not tracking costs this client a prompt notification, and it still finds
+    // out on its next request. Tracking a session we failed to confirm risks
+    // the repeat-notification loop above, which is the worse of the two.
+    authLog('Could not confirm session for socket:', errorMessage(err), '-- not tracked')
+    return
+  }
+
   authLog(`Socket connected (session ${sessionRef(tokenHash)})`)
 
   const sockets = socketsBySession.get(tokenHash) ?? new Set<WebSocket>()
