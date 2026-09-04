@@ -150,7 +150,7 @@ The server treats a missing access token like an expired one, so it will mint
 and return access tokens automatically; the client needs no login step.
 
 To revoke, delete this session's row:
-  DELETE FROM user_session WHERE token_hash = encode(digest('<token>', 'sha256'), 'hex');
+  DELETE FROM user_session WHERE token_hash = encode(sha256('<token>'), 'hex');
 or revoke every session for the account:
   DELETE FROM user_session WHERE user_id = ${userId};
 `)

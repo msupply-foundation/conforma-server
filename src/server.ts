@@ -50,6 +50,7 @@ import migrateData from '../database/migration/migrateData'
 import routeArchiveFiles from './components/files/routeArchiveFiles'
 import { Schedulers } from './components/scheduler'
 import { AccessExternalApiQuery, routeAccessExternalApi } from './components/external-apis/routes'
+import { warnAboutPlaintextSecrets } from './components/external-apis/warnPlaintextSecrets'
 import { ZIP_CACHE_FOLDER } from './constants'
 import { updateRowPolicies } from './components/permissions/rowLevelPolicyHelpers'
 import { startSessionCleanup } from './components/permissions/sessionCleanup'
@@ -426,6 +427,7 @@ const startServer = async () => {
     console.log('Email mode:', config.emailMode)
     if (config.emailMode === 'TEST') console.log('All email will be sent to:', config.testingEmail)
     if (config.maintenanceMode) console.log(`-- Server in Maintenance mode`)
+    warnAboutPlaintextSecrets(config.externalApiConfigs)
     console.log(`\nServer listening at ${address}`)
   })
 

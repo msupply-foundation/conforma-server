@@ -28,9 +28,61 @@ The `AuthenticationObject` can be one of the following:
 ```ts
 { type: 'Basic'; username: string; password: string }
 { type: 'Bearer'; token: string }
+{ type: 'ConformaSession'; token: string }   // another Conforma server
 ```
 
-We probably don't want to save passwords of tokens in plain text in our preferences file, so we've provided a mechanism to extract these from environment variables. Prefix any string with `env.` and the subsequent part of string will be replaced by an environment variable of that name, e.g. `password: "env.MY_SECRET"` will use whatever value is currently stored in the `"MY_SECRET"` env variable.
+We probably don't want to save passwords or tokens in plain text in our preferences file, so we've provided a mechanism to extract these from environment variables. Prefix any string with `env.` and the subsequent part of string will be replaced by an environment variable of that name, e.g. `password: "env.MY_SECRET"` will use whatever value is currently stored in the `"MY_SECRET"` env variable. This works for the `password`, `username` and `token` fields alike.
+
+If a `password` or `token` is written out literally, the server logs a warning naming the API -- at startup, and again whenever preferences are saved. It's only a warning; hard-coding a credential is fine in development. The reason to prefer `env.` in a real deployment is that `preferences.json` is editable through the admin UI and is carried along by snapshots and template exports, so a literal secret travels further than you might expect.
+
+#### Calling another Conforma server (`ConformaSession`)
+
+Conforma's own API endpoints (`/api/data-views` and friends) need an access token, and access tokens expire. Rather than log in and manage a token lifecycle, we present a **long-lived session credential that the other server has provisioned for us**. Because that server treats a *missing* access token exactly like an expired one, it mints an access token for the request and serves it -- so there is no login step, nothing to cache and nothing to renew on this side. See [`kdd/auth-token-lifecycle`](../kdd/auth-token-lifecycle/kdd.md) §4 and §7 for the reasoning.
+
+Setting it up takes one step at each end.
+
+**On the server being called**, an administrator creates a service account and issues it a session token:
+
+```
+yarn token session <username> --days 365
+```
+
+The token is displayed once, and only its hash is stored. Two things matter about the account it belongs to:
+
+- **It must not be an admin.** An admin JWT carries `role: 'postgres'` and bypasses every row-level security policy, so an admin credential sitting in a partner's config file is a permanent superuser key. Use a dedicated service account granted only the permissions the integration needs. (`yarn token` warns if you point it at an admin.)
+- **Its permissions are what the integration can see** -- not the permissions of whichever user triggers the relay at the calling end. Data views, for example, are filtered by `permissionNames`, so the service account only reaches the views its own permissions allow.
+
+**On the server doing the calling**, configure it like any other external API:
+
+```json
+"externalApiConfigs": {
+  "PeerConforma": {
+    "baseUrl": "https://peer-conforma.example.org/api/",
+    "authentication": {
+      "type": "ConformaSession",
+      "token": "env.PEER_CONFORMA_TOKEN"
+    },
+    "routes": {
+      "dataViews": { "method": "get", "url": "data-views" },
+      "registeredProducts": {
+        "method": "get",
+        "url": "data-views/registered-products",
+        "permissions": [ "applyProductRego" ]
+      }
+    }
+  }
+}
+```
+
+The token is sent as the `refresh` cookie on every request, and nothing is kept between requests: the peer mints an access token each time (an indexed lookup and a signature -- no password hashing). That keeps the relay a plain function of its configuration, so editing the credential takes effect immediately, with no restart and no cache to clear.
+
+To cut the integration off, delete its session row on the server being called. That revokes the credential without touching the account, and without affecting anyone else logged in as it:
+
+```sql
+DELETE FROM user_session WHERE token_hash = encode(sha256('<token>'), 'hex');
+```
+
+The credential does not rotate, and it cannot be recovered -- if it is lost, issue a new one and update the calling server's configuration. When the session is revoked or expires, the peer returns 401, and the relay passes that status back to its own client.
 
 ### Route Definitions
 

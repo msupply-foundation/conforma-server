@@ -5,6 +5,7 @@ import path from 'path'
 import { getAppEntryPointDir } from './components/utilityFunctions'
 import { merge } from 'lodash'
 import databaseConnect from './components/database/databaseConnect'
+import { warnAboutPlaintextSecrets } from './components/external-apis/warnPlaintextSecrets'
 
 function loadPrefs(preferencesFolder: string, preferencesFileName: string) {
   const mainPrefs = readJsonSync(
@@ -65,6 +66,8 @@ export const refreshConfig = async (config: Config) => {
       config[key] = serverPrefs[key] as never
     } else delete config[key]
   })
+
+  warnAboutPlaintextSecrets(config.externalApiConfigs)
 
   if (webAppPrefs.siteHost) config.productionHost = webAppPrefs.siteHost
   else config.productionHost = undefined
