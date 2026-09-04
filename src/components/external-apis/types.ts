@@ -4,10 +4,14 @@ import { EvaluatorNode } from 'fig-tree-evaluator'
 "ConformaSession" is for calling a peer Conforma server, and is the machine-client
 mechanism of kdd/auth-token-lifecycle §4 pointed the other way: that server
 provisions a long-lived session credential for us (`yarn token session`), and we
-present it as the refresh cookie on every request. Because it treats a *missing*
-access token exactly as an expired one, it mints an access token for us and the
-request proceeds -- so there is no login step, no token to cache and nothing to
-renew on this side.
+present it as the refresh cookie. Because it treats a *missing* access token
+exactly as an expired one, it mints one for us and the request proceeds -- so
+there is no login step and nothing to renew on this side.
+
+The access token it mints comes back as a cookie, and we send that back on every
+subsequent request, exactly as a browser would (§7). When it expires the peer
+mints another from the same credential and we carry that instead, so the
+configured `token` is the only thing this side ever has to hold.
 
 No `baseUrl` of its own: unlike a login-based scheme there is no second endpoint
 to call, so the credential travels with the ordinary request to the API's

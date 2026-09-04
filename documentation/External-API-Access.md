@@ -74,7 +74,9 @@ The token is displayed once, and only its hash is stored. Two things matter abou
 }
 ```
 
-The token is sent as the `refresh` cookie on every request, and nothing is kept between requests: the peer mints an access token each time (an indexed lookup and a signature -- no password hashing). That keeps the relay a plain function of its configuration, so editing the credential takes effect immediately, with no restart and no cache to clear.
+The provisioned token is sent as the `refresh` cookie on every request. The peer mints an access token from it and returns that as a cookie too, and we send it back on each subsequent request -- exactly as a browser would. When it eventually expires, the peer mints another from the same credential and we carry that instead, so `token` is the only value this side ever has to hold.
+
+Nothing about that needs configuring or maintaining. The access token is held per API, in memory, and remembers which credential it was minted against -- so editing the credential in preferences takes effect immediately, with no restart and nothing to clear.
 
 To cut the integration off, delete its session row on the server being called. That revokes the credential without touching the account, and without affecting anyone else logged in as it:
 
@@ -82,7 +84,7 @@ To cut the integration off, delete its session row on the server being called. T
 DELETE FROM user_session WHERE token_hash = encode(sha256('<token>'), 'hex');
 ```
 
-The credential does not rotate, and it cannot be recovered -- if it is lost, issue a new one and update the calling server's configuration. When the session is revoked or expires, the peer returns 401, and the relay passes that status back to its own client.
+The credential does not rotate, and it cannot be recovered -- if it is lost, issue a new one and update the calling server's configuration. When the session is revoked or expires, the peer returns 401 and expires the access cookie; the relay drops the token it was holding and passes the 401 back to its own client.
 
 ### Route Definitions
 
