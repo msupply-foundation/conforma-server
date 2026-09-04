@@ -28,16 +28,18 @@ The `AuthenticationObject` can be one of the following:
 ```ts
 { type: 'Basic'; username: string; password: string }
 { type: 'Bearer'; token: string }
-{ type: 'ConformaSession'; token: string }   // another Conforma server
+{ type: 'CookieToken'; token: string; cookieName: string }   // credential goes in a cookie
 ```
 
 We probably don't want to save passwords or tokens in plain text in our preferences file, so we've provided a mechanism to extract these from environment variables. Prefix any string with `env.` and the subsequent part of string will be replaced by an environment variable of that name, e.g. `password: "env.MY_SECRET"` will use whatever value is currently stored in the `"MY_SECRET"` env variable. This works for the `password`, `username` and `token` fields alike.
 
 If a `password` or `token` is written out literally, the server logs a warning naming the API -- at startup, and again whenever preferences are saved. It's only a warning; hard-coding a credential is fine in development. The reason to prefer `env.` in a real deployment is that `preferences.json` is editable through the admin UI and is carried along by snapshots and template exports, so a literal secret travels further than you might expect.
 
-#### Calling another Conforma server (`ConformaSession`)
+#### Servers whose credential is a cookie (`CookieToken`), including another Conforma
 
-Conforma's own API endpoints (`/api/data-views` and friends) need an access token, and access tokens expire. Rather than log in and manage a token lifecycle, we present a **long-lived session credential that the other server has provisioned for us**. Because that server treats a *missing* access token exactly like an expired one, it mints an access token for the request and serves it -- so there is no login step, nothing to cache and nothing to renew on this side. See [`kdd/auth-token-lifecycle`](../kdd/auth-token-lifecycle/kdd.md) §4 and §7 for the reasoning.
+`CookieToken` sends its credential as a cookie of your choosing rather than a header, and then behaves like a browser: whatever the server sets on us in response is carried back on subsequent requests. Any server that authenticates by cookie fits this shape.
+
+The case it was built for is **another Conforma server**, so that is the worked example below. Conforma's own API endpoints (`/api/data-views` and friends) need an access token, and access tokens expire. Rather than log in and manage a token lifecycle, we present a **long-lived session credential that the other server has provisioned for us**, as its `refresh` cookie. Because that server treats a *missing* access token exactly like an expired one, it mints an access token for the request and serves it -- so there is no login step and nothing to renew on this side. See [`kdd/auth-token-lifecycle`](../kdd/auth-token-lifecycle/kdd.md) §4 and §7 for the reasoning.
 
 Setting it up takes one step at each end.
 
@@ -59,7 +61,8 @@ The token is displayed once, and only its hash is stored. Two things matter abou
   "PeerConforma": {
     "baseUrl": "https://peer-conforma.example.org/api/",
     "authentication": {
-      "type": "ConformaSession",
+      "type": "CookieToken",
+      "cookieName": "refresh",
       "token": "env.PEER_CONFORMA_TOKEN"
     },
     "routes": {
@@ -74,9 +77,9 @@ The token is displayed once, and only its hash is stored. Two things matter abou
 }
 ```
 
-The provisioned token is sent as the `refresh` cookie on every request. The peer mints an access token from it and returns that as a cookie too, and we send it back on each subsequent request -- exactly as a browser would. When it eventually expires, the peer mints another from the same credential and we carry that instead, so `token` is the only value this side ever has to hold.
+`cookieName` is the name the *server* expects its credential under -- `refresh` for a Conforma peer. The token is sent under that name on every request. The peer mints an access token from it and returns that as a cookie of its own, which we then send back on each subsequent request. When it eventually expires, the peer mints another from the same credential and we carry that instead, so `token` is the only value this side ever has to hold.
 
-Nothing about that needs configuring or maintaining. The access token is held per API, in memory, and remembers which credential it was minted against -- so editing the credential in preferences takes effect immediately, with no restart and nothing to clear.
+Nothing about that needs configuring or maintaining. Cookies are held per API, in memory, and each set remembers which credential it was collected under -- so editing the credential in preferences takes effect immediately, with no restart and nothing to clear.
 
 To cut the integration off, delete its session row on the server being called. That revokes the credential without touching the account, and without affecting anyone else logged in as it:
 
@@ -84,7 +87,7 @@ To cut the integration off, delete its session row on the server being called. T
 DELETE FROM user_session WHERE token_hash = encode(sha256('<token>'), 'hex');
 ```
 
-The credential does not rotate, and it cannot be recovered -- if it is lost, issue a new one and update the calling server's configuration. When the session is revoked or expires, the peer returns 401 and expires the access cookie; the relay drops the token it was holding and passes the 401 back to its own client.
+The credential does not rotate, and it cannot be recovered -- if it is lost, issue a new one and update the calling server's configuration. When the session is revoked or expires, the peer returns 401 and expires the cookie it had set; the relay drops what it was holding and passes the 401 back to its own client.
 
 ### Route Definitions
 

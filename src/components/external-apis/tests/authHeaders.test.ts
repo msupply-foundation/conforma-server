@@ -1,10 +1,14 @@
 import { AxiosRequestConfig } from 'axios'
 import { constructAuthHeader, recordAuthResponse } from '../authHeaders'
 import { ApiAuthentication } from '../types'
-import { ACCESS_COOKIE_NAME, REFRESH_COOKIE_NAME } from '../../permissions/sessionCookies'
-import { resetStoredSessions } from '../conformaSession'
+import { resetCookieJars } from '../cookieJar'
 
 const API = 'PeerConforma'
+
+// A peer Conforma takes its credential as "refresh" and mints "access" from it,
+// but nothing here is Conforma-specific -- both names are configuration
+const CREDENTIAL_COOKIE = 'refresh'
+const MINTED_COOKIE = 'access'
 
 const authHeaderFor = (
   authentication: ApiAuthentication,
@@ -17,7 +21,7 @@ const authHeaderFor = (
 
 // What the peer sends back when it mints an access token for us
 const peerMinted = (token: string) => [
-  `${ACCESS_COOKIE_NAME}=${token}; Max-Age=34560000; Path=/; HttpOnly; Secure; SameSite=Strict`,
+  `${MINTED_COOKIE}=${token}; Max-Age=34560000; Path=/; HttpOnly; Secure; SameSite=Strict`,
 ]
 
 describe('constructAuthHeader', () => {
@@ -25,7 +29,7 @@ describe('constructAuthHeader', () => {
 
   beforeEach(() => {
     process.env = { ...originalEnv, API_SECRET: 'from-the-environment', API_USER: 'env-user' }
-    resetStoredSessions()
+    resetCookieJars()
   })
 
   afterAll(() => {
@@ -83,44 +87,56 @@ describe('constructAuthHeader', () => {
     })
   })
 
-  describe('ConformaSession', () => {
+  describe('CookieToken', () => {
     // The far Conforma server treats a *missing* access token exactly as an
     // expired one, so presenting only the refresh cookie is enough for it to
     // mint an access token and serve the request
     it('sends the provisioned token as the refresh cookie', () => {
-      const request = authHeaderFor({ type: 'ConformaSession', token: 'a-provisioned-token' })
+      const request = authHeaderFor({
+        type: 'CookieToken',
+        cookieName: CREDENTIAL_COOKIE,
+        token: 'a-provisioned-token',
+      })
 
       expect(request.headers).toEqual({
-        Cookie: `${REFRESH_COOKIE_NAME}=a-provisioned-token`,
+        Cookie: `${CREDENTIAL_COOKIE}=a-provisioned-token`,
       })
     })
 
     it('substitutes env variables into the token', () => {
-      const request = authHeaderFor({ type: 'ConformaSession', token: 'env.API_SECRET' })
+      const request = authHeaderFor({
+        type: 'CookieToken',
+        cookieName: CREDENTIAL_COOKIE,
+        token: 'env.API_SECRET',
+      })
 
       expect(request.headers).toEqual({
-        Cookie: `${REFRESH_COOKIE_NAME}=from-the-environment`,
+        Cookie: `${CREDENTIAL_COOKIE}=from-the-environment`,
       })
     })
 
     // Matches the far server's cookie reader, which decodeURIComponents values
     it('url-encodes the token', () => {
-      const request = authHeaderFor({ type: 'ConformaSession', token: 'has spaces; and=signs' })
+      const request = authHeaderFor({
+        type: 'CookieToken',
+        cookieName: CREDENTIAL_COOKIE,
+        token: 'has spaces; and=signs',
+      })
 
       expect(request.headers).toEqual({
-        Cookie: `${REFRESH_COOKIE_NAME}=has%20spaces%3B%20and%3Dsigns`,
+        Cookie: `${CREDENTIAL_COOKIE}=has%20spaces%3B%20and%3Dsigns`,
       })
     })
 
     it('keeps headers supplied by additionalAxiosProperties', () => {
       const request = authHeaderFor(
-        { type: 'ConformaSession', token: 'abc' },
+        { type: 'CookieToken', cookieName: CREDENTIAL_COOKIE, token: 'abc' },
         { headers: { 'X-Requested-By': 'Conforma' } }
       )
 
       expect(request.headers).toEqual({
         'X-Requested-By': 'Conforma',
-        Cookie: `${REFRESH_COOKIE_NAME}=abc`,
+        Cookie: `${CREDENTIAL_COOKIE}=abc`,
       })
     })
   })
@@ -130,14 +146,18 @@ describe('constructAuthHeader', () => {
   as a cookie; we send it back, so it only mints again once that token expires
   -- kdd/auth-token-lifecycle §7
   */
-  describe("ConformaSession: carrying the peer's access token", () => {
-    const auth: ApiAuthentication = { type: 'ConformaSession', token: 'a-provisioned-token' }
+  describe('CookieToken: carrying what the server sets', () => {
+    const auth: ApiAuthentication = {
+      type: 'CookieToken',
+      cookieName: CREDENTIAL_COOKIE,
+      token: 'a-provisioned-token',
+    }
 
     it('presents the access token the peer last minted, alongside the credential', () => {
       recordAuthResponse(auth, { 'set-cookie': peerMinted('minted-jwt') }, API)
 
       expect(authHeaderFor(auth).headers).toEqual({
-        Cookie: `${REFRESH_COOKIE_NAME}=a-provisioned-token; ${ACCESS_COOKIE_NAME}=minted-jwt`,
+        Cookie: `${CREDENTIAL_COOKIE}=a-provisioned-token; ${MINTED_COOKIE}=minted-jwt`,
       })
     })
 
@@ -146,7 +166,7 @@ describe('constructAuthHeader', () => {
       recordAuthResponse(auth, { 'set-cookie': peerMinted('second-jwt') }, API)
 
       expect(authHeaderFor(auth).headers).toEqual({
-        Cookie: `${REFRESH_COOKIE_NAME}=a-provisioned-token; ${ACCESS_COOKIE_NAME}=second-jwt`,
+        Cookie: `${CREDENTIAL_COOKIE}=a-provisioned-token; ${MINTED_COOKIE}=second-jwt`,
       })
     })
 
@@ -157,17 +177,17 @@ describe('constructAuthHeader', () => {
       recordAuthResponse(auth, undefined, API)
 
       expect(authHeaderFor(auth).headers).toEqual({
-        Cookie: `${REFRESH_COOKIE_NAME}=a-provisioned-token; ${ACCESS_COOKIE_NAME}=minted-jwt`,
+        Cookie: `${CREDENTIAL_COOKIE}=a-provisioned-token; ${MINTED_COOKIE}=minted-jwt`,
       })
     })
 
     // A revoked session is reported by expiring the cookie -- Max-Age=0, empty value
     it('drops the token when the peer expires it', () => {
       recordAuthResponse(auth, { 'set-cookie': peerMinted('minted-jwt') }, API)
-      recordAuthResponse(auth, { 'set-cookie': [`${ACCESS_COOKIE_NAME}=; Max-Age=0; Path=/`] }, API)
+      recordAuthResponse(auth, { 'set-cookie': [`${MINTED_COOKIE}=; Max-Age=0; Path=/`] }, API)
 
       expect(authHeaderFor(auth).headers).toEqual({
-        Cookie: `${REFRESH_COOKIE_NAME}=a-provisioned-token`,
+        Cookie: `${CREDENTIAL_COOKIE}=a-provisioned-token`,
       })
     })
 
@@ -176,9 +196,13 @@ describe('constructAuthHeader', () => {
     it('discards a token minted for a credential that is no longer configured', () => {
       recordAuthResponse(auth, { 'set-cookie': peerMinted('minted-jwt') }, API)
 
-      const rotated: ApiAuthentication = { type: 'ConformaSession', token: 'a-rotated-token' }
+      const rotated: ApiAuthentication = {
+        type: 'CookieToken',
+        cookieName: CREDENTIAL_COOKIE,
+        token: 'a-rotated-token',
+      }
       expect(authHeaderFor(rotated).headers).toEqual({
-        Cookie: `${REFRESH_COOKIE_NAME}=a-rotated-token`,
+        Cookie: `${CREDENTIAL_COOKIE}=a-rotated-token`,
       })
     })
 
@@ -186,19 +210,27 @@ describe('constructAuthHeader', () => {
       recordAuthResponse(auth, { 'set-cookie': peerMinted('minted-jwt') }, API)
 
       expect(authHeaderFor(auth, {}, 'AnotherPeer').headers).toEqual({
-        Cookie: `${REFRESH_COOKIE_NAME}=a-provisioned-token`,
+        Cookie: `${CREDENTIAL_COOKIE}=a-provisioned-token`,
       })
     })
 
-    it("ignores the peer's other cookies", () => {
-      recordAuthResponse(
-        auth,
-        { 'set-cookie': [`${REFRESH_COOKIE_NAME}=rotated; Path=/`, 'unrelated=value'] },
-        API
-      )
+    // The jar is a browser's, not a Conforma one: it has no opinion about what
+    // the server chose to name its session cookie
+    it('carries any cookie the server sets, not only the one it minted', () => {
+      recordAuthResponse(auth, { 'set-cookie': ['session=abc; Path=/', 'csrf=xyz'] }, API)
 
       expect(authHeaderFor(auth).headers).toEqual({
-        Cookie: `${REFRESH_COOKIE_NAME}=a-provisioned-token`,
+        Cookie: `${CREDENTIAL_COOKIE}=a-provisioned-token; session=abc; csrf=xyz`,
+      })
+    })
+
+    // The credential comes from configuration and is ours to send, so a server
+    // echoing that name back must not become a second value for it
+    it("never sends a second value for the credential's own cookie", () => {
+      recordAuthResponse(auth, { 'set-cookie': [`${CREDENTIAL_COOKIE}=rotated; Path=/`] }, API)
+
+      expect(authHeaderFor(auth).headers).toEqual({
+        Cookie: `${CREDENTIAL_COOKIE}=a-provisioned-token`,
       })
     })
 
@@ -207,7 +239,7 @@ describe('constructAuthHeader', () => {
       recordAuthResponse(bearer, { 'set-cookie': peerMinted('minted-jwt') }, API)
 
       expect(authHeaderFor(auth).headers).toEqual({
-        Cookie: `${REFRESH_COOKIE_NAME}=a-provisioned-token`,
+        Cookie: `${CREDENTIAL_COOKIE}=a-provisioned-token`,
       })
     })
   })

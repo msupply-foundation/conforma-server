@@ -29,8 +29,10 @@ describe('warnAboutPlaintextSecrets', () => {
     expect(output()).toContain('MedServer ("token")')
   })
 
-  it('warns about a literal ConformaSession token', () => {
-    warnAboutPlaintextSecrets(apiWith({ type: 'ConformaSession', token: 'abc123' }))
+  it('warns about a literal CookieToken token', () => {
+    warnAboutPlaintextSecrets(
+      apiWith({ type: 'CookieToken', cookieName: 'refresh', token: 'abc123' })
+    )
 
     expect(output()).toContain('MedServer ("token")')
   })
@@ -55,7 +57,7 @@ describe('warnAboutPlaintextSecrets', () => {
       ...apiWith({ type: 'Bearer', token: 'abc' }),
       PeerConforma: {
         baseUrl: 'https://peer.example.org',
-        authentication: { type: 'ConformaSession', token: 'xyz' },
+        authentication: { type: 'CookieToken', cookieName: 'refresh', token: 'xyz' },
         routes: {},
       },
     })

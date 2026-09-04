@@ -17,7 +17,7 @@ here is perfectly reasonable for development and testing.
 const SECRET_FIELD: { [type in ApiAuthentication['type']]: string } = {
   Basic: 'password',
   Bearer: 'token',
-  ConformaSession: 'token',
+  CookieToken: 'token',
 }
 
 export const warnAboutPlaintextSecrets = (apiConfigs: ExternalApiConfigs = {}) => {
