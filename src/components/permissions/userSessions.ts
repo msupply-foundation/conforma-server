@@ -116,6 +116,12 @@ deliberately indistinguishable from here.
 no way to tell whose session it is. It is never used to find the session -- the
 token hash alone does that.
 
+"notPast" caps how far the session is pushed out. The inactivity window is
+measured from the user's last interaction, which only their browser can see, so
+a client that knows its own deadline reports it here and the session expires
+when the user actually went idle rather than when they last made a request. A
+caller with no such knowledge omits it and gets a full window.
+
 This is the only session read on the request path, and it only happens when
 there is no usable access token: a valid one verifies on its own signature and
 never reaches the table. So an active client costs one write per access-token
@@ -123,11 +129,13 @@ lifetime, not one per request.
 */
 export const renewSession = async (
   refreshToken: string,
-  userId?: number
+  userId?: number,
+  notPast?: Date
 ): Promise<UserSession | null> =>
   (await databaseConnect.extendUserSessionIfValid(
     hashRefreshToken(refreshToken),
-    getSessionLifetimeMinutes(userId)
+    getSessionLifetimeMinutes(userId),
+    notPast
   )) ?? null
 
 /*

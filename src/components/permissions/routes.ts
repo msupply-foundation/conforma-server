@@ -166,8 +166,27 @@ const routeLoginOrg = async (request: any, reply: any) => {
 Authenticates user using JWT header and returns latest user/org info,
 template permissions and new JWT token
 */
+/*
+The inactivity window runs from the user's last interaction, and only their
+browser can see that -- the server sees requests, and a user typing into a long
+form makes none. So a browser reports the deadline it has measured and the
+session is held to it, rather than being pushed out a full window from whenever
+the last request happened to land.
+
+Untrusted, and safe to be: it can only ever ask for LESS than the configured
+window (see extendUserSessionIfValid), and it cannot pull back an expiry the
+session already has. The worst a caller can do with it is decline to extend its
+own session. Absent, malformed and already-past all mean "no deadline offered".
+*/
+const getIdleDeadline = (idleDeadline: unknown) => {
+  const seconds = Number(idleDeadline)
+  if (!Number.isFinite(seconds) || seconds <= 0) return undefined
+  const deadline = new Date(seconds * 1000)
+  return deadline > new Date() ? deadline : undefined
+}
+
 const routeUserInfo = async (request: any, reply: any) => {
-  const { sessionId } = request.query
+  const { sessionId, idleDeadline } = request.query
   const { userId, orgId, username, sessionId: returnSessionId, error } = request.auth
 
   if (error) return reply.send({ success: false, message: error })
@@ -182,7 +201,9 @@ const routeUserInfo = async (request: any, reply: any) => {
   // session that no longer exists -- which would leave it sitting quietly until
   // that deadline, making no valid requests.
   const refreshToken = getRefreshToken(request)
-  const session = refreshToken ? await renewSession(refreshToken, userId) : null
+  const session = refreshToken
+    ? await renewSession(refreshToken, userId, getIdleDeadline(idleDeadline))
+    : null
 
   if (refreshToken && !session) {
     authLog(`Session expired or revoked for ${quoted(username)}`)
