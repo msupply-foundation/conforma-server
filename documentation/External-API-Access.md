@@ -22,6 +22,12 @@ externalApiConfigs : {
 }
 ```
 
+### Values from the environment
+
+Prefix any of these strings with `env.` and the rest of the string is replaced by the environment variable of that name, e.g. `password: "env.MY_SECRET"` will use whatever value is currently stored in the `"MY_SECRET"` env variable. This works for `baseUrl` and for the authentication `username`, `password` and `token` fields alike. Naming a variable that isn't set is an error -- the request fails with `Environment variable not set: MY_SECRET` rather than quietly going out with the reference itself in place of the value.
+
+For credentials the reason is that we don't want secrets sitting in plain text in the preferences file (see below). For `baseUrl` it's that the server an API points at is usually the one part of a configuration that differs between a test deployment and a live one -- deferring it to the environment lets the same `preferences.json` serve both.
+
 ### Authentication
 
 The `AuthenticationObject` can be one of the following:
@@ -31,7 +37,7 @@ The `AuthenticationObject` can be one of the following:
 { type: 'CookieToken'; token: string; cookieName: string }   // credential goes in a cookie
 ```
 
-We probably don't want to save passwords or tokens in plain text in our preferences file, so we've provided a mechanism to extract these from environment variables. Prefix any string with `env.` and the subsequent part of string will be replaced by an environment variable of that name, e.g. `password: "env.MY_SECRET"` will use whatever value is currently stored in the `"MY_SECRET"` env variable. This works for the `password`, `username` and `token` fields alike.
+We probably don't want to save passwords or tokens in plain text in our preferences file, so the `env.` substitution described above applies to the `username`, `password` and `token` fields.
 
 If a `password` or `token` is written out literally, the server logs a warning naming the API -- at startup, and again whenever preferences are saved. It's only a warning; hard-coding a credential is fine in development. The reason to prefer `env.` in a real deployment is that `preferences.json` is editable through the admin UI and is carried along by snapshots and template exports, so a literal secret travels further than you might expect.
 

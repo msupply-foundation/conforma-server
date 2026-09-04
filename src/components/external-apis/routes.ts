@@ -10,7 +10,7 @@ import { ExternalApiConfigs, QueryParameters } from './types'
 import { getApplicationData } from '../actions'
 import { getPermissionNamesFromJWT, getUserInfo } from '../permissions/loginHelpers'
 import { ActionApplicationData } from '../../types'
-import { errorMessage } from '../utilityFunctions'
+import { errorMessage, getEnvVariableReplacement } from '../utilityFunctions'
 
 export type AccessExternalApiQuery = {
   Querystring: { applicationId?: string }
@@ -89,7 +89,10 @@ export const routeAccessExternalApi = async (
 
   const axiosRequest = {
     method,
-    url: new URL(url, baseUrl).toString(),
+    // baseUrl takes the same "env.<VAR>" indirection as the credentials do:
+    // the server an API points at is the part of the configuration that
+    // differs between a test deployment and a live one.
+    url: new URL(url, getEnvVariableReplacement(baseUrl)).toString(),
     ...additionalAxiosProperties,
   } as AxiosRequestConfig
 

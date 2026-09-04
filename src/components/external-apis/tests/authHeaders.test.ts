@@ -55,14 +55,16 @@ describe('constructAuthHeader', () => {
       expect(request.auth).toEqual({ username: 'env-user', password: 'from-the-environment' })
     })
 
-    it('leaves an env reference alone when the variable is unset', () => {
-      const request = authHeaderFor({
-        type: 'Basic',
-        username: 'conforma',
-        password: 'env.NOT_SET',
-      })
-
-      expect(request.auth).toEqual({ username: 'conforma', password: 'env.NOT_SET' })
+    // Better than authenticating with the reference itself and reading the
+    // rejection back from the external server
+    it('refuses an env reference whose variable is unset', () => {
+      expect(() =>
+        authHeaderFor({
+          type: 'Basic',
+          username: 'conforma',
+          password: 'env.NOT_SET',
+        })
+      ).toThrow('Environment variable not set: NOT_SET')
     })
   })
 
