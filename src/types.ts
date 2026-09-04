@@ -263,6 +263,25 @@ export interface UserOrg extends User, Organisation {
   id: number
 }
 
+// One row of the "user_session" table -- a single login, keyed by the hash of
+// its refresh token. See kdd/auth-token-lifecycle
+export interface UserSession {
+  tokenHash: string
+  userId: number
+  orgId: number | null
+  // The JWT "sessionId" claim, which row-level security evaluates for public
+  // applicants, so renewal must reproduce it exactly. Not unique.
+  sessionId: string
+  expiresAt: Date
+}
+
+// A session read out ahead of a database restore so it can be put back
+// afterwards. It carries the username in place of the user id, because an id is
+// only meaningful within the dataset it was read from -- see sessionRestore.ts
+export interface CapturedSession extends Omit<UserSession, 'userId'> {
+  username: string
+}
+
 // node-scheduler recurrence rule format
 export interface ScheduleObject {
   date?: number | number[] | null

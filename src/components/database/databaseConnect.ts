@@ -166,6 +166,24 @@ class DBConnect {
 
   public getUserAdminStatus = PostgresDB.getUserAdminStatus
 
+  public createUserSession = PostgresDB.createUserSession
+
+  public getUserSessionForRestore = PostgresDB.getUserSessionForRestore
+
+  public reinstateUserSession = PostgresDB.reinstateUserSession
+
+  public setUserSessionOrg = PostgresDB.setUserSessionOrg
+
+  public extendUserSessionIfValid = PostgresDB.extendUserSessionIfValid
+
+  public deleteUserSession = PostgresDB.deleteUserSession
+
+  public deleteUserSessionsByUserId = PostgresDB.deleteUserSessionsByUserId
+
+  public deleteExpiredUserSessions = PostgresDB.deleteExpiredUserSessions
+
+  public getLiveUserSessions = PostgresDB.getLiveUserSessions
+
   public getAllGeneratedRowPolicies = PostgresDB.getAllGeneratedRowPolicies
 
   public getUserOrgPermissionNames = PostgresDB.getUserOrgPermissionNames

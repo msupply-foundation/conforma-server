@@ -3,6 +3,7 @@ import databaseConnect from '../database/databaseConnect'
 import config from '../../config'
 import { Config } from '../../types'
 import { WebSocket } from '@fastify/websocket'
+import { trackSessionSocket } from '../permissions/sessionSockets'
 
 const notifyClients = async (message: string, server: FastifyInstance) => {
   server.websocketServer.clients.forEach((client) => client.send(message))
@@ -39,8 +40,18 @@ export const routeSetMaintenanceMode = (
   reply.send({ success: true, enabled })
 }
 
-export const routeServerStatusWebsocket = (socket: WebSocket, server: FastifyInstance) => {
+export const routeServerStatusWebsocket = (
+  socket: WebSocket,
+  server: FastifyInstance,
+  request: FastifyRequest
+) => {
   console.log(`New client connected, ${server.websocketServer.clients.size} current connections`)
+
+  // The handshake carries the auth cookies like any other request, so the
+  // session behind this socket can be resolved once, here -- which is what lets
+  // the expiry sweep notify only the clients actually affected, rather than
+  // broadcasting to everyone as notifyClients does.
+  trackSessionSocket(socket, request)
   socket.send(JSON.stringify({ version: config.version, latestSnapshot: config.latestSnapshot }))
   if (config.maintenanceMode)
     socket.send(

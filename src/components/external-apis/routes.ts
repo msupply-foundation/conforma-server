@@ -4,7 +4,8 @@ import { URL } from 'url'
 import config from '../../config'
 import { get as extractProperty } from 'lodash'
 import axios, { AxiosError, AxiosRequestConfig } from 'axios'
-import { constructAuthHeader, constructQueryObject, validateResult } from './helpers'
+import { constructQueryObject, validateResult } from './helpers'
+import { constructAuthHeader, recordAuthResponse } from './authHeaders'
 import { ExternalApiConfigs, QueryParameters } from './types'
 import { getApplicationData } from '../actions'
 import { getPermissionNamesFromJWT, getUserInfo } from '../permissions/loginHelpers'
@@ -111,11 +112,14 @@ export const routeAccessExternalApi = async (
     }
   }
 
-  constructAuthHeader(authentication, axiosRequest)
+  constructAuthHeader(authentication, axiosRequest, name)
 
   console.log(`Making ${method.toUpperCase()} request to: ${axiosRequest.url}`)
   try {
-    const result = (await axios(axiosRequest)).data
+    const response = await axios(axiosRequest)
+    recordAuthResponse(authentication, response.headers, name)
+
+    const result = response.data
     const returnValue = returnProperty ? extractProperty(result, returnProperty, result) : result
 
     if (
@@ -135,6 +139,10 @@ export const routeAccessExternalApi = async (
     }
   } catch (err) {
     if (err instanceof AxiosError) {
+      // A peer that has ended our session says so by expiring the cookie, so
+      // the error response is worth reading before the status is passed on
+      recordAuthResponse(authentication, err.response?.headers, name)
+
       reply.status(err.response?.status ?? 500)
       return reply.send(`External API error: ${err.message}`)
     }

@@ -136,14 +136,22 @@ export const getValidTableName = (inputName: string | undefined): string => {
 // Replace a string of the form "env.<KEY>" with environment variable <KEY>
 // - Used for references in configurations to sensitive data such as
 //   passwords/keys
+const ENV_VARIABLE_PATTERN = /^env\.(\w+)$/
+
 export const getEnvVariableReplacement = (input: string) => {
-  const match = input.match(/^env\.(\w+)$/)
+  const match = input.match(ENV_VARIABLE_PATTERN)
   if (!match) return input
 
   const envKey = match[1]
 
   return process.env[envKey] ?? input
 }
+
+// Whether a config value defers to an environment variable, as opposed to
+// stating a value outright. Distinct from getEnvVariableReplacement returning
+// its input unchanged, which also happens when the variable is simply unset.
+export const isEnvVariableReference = (input: unknown) =>
+  typeof input === 'string' && ENV_VARIABLE_PATTERN.test(input)
 
 // Validates an Error object and returns its message (default) or requested
 // property, if available

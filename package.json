@@ -64,6 +64,7 @@
     "generate_pg": "ts-node ./utils/postgresCodegen.ts",
     "postinstall": "node ./utils/pluginScripts/yarnInstallPlugins.js",
     "snapshot": "ts-node ./database/snapshotCLI.ts",
+    "token": "ts-node ./src/components/permissions/tokenCLI.ts --token",
     "dockerise": "cd docker && ./dockerise.sh",
     "docker_run": "cd docker && ./run.sh",
     "release": "ts-node ./utils/release.ts",

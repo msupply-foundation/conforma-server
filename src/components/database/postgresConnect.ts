@@ -13,6 +13,8 @@ import {
   FilePayload,
   TriggerQueueUpdatePayload,
   UserOrg,
+  UserSession,
+  CapturedSession,
   DBOperationType,
 } from '../../types'
 import {
@@ -1333,6 +1335,265 @@ class PostgresDB {
       const isAdmin = result.rows.some((row) => row.name === 'admin')
       const isManager = result.rows.some((row) => row.name === managementPrefName)
       return { isAdmin, isManager }
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  /**
+   * Creates a new record in the user_session table
+   * @param userSession the {@link UserSession} object that will be persisted
+   */
+  public createUserSession = async ({
+    tokenHash,
+    userId,
+    orgId,
+    sessionId,
+    expiresAt,
+  }: UserSession) => {
+    const text = `
+      INSERT INTO user_session (token_hash, user_id, org_id, session_id, expires_at)
+      VALUES ($1, $2, $3, $4, $5)
+    `
+    try {
+      await this.query({ text, values: [tokenHash, userId, orgId, sessionId, expiresAt] })
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  /**
+   * Reads a session together with the username it belongs to, so it can be
+   * carried across a database restore. The username is what makes it portable:
+   * the stored user_id only identifies anyone within the dataset it was read
+   * from. This is a plain read, unlike extendUserSessionIfValid, because
+   * nothing about being about to destroy the database should extend a session.
+   * @param tokenHash that uniquely identifies a session
+   * @returns the {@link CapturedSession}, or undefined if there is no such row
+   */
+  public getUserSessionForRestore = async (
+    tokenHash: string
+  ): Promise<CapturedSession | undefined> => {
+    const text = `
+      SELECT s.token_hash AS "tokenHash",
+        s.org_id AS "orgId",
+        s.session_id AS "sessionId",
+        s.expires_at AS "expiresAt",
+        u.username
+      FROM user_session s
+      JOIN "user" u ON u.id = s.user_id
+      WHERE s.token_hash = $1
+    `
+    try {
+      const result = await this.query({ text, values: [tokenHash] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  /**
+   * Puts a captured session back after a database restore, re-resolved against
+   * the restored data. One statement, so there is no window between resolving
+   * the username and writing the row.
+   *
+   * INSERT...SELECT is doing the work of a conditional: no user with that
+   * username means no source row, so nothing is inserted and the caller learns
+   * the session could not be carried across. The org is resolved the same way,
+   * to NULL rather than to nothing, since a session without an org is valid.
+   *
+   * ON CONFLICT is needed because the restored dump may already contain this
+   * very token_hash -- a snapshot taken from this same server carries the
+   * session that is now asking to be reinstated, pointing at whichever user
+   * held that id when the snapshot was taken.
+   *
+   * GREATEST covers a restore that outlasts the inactivity window: reinstating
+   * the captured expiry alone could put back a row that has already expired,
+   * which every later lookup would then refuse.
+   * @param session the {@link CapturedSession} to reinstate. Its orgId is taken
+   * as given -- deciding which orgs survive a restore is the caller's call
+   * @param lifetimeMinutes floor for the reinstated expiry, measured from now
+   * @returns the user id the session now belongs to, or undefined if the
+   * username no longer exists in the restored data
+   */
+  public reinstateUserSession = async (
+    { tokenHash, username, orgId, sessionId, expiresAt }: CapturedSession,
+    lifetimeMinutes: number
+  ): Promise<number | undefined> => {
+    const text = `
+      INSERT INTO user_session (token_hash, user_id, org_id, session_id, expires_at)
+      SELECT $1, u.id,
+        (SELECT id FROM organisation WHERE id = $3),
+        $4,
+        GREATEST($5::timestamptz, NOW() + make_interval(mins => $6::int))
+      FROM "user" u
+      WHERE u.username = $2
+      ON CONFLICT (token_hash) DO UPDATE
+      SET user_id = EXCLUDED.user_id,
+        org_id = EXCLUDED.org_id,
+        session_id = EXCLUDED.session_id,
+        expires_at = EXCLUDED.expires_at
+      RETURNING user_id AS "userId"
+    `
+    const values = [tokenHash, username, orgId, sessionId, expiresAt, lifetimeMinutes]
+    try {
+      const result = await this.query({ text, values })
+      return result.rows[0]?.userId
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  /**
+   * Updates the org_id in the user_session table for a session
+   * @param tokenHash that uniquely identifies a session
+   * @param orgId to be updated
+   * @returns a promise that resolves to true if successfully updated,
+   * false if no rows were updated errors if failed
+   */
+  public setUserSessionOrg = async (tokenHash: string, orgId: number | null) => {
+    const text = `
+      UPDATE user_session
+      SET org_id = $2
+      WHERE token_hash = $1
+      RETURNING token_hash
+    `
+    try {
+      const result = await this.query({ text, values: [tokenHash, orgId] })
+      return result.rowCount > 0
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  /**
+   * Renews a session: pushes its expiry out and hands back the row, in one
+   * statement. Coalesced deliberately -- doing it as a lookup followed by an
+   * update costs two round trips on a path that runs whenever an access token
+   * lapses, and leaves a window in which a logout between the two could delete
+   * the session after we had already decided it was live.
+   *
+   * Expiry is applied in the WHERE clause rather than checked by the caller, so
+   * revoked, expired and never-existed all collapse to "no session".
+   *
+   * GREATEST is load-bearing: extending must never SHORTEN a session. A machine
+   * client is an admin-provisioned session with a far-future expiry that sends
+   * no access token, so it takes this path on every request -- without the
+   * clamp, its first request would collapse a multi-year credential to one
+   * inactivity window. It is also what makes it safe for the caller to fall
+   * back to the standard window when it cannot tell whose session this is: the
+   * worst case is under-extending, never cutting a session short.
+   * @param tokenHash that uniquely identifies a session
+   * @param lifetimeMinutes how far past now to push the expiry
+   * @returns the renewed {@link UserSession}, or undefined if none was live
+   */
+  public extendUserSessionIfValid = async (
+    tokenHash: string,
+    lifetimeMinutes: number
+  ): Promise<UserSession | undefined> => {
+    const text = `
+      UPDATE user_session
+      SET expires_at = GREATEST(expires_at, NOW() + make_interval(mins => $2::int))
+      WHERE token_hash = $1
+      AND expires_at > NOW()
+      RETURNING token_hash AS "tokenHash",
+        user_id AS "userId",
+        org_id AS "orgId",
+        session_id AS "sessionId",
+        expires_at AS "expiresAt"
+    `
+    const values = [tokenHash, lifetimeMinutes]
+    try {
+      const result = await this.query({ text, values })
+      return result.rows[0]
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  /**
+   * Deletes every session whose inactivity window has passed, and reports which
+   * ones went. Runs on a fixed once-a-minute poll: sessions are already
+   * unusable the moment they expire (every lookup filters on expires_at), so
+   * this is housekeeping plus the trigger for notifying idle clients -- not a
+   * security boundary.
+   * @returns the token hashes of the sessions that were deleted
+   */
+  public deleteExpiredUserSessions = async (): Promise<string[]> => {
+    const text = `
+      DELETE FROM user_session
+      WHERE expires_at < NOW()
+      RETURNING token_hash
+    `
+    try {
+      const result = await this.query({ text, values: [] })
+      return result.rows.map((row) => row.token_hash)
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  /**
+   * Ends a single session. Deleting the row IS the revocation -- there is no
+   * "revoked" flag to set.
+   * @param tokenHash that uniquely identifies a session
+   * @returns the token hash of the session that was deleted, or empty if there
+   * was none
+   */
+  public deleteUserSession = async (tokenHash: string): Promise<string[]> => {
+    const text = `DELETE FROM user_session WHERE token_hash = $1 RETURNING token_hash`
+    try {
+      const result = await this.query({ text, values: [tokenHash] })
+      return result.rows.map((row) => row.token_hash)
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  /**
+   * Ends every session belonging to a user, so an explicit logout logs them out
+   * everywhere. Must never be called for the shared public account, whose rows
+   * belong to unrelated applicants -- see endSessions() in userSessions.ts
+   * @param userId whose sessions are being ended
+   * @returns the token hashes of the sessions that were deleted
+   */
+  public deleteUserSessionsByUserId = async (userId: number): Promise<string[]> => {
+    const text = `DELETE FROM user_session WHERE user_id = $1 RETURNING token_hash`
+    try {
+      const result = await this.query({ text, values: [userId] })
+      return result.rows.map((row) => row.token_hash)
+    } catch (err) {
+      console.log(errorMessage(err))
+      throw err
+    }
+  }
+
+  /**
+   * Of the sessions asked about, reports which are still live. This is how a
+   * connected client learns its session has gone by a route that doesn't
+   * report anything -- an admin, direct SQL, a snapshot restore -- since only
+   * the deletions this server performs itself can announce what they removed.
+   * @param tokenHashes the sessions to ask about
+   * @returns the subset that still exists and has not expired
+   */
+  public getLiveUserSessions = async (tokenHashes: string[]): Promise<string[]> => {
+    const text = `
+      SELECT token_hash
+      FROM user_session
+      WHERE token_hash = ANY($1)
+      AND expires_at > NOW()
+    `
+    try {
+      const result = await this.query({ text, values: [tokenHashes] })
+      return result.rows.map((row) => row.token_hash)
     } catch (err) {
       console.log(errorMessage(err))
       throw err

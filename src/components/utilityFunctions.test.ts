@@ -41,7 +41,7 @@ test('Filter object using default filter function', () => {
 })
 
 test('Filter object using custom filter for any falsy value', () => {
-  expect(filterObject(testObject, (x) => x)).toEqual({
+  expect(filterObject(testObject, (_, value) => !!value)).toEqual({
     one: 1,
     twoString: 'two',
     arrayValue: [1, 2, 'three'],

@@ -63,7 +63,7 @@ Roughly: `01–04` foundation (JWT config, users, orgs), `05–25` templates/per
 
 ## Key tables (high level)
 
-`template` (+ `template_section`, `template_element`, `template_stage`, `template_stage_review_level`, `template_permission`, `template_action`) define a configurable workflow. `application` + `application_response` hold instances. `review_assignment` → `review` → `review_response` drive assessment. `permission_policy` / `permission_name` / `permission_join` express access. `data_table`/`data_view` back lookup data and configurable displays. `file`, `notification`, `activity_log`, `system_info`, `evaluator_fragment` support the rest.
+`template` (+ `template_section`, `template_element`, `template_stage`, `template_stage_review_level`, `template_permission`, `template_action`) define a configurable workflow. `application` + `application_response` hold instances. `review_assignment` → `review` → `review_response` drive assessment. `permission_policy` / `permission_name` / `permission_join` express access. `data_table`/`data_view` back lookup data and configurable displays. `file`, `notification`, `activity_log`, `system_info`, `evaluator_fragment` support the rest. `user_session` holds login sessions (hashed refresh tokens) — server-side only: omitted from the GraphQL schema and RLS-enabled with no policies. Snapshots dump and restore its rows like any other table's, by design; the restoring admin's own session is separately carried across the restore (see [../src/components/permissions/CLAUDE.md](../src/components/permissions/CLAUDE.md)).
 
 ## Gotchas
 

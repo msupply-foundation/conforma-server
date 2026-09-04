@@ -6,6 +6,8 @@ import path from 'path'
 import { ARCHIVE_SUBFOLDER_NAME, INFO_FILE_NAME, SNAPSHOT_FOLDER } from '../../../constants'
 import { convertSnapshotToNewStructure } from './helpers'
 import config from '../../../config'
+import { clearAccessCookie, getRefreshToken } from '../../permissions/sessionCookies'
+import { hashRefreshToken } from '../../permissions/userSessions'
 
 const routeUseSnapshot = async (
   request: FastifyRequest<{ Querystring: { name?: string } }>,
@@ -56,8 +58,24 @@ const routeUseSnapshot = async (
     }
   }
 
+  // The refresh cookie's hash is the primary key of this admin's session, which
+  // the restore would otherwise destroy along with every other one
+  const refreshToken = getRefreshToken(request)
+
   try {
-    reply.send(await useSnapshot({ snapshotName: nameToLoad }))
+    const result = await useSnapshot({
+      snapshotName: nameToLoad,
+      preserveSessionTokenHash: refreshToken ? hashRefreshToken(refreshToken) : undefined,
+    })
+
+    // The access token in hand describes the database that has just been
+    // replaced -- its user id, org and permission claims all address rows that
+    // may now belong to someone else. Discarding it makes the next request
+    // renew against the preserved session and rebuild every claim from the
+    // restored data.
+    if (result.success) clearAccessCookie(reply)
+
+    reply.send(result)
   } catch (e) {
     console.error('Error loading snapshot:', e)
     reply.send({

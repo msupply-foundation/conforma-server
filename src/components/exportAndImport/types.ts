@@ -48,10 +48,25 @@ export interface SnapshotInfo {
 
 export type SnapshotType = 'normal' | 'backup'
 
+type SnapshotOperationResult = Promise<{
+  success: boolean
+  message: string
+  error?: string
+  snapshot?: string
+}>
+
 export type SnapshotOperation = (props: {
   snapshotName: string
   snapshotType?: SnapshotType
-}) => Promise<{ success: boolean; message: string; error?: string; snapshot?: string }>
+}) => SnapshotOperationResult
+
+// Restoring takes a parameter taking a snapshot has no use for, so it has its
+// own signature rather than widening the one they would otherwise share
+export type UseSnapshotOperation = (props: {
+  snapshotName: string
+  // The session to carry across the restore -- see permissions/sessionRestore.ts
+  preserveSessionTokenHash?: string
+}) => SnapshotOperationResult
 
 export type ArchiveSnapshotOperation = (props: {
   snapshotName?: string

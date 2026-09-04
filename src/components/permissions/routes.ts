@@ -1,6 +1,20 @@
 import databaseConnect from '../database/databaseConnect'
 import { getUserInfo } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
+import {
+  createSession,
+  endSessions,
+  hashRefreshToken,
+  renewSession,
+  setSessionOrg,
+} from './userSessions'
+import { asTime, authLog, quoted, sessionRef } from './authLog'
+import {
+  clearAuthCookies,
+  getRefreshToken,
+  setAccessCookie,
+  setRefreshCookie,
+} from './sessionCookies'
 import bcrypt from 'bcrypt'
 import { UserOrg } from '../../types'
 import { PermissionDetails } from '../permissions/types'
@@ -30,20 +44,58 @@ Authenticates login and returns:
 const routeLogin = async (request: any, reply: any) => {
   try {
     const { username, password, sessionId } = request.body
-    if (password === undefined) return reply.send({ success: false })
+    if (password === undefined) {
+      authLog(`Login rejected for ${quoted(username)}: no password supplied`)
+      return reply.send({ success: false })
+    }
 
     const userOrgInfo: UserOrg[] = (await databaseConnect.getUserOrgData({ username })) || {}
-    if (userOrgInfo.length === 0) return reply.send({ success: false })
-    const { userId, passwordHash } = userOrgInfo?.[0]
-    if (!userId) return reply.send({ success: false })
-
-    if (!(await bcrypt.compare(password, passwordHash as string)))
+    if (userOrgInfo.length === 0) {
+      authLog(`Login failed for ${quoted(username)}: no such user`)
       return reply.send({ success: false })
+    }
+    const { userId, passwordHash } = userOrgInfo?.[0]
+    if (!userId) {
+      authLog(`Login failed for ${quoted(username)}: no such user`)
+      return reply.send({ success: false })
+    }
+
+    if (!(await bcrypt.compare(password, passwordHash as string))) {
+      authLog(`Login failed for ${quoted(username)}: incorrect password`)
+      return reply.send({ success: false })
+    }
 
     // Login successful
+    const { JWT, ...userInfo } = await getUserInfo({ userId, sessionId })
+
+    // Back the login with a server-side session, so it can be renewed after the
+    // access token expires and revoked by deleting its row. The session records
+    // the sessionId that was actually used (getUserInfo mints one if the client
+    // didn't supply it), since row-level security evaluates that claim for
+    // public applicants and a renewal has to reproduce it exactly.
+    const { token, tokenHash, expiresAt } = await createSession({
+      userId,
+      sessionId: userInfo.user.sessionId,
+    })
+
+    authLog(
+      `Login: ${quoted(username)} (session ${sessionRef(tokenHash)}, expires ${asTime(expiresAt)})`,
+      userInfo.orgList.length > 0 ? `-- ${userInfo.orgList.length} org(s) to choose from` : ''
+    )
+
+    // Both tokens are delivered by Set-Cookie and never in the body -- see
+    // sessionCookies.ts. Everything else the client needs (user, orgList,
+    // templatePermissions) is unchanged.
+    setRefreshCookie(reply, token)
+    setAccessCookie(reply, JWT)
+
     reply.send({
       success: true,
-      ...(await getUserInfo({ userId, sessionId })),
+      ...userInfo,
+      // getUserInfo runs before the session exists, so it can only calculate
+      // this. The row is created moments later from the same lifetime, so its
+      // value is the one to report.
+      sessionExpiry: Math.floor(expiresAt.getTime() / 1000),
     })
   } catch (err) {
     return reply.send({ success: false, error: errorMessage(err) })
@@ -59,10 +111,53 @@ Authenticates user and checks they belong to requested org (id). Returns:
 const routeLoginOrg = async (request: any, reply: any) => {
   const { orgId, sessionId } = request.body
 
-  const { userId, error } = request.auth
-  if (error) return reply.send({ success: false, message: error })
+  const { userId, username, error } = request.auth
+  if (error) {
+    authLog(`Org login rejected: ${error}`)
+    return reply.send({ success: false, message: error })
+  }
 
-  const userInfo = await getUserInfo({ userId, orgId, sessionId })
+  // Org is a field on the existing session, not a new session -- same login,
+  // same refresh token. Without it on the row, a silent renewal would drop the
+  // user back to no organisation (and so lose their org-granted permissions)
+  // mid-session. Runs unchanged when switching org or picking "no organisation".
+  //
+  // Picking an organisation is deliberate user activity, so the session is
+  // renewed as well, which is also what makes the row's real deadline available
+  // to report back.
+  const refreshToken = getRefreshToken(request)
+  let session = null
+
+  if (refreshToken) {
+    await setSessionOrg(refreshToken, orgId ?? null)
+    session = await renewSession(refreshToken, userId)
+
+    if (!session) {
+      authLog(`Org login rejected for ${quoted(username)}: no live session`)
+      reply.statusCode = 401
+      // Revoked, expired and never-existed are deliberately indistinguishable
+      return reply.send({ success: false, message: 'Session expired' })
+    }
+
+    authLog(
+      `Org login: ${quoted(username)} -> ${orgId ? `org ${orgId}` : 'no organisation'}`,
+      `(session ${sessionRef(hashRefreshToken(refreshToken))}, expires ${asTime(session.expiresAt)})`
+    )
+  } else
+    authLog(
+      `Org login: ${quoted(username)} presented no refresh token,`,
+      'so the organisation is not stored against a session'
+    )
+
+  const { JWT, ...userInfo } = await getUserInfo({
+    userId,
+    orgId,
+    sessionId,
+    sessionExpiresAt: session?.expiresAt,
+  })
+
+  // Only the access token is reissued -- it is the one carrying the org claims.
+  setAccessCookie(reply, JWT)
 
   reply.send({ success: true, ...userInfo })
 }
@@ -77,16 +172,76 @@ const routeUserInfo = async (request: any, reply: any) => {
 
   if (error) return reply.send({ success: false, message: error })
 
-  const userData = await getUserInfo({ userId, orgId, sessionId: sessionId ?? returnSessionId })
+  // This is the designated "still here" call: the front end's activity timer
+  // hits it while the user is actually interacting, so it must extend the
+  // session whether or not a token happened to be minted for this request.
+  // Everything else extends expiry only as a side effect of minting.
+  //
+  // Renewed before anything else is looked up, so a caller whose session has
+  // gone is told immediately rather than being handed a fresh deadline for a
+  // session that no longer exists -- which would leave it sitting quietly until
+  // that deadline, making no valid requests.
+  const refreshToken = getRefreshToken(request)
+  const session = refreshToken ? await renewSession(refreshToken, userId) : null
+
+  if (refreshToken && !session) {
+    authLog(`Session expired or revoked for ${quoted(username)}`)
+    reply.statusCode = 401
+    // Revoked, expired and never-existed are deliberately indistinguishable
+    return reply.send({ success: false, message: 'Session expired' })
+  }
+
+  if (session)
+    authLog(
+      `Session extended for ${quoted(username)} to ${asTime(session.expiresAt)}`,
+      `(session ${sessionRef(hashRefreshToken(refreshToken as string))})`
+    )
+
+  const { JWT, ...userData } = await getUserInfo({
+    userId,
+    orgId,
+    sessionId: sessionId ?? returnSessionId,
+    sessionExpiresAt: session?.expiresAt,
+  })
 
   // This check is to prevent a user remaining logged in as a different user if
   // the snapshot changes and their userId corresponds to a different username
   // on the new system. So we check that the username matches the one from the
   // JWT too, and return error if no match
-  if (userData.user.username !== username)
+  if (userData.user.username !== username) {
+    authLog(
+      `Rejected ${quoted(username)}: user ${userId} is now`,
+      `${quoted(userData.user.username)} -- the data was probably replaced`
+    )
     return reply.send({ success: false, message: 'Invalid username' })
+  }
+
+  setAccessCookie(reply, JWT)
 
   return reply.send({ success: true, ...userData })
+}
+
+/*
+Ends the user's sessions and expires their cookies. Note the deliberate
+asymmetry with login: logging in elsewhere revokes nothing (several browsers
+must keep working), while an explicit logout ends them all 
+*/
+const routeLogout = async (request: any, reply: any) => {
+  const { userId, username, error } = request.auth
+  if (error) {
+    authLog(`Logout rejected: ${error}`)
+    return reply.send({ success: false, message: error })
+  }
+
+  const refreshToken = getRefreshToken(request)
+  const sessionsEnded = await endSessions(userId, refreshToken)
+
+  authLog(`Logout: ${quoted(username)} -- ${sessionsEnded} session(s) ended`)
+
+  // Without this the browser keeps presenting a cookie whose row is gone
+  clearAuthCookies(reply)
+
+  return reply.send({ success: true, sessionsEnded })
 }
 
 const routeUserPermissions = async (request: any, reply: any) => {
@@ -278,6 +433,7 @@ export {
   routeUserPermissions,
   routeLogin,
   routeLoginOrg,
+  routeLogout,
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
