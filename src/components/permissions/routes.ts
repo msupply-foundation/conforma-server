@@ -176,13 +176,18 @@ the last request happened to land.
 Untrusted, and safe to be: it can only ever ask for LESS than the configured
 window (see extendUserSessionIfValid), and it cannot pull back an expiry the
 session already has. The worst a caller can do with it is decline to extend its
-own session. Absent, malformed and already-past all mean "no deadline offered".
+own session. Absent and malformed both mean "no deadline offered".
+
+A deadline already in the past is honoured rather than discarded, and means
+exactly what it says: extend to no later than then, which extends to nothing at
+all. The client's last call before it gives up on a session arrives with the
+deadline just behind it, and treating that as "no deadline" would hand a session
+the user has finished with a whole fresh window.
 */
 const getIdleDeadline = (idleDeadline: unknown) => {
   const seconds = Number(idleDeadline)
   if (!Number.isFinite(seconds) || seconds <= 0) return undefined
-  const deadline = new Date(seconds * 1000)
-  return deadline > new Date() ? deadline : undefined
+  return new Date(seconds * 1000)
 }
 
 const routeUserInfo = async (request: any, reply: any) => {
