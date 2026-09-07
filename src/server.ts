@@ -10,6 +10,7 @@ import { loadActionPlugins } from './components/pluginsConnect'
 import {
   routeUserInfo,
   routeUserPermissions,
+  routeHeartbeat,
   routeLogin,
   routeLoginOrg,
   routeLogout,
@@ -183,12 +184,19 @@ const startServer = async () => {
         return reply.send({ success: false, message: error })
       }
 
-      // All endpoints become admin-only in Maintenance mode
+      // All endpoints become admin-only in Maintenance mode, apart from the few
+      // that keep an existing login working rather than serving it any data.
+      // Maintenance mode is about withholding the site, not ending sessions:
+      // shutting these out would log every non-admin out mid-maintenance, and
+      // tell them their session had expired when it had not.
+      //
+      // Compared on the path alone, because request.url carries the query
+      // string -- "/api/user-info?sessionId=..." is the same endpoint.
+      const [requestPath] = request.url.split('?')
       if (
         config.maintenanceMode &&
         !request.auth.isAdmin &&
-        request.url !== '/api/login-org' &&
-        request.url !== '/api/user-info'
+        !['/api/login-org', '/api/user-info', '/api/heartbeat'].includes(requestPath)
       ) {
         reply.statusCode = 401
         return reply.send({ success: false, message: 'Must be admin user in Maintenance mode' })
@@ -368,6 +376,7 @@ const startServer = async () => {
     // Routes that require authentication but no special permissions
     server.get('/check-unique', routeCheckUnique)
     server.get('/user-info', routeUserInfo)
+    server.post('/heartbeat', routeHeartbeat)
     server.get('/user-permissions', routeUserPermissions)
     server.post('/login-org', routeLoginOrg)
     server.post('/logout', routeLogout)

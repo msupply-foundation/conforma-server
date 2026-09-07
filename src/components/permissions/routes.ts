@@ -196,10 +196,11 @@ const routeUserInfo = async (request: any, reply: any) => {
 
   if (error) return reply.send({ success: false, message: error })
 
-  // This is the designated "still here" call: the front end's activity timer
-  // hits it while the user is actually interacting, so it must extend the
-  // session whether or not a token happened to be minted for this request.
-  // Everything else extends expiry only as a side effect of minting.
+  // Extends the session whether or not a token happened to be minted for this
+  // request, where everything else extends expiry only as a side effect of
+  // minting. Restoring a session on page load comes through here, and must not
+  // leave it closer to lapsing than a login would. Saying "still here" on its
+  // own is routeHeartbeat's job.
   //
   // Renewed before anything else is looked up, so a caller whose session has
   // gone is told immediately rather than being handed a fresh deadline for a
@@ -252,6 +253,60 @@ const routeUserInfo = async (request: any, reply: any) => {
   setAccessCookie(reply, JWT)
 
   return reply.send({ success: true, ...userData })
+}
+
+/*
+The "still here" call, and nothing else.
+
+The server measures inactivity in requests, but a user can be working without
+making any -- filling in a long form -- and their session would lapse while they
+were at it. The front end tracks user activity of its own and calls this to
+report it, which extends the session exactly as any other request would.
+
+Deliberately separate from "/user-info", which was carrying this job before.
+That route rebuilds the user's whole picture -- org list, template permissions,
+org permissions, admin status, a fresh signed token -- which is the right answer
+to "who am I", and far more than is needed to say a user is still working. This
+one is a single UPDATE, and reports only whether the session survived it. It is
+called repeatedly for as long as someone is working, so the difference compounds.
+
+POST rather than GET: it changes server state, and a heartbeat that an
+intermediary decided to cache would be a silent failure -- the client would
+believe it was pinging while the session quietly lapsed underneath it.
+*/
+const routeHeartbeat = async (request: any, reply: any) => {
+  const { userId, username } = request.auth
+
+  // No "error" branch: the preValidation hook has already answered 401 for a
+  // request with no usable token, which -- since the middleware mints one from
+  // any live session -- also covers every session that has gone. What reaches
+  // here is the case that hook cannot see: a still-valid access token whose
+  // session row has since been deleted. A valid token verifies on its own
+  // signature and never touches the table, so only this read discovers it.
+  const refreshToken = getRefreshToken(request)
+  const session = refreshToken ? await renewSession(refreshToken, userId) : null
+
+  if (!session) {
+    authLog(`Heartbeat rejected for ${quoted(username)} -- no live session, cookies cleared`)
+    // The browser cannot discard them itself, and one left in place keeps being
+    // presented -- and recognised by the expiry sweep -- long after the app has
+    // returned to the login screen
+    clearAuthCookies(reply)
+    reply.statusCode = 401
+    // Revoked, expired and never-existed are deliberately indistinguishable
+    return reply.send({ success: false, message: 'Session expired' })
+  }
+
+  // Deliberately not logged on success: this is called repeatedly for every
+  // active user, and would bury everything else in the auth log. A rejection is
+  // the event worth recording.
+  return reply.send({
+    // Informational -- a client learns that its session has ended from the 401
+    // above rather than by watching this. Useful when working out why a session
+    // ended when it did.
+    sessionExpiry: Math.floor(session.expiresAt.getTime() / 1000),
+    success: true,
+  })
 }
 
 /*
@@ -467,6 +522,7 @@ const routeCheckUnique = async (request: any, reply: any) => {
 export {
   routeUserInfo,
   routeUserPermissions,
+  routeHeartbeat,
   routeLogin,
   routeLoginOrg,
   routeLogout,

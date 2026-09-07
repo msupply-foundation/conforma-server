@@ -1,5 +1,6 @@
 import {
   routeUserInfo,
+  routeHeartbeat,
   routeLogin,
   routeLoginOrg,
   routeLogout,
@@ -13,6 +14,7 @@ import {
 export {
   routeCreateHash,
   routeUserInfo,
+  routeHeartbeat,
   routeLogin,
   routeLoginOrg,
   routeLogout,
