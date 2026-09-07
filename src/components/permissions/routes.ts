@@ -275,9 +275,14 @@ const routeHeartbeat = async (request: any, reply: any) => {
   // active user, and would bury everything else in the auth log. A rejection is
   // the event worth recording.
   return reply.send({
-    // Informational -- a client learns that its session has ended from the 401
-    // above rather than by watching this. Useful when working out why a session
-    // ended when it did.
+    // An absolute instant in unix seconds, the same shape login and
+    // "/user-info" report, so a client can treat all three alike -- and so this
+    // can be held against the session row when working out why a session ended
+    // when it did. Deliberately not a duration, which would be stale by the
+    // time it arrived and could not be compared with anything.
+    //
+    // Informational: a client learns that its session has ENDED from the 401
+    // above, not by watching this.
     sessionExpiry: Math.floor(session.expiresAt.getTime() / 1000),
     success: true,
   })
