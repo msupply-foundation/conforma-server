@@ -266,25 +266,16 @@ test('An inactivity window of 0 renews with the indefinite lifetime', async () =
 })
 
 /*
-A browser measures the inactivity window from the user's last interaction, which
-the server never sees, and reports the deadline so the session ends then rather
-than a full window after the last request.
+Every renewal asks for the full window, and nothing may narrow it. A caller
+cannot know when the user last interacted -- only that a request arrived -- so
+there is nothing for a third argument to carry, and one appearing here would
+mean a session being cut shorter than the configured window somewhere.
 */
-test('Renewing passes a caller-supplied deadline through as the cap', async () => {
-  const deadline = new Date('2030-01-01T00:00:00Z')
-  extendUserSessionIfValid.mockResolvedValue(undefined)
-  await renewSession('raw-token', ANY_OTHER_USER, deadline)
-
-  expect(extendUserSessionIfValid.mock.calls[0][2]).toBe(deadline)
-})
-
-// A caller with no idea when the user last interacted -- the access-token
-// renewal path, and every machine client -- must get a full window
-test('Renewing caps nothing when no deadline is offered', async () => {
+test('Renewing asks for the full window and nothing more', async () => {
   extendUserSessionIfValid.mockResolvedValue(undefined)
   await renewSession('raw-token', ANY_OTHER_USER)
 
-  expect(extendUserSessionIfValid.mock.calls[0][2]).toBeUndefined()
+  expect(extendUserSessionIfValid.mock.calls[0]).toHaveLength(2)
 })
 
 // -- endSessions --

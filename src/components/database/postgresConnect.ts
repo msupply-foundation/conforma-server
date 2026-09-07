@@ -1489,27 +1489,17 @@ class PostgresDB {
    * back to the standard window when it cannot tell whose session this is: the
    * worst case is under-extending, never cutting a session short.
    *
-   * "notPast" lets a caller that knows the session should end sooner than a
-   * full window ask for less -- the browser's inactivity deadline, which only
-   * it can measure. LEAST sits INSIDE the GREATEST, so a cap limits how far
-   * this call extends and can never pull an existing expiry back; a caller that
-   * passes none gets 'infinity', which is the identity.
    * @param tokenHash that uniquely identifies a session
    * @param lifetimeMinutes how far past now to push the expiry
-   * @param notPast an upper bound on the new expiry, if the caller knows one
    * @returns the renewed {@link UserSession}, or undefined if none was live
    */
   public extendUserSessionIfValid = async (
     tokenHash: string,
-    lifetimeMinutes: number,
-    notPast?: Date
+    lifetimeMinutes: number
   ): Promise<UserSession | undefined> => {
     const text = `
       UPDATE user_session
-      SET expires_at = GREATEST(
-        expires_at,
-        LEAST(NOW() + make_interval(mins => $2::int), COALESCE($3::timestamptz, 'infinity'))
-      )
+      SET expires_at = GREATEST(expires_at, NOW() + make_interval(mins => $2::int))
       WHERE token_hash = $1
       AND expires_at > NOW()
       RETURNING token_hash AS "tokenHash",
@@ -1518,7 +1508,7 @@ class PostgresDB {
         session_id AS "sessionId",
         expires_at AS "expiresAt"
     `
-    const values = [tokenHash, lifetimeMinutes, notPast ?? null]
+    const values = [tokenHash, lifetimeMinutes]
     try {
       const result = await this.query({ text, values })
       return result.rows[0]
