@@ -116,11 +116,10 @@ deliberately indistinguishable from here.
 no way to tell whose session it is. It is never used to find the session -- the
 token hash alone does that.
 
-"notPast" caps how far the session is pushed out. The inactivity window is
-measured from the user's last interaction, which only their browser can see, so
-a client that knows its own deadline reports it here and the session expires
-when the user actually went idle rather than when they last made a request. A
-caller with no such knowledge omits it and gets a full window.
+Every renewal extends by the full window, so the session lasts that long past
+the last request made against it. Reporting activity is how a client whose user
+is working without making requests keeps that true of them too -- see
+routeHeartbeat.
 
 This is the only session read on the request path, and it only happens when
 there is no usable access token: a valid one verifies on its own signature and
@@ -129,13 +128,11 @@ lifetime, not one per request.
 */
 export const renewSession = async (
   refreshToken: string,
-  userId?: number,
-  notPast?: Date
+  userId?: number
 ): Promise<UserSession | null> =>
   (await databaseConnect.extendUserSessionIfValid(
     hashRefreshToken(refreshToken),
-    getSessionLifetimeMinutes(userId),
-    notPast
+    getSessionLifetimeMinutes(userId)
   )) ?? null
 
 /*

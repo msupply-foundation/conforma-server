@@ -40,7 +40,7 @@ A user's effective access = the policies reachable through their permission join
 - The rule is *"no usable access token, but a live session → mint one"*, where **missing and expired are the same case**. That is what lets a machine client work with no code of its own: it sends only a provisioned refresh token, never logs in, and takes the ordinary renewal path.
 - A token presented in the `Authorization` header wins over the cookie, so scripted callers and internal requests are unaffected.
 - Renewal is triggered by **rejection, not a clock**. Every claim is rebuilt from the session row (never from the expired token), and minting extends `expires_at` — so an active client costs one write per access-token lifetime, not one per request.
-- `GET /api/user-info` is the designated "still here" call and extends the session *whether or not* a token was minted; everything else extends it only as a side effect of minting.
+- `POST /api/heartbeat` is the designated "still here" call and extends the session *whether or not* a token was minted; everything else extends it only as a side effect of minting. `GET /api/user-info` does the same, since it must (it is also how a session is restored on page load) — but it rebuilds the user's whole picture, so it is not what the front end should be calling on a loop.
 - Failures here are logged and swallowed: the hook runs on every request including public ones, so it must never turn into a 500.
 
 ## Sessions ([userSessions.ts](userSessions.ts))
@@ -63,7 +63,11 @@ A user's effective access = the policies reachable through their permission join
 
 ## Routes (registered in [../../server.ts](../../server.ts))
 
-`POST /api/public/login`, `GET /api/public/verify` (public — email verification), `POST /api/login-org`, `POST /api/logout`, `GET /api/user-info`, `GET /api/user-permissions`, `POST /api/create-hash`, `GET /api/check-unique`, and admin `GET /api/admin/updateRowPolicies`.
+`POST /api/public/login`, `GET /api/public/verify` (public — email verification), `POST /api/login-org`, `POST /api/logout`, `GET /api/user-info`, `POST /api/heartbeat`, `GET /api/user-permissions`, `POST /api/create-hash`, `GET /api/check-unique`, and admin `GET /api/admin/updateRowPolicies`.
+
+`POST /api/heartbeat` extends the session and reports nothing but whether it is still there. The front end tracks user activity of its own and calls it to report that, which is what stops a long form — which makes no requests of its own — lapsing mid-edit. It is deliberately not `/user-info`: that route rebuilds the org list, template permissions, org permissions, admin status and a fresh signed token, which is far too much work to repeat on a loop. A dead session answers **401** (and expires both cookies), which is the client's signal to log out. `POST` rather than `GET` because it mutates state, and a cached heartbeat would fail silently.
+
+Three routes stay reachable by non-admins in **maintenance mode** — `login-org`, `user-info` and `heartbeat` — because they keep an existing login working rather than serving any data. Shutting them out would log every non-admin out mid-maintenance and tell them their session had expired when it had not.
 
 `POST /api/logout` deletes **every** session for the user (logging in elsewhere revokes nothing, but an explicit logout ends everything) and expires both cookies. Revocation is not instant for other browsers: their access token is stateless, so it keeps working until its own `exp` passes — after which renewal finds no session. On the shared public account it collapses to ending just the calling session.
 

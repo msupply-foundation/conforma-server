@@ -166,49 +166,24 @@ const routeLoginOrg = async (request: any, reply: any) => {
 Authenticates user using JWT header and returns latest user/org info,
 template permissions and new JWT token
 */
-/*
-The inactivity window runs from the user's last interaction, and only their
-browser can see that -- the server sees requests, and a user typing into a long
-form makes none. So a browser reports the deadline it has measured and the
-session is held to it, rather than being pushed out a full window from whenever
-the last request happened to land.
-
-Untrusted, and safe to be: it can only ever ask for LESS than the configured
-window (see extendUserSessionIfValid), and it cannot pull back an expiry the
-session already has. The worst a caller can do with it is decline to extend its
-own session. Absent and malformed both mean "no deadline offered".
-
-A deadline already in the past is honoured rather than discarded, and means
-exactly what it says: extend to no later than then, which extends to nothing at
-all. The client's last call before it gives up on a session arrives with the
-deadline just behind it, and treating that as "no deadline" would hand a session
-the user has finished with a whole fresh window.
-*/
-const getIdleDeadline = (idleDeadline: unknown) => {
-  const seconds = Number(idleDeadline)
-  if (!Number.isFinite(seconds) || seconds <= 0) return undefined
-  return new Date(seconds * 1000)
-}
-
 const routeUserInfo = async (request: any, reply: any) => {
-  const { sessionId, idleDeadline } = request.query
+  const { sessionId } = request.query
   const { userId, orgId, username, sessionId: returnSessionId, error } = request.auth
 
   if (error) return reply.send({ success: false, message: error })
 
-  // This is the designated "still here" call: the front end's activity timer
-  // hits it while the user is actually interacting, so it must extend the
-  // session whether or not a token happened to be minted for this request.
-  // Everything else extends expiry only as a side effect of minting.
+  // Extends the session whether or not a token happened to be minted for this
+  // request, where everything else extends expiry only as a side effect of
+  // minting. Restoring a session on page load comes through here, and must not
+  // leave it closer to lapsing than a login would. Saying "still here" on its
+  // own is routeHeartbeat's job.
   //
   // Renewed before anything else is looked up, so a caller whose session has
   // gone is told immediately rather than being handed a fresh deadline for a
   // session that no longer exists -- which would leave it sitting quietly until
   // that deadline, making no valid requests.
   const refreshToken = getRefreshToken(request)
-  const session = refreshToken
-    ? await renewSession(refreshToken, userId, getIdleDeadline(idleDeadline))
-    : null
+  const session = refreshToken ? await renewSession(refreshToken, userId) : null
 
   if (refreshToken && !session) {
     authLog(`Session expired or revoked for ${quoted(username)} -- cookies cleared`)
@@ -252,6 +227,65 @@ const routeUserInfo = async (request: any, reply: any) => {
   setAccessCookie(reply, JWT)
 
   return reply.send({ success: true, ...userData })
+}
+
+/*
+The "still here" call, and nothing else.
+
+The server measures inactivity in requests, but a user can be working without
+making any -- filling in a long form -- and their session would lapse while they
+were at it. The front end tracks user activity of its own and calls this to
+report it, which extends the session exactly as any other request would.
+
+Deliberately separate from "/user-info", which was carrying this job before.
+That route rebuilds the user's whole picture -- org list, template permissions,
+org permissions, admin status, a fresh signed token -- which is the right answer
+to "who am I", and far more than is needed to say a user is still working. This
+one is a single UPDATE, and reports only whether the session survived it. It is
+called repeatedly for as long as someone is working, so the difference compounds.
+
+POST rather than GET: it changes server state, and a heartbeat that an
+intermediary decided to cache would be a silent failure -- the client would
+believe it was pinging while the session quietly lapsed underneath it.
+*/
+const routeHeartbeat = async (request: any, reply: any) => {
+  const { userId, username } = request.auth
+
+  // No "error" branch: the preValidation hook has already answered 401 for a
+  // request with no usable token, which -- since the middleware mints one from
+  // any live session -- also covers every session that has gone. What reaches
+  // here is the case that hook cannot see: a still-valid access token whose
+  // session row has since been deleted. A valid token verifies on its own
+  // signature and never touches the table, so only this read discovers it.
+  const refreshToken = getRefreshToken(request)
+  const session = refreshToken ? await renewSession(refreshToken, userId) : null
+
+  if (!session) {
+    authLog(`Heartbeat rejected for ${quoted(username)} -- no live session, cookies cleared`)
+    // The browser cannot discard them itself, and one left in place keeps being
+    // presented -- and recognised by the expiry sweep -- long after the app has
+    // returned to the login screen
+    clearAuthCookies(reply)
+    reply.statusCode = 401
+    // Revoked, expired and never-existed are deliberately indistinguishable
+    return reply.send({ success: false, message: 'Session expired' })
+  }
+
+  // Deliberately not logged on success: this is called repeatedly for every
+  // active user, and would bury everything else in the auth log. A rejection is
+  // the event worth recording.
+  return reply.send({
+    // An absolute instant in unix seconds, the same shape login and
+    // "/user-info" report, so a client can treat all three alike -- and so this
+    // can be held against the session row when working out why a session ended
+    // when it did. Deliberately not a duration, which would be stale by the
+    // time it arrived and could not be compared with anything.
+    //
+    // Informational: a client learns that its session has ENDED from the 401
+    // above, not by watching this.
+    sessionExpiry: Math.floor(session.expiresAt.getTime() / 1000),
+    success: true,
+  })
 }
 
 /*
@@ -467,6 +501,7 @@ const routeCheckUnique = async (request: any, reply: any) => {
 export {
   routeUserInfo,
   routeUserPermissions,
+  routeHeartbeat,
   routeLogin,
   routeLoginOrg,
   routeLogout,
