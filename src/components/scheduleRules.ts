@@ -1,6 +1,6 @@
 import Scheduler, { RecurrenceSpecObjLit } from 'node-schedule'
 import { Settings } from 'luxon'
-import { ScheduleObject, ServerPreferences } from '../types'
+import { ScheduleObject } from '../types'
 
 export type ScheduleType =
   | 'action'
@@ -39,14 +39,18 @@ const defaultSchedules: { [K in ScheduleType]: RecurrenceSpecObjLit } = {
   },
 }
 
-// The action schedule has a deprecated predecessor, "hoursSchedule", which is
-// still used as a fallback. Note that we can't use "??" for that fallback: an
-// explicitly null actionSchedule means "never run", so it must not fall through
-// to hoursSchedule (which the default preferences still set).
-export function getActionSchedulePref(
-  prefs: Pick<ServerPreferences, 'actionSchedule' | 'hoursSchedule'>
-) {
-  return prefs.actionSchedule !== undefined ? prefs.actionSchedule : prefs.hoursSchedule
+// Scheduled actions have to keep running for the system to work, so unlike the
+// other jobs the action schedule can't be switched off: a missing schedule
+// falls back to the deprecated hoursSchedule, and then to the default (hourly).
+// The preference isn't typed as nullable, but a null can still arrive from
+// preferences.json, and it must not stop the job -- hence the "??" chain, and
+// the trailing "?? undefined" so a null can never reach getSchedule (which
+// would read it as "never run").
+export function getActionSchedulePref(prefs: {
+  actionSchedule?: number[] | ScheduleObject | null
+  hoursSchedule?: number[] | null
+}) {
+  return prefs.actionSchedule ?? prefs.hoursSchedule ?? undefined
 }
 
 // Turns a schedule preference into a node-schedule recurrence rule, or null if
