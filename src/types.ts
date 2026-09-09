@@ -289,7 +289,6 @@ export interface ServerPreferences {
   logoutAfterInactivity?: number // Minutes
   thumbnailMaxWidth?: number
   thumbnailMaxHeight?: number
-  // Not nullable: scheduled actions must always run. See getActionSchedulePref.
   actionSchedule?: number[] | ScheduleObject
   hoursSchedule?: number[] // deprecated, please use actionSchedule
   SMTPConfig?: SMTPConfig

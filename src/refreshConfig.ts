@@ -3,7 +3,6 @@ import { serverPrefKeys, ServerPreferences, WebAppPrefs, Config } from './types'
 import { readJsonSync } from 'fs-extra'
 import path from 'path'
 import { getAppEntryPointDir } from './components/utilityFunctions'
-import { getActionSchedulePref } from './components/scheduleRules'
 import { merge } from 'lodash'
 import databaseConnect from './components/database/databaseConnect'
 
@@ -93,7 +92,7 @@ export const refreshConfig = async (config: Config) => {
 
   //Update scheduled jobs from prefs
   if (config.scheduledJobs) {
-    config.scheduledJobs.reschedule('action', getActionSchedulePref(serverPrefs))
+    config.scheduledJobs.reschedule('action', serverPrefs.actionSchedule)
     config.scheduledJobs.reschedule('backup', serverPrefs.backupSchedule)
     config.scheduledJobs.reschedule('fileCleanup', serverPrefs.fileCleanupSchedule)
     config.scheduledJobs.reschedule('archive', serverPrefs.archiveSchedule)
