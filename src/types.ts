@@ -290,7 +290,6 @@ export interface ServerPreferences {
   thumbnailMaxWidth?: number
   thumbnailMaxHeight?: number
   actionSchedule?: number[] | ScheduleObject
-  hoursSchedule?: number[] // deprecated, please use actionSchedule
   SMTPConfig?: SMTPConfig
   systemManagerPermissionName?: string
   managerCanEditLookupTables?: boolean
@@ -322,7 +321,6 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'thumbnailMaxHeight',
   'thumbnailMaxWidth',
   'actionSchedule',
-  'hoursSchedule', // deprecated, see above
   'SMTPConfig',
   'systemManagerPermissionName',
   'managerCanEditLookupTables',
