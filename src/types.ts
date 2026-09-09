@@ -289,7 +289,10 @@ export interface ServerPreferences {
   logoutAfterInactivity?: number // Minutes
   thumbnailMaxWidth?: number
   thumbnailMaxHeight?: number
-  actionSchedule?: number[] | ScheduleObject
+  // The scheduler already treats a null schedule as "never run", so null is
+  // typed here because the hoursSchedule fallback below has to tell that apart
+  // from undefined, which means "use the default schedule".
+  actionSchedule?: number[] | ScheduleObject | null
   hoursSchedule?: number[] // deprecated, please use actionSchedule
   SMTPConfig?: SMTPConfig
   systemManagerPermissionName?: string
