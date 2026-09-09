@@ -333,6 +333,7 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'fileCleanupSchedule',
   'backupSchedule',
   'backupFilePrefix',
+  'skipBackup',
   'maxBackupDurationDays',
   'archiveSchedule',
   'archiveFileAgeMinimum',
