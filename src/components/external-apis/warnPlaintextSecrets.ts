@@ -1,3 +1,4 @@
+import { get as extractProperty } from 'lodash'
 import { ApiAuthentication, ExternalApiConfigs } from './types'
 import { isEnvVariableReference } from '../utilityFunctions'
 
@@ -12,25 +13,49 @@ A warning, not a refusal -- kdd/auth-token-lifecycle §7. Hard-coding a password
 here is perfectly reasonable for development and testing.
 */
 
-// Which field of each auth type holds a secret. "Basic.username" is absent
-// deliberately: it takes env. substitution too, but a username is not a secret.
-const SECRET_FIELD: { [type in ApiAuthentication['type']]: string } = {
-  Basic: 'password',
-  Bearer: 'token',
-  CookieToken: 'token',
+// CookieLogin's secret sits under a key of the config author's choosing inside
+// `login.body`, next to things that are not secret at all: mSupply's takes
+// `username` and `loginType` alongside `password`. So only keys that look like
+// a credential are checked. Warning on every literal in the body would fire on
+// correct config, and a warning that cries wolf trains people to ignore it.
+// This errs toward silence: a secret under an unusual name goes unremarked.
+const CREDENTIAL_KEY = /pass|secret|token|key|auth/i
+
+// Which fields of each auth type hold a secret, as paths into the auth object.
+// "Basic.username" is absent deliberately: it takes env. substitution too, but
+// a username is not a secret.
+const SECRET_FIELDS: {
+  [T in ApiAuthentication['type']]: (
+    authentication: Extract<ApiAuthentication, { type: T }>
+  ) => string[]
+} = {
+  Basic: () => ['password'],
+  Bearer: () => ['token'],
+  CookieToken: () => ['token'],
+  CookieLogin: ({ login }) =>
+    Object.keys(login?.body ?? {})
+      .filter((key) => CREDENTIAL_KEY.test(key))
+      .map((key) => `login.body.${key}`),
+}
+
+const secretFieldsOf = (authentication: ApiAuthentication): string[] => {
+  // Indexed by a runtime value that may be absent or unrecognised, which the
+  // mapped type cannot express
+  const fields = SECRET_FIELDS[authentication?.type] as
+    ((authentication: ApiAuthentication) => string[]) | undefined
+  return fields?.(authentication) ?? []
 }
 
 export const warnAboutPlaintextSecrets = (apiConfigs: ExternalApiConfigs = {}) => {
-  const literals = Object.entries(apiConfigs).flatMap(([name, { authentication }]) => {
-    const field = SECRET_FIELD[authentication?.type]
-    if (!field) return []
-
-    const value = (authentication as Record<string, unknown>)[field]
-    // Absent is a different problem, and one the request itself will report
-    if (value === undefined || isEnvVariableReference(value)) return []
-
-    return [`${name} ("${field}")`]
-  })
+  const literals = Object.entries(apiConfigs).flatMap(([name, { authentication }]) =>
+    secretFieldsOf(authentication)
+      .filter((field) => {
+        const value = extractProperty(authentication, field)
+        // Absent is a different problem, and one the request itself will report
+        return value !== undefined && !isEnvVariableReference(value)
+      })
+      .map((field) => `${name} ("${field}")`)
+  )
 
   if (literals.length === 0) return
 

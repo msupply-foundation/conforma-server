@@ -1,12 +1,13 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import db from '../database/databaseConnect'
-import { URL } from 'url'
 import config from '../../config'
 import { get as extractProperty } from 'lodash'
-import axios, { AxiosError, AxiosRequestConfig } from 'axios'
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { constructQueryObject, validateResult } from './helpers'
-import { constructAuthHeader, recordAuthResponse } from './authHeaders'
-import { ExternalApiConfigs, QueryParameters } from './types'
+import { constructAuthHeader, recordAuthResponse, sessionFor } from './authHeaders'
+import { ensureLoggedIn, ExternalLoginError, reloginStatuses } from './login'
+import { resolveApiUrl } from './resolveUrl'
+import { ApiAuthentication, ExternalApiConfigs, QueryParameters } from './types'
 import { getApplicationData } from '../actions'
 import { getPermissionNamesFromJWT, getUserInfo } from '../permissions/loginHelpers'
 import { ActionApplicationData } from '../../types'
@@ -16,6 +17,80 @@ export type AccessExternalApiQuery = {
   Querystring: { applicationId?: string }
   Params: { name: string; route: string }
   auth: { userId: number; orgId: number }
+}
+
+/*
+Issues the request, and repairs a lapsed session once.
+
+  1. build the auth header -- for CookieLogin, logging in first if the jar is
+     empty (constructAuthHeader)
+  2. note the session's generation, and send
+  3. record any Set-Cookie, on success and error alike
+  4. status not in reloginOn              → done, however it went
+  5. already replayed                     → return the rejection
+  6. generation moved since we sent       → a login completed meanwhile;
+                                            re-issue with what it stored
+  7. otherwise                            → log in, then re-issue
+
+Each of the last three earns its place. Recording on error responses is how a
+cookie the server expires on the rejection itself gets dropped. Replaying at
+most once is what stops an API that answers 401 for a reason login cannot fix
+(valid credentials, insufficient access) from looping: 401 → login → 401 →
+login. And the generation check is what keeps a burst to one login. Twenty
+requests go out under generation g; the session expires; the first rejection
+back logs in and the store is at g+1 -- but the other nineteen were already in
+flight, so their rejections land AFTER that login completed, and each would
+otherwise find no login running and start its own. Comparing generations rather
+than cookie values matters because a login may hand back the very same session
+id, in which case every late rejection would compare equal and log in anyway.
+
+Only CookieLogin has a reloginOn, so for every other auth type this is a single
+send with the response cookies recorded.
+*/
+const sendAuthenticated = async (
+  axiosRequest: AxiosRequestConfig,
+  authentication: ApiAuthentication,
+  apiName: string,
+  baseUrl: string
+): Promise<AxiosResponse> => {
+  const cookieLogin = authentication.type === 'CookieLogin' ? authentication : undefined
+  const reloginOn = cookieLogin ? reloginStatuses(cookieLogin) : new Set<number>()
+
+  const attempt = async (replayed: boolean): Promise<AxiosResponse> => {
+    await constructAuthHeader(authentication, axiosRequest, apiName, baseUrl)
+    const session = cookieLogin && sessionFor(cookieLogin, apiName)
+    const generationAtSend = session?.generation
+
+    console.log(`Making ${axiosRequest.method?.toUpperCase()} request to: ${axiosRequest.url}`)
+    try {
+      const response = await axios(axiosRequest)
+      recordAuthResponse(authentication, response.headers, apiName)
+      return response
+    } catch (err) {
+      if (!(err instanceof AxiosError)) throw err
+
+      // A peer that has ended our session may say so by expiring the cookie, so
+      // the error response is worth reading before the status is acted on
+      recordAuthResponse(authentication, err.response?.headers, apiName)
+
+      const status = err.response?.status
+      if (!cookieLogin || !session || status === undefined || !reloginOn.has(status)) throw err
+      if (replayed) {
+        console.log(`${apiName} rejected the request again (${status}); not retrying`)
+        throw err
+      }
+
+      if (generationAtSend === session.generation) {
+        console.log(`${apiName} rejected the session (${status}); logging in again`)
+        await ensureLoggedIn(session, apiName, cookieLogin, baseUrl)
+      } else {
+        console.log(`${apiName} rejected the session (${status}); a login has since completed`)
+      }
+      return attempt(true)
+    }
+  }
+
+  return attempt(false)
 }
 
 export const routeAccessExternalApi = async (
@@ -87,12 +162,14 @@ export const routeAccessExternalApi = async (
     if (application) evaluatorData.applicationData = await getApplicationData({ applicationId })
   }
 
+  // baseUrl takes the same "env.<VAR>" indirection as the credentials do: the
+  // server an API points at is the part of the configuration that differs
+  // between a test deployment and a live one.
+  const resolvedBaseUrl = getEnvVariableReplacement(baseUrl)
+
   const axiosRequest = {
     method,
-    // baseUrl takes the same "env.<VAR>" indirection as the credentials do:
-    // the server an API points at is the part of the configuration that
-    // differs between a test deployment and a live one.
-    url: new URL(url, getEnvVariableReplacement(baseUrl)).toString(),
+    url: resolveApiUrl(resolvedBaseUrl, url),
     ...additionalAxiosProperties,
   } as AxiosRequestConfig
 
@@ -115,12 +192,8 @@ export const routeAccessExternalApi = async (
     }
   }
 
-  constructAuthHeader(authentication, axiosRequest, name)
-
-  console.log(`Making ${method.toUpperCase()} request to: ${axiosRequest.url}`)
   try {
-    const response = await axios(axiosRequest)
-    recordAuthResponse(authentication, response.headers, name)
+    const response = await sendAuthenticated(axiosRequest, authentication, name, resolvedBaseUrl)
 
     const result = response.data
     const returnValue = returnProperty ? extractProperty(result, returnProperty, result) : result
@@ -141,11 +214,14 @@ export const routeAccessExternalApi = async (
       return reply.send('Not authorized to view result')
     }
   } catch (err) {
+    // The far server would not have us, or could not be reached to ask. 502
+    // because the failure is upstream, and the message names the API but not
+    // the cause: no part of the far server's response reaches our client.
+    if (err instanceof ExternalLoginError) {
+      reply.status(502)
+      return reply.send(err.message)
+    }
     if (err instanceof AxiosError) {
-      // A peer that has ended our session says so by expiring the cookie, so
-      // the error response is worth reading before the status is passed on
-      recordAuthResponse(authentication, err.response?.headers, name)
-
       reply.status(err.response?.status ?? 500)
       return reply.send(`External API error: ${err.message}`)
     }
