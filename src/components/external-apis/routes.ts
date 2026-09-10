@@ -20,6 +20,33 @@ export type AccessExternalApiQuery = {
 }
 
 /*
+What the external server is about to receive, for debugging a route that does
+not behave: method, the full url with its params serialised exactly as axios
+will send them, which cookies are going, and the body if there is one.
+
+Cookie NAMES only, never values -- a session cookie is a credential. Nor the
+Authorization header or basic-auth fields, which are not shown at all.
+*/
+const describeRequest = (axiosRequest: AxiosRequestConfig) => {
+  const lines = [
+    `Making ${axiosRequest.method?.toUpperCase()} request to: ${axios.getUri(axiosRequest)}`,
+  ]
+
+  const cookieHeader = axiosRequest.headers?.Cookie
+  if (typeof cookieHeader === 'string' && cookieHeader) {
+    const names = cookieHeader.split('; ').map((cookie) => cookie.split('=')[0])
+    lines.push(`  cookies: ${names.join(', ')}`)
+  }
+
+  if (axiosRequest.data !== undefined) {
+    const { data } = axiosRequest
+    lines.push(`  body: ${typeof data === 'string' ? data : JSON.stringify(data)}`)
+  }
+
+  return lines.join('\n')
+}
+
+/*
 Issues the request, and repairs a lapsed session once.
 
   1. build the auth header -- for CookieLogin, logging in first if the jar is
@@ -61,7 +88,7 @@ const sendAuthenticated = async (
     const session = cookieLogin && sessionFor(cookieLogin, apiName)
     const generationAtSend = session?.generation
 
-    console.log(`Making ${axiosRequest.method?.toUpperCase()} request to: ${axiosRequest.url}`)
+    console.log(describeRequest(axiosRequest))
     try {
       const response = await axios(axiosRequest)
       recordAuthResponse(authentication, response.headers, apiName)

@@ -320,3 +320,4 @@ We then check the validation expression -- that the returned `data.person.birth_
 
 - The endpoint returns a 403 "unauthorized" status if either the permissions or validation expression checks fail, with appropriate message.
 - Any errors returned by the external server are passed on directly to the client. The exception is a `CookieLogin` login that fails, which is reported as a 502 with a generic message -- see above.
+- As a debugging aid, every request the relay sends is logged to the server console with its method, the full URL including query parameters, the names of any cookies being sent, and the body if there is one. Cookie values, `Authorization` headers and Basic credentials are never logged, and neither is the body of a `CookieLogin` login call.

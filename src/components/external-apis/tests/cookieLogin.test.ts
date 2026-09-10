@@ -16,11 +16,15 @@ same reason as the permissions tests: ts-jest 26 hoists via
 compile. `doMock` is not hoisted, so anything that imports axios has to be
 required after it.
 */
-jest.doMock('axios', () => ({
-  __esModule: true,
-  ...(jest.requireActual('axios') as object),
-  default: jest.fn(),
-}))
+jest.doMock('axios', () => {
+  const actual = jest.requireActual('axios') as { getUri: unknown }
+  return {
+    __esModule: true,
+    ...actual,
+    // The request log builds the outgoing url the way axios itself does
+    default: Object.assign(jest.fn(), { getUri: actual.getUri }),
+  }
+})
 jest.doMock('../../database/databaseConnect', () => ({
   __esModule: true,
   default: { gqlQuery: jest.fn() },
@@ -195,7 +199,7 @@ const fakeReply = () => {
   })
 }
 
-const relay = async () => {
+const relay = async (request: { query?: object; body?: object } = {}) => {
   const reply = fakeReply()
   await routeAccessExternalApi(
     {
@@ -203,6 +207,7 @@ const relay = async () => {
       query: {},
       headers: {},
       auth: { userId: 1, orgId: 1 },
+      ...request,
     } as any,
     reply as any
   )
@@ -703,6 +708,34 @@ describe('CookieLogin', () => {
       expectSuccess(await relay())
 
       expect(calls().map((request) => request.url)).toEqual([LOGIN_URL, ITEM_URL])
+    })
+
+    // A debugging aid: what the far server is about to receive. Cookie names
+    // only -- the afterEach above checks no cookie value reached the log.
+    it('logs each outgoing request: method, url with params, cookie names and body', async () => {
+      config.externalApiConfigs![API].routes.item = { method: 'post', url: 'item' }
+
+      await relay({ query: { code: '123' }, body: { qty: 2 } })
+
+      expect(logged).toContainEqual(
+        [
+          `Making POST request to: ${ITEM_URL}?code=123`,
+          `  cookies: ${SESSION_COOKIE}`,
+          '  body: {"qty":2}',
+        ].join('\n')
+      )
+    })
+
+    it('logs neither a cookies line nor a body line when there is nothing to show', async () => {
+      config.externalApiConfigs![API].authentication = { type: 'Bearer', token: 'abc' }
+      accepted.add('irrelevant')
+      mockedAxios.mockImplementation(async (request: AxiosRequestConfig) =>
+        ok(request, { item: 'paracetamol' })
+      )
+
+      await relay()
+
+      expect(logged).toContainEqual(`Making GET request to: ${ITEM_URL}`)
     })
 
     it('passes a rejection straight through for an auth type with no login', async () => {
