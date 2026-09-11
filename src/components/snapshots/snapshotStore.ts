@@ -2,6 +2,7 @@ import fs from 'fs/promises'
 import fsx from 'fs-extra'
 import path from 'path'
 import getFolderSize from 'get-folder-size'
+import { DateTime } from 'luxon'
 import {
   INFO_FILE_NAME,
   SNAPSHOT_ARCHIVE_FOLDER,
@@ -88,6 +89,73 @@ export const ensureArchiveSize = async (archiveFolder: string): Promise<ArchiveI
   info.totalFileSize = await getFolderSize.loose(archiveFolder)
   await fsx.writeJson(infoFile(archiveFolder), info, { spaces: 2 })
   return info
+}
+
+// ---------- Manifest construction ----------
+
+// An archive path the file table points into, as reported by
+// DBConnect.getReferencedArchives.
+export type ReferencedArchive = {
+  archive_path: string
+  num_files: number
+  total_file_size: number
+}
+
+// Builds a snapshot's archive.json from the archives its database actually
+// references, so the manifest declares exactly the archives needed to
+// restore it. Metadata for each folder comes from the archive's own info.json
+// in the store when it is there, else from the store's archive.json (which
+// can still describe an archive that has left the disk), else is synthesised
+// from the folder name and the file table so the dependency is still
+// declared. Returns null when the database references no archives.
+export const buildArchiveManifest = (
+  referenced: ReferencedArchive[],
+  storeArchives: Record<string, ArchiveInfo>,
+  storeManifest: ArchiveData | null
+): ArchiveData | null => {
+  if (referenced.length === 0) return null
+
+  // The on-disk info.json is authoritative, so it is applied last
+  const known = new Map<string, ArchiveInfo>()
+  for (const info of storeManifest?.history ?? []) known.set(info.archiveFolder, info)
+  for (const info of Object.values(storeArchives)) known.set(info.archiveFolder, info)
+
+  const entries = new Map<string, ArchiveInfo>()
+  for (const { archive_path, num_files, total_file_size } of referenced) {
+    const archiveFolder = archive_path.split('/')[0]
+    if (entries.has(archiveFolder)) continue
+    entries.set(
+      archiveFolder,
+      known.get(archiveFolder) ?? synthesiseArchiveInfo(archiveFolder, num_files, total_file_size)
+    )
+  }
+
+  const history = [...entries.values()].sort((a, b) => a.timestamp - b.timestamp)
+  const archives = Object.fromEntries(history.map((info) => [info.uid, info]))
+  return { archives, history }
+}
+
+// Archive folders are named "yyyy-LL-dd_HH-mm-ss_<first 6 chars of uid>", so
+// the timestamp is recoverable but the full uid is not. The folder name
+// stands in for the uid; no real archive carries that uid, so the snapshot
+// list reports the archive as missing until the snapshot is re-taken with the
+// archive back in the store. The load check compares folder names and is
+// unaffected.
+const synthesiseArchiveInfo = (
+  archiveFolder: string,
+  numFiles: number,
+  totalFileSize: number
+): ArchiveInfo => {
+  const parsed = DateTime.fromFormat(archiveFolder.slice(0, 19), 'yyyy-LL-dd_HH-mm-ss')
+  return {
+    timestamp: parsed.isValid ? parsed.toMillis() : 0,
+    uid: archiveFolder,
+    archiveFolder,
+    prevArchiveFolder: null,
+    prevUid: null,
+    numFiles,
+    totalFileSize,
+  }
 }
 
 // ---------- Listing functions ----------
