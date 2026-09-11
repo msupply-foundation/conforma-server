@@ -560,6 +560,12 @@ class PostgresDB {
   }
 
   // File archiving
+  //
+  // Two rules hold between this table and the archive store. Files flagged
+  // to_be_deleted or is_protected are never archived (filtered here). And
+  // archived files are never deleted from the store (see deleteFiles.ts):
+  // deleting an archived file's record leaves the file unreferenced in an
+  // archive that is itself immutable.
 
   public getFilesToArchive = async (days: number) => {
     const duration = `${days} days`
