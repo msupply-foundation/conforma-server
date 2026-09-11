@@ -19,9 +19,10 @@ password is still something to attack.
 
 For CookieToken the credential is the resolved token. For CookieLogin it is the
 resolved login call -- url, method and body -- since that is what the session
-was acquired with. `reloginOn` and `loginFailTimeout` take no part: they say
-how to read a response and how long to back off, not which credential we hold,
-so editing them must not throw away a live session.
+was acquired with. `reloginOn`, `loginTimeout` and `loginFailTimeout` take no
+part: they say how to read a response, how long to wait for one and how long to
+back off, not which credential we hold, so editing them must not throw away a
+live session.
 */
 const sessionFingerprint = (authentication: CookieAuthentication) => {
   switch (authentication.type) {
@@ -88,7 +89,10 @@ const constructAuthHeader = async (
 
       // Encoded because a cookie value is read back decoded -- Conforma's own
       // reader does, and RFC 6265 has no other escaping for ";" or ","
-      const cookies = [`${cookieName}=${encodeURIComponent(token)}`, ...storedCookies(session)]
+      const cookies = [
+        `${cookieName}=${encodeURIComponent(token)}`,
+        ...storedCookies(session.cookies),
+      ]
 
       setHeader(axiosRequest, 'Cookie', cookies.join('; '))
       break
@@ -110,7 +114,7 @@ const constructAuthHeader = async (
         await ensureLoggedIn(session, apiName, authentication, baseUrl)
       }
 
-      setHeader(axiosRequest, 'Cookie', storedCookies(session).join('; '))
+      setHeader(axiosRequest, 'Cookie', storedCookies(session.cookies).join('; '))
       break
     }
 
@@ -137,7 +141,7 @@ const recordAuthResponse = (
   if (!session) return
 
   recordCookies(
-    session,
+    session.cookies,
     responseHeaders?.['set-cookie'],
     authentication.type === 'CookieToken' ? authentication.cookieName : undefined
   )

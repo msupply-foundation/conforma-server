@@ -23,6 +23,7 @@ const {
   ExternalLoginError,
   reloginStatuses,
   resolveLogin,
+  warnAboutReloginOn,
 }: typeof LoginModule = require('../login')
 
 const API = 'mSupply'
@@ -72,6 +73,26 @@ describe('login', () => {
 
       expect(() => resolveLogin(auth)).toThrow('Environment variable not set: MSUPPLY_PW')
     })
+
+    // A JSON author will leave a numeric field unquoted, and substitution has
+    // nothing to do to a value that cannot hold an "env." reference
+    it('sends a body value that is not a string as written', () => {
+      const login = { url: 'login', body: { username: 'demo', loginType: 1, remember: false } }
+
+      expect(resolveLogin({ ...auth, login } as CookieLoginAuthentication).body).toEqual({
+        username: 'demo',
+        loginType: 1,
+        remember: false,
+      })
+    })
+
+    // Reading `.match` of a missing url would reach the client as an opaque
+    // 500 on every request, since the fingerprint resolves the login too
+    it('names the missing url rather than failing on it', () => {
+      expect(() => resolveLogin({ ...auth, login: {} } as CookieLoginAuthentication)).toThrow(
+        'requires a string "login.url"'
+      )
+    })
   })
 
   describe('reloginStatuses', () => {
@@ -88,6 +109,88 @@ describe('login', () => {
       expect(reloginStatuses({ ...auth, reloginOn } as CookieLoginAuthentication)).toEqual(
         new Set(expected)
       )
+    })
+
+    // Hand-written JSON, so anything can turn up. Coercing it would give a
+    // set that matches no response, and a session that is never repaired.
+    it.each([
+      ['a word', 'unauthorized', []],
+      ['a comma-separated string', '401, 403', []],
+      ['an empty string', '', []],
+      ['an object', {}, []],
+      ['a number outside the status range', 0, []],
+      ['the unusable entry of a mixed list, keeping the rest', ['401', 'nope', 403], [401, 403]],
+    ])('drops %s', (_, reloginOn, expected) => {
+      expect(reloginStatuses({ ...auth, reloginOn } as CookieLoginAuthentication)).toEqual(
+        new Set(expected)
+      )
+    })
+
+    // Only `undefined` reaches a destructuring default, so an explicit null
+    // used to coerce to the status 0 and silently disable re-login
+    it('reads an explicit null as "not configured"', () => {
+      expect(
+        reloginStatuses({ ...auth, reloginOn: null } as unknown as CookieLoginAuthentication)
+      ).toEqual(new Set([401]))
+    })
+
+    // "Never re-login" is a coherent thing to ask for
+    it('leaves an empty list empty', () => {
+      expect(reloginStatuses({ ...auth, reloginOn: [] })).toEqual(new Set())
+    })
+  })
+
+  describe('warnAboutReloginOn', () => {
+    let logged: string[]
+
+    const configFor = (reloginOn: unknown) =>
+      ({
+        mSupply: { baseUrl: BASE_URL, routes: {}, authentication: { ...auth, reloginOn } },
+      }) as unknown as Parameters<typeof warnAboutReloginOn>[0]
+
+    beforeEach(() => {
+      logged = []
+      jest.spyOn(console, 'log').mockImplementation((...args) => logged.push(args.join(' ')))
+    })
+
+    const output = () => logged.join('\n')
+
+    it('names the API and the unusable value', () => {
+      warnAboutReloginOn(configFor('unauthorized'))
+
+      expect(output()).toContain('external API "mSupply"')
+      expect(output()).toContain('"unauthorized"')
+    })
+
+    it('says a lapsed session will never be repaired when nothing usable is left', () => {
+      warnAboutReloginOn(configFor(['nope', '']))
+
+      expect(output()).toContain('never be repaired')
+    })
+
+    it('does not claim that when a usable status remains', () => {
+      warnAboutReloginOn(configFor(['401', 'nope']))
+
+      expect(output()).toContain('"nope"')
+      expect(output()).not.toContain('never be repaired')
+    })
+
+    it.each([
+      ['the default', undefined],
+      ['a valid list', ['401', 403]],
+      ['an empty list', []],
+    ])('says nothing for %s', (_, reloginOn) => {
+      warnAboutReloginOn(configFor(reloginOn))
+
+      expect(output()).toBe('')
+    })
+
+    it('ignores auth types that have no reloginOn', () => {
+      warnAboutReloginOn({
+        peer: { baseUrl: BASE_URL, routes: {}, authentication: { type: 'Bearer', token: 'abc' } },
+      })
+
+      expect(output()).toBe('')
     })
   })
 
@@ -134,11 +237,15 @@ describe('login', () => {
         BASE_URL
       )
 
-      expect(mockedAxios).toHaveBeenCalledWith({
-        method: 'get',
-        url: `${BASE_URL}login`,
-        data: { username: 'demo', password: 's3cret-pw', loginType: 'user' },
-      })
+      // The transport options the call also carries -- timeout, redirects --
+      // are the subject of their own tests
+      expect(mockedAxios).toHaveBeenCalledWith(
+        expect.objectContaining({
+          method: 'get',
+          url: `${BASE_URL}login`,
+          data: { username: 'demo', password: 's3cret-pw', loginType: 'user' },
+        })
+      )
       expect(session.cookies.get('sessionid')).toBe('abc')
       expect(session.generation).toBe(1)
     })

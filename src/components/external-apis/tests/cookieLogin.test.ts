@@ -17,13 +17,8 @@ compile. `doMock` is not hoisted, so anything that imports axios has to be
 required after it.
 */
 jest.doMock('axios', () => {
-  const actual = jest.requireActual('axios') as { getUri: unknown }
-  return {
-    __esModule: true,
-    ...actual,
-    // The request log builds the outgoing url the way axios itself does
-    default: Object.assign(jest.fn(), { getUri: actual.getUri }),
-  }
+  const actual = jest.requireActual('axios')
+  return { __esModule: true, ...actual, default: jest.fn() }
 })
 jest.doMock('../../database/databaseConnect', () => ({
   __esModule: true,
@@ -82,7 +77,10 @@ let accepted: Set<string>
 let toMint: string[]
 let minted: number
 let rejectWith: number
-let onLogin: 'succeed' | 'reject' | 'unreachable' | 'no-cookie'
+let onLogin: 'succeed' | 'reject' | 'unreachable' | 'timeout' | 'no-cookie'
+// The status a login answers with, orthogonal to whether it sets a cookie:
+// a redirect is a login outcome in its own right, since we do not follow one
+let loginStatus: number
 let extraSetCookieOnReject: string[]
 let extraSetCookieOnLogin: string[]
 
@@ -96,9 +94,9 @@ const setCookie = (name: string, value: string) => `${name}=${value}; Path=/; Ht
 const ok = (
   request: AxiosRequestConfig,
   data: unknown,
-  headers: { [key: string]: unknown } = {}
-): AxiosResponse =>
-  ({ status: 200, statusText: 'OK', data, headers, config: request }) as AxiosResponse
+  headers: { [key: string]: unknown } = {},
+  status = 200
+): AxiosResponse => ({ status, statusText: 'OK', data, headers, config: request }) as AxiosResponse
 
 // What axios throws for a non-2xx: the response body is a stand-in for whatever
 // the far server said, which must never reach our client or our logs
@@ -120,6 +118,10 @@ const rejected = (request: AxiosRequestConfig, status: number, headers = {}) =>
 const unreachable = (request: AxiosRequestConfig) =>
   new AxiosError('connect ECONNREFUSED', 'ECONNREFUSED', request as InternalAxiosRequestConfig)
 
+// What axios throws once its `timeout` elapses: accepted, never answered
+const timedOut = (request: AxiosRequestConfig) =>
+  new AxiosError('timeout exceeded', 'ECONNABORTED', request as InternalAxiosRequestConfig)
+
 const cookieSent = (request: AxiosRequestConfig) => (request.headers?.Cookie as string) ?? ''
 const cookiesSent = (request: AxiosRequestConfig) => cookieSent(request).split('; ').filter(Boolean)
 const isLogin = (request: AxiosRequestConfig) => request.url === LOGIN_URL
@@ -129,7 +131,15 @@ const farServer = async (request: AxiosRequestConfig): Promise<AxiosResponse> =>
   if (isLogin(request)) {
     if (onLogin === 'reject') throw rejected(request, 401)
     if (onLogin === 'unreachable') throw unreachable(request)
-    if (onLogin === 'no-cookie') return ok(request, { token: LOGIN_RESPONSE_BODY })
+    if (onLogin === 'timeout') throw timedOut(request)
+    // "No cookie" is about what gets STORED: a login may still expire one
+    if (onLogin === 'no-cookie')
+      return ok(
+        request,
+        { token: LOGIN_RESPONSE_BODY },
+        { 'set-cookie': extraSetCookieOnLogin },
+        loginStatus
+      )
 
     const id = nextSessionId()
     accepted.add(id)
@@ -138,7 +148,8 @@ const farServer = async (request: AxiosRequestConfig): Promise<AxiosResponse> =>
       { token: LOGIN_RESPONSE_BODY },
       {
         'set-cookie': [setCookie(SESSION_COOKIE, id), ...extraSetCookieOnLogin],
-      }
+      },
+      loginStatus
     )
   }
 
@@ -199,7 +210,7 @@ const fakeReply = () => {
   })
 }
 
-const relay = async (request: { query?: object; body?: object } = {}) => {
+const relay = async (request: { query?: object; body?: object; params?: object } = {}) => {
   const reply = fakeReply()
   await routeAccessExternalApi(
     {
@@ -216,6 +227,8 @@ const relay = async (request: { query?: object; body?: object } = {}) => {
 
 const relayMany = (count: number) => Promise.all(Array.from({ length: count }, relay))
 
+const relayTo = (name: string, route: string) => relay({ params: { name, route } })
+
 describe('CookieLogin', () => {
   const originalEnv = process.env
   let logged: string[]
@@ -230,6 +243,7 @@ describe('CookieLogin', () => {
     minted = 0
     rejectWith = 401
     onLogin = 'succeed'
+    loginStatus = 200
     extraSetCookieOnReject = []
     extraSetCookieOnLogin = []
 
@@ -368,6 +382,61 @@ describe('CookieLogin', () => {
       expect(logins()).toHaveLength(2)
     })
 
+    /*
+    A late rejection describes the session the login already replaced. Against
+    a server that ends a session by expiring its cookie, harvesting that
+    response would delete the cookie the login had just stored -- emptying the
+    jar, so the replay logs in a second time, one per late rejection.
+    */
+    it('ignores the cookies of a rejection that lands after a login has completed', async () => {
+      extraSetCookieOnReject = [`${SESSION_COOKIE}=; Max-Age=0; Path=/`]
+      await relay()
+      accepted.clear()
+      deferResponses()
+
+      const first = relay()
+      const second = relay()
+      await flush()
+
+      await settle(isItem) // first rejection → starts the login
+      await settle(isLogin)
+      await settle(isItem) // the late rejection, against the replaced session
+      await settleAll()
+
+      expectSuccess(await first)
+      expectSuccess(await second)
+      expect(logins()).toHaveLength(2)
+      expect(relays().slice(-2).map(cookieSent)).toEqual([
+        `${SESSION_COOKIE}=session-secret-2`,
+        `${SESSION_COOKIE}=session-secret-2`,
+      ])
+    })
+
+    // With a second cookie in the jar the clobber leaves it non-empty, so no
+    // login is triggered at all and the replay goes out with no session cookie
+    it('replays with the session cookie when the login also set another one', async () => {
+      extraSetCookieOnReject = [`${SESSION_COOKIE}=; Max-Age=0; Path=/`]
+      extraSetCookieOnLogin = ['csrf=csrf-value; Path=/']
+      await relay()
+      accepted.clear()
+      deferResponses()
+
+      const first = relay()
+      const second = relay()
+      await flush()
+
+      await settle(isItem)
+      await settle(isLogin)
+      await settle(isItem)
+      await settleAll()
+
+      expectSuccess(await first)
+      expectSuccess(await second)
+      expect(cookiesSent(relays()[relays().length - 1])).toContain(
+        `${SESSION_COOKIE}=session-secret-2`
+      )
+    })
+
     // recordCookies leaves the generation alone, or this would read as a repair
     it('logs in when the server expires the cookie on the rejection itself', async () => {
       await relay()
@@ -468,6 +537,62 @@ describe('CookieLogin', () => {
       expect(logged.join('\n')).toContain('rejected with 401')
     })
 
+    /*
+    Every request to the API waits behind an in-flight login, so a login that
+    is accepted and never answered would hold all of them indefinitely. The
+    timeout turns that into an ordinary failure: backoff, and a 502 rather
+    than a request that never returns.
+    */
+    it('bounds the login with a timeout, so one that never answers becomes a failure', async () => {
+      onLogin = 'timeout'
+
+      expect((await relay()).statusCode).toBe(502)
+      expect(logged.join('\n')).toContain('unreachable (ECONNABORTED)')
+
+      // The backoff is running, so the next request does not wait on another
+      expect((await relay()).statusCode).toBe(502)
+      expect(logins()).toHaveLength(1)
+    })
+
+    it('sends the login with a timeout, and does not follow redirects', async () => {
+      await relay()
+
+      const [login] = logins()
+      expect(login.timeout).toBe(10_000)
+      expect(login.maxRedirects).toBe(0)
+      // A 3xx is a response to read the Set-Cookie from, not an error
+      expect(login.validateStatus?.(302)).toBe(true)
+      expect(login.validateStatus?.(400)).toBe(false)
+    })
+
+    it('honours a configured loginTimeout, read as seconds', async () => {
+      configure({ loginTimeout: 3 })
+
+      await relay()
+
+      expect(logins()[0].timeout).toBe(3_000)
+    })
+
+    // A login's Set-Cookie commonly rides on the redirect to a landing page,
+    // which is why the redirect is not followed
+    it('takes the session from a login that answers with a redirect', async () => {
+      loginStatus = 302
+
+      expectSuccess(await relay())
+      expect(logins()).toHaveLength(1)
+      expect(cookieSent(relays()[0])).toBe(`${SESSION_COOKIE}=session-secret-1`)
+    })
+
+    it('names the unfollowed redirect when a 3xx login sets no cookie', async () => {
+      onLogin = 'no-cookie'
+      loginStatus = 301
+
+      expect((await relay()).statusCode).toBe(502)
+      expect(logged.join('\n')).toContain(
+        'the 301 response set no cookie, and redirects are not followed'
+      )
+    })
+
     it('treats a 2xx login that sets no cookie as a failure', async () => {
       onLogin = 'no-cookie'
 
@@ -492,6 +617,29 @@ describe('CookieLogin', () => {
       // The next request still presents what we held before the failed login
       await relay()
       expect(cookieSent(relays()[2])).toBe(`${SESSION_COOKIE}=session-secret-1`)
+    })
+
+    /*
+    Harvesting is destructive and the failure verdict comes after it: a login
+    that answers 2xx while EXPIRING a cookie -- how a server commonly clears a
+    partial session on a bad password -- stores nothing, and so is a failure.
+    Harvested into the live jar that would delete the working session, with
+    the backoff then blocking the login that would replace it, so every
+    request in the window gets a 502 without being relayed at all.
+    */
+    it('keeps the live session when a failed login expires its cookie', async () => {
+      await relay()
+      accepted.clear()
+      onLogin = 'no-cookie'
+      extraSetCookieOnLogin = [`${SESSION_COOKIE}=; Max-Age=0; Path=/`]
+
+      expect((await relay()).statusCode).toBe(502)
+
+      // What we held is untouched, so once it is accepted again the relay
+      // works -- inside the backoff window, and with no further login
+      accepted.add('session-secret-1')
+      expectSuccess(await relay())
+      expect(logins()).toHaveLength(2)
     })
 
     // The rejection that provoked the login may have been about one route, not
@@ -619,10 +767,10 @@ describe('CookieLogin', () => {
       expect(cookieSent(relays()[1])).toBe(`${SESSION_COOKIE}=session-secret-2`)
     })
 
-    it('keeps a live session when only reloginOn or loginFailTimeout change', async () => {
+    it('keeps a live session when only the behaviour-tuning fields change', async () => {
       await relay()
 
-      configure({ reloginOn: ['401', '403'], loginFailTimeout: 5 })
+      configure({ reloginOn: ['401', '403'], loginTimeout: 20, loginFailTimeout: 5 })
       expectSuccess(await relay())
 
       expect(logins()).toHaveLength(1)
@@ -663,6 +811,23 @@ describe('CookieLogin', () => {
       )
     })
 
+    // The copy a login harvests into carries its expiries as well as what it
+    // set, so installing it is not a merge of the stored ones alone
+    it('applies an expiry from a login that succeeded, along with what it set', async () => {
+      extraSetCookieOnLogin = ['csrf=csrf-value; Path=/']
+      await relay()
+      expect(cookiesSent(relays()[0])).toEqual([
+        `${SESSION_COOKIE}=session-secret-1`,
+        'csrf=csrf-value',
+      ])
+
+      accepted.clear()
+      extraSetCookieOnLogin = ['csrf=; Max-Age=0; Path=/']
+      expectSuccess(await relay())
+
+      expect(cookiesSent(relays()[2])).toEqual([`${SESSION_COOKIE}=session-secret-2`])
+    })
+
     it('drops a cookie the server expires with Max-Age=0', async () => {
       extraSetCookieOnLogin = [setCookie('extra', 'e1')]
       mockedAxios.mockImplementation(async (request: AxiosRequestConfig) => {
@@ -685,6 +850,32 @@ describe('CookieLogin', () => {
       expect(session.fingerprint).toMatch(/^[0-9a-f]{64}$/)
       expect(JSON.stringify(session)).not.toContain(PASSWORD)
       expect(Array.from(session.cookies.values())).toEqual(['session-secret-1'])
+    })
+
+    // The fingerprint resolves the login too, so anything resolving throws
+    // for every request to the API, before one is attempted
+    it('relays normally with an unquoted number in the login body', async () => {
+      configure({
+        login: {
+          url: 'login',
+          body: { username: 'demo', password: 'env.MSUPPLY_PW', loginType: 1 },
+        },
+      })
+
+      expectSuccess(await relay())
+      expect(logins()[0].data).toEqual({ username: 'demo', password: PASSWORD, loginType: 1 })
+    })
+
+    it('names a missing login url instead of failing obscurely on it', async () => {
+      configure({ login: {} as CookieLoginAuthentication['login'] })
+
+      const reply = await relay()
+
+      expect(reply.statusCode).toBe(500)
+      expect(reply.payload).toBe(
+        'Server error: CookieLogin authentication requires a string "login.url"'
+      )
+      expect(mockedAxios).not.toHaveBeenCalled()
     })
 
     it('fails loudly on an unset env variable in the login body, without calling out', async () => {
@@ -710,23 +901,35 @@ describe('CookieLogin', () => {
       expect(calls().map((request) => request.url)).toEqual([LOGIN_URL, ITEM_URL])
     })
 
-    // A debugging aid: what the far server is about to receive. Cookie names
-    // only -- the afterEach above checks no cookie value reached the log.
-    it('logs each outgoing request: method, url with params, cookie names and body', async () => {
+    // A debugging aid: what the far server is about to receive. Names only --
+    // the afterEach above checks no cookie value reached the log.
+    it('logs each outgoing request: method, url, and the names it is sending', async () => {
       config.externalApiConfigs![API].routes.item = { method: 'post', url: 'item' }
 
       await relay({ query: { code: '123' }, body: { qty: 2 } })
 
       expect(logged).toContainEqual(
         [
-          `Making POST request to: ${ITEM_URL}?code=123`,
+          `Making POST request to: ${ITEM_URL}`,
+          '  params: code',
           `  cookies: ${SESSION_COOKIE}`,
-          '  body: {"qty":2}',
+          '  body fields: qty',
         ].join('\n')
       )
     })
 
-    it('logs neither a cookies line nor a body line when there is nothing to show', async () => {
+    // A query parameter or body field holds the client's own data, and a
+    // route's configured ones may hold a literal api key
+    it('logs no parameter or body value', async () => {
+      config.externalApiConfigs![API].routes.item = { method: 'post', url: 'item' }
+
+      await relay({ query: { code: 'patient-identifier' }, body: { apiKey: 'literal-api-key' } })
+
+      expect(logged.join('\n')).not.toContain('patient-identifier')
+      expect(logged.join('\n')).not.toContain('literal-api-key')
+    })
+
+    it('logs no params, cookies or body line when there is nothing to show', async () => {
       config.externalApiConfigs![API].authentication = { type: 'Bearer', token: 'abc' }
       accepted.add('irrelevant')
       mockedAxios.mockImplementation(async (request: AxiosRequestConfig) =>
@@ -736,6 +939,43 @@ describe('CookieLogin', () => {
       await relay()
 
       expect(logged).toContainEqual(`Making GET request to: ${ITEM_URL}`)
+    })
+
+    /*
+    These are answered before the config is read: destructuring an absent API
+    threw ahead of the try block, so the caller got Fastify's own 500 carrying
+    an internal message about destructuring, and none of the error mapping
+    above applied.
+    */
+    describe('an unrecognised name or route', () => {
+      it('answers 404 for an API that is not configured', async () => {
+        const reply = await relayTo('notAnApi', 'item')
+
+        expect(reply.statusCode).toBe(404)
+        expect(reply.payload).toBe('Unknown external API route: notAnApi/item')
+        expect(mockedAxios).not.toHaveBeenCalled()
+      })
+
+      it('answers 404 for a route the API does not have', async () => {
+        const reply = await relayTo(API, 'notARoute')
+
+        expect(reply.statusCode).toBe(404)
+        expect(reply.payload).toBe(`Unknown external API route: ${API}/notARoute`)
+        expect(mockedAxios).not.toHaveBeenCalled()
+      })
+
+      // Which of the two was wrong is the log's business, not the caller's
+      it('says which in the log', async () => {
+        await relayTo('notAnApi', 'item')
+        await relayTo(API, 'notARoute')
+
+        expect(logged.join('\n')).toContain(
+          'No external API is configured under the name: notAnApi'
+        )
+        expect(logged.join('\n')).toContain(
+          `External API ${API} has no route configured as: notARoute`
+        )
+      })
     })
 
     it('passes a rejection straight through for an auth type with no login', async () => {

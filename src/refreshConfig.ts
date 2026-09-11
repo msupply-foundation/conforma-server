@@ -6,6 +6,7 @@ import { getAppEntryPointDir } from './components/utilityFunctions'
 import { merge } from 'lodash'
 import databaseConnect from './components/database/databaseConnect'
 import { warnAboutPlaintextSecrets } from './components/external-apis/warnPlaintextSecrets'
+import { warnAboutReloginOn } from './components/external-apis/login'
 
 function loadPrefs(preferencesFolder: string, preferencesFileName: string) {
   const mainPrefs = readJsonSync(
@@ -68,6 +69,7 @@ export const refreshConfig = async (config: Config) => {
   })
 
   warnAboutPlaintextSecrets(config.externalApiConfigs)
+  warnAboutReloginOn(config.externalApiConfigs)
 
   if (webAppPrefs.siteHost) config.productionHost = webAppPrefs.siteHost
   else config.productionHost = undefined

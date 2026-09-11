@@ -128,6 +128,17 @@ describe('warnAboutPlaintextSecrets', () => {
       )
     })
 
+    // The key is the config author's, so it may hold anything. Reading the
+    // value back from a path built out of it would find nothing here.
+    it.each(['api.password', 'auth[0]', 'x.y.token'])(
+      'warns about a literal under the key "%s"',
+      (key) => {
+        warnAboutPlaintextSecrets(cookieLoginWith({ [key]: 'hunter2' }))
+
+        expect(output()).toContain(`MedServer ("login.body.${key}")`)
+      }
+    )
+
     it('says nothing for a login with no body', () => {
       warnAboutPlaintextSecrets(apiWith({ type: 'CookieLogin', login: { url: 'login' } }))
 

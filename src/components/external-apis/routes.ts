@@ -21,16 +21,35 @@ export type AccessExternalApiQuery = {
 
 /*
 What the external server is about to receive, for debugging a route that does
-not behave: method, the full url with its params serialised exactly as axios
-will send them, which cookies are going, and the body if there is one.
+not behave: method, the url, and which query parameters, cookies and body
+fields are going with it.
 
-Cookie NAMES only, never values -- a session cookie is a credential. Nor the
-Authorization header or basic-auth fields, which are not shown at all.
+NAMES only, never values, for all three. A session cookie is a credential. A
+query parameter or a body field carries the client's own data -- in this domain
+a patient identifier or an application's contents -- and may equally carry a
+secret, since a route's configured `queryParams` and `bodyJson` take literals
+and are not env-substituted. Which fields a route is sending is what diagnoses
+a route that misbehaves; what is in them is not the log's business. The
+Authorization header and basic-auth fields are not shown at all.
 */
+
+// The names in an outgoing field map, or undefined when there is nothing to
+// show. A body that is not a field map -- a route may set a raw one through
+// `additionalAxiosProperties` -- has no names, and its content is no more
+// ours to print than any other, so its presence is noted and no more.
+const describeFields = (value: unknown) => {
+  if (value === undefined || value === null) return undefined
+  if (typeof value !== 'object') return '(not shown)'
+
+  const names = Object.keys(value)
+  return names.length > 0 ? names.join(', ') : undefined
+}
+
 const describeRequest = (axiosRequest: AxiosRequestConfig) => {
-  const lines = [
-    `Making ${axiosRequest.method?.toUpperCase()} request to: ${axios.getUri(axiosRequest)}`,
-  ]
+  const lines = [`Making ${axiosRequest.method?.toUpperCase()} request to: ${axiosRequest.url}`]
+
+  const params = describeFields(axiosRequest.params)
+  if (params) lines.push(`  params: ${params}`)
 
   const cookieHeader = axiosRequest.headers?.Cookie
   if (typeof cookieHeader === 'string' && cookieHeader) {
@@ -38,10 +57,8 @@ const describeRequest = (axiosRequest: AxiosRequestConfig) => {
     lines.push(`  cookies: ${names.join(', ')}`)
   }
 
-  if (axiosRequest.data !== undefined) {
-    const { data } = axiosRequest
-    lines.push(`  body: ${typeof data === 'string' ? data : JSON.stringify(data)}`)
-  }
+  const body = describeFields(axiosRequest.data)
+  if (body) lines.push(`  body fields: ${body}`)
 
   return lines.join('\n')
 }
@@ -52,14 +69,15 @@ Issues the request, and repairs a lapsed session once.
   1. build the auth header -- for CookieLogin, logging in first if the jar is
      empty (constructAuthHeader)
   2. note the session's generation, and send
-  3. record any Set-Cookie, on success and error alike
+  3. generation unmoved                   → record any Set-Cookie, on success
+                                            and error alike
   4. status not in reloginOn              → done, however it went
   5. already replayed                     → return the rejection
   6. generation moved since we sent       → a login completed meanwhile;
                                             re-issue with what it stored
   7. otherwise                            → log in, then re-issue
 
-Each of the last three earns its place. Recording on error responses is how a
+Each of the last four earns its place. Recording on error responses is how a
 cookie the server expires on the rejection itself gets dropped. Replaying at
 most once is what stops an API that answers 401 for a reason login cannot fix
 (valid credentials, insufficient access) from looping: 401 → login → 401 →
@@ -70,6 +88,12 @@ flight, so their rejections land AFTER that login completed, and each would
 otherwise find no login running and start its own. Comparing generations rather
 than cookie values matters because a login may hand back the very same session
 id, in which case every late rejection would compare equal and log in anyway.
+
+The same comparison gates the recording, which is why it comes first. A late
+response describes the session that has already been replaced, so harvesting
+its cookies would write the dead session's state over the live one -- against a
+server that expires the cookie to end a session, deleting the cookie the new
+login stored, and undoing the de-duplication the generation exists to provide.
 
 Only CookieLogin has a reloginOn, so for every other auth type this is a single
 send with the response cookies recorded.
@@ -88,17 +112,25 @@ const sendAuthenticated = async (
     const session = cookieLogin && sessionFor(cookieLogin, apiName)
     const generationAtSend = session?.generation
 
+    // Whether the response is talking about the session we still hold. A login
+    // that completed while this request was in flight has replaced it, and the
+    // response's cookies belong to the session it replaced: a server that ends
+    // a session by expiring its cookie would have us delete the very cookie
+    // that login just stored.
+    const describesCurrentSession = () => !session || generationAtSend === session.generation
+
     console.log(describeRequest(axiosRequest))
     try {
       const response = await axios(axiosRequest)
-      recordAuthResponse(authentication, response.headers, apiName)
+      if (describesCurrentSession()) recordAuthResponse(authentication, response.headers, apiName)
       return response
     } catch (err) {
       if (!(err instanceof AxiosError)) throw err
 
       // A peer that has ended our session may say so by expiring the cookie, so
       // the error response is worth reading before the status is acted on
-      recordAuthResponse(authentication, err.response?.headers, apiName)
+      if (describesCurrentSession())
+        recordAuthResponse(authentication, err.response?.headers, apiName)
 
       const status = err.response?.status
       if (!cookieLogin || !session || status === undefined || !reloginOn.has(status)) throw err
@@ -128,14 +160,40 @@ export const routeAccessExternalApi = async (
 
   const apiConfigs: ExternalApiConfigs = config?.externalApiConfigs ?? {}
 
-  const { baseUrl, routes, authentication } = apiConfigs?.[name]
-  if (!baseUrl) {
-    throw new Error('No baseUrl defined for API: ' + name)
+  /*
+  An unrecognised name or route is the client asking for something that does
+  not exist, so 404 -- and it must be answered before the config is read, or
+  destructuring an absent API throws where nothing catches it: these run ahead
+  of the try block below, so what reaches the client is Fastify's own 500
+  carrying an internal message about destructuring.
+
+  The message names only what the caller already sent, with which of the two
+  was wrong left to the log. Both are 404 for the same reason, so answering
+  them alike tells a caller nothing about what else is configured.
+  */
+  const notFound = () => {
+    reply.status(404)
+    return reply.send(`Unknown external API route: ${name}/${route}`)
   }
+
+  const apiConfig = apiConfigs[name]
+  if (!apiConfig) {
+    console.log(`No external API is configured under the name: ${name}`)
+    return notFound()
+  }
+
+  const { baseUrl, routes, authentication } = apiConfig
 
   const routeConfig = routes?.[route]
   if (!routeConfig) {
-    throw new Error('No config definition for Route: ' + route)
+    console.log(`External API ${name} has no route configured as: ${route}`)
+    return notFound()
+  }
+
+  // A configured API with no baseUrl is a mistake on this side, not the
+  // caller's, and there is nothing they could ask differently
+  if (!baseUrl) {
+    throw new Error('No baseUrl defined for API: ' + name)
   }
 
   const {

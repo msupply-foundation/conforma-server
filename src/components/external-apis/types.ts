@@ -46,19 +46,26 @@ session acquired with one user's details being served to another.
 A response whose status is in `reloginOn` is read as "the session has lapsed":
 the relay logs in once and re-issues the request once. A login that fails
 blocks further logins for `loginFailTimeout` seconds, so a bad credential or a
-dead endpoint is not hammered on every request. Neither field describes the
-credential, so editing either leaves a live session in place.
+dead endpoint is not hammered on every request. `loginTimeout` bounds the login
+call itself, which needs its own because awaiting it is how every other request
+to the API waits its turn (login.ts): one that never answers would hold up all
+of them, where one that fails only starts the backoff. None of the three
+describes the credential, so editing any of them leaves a live session in
+place.
 */
 interface CookieLoginAuthentication {
   type: 'CookieLogin'
   login: {
     url: string // resolved against baseUrl
     method?: 'post' | 'get' // default 'post'
-    body?: { [key: string]: string } // env.-substituted where prefixed
+    // Strings take env. substitution where prefixed; a value that is not a
+    // string -- a JSON author leaving a number unquoted -- is sent as written
+    body?: { [key: string]: string | number | boolean }
   }
   // Statuses meaning the session has lapsed. Strings by convention, but a
   // JSON author will naturally leave a status unquoted, so numbers are taken
   reloginOn?: string | number | (string | number)[] // default '401'
+  loginTimeout?: number // seconds; default 10
   loginFailTimeout?: number // seconds; default 30
 }
 
