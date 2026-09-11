@@ -1,4 +1,4 @@
-import { buildArchiveManifest } from './snapshotStore'
+import { buildArchiveManifest, findOrphanArchives, SnapshotListEntry } from './snapshotStore'
 import { ArchiveInfo } from '../files/archive'
 
 // buildArchiveManifest decides which archives a snapshot declares it depends
@@ -93,4 +93,44 @@ test('buildArchiveManifest: a folder referenced under two paths appears once', (
     null
   )
   expect(manifest?.history).toEqual([A])
+})
+
+// findOrphanArchives decides what a purge may delete. An archive is safe as
+// long as any snapshot manifest lists it or the live database points into it.
+
+const snapshot = (archiveFolders: string[]): SnapshotListEntry => ({
+  name: 'snap',
+  filename: 'snap_2026-01-01_00-00-00',
+  timestamp: '2026-01-01T00:00:00.000Z',
+  version: '2.0.0',
+  size: 0,
+  archiveSize: 0,
+  missingArchives: [],
+  isLegacy: false,
+  archiveFolders,
+})
+
+test('findOrphanArchives: archives listed by no snapshot are orphans', () => {
+  expect(findOrphanArchives(store, [snapshot([A.archiveFolder])])).toEqual([
+    B.archiveFolder,
+    C.archiveFolder,
+  ])
+})
+
+test('findOrphanArchives: archives the live database references are never orphans', () => {
+  expect(findOrphanArchives(store, [snapshot([A.archiveFolder])], [C.archiveFolder])).toEqual([
+    B.archiveFolder,
+  ])
+})
+
+test('findOrphanArchives: with no snapshots at all, the live database alone protects', () => {
+  expect(findOrphanArchives(store, [], [A.archiveFolder, B.archiveFolder])).toEqual([
+    C.archiveFolder,
+  ])
+})
+
+test('findOrphanArchives: nothing is an orphan when everything is referenced', () => {
+  expect(
+    findOrphanArchives(store, [snapshot([A.archiveFolder, B.archiveFolder, C.archiveFolder])])
+  ).toEqual([])
 })

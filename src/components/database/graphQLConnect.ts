@@ -219,6 +219,9 @@ class GraphQLdb {
     return data?.application.template.templatePermissions.nodes || null
   }
 
+  // Resolves each record to where its file should be on disk: archived
+  // records point into the archive store, the rest into the files folder.
+  // archivePath is passed through so callers can tell the two apart.
   public getFilePaths = async (batchSize: number, offset: number) => {
     const data = await this.gqlQuery(
       `
@@ -239,6 +242,7 @@ class GraphQLdb {
         filePath: archivePath
           ? path.join(SNAPSHOT_ARCHIVE_FOLDER, archivePath, filePath)
           : path.join(FILES_FOLDER, filePath),
+        archivePath: archivePath ?? null,
         id,
       })) || []
     )

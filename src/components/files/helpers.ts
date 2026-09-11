@@ -61,3 +61,30 @@ const getTimestamp = (
     return archive.timestamp
   } else return timestampOrArchiveId
 }
+
+// A file's archive_path has the form "<archiveFolder>/files" (see
+// archiveFiles); this returns the folder segment.
+export const archiveFolderOf = (archivePath: string): string => archivePath.split('/')[0]
+
+// Sorts records whose file is absent from disk by where the file was meant
+// to be. A record in the files folder with nothing behind it is stale and
+// can go. An archived record is kept whatever caused the gap: archives are
+// immutable, so a missing archived file means the archive is absent or
+// damaged, and the record is the only remaining link between an application
+// and its document. Kept, it shows in the UI as a missing file; deleted, the
+// loss would be permanent even once the archive is restored.
+export const partitionMissingFiles = <T extends { id: number; archivePath: string | null }>(
+  missing: T[]
+): { staleRecordIds: number[]; missingArchived: Map<string, number> } => {
+  const staleRecordIds: number[] = []
+  const missingArchived = new Map<string, number>()
+  for (const { id, archivePath } of missing) {
+    if (!archivePath) {
+      staleRecordIds.push(id)
+      continue
+    }
+    const folder = archiveFolderOf(archivePath)
+    missingArchived.set(folder, (missingArchived.get(folder) ?? 0) + 1)
+  }
+  return { staleRecordIds, missingArchived }
+}
