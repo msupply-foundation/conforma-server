@@ -7,6 +7,10 @@ The endpoint for this service is:
 
 "Name" refers the designated name for the API, as defined in `preferences.json`. "Route" is the specific route on the external server that will be queried.
 
+The route's `url` is appended to the API's `baseUrl` as a path segment, so `baseUrl: "https://host/api/v4"` with `url: "item"` requests `https://host/api/v4/item`. A trailing slash on `baseUrl` and a leading slash on `url` are both optional and make no difference -- all four combinations resolve to the same address. (This matters because plain URL resolution would otherwise drop the `v4` segment, or the whole base path, for the "wrong" combination.) The same rule applies to a `CookieLogin`'s `login.url`, below.
+
+**Check existing configuration when upgrading to this rule.** Appending as a path segment is stricter than the plain URL resolution used before it, so a route that relied on the looser behaviour changes address. Specifically, a `url` beginning with `/` used to discard the `baseUrl`'s path: `baseUrl: "https://host/api/v4/"` with `url: "/lookup"` requested `https://host/lookup`, and requests `https://host/api/v4/lookup` under this rule. If a route used a leading slash deliberately, to reach past the base path to the host root, give it its own entry in `externalApiConfigs` with a `baseUrl` of `https://host`. The symptom of missing one is a 404 from the far server, with nothing to point at the cause.
+
 ## Configuration
 
 Configuration for available APIs is defined in `preferences.json` under `server.externalApiConfigs`, with the following basic structure:
@@ -24,7 +28,7 @@ externalApiConfigs : {
 
 ### Values from the environment
 
-Prefix any of these strings with `env.` and the rest of the string is replaced by the environment variable of that name, e.g. `password: "env.MY_SECRET"` will use whatever value is currently stored in the `"MY_SECRET"` env variable. This works for `baseUrl` and for the authentication `username`, `password` and `token` fields alike. Naming a variable that isn't set is an error -- the request fails with `Environment variable not set: MY_SECRET` rather than quietly going out with the reference itself in place of the value.
+Prefix any of these strings with `env.` and the rest of the string is replaced by the environment variable of that name, e.g. `password: "env.MY_SECRET"` will use whatever value is currently stored in the `"MY_SECRET"` env variable. This works for `baseUrl`, for the authentication `username`, `password` and `token` fields, and for a `CookieLogin`'s `login.url` and every value in its `login.body` alike. Naming a variable that isn't set is an error -- the request fails with `Environment variable not set: MY_SECRET` rather than quietly going out with the reference itself in place of the value.
 
 For credentials the reason is that we don't want secrets sitting in plain text in the preferences file (see below). For `baseUrl` it's that the server an API points at is usually the one part of a configuration that differs between a test deployment and a live one -- deferring it to the environment lets the same `preferences.json` serve both.
 
@@ -35,11 +39,12 @@ The `AuthenticationObject` can be one of the following:
 { type: 'Basic'; username: string; password: string }
 { type: 'Bearer'; token: string }
 { type: 'CookieToken'; token: string; cookieName: string }   // credential goes in a cookie
+{ type: 'CookieLogin'; login: {...}; reloginOn?: ...; loginFailTimeout?: number }   // logs in to get a session cookie
 ```
 
-We probably don't want to save passwords or tokens in plain text in our preferences file, so the `env.` substitution described above applies to the `username`, `password` and `token` fields.
+We probably don't want to save passwords or tokens in plain text in our preferences file, so the `env.` substitution described above applies to the `username`, `password` and `token` fields, and to the values of a `CookieLogin`'s `login.body`.
 
-If a `password` or `token` is written out literally, the server logs a warning naming the API -- at startup, and again whenever preferences are saved. It's only a warning; hard-coding a credential is fine in development. The reason to prefer `env.` in a real deployment is that `preferences.json` is editable through the admin UI and is carried along by snapshots and template exports, so a literal secret travels further than you might expect.
+If a `password` or `token` is written out literally -- or, for `CookieLogin`, a `login.body` value under a key that looks like a credential (`password`, `apiKey`, `secret`, `token`, `auth`...) -- the server logs a warning naming the API -- at startup, and again whenever preferences are saved. It's only a warning; hard-coding a credential is fine in development. The reason to prefer `env.` in a real deployment is that `preferences.json` is editable through the admin UI and is carried along by snapshots and template exports, so a literal secret travels further than you might expect.
 
 #### Servers whose credential is a cookie (`CookieToken`), including another Conforma
 
@@ -94,6 +99,64 @@ DELETE FROM user_session WHERE token_hash = encode(sha256('<token>'), 'hex');
 ```
 
 The credential does not rotate, and it cannot be recovered -- if it is lost, issue a new one and update the calling server's configuration. When the session is revoked or expires, the peer returns 401 and expires the cookie it had set; the relay drops what it was holding and passes the 401 back to its own client.
+
+#### Servers that hand out a session through a login call (`CookieLogin`), including mSupply
+
+Some servers offer no credential that can be provisioned and pasted into configuration: the only way to hold a working session is to log in with a username and password, and to log in again when that session lapses. mSupply's v4 API is one. `CookieLogin` does that for you -- it performs the login call, keeps the session cookies it gets back, sends them on every request, and when the server rejects them, logs in again and retries the request that was rejected. All of that happens inside the one request; the client never sees a rejection that a login could fix.
+
+```json
+"externalApiConfigs": {
+  "mSupply": {
+    "baseUrl": "http://localhost:2048/api/v4/",
+    "authentication": {
+      "type": "CookieLogin",
+      "login": {
+        "url": "login",
+        "body": {
+          "username": "demo",
+          "password": "env.MSUPPLY_PW",
+          "loginType": "user"
+        }
+      }
+    },
+    "routes": {
+      "item": {
+        "method": "get",
+        "url": "item",
+        "allowedClientQueryParams": [ "code" ]
+      }
+    }
+  }
+}
+```
+
+The front end reaches this as `POST /api/external-api/mSupply/item?code=...`.
+
+The `login` object describes the login call:
+
+- `url`: resolved against `baseUrl` by the same rule as a route's `url`.
+- `method`: `"post"` (the default) or `"get"`.
+- `body`: sent as JSON. It is an arbitrary map of string keys to string values rather than a fixed username/password pair, because servers differ -- mSupply needs a third field, `loginType`. Values may use `env.` indirection, and the secret ones should; literals such as `"loginType": "user"` are perfectly reasonable where nothing is secret. A value that is not a string -- an unquoted `"loginType": 1`, say -- is sent as written, since `env.` indirection applies only to strings. The body is plain strings, **not** an evaluator expression, and that is deliberate: the session is held per API and shared by every caller, so a body carrying per-user data would mean a session acquired with one user's details being served to another.
+
+Three optional fields tune the behaviour, and none of them affects which credential is held -- editing them does not discard a live session:
+
+- `reloginOn`: which response status means "the session has lapsed". Defaults to `"401"`; a list such as `["401", "403"]` is accepted, and so are bare numbers. Anything that is not an HTTP status is ignored, with a warning naming the API at startup and whenever preferences are saved -- otherwise a typo such as `"unauthorized"` would match no response at all and quietly leave a lapsed session unrepaired forever. An empty list is taken at face value and disables re-login. A rejected request logs in and is retried **once**. If the retry is rejected too, that rejection is passed back to the client as it is, so a server that answers 401 for a reason a login cannot fix (valid credentials, but insufficient access) costs one login and one retry rather than a loop.
+- `loginTimeout`: how long, in seconds, to wait for the login call itself. Defaults to 10. Every other request to the API waits behind an in-flight login, so a login endpoint that accepts the connection and never answers would hold all of them up indefinitely; timing out turns that into an ordinary login failure, which starts the backoff below and answers 502. Raise it for a server that is genuinely slow to authenticate. (A *route's* timeout is set separately, through its `additionalAxiosProperties`.)
+- `loginFailTimeout`: how long, in seconds, to stop trying after a login fails. Defaults to 30. A login can fail because the credential is wrong, the endpoint is unreachable, or the server is rate-limiting -- in each case retrying on every request would make things worse. During the window no login is attempted, but requests are still relayed with whatever session cookies are held: if those are still accepted the request succeeds, and if they are rejected the client gets a 502. A request that arrives with no session held at all gets a 502 without being relayed.
+
+**Redirects are not followed.** A login that answers `302` (or any other 3xx) counts as a success if it set a cookie, and the relay stops there rather than following it. That is deliberate: a login's `Set-Cookie` often rides on the redirect to a landing page, and following it would leave only the landing page's headers, so a login that had in fact worked would look like one that set nothing. The cost is that a redirect used to reach the login endpoint -- `http://` to `https://`, say -- is *not* followed either; point `login.url` at the final address. That case is loud rather than silent: the log says `the 301 response set no cookie, and redirects are not followed`.
+
+**Why no `cookieName`?** `CookieToken` needs one because its credential is a bare value pasted into configuration -- there is no response header to learn a name from, so you must say which name the server expects. A login's cookies arrive as `Set-Cookie`, which carries each cookie's name alongside its value, so the relay learns them from the response. Whatever the server sets -- one cookie or several, under any name -- is carried back, and a cookie the server later expires (`Max-Age=0`) is dropped.
+
+Things worth knowing about how the session is held:
+
+- **It is per API, not per caller.** Every relay request to `mSupply` authenticates as the configured account, whoever triggered it, and they all share one session. A route's `permissions` list remains the only per-user gate.
+- **A burst of requests produces one login.** Twenty requests arriving against an expired session log in once, not twenty times; the rest wait for that login and then retry.
+- **It lives in memory.** A server restart costs one login. If Conforma runs as several instances, each holds its own session, which is correct but means one login per instance.
+- **Editing the credential in preferences takes effect at once**, with no restart: the session is keyed by a hash of the login configuration, so changing it orphans the old session (and any failed-login backoff with it) and the next request logs in afresh.
+- **Nothing sensitive is logged.** The log records that a login was attempted and how it ended (a status, or "unreachable"), never the request body, the response body or a cookie value.
+
+**Errors.** A failed login, or a request that would need a login inside the backoff window, returns **502** to the client with a message naming the API but not the cause. Not 401 -- that would tell the web app its *own* Conforma session is bad, which is untrue. The server log has the detail.
 
 ### Route Definitions
 
@@ -261,4 +324,5 @@ We then check the validation expression -- that the returned `data.person.birth_
 ## Misc
 
 - The endpoint returns a 403 "unauthorized" status if either the permissions or validation expression checks fail, with appropriate message.
-- Any errors returned by the external server are passed on directly to the client.
+- Any errors returned by the external server are passed on directly to the client. The exception is a `CookieLogin` login that fails, which is reported as a 502 with a generic message -- see above.
+- As a debugging aid, every request the relay sends is logged to the server console with its method, the full URL including query parameters, the names of any cookies being sent, and the body if there is one. Cookie values, `Authorization` headers and Basic credentials are never logged, and neither is the body of a `CookieLogin` login call.

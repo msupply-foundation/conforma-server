@@ -5,6 +5,9 @@ const apiWith = (authentication: any): ExternalApiConfigs => ({
   MedServer: { baseUrl: 'https://example.org', authentication, routes: {} },
 })
 
+const cookieLoginWith = (body: { [key: string]: string }) =>
+  apiWith({ type: 'CookieLogin', login: { url: 'login', body } })
+
 describe('warnAboutPlaintextSecrets', () => {
   let logged: string[]
 
@@ -77,5 +80,69 @@ describe('warnAboutPlaintextSecrets', () => {
     warnAboutPlaintextSecrets(apiWith(undefined))
 
     expect(output()).toBe('')
+  })
+
+  /*
+  CookieLogin's secret sits under a key of the config author's choosing, next to
+  fields that are not secret at all -- so only keys that look like a credential
+  are checked, and a correct mSupply config produces no warning
+  */
+  describe('CookieLogin', () => {
+    it('flags a literal password in the login body, by its path', () => {
+      warnAboutPlaintextSecrets(
+        cookieLoginWith({ username: 'demo', password: 'hunter2', loginType: 'user' })
+      )
+
+      expect(output()).toContain('MedServer ("login.body.password")')
+    })
+
+    it('stays silent for an env reference', () => {
+      warnAboutPlaintextSecrets(
+        cookieLoginWith({ username: 'demo', password: 'env.MSUPPLY_PW', loginType: 'user' })
+      )
+
+      expect(output()).toBe('')
+    })
+
+    // Warning on these would cry wolf on the real mSupply config
+    it('stays silent for username and loginType', () => {
+      warnAboutPlaintextSecrets(cookieLoginWith({ username: 'demo', loginType: 'user' }))
+
+      expect(output()).toBe('')
+    })
+
+    it.each(['apiKey', 'clientSecret', 'authToken', 'PASSWORD'])(
+      'recognises a credential-shaped key such as %s',
+      (key) => {
+        warnAboutPlaintextSecrets(cookieLoginWith({ [key]: 'literal' }))
+
+        expect(output()).toContain(`MedServer ("login.body.${key}")`)
+      }
+    )
+
+    it('names each literal secret when there are several', () => {
+      warnAboutPlaintextSecrets(cookieLoginWith({ password: 'a', apiKey: 'b' }))
+
+      expect(output()).toContain(
+        'MedServer ("login.body.password"), MedServer ("login.body.apiKey")'
+      )
+    })
+
+    // The key is the config author's, so it may hold anything. Reading the
+    // value back from a path built out of it would find nothing here.
+    it.each(['api.password', 'auth[0]', 'x.y.token'])(
+      'warns about a literal under the key "%s"',
+      (key) => {
+        warnAboutPlaintextSecrets(cookieLoginWith({ [key]: 'hunter2' }))
+
+        expect(output()).toContain(`MedServer ("login.body.${key}")`)
+      }
+    )
+
+    it('says nothing for a login with no body', () => {
+      warnAboutPlaintextSecrets(apiWith({ type: 'CookieLogin', login: { url: 'login' } }))
+
+      expect(output()).toBe('')
+    })
   })
 })

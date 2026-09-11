@@ -2,39 +2,71 @@
 Holds the cookies a server sets on us, per external API, so we send them back on
 the next request the way a browser would.
 
-That is what makes the "CookieToken" auth type work against a server that hands
-out a session on first use rather than expecting the same credential every time.
-For a peer Conforma (kdd/auth-token-lifecycle §7) the cookie in question is the
+That is what makes the cookie-based auth types work. For "CookieToken" against
+a peer Conforma (kdd/auth-token-lifecycle §7) the cookie in question is the
 access token it mints from our provisioned credential: carrying it means it
-mints once per token lifetime instead of once per request.
+mints once per token lifetime instead of once per request. For "CookieLogin"
+the cookies ARE the session: the jar is the whole cache, and login.ts fills it.
 
 Held per API, not per caller. The credential is the API's, so every relay
 request to it authenticates as the same identity whoever triggered it, and they
 can all share what the server sent back.
 
-Invalidation is by construction rather than by a hook. Each jar records the
-token it was filled under, so editing the credential in preferences orphans the
-old jar instead of sending another server's cookies with a new credential. That
-is what keeps prefs reload out of this.
+Invalidation is by construction rather than by a hook. Each session records a
+fingerprint of the credential it was filled under, so editing the credential in
+preferences orphans the old session instead of sending another server's cookies
+with a new credential. That is what keeps prefs reload out of this. The login
+backoff lives on the same record, so correcting a bad credential clears that
+for free.
+
+The fingerprint is a hash of the credential, never the credential itself
+(authHeaders.ts): nothing here is recoverable from a heap dump, and nothing a
+debug log might print is a secret.
 
 Nothing here needs to notice expiry, and deliberately so: a cookie we have held
 too long is simply not accepted, and a server that wants to replace it says so
 in its response. So there is no clock and no reason to inspect what we hold.
 */
 
-type Jar = { token: string; cookies: Map<string, string> }
+// What a server has set on us, by cookie name. Detachable from the session
+// on purpose: a login harvests into a copy and installs it only once it has
+// succeeded, so a response that turns out to be a failure cannot alter what
+// we hold (login.ts).
+export type CookieJar = Map<string, string>
 
-const jars = new Map<string, Jar>()
+export type ApiSession = {
+  // sha256 of the credential this was filled under
+  fingerprint: string
+  cookies: CookieJar
+  // Bumped by a successful login and by nothing else, so a value read before
+  // a request went out says whether a login has completed since. Not by
+  // recordCookies, even when the server rotates a cookie: a server that
+  // expires the cookie on the very response that rejects it would otherwise
+  // read as a completed repair, and the rejection would be passed on to our
+  // client instead of logging in.
+  generation: number
+  // Present while a login is in flight; awaiting it is the queue (login.ts)
+  loginPromise?: Promise<void>
+  // Epoch ms before which no login may start
+  failedUntil?: number
+}
 
-// The jar is only ours if it was filled under the credential still configured
-const getJar = (apiName: string, token: string) => {
-  const jar = jars.get(apiName)
-  return jar?.token === token ? jar : undefined
+const sessions = new Map<string, ApiSession>()
+
+// The session is only ours if it was filled under the credential still
+// configured. Any other is orphaned here and an empty one takes its place.
+export const getSession = (apiName: string, fingerprint: string): ApiSession => {
+  const session = sessions.get(apiName)
+  if (session?.fingerprint === fingerprint) return session
+
+  const fresh: ApiSession = { fingerprint, cookies: new Map(), generation: 0 }
+  sessions.set(apiName, fresh)
+  return fresh
 }
 
 // "name=value" pairs, ready to join into a Cookie header
-export const getStoredCookies = (apiName: string, token: string) =>
-  Array.from(getJar(apiName, token)?.cookies ?? [], ([name, value]) => `${name}=${value}`)
+export const storedCookies = (cookies: CookieJar) =>
+  Array.from(cookies, ([name, value]) => `${name}=${value}`)
 
 // Set-Cookie values look like "access=eyJ...; Max-Age=0; Path=/; HttpOnly", so
 // everything after the first attribute is the server's storage instructions to
@@ -47,17 +79,27 @@ const parseSetCookie = (header: string) => {
   return { name: pair.slice(0, separator).trim(), value: pair.slice(separator + 1).trim() }
 }
 
+/*
+Harvests a response's Set-Cookie headers into a jar. Returns how many cookies
+it stored, so a login can tell a response that gave it nothing to hold.
+
+It takes the jar rather than the session because harvesting and keeping are
+separate decisions: a login harvests into a copy, and only a login that has
+succeeded puts that copy back. Note that the count is of cookies STORED, while
+the jar is also modified by the ones expired, which is why a caller that may
+discard the result must be handed something it can discard.
+
+`credentialCookieName` is the cookie CookieToken presents from configuration;
+CookieLogin has no such cookie, so nothing is skipped on harvest.
+*/
 export const recordCookies = (
-  apiName: string,
-  token: string,
-  credentialCookieName: string,
-  setCookieHeaders: string[] | undefined
+  cookies: CookieJar,
+  setCookieHeaders: string[] | undefined,
+  credentialCookieName?: string
 ) => {
-  if (!setCookieHeaders?.length) return
+  let stored = 0
 
-  const jar = getJar(apiName, token) ?? { token, cookies: new Map<string, string>() }
-
-  for (const header of setCookieHeaders) {
+  for (const header of setCookieHeaders ?? []) {
     const cookie = parseSetCookie(header)
     if (!cookie) continue
 
@@ -68,12 +110,16 @@ export const recordCookies = (
     // An empty value is the server expiring the cookie, which is how it says
     // the thing behind it is gone. Keeping it would mean presenting something
     // we have been told is dead.
-    if (cookie.value) jar.cookies.set(cookie.name, cookie.value)
-    else jar.cookies.delete(cookie.name)
+    if (cookie.value) {
+      cookies.set(cookie.name, cookie.value)
+      stored += 1
+    } else cookies.delete(cookie.name)
   }
 
-  jars.set(apiName, jar)
+  return stored
 }
 
-// Only for tests -- the jars are process-lifetime state otherwise
-export const resetCookieJars = () => jars.clear()
+// Only for tests -- the sessions are process-lifetime state otherwise. Login
+// state (the in-flight promise, the backoff) lives on the same records, so
+// this clears that too.
+export const resetCookieJars = () => sessions.clear()
