@@ -593,6 +593,27 @@ class PostgresDB {
     }
   }
 
+  // One row per archive path the file table points into, with the number of
+  // files there and their combined size. Every archived file in one archive
+  // shares the same path ("<archiveFolder>/files"), so this is one row per
+  // archive folder.
+  public getReferencedArchives = async (): Promise<
+    { archive_path: string; num_files: number; total_file_size: number }[]
+  > => {
+    const text = `
+      SELECT archive_path,
+        COUNT(*)::int AS num_files,
+        COALESCE(SUM(file_size), 0)::bigint AS total_file_size
+      FROM file
+      WHERE archive_path IS NOT NULL
+      GROUP BY archive_path
+      ORDER BY archive_path
+    `
+    const result = await this.query({ text })
+    // bigint columns arrive as strings
+    return result.rows.map((row) => ({ ...row, total_file_size: Number(row.total_file_size) }))
+  }
+
   public addActionPlugin = async (plugin: ActionPlugin): Promise<boolean> => {
     const text = `INSERT INTO action_plugin (${Object.keys(plugin)}) 
       VALUES (${this.getValuesPlaceholders(plugin)})`
