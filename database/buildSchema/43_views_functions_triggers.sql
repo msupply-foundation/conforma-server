@@ -1261,13 +1261,15 @@ LANGUAGE sql
 STABLE;
 
 -- FILE
--- Function to Notify server of File record deletion
+-- Function to Notify server of File record deletion. archivePath tells the
+-- server the file lives in the (immutable) archive store, where nothing is
+-- ever deleted.
 CREATE OR REPLACE FUNCTION public.notify_file_server ()
     RETURNS TRIGGER
     AS $trigger_event$
 BEGIN
     PERFORM
-        pg_notify('file_notifications', json_build_object('id', OLD.id, 'uniqueId', OLD.unique_id, 'originalFilename', OLD.original_filename, 'filePath', OLD.file_path, 'thumbnailPath', OLD.thumbnail_path)::text);
+        pg_notify('file_notifications', json_build_object('id', OLD.id, 'uniqueId', OLD.unique_id, 'originalFilename', OLD.original_filename, 'filePath', OLD.file_path, 'thumbnailPath', OLD.thumbnail_path, 'archivePath', OLD.archive_path)::text);
     RETURN NULL;
 END;
 $trigger_event$

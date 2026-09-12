@@ -42,6 +42,8 @@ To prevent wasting disk space in the backups location, we have a [file archiving
 
 When backups run, only *new* archives that have been added since the last backup are backed up. The backup folder stores progressive archives in an "_archives" subfolder. These are encrypted and zipped as per the main backup snapshot. The main backup snapshot is then saved with no archives included, only files that haven't yet been archived. Meta-data about the stored archives and the latest backup snapshot can be inspected in the `backup.json` file in the main backups location.
 
+Archives are immutable once written. A file that has been archived is never deleted from the archive store, even if its database record is later removed (for example because it was flagged `to_be_deleted` after archiving); the file simply becomes unreferenced. Conversely, files flagged `to_be_deleted` or `is_protected` are never archived. If the server finds archived files missing from the store, it keeps their records and prints a warning listing the affected archives, since a missing archive is a setup problem (not yet uploaded, volume not mounted) rather than an intentional deletion.
+
 ## Backing up with Dropbox
 
 The backup folder can be synced to any cloud storage service, but here are instructions for setting up Dropbox on our Linux servers:

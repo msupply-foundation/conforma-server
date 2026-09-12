@@ -21,7 +21,8 @@ import { DateTime } from 'luxon'
 import { createDefaultDataFolders } from '../files/createDefaultFolders'
 import { errorMessage } from '../utilityFunctions'
 import { cleanupDataTables } from '../../lookup-table/utils/cleanupDataTables'
-import { listArchives, measureSnapshotSizes } from './snapshotStore'
+import { buildArchiveManifest, listArchives, measureSnapshotSizes } from './snapshotStore'
+import { loadArchiveData } from '../files/helpers'
 
 const execFileAsync = promisify(execFile)
 
@@ -63,16 +64,21 @@ const takeSnapshot: SnapshotOperation = async ({
     // Copy main files (not archives)
     await copyFiles(tempFolder)
 
-    // Copy archive.json metadata file to snapshot (archives themselves live in the
-    // shared archive store and don't need to be copied)
-    try {
-      await fsx.copy(
-        path.join(SNAPSHOT_ARCHIVE_FOLDER, 'archive.json'),
-        path.join(tempFolder, 'archive.json')
-      )
-    } catch {
-      console.log('No archives in current system...')
-    }
+    // Write the archive manifest. Archives themselves live in the shared
+    // archive store and are not copied; the manifest records which of them
+    // this database depends on. It is derived from the file table, not from
+    // the store's own archive.json, which tracks whichever snapshot was
+    // loaded last rather than the database being dumped here.
+    const archives = await listArchives()
+    const manifest = buildArchiveManifest(
+      await DBConnect.getReferencedArchives(),
+      archives,
+      await loadArchiveData(SNAPSHOT_ARCHIVE_FOLDER)
+    )
+    if (manifest) {
+      await fsx.writeJSON(path.join(tempFolder, 'archive.json'), manifest, { spaces: 2 })
+      console.log(`Archives referenced by this database: ${manifest.history.length}`)
+    } else console.log('No archives referenced by this database')
 
     // Copy localisation
     await fsx.copy(LOCALISATION_FOLDER, path.join(tempFolder, 'localisation'))
@@ -84,7 +90,6 @@ const takeSnapshot: SnapshotOperation = async ({
     // info.json so the size reflects the snapshot's data content; the
     // ~hundred-byte info.json itself isn't counted, which is rounding noise
     // against multi-MB database dumps.
-    const archives = await listArchives()
     const { snapshotSize, archiveSize } = await measureSnapshotSizes(tempFolder, archives)
     const info = getSnapshotInfo({ snapshotSize, archiveSize })
     await fs.promises.writeFile(

@@ -68,6 +68,8 @@ class DBConnect {
 
   public setFileArchived = PostgresDB.setFileArchived
 
+  public getReferencedArchives = PostgresDB.getReferencedArchives
+
   public addActionPlugin = PostgresDB.addActionPlugin
 
   public deleteActionPlugin = PostgresDB.deleteActionPlugin

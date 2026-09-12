@@ -560,6 +560,12 @@ class PostgresDB {
   }
 
   // File archiving
+  //
+  // Two rules hold between this table and the archive store. Files flagged
+  // to_be_deleted or is_protected are never archived (filtered here). And
+  // archived files are never deleted from the store (see deleteFiles.ts):
+  // deleting an archived file's record leaves the file unreferenced in an
+  // archive that is itself immutable.
 
   public getFilesToArchive = async (days: number) => {
     const duration = `${days} days`
@@ -591,6 +597,27 @@ class PostgresDB {
     } catch (err) {
       throw err
     }
+  }
+
+  // One row per archive path the file table points into, with the number of
+  // files there and their combined size. Every archived file in one archive
+  // shares the same path ("<archiveFolder>/files"), so this is one row per
+  // archive folder.
+  public getReferencedArchives = async (): Promise<
+    { archive_path: string; num_files: number; total_file_size: number }[]
+  > => {
+    const text = `
+      SELECT archive_path,
+        COUNT(*)::int AS num_files,
+        COALESCE(SUM(file_size), 0)::bigint AS total_file_size
+      FROM file
+      WHERE archive_path IS NOT NULL
+      GROUP BY archive_path
+      ORDER BY archive_path
+    `
+    const result = await this.query({ text })
+    // bigint columns arrive as strings
+    return result.rows.map((row) => ({ ...row, total_file_size: Number(row.total_file_size) }))
   }
 
   public addActionPlugin = async (plugin: ActionPlugin): Promise<boolean> => {

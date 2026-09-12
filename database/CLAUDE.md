@@ -45,7 +45,7 @@ Roughly: `01–04` foundation (JWT config, users, orgs), `05–25` templates/per
 
 ## Snapshots ([snapshotCLI.ts](snapshotCLI.ts), `src/components/snapshots/`)
 
-- A snapshot = a `pg_dump` of the DB + a copy of user files + prefs/localisation, in a timestamped folder. File **archives** are kept in a separate shared store and referenced by metadata (not duplicated per snapshot).
+- A snapshot = a `pg_dump` of the DB + a copy of user files + prefs/localisation, in a timestamped folder. File **archives** are kept in a separate shared store and referenced by metadata (not duplicated per snapshot). Each snapshot's `archive.json` lists the archives its own database points into (derived from `file.archive_path` when the snapshot is taken), so it declares only the archives needed to restore it, whatever else the store holds.
 - `yarn snapshot use <name>` drops & recreates the schema, restores the dump, **then runs `migrateData()`** so older snapshots are upgraded to the current app version. Restoring a snapshot from a **newer** Conforma version is blocked.
 - Used heavily for dev fixtures and for moving data between environments. (Docs: [../documentation/Snapshots.md](../documentation/Snapshots.md).)
 

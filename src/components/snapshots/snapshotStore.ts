@@ -2,6 +2,8 @@ import fs from 'fs/promises'
 import fsx from 'fs-extra'
 import path from 'path'
 import getFolderSize from 'get-folder-size'
+import { DateTime } from 'luxon'
+import { archiveFolderOf } from '../files/helpers'
 import {
   INFO_FILE_NAME,
   SNAPSHOT_ARCHIVE_FOLDER,
@@ -21,7 +23,7 @@ export type SnapshotListEntry = {
   archiveSize: number
   missingArchives: string[]
   isLegacy: boolean
-  archiveUids: string[]
+  archiveFolders: string[]
 }
 
 const infoFile = (folder: string) => path.join(folder, `${INFO_FILE_NAME}.json`)
@@ -90,6 +92,75 @@ export const ensureArchiveSize = async (archiveFolder: string): Promise<ArchiveI
   return info
 }
 
+// ---------- Manifest construction ----------
+
+// An archive path the file table points into, as reported by
+// DBConnect.getReferencedArchives.
+export type ReferencedArchive = {
+  archive_path: string
+  num_files: number
+  total_file_size: number
+}
+
+// The archive folders the database points into, one name per folder
+export const referencedArchiveFolders = (referenced: ReferencedArchive[]): string[] =>
+  referenced.map(({ archive_path }) => archiveFolderOf(archive_path))
+
+// Builds a snapshot's archive.json from the archives its database actually
+// references, so the manifest declares exactly the archives needed to
+// restore it. Metadata for each folder comes from the archive's own info.json
+// in the store when it is there, else from the store's archive.json (which
+// can still describe an archive that has left the disk), else is synthesised
+// from the folder name and the file table so the dependency is still
+// declared. Returns null when the database references no archives.
+export const buildArchiveManifest = (
+  referenced: ReferencedArchive[],
+  storeArchives: Record<string, ArchiveInfo>,
+  storeManifest: ArchiveData | null
+): ArchiveData | null => {
+  if (referenced.length === 0) return null
+
+  // The on-disk info.json is authoritative, so it is applied last
+  const known = new Map<string, ArchiveInfo>()
+  for (const info of storeManifest?.history ?? []) known.set(info.archiveFolder, info)
+  for (const info of Object.values(storeArchives)) known.set(info.archiveFolder, info)
+
+  const entries = new Map<string, ArchiveInfo>()
+  for (const { archive_path, num_files, total_file_size } of referenced) {
+    const archiveFolder = archiveFolderOf(archive_path)
+    if (entries.has(archiveFolder)) continue
+    entries.set(
+      archiveFolder,
+      known.get(archiveFolder) ?? synthesiseArchiveInfo(archiveFolder, num_files, total_file_size)
+    )
+  }
+
+  const history = [...entries.values()].sort((a, b) => a.timestamp - b.timestamp)
+  const archives = Object.fromEntries(history.map((info) => [info.uid, info]))
+  return { archives, history }
+}
+
+// Archive folders are named "yyyy-LL-dd_HH-mm-ss_<first 6 chars of uid>", so
+// the timestamp is recoverable but the full uid is not. The folder name
+// stands in for the uid. It only has to be unique within the manifest:
+// presence and orphan checks compare folder names, never uids.
+const synthesiseArchiveInfo = (
+  archiveFolder: string,
+  numFiles: number,
+  totalFileSize: number
+): ArchiveInfo => {
+  const parsed = DateTime.fromFormat(archiveFolder.slice(0, 19), 'yyyy-LL-dd_HH-mm-ss')
+  return {
+    timestamp: parsed.isValid ? parsed.toMillis() : 0,
+    uid: archiveFolder,
+    archiveFolder,
+    prevArchiveFolder: null,
+    prevUid: null,
+    numFiles,
+    totalFileSize,
+  }
+}
+
 // ---------- Listing functions ----------
 
 // Scans SNAPSHOT_ARCHIVE_FOLDER and returns a uid → ArchiveInfo map.
@@ -122,6 +193,10 @@ export const listSnapshots = async (
   archives?: Record<string, ArchiveInfo>
 ): Promise<SnapshotListEntry[]> => {
   const archiveMap = archives ?? (await listArchives())
+  // Presence is judged by folder name: that is what exists on disk and what
+  // the load check compares. Uids can be synthesised (see
+  // buildArchiveManifest), so they are not reliable for matching.
+  const storeFolders = new Set(Object.values(archiveMap).map((a) => a.archiveFolder))
   const dirents = await fs.readdir(SNAPSHOT_FOLDER, { encoding: 'utf-8', withFileTypes: true })
   const snapshots: SnapshotListEntry[] = []
 
@@ -141,9 +216,8 @@ export const listSnapshots = async (
       ? ((await fsx.readJson(archiveJsonPath))?.history ?? [])
       : []
 
-    const missingArchives = referenced
-      .filter(({ uid }) => !archiveMap[uid])
-      .map(({ archiveFolder }) => archiveFolder)
+    const referencedFolders = referenced.map(({ archiveFolder }) => archiveFolder)
+    const missingArchives = referencedFolders.filter((folder) => !storeFolders.has(folder))
 
     const isLegacy = await fsx.pathExists(
       path.join(snapshotFolder, 'files', ARCHIVE_SUBFOLDER_NAME, 'archive.json')
@@ -158,7 +232,7 @@ export const listSnapshots = async (
       archiveSize: info.archiveSize ?? 0,
       missingArchives,
       isLegacy,
-      archiveUids: referenced.map(({ uid }) => uid),
+      archiveFolders: referencedFolders,
     })
   }
 
@@ -181,25 +255,35 @@ export const copyArchivesIfMissing = async (
   }
 }
 
-// Returns archive folder names that exist on disk but aren't referenced by
-// any snapshot.
+// Returns archive folder names that exist on disk but are needed neither by
+// any snapshot manifest nor by the live database. The database has to be
+// consulted: archives created since the last snapshot was taken are
+// referenced nowhere else, and on a server that keeps no snapshots (the
+// backup job removes the one it takes) it is the only reference there is.
 export const findOrphanArchives = (
   archives: Record<string, ArchiveInfo>,
-  snapshots: SnapshotListEntry[]
+  snapshots: SnapshotListEntry[],
+  liveArchiveFolders: Iterable<string> = []
 ): string[] => {
-  const inUse = new Set(snapshots.flatMap((s) => s.archiveUids))
+  const inUse = new Set([...snapshots.flatMap((s) => s.archiveFolders), ...liveArchiveFolders])
   return Object.values(archives)
-    .filter((a) => !inUse.has(a.uid))
     .map(({ archiveFolder }) => archiveFolder)
+    .filter((folder) => !inUse.has(folder))
 }
 
-// Deletes orphan archive folders. Returns the list of folder names removed.
-export const purgeOrphanArchives = async (): Promise<string[]> => {
+// Deletes orphan archive folders. `liveArchiveFolders` are the folders the
+// current database references (see DBConnect.getReferencedArchives); those
+// are never deleted. Returns the folders removed, and how many archives
+// listed by no snapshot were kept because the database needs them.
+export const purgeOrphanArchives = async (
+  liveArchiveFolders: string[]
+): Promise<{ purged: string[]; keptForDatabase: number }> => {
   const archives = await listArchives()
   const snapshots = await listSnapshots(archives)
-  const orphans = findOrphanArchives(archives, snapshots)
-  for (const folder of orphans) {
+  const unlistedBySnapshots = findOrphanArchives(archives, snapshots)
+  const purged = findOrphanArchives(archives, snapshots, liveArchiveFolders)
+  for (const folder of purged) {
     await fsx.remove(path.join(SNAPSHOT_ARCHIVE_FOLDER, folder))
   }
-  return orphans
+  return { purged, keptForDatabase: unlistedBySnapshots.length - purged.length }
 }
