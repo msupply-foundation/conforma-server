@@ -45,7 +45,7 @@ Roughly: `01–04` foundation (JWT config, users, orgs), `05–25` templates/per
 
 ## Snapshots ([snapshotCLI.ts](snapshotCLI.ts), `src/components/snapshots/`)
 
-- A snapshot = a `pg_dump` of the DB + a copy of user files + prefs/localisation, in a timestamped folder. File **archives** are kept in a separate shared store and referenced by metadata (not duplicated per snapshot).
+- A snapshot = a `pg_dump` of the DB + a copy of user files + prefs/localisation, in a timestamped folder. File **archives** are kept in a separate shared store and referenced by metadata (not duplicated per snapshot). Each snapshot's `archive.json` lists the archives its own database points into (derived from `file.archive_path` when the snapshot is taken), so it declares only the archives needed to restore it, whatever else the store holds.
 - `yarn snapshot use <name>` drops & recreates the schema, restores the dump, **then runs `migrateData()`** so older snapshots are upgraded to the current app version. Restoring a snapshot from a **newer** Conforma version is blocked.
 - Used heavily for dev fixtures and for moving data between environments. (Docs: [../documentation/Snapshots.md](../documentation/Snapshots.md).)
 
@@ -63,7 +63,7 @@ Roughly: `01–04` foundation (JWT config, users, orgs), `05–25` templates/per
 
 ## Key tables (high level)
 
-`template` (+ `template_section`, `template_element`, `template_stage`, `template_stage_review_level`, `template_permission`, `template_action`) define a configurable workflow. `application` + `application_response` hold instances. `review_assignment` → `review` → `review_response` drive assessment. `permission_policy` / `permission_name` / `permission_join` express access. `data_table`/`data_view` back lookup data and configurable displays. `file`, `notification`, `activity_log`, `system_info`, `evaluator_fragment` support the rest.
+`template` (+ `template_section`, `template_element`, `template_stage`, `template_stage_review_level`, `template_permission`, `template_action`) define a configurable workflow. `application` + `application_response` hold instances. `review_assignment` → `review` → `review_response` drive assessment. `permission_policy` / `permission_name` / `permission_join` express access. `data_table`/`data_view` back lookup data and configurable displays. `file`, `notification`, `activity_log`, `system_info`, `evaluator_fragment` support the rest. `user_session` holds login sessions (hashed refresh tokens) — server-side only: omitted from the GraphQL schema and RLS-enabled with no policies. Snapshots dump and restore its rows like any other table's, by design; the restoring admin's own session is separately carried across the restore (see [../src/components/permissions/CLAUDE.md](../src/components/permissions/CLAUDE.md)).
 
 ## Gotchas
 

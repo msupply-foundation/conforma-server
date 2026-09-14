@@ -10,8 +10,10 @@ import { loadActionPlugins } from './components/pluginsConnect'
 import {
   routeUserInfo,
   routeUserPermissions,
+  routeHeartbeat,
   routeLogin,
   routeLoginOrg,
+  routeLogout,
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
@@ -43,12 +45,17 @@ import snapshotRoutes from './components/snapshots/routes'
 import { routeGetLanguageFile, localisationRoutes } from './components/localisation/routes'
 import { routeTriggers } from './components/other/routeTriggers'
 import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
+import { resolveAccessToken } from './components/permissions/accessTokenMiddleware'
+import { authLog } from './components/permissions/authLog'
 import migrateData from '../database/migration/migrateData'
 import routeArchiveFiles from './components/files/routeArchiveFiles'
 import { Schedulers } from './components/scheduler'
 import { AccessExternalApiQuery, routeAccessExternalApi } from './components/external-apis/routes'
-import { DEFAULT_LOGOUT_TIME, ZIP_CACHE_FOLDER } from './constants'
+import { warnAboutPlaintextSecrets } from './components/external-apis/warnPlaintextSecrets'
+import { warnAboutReloginOn } from './components/external-apis/login'
+import { ZIP_CACHE_FOLDER } from './constants'
 import { updateRowPolicies } from './components/permissions/rowLevelPolicyHelpers'
+import { startSessionCleanup } from './components/permissions/sessionCleanup'
 import { routeRawData } from './components/other/routeRawData'
 import {
   routeServerStatusWebsocket,
@@ -96,6 +103,10 @@ const startServer = async () => {
   // should only be a single global instance of Schedulers -- this one!
   config.scheduledJobs = new Schedulers()
 
+  // A fixed internal poll, so deliberately NOT one of the above schedulers,
+  // which exist for user-editable schedules
+  startSessionCleanup()
+
   config.latestSnapshot = await databaseConnect.getSystemInfo('snapshot')
 
   const server = fastify()
@@ -107,11 +118,21 @@ const startServer = async () => {
 
   server.register(fastifyMultipart, { limits: { fileSize: config.fileUploadLimit } })
 
+  // "credentials" is required for the auth cookies to be sent at all, and a
+  // wildcard origin is rejected by browsers once credentials are in play -- so
+  // in development the request's own origin is reflected back instead of "*".
   server.register(fastifyCors, {
-    origin: config.isProductionBuild ? config.webHostUrl : '*',
+    origin: config.isProductionBuild ? config.webHostUrl : true,
+    credentials: true,
   })
 
   server.register(fastifyWebsocket)
+
+  // Translates the access cookie into an Authorization header for BOTH surfaces
+  // (REST's preValidation hook and Postgraphile read the same header), and
+  // silently re-mints the token against the session when it has expired or was
+  // never sent. Registered on the root instance so it runs before every route.
+  server.addHook('onRequest', resolveAccessToken)
 
   // Register Postgraphile Middleware
   server.options(pgMiddleware.graphqlRoute, convertHandler(pgMiddleware.graphqlRouteHandler))
@@ -142,7 +163,11 @@ const startServer = async () => {
 
   const api: FastifyPluginCallback = (server, _, done) => {
     // Here we parse JWT, and set it in request.auth, which is available for
-    // downstream routes
+    // downstream routes. Expiry needs no check of its own here: the token
+    // carries an "exp" claim, so getTokenData's verify() rejects an expired one
+    // and the error branch below returns 401. Postgraphile verifies the same
+    // claim, so both surfaces expire tokens by the same rule, in dev as well as
+    // production.
     server.addHook('preValidation', async (request: any, reply: FastifyReply) => {
       if (request.url.startsWith('/api/public')) return
 
@@ -152,28 +177,27 @@ const startServer = async () => {
       request.auth = tokenData
 
       if (error) {
+        // Reaching here means the cookie-to-header hook found nothing usable
+        // and had no live session to mint against, so the reason is worth
+        // recording with the route that was refused
+        authLog(`401 ${request.method} ${request.url}: ${error}`)
         reply.statusCode = 401
         return reply.send({ success: false, message: error })
       }
 
-      // Check if token is too old
-      if (config.logoutAfterInactivity !== 0 && config.isProductionBuild) {
-        const expiryTime =
-          tokenData.iat * 1000 + (config.logoutAfterInactivity ?? DEFAULT_LOGOUT_TIME) * 60_000
-
-        if (Date.now() > expiryTime && !config.maintenanceMode) {
-          reply.statusCode = 401
-          console.log('Expired token from:', tokenData.username)
-          return reply.send({ success: false, message: 'Expired token' })
-        }
-      }
-
-      // All endpoints become admin-only in Maintenance mode
+      // All endpoints become admin-only in Maintenance mode, apart from the few
+      // that keep an existing login working rather than serving it any data.
+      // Maintenance mode is about withholding the site, not ending sessions:
+      // shutting these out would log every non-admin out mid-maintenance, and
+      // tell them their session had expired when it had not.
+      //
+      // Compared on the path alone, because request.url carries the query
+      // string -- "/api/user-info?sessionId=..." is the same endpoint.
+      const [requestPath] = request.url.split('?')
       if (
         config.maintenanceMode &&
         !request.auth.isAdmin &&
-        request.url !== '/api/login-org' &&
-        request.url !== '/api/user-info'
+        !['/api/login-org', '/api/user-info', '/api/heartbeat'].includes(requestPath)
       ) {
         reply.statusCode = 401
         return reply.send({ success: false, message: 'Must be admin user in Maintenance mode' })
@@ -353,8 +377,10 @@ const startServer = async () => {
     // Routes that require authentication but no special permissions
     server.get('/check-unique', routeCheckUnique)
     server.get('/user-info', routeUserInfo)
+    server.post('/heartbeat', routeHeartbeat)
     server.get('/user-permissions', routeUserPermissions)
     server.post('/login-org', routeLoginOrg)
+    server.post('/logout', routeLogout)
     server.post('/create-hash', routeCreateHash)
     server.post('/generate-pdf', routeGeneratePDF)
     server.get('/data-views', routeDataViews)
@@ -387,8 +413,8 @@ const startServer = async () => {
   })
 
   server.register(async function (fastify) {
-    fastify.get('/server-status', { websocket: true }, (socket, _) =>
-      routeServerStatusWebsocket(socket, server)
+    fastify.get('/server-status', { websocket: true }, (socket, request) =>
+      routeServerStatusWebsocket(socket, server, request)
     )
   })
 
@@ -411,6 +437,23 @@ const startServer = async () => {
     console.log('Email mode:', config.emailMode)
     if (config.emailMode === 'TEST') console.log('All email will be sent to:', config.testingEmail)
     if (config.maintenanceMode) console.log(`-- Server in Maintenance mode`)
+    if (config.allowInsecureCookies)
+      console.log(
+        '\n⚠️  INSECURE_COOKIES_FOR_LAN_TESTING is set -- auth cookies are being issued\n' +
+          '   without the "Secure" flag so they survive a plain-http LAN address.\n' +
+          '   For testing on other devices only. Unset it when you are done.'
+      )
+    // Announcing the refusal as well, or a browser silently dropping every
+    // cookie is all the developer has to go on -- the failure this flag
+    // exists to fix, reached by a different route.
+    else if (process.env.INSECURE_COOKIES_FOR_LAN_TESTING === 'true')
+      console.log(
+        '\n⚠️  INSECURE_COOKIES_FOR_LAN_TESTING is set but REFUSED -- this is a\n' +
+          '   production build or a live server, so auth cookies keep the "Secure"\n' +
+          '   flag and a plain-http LAN address will not be able to hold them.'
+      )
+    warnAboutPlaintextSecrets(config.externalApiConfigs)
+    warnAboutReloginOn(config.externalApiConfigs)
     console.log(`\nServer listening at ${address}`)
   })
 

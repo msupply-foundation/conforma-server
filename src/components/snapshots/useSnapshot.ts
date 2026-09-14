@@ -7,7 +7,7 @@ import { promisify } from 'util'
 import { setTimeout as sleep } from 'node:timers/promises'
 import DBConnect from '../../../src/components/database/databaseConnect'
 import { updateRowPolicies } from '../permissions/rowLevelPolicyHelpers'
-import { SnapshotOperation } from '../exportAndImport/types'
+import { UseSnapshotOperation } from '../exportAndImport/types'
 import semverCompare from 'semver/functions/compare'
 import config from '../../../src/config'
 import { refreshConfig } from '../../../src/refreshConfig'
@@ -27,14 +27,21 @@ import { errorMessage } from '../utilityFunctions'
 import { cleanupDataTables } from '../../lookup-table/utils/cleanupDataTables'
 import { getTimeString } from './takeSnapshot'
 import { reloadFragments } from '../fig-tree-evaluator/FigTree'
+import { captureSessionForRestore, reinstateCapturedSession } from '../permissions/sessionRestore'
+import { pauseSessionSweep, resumeSessionSweep } from '../permissions/sessionCleanup'
 
 const execFileAsync = promisify(execFile)
 
-const useSnapshot: SnapshotOperation = async ({ snapshotName }) => {
+const useSnapshot: UseSnapshotOperation = async ({ snapshotName, preserveSessionTokenHash }) => {
   const startTime = Date.now()
 
   // Ensure relevant folders exist
   await createDefaultDataFolders()
+
+  // While the database is being replaced, the session table describes either
+  // nothing or somebody else's system, so the sweep must not read anything into
+  // it (see sessionCleanup.ts)
+  pauseSessionSweep()
 
   try {
     console.log(`Restoring snapshot: ${snapshotName}`)
@@ -69,6 +76,10 @@ const useSnapshot: SnapshotOperation = async ({ snapshotName }) => {
     const archiveCollectStartTime = Date.now()
     await collectArchives(snapshotFolder)
     console.log(`Collecting archives...done in ${getTimeString(archiveCollectStartTime)}`)
+
+    // Read out the calling admin's session while the current database still
+    // exists -- the restore below destroys every session on the server
+    const capturedSession = await captureSessionForRestore(preserveSessionTokenHash)
 
     // Reset existing files folder (but keep temp archives)
     await removeFiles()
@@ -145,6 +156,10 @@ const useSnapshot: SnapshotOperation = async ({ snapshotName }) => {
     // Regenerate row level policies
     await updateRowPolicies()
 
+    // Only now is the session table certainly present and in its current shape
+    // -- a snapshot predating it relies on the migration above to create it
+    await reinstateCapturedSession(capturedSession)
+
     // To ensure generic thumbnails are not wiped out, even if server doesn't restart
     await createDefaultDataFolders()
 
@@ -168,6 +183,8 @@ const useSnapshot: SnapshotOperation = async ({ snapshotName }) => {
     return { success: true, message: `snapshot loaded ${snapshotName}` }
   } catch (e) {
     return { success: false, message: 'error while loading snapshot', error: errorMessage(e) }
+  } finally {
+    resumeSessionSweep()
   }
 }
 

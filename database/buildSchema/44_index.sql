@@ -108,6 +108,10 @@ CREATE INDEX IF NOT EXISTS "i_user_organisation_organisation_id_fkey" ON user_or
 
 CREATE INDEX IF NOT EXISTS "i_verification_application_id_fkey" ON verification (application_id);
 
+CREATE INDEX IF NOT EXISTS "i_user_session_user_id_fkey" ON user_session (user_id);
+
+CREATE INDEX IF NOT EXISTS "i_user_session_org_id_fkey" ON user_session (org_id);
+
 CREATE INDEX IF NOT EXISTS "i_permission_join_organisation_id_fkey" ON permission_join (organisation_id);
 
 CREATE INDEX IF NOT EXISTS "i_permission_join_user_id_fkey" ON permission_join (user_id);
@@ -115,6 +119,9 @@ CREATE INDEX IF NOT EXISTS "i_permission_join_user_id_fkey" ON permission_join (
 CREATE INDEX IF NOT EXISTS "i_review_assignment_reviewer_id_fkey" ON review_assignment (reviewer_id);
 
 CREATE INDEX IF NOT EXISTS "i_review_assignment_assigner_join_assigner_id_fkey" ON review_assignment_assigner_join (assigner_id);
+
+-- Used by the once-a-minute sweep that deletes expired sessions:
+CREATE INDEX IF NOT EXISTS "i_user_session_expires_at" ON user_session (expires_at);
 
 -- Additional indexes to help Application List performace:
 CREATE INDEX IF NOT EXISTS "i_application_outcome" ON application (outcome);

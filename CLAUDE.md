@@ -56,6 +56,8 @@ Run from the repo root with **yarn** (Node 20 or later — `.nvmrc` has the base
    - Route handlers live in `src/components/<feature>/routes.ts` and are imported into `server.ts`. To add a route, write the handler in its component and register it in the `api` plugin callback under the right tier.
 2. **GraphQL** at `/graphql` (+ `/graphiql` IDE in dev). This is **not** behind the REST `preValidation` hook — PostGraphile verifies the JWT itself and enforces access purely through Postgres RLS. **A direct GraphQL call bypasses REST route guards**; never assume a REST-layer check protects data reachable via GraphQL.
 
+Both surfaces sit behind one root-level `onRequest` hook that turns the auth cookie into an `Authorization: Bearer` header and silently re-mints an expired token against the session table (`src/components/permissions/accessTokenMiddleware.ts`). It is *not* a guard — it only supplies the token; RLS and the REST tiers still decide what that token can do.
+
 ### The core idea: schema-driven API + RLS
 
 The Postgres schema *is* the API. PostGraphile reflects tables/views into GraphQL. Security is mostly **not** in application code — it's RLS policies generated from the permissions configuration and evaluated against `jwt.claims.*`. See [database/CLAUDE.md](database/CLAUDE.md) and [src/components/permissions/CLAUDE.md](src/components/permissions/CLAUDE.md).
@@ -112,3 +114,4 @@ utils/                   Build scripts, codegen helpers, release, doc publishing
 - **Preferences are runtime config**: edited via `/api/admin/set-prefs`, hot-reloaded by [src/refreshConfig.ts](src/refreshConfig.ts) (re-schedules jobs, updates locale/timezone). `PREFERENCE_OVERRIDES` env can point to a JSON file that deep-merges on top.
 - **The public `/api/public/file` endpoint does not check permissions** (there's a `TO-DO` for it). Don't rely on it for access control on sensitive files.
 - **`yarn generate` needs a running server** and overwrites `src/generated/graphql.ts`.
+- **Archived files are never deleted or moved.** An archived file (`file.archive_path` set) stays in the archive store even when its DB record goes, and the file cleanup keeps records of archived files it cannot find and warns instead. Whole archive folders are removed only by the admin orphan purge, which protects anything listed by a snapshot manifest or referenced by the live `file` table. Snapshot manifests are derived from the `file` table; the backup job still reads the store's `archive.json` as "the current system's archives", a known exception. See [documentation/Backups.md](documentation/Backups.md#file-archives).

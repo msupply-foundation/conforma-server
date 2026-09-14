@@ -3,6 +3,8 @@ import {
   objectKeysToSnakeCase,
   filterObject,
   modifyValueInObject,
+  getEnvVariableReplacement,
+  isEnvVariableReference,
 } from './utilityFunctions'
 
 test('Convert object to camelCase', () => {
@@ -62,5 +64,46 @@ test(`Check modify in object`, () => {
   ).toEqual({
     something: { $from: 'private.yow' },
     somethingElse: { nested: [], alsoNested: { $from: 'private.hi' } },
+  })
+})
+
+describe('Environment variable references', () => {
+  const originalEnv = process.env
+
+  beforeEach(() => {
+    process.env = { ...originalEnv, MY_SECRET: 'hunter2', EMPTY_VAR: '' }
+  })
+
+  afterEach(() => {
+    process.env = originalEnv
+  })
+
+  test('Substitute a referenced variable', () => {
+    expect(getEnvVariableReplacement('env.MY_SECRET')).toBe('hunter2')
+  })
+
+  test('Leave a plain value alone', () => {
+    expect(getEnvVariableReplacement('hunter2')).toBe('hunter2')
+    // Only a whole string of the right shape is a reference
+    expect(getEnvVariableReplacement('https://example.org/env.MY_SECRET')).toBe(
+      'https://example.org/env.MY_SECRET'
+    )
+  })
+
+  test('Throw when the referenced variable is not set', () => {
+    expect(() => getEnvVariableReplacement('env.NOT_SET')).toThrow(
+      'Environment variable not set: NOT_SET'
+    )
+  })
+
+  // A variable set to nothing is a stated value, not an absent one
+  test('Substitute an empty variable', () => {
+    expect(getEnvVariableReplacement('env.EMPTY_VAR')).toBe('')
+  })
+
+  test('Recognise a reference without resolving it', () => {
+    expect(isEnvVariableReference('env.NOT_SET')).toBe(true)
+    expect(isEnvVariableReference('hunter2')).toBe(false)
+    expect(isEnvVariableReference(undefined)).toBe(false)
   })
 })
