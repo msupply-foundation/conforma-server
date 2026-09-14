@@ -19,6 +19,27 @@ const siteHost = (preferences.web as WebAppPrefs)?.siteHost
 const webHostUrl = process.env.WEB_HOST
 const isLiveServer = getIsLiveServer(webHostUrl, siteHost)
 
+// Opt-in for testing the app on other devices over a LAN address, which
+// requires dropping the auth cookies' "Secure" flag -- see
+// components/permissions/sessionCookies.ts for why.
+//
+// A production build and a live server each refuse it, and between them they
+// cover a deployment however it was launched. isProductionBuild alone would
+// not: NODE_ENV=production is set only by the Docker entrypoint, while
+// `yarn serve` copies the developer's .env into the build, so the flag can
+// travel to a deployment that never sets it. isLiveServer is derived from
+// WEB_HOST matching the configured siteHost -- deployment topology rather
+// than a variable someone has to remember.
+//
+// A test run refuses it too, since the suite asserts the full flag set and a
+// developer who leaves this in their .env must not see those assertions
+// quietly change.
+const allowInsecureCookies =
+  process.env.INSECURE_COOKIES_FOR_LAN_TESTING === 'true' &&
+  !isProductionBuild &&
+  !isLiveServer &&
+  process.env.NODE_ENV !== 'test'
+
 // Change to true to force email server to use local Mailhog
 const USE_MAIL_HOG = false
 
@@ -81,6 +102,7 @@ const config: Config = {
   filterColumnSuffix: '_filter_data', // snake_case,
   fileUploadLimit: 5 * 1024 * 1024 * 1024, // 5GB
   isProductionBuild,
+  allowInsecureCookies,
   defaultSystemManagerPermissionName: 'systemManager',
   ...serverPrefs,
   webHostUrl,

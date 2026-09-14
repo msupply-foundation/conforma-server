@@ -424,6 +424,7 @@ interface ConfigBase {
   filterColumnSuffix: string
   fileUploadLimit: number
   isProductionBuild: boolean
+  allowInsecureCookies: boolean
   defaultSystemManagerPermissionName: string
   webHostUrl?: string
   productionHost?: string
