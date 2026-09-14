@@ -8,6 +8,9 @@ module.exports = {
   moduleNameMapper: {
     // ESM-only package that Jest cannot parse; folder sizes don't matter in tests
     '^get-folder-size$': '<rootDir>/jest.stubs/get-folder-size.js',
+    // axios 1.x's "main" is an ES module; Jest 26 does not read the "exports"
+    // map that would point Node at the CommonJS build, so point it there here
+    '^axios$': '<rootDir>/node_modules/axios/dist/node/axios.cjs',
   },
   verbose: true,
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
