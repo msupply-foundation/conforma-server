@@ -176,3 +176,23 @@ export const modifyValueInObject = (
     {} as object
   )
 }
+
+/**
+ * Makes a string safe to use as the base (extension-less) part of a filename:
+ * one path segment, no control or Windows-reserved characters, capped in
+ * length. Runs of whitespace become `spaceReplacement`. Returns '' when
+ * nothing usable is left, so the caller can pick its own fallback.
+ */
+export const sanitiseFilenameBase = (
+  name: string,
+  { spaceReplacement = ' ', maxLength = 80 }: { spaceReplacement?: string; maxLength?: number } = {}
+): string =>
+  name
+    .replace(/[\\/]/g, '_') // path separators
+    .replace(/\.{2,}/g, '_') // runs of dots (path traversal)
+    .replace(/\s+/g, spaceReplacement) // whitespace first, so tabs/newlines still separate words
+    .replace(/[\x00-\x1f\x7f]/g, '') // any other control chars are invisible, so just drop them
+    .replace(/[<>:"|?*]/g, '_') // Windows-reserved chars
+    .trim()
+    .slice(0, maxLength)
+    .replace(/^[._\s]+|[._\s]+$/g, '')

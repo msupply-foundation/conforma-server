@@ -12,6 +12,7 @@ import { nanoid } from 'nanoid'
 import config from '../../config'
 import { render, RenderCallback, RenderOptions } from 'carbone'
 import { renderTypstPDF } from './documentGenerateTypst'
+import { buildOutputFilenames } from './outputFilename'
 
 const TYPST_EXTENSIONS = ['.typ', '.typzip']
 
@@ -44,6 +45,9 @@ interface GeneratePDFInput {
   applicationSerial?: string
   applicationResponseId?: number
   subFolder?: string
+  /** Download name for the generated PDF (".pdf" added if missing). Defaults to
+   * "<docTemplateName>_<applicationSerial>.pdf" — see buildOutputFilenames. */
+  filename?: string
   description?: string
   isOutputDoc?: boolean
   toBeDeleted?: boolean
@@ -58,6 +62,7 @@ export async function generatePDF({
   applicationSerial,
   applicationResponseId,
   subFolder,
+  filename,
   description,
   isOutputDoc,
   toBeDeleted,
@@ -69,16 +74,18 @@ export async function generatePDF({
   // archive store, not the files folder — so resolve it against the "root"
   // returned by getFilePath rather than assuming the files folder.
   const templateFullPath = path.join(templateFileInfo.root, templatePath as string)
-  const templateName = path.parse(templateFileInfo?.originalFilename).name
+  const docTemplateName = path.parse(templateFileInfo?.originalFilename).name
 
   // Output file/folder properties
   const uniqueId = nanoid()
   const subfolder = subFolder ?? applicationSerial ?? ''
   if (subfolder) makeFolder(path.join(appRootFolder, filesFolder, subfolder))
-  const originalFilename = `${templateName}_${applicationSerial ?? uniqueId}.pdf`
-  const outputFilename = `${templateName}${
-    applicationSerial ? '_' + applicationSerial : ''
-  }_${uniqueId}.pdf`
+  const { originalFilename, outputFilename } = buildOutputFilenames({
+    filename,
+    docTemplateName,
+    applicationSerial,
+    uniqueId,
+  })
   const outputFilePath = path.join(subfolder, outputFilename)
 
   console.log('Generating document: ' + originalFilename)
