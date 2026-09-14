@@ -1,4 +1,9 @@
-import { buildArchiveManifest, findOrphanArchives, SnapshotListEntry } from './snapshotStore'
+import {
+  buildArchiveManifest,
+  findOrphanArchives,
+  mergeReferencedArchives,
+  SnapshotListEntry,
+} from './snapshotStore'
 import { ArchiveInfo } from '../files/archive'
 
 // buildArchiveManifest decides which archives a snapshot declares it depends
@@ -31,7 +36,7 @@ test('buildArchiveManifest: nothing referenced gives no manifest', () => {
   expect(buildArchiveManifest([], store, { archives: store, history: [A, B, C] })).toBeNull()
 })
 
-test('buildArchiveManifest: only referenced archives are included, in timestamp order', () => {
+test('buildArchiveManifest: only referenced archives are included, in folder-name order', () => {
   const manifest = buildArchiveManifest(
     [referenced(C.archiveFolder), referenced(A.archiveFolder)],
     store,
@@ -83,7 +88,25 @@ test('buildArchiveManifest: an unknown archive is synthesised from the folder na
   expect(manifest?.archives[folder]).toBe(entry)
 })
 
-test('buildArchiveManifest: a folder referenced under two paths appears once', () => {
+test('buildArchiveManifest: a folder referenced under two paths appears once, counts summed', () => {
+  const folder = '2026-06-27_01-10-00_8hP43c'
+  const manifest = buildArchiveManifest(
+    [
+      referenced(folder, 300, 80_000_000),
+      { ...referenced(folder, 97, 22_000_000), archive_path: `${folder}/files/sub` },
+    ],
+    {},
+    null
+  )
+  expect(manifest?.history).toHaveLength(1)
+  expect(manifest?.history[0]).toMatchObject({
+    archiveFolder: folder,
+    numFiles: 397,
+    totalFileSize: 102_000_000,
+  })
+})
+
+test('buildArchiveManifest: a known archive referenced twice keeps its info.json counts', () => {
   const manifest = buildArchiveManifest(
     [
       referenced(A.archiveFolder),
@@ -93,6 +116,21 @@ test('buildArchiveManifest: a folder referenced under two paths appears once', (
     null
   )
   expect(manifest?.history).toEqual([A])
+})
+
+// mergeReferencedArchives combines the readings taken before and after
+// pg_dump, so the manifest never under-declares a dependency.
+
+test('mergeReferencedArchives: later readings win per path, paths from either side are kept', () => {
+  const merged = mergeReferencedArchives(
+    [referenced(A.archiveFolder, 1, 10), referenced(B.archiveFolder, 5, 50)],
+    [referenced(B.archiveFolder, 6, 60), referenced(C.archiveFolder, 2, 20)]
+  )
+  expect(merged).toEqual([
+    referenced(A.archiveFolder, 1, 10),
+    referenced(B.archiveFolder, 6, 60),
+    referenced(C.archiveFolder, 2, 20),
+  ])
 })
 
 // findOrphanArchives decides what a purge may delete. An archive is safe as
@@ -111,7 +149,7 @@ const snapshot = (archiveFolders: string[]): SnapshotListEntry => ({
 })
 
 test('findOrphanArchives: archives listed by no snapshot are orphans', () => {
-  expect(findOrphanArchives(store, [snapshot([A.archiveFolder])])).toEqual([
+  expect(findOrphanArchives(store, [snapshot([A.archiveFolder])], [])).toEqual([
     B.archiveFolder,
     C.archiveFolder,
   ])
@@ -131,6 +169,6 @@ test('findOrphanArchives: with no snapshots at all, the live database alone prot
 
 test('findOrphanArchives: nothing is an orphan when everything is referenced', () => {
   expect(
-    findOrphanArchives(store, [snapshot([A.archiveFolder, B.archiveFolder, C.archiveFolder])])
+    findOrphanArchives(store, [snapshot([A.archiveFolder, B.archiveFolder, C.archiveFolder])], [])
   ).toEqual([])
 })

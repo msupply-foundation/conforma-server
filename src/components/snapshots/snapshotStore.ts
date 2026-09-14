@@ -106,6 +106,17 @@ export type ReferencedArchive = {
 export const referencedArchiveFolders = (referenced: ReferencedArchive[]): string[] =>
   referenced.map(({ archive_path }) => archiveFolderOf(archive_path))
 
+// Combines two readings of the referenced archives into one, keyed by path,
+// with the later reading's counts winning for paths present in both.
+export const mergeReferencedArchives = (
+  earlier: ReferencedArchive[],
+  later: ReferencedArchive[]
+): ReferencedArchive[] => {
+  const byPath = new Map(earlier.map((row) => [row.archive_path, row]))
+  for (const row of later) byPath.set(row.archive_path, row)
+  return [...byPath.values()]
+}
+
 // Builds a snapshot's archive.json from the archives its database actually
 // references, so the manifest declares exactly the archives needed to
 // restore it. Metadata for each folder comes from the archive's own info.json
@@ -125,17 +136,27 @@ export const buildArchiveManifest = (
   for (const info of storeManifest?.history ?? []) known.set(info.archiveFolder, info)
   for (const info of Object.values(storeArchives)) known.set(info.archiveFolder, info)
 
-  const entries = new Map<string, ArchiveInfo>()
+  // Rows arrive grouped by archive_path. One folder can be referenced under
+  // more than one path, so counts are accumulated per folder before any
+  // entry has to be synthesised from them.
+  const totals = new Map<string, { numFiles: number; totalFileSize: number }>()
   for (const { archive_path, num_files, total_file_size } of referenced) {
-    const archiveFolder = archiveFolderOf(archive_path)
-    if (entries.has(archiveFolder)) continue
-    entries.set(
-      archiveFolder,
-      known.get(archiveFolder) ?? synthesiseArchiveInfo(archiveFolder, num_files, total_file_size)
-    )
+    const folder = archiveFolderOf(archive_path)
+    const sum = totals.get(folder) ?? { numFiles: 0, totalFileSize: 0 }
+    totals.set(folder, {
+      numFiles: sum.numFiles + num_files,
+      totalFileSize: sum.totalFileSize + total_file_size,
+    })
   }
 
-  const history = [...entries.values()].sort((a, b) => a.timestamp - b.timestamp)
+  // Folder names begin with the archive's creation time, so sorting by name
+  // is chronological and independent of the server's timezone setting.
+  const history = [...totals.entries()]
+    .map(
+      ([folder, { numFiles, totalFileSize }]) =>
+        known.get(folder) ?? synthesiseArchiveInfo(folder, numFiles, totalFileSize)
+    )
+    .sort((a, b) => a.archiveFolder.localeCompare(b.archiveFolder))
   const archives = Object.fromEntries(history.map((info) => [info.uid, info]))
   return { archives, history }
 }
@@ -143,7 +164,10 @@ export const buildArchiveManifest = (
 // Archive folders are named "yyyy-LL-dd_HH-mm-ss_<first 6 chars of uid>", so
 // the timestamp is recoverable but the full uid is not. The folder name
 // stands in for the uid. It only has to be unique within the manifest:
-// presence and orphan checks compare folder names, never uids.
+// presence and orphan checks compare folder names, never uids. The name
+// carries the server's local time as it was when the archive was written
+// and is parsed in the server's current zone, so the timestamp can be off by
+// a zone offset; it is informational, as history order comes from the name.
 const synthesiseArchiveInfo = (
   archiveFolder: string,
   numFiles: number,
@@ -179,7 +203,10 @@ export const listArchives = async (): Promise<Record<string, ArchiveInfo>> => {
     const archiveFolder = path.join(SNAPSHOT_ARCHIVE_FOLDER, dirent.name)
     if (!(await fsx.pathExists(infoFile(archiveFolder)))) continue
     const info = await ensureArchiveSize(archiveFolder)
-    store[info.uid] = info
+    // The directory name is what paths are built from and what a purge
+    // removes; the name recorded inside info.json is only what the folder
+    // was called when the archive was written.
+    store[info.uid] = { ...info, archiveFolder: dirent.name }
   }
   return store
 }
@@ -260,10 +287,12 @@ export const copyArchivesIfMissing = async (
 // consulted: archives created since the last snapshot was taken are
 // referenced nowhere else, and on a server that keeps no snapshots (the
 // backup job removes the one it takes) it is the only reference there is.
+// A caller that deliberately wants the snapshot-only view passes an empty
+// list; there is no default, so leaving the database out is always visible.
 export const findOrphanArchives = (
   archives: Record<string, ArchiveInfo>,
   snapshots: SnapshotListEntry[],
-  liveArchiveFolders: Iterable<string> = []
+  liveArchiveFolders: Iterable<string>
 ): string[] => {
   const inUse = new Set([...snapshots.flatMap((s) => s.archiveFolders), ...liveArchiveFolders])
   return Object.values(archives)
@@ -271,17 +300,22 @@ export const findOrphanArchives = (
     .filter((folder) => !inUse.has(folder))
 }
 
-// Deletes orphan archive folders. `liveArchiveFolders` are the folders the
-// current database references (see DBConnect.getReferencedArchives); those
-// are never deleted. Returns the folders removed, and how many archives
-// listed by no snapshot were kept because the database needs them.
+// Deletes orphan archive folders. `getLiveArchiveFolders` returns the folders
+// the current database references (see liveArchives.ts); those are never
+// deleted. It is called only after the store and snapshots have been listed:
+// archiveFiles commits a new archive's rows before it writes the info.json
+// that makes the folder listable, so every folder in the listing is already
+// visible to the query, and nothing created during the listing can be
+// deleted. Returns the folders removed, and how many archives listed by no
+// snapshot were kept because the database needs them.
 export const purgeOrphanArchives = async (
-  liveArchiveFolders: string[]
+  getLiveArchiveFolders: () => Promise<string[]>
 ): Promise<{ purged: string[]; keptForDatabase: number }> => {
   const archives = await listArchives()
   const snapshots = await listSnapshots(archives)
-  const unlistedBySnapshots = findOrphanArchives(archives, snapshots)
-  const purged = findOrphanArchives(archives, snapshots, liveArchiveFolders)
+  const unlistedBySnapshots = findOrphanArchives(archives, snapshots, [])
+  const live = new Set(await getLiveArchiveFolders())
+  const purged = unlistedBySnapshots.filter((folder) => !live.has(folder))
   for (const folder of purged) {
     await fsx.remove(path.join(SNAPSHOT_ARCHIVE_FOLDER, folder))
   }

@@ -21,7 +21,12 @@ import { DateTime } from 'luxon'
 import { createDefaultDataFolders } from '../files/createDefaultFolders'
 import { errorMessage } from '../utilityFunctions'
 import { cleanupDataTables } from '../../lookup-table/utils/cleanupDataTables'
-import { buildArchiveManifest, listArchives, measureSnapshotSizes } from './snapshotStore'
+import {
+  buildArchiveManifest,
+  listArchives,
+  measureSnapshotSizes,
+  mergeReferencedArchives,
+} from './snapshotStore'
 import { loadArchiveData } from '../files/helpers'
 
 const execFileAsync = promisify(execFile)
@@ -45,6 +50,13 @@ const takeSnapshot: SnapshotOperation = async ({
     const tempFolder = path.join(SNAPSHOT_FOLDER, TEMP_SNAPSHOT_FOLDER_NAME)
 
     await fsx.emptyDir(tempFolder)
+
+    // The archive job can commit new archive_path rows while pg_dump runs.
+    // Reading the referenced archives both before and after the dump and
+    // merging the two means the manifest can over-declare a dependency (a
+    // load then insists on an archive the dump does not need) but never
+    // under-declare one (a load would proceed and leave files missing).
+    const referencedBefore = await DBConnect.getReferencedArchives()
 
     // Write snapshot/database to folder
     console.log('Dumping database...')
@@ -71,7 +83,7 @@ const takeSnapshot: SnapshotOperation = async ({
     // loaded last rather than the database being dumped here.
     const archives = await listArchives()
     const manifest = buildArchiveManifest(
-      await DBConnect.getReferencedArchives(),
+      mergeReferencedArchives(referencedBefore, await DBConnect.getReferencedArchives()),
       archives,
       await loadArchiveData(SNAPSHOT_ARCHIVE_FOLDER)
     )

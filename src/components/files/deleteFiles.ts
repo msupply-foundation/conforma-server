@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 const fsPromises = fs.promises
 import config from '../../config'
-import { getAppEntryPointDir } from '../utilityFunctions'
+import { errorMessage, getAppEntryPointDir } from '../utilityFunctions'
 
 const { filesFolder, genericThumbnailsFolderName } = config
 
@@ -37,6 +37,7 @@ export const deleteFile = async (file: FileDetail, root: string = filesPath) => 
       await fsPromises.rmdir(path.join(root, dir))
   } catch (err) {
     // Don't log if it's just a missing file -- this is expected sometimes
-    if ((err as any)?.code !== 'ENOENT') console.log()
+    if ((err as any)?.code !== 'ENOENT')
+      console.log(`Problem deleting ${filePath}:`, errorMessage(err))
   }
 }

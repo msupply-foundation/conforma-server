@@ -83,6 +83,11 @@ const warnAboutMissingArchivedFiles = async (missingArchived: Map<string, number
     const folderPresent = await fileExists(path.join(SNAPSHOT_ARCHIVE_FOLDER, folder))
     lines.push(`  - ${folder}: ${count} file(s)${folderPresent ? '' : ' -- ARCHIVE FOLDER ABSENT'}`)
   }
+  lines.push(
+    '  A snapshot that depends on a missing archive will not load until the folder is back.',
+    '  If an archive is lost for good, an empty folder of that name lets the load proceed,',
+    '  with those files reported as missing.'
+  )
   console.warn(lines.join('\n'))
 }
 
@@ -97,7 +102,7 @@ export const cleanUpFiles = async () => {
       const relativeFilePath = filePath.replace(FILES_FOLDER + '/', '')
       const isFileInDatabase = await DBConnect.checkIfInFileTable(relativeFilePath)
       if (!isFileInDatabase) {
-        deleteFile({ filePath: relativeFilePath })
+        await deleteFile({ filePath: relativeFilePath })
         filesMissingRecords++
       }
     }

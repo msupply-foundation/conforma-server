@@ -602,7 +602,8 @@ class PostgresDB {
   // One row per archive path the file table points into, with the number of
   // files there and their combined size. Every archived file in one archive
   // shares the same path ("<archiveFolder>/files"), so this is one row per
-  // archive folder.
+  // archive folder. An empty path counts as unarchived, as it does in every
+  // TypeScript check on this column.
   public getReferencedArchives = async (): Promise<
     { archive_path: string; num_files: number; total_file_size: number }[]
   > => {
@@ -611,7 +612,7 @@ class PostgresDB {
         COUNT(*)::int AS num_files,
         COALESCE(SUM(file_size), 0)::bigint AS total_file_size
       FROM file
-      WHERE archive_path IS NOT NULL
+      WHERE archive_path IS NOT NULL AND archive_path <> ''
       GROUP BY archive_path
       ORDER BY archive_path
     `

@@ -14,12 +14,11 @@ export const loadArchiveData = async (source: string) => {
   }
 }
 
-// Gets archive data for the current system
-export const getCurrentArchives = async () => {
-  const currentArchives: ArchiveData = await readJSON(path.join(SNAPSHOT_ARCHIVE_FOLDER, 'archive.json'))
-
-  return currentArchives.history
-}
+// Gets archive data for the current system. A system that has never
+// archived, or whose loaded snapshot references no archives, has no manifest
+// at all; that is an empty history, not an error.
+export const getCurrentArchives = async (): Promise<ArchiveInfo[]> =>
+  (await loadArchiveData(SNAPSHOT_ARCHIVE_FOLDER))?.history ?? []
 
 // Gets archive data for a specified snapshot
 export const getSnapshotArchives = async (snapshotFolder: string) => {

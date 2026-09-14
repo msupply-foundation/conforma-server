@@ -1,13 +1,12 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
-import DBConnect from '../../database/databaseConnect'
 import { errorMessage } from '../../utilityFunctions'
-import { purgeOrphanArchives, referencedArchiveFolders } from '../snapshotStore'
+import { purgeOrphanArchives } from '../snapshotStore'
+import { getLiveArchiveFolders } from '../liveArchives'
 
 const routePurgeOrphanArchives = async (_: FastifyRequest, reply: FastifyReply) => {
   console.log('Purge orphan archives request received')
   try {
-    const liveArchiveFolders = referencedArchiveFolders(await DBConnect.getReferencedArchives())
-    const { purged, keptForDatabase } = await purgeOrphanArchives(liveArchiveFolders)
+    const { purged, keptForDatabase } = await purgeOrphanArchives(getLiveArchiveFolders)
     console.log('Purging...Done')
 
     const kept =
