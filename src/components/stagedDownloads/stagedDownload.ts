@@ -20,6 +20,7 @@ import fsx from 'fs-extra'
 import path from 'path'
 import { customAlphabet } from 'nanoid'
 import { STAGED_DOWNLOAD_FOLDER } from '../../constants'
+import { sanitiseFilenameBase } from '../utilityFunctions'
 
 const HARD_TIMEOUT_MS = 30 * 60_000
 const SOFT_TIMEOUT_MS = 5 * 60_000
@@ -38,24 +39,14 @@ interface TimerEntry {
 
 const timers = new Map<string, TimerEntry>()
 
-const sanitizeBaseName = (name: string): string => {
-  const cleaned = name
-    .replace(/[\\/]/g, '_') // path separators
-    .replace(/\.{2,}/g, '_') // collapse runs of dots (path-traversal)
-    .replace(/[\x00-\x1f<>:"|?*]/g, '_') // control + Windows-reserved
-    .replace(/\s+/g, '_')
-    .replace(/^[._]+|[._]+$/g, '')
-    .slice(0, 80)
-  return cleaned || 'file'
-}
-
 const sanitizeExtension = (ext: string): string =>
   // path.parse(...).ext includes the leading dot; cap to keep things tidy
   ext.replace(/[^A-Za-z0-9.]/g, '').slice(0, 16)
 
 const buildOnDiskName = (token: string, displayFilename: string): string => {
   const parsed = path.parse(displayFilename)
-  return `${sanitizeBaseName(parsed.name)}_${token}${sanitizeExtension(parsed.ext)}`
+  const base = sanitiseFilenameBase(parsed.name, { spaceReplacement: '_' }) || 'file'
+  return `${base}_${token}${sanitizeExtension(parsed.ext)}`
 }
 
 const forceDelete = async (token: string) => {

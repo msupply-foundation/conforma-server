@@ -46,7 +46,7 @@ interface GeneratePDFInput {
   applicationResponseId?: number
   subFolder?: string
   /** Download name for the generated PDF (".pdf" added if missing). Defaults to
-   * "<templateName>_<applicationSerial>.pdf" — see buildOutputFilenames. */
+   * "<docTemplateName>_<applicationSerial>.pdf" — see buildOutputFilenames. */
   filename?: string
   description?: string
   isOutputDoc?: boolean
@@ -74,7 +74,7 @@ export async function generatePDF({
   // archive store, not the files folder — so resolve it against the "root"
   // returned by getFilePath rather than assuming the files folder.
   const templateFullPath = path.join(templateFileInfo.root, templatePath as string)
-  const templateName = path.parse(templateFileInfo?.originalFilename).name
+  const docTemplateName = path.parse(templateFileInfo?.originalFilename).name
 
   // Output file/folder properties
   const uniqueId = nanoid()
@@ -82,7 +82,7 @@ export async function generatePDF({
   if (subfolder) makeFolder(path.join(appRootFolder, filesFolder, subfolder))
   const { originalFilename, outputFilename } = buildOutputFilenames({
     filename,
-    templateName,
+    docTemplateName,
     applicationSerial,
     uniqueId,
   })

@@ -2,7 +2,7 @@
   "type": "action_plugin",
   "code": "generateDoc",
   "name": "Generate Document",
-  "description": "Generates a PDF document from a Carbone or Typst template",
+  "description": "Generates a PDF document from a Carbone template or Typst bundle",
   "required_parameters": ["docTemplateId"],
   "optional_parameters": [
     "options",
