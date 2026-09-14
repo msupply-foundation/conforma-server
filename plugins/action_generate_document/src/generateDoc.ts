@@ -10,8 +10,16 @@ const generateDoc: ActionPluginType = async ({
   // DBConnect,
   outputCumulative,
 }) => {
-  const { options, docTemplateId, data, additionalData, description, isOutputDoc, toBeDeleted } =
-    parameters
+  const {
+    options,
+    docTemplateId,
+    data,
+    additionalData,
+    filename,
+    description,
+    isOutputDoc,
+    toBeDeleted,
+  } = parameters
   const userId = parameters?.userId ?? applicationData?.userId
   const applicationSerial = parameters?.applicationSerial ?? applicationData?.applicationSerial
   // We don't want to include template id normally, as that will link the file
@@ -35,6 +43,7 @@ const generateDoc: ActionPluginType = async ({
       userId,
       templateId,
       applicationSerial,
+      filename,
       description,
       isOutputDoc,
       toBeDeleted,

@@ -359,6 +359,7 @@ Endpoint to generate PDF files based on a [Carbone template](https://carbone.io/
 - `fileId` -- uniqueId of the carbone template file (from the "file" table)
 - `data` -- object containing all the data to be used for substitutions in the carbone template
 - `userId` / `applicationSerial` / `templateId` -- not required, but will be added to the resulting "file" record of the generated document. Note: it is not recommended to add `templateId` to files generated for applications; it should be reserved for files directly associated with templates, such as carbone document templates.
+- `filename` -- optional download name for the generated PDF (`.pdf` is added if missing; unsafe characters are stripped). Defaults to `<templateName>_<applicationSerial>.pdf`, or `<templateName>.pdf` if no `applicationSerial`. The file stored on disk always gets a unique suffix regardless.
 - `subfolder` -- will save output file into a subfolder if `applicationSerial` is not supplied
 
 The return object contains:

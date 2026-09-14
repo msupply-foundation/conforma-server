@@ -2,9 +2,20 @@
   "type": "action_plugin",
   "code": "generateDoc",
   "name": "Generate Document",
-  "description": "Generates a PDF document from a Carbone template",
+  "description": "Generates a PDF document from a Carbone or Typst template",
   "required_parameters": ["docTemplateId"],
-  "optional_parameters": ["options", "additionalData", "userId", "applicationSerial", "templateId"],
+  "optional_parameters": [
+    "options",
+    "data",
+    "additionalData",
+    "userId",
+    "applicationSerial",
+    "templateId",
+    "filename",
+    "description",
+    "isOutputDoc",
+    "toBeDeleted"
+  ],
   "output_properties": ["document"],
   "info": {
     "author": {
