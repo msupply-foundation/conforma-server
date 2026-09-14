@@ -443,6 +443,15 @@ const startServer = async () => {
           '   without the "Secure" flag so they survive a plain-http LAN address.\n' +
           '   For testing on other devices only. Unset it when you are done.'
       )
+    // Announcing the refusal as well, or a browser silently dropping every
+    // cookie is all the developer has to go on -- the failure this flag
+    // exists to fix, reached by a different route.
+    else if (process.env.INSECURE_COOKIES_FOR_LAN_TESTING === 'true')
+      console.log(
+        '\n⚠️  INSECURE_COOKIES_FOR_LAN_TESTING is set but REFUSED -- this is a\n' +
+          '   production build or a live server, so auth cookies keep the "Secure"\n' +
+          '   flag and a plain-http LAN address will not be able to hold them.'
+      )
     warnAboutPlaintextSecrets(config.externalApiConfigs)
     warnAboutReloginOn(config.externalApiConfigs)
     console.log(`\nServer listening at ${address}`)

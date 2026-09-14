@@ -45,7 +45,8 @@ normal 200 -- and every later request arrives unauthenticated.
 Dropping the flag is the only way to make that case work without serving the
 dev site over TLS. config.allowInsecureCookies is false unless
 INSECURE_COOKIES_FOR_LAN_TESTING is set, and is forced false in a production
-build (see config.ts), so a deployment always gets the full flag set.
+build and on a live server alike (see config.ts), so a deployment gets the full
+flag set however it was launched.
 */
 const COOKIE_FLAGS = config.allowInsecureCookies
   ? ['Path=/', 'HttpOnly', 'SameSite=Strict']
