@@ -1,4 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
+import config from '../../config'
 
 /*
 Transport for both auth tokens -- see kdd/auth-token-lifecycle §3
@@ -28,7 +29,27 @@ export const REFRESH_COOKIE_NAME = 'refresh'
 // working.
 const COOKIE_MAX_AGE = 400 * 24 * 60 * 60 // Seconds
 
-const COOKIE_FLAGS = ['Path=/', 'HttpOnly', 'Secure', 'SameSite=Strict']
+/*
+"Secure" is not "the scheme must be https" -- browsers test it against the
+Secure Contexts notion of a *potentially trustworthy origin*, which grants
+loopback (`localhost`, `127.0.0.0/8`, `::1`) the same standing as TLS. Loopback
+traffic cannot reach a network interface, so there is no path for an attacker
+to sit on, which is why ordinary local development over http keeps its cookies.
+
+A LAN address earns no such exemption: private ranges were deliberately left
+out, because nothing in `192.168.x.x` distinguishes a home network from hostile
+cafe wifi. So testing the app from a phone at `http://192.168.x.x` has the
+browser discard both cookies at login -- silently, since the response is a
+normal 200 -- and every later request arrives unauthenticated.
+
+Dropping the flag is the only way to make that case work without serving the
+dev site over TLS. config.allowInsecureCookies is false unless
+INSECURE_COOKIES_FOR_LAN_TESTING is set, and is forced false in a production
+build (see config.ts), so a deployment always gets the full flag set.
+*/
+const COOKIE_FLAGS = config.allowInsecureCookies
+  ? ['Path=/', 'HttpOnly', 'SameSite=Strict']
+  : ['Path=/', 'HttpOnly', 'Secure', 'SameSite=Strict']
 
 /*
 Fastify APPENDS repeated Set-Cookie headers rather than replacing them, which is

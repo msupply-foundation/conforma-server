@@ -437,6 +437,12 @@ const startServer = async () => {
     console.log('Email mode:', config.emailMode)
     if (config.emailMode === 'TEST') console.log('All email will be sent to:', config.testingEmail)
     if (config.maintenanceMode) console.log(`-- Server in Maintenance mode`)
+    if (config.allowInsecureCookies)
+      console.log(
+        '\n⚠️  INSECURE_COOKIES_FOR_LAN_TESTING is set -- auth cookies are being issued\n' +
+          '   without the "Secure" flag so they survive a plain-http LAN address.\n' +
+          '   For testing on other devices only. Unset it when you are done.'
+      )
     warnAboutPlaintextSecrets(config.externalApiConfigs)
     warnAboutReloginOn(config.externalApiConfigs)
     console.log(`\nServer listening at ${address}`)

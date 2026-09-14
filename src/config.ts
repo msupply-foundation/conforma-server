@@ -19,6 +19,17 @@ const siteHost = (preferences.web as WebAppPrefs)?.siteHost
 const webHostUrl = process.env.WEB_HOST
 const isLiveServer = getIsLiveServer(webHostUrl, siteHost)
 
+// Opt-in for testing the app on other devices over a LAN address, which
+// requires dropping the auth cookies' "Secure" flag -- see
+// components/permissions/sessionCookies.ts for why. A production build
+// ignores it, so setting it in a deployment cannot weaken one. So does a test
+// run, since the suite asserts the full flag set and a developer who leaves
+// this in their .env must not see those assertions quietly change.
+const allowInsecureCookies =
+  process.env.INSECURE_COOKIES_FOR_LAN_TESTING === 'true' &&
+  !isProductionBuild &&
+  process.env.NODE_ENV !== 'test'
+
 // Change to true to force email server to use local Mailhog
 const USE_MAIL_HOG = false
 
@@ -81,6 +92,7 @@ const config: Config = {
   filterColumnSuffix: '_filter_data', // snake_case,
   fileUploadLimit: 5 * 1024 * 1024 * 1024, // 5GB
   isProductionBuild,
+  allowInsecureCookies,
   defaultSystemManagerPermissionName: 'systemManager',
   ...serverPrefs,
   webHostUrl,
