@@ -941,6 +941,23 @@ describe('CookieLogin', () => {
       expect(logged).toContainEqual(`Making GET request to: ${ITEM_URL}`)
     })
 
+    // Axios labels a POST with no data as form-urlencoded, which a Fastify
+    // server with no parser for that type turns away with 415. An empty object
+    // goes out as JSON instead.
+    it('sends an empty body on a POST when neither client nor route supplied one', async () => {
+      config.externalApiConfigs![API].routes.item = { method: 'post', url: 'item' }
+
+      expectSuccess(await relay())
+
+      expect(relays()[0].data).toEqual({})
+    })
+
+    it('leaves the body off a GET', async () => {
+      expectSuccess(await relay())
+
+      expect(relays()[0].data).toBeUndefined()
+    })
+
     /*
     These are answered before the config is read: destructuring an absent API
     threw ahead of the try block, so the caller got Fastify's own 500 carrying

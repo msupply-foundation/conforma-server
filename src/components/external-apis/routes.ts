@@ -125,6 +125,7 @@ const sendAuthenticated = async (
       if (describesCurrentSession()) recordAuthResponse(authentication, response.headers, apiName)
       return response
     } catch (err) {
+      console.error(errorMessage(err))
       if (!(err instanceof AxiosError)) throw err
 
       // A peer that has ended our session may say so by expiring the cookie, so
@@ -265,16 +266,19 @@ export const routeAccessExternalApi = async (
     evaluatorData
   )
 
+  // A POST always carries a body, even when neither the client nor the route
+  // supplied one. Axios labels a bodiless POST as form-urlencoded, and a
+  // Fastify server with no parser for that type (another Conforma, for one)
+  // answers 415 before its handler runs. An object, however empty, goes out as
+  // `application/json`, which any JSON API accepts.
   if (method === 'post') {
     const { bodyJson, allowedClientBodyFields } = routeConfig
-    if (request.body || bodyJson) {
-      axiosRequest.data = await constructQueryObject(
-        request.body as QueryParameters,
-        bodyJson,
-        allowedClientBodyFields,
-        evaluatorData
-      )
-    }
+    axiosRequest.data = await constructQueryObject(
+      request.body as QueryParameters,
+      bodyJson,
+      allowedClientBodyFields,
+      evaluatorData
+    )
   }
 
   try {
