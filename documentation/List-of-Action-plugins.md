@@ -59,18 +59,19 @@ Set the Outcome of an application to the input parameter ("Pending", "Approved",
 
 ### Increment Stage
 
-Changes the application Stage to the next in the sequence
+Changes the application Stage to the next in the sequence, or to a specific stage if `stageNumber` is supplied
 
 - _Action Code:_ **`incrementStage`**
 
   - If a new application, will create a corresponding Status set to "Draft"
   - If application is already on final stage, will leave unchanged
   - If application outcome is anything other than PENDING, will leave unchanged
+  - If `stageNumber` is supplied, sets the application to that specific stage (forwards or backwards) instead of just the next one. Leaves unchanged if the stage doesn't exist for the template, or if the application is already on that stage.
 
 | Input parameters<br />(\*required) <br/> | Output properties |
 | ---------------------------------------- | ----------------- |
 | `applicationId`                          | `applicationId`   |
-|                                          | `stageNumber`     |
+| `stageNumber`                            | `stageNumber`     |
 |                                          | `stageName`       |
 |                                          | `stageId`         |
 |                                          | `status`          |
@@ -116,7 +117,7 @@ Creates or updates a database record on any table, and creates/updates a related
 | `ignoreNull` (default `true`)                  |                                               |
 | `shouldCreateJoinTable` (default `true`)       |                                               |
 | `noChangeLog` (default `false`)                |                                               |
-| `regenerateDataTableFilters` (default `false`) |                                               |
+| `regenerateDataTableFilters` (default `true` for CREATE, else `false`) |                     |
 | `data` (shorthand for multiple fields at once) |                                               |
 | `patch` (pre-constructed data object)          |                                               |
 | `databaseTypes`                                |                                               |
@@ -233,7 +234,7 @@ It is recommended to use the `data` parameter object, or `patch` when possible. 
 
 `ignoreNull`: By default, any `null` values in the incoming data are ignored -- they won't replace existing values, nor creating new fields. This is preferable in most cases, as it can be hard to create an expression that conditional omits a field, and so setting it to `null` is usually the easiest way to handle it if we don't want a certain field changed under certain conditions. However, this behaviour can be over-ridden by setting `ignoreNull: false`, in which case `null` values are treated the same as any other.
 
-`regenerateDataTableFilters`: if you have ["filter data" columns](Data-View-Filters.md#handling-complex-data-structures) defined for filtering this data table, the `regenerateDataTableFilters` flag will ensure that the "generateFilterDataFields" script will run and compute the relevant filter data values for the new record. By default this is `false`, but you should enable it for all instances of `modifyRecord` where you are inserting data that can be viewed in [Data Views](Data-View.md). Even if you have no filter data filters defined currently, having this set to `true` ensures that any definitions you configure in the future will automatically create the appropriate filter data values for new records.
+`regenerateDataTableFilters`: if you have ["filter data" columns](Data-View-Filters.md#handling-complex-data-structures) defined for this data table, this flag runs the "generateFilterDataFields" script to compute their values for the affected record. It defaults to `true` for creation (`CREATE`) and `false` for updates and deletes, but you can override it explicitly in either direction. (It's a cheap no-op for tables with no filter data definitions.)
 
 `noChangeLog`: The `modifyRecord` action causes an entry to be added to the `data_changelog` database table so we have a record of all data modifications (after record's initial creation) done in the system. This can be over-ridden by setting `noChangeLog: true` (or `noChangeLog: false` if you need to add a log for new record creation). It is not recommended to change the default in most cases -- we want an audit trail. It is mostly used by a few core actions so we don't clutter up the changelog table with common application table changes, etc. 
 
@@ -524,7 +525,7 @@ Should be run whenever an application or review is submitted or re-submitted, an
 
 ### Refresh Review Assignments
 
-A "super-action", which regenerates all `review_assignment` and `review_assignment_assigner_join` records associated with a specific user, or group of users (or all users). It does this by figuring out which active applications are associated with the input user(s), and then running [`generateReviewAssignments`](#generate-review-assignments) on each of them.
+Brings the `review_assignment` and `review_assignment_assigner_join` records for a specific user (or group of users) into line with their current REVIEW/ASSIGN permissions, across all active applications: missing assignments are created, revoked ones (and their assigner joins) are deleted, and section restrictions are re-merged. Only the specified users' records are touched, via a handful of set-based SQL statements — other users and unchanged records are not rewritten, so it stays fast on large systems.
 
 Should be run whenever the permissions for any user are changed.
 
@@ -538,7 +539,8 @@ Should be run whenever the permissions for any user are changed.
 **Notes**:
 
 - `userId` can be a single user (number) _OR_ an array of `userId`s
-- if `userId` is omitted completely, then ALL active applications will have their review assignments re-generated. Useful for manually running and fully updating the system assignments.
+- if `userId` is omitted completely, then ALL active applications will have their review assignments re-generated for **all** users, by running [`generateReviewAssignments`](#generate-review-assignments) on each of them. Useful for manually running and fully updating the system assignments (slow — avoid triggering from templates).
+- `updatedApplications` output: with `userId`, one record of change counts per affected application (`assignmentsCreated/Updated/Deleted`, `assignerJoinsCreated/Deleted`); without, the per-application `generateReviewAssignments` results.
 
 ---
 
@@ -600,7 +602,12 @@ The logic is as follows:
 
 ### Generate Document
 
-Generates a PDF file based on a [Carbone](https://carbone.io/api-reference.html) document template.
+Generates a PDF file from a document template. Two templating engines are supported, selected automatically by the template file's extension:
+
+- **[Carbone](https://carbone.io/api-reference.html)** — `.odt` (and other office-format) templates, rendered via LibreOffice. The original engine, which we are aiming to **deprecate** — please use Typst for all new templates.
+- **[Typst](https://typst.app/)** — `.typzip` template bundles (or bare `.typ` files), rendered with the Typst compiler. See [Typst Document Templates](Typst-Document-Templates.md) for the bundle format, data handling, fonts and validation tooling.
+
+Apart from the template file itself, the two engines behave identically from the action's point of view — same parameters, same data assembly, same output file handling.
 
 - _Action Code:_ **`generateDoc`**
 
@@ -613,21 +620,23 @@ Generates a PDF file based on a [Carbone](https://carbone.io/api-reference.html)
 | `userId`                                 |                                            |
 | `data`                                   |                                            |
 | `additionalData`                         |                                            |
+| `filename`                               |                                            |
 | `isOutputDoc`                            |                                            |
+| `toBeDeleted`                            |                                            |
 | `description`                            |                                            |
 
 
 The Action utilises the internal `generatePDF` function, which is also accessible via the [`/generate-pdf` endpoint](API.md)
 
-`docTemplateId` specifies the uniqueId of the carbone template file (from the "file" table) and `options` optional can define a localisatiion to be used for dates and currency formatting.
+`docTemplateId` specifies the uniqueId of the template file (from the "file" table) and the optional `options` can define a localisation to be used for dates and currency formatting (Carbone only — ignored for Typst templates).
 
-The data used by the action primarily comes from `applicationData` and `outputCumulative`, which are flattened/spread into a combined object to the carbone processer. Extra data (such as from individual responses, or other expressions) can be provided in one of two ways:
+The data used by the action primarily comes from `applicationData` and `outputCumulative`, which are flattened/spread into a combined object passed to the templating engine. Extra data (such as from individual responses, or other expressions) can be provided in one of two ways:
 
 - `data`: this parameter is an object in which you can define a simple mapping between field names required by Carbone and fields on `applicationData`. This is the same as the mapping available in `modifyRecord`, so please [see modifyRecord plugin](#modify-record) info for more detail and examples.
 - `additionalData`: another object, but does no mapping, so each value must either be a literal value or an evaluator expression. In the latter case, you'll need to create the object using the [`buildObject` operator](Query-Syntax.md#buildobject).
 
 
-The full data object is constructed and sent to the Carbone processor like so:
+The full data object is constructed and sent to the templating engine like so:
 
 ```
 data: { ...applicationData, ...outputCumulative, ...data(mapped), additionalData }
@@ -636,7 +645,9 @@ data: { ...applicationData, ...outputCumulative, ...data(mapped), additionalData
 
 `userId` and `applicationSerial` are not required for functioning, but will be stored as fields in the resulting "file" record. If `applicationSerial` is supplied, the output PDF file will be stored in a subfolder named for the application serial.
 
-Similarly, `isOutputDoc` and `description` (boolean) will populate their respective fields in the "file" record. These are used to mark the "output" documents generated by an application (e.g. licenses, certificates) that show up in the "Documents" tab of the "Review" summary page.
+`filename` sets the name the document is downloaded as (its `original_filename` in the "file" record). It can be a literal string or an expression built from application data, e.g. `"Import Licence " + orgName`. A `.pdf` extension is added if missing, and path separators and other unsafe characters are stripped. If omitted, the name defaults to `<docTemplateName>_<applicationSerial>.pdf` (or just `<docTemplateName>.pdf` when there is no application serial), where `<docTemplateName>` is the filename of the document template, i.e. the file that `docTemplateId` points to. Note that the file as stored on disk always has a unique suffix added, so regenerating a document never overwrites an earlier one — `filename` only controls the user-facing name.
+
+Similarly, `isOutputDoc` (boolean), `toBeDeleted` (boolean) and `description` will populate their respective fields in the "file" record. `isOutputDoc` is used to mark the "output" documents generated by an application (e.g. licenses, certificates) that show up in the "Documents" tab of the "Review" summary page; `toBeDeleted` marks temporary files (such as previews) for removal by the file cleanup job.
 
 The output object `document` provides the `uniqueId`, `filename`, and `filepath` (relative to server root) of the generated document, so it can be accessed by subsequent actions
 

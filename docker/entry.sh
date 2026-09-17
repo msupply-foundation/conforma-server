@@ -1,5 +1,65 @@
 #!/bin/bash
 
+# ---------------------------------------------------------------------------
+# FIRST-LAUNCH SEEDING
+#
+# Under docker-compose, volumes mount over the Postgres data dir and the
+# prefs/localisation/files folders. A brand-new volume comes up EMPTY (Docker's
+# implicit image->volume seeding is unreliable, and never happens at all for
+# bind mounts), so we explicitly seed each one from the image-baked sources the
+# build left at paths that no volume shadows:
+#   - the DB cluster    <- ./fresh_db                    (see database.sh)
+#   - prefs/lang/files  <- build/database/core_templates
+#
+# Every step is guarded to only run when the target is empty, so on all later
+# launches the persisted volume data is left untouched. Must run BEFORE any
+# service starts (Postgres won't start against an empty data dir).
+# ---------------------------------------------------------------------------
+APP_DIR=/usr/src/conforma-server
+PG_DATA=/var/lib/postgresql/16/main
+SEED_DB=$APP_DIR/fresh_db
+CORE=$APP_DIR/build/database/core_templates
+
+echo '---'
+echo '--- SEEDING EMPTY VOLUMES (first launch only)'
+echo '---'
+
+# Postgres cluster
+if [ ! -s "$PG_DATA/PG_VERSION" ]; then
+  if [ -d "$SEED_DB" ]; then
+    echo '    - DB volume empty: restoring cluster from fresh_db'
+    mkdir -p "$PG_DATA"
+    cp -a "$SEED_DB/." "$PG_DATA/"
+    chown -R postgres:postgres "$PG_DATA"
+    chmod 700 "$PG_DATA"
+  else
+    echo '    - WARNING: DB volume empty and no fresh_db to seed from!'
+  fi
+else
+  echo '    - DB already initialised: skipping'
+fi
+
+# Preferences
+if [ ! -f "$APP_DIR/build/preferences/preferences.json" ]; then
+  echo '    - preferences empty: seeding from core_templates'
+  mkdir -p "$APP_DIR/build/preferences"
+  cp -a "$CORE/preferences.json" "$APP_DIR/build/preferences/preferences.json"
+fi
+
+# Localisation
+if [ ! -f "$APP_DIR/build/localisation/languages.json" ]; then
+  echo '    - localisation empty: seeding from core_templates'
+  mkdir -p "$APP_DIR/build/localisation"
+  cp -a "$CORE/localisation/." "$APP_DIR/build/localisation/"
+fi
+
+# Files
+if [ ! -d "$APP_DIR/build/files" ] || [ -z "$(ls -A "$APP_DIR/build/files" 2>/dev/null)" ]; then
+  echo '    - files empty: seeding from core_templates'
+  mkdir -p "$APP_DIR/build/files"
+  cp -a "$CORE/files/." "$APP_DIR/build/files/"
+fi
+
 echo '---'
 echo '---'
 echo '--- STARTING POSTGRES'
@@ -7,6 +67,34 @@ echo '---'
 echo '---'
 service postgresql start
 service postgresql status
+
+echo '---'
+echo '---'
+echo '--- ENSURING BASE DATA (restore core_templates if the DB is empty)'
+echo '---'
+echo '---'
+# Wait for Postgres to accept connections
+for _ in $(seq 1 30); do
+  psql -U postgres -c '\q' 2>/dev/null && break
+  sleep 1
+done
+# fresh_db gives us a bootable cluster, but its app data may be empty (e.g. the
+# build-time restore didn't populate it). If the app schema is missing, restore
+# the base "core_templates" snapshot shipped in the image -- via the same code
+# path as an admin "restore snapshot", reading the reliable build/database copy.
+# This is deterministic and independent of the build-time DB restore. On an
+# already-populated DB it's a no-op.
+psql -U postgres -tc "SELECT 1 FROM pg_database WHERE datname='tmf_app_manager'" | grep -q 1 \
+  || psql -U postgres -c "CREATE DATABASE tmf_app_manager"
+HAS_SCHEMA=$(psql -U postgres -d tmf_app_manager -tAc \
+  "SELECT to_regclass('public.system_info') IS NOT NULL" 2>/dev/null | tr -d '[:space:]')
+if [ "$HAS_SCHEMA" = "t" ]; then
+  echo '    - database already populated: skipping base snapshot restore'
+else
+  echo '    - empty database: restoring core_templates'
+  cd "$APP_DIR"
+  NODE_ENV=production node build/database/snapshotCLI.js use core_templates
+fi
 
 echo '---'
 echo '---'

@@ -55,11 +55,7 @@ export class Schedulers {
     if (schedulerTestMode)
       console.log('Scheduler in test mode, will run a scheduled event every 30 seconds...')
 
-    const actionScheduleRule = getSchedule(
-      'action',
-      schedulerTestMode,
-      config.actionSchedule ?? config?.hoursSchedule
-    )
+    const actionScheduleRule = getSchedule('action', schedulerTestMode, config.actionSchedule)
     if (actionScheduleRule) {
       this.actionSchedule = Scheduler.scheduleJob(actionScheduleRule, triggerScheduledActions)
     }

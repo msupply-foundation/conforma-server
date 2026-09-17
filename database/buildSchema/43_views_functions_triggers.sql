@@ -1141,7 +1141,14 @@ CREATE OR REPLACE FUNCTION public.reviewable_questions (app_id int)
         ar.value
     ORDER BY
         code,
-        ar.time_submitted DESC
+        -- NULLS LAST is critical: an application_response that has never been
+        -- submitted (time_submitted IS NULL) would otherwise sort FIRST under
+        -- DESC and shadow the genuinely submitted response. That happens
+        -- whenever a restarted application leaves behind duplicate DRAFT
+        -- responses, and it breaks any review lookup keyed on response_id.
+        ar.time_submitted DESC NULLS LAST,
+        -- Deterministic tie-break (e.g. nothing submitted yet): newest wins
+        ar.id DESC
 $$
 LANGUAGE sql
 STABLE;
@@ -1200,7 +1207,10 @@ GROUP BY
     rq.response_id
 ORDER BY
     review_response_code,
-    is_latest_review DESC
+    -- is_latest_review is NULL when the LEFT JOINs found no review_response.
+    -- Without NULLS LAST those unreviewed rows sort ahead of TRUE and hide a
+    -- real decision when one question is assigned to more than one reviewer.
+    is_latest_review DESC NULLS LAST
 $$
 LANGUAGE sql
 STABLE;
@@ -1251,13 +1261,15 @@ LANGUAGE sql
 STABLE;
 
 -- FILE
--- Function to Notify server of File record deletion
+-- Function to Notify server of File record deletion. archivePath tells the
+-- server the file lives in the (immutable) archive store, where nothing is
+-- ever deleted.
 CREATE OR REPLACE FUNCTION public.notify_file_server ()
     RETURNS TRIGGER
     AS $trigger_event$
 BEGIN
     PERFORM
-        pg_notify('file_notifications', json_build_object('id', OLD.id, 'uniqueId', OLD.unique_id, 'originalFilename', OLD.original_filename, 'filePath', OLD.file_path, 'thumbnailPath', OLD.thumbnail_path)::text);
+        pg_notify('file_notifications', json_build_object('id', OLD.id, 'uniqueId', OLD.unique_id, 'originalFilename', OLD.original_filename, 'filePath', OLD.file_path, 'thumbnailPath', OLD.thumbnail_path, 'archivePath', OLD.archive_path)::text);
     RETURN NULL;
 END;
 $trigger_event$

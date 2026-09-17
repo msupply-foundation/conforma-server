@@ -8,6 +8,8 @@ echo 'building app with tsc'
 tsc
 echo 'copying images'
 cp -R images ./build/
+echo 'copying fonts'
+cp -R fonts ./build/
 echo 'copying database related files'
 cp -R database/buildSchema ./build/database/
 cp -R database/insertData ./build/database/

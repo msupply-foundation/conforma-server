@@ -68,6 +68,8 @@ class DBConnect {
 
   public setFileArchived = PostgresDB.setFileArchived
 
+  public getReferencedArchives = PostgresDB.getReferencedArchives
+
   public addActionPlugin = PostgresDB.addActionPlugin
 
   public deleteActionPlugin = PostgresDB.deleteActionPlugin
@@ -138,6 +140,8 @@ class DBConnect {
 
   public getNextStage = PostgresDB.getNextStage
 
+  public getStageByNumber = PostgresDB.getStageByNumber
+
   public addNewStageHistory = PostgresDB.addNewStageHistory
 
   public getReviewCurrentStatusHistory = PostgresDB.getReviewCurrentStatusHistory
@@ -163,6 +167,24 @@ class DBConnect {
   public getTemplatePermissions = PostgresDB.getTemplatePermissions
 
   public getUserAdminStatus = PostgresDB.getUserAdminStatus
+
+  public createUserSession = PostgresDB.createUserSession
+
+  public getUserSessionForRestore = PostgresDB.getUserSessionForRestore
+
+  public reinstateUserSession = PostgresDB.reinstateUserSession
+
+  public setUserSessionOrg = PostgresDB.setUserSessionOrg
+
+  public extendUserSessionIfValid = PostgresDB.extendUserSessionIfValid
+
+  public deleteUserSession = PostgresDB.deleteUserSession
+
+  public deleteUserSessionsByUserId = PostgresDB.deleteUserSessionsByUserId
+
+  public deleteExpiredUserSessions = PostgresDB.deleteExpiredUserSessions
+
+  public getLiveUserSessions = PostgresDB.getLiveUserSessions
 
   public getAllGeneratedRowPolicies = PostgresDB.getAllGeneratedRowPolicies
 

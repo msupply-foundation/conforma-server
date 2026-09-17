@@ -5,6 +5,8 @@ import path from 'path'
 import { getAppEntryPointDir } from './components/utilityFunctions'
 import { merge } from 'lodash'
 import databaseConnect from './components/database/databaseConnect'
+import { warnAboutPlaintextSecrets } from './components/external-apis/warnPlaintextSecrets'
+import { warnAboutReloginOn } from './components/external-apis/login'
 
 function loadPrefs(preferencesFolder: string, preferencesFileName: string) {
   const mainPrefs = readJsonSync(
@@ -35,17 +37,19 @@ function getIsLiveServer(webHostUrl: string | undefined, productionHost?: string
 
 function getEmailOperationMode(
   emailTestMode: boolean | undefined,
-  testingEmail: string | undefined,
+  testingEmail: string | string[] | undefined,
   isLiveServer: boolean
 ): 'LIVE' | 'TEST' | 'NONE' {
+  // An empty array is truthy, so must be checked explicitly
+  const hasTestingEmail = Array.isArray(testingEmail) ? testingEmail.length > 0 : !!testingEmail
   switch (true) {
     case emailTestMode === false:
       return 'LIVE'
-    case emailTestMode === true && !!testingEmail:
+    case emailTestMode === true && hasTestingEmail:
       return 'TEST'
     case isLiveServer:
       return 'LIVE'
-    case !!testingEmail:
+    case hasTestingEmail:
       return 'TEST'
     default:
       return 'NONE'
@@ -63,6 +67,9 @@ export const refreshConfig = async (config: Config) => {
       config[key] = serverPrefs[key] as never
     } else delete config[key]
   })
+
+  warnAboutPlaintextSecrets(config.externalApiConfigs)
+  warnAboutReloginOn(config.externalApiConfigs)
 
   if (webAppPrefs.siteHost) config.productionHost = webAppPrefs.siteHost
   else config.productionHost = undefined

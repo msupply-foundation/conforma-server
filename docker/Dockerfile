@@ -26,9 +26,28 @@ RUN apt-get install lsof -y
 # --- NGINX
 RUN apt-get install nginx -y
 
-# --- LIBRE OFFICE
+# --- LIBRE OFFICE (used by Carbone .odt document generation -- can be
+# removed, along with this comment, once all doc templates are Typst-based)
 RUN apt-get update
 RUN apt install libreoffice -y
+
+# --- TYPST (PDF generation from .typ/.typzip document templates)
+# Version is pinned: template rendering must stay reproducible, and Typst
+# syntax evolves between minor versions. Bump deliberately and re-validate
+# templates. The musl builds are fully static so run on any distro/libc.
+ARG TYPST_VERSION=0.15.0
+RUN apt-get install -y xz-utils
+RUN ARCH=$(uname -m) \
+    && case "${ARCH}" in \
+         x86_64) TYPST_ARCH='x86_64-unknown-linux-musl' ;; \
+         aarch64) TYPST_ARCH='aarch64-unknown-linux-musl' ;; \
+         *) echo "No typst build for architecture: ${ARCH}" && exit 1 ;; \
+       esac \
+    && mkdir -p /opt/typst \
+    && curl -fsSL "https://github.com/typst/typst/releases/download/v${TYPST_VERSION}/typst-${TYPST_ARCH}.tar.xz" \
+       | tar -xJ -C /opt/typst --strip-components=1 \
+    && ln -sf /opt/typst/typst /usr/local/bin/typst
+RUN typst --version
 
 # --- NODE and NPX
 ARG NODE_VERSION

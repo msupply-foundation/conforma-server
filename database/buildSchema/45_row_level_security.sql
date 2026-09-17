@@ -19,6 +19,7 @@ ALTER TABLE public.system_info ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.template_permission ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.trigger_queue ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.trigger_schedule ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_session ENABLE ROW LEVEL SECURITY;
 
 -- These ones have additional policies applied
 ALTER TABLE public.application ENABLE ROW LEVEL SECURITY;
@@ -47,6 +48,7 @@ ALTER TABLE public.template_action DISABLE ROW LEVEL SECURITY;
 -- ALTER TABLE public.template_permission DISABLE ROW LEVEL SECURITY;
 -- ALTER TABLE public.trigger_queue DISABLE ROW LEVEL SECURITY;
 -- ALTER TABLE public.trigger_schedule DISABLE ROW LEVEL SECURITY;
+-- ALTER TABLE public.user_session DISABLE ROW LEVEL SECURITY;
 -- ALTER TABLE public.application DISABLE ROW LEVEL SECURITY;
 -- ALTER TABLE public.review DISABLE ROW LEVEL SECURITY;
 -- ALTER TABLE public.review_assignment DISABLE ROW LEVEL SECURITY;

@@ -19,6 +19,27 @@ const siteHost = (preferences.web as WebAppPrefs)?.siteHost
 const webHostUrl = process.env.WEB_HOST
 const isLiveServer = getIsLiveServer(webHostUrl, siteHost)
 
+// Opt-in for testing the app on other devices over a LAN address, which
+// requires dropping the auth cookies' "Secure" flag -- see
+// components/permissions/sessionCookies.ts for why.
+//
+// A production build and a live server each refuse it, and between them they
+// cover a deployment however it was launched. isProductionBuild alone would
+// not: NODE_ENV=production is set only by the Docker entrypoint, while
+// `yarn serve` copies the developer's .env into the build, so the flag can
+// travel to a deployment that never sets it. isLiveServer is derived from
+// WEB_HOST matching the configured siteHost -- deployment topology rather
+// than a variable someone has to remember.
+//
+// A test run refuses it too, since the suite asserts the full flag set and a
+// developer who leaves this in their .env must not see those assertions
+// quietly change.
+const allowInsecureCookies =
+  process.env.INSECURE_COOKIES_FOR_LAN_TESTING === 'true' &&
+  !isProductionBuild &&
+  !isLiveServer &&
+  process.env.NODE_ENV !== 'test'
+
 // Change to true to force email server to use local Mailhog
 const USE_MAIL_HOG = false
 
@@ -29,9 +50,9 @@ export type EmailOperationMode = 'LIVE' | 'TEST' | 'NONE' | 'MAILHOG'
 Operation modes:
 
 - LIVE: Emails are sent normally according to action configurations
-- TEST: All emails are sent to a single address, defined in server
-  preferences "testingEmail" property. Used on testing servers or in
-  development.
+- TEST: All emails are sent to the address (or array of addresses) defined
+  in server preferences "testingEmail" property. Used on testing servers or
+  in development.
 - NONE: No emails are sent at all. Used for automated testing, or when a
   "testingEmail" address is not provided.
 - MAILHOG: All emails are relayed through a local MailHog SMTP server (so not
@@ -55,6 +76,8 @@ const config: Config = {
   databaseFolder: '../database',
   localisationsFolder: '../localisation',
   zipCacheFolder: '../__zip_cache',
+  typstCacheFolder: '../__typst_cache',
+  fontsFolder: '../fonts',
   stagedDownloadsFolder: '../__staged_downloads',
   preferencesFolder,
   preferencesFileName,
@@ -79,6 +102,7 @@ const config: Config = {
   filterColumnSuffix: '_filter_data', // snake_case,
   fileUploadLimit: 5 * 1024 * 1024 * 1024, // 5GB
   isProductionBuild,
+  allowInsecureCookies,
   defaultSystemManagerPermissionName: 'systemManager',
   ...serverPrefs,
   webHostUrl,
@@ -118,18 +142,20 @@ function getIsLiveServer(webHostUrl: string | undefined, productionHost?: string
 
 function getEmailOperationMode(
   emailTestMode: boolean | undefined,
-  testingEmail: string | undefined
+  testingEmail: string | string[] | undefined
 ): EmailOperationMode {
+  // An empty array is truthy, so must be checked explicitly
+  const hasTestingEmail = Array.isArray(testingEmail) ? testingEmail.length > 0 : !!testingEmail
   switch (true) {
     case emailTestMode === false:
       return 'LIVE'
-    case emailTestMode === true && !!testingEmail:
+    case emailTestMode === true && hasTestingEmail:
       return 'TEST'
     case USE_MAIL_HOG as boolean:
       return 'MAILHOG'
     case isLiveServer:
       return 'LIVE'
-    case !!testingEmail:
+    case hasTestingEmail:
       return 'TEST'
     default:
       return 'NONE'

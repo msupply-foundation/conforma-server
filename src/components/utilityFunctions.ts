@@ -97,19 +97,18 @@ export const crawlFileSystem = async (
   directory: string,
   fileOperation: (filePath: string) => void
 ) => {
-  const files = fs.readdirSync(directory)
-  for (const file of files) {
-    const subPath = path.join(directory, file)
-    if (fs.statSync(subPath).isDirectory()) await crawlFileSystem(subPath, fileOperation)
+  const entries = await fsProm.readdir(directory, { withFileTypes: true })
+  for (const entry of entries) {
+    const subPath = path.join(directory, entry.name)
+    if (entry.isDirectory()) await crawlFileSystem(subPath, fileOperation)
     else await fileOperation(subPath)
   }
 }
 
 // Recursively crawl a directory and remove any empty directories within
 export const clearEmptyDirectories = async (directory: string) => {
-  const directories = (await fsProm.readdir(directory)).filter((dir) =>
-    fs.statSync(path.join(directory, dir)).isDirectory()
-  )
+  const entries = await fsProm.readdir(directory, { withFileTypes: true })
+  const directories = entries.filter((entry) => entry.isDirectory()).map((entry) => entry.name)
   for (const dir of directories) {
     await clearEmptyDirectories(path.join(directory, dir))
     const files = await fsProm.readdir(path.join(directory, dir))
@@ -135,16 +134,31 @@ export const getValidTableName = (inputName: string | undefined): string => {
 }
 
 // Replace a string of the form "env.<KEY>" with environment variable <KEY>
-// - Used for references in configurations to sensitive data such as
-//   passwords/keys
+// - Used for configuration values that shouldn't be stated outright, such as
+//   passwords and keys, or that differ from one deployment to the next
+const ENV_VARIABLE_PATTERN = /^env\.(\w+)$/
+
 export const getEnvVariableReplacement = (input: string) => {
-  const match = input.match(/^env\.(\w+)$/)
+  const match = input.match(ENV_VARIABLE_PATTERN)
   if (!match) return input
 
   const envKey = match[1]
+  const value = process.env[envKey]
 
-  return process.env[envKey] ?? input
+  // Naming a variable that isn't there is a configuration mistake, and one
+  // worth reporting where it can be understood. Passing the reference along
+  // unresolved only moves the failure somewhere it makes no sense -- a
+  // password the server rejects, or a url that won't parse.
+  if (value === undefined) throw new Error(`Environment variable not set: ${envKey}`)
+
+  return value
 }
+
+// Whether a config value defers to an environment variable, as opposed to
+// stating a value outright -- answered without resolving it, for callers
+// inspecting configuration they aren't about to use.
+export const isEnvVariableReference = (input: unknown) =>
+  typeof input === 'string' && ENV_VARIABLE_PATTERN.test(input)
 
 // Validates an Error object and returns its message (default) or requested
 // property, if available
@@ -177,3 +191,23 @@ export const modifyValueInObject = (
     {} as object
   )
 }
+
+/**
+ * Makes a string safe to use as the base (extension-less) part of a filename:
+ * one path segment, no control or Windows-reserved characters, capped in
+ * length. Runs of whitespace become `spaceReplacement`. Returns '' when
+ * nothing usable is left, so the caller can pick its own fallback.
+ */
+export const sanitiseFilenameBase = (
+  name: string,
+  { spaceReplacement = ' ', maxLength = 80 }: { spaceReplacement?: string; maxLength?: number } = {}
+): string =>
+  name
+    .replace(/[\\/]/g, '_') // path separators
+    .replace(/\.{2,}/g, '_') // runs of dots (path traversal)
+    .replace(/\s+/g, spaceReplacement) // whitespace first, so tabs/newlines still separate words
+    .replace(/[\x00-\x1f\x7f]/g, '') // any other control chars are invisible, so just drop them
+    .replace(/[<>:"|?*]/g, '_') // Windows-reserved chars
+    .trim()
+    .slice(0, maxLength)
+    .replace(/^[._\s]+|[._\s]+$/g, '')

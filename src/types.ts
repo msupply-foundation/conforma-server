@@ -154,7 +154,7 @@ export interface ActionApplicationData extends BaseApplicationData {
     webHostUrl: string
     SMTPConfig?: SMTPConfig
     emailMode: EmailOperationMode
-    testingEmail: string | null
+    testingEmail: string | string[] | null
     productionHost: string | null
   }
   other?: {
@@ -263,6 +263,25 @@ export interface UserOrg extends User, Organisation {
   id: number
 }
 
+// One row of the "user_session" table -- a single login, keyed by the hash of
+// its refresh token. See kdd/auth-token-lifecycle
+export interface UserSession {
+  tokenHash: string
+  userId: number
+  orgId: number | null
+  // The JWT "sessionId" claim, which row-level security evaluates for public
+  // applicants, so renewal must reproduce it exactly. Not unique.
+  sessionId: string
+  expiresAt: Date
+}
+
+// A session read out ahead of a database restore so it can be put back
+// afterwards. It carries the username in place of the user id, because an id is
+// only meaningful within the dataset it was read from -- see sessionRestore.ts
+export interface CapturedSession extends Omit<UserSession, 'userId'> {
+  username: string
+}
+
 // node-scheduler recurrence rule format
 export interface ScheduleObject {
   date?: number | number[] | null
@@ -290,7 +309,6 @@ export interface ServerPreferences {
   thumbnailMaxWidth?: number
   thumbnailMaxHeight?: number
   actionSchedule?: number[] | ScheduleObject
-  hoursSchedule?: number[] // deprecated, please use actionSchedule
   SMTPConfig?: SMTPConfig
   systemManagerPermissionName?: string
   managerCanEditLookupTables?: boolean
@@ -307,7 +325,7 @@ export interface ServerPreferences {
   archiveFileAgeMinimum?: number
   archiveMinSize?: number // MB
   emailTestMode?: boolean
-  testingEmail?: string
+  testingEmail?: string | string[]
   locale?: string
   timezone?: string
   externalApiConfigs?: ExternalApiConfigs
@@ -325,11 +343,14 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'SMTPConfig',
   'systemManagerPermissionName',
   'managerCanEditLookupTables',
+  'managerCanEditLocalisation',
   'previewDocsMinKeepTime',
   'protectedFilesKeepDays',
   'fileCleanupSchedule',
+  'staleApplicationsCleanupSchedule',
   'backupSchedule',
   'backupFilePrefix',
+  'skipBackup',
   'maxBackupDurationDays',
   'archiveSchedule',
   'archiveFileAgeMinimum',
@@ -388,6 +409,8 @@ interface ConfigBase {
   preferencesFolder: string
   preferencesFileName: string
   zipCacheFolder: string
+  typstCacheFolder: string
+  fontsFolder: string
   stagedDownloadsFolder: string
   backupsFolder: string
   genericThumbnailsFolderName: string
@@ -403,6 +426,7 @@ interface ConfigBase {
   filterColumnSuffix: string
   fileUploadLimit: number
   isProductionBuild: boolean
+  allowInsecureCookies: boolean
   defaultSystemManagerPermissionName: string
   webHostUrl?: string
   productionHost?: string

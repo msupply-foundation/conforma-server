@@ -2,15 +2,15 @@ import fs from 'fs/promises'
 import fsSync from 'fs'
 import fsx from 'fs-extra'
 import path from 'path'
-import { execSync } from 'child_process'
+import { execFile } from 'child_process'
+import { promisify } from 'util'
+import { setTimeout as sleep } from 'node:timers/promises'
 import DBConnect from '../../../src/components/database/databaseConnect'
 import { updateRowPolicies } from '../permissions/rowLevelPolicyHelpers'
-import { SnapshotOperation } from '../exportAndImport/types'
+import { UseSnapshotOperation } from '../exportAndImport/types'
 import semverCompare from 'semver/functions/compare'
 import config from '../../../src/config'
 import { refreshConfig } from '../../../src/refreshConfig'
-// @ts-ignore
-import delay from 'delay-sync'
 import { createDefaultDataFolders } from '../files/createDefaultFolders'
 import migrateData from '../../../database/migration/migrateData'
 import {
@@ -26,12 +26,22 @@ import { getSnapshotArchives } from '../files/helpers'
 import { errorMessage } from '../utilityFunctions'
 import { cleanupDataTables } from '../../lookup-table/utils/cleanupDataTables'
 import { getTimeString } from './takeSnapshot'
+import { reloadFragments } from '../fig-tree-evaluator/FigTree'
+import { captureSessionForRestore, reinstateCapturedSession } from '../permissions/sessionRestore'
+import { pauseSessionSweep, resumeSessionSweep } from '../permissions/sessionCleanup'
 
-const useSnapshot: SnapshotOperation = async ({ snapshotName }) => {
+const execFileAsync = promisify(execFile)
+
+const useSnapshot: UseSnapshotOperation = async ({ snapshotName, preserveSessionTokenHash }) => {
   const startTime = Date.now()
 
   // Ensure relevant folders exist
-  createDefaultDataFolders()
+  await createDefaultDataFolders()
+
+  // While the database is being replaced, the session table describes either
+  // nothing or somebody else's system, so the sweep must not read anything into
+  // it (see sessionCleanup.ts)
+  pauseSessionSweep()
 
   try {
     console.log(`Restoring snapshot: ${snapshotName}`)
@@ -67,6 +77,10 @@ const useSnapshot: SnapshotOperation = async ({ snapshotName }) => {
     await collectArchives(snapshotFolder)
     console.log(`Collecting archives...done in ${getTimeString(archiveCollectStartTime)}`)
 
+    // Read out the calling admin's session while the current database still
+    // exists -- the restore below destroys every session on the server
+    const capturedSession = await captureSessionForRestore(preserveSessionTokenHash)
+
     // Reset existing files folder (but keep temp archives)
     await removeFiles()
 
@@ -76,12 +90,32 @@ const useSnapshot: SnapshotOperation = async ({ snapshotName }) => {
     // Safer to drop and recreate whole schema, as there can be errors when
     // trying to drop individual objects using --clean, especially if the
     // incoming database differs from the current database, schema-wise
-    execSync(
-      `psql -U postgres -d tmf_app_manager -c 'DROP schema public CASCADE;' > /dev/null 2>&1`
+    const pgOptions = { maxBuffer: 1024 * 1024 * 100 }
+    await execFileAsync(
+      'psql',
+      ['-U', 'postgres', '-d', 'tmf_app_manager', '-c', 'DROP schema public CASCADE;'],
+      pgOptions
+    ).catch(() => {
+      // Ignore errors dropping the schema (e.g. it doesn't exist yet) — matches
+      // the previous behaviour of silencing this command's output/failures
+    })
+    await execFileAsync(
+      'psql',
+      ['-U', 'postgres', '-d', 'tmf_app_manager', '-c', 'CREATE schema public;'],
+      pgOptions
     )
-    execSync(`psql -U postgres -d tmf_app_manager -c 'CREATE schema public;'`)
-    execSync(
-      `pg_restore -U postgres --clean --if-exists --dbname tmf_app_manager ${snapshotFolder}/database.dump`
+    await execFileAsync(
+      'pg_restore',
+      [
+        '-U',
+        'postgres',
+        '--clean',
+        '--if-exists',
+        '--dbname',
+        'tmf_app_manager',
+        `${snapshotFolder}/database.dump`,
+      ],
+      pgOptions
     )
 
     console.log(`Restoring database...done in ${getTimeString(databaseStartTime)}`)
@@ -113,7 +147,7 @@ const useSnapshot: SnapshotOperation = async ({ snapshotName }) => {
     }
 
     // Pause to allow postgraphile "watch" to detect changed schema
-    delay(1500)
+    await sleep(1500)
 
     // Migrate database to latest version
     console.log('Migrating database (if required)...)')
@@ -122,8 +156,12 @@ const useSnapshot: SnapshotOperation = async ({ snapshotName }) => {
     // Regenerate row level policies
     await updateRowPolicies()
 
+    // Only now is the session table certainly present and in its current shape
+    // -- a snapshot predating it relies on the migration above to create it
+    await reinstateCapturedSession(capturedSession)
+
     // To ensure generic thumbnails are not wiped out, even if server doesn't restart
-    createDefaultDataFolders()
+    await createDefaultDataFolders()
 
     // Store snapshot name in database
     const text = `INSERT INTO system_info (name, value)
@@ -137,12 +175,16 @@ const useSnapshot: SnapshotOperation = async ({ snapshotName }) => {
 
     await refreshConfig(config)
 
+    reloadFragments()
+
     console.log('...Snapshot load complete!')
     console.log('Total time:', getTimeString(startTime))
 
     return { success: true, message: `snapshot loaded ${snapshotName}` }
   } catch (e) {
     return { success: false, message: 'error while loading snapshot', error: errorMessage(e) }
+  } finally {
+    resumeSessionSweep()
   }
 }
 

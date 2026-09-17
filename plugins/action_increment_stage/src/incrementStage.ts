@@ -40,10 +40,28 @@ async function incrementStage({
     const currentStageNum = current?.stageNumber ?? 0
     const currentStatus = current?.status
 
-    const nextStage = await DBConnect.getNextStage(templateId, currentStageNum)
+    // If a specific "stageNumber" parameter is supplied, jump to that stage
+    // (forwards or backwards) rather than just incrementing to the next one.
+    const targetStageNumber = parameters?.stageNumber
 
-    if (!nextStage) {
-      console.log('WARNING: Application is already at final stage. No changes made.')
+    const targetStage =
+      targetStageNumber === undefined
+        ? await DBConnect.getNextStage(templateId, currentStageNum)
+        : await DBConnect.getStageByNumber(templateId, targetStageNumber)
+
+    if (!targetStage) {
+      console.log(
+        targetStageNumber === undefined
+          ? 'WARNING: Application is already at final stage. No changes made.'
+          : `WARNING: Stage ${targetStageNumber} does not exist for this template. No changes made.`
+      )
+      returnObject.status = ActionQueueStatus.Success
+      returnObject.error_log = 'Warning: No changes made'
+      return returnObject
+    }
+
+    if (targetStageNumber !== undefined && targetStage.stage_number === currentStageNum) {
+      console.log(`WARNING: Application is already at stage ${currentStageNum}. No changes made.`)
       returnObject.status = ActionQueueStatus.Success
       returnObject.error_log = 'Warning: No changes made'
       return returnObject
@@ -63,7 +81,7 @@ async function incrementStage({
     }
 
     // Create new stage_history
-    const newStageHistoryId = await DBConnect.addNewStageHistory(applicationId, nextStage.stage_id)
+    const newStageHistoryId = await DBConnect.addNewStageHistory(applicationId, targetStage.stage_id)
 
     // Create new status_history
     const newStatusHistory = await DBConnect.addNewApplicationStatusHistory(
@@ -80,8 +98,8 @@ async function incrementStage({
     returnObject.status = ActionQueueStatus.Success
     returnObject.output = {
       applicationId,
-      stageNumber: nextStage.stage_number,
-      stageName: nextStage.title,
+      stageNumber: targetStage.stage_number,
+      stageName: targetStage.title,
       stageHistoryId: newStageHistoryId,
       statusId: newStatusHistory.id,
       status: newStatusHistory.status,

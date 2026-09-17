@@ -6,7 +6,7 @@ import { FILES_FOLDER, FILES_TEMP_FOLDER, SNAPSHOT_ARCHIVE_FOLDER } from '../../
 import { DateTime } from 'luxon'
 import config from '../../../config'
 import archiver from 'archiver'
-import { buildTemplateStructure } from '../utilities'
+import { buildTemplateStructure, ensureLinkedEntityData } from '../utilities'
 import { PgTemplate } from '../types'
 
 export const exportTemplate = async (templateId: number) => {
@@ -20,7 +20,7 @@ export const exportTemplate = async (templateId: number) => {
 
   console.log('Building structure...')
 
-  const templateStructure = await buildTemplateStructure(template)
+  const templateStructure = await buildTemplateStructure(await ensureLinkedEntityData(template))
 
   // Now dump the data to output files
   console.log('Outputting to disk...')

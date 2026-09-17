@@ -11,6 +11,10 @@ import { getFilePath, saveToDB } from '../../../src/components/files/fileHandler
 import { nanoid } from 'nanoid'
 import config from '../../config'
 import { render, RenderCallback, RenderOptions } from 'carbone'
+import { renderTypstPDF } from './documentGenerateTypst'
+import { buildOutputFilenames } from './outputFilename'
+
+const TYPST_EXTENSIONS = ['.typ', '.typzip']
 
 const appRootFolder = getAppEntryPointDir()
 const filesFolder = config.filesFolder
@@ -41,6 +45,9 @@ interface GeneratePDFInput {
   applicationSerial?: string
   applicationResponseId?: number
   subFolder?: string
+  /** Download name for the generated PDF (".pdf" added if missing). Defaults to
+   * "<docTemplateName>_<applicationSerial>.pdf" — see buildOutputFilenames. */
+  filename?: string
   description?: string
   isOutputDoc?: boolean
   toBeDeleted?: boolean
@@ -55,6 +62,7 @@ export async function generatePDF({
   applicationSerial,
   applicationResponseId,
   subFolder,
+  filename,
   description,
   isOutputDoc,
   toBeDeleted,
@@ -62,28 +70,39 @@ export async function generatePDF({
   // Existing Carbone Template properties
   const templateFileInfo = await getFilePath(fileId)
   const templatePath = templateFileInfo?.filePath
-  const templateFullPath = path.join(appRootFolder, filesFolder, templatePath as string)
-  const templateName = path.parse(templateFileInfo?.originalFilename).name
+  // The template file may have been archived, in which case it lives in the
+  // archive store, not the files folder — so resolve it against the "root"
+  // returned by getFilePath rather than assuming the files folder.
+  const templateFullPath = path.join(templateFileInfo.root, templatePath as string)
+  const docTemplateName = path.parse(templateFileInfo?.originalFilename).name
 
   // Output file/folder properties
   const uniqueId = nanoid()
   const subfolder = subFolder ?? applicationSerial ?? ''
   if (subfolder) makeFolder(path.join(appRootFolder, filesFolder, subfolder))
-  const originalFilename = `${templateName}_${applicationSerial ?? uniqueId}.pdf`
-  const outputFilename = `${templateName}${
-    applicationSerial ? '_' + applicationSerial : ''
-  }_${uniqueId}.pdf`
+  const { originalFilename, outputFilename } = buildOutputFilenames({
+    filename,
+    docTemplateName,
+    applicationSerial,
+    uniqueId,
+  })
   const outputFilePath = path.join(subfolder, outputFilename)
 
   console.log('Generating document: ' + originalFilename)
 
+  const outputFullPath = path.join(appRootFolder, filesFolder, outputFilePath)
+
   try {
-    const result = await carboneRender(templateFullPath, data, {
-      convertTo: 'pdf',
-      lang: 'en-nz',
-      ...options,
-    })
-    fs.writeFileSync(path.join(appRootFolder, filesFolder, outputFilePath), result)
+    if (TYPST_EXTENSIONS.includes(path.extname(templatePath as string).toLowerCase())) {
+      await renderTypstPDF({ fileId, templateFullPath, data, outputFullPath })
+    } else {
+      const result = await carboneRender(templateFullPath, data, {
+        convertTo: 'pdf',
+        lang: 'en-nz',
+        ...options,
+      })
+      await fs.promises.writeFile(outputFullPath, result)
+    }
     await saveToDB(
       objectKeysToSnakeCase({
         uniqueId,

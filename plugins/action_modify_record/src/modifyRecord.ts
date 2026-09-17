@@ -19,7 +19,7 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
     matchField,
     matchValue,
     shouldCreateJoinTable = true,
-    regenerateDataTableFilters = false,
+    regenerateDataTableFilters,
     ignoreNull = true,
     noChangelog,
     noChangeLog = noChangelog, // In case of common capitalisation typo
@@ -116,8 +116,12 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
         await db.createJoinTableAndRecord(tableNameProper, applicationId, recordId)
     }
 
-    // Run this one async so we don't block action sequence
-    if (regenerateDataTableFilters) generateFilterDataFields(tableName)
+    // Regenerate filter data for the affected table. Defaults to ON for CREATE
+    // (new records need filter fields populated) but OFF for UPDATE/DELETE
+    // unless explicitly requested. Run async so we don't block the action
+    // sequence.
+    const shouldRegenerateFilters = regenerateDataTableFilters ?? operationType === 'CREATE'
+    if (shouldRegenerateFilters) generateFilterDataFields(tableName)
 
     if (result.some((result) => !result.success))
       throw new Error('Problem creating or updating record(s)')

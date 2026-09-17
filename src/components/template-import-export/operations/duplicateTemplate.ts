@@ -1,6 +1,6 @@
 import { ApiError } from '../../../ApiError'
 import db from '../databaseMethods'
-import { buildTemplateStructure } from '../utilities'
+import { buildTemplateStructure, ensureLinkedEntityData } from '../utilities'
 import { installTemplate, PreserveExistingEntities } from './importTemplate'
 import { PgTemplate } from '../types'
 import { TemplateStatus } from '../../../generated/graphql'
@@ -15,7 +15,7 @@ export const duplicateTemplate = async (templateId: number, newCode?: string) =>
     throw new ApiError(`Current template version must be committed before duplicating`, 400)
 
   console.log('Building structure...')
-  const templateStructure = await buildTemplateStructure(template)
+  const templateStructure = await buildTemplateStructure(await ensureLinkedEntityData(template))
 
   if (!newCode) {
     // Making a new version

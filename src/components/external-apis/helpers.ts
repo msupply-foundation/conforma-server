@@ -1,30 +1,7 @@
 import FigTree from '../fig-tree-evaluator/FigTree'
-import { AxiosRequestConfig } from 'axios'
-import { ApiAuthentication, QueryParameters } from './types'
-import { getEnvVariableReplacement } from '../utilityFunctions'
+import { QueryParameters } from './types'
 import { ActionApplicationData } from '../../types'
 import { EvaluatorNode } from 'fig-tree-evaluator'
-
-// Adds appropriate auth properties to Axios request object (modifies in-place)
-const constructAuthHeader = (
-  authentication: ApiAuthentication,
-  axiosRequest: AxiosRequestConfig
-) => {
-  switch (authentication.type) {
-    case 'Basic':
-      const { username, password } = authentication
-      axiosRequest.auth = { username, password: getEnvVariableReplacement(password) }
-      break
-
-    case 'Bearer':
-      const token = getEnvVariableReplacement(authentication.token)
-      axiosRequest.headers = { Authorization: `Bearer ${token}` }
-      break
-
-    default:
-      throw new Error('Invalid authorisation config')
-  }
-}
 
 // Build a data object, for either url query params or JSON body data, using:
 // - values from HTTP request, filtered for allowed fields only
@@ -66,4 +43,4 @@ const validateResult = async (
   return await FigTree.evaluate(validationExpression, { data: { ...evaluatorData, query, result } })
 }
 
-export { constructAuthHeader, constructQueryObject, validateResult }
+export { constructQueryObject, validateResult }

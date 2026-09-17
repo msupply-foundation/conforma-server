@@ -2,9 +2,9 @@
   "type": "action_plugin",
   "code": "incrementStage",
   "name": "Increment Stage",
-  "description": "Increments (or creates) the application Stage, if possible.",
+  "description": "Increments (or creates) the application Stage, if possible. If a specific \"stageNumber\" is supplied, sets the application to that stage instead of just the next one.",
   "required_parameters": [],
-  "optional_parameters": ["applicationId"],
+  "optional_parameters": ["applicationId", "stageNumber"],
   "output_properties": [
     "applicationId",
     "stageNumber",

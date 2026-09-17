@@ -28,6 +28,7 @@ Please see [ReadMe](__README.md) for information about maintaining this document
   - [Action plugin spec](Action-plugin-specification.md)
   - [List of Action plugins](List-of-Action-plugins.md)
   - [List of Core Actions](https://github.com/msupply-foundation/conforma-web-app/wiki/List-Core-Actions)
+  - [Typst Document Templates](Typst-Document-Templates.md)
 - [Template Builder](https://github.com/msupply-foundation/conforma-web-app/wiki/Template-Builder)
 - [Dynamic Expressions/Queries](Query-Syntax.md)
 - [Data Display/Views](Data-View.md)
