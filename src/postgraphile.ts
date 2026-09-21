@@ -5,6 +5,7 @@
 require('dotenv').config()
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { postgraphile, PostGraphileResponseFastify3, PostGraphileResponse } from 'postgraphile'
+import config from './config'
 
 const isProductionBuild = process.env.NODE_ENV === 'production'
 
@@ -24,7 +25,9 @@ export const pgMiddleware = postgraphile(
     enhanceGraphiql: true,
     externalUrlBase: isProductionBuild ? '/server' : '',
     dynamicJson: true,
-    jwtSecret: process.env.JWT_SECRET || 'devsecret',
+    // Must be the same value loginHelpers.ts signs with, or GraphQL rejects
+    // every token the REST tier issued -- see resolveJwtSecret() in config.ts.
+    jwtSecret: config.jwtSecret,
     disableQueryLog: isProductionBuild || process.env.HIDE_GRAPHQL_QUERY_LOG === 'true',
     graphileBuildOptions: {
       connectionFilterRelations: true,

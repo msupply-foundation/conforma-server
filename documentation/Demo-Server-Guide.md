@@ -177,7 +177,7 @@ For each instance, docker-compose is expecting a set of environment variables, s
   - `PORT_APP`: -- the Http port the Conforma server will listen on (recommend start with `8000` and increase by 2 for each additional instance)
   - `PORT_DASH`: -- the Http port the Grafana server will listen on (recommend start with `8001` and increase by 2 for each additional instance)
   - `TAG` -- the name of the tag you're about to launch
-  - `JWT_SECRET` -- private key for generating and verifying JWT tokens. Should be a strong, randomly generated string.
+  - `JWT_SECRET` (**required**) -- private key for generating and verifying JWT tokens. Must be a strong, randomly generated string. The server refuses to start without it: the development fallback is published in the source repository, so any token signed with it -- including an admin token, which runs as the Postgres superuser -- could be forged.
 
 Then, for each instance, run the following launch commands (you can either `export` the env vars or include them in the command):
 

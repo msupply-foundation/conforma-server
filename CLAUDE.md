@@ -39,7 +39,7 @@ Run from the repo root with **yarn** (Node 20 or later — `.nvmrc` has the base
 ### Setup prerequisites
 
 - PostgreSQL with `psql` available and a `postgres` superuser; the app DB is `tmf_app_manager` (connection string is currently **hard-coded** in [src/postgraphile.ts](src/postgraphile.ts)).
-- A `.env` file. `WEB_HOST` is **required** — the server exits on startup without it. `JWT_SECRET` falls back to `'devsecret'` whenever it is unset (no environment gating — an unset secret in production silently uses the dev default).
+- A `.env` file. `WEB_HOST` is **required** — the server exits on startup without it. `JWT_SECRET` is **required in a production build** — a missing or blank value exits the process when `NODE_ENV=production`; any other launch falls back to the public `'devsecret'` and warns loudly on every startup. Resolved once, in `resolveJwtSecret()` in [src/config.ts](src/config.ts); both the REST tier and PostGraphile read `config.jwtSecret`.
 
 ## Architecture
 
