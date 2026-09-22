@@ -11,6 +11,10 @@ import { merge } from 'lodash'
 const preferencesFolder = '../preferences'
 const preferencesFileName = 'preferences.json'
 
+// Shared by every developer, and published in this repo -- see
+// resolveJwtSecret() for what that costs and where it is refused.
+const DEV_JWT_SECRET = 'devsecret'
+
 const preferences = loadPrefs()
 
 const serverPrefs: ServerPreferences = preferences.server as ServerPreferences
@@ -87,7 +91,7 @@ const config: Config = {
   // In production postgraphile is started with -q and -i /postgraphile/...
   nodeModulesFolder:
     process.env.NODE_ENV === 'production' ? '../../node_modules' : '../node_modules',
-  jwtSecret: process.env.JWT_SECRET || 'devsecret',
+  jwtSecret: resolveJwtSecret(),
   RESTport: 8080,
   dataTablePrefix: 'data_table_', // snake_case
   // These are the only default tables in the system that we allow to be mutated
@@ -130,6 +134,49 @@ function loadPrefs() {
       return mainPrefs
     }
   } else return mainPrefs
+}
+
+// The only place the JWT secret is resolved: postgraphile.ts verifies tokens
+// that loginHelpers.ts signed, so a second reading of the environment could
+// disagree with this one and reject every token the REST tier issued.
+//
+// DEV_JWT_SECRET is public, so a token signed with it can be forged --
+// including one with isAdmin set, which carries role 'postgres' and bypasses
+// every row-level policy. A production build therefore refuses to start
+// without a real secret -- in any entry point that loads this file, including
+// the snapshot CLI docker/entry.sh runs to seed a fresh install.
+//
+// Any other launch keeps the development fallback, which fixtures, the test
+// suite and a nodemon reload all rely on being stable, but says so on every
+// startup: `yarn serve` can deploy a build that never sets NODE_ENV, and that
+// deployment has to be told rather than quietly trusted.
+//
+// A blank or whitespace-only value counts as unset, which catches both
+// `JWT_SECRET=` in an .env file and an unset `${JWT_SECRET}` passed through
+// docker-compose.
+function resolveJwtSecret(): string {
+  const secret = process.env.JWT_SECRET?.trim()
+  if (secret) return secret
+
+  if (isProductionBuild) {
+    console.error(
+      'ERROR!\nThe JWT_SECRET environment variable is not set. Conforma ' +
+        "won't start without it -- the development fallback is public, so any " +
+        'token signed with it can be forged.\n\nExiting now...\n'
+    )
+    process.exit(1)
+  }
+
+  if (process.env.NODE_ENV !== 'test')
+    console.warn(`
+!! WARNING ------------------------------------------------------------------
+!! JWT_SECRET is not set, so the public "${DEV_JWT_SECRET}" fallback is in use.
+!! Any token signed with it can be forged, including an admin one, which runs
+!! as the Postgres superuser. Set JWT_SECRET before this server is reachable
+!! from a network.
+!! ---------------------------------------------------------------------------`)
+
+  return DEV_JWT_SECRET
 }
 
 function getIsLiveServer(webHostUrl: string | undefined, productionHost?: string | null) {

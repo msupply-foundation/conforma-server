@@ -173,11 +173,13 @@ For each instance, docker-compose is expecting a set of environment variables, s
   - `WEB_HOST` -- full host name as will be shown in the application URL (including port), e.g. `https://conforma-demo.msupply.org:50004`
   - `BACKUPS_FOLDER` (optional, default: `~/backups`) -- path *on the host system* where the internal "backups" folder should be mapped to (optional -- default is the default volumes location). An appropriate location would be a folder that is synced to a cloud backup service. (See [Backups](Backups.md) for more info.)
   - `BACKUPS_PASSWORD` (optional) -- password for encrypting the backup archives (AES-encrypted .zip files) (if no password provided, the backups will be unencrypted .zip files)
+  - `JWT_SECRET` (**required**) -- private key for signing and verifying JWT tokens. Must be a strong, randomly generated string. Conforma refuses to start without one: the development fallback is published in the source repository, so any token signed with it -- including an admin token, which runs as the Postgres superuser -- could be forged.
 - As part of the launch command (not included in `.env` file as they will change every time):
   - `PORT_APP`: -- the Http port the Conforma server will listen on (recommend start with `8000` and increase by 2 for each additional instance)
   - `PORT_DASH`: -- the Http port the Grafana server will listen on (recommend start with `8001` and increase by 2 for each additional instance)
   - `TAG` -- the name of the tag you're about to launch
-  - `JWT_SECRET` -- private key for generating and verifying JWT tokens. Should be a strong, randomly generated string.
+
+`JWT_SECRET` can equally be exported or passed on the launch command instead. `launch.mjs` takes the first of an exported `JWT_SECRET`, the instance's `.env` file, or `default.env`, and reports which one it used. If none of the three supplies it, `launch.mjs` generates a random 64-character secret, which means a different secret on every launch: browser sessions survive that (they re-mint from the refresh cookie), but any long-lived access token issued by `yarn token` stops verifying. Set it explicitly to keep it stable.
 
 Then, for each instance, run the following launch commands (you can either `export` the env vars or include them in the command):
 
