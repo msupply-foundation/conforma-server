@@ -40,12 +40,13 @@ How to set up server in order for the above commands to work:
     PORT=8004
     SMTP_PASSWORD='<password>'
     WEB_HOST='https://conforma-demo.msupply.org:50004'
+    JWT_SECRET='<long-random-string>'
     BACKUPS_FOLDER='~/demo_server/backups/50004'
     BACKUPS_PASSWORD='<password>'
     ```  
     Note:
     - `PORT`, `SMTP_PASSWORD` & `WEB_HOST` are *required*; the other two are optional as they have default values.
-    - `JWT_SECRET` is *required* too, and is passed on the launch command rather than in the `.env` file (see the [Demo Server Guide](Demo-Server-Guide.md)). The server exits on startup if it is missing or blank.
+    - `JWT_SECRET` is *required* too, and belongs in these `.env` files alongside the rest (`launch.mjs` reads it from there, or from an exported variable, which takes precedence). Conforma exits on startup if it is missing or blank, and `launch.mjs` invents a random one -- different on every launch -- if nothing supplies it.
     - see the [Demo Server Guide](Demo-Server-Guide.md) for specifics of what these variables refer to.
 - Lock down the permissions on all the above `.env` files -- because they contain sensitive information, we want them to be as inaccessible as possible:
     ```sh
