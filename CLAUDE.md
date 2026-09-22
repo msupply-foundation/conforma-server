@@ -24,6 +24,7 @@ Run from the repo root with **yarn** (Node 20 or later — `.nvmrc` has the base
 | `yarn dev` | Dev server via nodemon + ts-node (recompiles on change). **Runs the REST API and GraphQL in one process.** |
 | `yarn build` | Compiles everything to `build/` via `utils/build_all.sh` (also builds plugins). |
 | `yarn serve` | Run a compiled build: copies prefs/config into `build/`, then runs `build/src/server.js`. |
+| `yarn start` | `yarn build` then `yarn serve` — compile and run in one step. |
 | `yarn test` | Jest (`--runInBand`). Tests live next to code as `*.test.ts` and under `tests/` folders. |
 | `yarn generate` | GraphQL codegen → `src/generated/graphql.ts`. **Requires the server running** (introspects `localhost:8080/graphql`). Re-run after any DB schema change. |
 | `yarn migrate` | Run DB migrations to the current app version without a release (see [database/CLAUDE.md](database/CLAUDE.md)). |
@@ -33,8 +34,6 @@ Run from the repo root with **yarn** (Node 20 or later — `.nvmrc` has the base
 | `yarn dockerise` / `yarn docker_run` | Build/run the Docker image (`docker/`). |
 
 > ⚠️ The [README.md](README.md) lists `yarn pg`, `yarn dev_pg`, `yarn pg_permissions` for running PostGraphile in a **separate** process. **Those scripts no longer exist** — PostGraphile is now mounted in-process inside [src/server.ts](src/server.ts) (`pgMiddleware` from [src/postgraphile.ts](src/postgraphile.ts)). Just `yarn dev`.
->
-> ⚠️ `yarn start` is currently broken — it runs `node server.js` from `build/`, but the compiled entry is `build/src/server.js`. Use `yarn serve` to run a compiled build.
 
 ### Setup prerequisites
 

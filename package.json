@@ -52,7 +52,7 @@
   },
   "scripts": {
     "dev": "nodemon",
-    "start": "yarn build && cd build && node server.js",
+    "start": "yarn build && yarn serve",
     "build": "./utils/build_all.sh",
     "serve": "cp -R preferences ./build && cp postgraphile.tags.json5 ./build && cp -R .env ./build && cd build && node src/server.js",
     "test": "jest --runInBand",
