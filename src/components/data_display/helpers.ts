@@ -5,7 +5,7 @@ import {
   capitaliseFirstLetter,
 } from '../utilityFunctions'
 import FigTree from '../fig-tree-evaluator/FigTree'
-import { camelCase, snakeCase, startCase } from 'lodash'
+import { camelCase, isEqual, mapValues, snakeCase, startCase } from 'lodash'
 // @ts-ignore
 import mapValuesDeep from 'map-values-deep'
 import {
@@ -66,9 +66,6 @@ export const buildAllColumnDefinitions = async ({
 
   const tableNameProper = camelCase(getValidTableName(tableName))
 
-  // Generate graphQL filter object
-  const gqlFilters: GraphQLFilter = { ...filter, ...getFilters(dataView, userId, orgId) }
-
   // Only for details view
   const headerColumnName = dataView.detailViewHeaderColumn ?? ''
   const showLinkedApplications = dataView.showLinkedApplications
@@ -86,6 +83,15 @@ export const buildAllColumnDefinitions = async ({
     dataTypeIndex[field.name] = field.dataType
     return dataTypeIndex
   }, {})
+
+  // Generate graphQL filter object. A boolean "false" filter should also match
+  // NULL, and "IS DISTINCT FROM true" matches both false and NULL.
+  const clientFilter = mapValues(filter, (condition, field) =>
+    fieldDataTypes[field] === 'boolean' && isEqual(condition, { equalTo: false })
+      ? { distinctFrom: true }
+      : condition
+  )
+  const gqlFilters: GraphQLFilter = { ...clientFilter, ...getFilters(dataView, userId, orgId) }
 
   // Get all returning column names (include/exclude + custom columns)
   const columnsToReturn: string[] = buildColumnList(dataView, fieldNames, type)
