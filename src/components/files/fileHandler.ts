@@ -41,7 +41,7 @@ export async function getFilePath(uid: string, thumbnail = false) {
   )
   const mimeType = thumbnail
     ? `image/${path.extname(thumbnailPath).toLowerCase().slice(1)}`
-    : fileData.mimetype
+    : (fileData.mimetype ?? 'application/octet-stream')
   // Generic thumbnails always live in FILES_FOLDER even when the underlying
   // file has been archived — they're shared assets that aren't copied into
   // the archive store.

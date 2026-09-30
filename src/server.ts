@@ -29,6 +29,7 @@ import {
 } from './components/data_display'
 import { routeGeneratePDF } from './components/files/documentGenerate'
 import { saveFiles, getFilePath, filesFolder } from './components/files/fileHandler'
+import { getFileContentDisposition } from './components/files/contentDisposition'
 import { createDefaultDataFolders } from './components/files/createDefaultFolders'
 import { getAppEntryPointDir, objectKeysToSnakeCase } from './components/utilityFunctions'
 import {
@@ -257,18 +258,17 @@ const startServer = async () => {
             originalFilename,
             filePath,
             thumbnailPath,
-            mimeType = 'application/octet-stream',
+            mimeType,
             root,
           } = await getFilePath(uid, thumbnail)
 
           const actualPath = thumbnail ? thumbnailPath : filePath
           reply.header('Content-Type', mimeType)
-          reply.header(
-            'Content-Disposition',
-            `attachment; filename="${encodeURIComponent(
-              originalFilename
-            )}"; filename*=UTF-8''${encodeURIComponent(originalFilename)}`
-          )
+          // PDFs and images open in the browser; everything else downloads
+          reply.header('Content-Disposition', getFileContentDisposition(mimeType, originalFilename))
+          // Stop the browser guessing the type from the file's contents, so an
+          // HTML file uploaded as a "PDF" can't run as a page on our origin
+          reply.header('X-Content-Type-Options', 'nosniff')
 
           // TO-DO Check for permission to access file
           try {
