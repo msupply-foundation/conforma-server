@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS application_list_shape (
     assigners varchar[],
     reviewers varchar[],
     reviewer_action public.reviewer_action,
-    assigner_action public.assigner_action
+    assigner_action public.assigner_action,
+    has_been_submitted boolean
 );
 

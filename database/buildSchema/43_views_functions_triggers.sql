@@ -1733,7 +1733,8 @@ CREATE TABLE IF NOT EXISTS application_list_shape (
     reviewers varchar[],
     assigners varchar[],
     reviewer_action public.reviewer_action,
-    assigner_action public.assigner_action
+    assigner_action public.assigner_action,
+    has_been_submitted boolean
 );
 
 
@@ -1779,7 +1780,14 @@ CREATE OR REPLACE FUNCTION application_list(userId int DEFAULT 0)
         app.reviewer_list AS reviewers,
         app.assigner_list AS assigners,
         reviewer_action,
-        assigner_action
+        assigner_action,
+        EXISTS (
+            SELECT 1 FROM application_status_history ash
+            JOIN application_stage_history ast
+                ON ash.application_stage_history_id = ast.id
+            WHERE ast.application_id = app.id
+            AND ash.status = 'SUBMITTED'
+        ) AS has_been_submitted
         FROM application app
         LEFT JOIN application_stage_status_latest as stage_status
             ON app.id = stage_status.application_id
