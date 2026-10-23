@@ -1783,10 +1783,8 @@ CREATE OR REPLACE FUNCTION application_list(userId int DEFAULT 0)
         assigner_action,
         EXISTS (
             SELECT 1 FROM application_status_history ash
-            JOIN application_stage_history ast
-                ON ash.application_stage_history_id = ast.id
-            WHERE ast.application_id = app.id
-            AND ash.status = 'SUBMITTED'
+            WHERE ash.application_id = app.id
+            AND ash.status <> 'DRAFT'
         ) AS has_been_submitted
         FROM application app
         LEFT JOIN application_stage_status_latest as stage_status

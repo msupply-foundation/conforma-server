@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS application_list_shape (
     last_active_date timestamptz,
     applicant_deadline timestamptz,
     -- TO-DO: reviewer_deadline
-    assigners varchar[],
     reviewers varchar[],
+    assigners varchar[],
     reviewer_action public.reviewer_action,
     assigner_action public.assigner_action,
     has_been_submitted boolean

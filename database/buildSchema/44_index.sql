@@ -138,6 +138,8 @@ CREATE INDEX IF NOT EXISTS "i_application_status_history_status" ON application_
 
 CREATE INDEX IF NOT EXISTS "i_application_status_history_is_current" ON application_status_history (is_current);
 
+CREATE INDEX IF NOT EXISTS "i_application_status_history_application_id" ON application_status_history (application_id);
+
 CREATE INDEX IF NOT EXISTS "i_application_response_status" ON application_response (status);
 
 CREATE INDEX IF NOT EXISTS "i_application_stage_history_is_current" ON application_stage_history (is_current);
