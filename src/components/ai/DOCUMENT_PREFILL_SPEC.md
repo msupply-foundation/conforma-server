@@ -27,7 +27,7 @@ An applicant uploads a document of no particular structure (a typed PDF, a scan,
 
 ### Endpoint
 
-`POST /api/ai/prefill`, registered in the authenticated `/api/*` tier in [src/server.ts](../../server.ts), handler in [routes.ts](routes.ts). Returns 404 when the feature isn't enabled (see Configuration).
+`POST /api/ai/prefill`, registered in the authenticated `/api/*` tier in [src/server.ts](../../server.ts), handler in [routes.ts](routes.ts). Returns 404 when the server has no API key (see Configuration).
 
 Multipart request:
 
@@ -108,9 +108,9 @@ The documents come first in the message (each preceded by its file name, so `evi
 
 ### Model call
 
-- Anthropic TypeScript SDK (`@anthropic-ai/sdk`, not yet a dependency).
-- Model from preferences, default `claude-opus-5-5`. Compare against `claude-sonnet-5-5` and `claude-haiku-5-5` during phase 1 testing (see below).
-- `output_config: { effort, format: { type: 'json_schema', schema } }`; effort from preferences, starting at `medium`.
+- Anthropic TypeScript SDK (`@anthropic-ai/sdk`).
+- Model `claude-opus-5-5` (`DEFAULT_MODEL` in [extractAnswers.ts](extractAnswers.ts)). The test CLI's `--model` compares it against `claude-sonnet-5-5` and `claude-haiku-5-5` (see below).
+- `output_config: { effort, format: { type: 'json_schema', schema } }`, effort `medium` (`DEFAULT_EFFORT`); the CLI's `--effort` tries others.
 - Stream and use `finalMessage()`; large documents can take a minute or more.
 - Check `stop_reason` before reading the content: handle `refusal` and `max_tokens` as errors back to the client. Enable server-side refusal fallbacks.
 - Errors go back through `ApiError` / `returnApiError`.
@@ -119,23 +119,23 @@ The documents come first in the message (each preceded by its file name, so `evi
 
 Structured outputs guarantee the shape, but the server still:
 - drops codes that weren't in the request
-- drops null values
+- drops empty answers, and numbers and dates that don't parse
 - checks choice values against the request's options
 - clamps `confidence` to 0–1
 
 ### Files
 
 - Held in memory only; nothing is written to disk or the `file` table.
-- Limits per request: `maxFiles` (default 5) and `maxTotalSizeMB` (default 20, for all files together). These are endpoint-specific; the global `fileUploadLimit` is 5 GB. Base64 encoding adds a third to the size sent to the API. The API also caps PDFs at 600 pages.
+- Limits per request: 5 files and 20 MB for all files together (`MAX_FILES` and `MAX_TOTAL_SIZE_MB` in [routes.ts](routes.ts)). These are endpoint-specific; the global `fileUploadLimit` is 5 GB. Base64 encoding adds a third to the size sent to the API. The API also caps PDFs at 600 pages.
 - The file type is detected from the file's first bytes, not its name or declared type. Anything other than PDF, JPEG, PNG, GIF or WebP is rejected with a clear message, including HEIC (iPhone photos), which the API doesn't accept. The web-app should convert HEIC to JPEG before upload, or tell the user to.
 - Large phone photos haven't been tested; if the API rejects them, downscale images with `sharp` before sending.
 
 ### Configuration
 
-- `ANTHROPIC_API_KEY` in `.env`.
-- Server preference `aiPrefill` (type `AiPrefillPreferences` in [src/types.ts](../../types.ts)): `enabled`, `model` (default `claude-opus-5-5`), `effort` (default `medium`), `maxFiles`, `maxTotalSizeMB`.
-- The feature is available only when `aiPrefill.enabled` is `true` **and** the key is set, so a key in a deployment's environment doesn't switch it on by itself. `GET /api/public/get-prefs` returns this as `aiPrefillEnabled`, so the web-app's prefill element can hide itself.
-- For local development, enable it in the file named by `PREFERENCE_OVERRIDES` rather than the committed preferences.
+No preferences. Two things decide where the feature is available:
+
+- **Per deployment:** `ANTHROPIC_API_KEY` in the server's `.env`. Without it the endpoint returns 404, and `GET /api/public/get-prefs` reports `aiPrefillEnabled: false` so the web-app's prefill element can hide itself.
+- **Per form:** the template contains the prefill element (see TO-DO).
 
 ### Logging and cost
 
@@ -169,7 +169,7 @@ No GraphQL schema change is needed, so no codegen in either repo.
 ## Data governance
 
 Many deployments are regulators handling applicants' documents, and some are on-prem or air-gapped. Before enabling this anywhere:
-- the feature is off by default and enabled per deployment
+- the feature is off unless the deployment has an API key, and then only on forms whose template includes the prefill element
 - the UI tells the applicant the document is sent to an external AI service
 - the provider sits behind a small interface in `src/components/ai/`, so Claude via Amazon Bedrock or Google Vertex (for data residency) or a local model can replace the direct API
 

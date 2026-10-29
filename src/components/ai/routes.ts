@@ -1,41 +1,38 @@
 import { FastifyReply } from 'fastify'
-import config from '../../config'
 import { ApiError, returnApiError } from '../../ApiError'
 import { checkApplicationAccess } from './checkApplicationAccess'
 import { extractAnswers } from './extractAnswers'
 import { detectMediaType, parseElements } from './parseInput'
 import { PrefillDocument, PrefillResult } from './types'
 
-const DEFAULT_MAX_FILES = 5
-// Base64 encoding adds a third to the size sent to the API
-const DEFAULT_MAX_TOTAL_SIZE_MB = 20
+const MAX_FILES = 5
+// All files in a request. Base64 encoding adds a third to the size sent to
+// the API.
+const MAX_TOTAL_SIZE_MB = 20
+const MAX_BYTES = MAX_TOTAL_SIZE_MB * 1024 * 1024
 
-// Needs both, so that a key in a deployment's environment doesn't switch the
-// feature on by itself
-export const isAiPrefillAvailable = () =>
-  !!config.aiPrefill?.enabled && !!process.env.ANTHROPIC_API_KEY
+// The API key is the deployment's switch for the feature; which forms can use
+// it is decided by their templates
+export const isAiPrefillAvailable = () => !!process.env.ANTHROPIC_API_KEY
+
+const tooLarge = () =>
+  new ApiError(`The documents are larger than ${MAX_TOTAL_SIZE_MB} MB in total`, 413)
 
 const readRequest = async (request: any) => {
-  const { maxFiles = DEFAULT_MAX_FILES, maxTotalSizeMB = DEFAULT_MAX_TOTAL_SIZE_MB } =
-    config.aiPrefill ?? {}
-  const maxBytes = maxTotalSizeMB * 1024 * 1024
-
-  const tooLarge = () =>
-    new ApiError(`The documents are larger than ${maxTotalSizeMB} MB in total`, 413)
 
   const documents: PrefillDocument[] = []
   const fields: Record<string, string> = {}
   let totalBytes = 0
 
   try {
-    for await (const part of request.parts({ limits: { files: maxFiles, fileSize: maxBytes } })) {
+    for await (const part of request.parts({ limits: { files: MAX_FILES, fileSize: MAX_BYTES } })) {
       if (part.type === 'field') {
         if (typeof part.value === 'string') fields[part.fieldname] = part.value
         continue
       }
       const data: Buffer = await part.toBuffer()
       totalBytes += data.length
-      if (totalBytes > maxBytes) throw tooLarge()
+      if (totalBytes > MAX_BYTES) throw tooLarge()
 
       const name = part.filename || `document ${documents.length + 1}`
       const mediaType = detectMediaType(data)
@@ -45,7 +42,7 @@ const readRequest = async (request: any) => {
   } catch (err) {
     // @fastify/multipart's own limit errors
     const code = (err as { code?: string })?.code
-    if (code === 'FST_FILES_LIMIT') throw new ApiError(`Too many files (maximum ${maxFiles})`, 413)
+    if (code === 'FST_FILES_LIMIT') throw new ApiError(`Too many files (maximum ${MAX_FILES})`, 413)
     if (code === 'FST_REQ_FILE_TOO_LARGE') throw tooLarge()
     throw err
   }
@@ -79,8 +76,6 @@ export const routeAiPrefill = async (request: any, reply: FastifyReply) => {
     const elements = parseElements(fields.elements)
 
     const result = await extractAnswers(documents, elements, {
-      model: config.aiPrefill?.model,
-      effort: config.aiPrefill?.effort,
       instructions: fields.instructions,
     })
 
