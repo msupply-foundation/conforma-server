@@ -193,10 +193,20 @@ Saved only when the applicant applies answers. As a response it survives reloads
 
 ### Building the request
 
-- The element definitions come from the full structure: visible, editable questions whose plugin provides `aiFill` (see below), within `scope`, with their current value.
+- The element definitions come from the full structure: editable questions whose plugin provides `aiFill` (see below), within `scope`, with their current value. Hidden questions are included, unless their visibility is literally `false`, because the answers may reveal them (see Hidden questions below).
 - The structure evaluates only visibility, editability and requirement; `parameters` (label, options) are evaluated inside each mounted element, so elements on other pages have none. The definitions builder evaluates each target element's parameters itself, the same way `ApplicationViewWrapper` does (`buildParameters`, then fig-tree with the same data). The question text is the evaluated `label` with markdown stripped, falling back to the element's `title`.
 - Plugins don't receive the structure as a prop, so `ApplicationPage` provides it through a context, along with the remount callback below.
 - The request includes the application's serial, which the endpoint requires.
+
+### Hidden questions
+
+A form often reveals questions from earlier answers (MDR1's product details appear once "where is it registered" is answered), so a fill that only sent visible questions would miss them, though the same documents answer both.
+
+- **Hidden questions are sent too**, and the model answers what the documents support.
+- **`previewFill`** works out how the application would be with a set of answers applied: it overlays them on the current responses, computes the `getValues` elements' values from those (as each would on mount: its `default`, else its `values`; repeated until nothing changes, as one can depend on another; only those whose parameters read `responses`, so lookups such as the applicant's organisation aren't fetched again), then evaluates `isVisible` with `evaluateElements`, as the structure does.
+- **In the review**, a proposal whose question would be hidden with the ticked answers is greyed out and can't be ticked, and is recomputed whenever a tick changes. It keeps its tick, so it's back as it was if it applies again. Apply is disabled while that's being recomputed.
+- **On Apply, the computed `getValues` values are saved too**, in the same mutation. A `getValues` element only computes and saves its value when its page is shown, so its saved value may be missing, or stale once the fill changes the answers it reads. Saving it means the revealed questions show, and count in progress, straight away.
+- **Not covered:** a choice question whose options come from another answer (MDR1's `otherCountrySelect`) isn't sent until that answer is saved, as its options can't be evaluated before then; a second fill reaches it. Defaults copied from other answers (`default` parameters) aren't simulated.
 
 ### Applying the answers
 
@@ -205,7 +215,7 @@ Saved only when the applicant applies answers. As a response it survives reloads
   - `fromPlainValue(value, evaluatedParameters, { locale, t }) → response` builds the value the plugin itself would save, including `text`, or undefined when the answer doesn't fit the element (not one of its options, outside its limits). The locale and the plugin's own strings are passed in because some plugins format with them.
   - The plugins' formatting helpers live in a `helpers.ts` beside their `ApplicationView`, shared by both.
 - **Answers are converted when they arrive**, before the review, so the review shows each answer as its element will, and answers that don't fit are left out.
-- **One GraphQL request with an aliased `updateApplicationResponse` per answer**, plus one for the element's own fill record, so Apollo updates its cache once and the structure rebuilds once. Each answer saves `isValid` as null and its question's evaluated parameters, as the wrapper does; nothing on the server reads `is_valid`, and the client revalidates (below) and again on submit.
+- **One GraphQL request with an aliased `updateApplicationResponse` per answer**, plus one for each `getValues` value that changes (see Hidden questions) and one for the element's own fill record, so Apollo updates its cache once and the structure rebuilds once. Each answer saves `isValid` as null and its question's evaluated parameters, as the wrapper does; nothing on the server reads `is_valid`, and the client revalidates (below) and again on submit.
 - **Remount the page's elements after the write.** The structure updates on its own (any response write flows through the Apollo cache into `useGetApplicationStructure`), but plugins copy `currentResponse` into local state on mount and don't re-read it. Without a remount, the current page shows old values, and a text field that loses focus saves its stale value over the new answer. The element waits until the rebuilt structure has the saved texts (remounting straight after the mutation returns would show the old values), then requests a revalidation and calls the context's `remountElements`, which changes the key of `PageElements` (or the Template Builder's page). The modal stays open until then.
 - No field can have an unsaved edit when the answers are written: the field lost focus, and saved, when the applicant opened the file picker, and the modal blocks the form from then on.
 
