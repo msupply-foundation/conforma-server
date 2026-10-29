@@ -1,7 +1,7 @@
 import { checkAnswers } from './checkAnswers'
-import { PrefillElement } from './types'
+import { ExtractionElement } from './types'
 
-const elements: PrefillElement[] = [
+const elements: ExtractionElement[] = [
   { code: 'name', pluginCode: 'shortText', title: 'Name' },
   { code: 'count', pluginCode: 'number', title: 'Count' },
   { code: 'date', pluginCode: 'datePicker', title: 'Date' },

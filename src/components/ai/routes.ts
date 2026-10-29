@@ -3,7 +3,7 @@ import { ApiError, returnApiError } from '../../ApiError'
 import { checkApplicationAccess } from './checkApplicationAccess'
 import { extractAnswers } from './extractAnswers'
 import { detectMediaType, parseElements } from './parseInput'
-import { PrefillDocument, PrefillResult } from './types'
+import { ExtractionDocument, ExtractionResult } from './types'
 
 const MAX_FILES = 5
 // All files in a request. Base64 encoding adds a third to the size sent to
@@ -11,16 +11,16 @@ const MAX_FILES = 5
 const MAX_TOTAL_SIZE_MB = 20
 const MAX_BYTES = MAX_TOTAL_SIZE_MB * 1024 * 1024
 
-// The API key is the deployment's switch for the feature; which forms can use
-// it is decided by their templates
-export const isAiPrefillAvailable = () => !!process.env.ANTHROPIC_API_KEY
+// The API key is the deployment's switch for AI features; which forms can use
+// document extraction is decided by their templates
+export const isAiAvailable = () => !!process.env.ANTHROPIC_API_KEY
 
 const tooLarge = () =>
   new ApiError(`The documents are larger than ${MAX_TOTAL_SIZE_MB} MB in total`, 413)
 
 const readRequest = async (request: any) => {
 
-  const documents: PrefillDocument[] = []
+  const documents: ExtractionDocument[] = []
   const fields: Record<string, string> = {}
   let totalBytes = 0
 
@@ -49,11 +49,11 @@ const readRequest = async (request: any) => {
   return { documents, fields }
 }
 
-const logUsage = (request: any, applicationSerial: string, result: PrefillResult) => {
+const logUsage = (request: any, applicationSerial: string, result: ExtractionResult) => {
   const { answers, skipped, usage } = result
   const answered = Object.keys(answers).length
   console.log(
-    `AI prefill: user ${request.auth?.userId}, application ${applicationSerial}, ` +
+    `AI extraction: user ${request.auth?.userId}, application ${applicationSerial}, ` +
       `${usage.model}, ${usage.inputTokens} + ${usage.outputTokens} tokens, ` +
       `${answered} answered (${skipped.length} not supported), ` +
       `${(usage.durationMs / 1000).toFixed(1)}s`
@@ -65,11 +65,11 @@ const logUsage = (request: any, applicationSerial: string, result: PrefillResult
  * questions as it can, for an application the caller can edit. Doesn't change
  * application data: the web-app saves the answers through GraphQL, so
  * permissions and validation apply as for any edit. See
- * DOCUMENT_PREFILL_SPEC.md.
+ * AI_DOCUMENT_FILL_SPEC.md.
  */
-export const routeAiPrefill = async (request: any, reply: FastifyReply) => {
+export const routeAiExtract = async (request: any, reply: FastifyReply) => {
   try {
-    if (!isAiPrefillAvailable()) throw new ApiError('AI prefill is not enabled', 404)
+    if (!isAiAvailable()) throw new ApiError('AI is not enabled on this server', 404)
 
     const { documents, fields } = await readRequest(request)
     const applicationSerial = await checkApplicationAccess(request.auth, fields.applicationSerial)

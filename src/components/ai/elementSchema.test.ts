@@ -1,8 +1,8 @@
 import { buildOutputSchema, splitSupported } from './elementSchema'
-import { PrefillElement } from './types'
+import { ExtractionElement } from './types'
 
-const name: PrefillElement = { code: 'name', pluginCode: 'shortText', title: 'Name' }
-const colour: PrefillElement = {
+const name: ExtractionElement = { code: 'name', pluginCode: 'shortText', title: 'Name' }
+const colour: ExtractionElement = {
   code: 'colour',
   pluginCode: 'radioChoice',
   title: 'Colour',
@@ -11,8 +11,8 @@ const colour: PrefillElement = {
 
 describe('splitSupported', () => {
   test('skips unsupported plugins and choice elements without options', () => {
-    const upload: PrefillElement = { code: 'upload', pluginCode: 'fileUpload', title: 'File' }
-    const noOptions: PrefillElement = { code: 'empty', pluginCode: 'radioChoice', title: 'X' }
+    const upload: ExtractionElement = { code: 'upload', pluginCode: 'fileUpload', title: 'File' }
+    const noOptions: ExtractionElement = { code: 'empty', pluginCode: 'radioChoice', title: 'X' }
     const { supported, skipped } = splitSupported([name, upload, noOptions, colour])
     expect(supported.map(({ code }) => code)).toEqual(['name', 'colour'])
     expect(skipped).toEqual(['upload', 'empty'])

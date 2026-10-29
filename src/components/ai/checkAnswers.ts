@@ -1,6 +1,6 @@
 import { isChoiceElement, isMultipleChoice } from './elementSchema'
 import { isRecord } from './parseInput'
-import { PrefillAnswer, PrefillElement, PrefillValue } from './types'
+import { ExtractionAnswer, ExtractionElement, ExtractionValue } from './types'
 
 const isIsoDate = (value: string) => {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
@@ -11,9 +11,9 @@ const isIsoDate = (value: string) => {
 // Returns the answer's value if it's usable for this element, otherwise
 // undefined
 const checkValue = (
-  element: PrefillElement,
+  element: ExtractionElement,
   answer: Record<string, unknown>
-): PrefillValue | undefined => {
+): ExtractionValue | undefined => {
   if (isChoiceElement(element)) {
     const chosen = Array.isArray(answer.selectedOptions) ? answer.selectedOptions : []
     // In option order, ignoring anything that isn't an option
@@ -44,13 +44,13 @@ const checkValue = (
  * question is answered twice, the more confident answer wins.
  */
 export const checkAnswers = (
-  elements: PrefillElement[],
+  elements: ExtractionElement[],
   output: unknown
-): Record<string, PrefillAnswer> => {
+): Record<string, ExtractionAnswer> => {
   const items = isRecord(output) && Array.isArray(output.answers) ? output.answers : []
   const elementsByCode = new Map(elements.map((element) => [element.code, element]))
 
-  const answers: Record<string, PrefillAnswer> = {}
+  const answers: Record<string, ExtractionAnswer> = {}
   for (const item of items) {
     if (!isRecord(item) || typeof item.code !== 'string') continue
     const element = elementsByCode.get(item.code)

@@ -1,8 +1,8 @@
-// Types for AI document prefill. See DOCUMENT_PREFILL_SPEC.md.
+// Types for AI document extraction. See AI_DOCUMENT_FILL_SPEC.md.
 
 // One form element, as described by the web-app (parameters already
 // evaluated)
-export interface PrefillElement {
+export interface ExtractionElement {
   code: string
   pluginCode: string
   title: string
@@ -16,39 +16,39 @@ export interface PrefillElement {
   currentValue?: string | null
 }
 
-export type PrefillValue = string | number | string[]
+export type ExtractionValue = string | number | string[]
 
-export interface PrefillAnswer {
-  value: PrefillValue
+export interface ExtractionAnswer {
+  value: ExtractionValue
   // 0-1
   confidence: number
   // Short quote from the document supporting the answer
   evidence: string
 }
 
-export type PrefillMediaType =
+export type ExtractionMediaType =
   | 'application/pdf'
   | 'image/jpeg'
   | 'image/png'
   | 'image/gif'
   | 'image/webp'
 
-export interface PrefillDocument {
+export interface ExtractionDocument {
   name: string
-  mediaType: PrefillMediaType
+  mediaType: ExtractionMediaType
   data: Buffer
 }
 
-export type PrefillEffort = 'low' | 'medium' | 'high' | 'xhigh' | 'max'
+export type ExtractionEffort = 'low' | 'medium' | 'high' | 'xhigh' | 'max'
 
-export interface PrefillOptions {
+export interface ExtractionOptions {
   model?: string
-  effort?: PrefillEffort
+  effort?: ExtractionEffort
   // Extra guidance from the template, e.g. what kind of document to expect
   instructions?: string
 }
 
-export interface PrefillUsage {
+export interface ExtractionUsage {
   // The model that produced the answer (differs from the requested model if
   // a refusal fallback ran)
   model: string
@@ -57,11 +57,11 @@ export interface PrefillUsage {
   durationMs: number
 }
 
-export interface PrefillResult {
+export interface ExtractionResult {
   // Keyed by element code; only questions the document answers
-  answers: Record<string, PrefillAnswer>
-  // Codes of elements that can't be prefilled (unsupported type, or a
+  answers: Record<string, ExtractionAnswer>
+  // Codes of elements that weren't asked (unsupported type, or a
   // choice element without options)
   skipped: string[]
-  usage: PrefillUsage
+  usage: ExtractionUsage
 }

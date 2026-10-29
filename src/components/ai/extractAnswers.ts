@@ -3,7 +3,7 @@ import { ApiError } from '../../ApiError'
 import { checkAnswers } from './checkAnswers'
 import { buildOutputSchema, splitSupported } from './elementSchema'
 import { buildFormDescription, SYSTEM_PROMPT } from './prompt'
-import { PrefillDocument, PrefillElement, PrefillOptions, PrefillResult } from './types'
+import { ExtractionDocument, ExtractionElement, ExtractionOptions, ExtractionResult } from './types'
 
 type ContentBlock = Anthropic.Beta.BetaContentBlockParam
 
@@ -18,14 +18,14 @@ let client: Anthropic | undefined
 
 const getClient = () => {
   if (!process.env.ANTHROPIC_API_KEY)
-    throw new ApiError('AI prefill is not configured (ANTHROPIC_API_KEY is not set)', 503)
+    throw new ApiError('AI is not configured (ANTHROPIC_API_KEY is not set)', 503)
   if (!client) client = new Anthropic()
   return client
 }
 
 // Each document is preceded by its name so the model can cite it in
 // `evidence`
-const toContentBlocks = ({ name, mediaType, data }: PrefillDocument): ContentBlock[] => {
+const toContentBlocks = ({ name, mediaType, data }: ExtractionDocument): ContentBlock[] => {
   const label: ContentBlock = { type: 'text', text: `Document: ${name}` }
   const base64 = data.toString('base64')
   if (mediaType === 'application/pdf')
@@ -41,7 +41,7 @@ const callModel = async (params: Anthropic.Beta.MessageCreateParamsStreaming) =>
     return await getClient().beta.messages.stream(params).finalMessage()
   } catch (err) {
     if (err instanceof Anthropic.AuthenticationError)
-      throw new ApiError('AI prefill is not configured correctly (API key rejected)', 503)
+      throw new ApiError('AI is not configured correctly (API key rejected)', 503)
     if (err instanceof Anthropic.RateLimitError)
       throw new ApiError('The AI service is busy, please try again shortly', 429)
     if (err instanceof Anthropic.APIError)
@@ -52,17 +52,18 @@ const callModel = async (params: Anthropic.Beta.MessageCreateParamsStreaming) =>
 
 /**
  * Reads the documents and answers as many of the elements' questions as it
- * can. Elements that can't be prefilled are returned in `skipped`.
+ * can. Elements it can't ask about (unsupported type, or a choice element
+ * without options) are returned in `skipped`.
  */
 export const extractAnswers = async (
-  documents: PrefillDocument[],
-  elements: PrefillElement[],
-  options: PrefillOptions = {}
-): Promise<PrefillResult> => {
+  documents: ExtractionDocument[],
+  elements: ExtractionElement[],
+  options: ExtractionOptions = {}
+): Promise<ExtractionResult> => {
   if (documents.length === 0) throw new ApiError('No documents provided', 400)
 
   const { supported, skipped } = splitSupported(elements)
-  if (supported.length === 0) throw new ApiError('None of these questions can be prefilled', 400)
+  if (supported.length === 0) throw new ApiError('None of these questions are supported', 400)
 
   const start = Date.now()
   const message = await callModel({

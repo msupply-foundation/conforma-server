@@ -5,19 +5,19 @@ import { Client } from 'pg'
 import { extractAnswers } from './extractAnswers'
 import { isChoiceElement } from './elementSchema'
 import { detectMediaType } from './parseInput'
-import { PrefillEffort, PrefillElement, PrefillResult } from './types'
+import { ExtractionEffort, ExtractionElement, ExtractionResult } from './types'
 
 /*
-Tries AI document prefill without the web-app. See DOCUMENT_PREFILL_SPEC.md.
+Runs AI document extraction without the web-app. See AI_DOCUMENT_FILL_SPEC.md.
 
-  yarn ai_prefill elements <templateCode> [--out <file>]
+  yarn ai_extract elements <templateCode> [--out <file>]
       Writes the template's questions as element definitions (the JSON the
       web-app will send). Parameters that are fig-tree expressions can't be
       evaluated here: dynamic labels fall back to the element title, and
       choice elements with dynamic options are left out. Edit the file to
       fill those in or to remove questions.
 
-  yarn ai_prefill run <document>... --elements <file> [options]
+  yarn ai_extract run <document>... --elements <file> [options]
       Sends the documents and questions to the model and prints the answers.
 
 Options for "run":
@@ -27,7 +27,7 @@ Options for "run":
   --out <file>           also write the full result as JSON
 */
 
-const OUTPUT_FOLDER = 'ai-prefill-tests'
+const OUTPUT_FOLDER = 'ai-extraction-tests'
 
 // USD per million tokens [input, output], standard API rates. Only used for
 // the cost estimate printed after a run.
@@ -39,8 +39,8 @@ const PRICES: Record<string, [number, number]> = {
 
 const usage = () => {
   console.log(`
-  yarn ai_prefill elements <templateCode> [--out <file>]
-  yarn ai_prefill run <document>... --elements <file> [--model <id>]
+  yarn ai_extract elements <templateCode> [--out <file>]
+  yarn ai_extract run <document>... --elements <file> [--model <id>]
       [--effort <level>] [--instructions <text>] [--out <file>]
 `)
   process.exit(1)
@@ -123,7 +123,7 @@ const buildElements = async (templateCode: string) => {
   const rows = await queryTemplateElements(templateCode)
   if (rows.length === 0) throw new Error(`No available template "${templateCode}" with questions`)
 
-  const elements: PrefillElement[] = []
+  const elements: ExtractionElement[] = []
   const leftOut: string[] = []
 
   for (const row of rows) {
@@ -133,7 +133,7 @@ const buildElements = async (templateCode: string) => {
       typeof parameters.description === 'string' ? parameters.description : undefined
     const helpText = [description, row.helpText].filter(Boolean).join('\n\n') || undefined
 
-    const element: PrefillElement = {
+    const element: ExtractionElement = {
       code: row.code,
       pluginCode: row.pluginCode,
       title: label,
@@ -172,7 +172,7 @@ const runElements = async () => {
 const truncate = (text: string, length: number) =>
   text.length > length ? text.slice(0, length - 1) + '…' : text
 
-const printResult = (elements: PrefillElement[], result: PrefillResult) => {
+const printResult = (elements: ExtractionElement[], result: ExtractionResult) => {
   const { answers, skipped, usage } = result
   console.log('')
   for (const element of elements) {
@@ -214,12 +214,12 @@ const runExtraction = async () => {
     if (!mediaType) throw new Error(`Not a PDF, JPEG, PNG, GIF or WebP file: ${file}`)
     return { name: path.basename(file), mediaType, data }
   })
-  const elements: PrefillElement[] = JSON.parse(fs.readFileSync(elementsFile as string, 'utf8'))
+  const elements: ExtractionElement[] = JSON.parse(fs.readFileSync(elementsFile as string, 'utf8'))
 
   console.log(`Reading ${documents.length} document(s) for ${elements.length} questions...`)
   const result = await extractAnswers(documents, elements, {
     model: getOption('model'),
-    effort: getOption('effort') as PrefillEffort | undefined,
+    effort: getOption('effort') as ExtractionEffort | undefined,
     instructions: getOption('instructions'),
   })
 

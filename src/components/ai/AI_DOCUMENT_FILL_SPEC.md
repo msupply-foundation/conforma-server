@@ -1,4 +1,4 @@
-# AI document prefill — spec
+# AI document fill — spec
 
 **Status:** draft. Phase 1 (server): extraction core, test CLI and endpoint done; extraction quality being tested on real documents. Phase 2 (web-app) waits until phase 1 shows the quality is good enough.
 
@@ -10,7 +10,8 @@ An applicant uploads a document of no particular structure (a typed PDF, a scan,
 
 - **A single model call, not MCP or an agent.** The server sends the document plus a description of the form and gets structured answers back. The model has no tools and no access to Conforma data. MCP is for letting an LLM client call into a system; that may suit later features (an assistant over the user's own data, template-building help) but not this one.
 - **The client sends the element definitions.** The web-app already holds each element's evaluated parameters (including dynamic option lists), visibility and current value. Trusting the client here is safe because the output is only suggestions for the applicant's own draft.
-- **The endpoint doesn't change application data.** The web-app writes the answers through the normal GraphQL mutation, so RLS and validation apply as for any user edit. The endpoint still checks that the caller can edit the application it's prefilling (see Access below): the data isn't at risk, but each call costs money, and anyone can get a valid token as the public `nonRegistered` user.
+- **The endpoint doesn't change application data.** The web-app writes the answers through the normal GraphQL mutation, so RLS and validation apply as for any user edit. The endpoint still checks that the caller can edit the application the answers are for (see Access below): the data isn't at risk, but each call costs money, and anyone can get a valid token as the public `nonRegistered` user.
+- **The server extracts; the web-app fills.** The endpoint matches the document's contents to the questions it's given and reports what it found. Whether those answers fill blanks only or replace existing ones is the web-app's decision, so the server side is named "extraction" and the web-app side "fill" (not "prefill", which would rule out replacing answers).
 - **The document goes to the model as-is.** Claude reads PDFs natively (each page as text plus a page image), so scans, tables, layout and handwriting work without an OCR step.
 - **Structured outputs with one generic answer schema**, so the response always parses. The model returns a list of answers (`code`, `evidence`, `text`, `selectedOptions`, `confidence`) for only the questions the documents answer, with `code` limited to the questions asked. A schema with a property per question (and an enum of options for each choice) would constrain the answers more tightly, but the API rejects it as too large a grammar even for a 24-question form, and structured outputs allow only 16 nullable properties per request. Types and options are checked on the server instead.
 - **The server returns plain values; the web-app converts them** to each plugin's response shape. Each plugin owns its shape (`{ text }`, `{ text, date }`, `{ optionIndex, text, selection }`, …) and its display formatting.
@@ -27,7 +28,7 @@ An applicant uploads a document of no particular structure (a typed PDF, a scan,
 
 ### Endpoint
 
-`POST /api/ai/prefill`, registered in the authenticated `/api/*` tier in [src/server.ts](../../server.ts), handler in [routes.ts](routes.ts). Returns 404 when the server has no API key (see Configuration).
+`POST /api/ai/extract`, registered in the authenticated `/api/*` tier in [src/server.ts](../../server.ts), handler in [routes.ts](routes.ts). Returns 404 when the server has no API key (see Configuration).
 
 Multipart request:
 
@@ -35,13 +36,13 @@ Multipart request:
 | --- | --- |
 | `file` | One or more documents. PDF, JPEG, PNG, WebP or GIF. |
 | `elements` | JSON array of element definitions (below). |
-| `applicationSerial` | Required. The application being prefilled; see Access. |
+| `applicationSerial` | Required. The application the answers are for; see Access. |
 | `instructions` | Optional extra guidance from the plugin's parameters, e.g. "the document is a GMP certificate". |
 
 Element definition, as sent by the client:
 
 ```ts
-interface PrefillElement {
+interface ExtractionElement {
   code: string
   pluginCode: string
   title: string // the element's label/title, markdown stripped
@@ -49,7 +50,7 @@ interface PrefillElement {
   isRequired: boolean
   options?: string[] // display labels, for choice elements
   multiSelect?: boolean // dropdownChoice
-  inputFields?: PrefillElement[] // listBuilder, later
+  inputFields?: ExtractionElement[] // listBuilder, later
   currentValue?: string | null // the response's `text`, so the model can see what's already answered
 }
 ```
@@ -57,7 +58,7 @@ interface PrefillElement {
 Response:
 
 ```ts
-interface PrefillResult {
+interface ExtractionResult {
   answers: Record<
     string, // element code
     {
@@ -70,7 +71,7 @@ interface PrefillResult {
 }
 ```
 
-Codes with no answer are left out of `answers`. The response also has `skipped`: the codes of elements that can't be prefilled (unsupported type, or a choice element without options).
+Codes with no answer are left out of `answers`. The response also has `skipped`: the codes of elements that weren't asked (unsupported type, or a choice element without options).
 
 The element definitions are validated and only the fields above are kept, so nothing else reaches the prompt. Errors come back as `{ message }` with a 4xx status for bad input (missing or invalid `elements`, unsupported file, too many or too large files) and 5xx for AI service problems.
 
@@ -134,8 +135,8 @@ Structured outputs guarantee the shape, but the server still:
 
 No preferences. Two things decide where the feature is available:
 
-- **Per deployment:** `ANTHROPIC_API_KEY` in the server's `.env`. Without it the endpoint returns 404, and `GET /api/public/get-prefs` reports `aiPrefillEnabled: false` so the web-app's prefill element can hide itself.
-- **Per form:** the template contains the prefill element (see TO-DO).
+- **Per deployment:** `ANTHROPIC_API_KEY` in the server's `.env`. Without it the endpoint returns 404, and `GET /api/public/get-prefs` reports `aiEnabled: false` so the web-app's `aiDocumentFill` element can hide itself. The flag isn't a system preference; it's sent with them because the web-app already loads them at startup.
+- **Per form:** the template contains the `aiDocumentFill` element (see TO-DO).
 
 ### Logging and cost
 
@@ -143,20 +144,20 @@ Each call logs one line to the server console: user, application serial, model, 
 
 ### TO-DO
 
-- **Only templates that use the feature.** Require the application's template to contain the prefill element (the template designer's opt-in), which also decides which public forms can use it. Reject element codes that aren't in that template, so the endpoint can't be used to ask arbitrary questions. Optionally take each question's title from the template rather than the client, keeping only evaluated options from the client. Waiting on the web-app's prefill element (phase 2).
+- **Only templates that use the feature.** Require the application's template to contain the `aiDocumentFill` element (the template designer's opt-in), which also decides which public forms can use it. Reject element codes that aren't in that template, so the endpoint can't be used to ask arbitrary questions. Optionally take each question's title from the template rather than the client, keeping only evaluated options from the client. Waiting on the web-app's `aiDocumentFill` element (phase 2).
 - **Rate limits.** Per user per day (per `sessionId` for `nonRegistered` users), plus a global daily cap, so a runaway client or an abuser can't drain the API account. Reject with 429.
 
 ### Testing (the purpose of phase 1)
 
-- **A CLI** ([prefillCLI.ts](prefillCLI.ts)) that runs the extraction without the web-app. Test files go in `ai-prefill-tests/` at the repo root, which is committed: the repo is public, so it holds only fictional or non-sensitive documents.
-  - `yarn ai_prefill elements <templateCode>` writes the template's questions as element definitions. Static parameters only: dynamic labels fall back to the element title, and choice elements with dynamic options are left out (edit the file to add them).
-  - `yarn ai_prefill run <document>... --elements <file> [--model …] [--effort …] [--instructions …] [--out …]` prints each answer with its confidence and evidence, then the token usage, an estimated cost and the time taken.
+- **A CLI** ([extractCLI.ts](extractCLI.ts)) that runs the extraction without the web-app. Test files go in `ai-extraction-tests/` at the repo root, which is committed: the repo is public, so it holds only fictional or non-sensitive documents.
+  - `yarn ai_extract elements <templateCode>` writes the template's questions as element definitions. Static parameters only: dynamic labels fall back to the element title, and choice elements with dynamic options are left out (edit the file to add them).
+  - `yarn ai_extract run <document>... --elements <file> [--model …] [--effort …] [--instructions …] [--out …]` prints each answer with its confidence and evidence, then the token usage, an estimated cost and the time taken.
 - **Fixtures**: a folder of non-sensitive sample documents, each with its `elements.json` and the expected answers. Score per field (correct / wrong / missed / invented) and compare models and effort levels on accuracy, cost and time.
 - **Unit tests** for schema building and output checking.
 
 ## Phase 2: web-app (summary)
 
-- **A new element plugin** (name TBD, e.g. `documentPrefill`) with the upload control. Parameters: which sections or element codes to fill, extra `instructions`, and whether to overwrite existing answers (default: fill blanks only).
+- **A new form element plugin, `aiDocumentFill`,** with the upload control. Parameters: which sections or element codes to fill, extra `instructions`, and whether to overwrite existing answers (default: fill blanks only).
 - It builds the element definitions from the full structure (visible, editable, supported types, evaluated parameters, current value) and sends them with the application's serial, which the endpoint requires.
 - **`fromPlainValue(value, evaluatedParameters) → ResponseFull`** on each supported plugin, registered in `pluginProvider.tsx` beside `config` rather than inside the lazy-loaded component, because most target elements aren't mounted (they're on other pages). The result must include `text`.
 - **One GraphQL request with an aliased `updateApplicationResponse` per answer**, so Apollo updates its cache once and the structure rebuilds once. `isValid` is left null and revalidation requested; `evaluatedParameters` saved as the wrapper does.
@@ -169,14 +170,14 @@ No GraphQL schema change is needed, so no codegen in either repo.
 ## Data governance
 
 Many deployments are regulators handling applicants' documents, and some are on-prem or air-gapped. Before enabling this anywhere:
-- the feature is off unless the deployment has an API key, and then only on forms whose template includes the prefill element
+- the feature is off unless the deployment has an API key, and then only on forms whose template includes the `aiDocumentFill` element
 - the UI tells the applicant the document is sent to an external AI service
 - the provider sits behind a small interface in `src/components/ai/`, so Claude via Amazon Bedrock or Google Vertex (for data residency) or a local model can replace the direct API
 
 ## Open questions
 
 - Consent wording, and whether a deployment needs an admin-level agreement before enabling.
-- Should the uploaded document be kept, e.g. saved as the prefill element's own response?
+- Should the uploaded document be kept, e.g. saved as the `aiDocumentFill` element's own response?
 - Is the "AI-filled" marker persisted (inside the response `value`) or kept as UI state only?
 - Large templates: split by section and run calls in parallel if one schema becomes too large.
-- What the prefill element saves as its own response (file reference, timestamp, nothing).
+- What the `aiDocumentFill` element saves as its own response (file reference, timestamp, nothing).

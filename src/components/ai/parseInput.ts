@@ -1,5 +1,5 @@
 import { ApiError } from '../../ApiError'
-import { PrefillElement, PrefillMediaType } from './types'
+import { ExtractionElement, ExtractionMediaType } from './types'
 
 const MAX_ELEMENTS = 500
 
@@ -12,7 +12,7 @@ const isString = (value: unknown): value is string => typeof value === 'string'
  * Parses the element definitions sent by the web-app. Copies only the known
  * fields, so nothing else reaches the prompt.
  */
-export const parseElements = (json: string | undefined): PrefillElement[] => {
+export const parseElements = (json: string | undefined): ExtractionElement[] => {
   if (!json) throw new ApiError('Missing "elements"', 400)
 
   let parsed: unknown
@@ -54,7 +54,7 @@ export const parseElements = (json: string | undefined): PrefillElement[] => {
  * is rejected here instead of failing at the API. Returns undefined for
  * anything the model can't read.
  */
-export const detectMediaType = (data: Buffer): PrefillMediaType | undefined => {
+export const detectMediaType = (data: Buffer): ExtractionMediaType | undefined => {
   const ascii = (start: number, end: number) => data.subarray(start, end).toString('latin1')
 
   // A PDF header may follow up to 1 KB of other bytes
