@@ -16,16 +16,18 @@ const getApplicantClaims = async (auth: Claims): Promise<Claims> => {
  * rules GraphQL applies) and that it's in a status they can edit. Admins
  * bypass RLS, as they do in GraphQL. Throws an ApiError otherwise; an
  * application the caller can't apply for is reported as not found, so the
- * endpoint doesn't reveal which serials exist. Returns the checked serial.
+ * endpoint doesn't reveal which serials exist. Returns the checked serial and
+ * the application's template.
  */
 export const checkApplicationAccess = async (
   auth: Claims,
   serial: string | undefined
-): Promise<string> => {
+): Promise<{ serial: string; templateId: number }> => {
   if (!serial) throw new ApiError('Missing "applicationSerial"', 400)
 
   const query = {
-    text: `SELECT a.id, application_status(a) AS status FROM application a WHERE a.serial = $1`,
+    text: `SELECT a.id, a.template_id, application_status(a) AS status
+      FROM application a WHERE a.serial = $1`,
     values: [serial],
   }
   const { rows } = auth.isAdmin
@@ -35,5 +37,5 @@ export const checkApplicationAccess = async (
   if (rows.length === 0) throw new ApiError('Application not found', 404)
   if (!EDITABLE_STATUSES.includes(rows[0].status))
     throw new ApiError(`Application ${serial} can't be edited (status ${rows[0].status})`, 409)
-  return serial
+  return { serial, templateId: rows[0].template_id }
 }

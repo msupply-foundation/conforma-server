@@ -1,6 +1,7 @@
 import { FastifyReply } from 'fastify'
 import { ApiError, returnApiError } from '../../ApiError'
 import { checkApplicationAccess } from './checkApplicationAccess'
+import { checkTemplateElements } from './checkTemplateElements'
 import { extractAnswers } from './extractAnswers'
 import { detectMediaType, parseElements } from './parseInput'
 import { ExtractionDocument, ExtractionResult } from './types'
@@ -62,7 +63,8 @@ const logUsage = (request: any, applicationSerial: string, result: ExtractionRes
 
 /**
  * Reads the uploaded documents and answers as many of the given elements'
- * questions as it can, for an application the caller can edit. Doesn't change
+ * questions as it can, for an application the caller can edit whose form uses
+ * AI document fill. The elements must be questions of that form. Doesn't change
  * application data: the web-app saves the answers through GraphQL, so
  * permissions and validation apply as for any edit. See
  * AI_DOCUMENT_FILL_SPEC.md.
@@ -72,8 +74,12 @@ export const routeAiExtract = async (request: any, reply: FastifyReply) => {
     if (!isAiAvailable()) throw new ApiError('AI is not enabled on this server', 404)
 
     const { documents, fields } = await readRequest(request)
-    const applicationSerial = await checkApplicationAccess(request.auth, fields.applicationSerial)
+    const { serial: applicationSerial, templateId } = await checkApplicationAccess(
+      request.auth,
+      fields.applicationSerial
+    )
     const elements = parseElements(fields.elements)
+    await checkTemplateElements(templateId, elements)
 
     const result = await extractAnswers(documents, elements, {
       instructions: fields.instructions,

@@ -84,6 +84,11 @@ Besides the valid token every `/api/*` route needs, [checkApplicationAccess.ts](
 
 Admins bypass RLS, as they do in GraphQL, so they pass the first check for any application.
 
+Then [checkTemplateElements.ts](checkTemplateElements.ts) requires that:
+
+- **The application's form uses AI document fill:** its template contains an `aiDocumentFill` element, otherwise 404 (the web-app shows this as not available). The template designer's opt-in therefore also decides which public forms can use it.
+- **Every element sent is one of that form's questions,** with the same `pluginCode`, otherwise 400, so the endpoint only answers questions the form actually has.
+
 ### Element type mapping
 
 | `pluginCode` | Model answers in | `value` returned to the web-app |
@@ -136,7 +141,7 @@ Structured outputs guarantee the shape, but the server still:
 No preferences. Two things decide where the feature is available:
 
 - **Per deployment:** `ANTHROPIC_API_KEY` in the server's `.env`. Without it the endpoint returns 404, and `GET /api/public/get-prefs` reports `aiEnabled: false` so the web-app's `aiDocumentFill` element can hide itself. The flag isn't a system preference; it's sent with them because the web-app already loads them at startup.
-- **Per form:** the template contains the `aiDocumentFill` element (see TO-DO).
+- **Per form:** the template contains the `aiDocumentFill` element (see Access).
 
 ### Logging and cost
 
@@ -144,7 +149,7 @@ Each call logs one line to the server console: user, application serial, model, 
 
 ### TO-DO
 
-- **Only templates that use the feature.** Require the application's template to contain the `aiDocumentFill` element (the template designer's opt-in), which also decides which public forms can use it. Reject element codes that aren't in that template, so the endpoint can't be used to ask arbitrary questions. Optionally take each question's title from the template rather than the client, keeping only evaluated options from the client. Waiting on the web-app's `aiDocumentFill` element (phase 2).
+- **The questions' wording from the template.** The element codes are checked (see Access), but each question's title and help text, and the `instructions`, still come from the client, so a caller could send a real code with different wording. Take them from the template where they're static strings (markdown stripped as the web-app does), keeping from the client only what has to be evaluated: dynamic labels and option lists.
 - **Rate limits.** Per user per day (per `sessionId` for `nonRegistered` users), plus a global daily cap, so a runaway client or an abuser can't drain the API account. Reject with 429.
 
 ### Testing (the purpose of phase 1)
