@@ -1,6 +1,6 @@
 # AI document fill — spec
 
-**Status:** draft. Phase 1 (server): extraction core, test CLI and endpoint done; extraction quality being tested on real documents. Phase 2 (web-app) waits until phase 1 shows the quality is good enough.
+**Status:** draft. Phase 1 (server): extraction core, test CLI and endpoint done; extraction quality being tested on real documents. Phase 2 (web-app): in progress; the `aiDocumentFill` element's design is settled and its skeleton is built.
 
 ## Goal
 
@@ -9,7 +9,7 @@ An applicant uploads a document of no particular structure (a typed PDF, a scan,
 ## Key decisions
 
 - **A single model call, not MCP or an agent.** The server sends the document plus a description of the form and gets structured answers back. The model has no tools and no access to Conforma data. MCP is for letting an LLM client call into a system; that may suit later features (an assistant over the user's own data, template-building help) but not this one.
-- **The client sends the element definitions.** The web-app already holds each element's evaluated parameters (including dynamic option lists), visibility and current value. Trusting the client here is safe because the output is only suggestions for the applicant's own draft.
+- **The client sends the element definitions.** The web-app has each element's visibility and current value, and can evaluate its parameters (including dynamic option lists). Trusting the client here is safe because the output is only suggestions for the applicant's own draft.
 - **The endpoint doesn't change application data.** The web-app writes the answers through the normal GraphQL mutation, so RLS and validation apply as for any user edit. The endpoint still checks that the caller can edit the application the answers are for (see Access below): the data isn't at risk, but each call costs money, and anyone can get a valid token as the public `nonRegistered` user.
 - **The server extracts; the web-app fills.** The endpoint matches the document's contents to the questions it's given and reports what it found. Whether those answers fill blanks only or replace existing ones is the web-app's decision, so the server side is named "extraction" and the web-app side "fill" (not "prefill", which would rule out replacing answers).
 - **The document goes to the model as-is.** Claude reads PDFs natively (each page as text plus a page image), so scans, tables, layout and handwriting work without an OCR step.
@@ -155,15 +155,49 @@ Each call logs one line to the server console: user, application serial, model, 
 - **Fixtures**: a folder of non-sensitive sample documents, each with its `elements.json` and the expected answers. Score per field (correct / wrong / missed / invented) and compare models and effort levels on accuracy, cost and time.
 - **Unit tests** for schema building and output checking.
 
-## Phase 2: web-app (summary)
+## Phase 2: web-app
 
-- **A new form element plugin, `aiDocumentFill`,** with the upload control. Parameters: which sections or element codes to fill, extra `instructions`, and whether to overwrite existing answers (default: fill blanks only).
-- It builds the element definitions from the full structure (visible, editable, supported types, evaluated parameters, current value) and sends them with the application's serial, which the endpoint requires.
+### The element
+
+- **A form element plugin, `aiDocumentFill`** ([conforma-web-app/src/formElementPlugins/aiDocumentFill/](https://github.com/msupply-foundation/conforma-web-app/tree/rnd/ai-form-fill/src/formElementPlugins/aiDocumentFill)). Template designers add it as a Question element with reviewability `NEVER`, and must set it as not required: `is_required` defaults to true, and the element only saves a response after a fill.
+- It renders nothing when `get-prefs` reports `aiEnabled: false`.
+- Parameters: `label` and `description` as on other elements; `notice`, the external-AI notice (a default is shown when it isn't set); `instructions`, sent to the model; and `scope`, section or element codes limiting which questions are sent (default: all supported questions).
+
+### Flow
+
+1. The applicant chooses up to 5 documents (20 MB in total) with the same upload button as File Upload, which on phones also offers the camera. Choosing them starts the extraction straight away. A problem with any of the files (type, HEIC, count, size) rejects the whole selection before anything is sent.
+2. A blocking modal shows progress while the server reads them, so no field can be edited before the answers are written.
+3. The modal then lists the proposed answers: each question's label, its current answer if any, the proposed answer, the confidence and the evidence, with a checkbox per row. Blank questions are ticked and answered ones unticked, so whether an existing answer is replaced is the applicant's choice, per answer. "Apply" writes the ticked answers; "Cancel" discards them all.
+4. The element saves a record of the fill as its own response and shows it, e.g. "Filled 8 answers from contact-info.pdf". The applicant can run it again with other documents.
+
+The documents themselves aren't kept: the server holds them in memory for the call only.
+
+### The element's response
+
+```ts
+{
+  text: string // the documents' file names, comma-separated
+  documents: string[]
+  filledAt: string // ISO timestamp
+  answerCount: number // answers the applicant applied
+}
+```
+
+Saved only when the applicant applies answers. As a response it survives reloads, is available to template expressions as `responses.<code>`, and under CHANGES_REQUIRED marks the element as changed, like any edit.
+
+### Building the request
+
+- The element definitions come from the full structure: visible, editable elements of supported types, within `scope`, with their current value.
+- The structure evaluates only visibility, editability and requirement; `parameters` (label, options) are evaluated inside each mounted element, so elements on other pages have none. The definitions builder evaluates each target element's parameters itself, the same way `ApplicationViewWrapper` does (`buildParameters`, then fig-tree with the same data). The question text is the evaluated `label` with markdown stripped, falling back to the element's `title`.
+- Plugins don't receive the structure as a prop, so `ApplicationPage` provides it through a context, along with the remount callback below.
+- The request includes the application's serial, which the endpoint requires.
+
+### Applying the answers
+
 - **`fromPlainValue(value, evaluatedParameters) → ResponseFull`** on each supported plugin, registered in `pluginProvider.tsx` beside `config` rather than inside the lazy-loaded component, because most target elements aren't mounted (they're on other pages). The result must include `text`.
 - **One GraphQL request with an aliased `updateApplicationResponse` per answer**, so Apollo updates its cache once and the structure rebuilds once. `isValid` is left null and revalidation requested; `evaluatedParameters` saved as the wrapper does.
 - **Remount the current page after the write.** The structure updates on its own (any response write flows through the Apollo cache into `useGetApplicationStructure`), but plugins copy `currentResponse` into local state on mount and don't re-read it. Without a remount, the current page shows old values, and a text field that loses focus saves its stale value over the AI answer. Bump a counter in the element keys in `PageElements.tsx` once the rebuilt structure contains the new values (not straight after the mutation returns, or the elements remount with the old values).
 - Clear focus before applying, so no pending field save races the bulk write.
-- Mark AI-filled answers for review, showing confidence and evidence.
 
 No GraphQL schema change is needed, so no codegen in either repo.
 
@@ -177,7 +211,5 @@ Many deployments are regulators handling applicants' documents, and some are on-
 ## Open questions
 
 - Consent wording, and whether a deployment needs an admin-level agreement before enabling.
-- Should the uploaded document be kept, e.g. saved as the `aiDocumentFill` element's own response?
-- Is the "AI-filled" marker persisted (inside the response `value`) or kept as UI state only?
+- Whether applied answers also need an "AI-filled" marker in the form, given the applicant has already seen each one's confidence and evidence in the review step.
 - Large templates: split by section and run calls in parallel if one schema becomes too large.
-- What the `aiDocumentFill` element saves as its own response (file reference, timestamp, nothing).
