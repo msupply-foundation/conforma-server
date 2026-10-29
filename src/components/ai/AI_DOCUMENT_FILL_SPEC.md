@@ -187,17 +187,21 @@ Saved only when the applicant applies answers. As a response it survives reloads
 
 ### Building the request
 
-- The element definitions come from the full structure: visible, editable elements of supported types, within `scope`, with their current value.
+- The element definitions come from the full structure: visible, editable questions whose plugin provides `aiFill` (see below), within `scope`, with their current value.
 - The structure evaluates only visibility, editability and requirement; `parameters` (label, options) are evaluated inside each mounted element, so elements on other pages have none. The definitions builder evaluates each target element's parameters itself, the same way `ApplicationViewWrapper` does (`buildParameters`, then fig-tree with the same data). The question text is the evaluated `label` with markdown stripped, falling back to the element's `title`.
 - Plugins don't receive the structure as a prop, so `ApplicationPage` provides it through a context, along with the remount callback below.
 - The request includes the application's serial, which the endpoint requires.
 
 ### Applying the answers
 
-- **`fromPlainValue(value, evaluatedParameters) → ResponseFull`** on each supported plugin, registered in `pluginProvider.tsx` beside `config` rather than inside the lazy-loaded component, because most target elements aren't mounted (they're on other pages). The result must include `text`.
-- **One GraphQL request with an aliased `updateApplicationResponse` per answer**, so Apollo updates its cache once and the structure rebuilds once. `isValid` is left null and revalidation requested; `evaluatedParameters` saved as the wrapper does.
-- **Remount the current page after the write.** The structure updates on its own (any response write flows through the Apollo cache into `useGetApplicationStructure`), but plugins copy `currentResponse` into local state on mount and don't re-read it. Without a remount, the current page shows old values, and a text field that loses focus saves its stale value over the AI answer. Bump a counter in the element keys in `PageElements.tsx` once the rebuilt structure contains the new values (not straight after the mutation returns, or the elements remount with the old values).
-- Clear focus before applying, so no pending field save races the bulk write.
+- **Each supported plugin provides `aiFill`**, registered in `pluginProvider.tsx` beside `config` rather than inside the lazy-loaded component, because most target elements aren't mounted (they're on other pages). The plugins with `aiFill` are the ones the element sends.
+  - `describe(evaluatedParameters)` gives what the question needs beyond its label (a choice element's option labels, `multiSelect`), or undefined when the element can't be filled as configured: options that can't all be shown as text, or a date picker set up for a range.
+  - `fromPlainValue(value, evaluatedParameters, { locale, t }) → response` builds the value the plugin itself would save, including `text`, or undefined when the answer doesn't fit the element (not one of its options, outside its limits). The locale and the plugin's own strings are passed in because some plugins format with them.
+  - The plugins' formatting helpers live in a `helpers.ts` beside their `ApplicationView`, shared by both.
+- **Answers are converted when they arrive**, before the review, so the review shows each answer as its element will, and answers that don't fit are left out.
+- **One GraphQL request with an aliased `updateApplicationResponse` per answer**, plus one for the element's own fill record, so Apollo updates its cache once and the structure rebuilds once. Each answer saves `isValid` as null and its question's evaluated parameters, as the wrapper does; nothing on the server reads `is_valid`, and the client revalidates (below) and again on submit.
+- **Remount the page's elements after the write.** The structure updates on its own (any response write flows through the Apollo cache into `useGetApplicationStructure`), but plugins copy `currentResponse` into local state on mount and don't re-read it. Without a remount, the current page shows old values, and a text field that loses focus saves its stale value over the new answer. The element waits until the rebuilt structure has the saved texts (remounting straight after the mutation returns would show the old values), then requests a revalidation and calls the context's `remountElements`, which changes the key of `PageElements` (or the Template Builder's page). The modal stays open until then.
+- No field can have an unsaved edit when the answers are written: the field lost focus, and saved, when the applicant opened the file picker, and the modal blocks the form from then on.
 
 No GraphQL schema change is needed, so no codegen in either repo.
 
