@@ -4,7 +4,8 @@ import path from 'path'
 import { Client } from 'pg'
 import { extractAnswers } from './extractAnswers'
 import { isChoiceElement } from './elementSchema'
-import { PrefillEffort, PrefillElement, PrefillMediaType, PrefillResult } from './types'
+import { detectMediaType } from './parseInput'
+import { PrefillEffort, PrefillElement, PrefillResult } from './types'
 
 /*
 Tries AI document prefill without the web-app. See DOCUMENT_PREFILL_SPEC.md.
@@ -34,15 +35,6 @@ const PRICES: Record<string, [number, number]> = {
   'claude-opus-5-5': [4, 20],
   'claude-sonnet-5-5': [2, 10],
   'claude-haiku-5-5': [0.1, 0.5],
-}
-
-const MEDIA_TYPES: Record<string, PrefillMediaType> = {
-  '.pdf': 'application/pdf',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.png': 'image/png',
-  '.gif': 'image/gif',
-  '.webp': 'image/webp',
 }
 
 const usage = () => {
@@ -217,9 +209,10 @@ const runExtraction = async () => {
   if (files.length === 0 || !elementsFile) usage()
 
   const documents = files.map((file) => {
-    const mediaType = MEDIA_TYPES[path.extname(file).toLowerCase()]
-    if (!mediaType) throw new Error(`Unsupported file type: ${file}`)
-    return { name: path.basename(file), mediaType, data: fs.readFileSync(file) }
+    const data = fs.readFileSync(file)
+    const mediaType = detectMediaType(data)
+    if (!mediaType) throw new Error(`Not a PDF, JPEG, PNG, GIF or WebP file: ${file}`)
+    return { name: path.basename(file), mediaType, data }
   })
   const elements: PrefillElement[] = JSON.parse(fs.readFileSync(elementsFile as string, 'utf8'))
 

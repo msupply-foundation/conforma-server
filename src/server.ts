@@ -52,6 +52,7 @@ import migrateData from '../database/migration/migrateData'
 import routeArchiveFiles from './components/files/routeArchiveFiles'
 import { Schedulers } from './components/scheduler'
 import { AccessExternalApiQuery, routeAccessExternalApi } from './components/external-apis/routes'
+import { routeAiPrefill } from './components/ai/routes'
 import { warnAboutPlaintextSecrets } from './components/external-apis/warnPlaintextSecrets'
 import { warnAboutReloginOn } from './components/external-apis/login'
 import { ZIP_CACHE_FOLDER } from './constants'
@@ -392,6 +393,7 @@ const startServer = async () => {
     server.post('/preview-actions', routePreviewActions)
     server.post('/extend-application', routeExtendApplication)
     server.post<AccessExternalApiQuery>('/external-api/:name/:route', routeAccessExternalApi)
+    server.post('/ai/prefill', routeAiPrefill)
     // Lookup tables & Localisation require "systemManager" permission
     server.register(lookupTableRoutes, { prefix: '/lookup-table' })
     server.register(localisationRoutes, { prefix: '/localisation' })

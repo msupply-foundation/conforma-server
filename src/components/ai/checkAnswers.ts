@@ -1,8 +1,6 @@
 import { isChoiceElement, isMultipleChoice } from './elementSchema'
+import { isRecord } from './parseInput'
 import { PrefillAnswer, PrefillElement, PrefillValue } from './types'
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null && !Array.isArray(value)
 
 const isIsoDate = (value: string) => {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false

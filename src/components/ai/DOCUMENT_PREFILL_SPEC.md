@@ -1,6 +1,6 @@
 # AI document prefill — spec
 
-**Status:** draft. Phase 1 (server): extraction core and test CLI done, endpoint next. Phase 2 (web-app) waits until phase 1 shows the extraction quality is good enough.
+**Status:** draft. Phase 1 (server): extraction core, test CLI and endpoint done; extraction quality being tested on real documents. Phase 2 (web-app) waits until phase 1 shows the quality is good enough.
 
 ## Goal
 
@@ -27,7 +27,7 @@ An applicant uploads a document of no particular structure (a typed PDF, a scan,
 
 ### Endpoint
 
-`POST /api/ai/prefill`, registered in the authenticated `/api/*` tier in [src/server.ts](../../server.ts), handler in `src/components/ai/routes.ts`.
+`POST /api/ai/prefill`, registered in the authenticated `/api/*` tier in [src/server.ts](../../server.ts), handler in [routes.ts](routes.ts). Returns 404 when the feature isn't enabled (see Configuration).
 
 Multipart request:
 
@@ -70,7 +70,9 @@ interface PrefillResult {
 }
 ```
 
-Codes with no answer are left out of `answers`.
+Codes with no answer are left out of `answers`. The response also has `skipped`: the codes of elements that can't be prefilled (unsupported type, or a choice element without options).
+
+The element definitions are validated and only the fields above are kept, so nothing else reaches the prompt. Errors come back as `{ message }` with a 4xx status for bad input (missing or invalid `elements`, unsupported file, too many or too large files) and 5xx for AI service problems.
 
 ### Element type mapping
 
@@ -114,18 +116,21 @@ Structured outputs guarantee the shape, but the server still:
 
 ### Files
 
-- Held in memory only; nothing is written to disk or the `file` table in phase 1.
-- An endpoint-specific size limit, well under the API's 32 MB per request (the global `fileUploadLimit` is 5 GB). The API also caps PDFs at 600 pages.
-- HEIC (iPhone photos) isn't accepted by the API. The server's `sharp` (0.29) may not decode it either; to be checked, otherwise the web-app converts or rejects it.
+- Held in memory only; nothing is written to disk or the `file` table.
+- Limits per request: `maxFiles` (default 5) and `maxTotalSizeMB` (default 20, for all files together). These are endpoint-specific; the global `fileUploadLimit` is 5 GB. Base64 encoding adds a third to the size sent to the API. The API also caps PDFs at 600 pages.
+- The file type is detected from the file's first bytes, not its name or declared type. Anything other than PDF, JPEG, PNG, GIF or WebP is rejected with a clear message, including HEIC (iPhone photos), which the API doesn't accept. The web-app should convert HEIC to JPEG before upload, or tell the user to.
+- Large phone photos haven't been tested; if the API rejects them, downscale images with `sharp` before sending.
 
 ### Configuration
 
-- `ANTHROPIC_API_KEY` in `.env`. Without it the endpoint reports the feature as unavailable.
-- Server preferences, e.g. `aiPrefill: { enabled, model, effort, maxFileSizeMB }`. The web-app needs to know `enabled` so the plugin can hide itself.
+- `ANTHROPIC_API_KEY` in `.env`.
+- Server preference `aiPrefill` (type `AiPrefillPreferences` in [src/types.ts](../../types.ts)): `enabled`, `model` (default `claude-opus-5-5`), `effort` (default `medium`), `maxFiles`, `maxTotalSizeMB`.
+- The feature is available only when `aiPrefill.enabled` is `true` **and** the key is set, so a key in a deployment's environment doesn't switch it on by itself. `GET /api/public/get-prefs` returns this as `aiPrefillEnabled`, so the web-app's prefill element can hide itself.
+- For local development, enable it in the file named by `PREFERENCE_OVERRIDES` rather than the committed preferences.
 
 ### Logging and cost
 
-Log each call: user, application serial, model, input/output tokens, duration, number of fields sent and answered. That gives real cost figures and is the basis for any later per-user rate limit or budget.
+Each call logs one line to the server console: user, application serial, model, input/output tokens, number answered, number not supported, and duration. That gives real cost figures and is the basis for any later per-user rate limit or budget. There is no rate limit yet: any logged-in user can call the endpoint as often as they like.
 
 ### Testing (the purpose of phase 1)
 

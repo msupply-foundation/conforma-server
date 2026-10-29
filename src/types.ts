@@ -332,6 +332,16 @@ export interface ServerPreferences {
   envVars?: string[]
   maintenanceSite?: string
   freeSpaceRequiredForZips?: number // GB, used in file cleanup to determine when to prune zip cache to prevent issues with new zip file creation. Default: not implemented (i.e. won't prune zip cache based on space)
+  aiPrefill?: AiPrefillPreferences
+}
+
+// AI document prefill (src/components/ai). Also needs ANTHROPIC_API_KEY.
+export interface AiPrefillPreferences {
+  enabled?: boolean
+  model?: string // Default: claude-opus-5-5
+  effort?: 'low' | 'medium' | 'high' | 'xhigh' | 'max' // Default: medium
+  maxFiles?: number // Per request. Default: 5
+  maxTotalSizeMB?: number // All files in a request. Default: 20
 }
 
 export const serverPrefKeys: (keyof ServerPreferences)[] = [
@@ -363,6 +373,7 @@ export const serverPrefKeys: (keyof ServerPreferences)[] = [
   'envVars',
   'maintenanceSite',
   'freeSpaceRequiredForZips',
+  'aiPrefill',
 ]
 
 export interface WebAppPrefs {

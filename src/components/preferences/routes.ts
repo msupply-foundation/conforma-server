@@ -6,6 +6,7 @@ import { DEFAULT_LOGOUT_TIME, PREFERENCES_FILE } from '../../constants'
 import { Preferences } from '../../types'
 import databaseConnect from '../database/databaseConnect'
 import { readLanguageOptions } from '../localisation/routes'
+import { isAiPrefillAvailable } from '../ai/routes'
 
 export type LanguageOption = {
   languageName: string
@@ -36,6 +37,7 @@ export const routeGetPrefs = async (_request: any, reply: any) => {
     latestSnapshot,
     allowedTableNames,
     logoutAfterInactivity,
+    aiPrefillEnabled: isAiPrefillAvailable(),
     maintenanceMode: {
       enabled: config.maintenanceMode,
       redirect: config.maintenanceSite ?? config.defaultUnderMaintenanceSite,
