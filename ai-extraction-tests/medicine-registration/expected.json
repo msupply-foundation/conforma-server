@@ -56,7 +56,9 @@
     "regAuthAddress": { "includes": ["Block C", "Sector 10", "Gandhinagar", "382010"] },
     "regAuthPhone": "+91 79 0000 4410",
     "regAuthEmail": "licensing@nmlo.example",
+    "noAuthReasons": null,
     "Declaration-COPY": null,
+    "externalContact?": null,
     "atcCode": { "includes": ["N02BE01"] },
     "manufacturers": [
       {
@@ -80,6 +82,8 @@
     "advanceSample": "Not in any document",
     "Declaration-COPY": "The applicant's own declaration: never filled",
     "atcCode": "A search element: the answer's shape depends on how searches are supported",
-    "manufacturers": "List builders: the answers' shape depends on how list builders are supported"
+    "Generics": "Its required ingredient field is a search, so the list isn't sent until searches are supported",
+    "noAuthReasons": "Only applies when the product isn't registered anywhere",
+    "externalContact?": "A reviewer's question, visible only at the Final Decision stage"
   }
 }

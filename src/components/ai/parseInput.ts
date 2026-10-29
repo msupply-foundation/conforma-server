@@ -26,26 +26,56 @@ export const parseElements = (json: string | undefined): ExtractionElement[] => 
   if (parsed.length > MAX_ELEMENTS)
     throw new ApiError(`Too many elements (maximum ${MAX_ELEMENTS})`, 400)
 
-  return parsed.map((item, index) => {
-    if (!isRecord(item) || !isString(item.code) || !isString(item.pluginCode) || !isString(item.title))
-      throw new ApiError(`Element ${index} needs a string code, pluginCode and title`, 400)
+  return parsed.map((item, index) => parseElement(item, `Element ${index}`, true))
+}
 
-    const { code, pluginCode, title, helpText, isRequired, options, multiSelect, currentValue } =
-      item
-    if (options !== undefined && !(Array.isArray(options) && options.every(isString)))
-      throw new ApiError(`Element "${code}" options must be an array of strings`, 400)
+// A list's fields are elements too, but can't be lists themselves
+const parseElement = (item: unknown, name: string, canHaveFields: boolean): ExtractionElement => {
+  if (
+    !isRecord(item) ||
+    !isString(item.code) ||
+    !isString(item.pluginCode) ||
+    !isString(item.title)
+  )
+    throw new ApiError(`${name} needs a string code, pluginCode and title`, 400)
 
-    return {
-      code,
-      pluginCode,
-      title,
-      ...(isString(helpText) ? { helpText } : {}),
-      ...(typeof isRequired === 'boolean' ? { isRequired } : {}),
-      ...(options ? { options } : {}),
-      ...(multiSelect === true ? { multiSelect } : {}),
-      ...(isString(currentValue) ? { currentValue } : {}),
-    }
-  })
+  const {
+    code,
+    pluginCode,
+    title,
+    helpText,
+    isRequired,
+    options,
+    multiSelect,
+    currentValue,
+    fields,
+    maxItems,
+  } = item
+  if (options !== undefined && !(Array.isArray(options) && options.every(isString)))
+    throw new ApiError(`Element "${code}" options must be an array of strings`, 400)
+  if (fields !== undefined && !(canHaveFields && Array.isArray(fields) && fields.length > 0))
+    throw new ApiError(`Element "${code}" fields must be a non-empty array, and not nested`, 400)
+
+  return {
+    code,
+    pluginCode,
+    title,
+    ...(isString(helpText) ? { helpText } : {}),
+    ...(typeof isRequired === 'boolean' ? { isRequired } : {}),
+    ...(options ? { options } : {}),
+    ...(multiSelect === true ? { multiSelect } : {}),
+    ...(isString(currentValue) ? { currentValue } : {}),
+    ...(fields
+      ? {
+          fields: (fields as unknown[]).map((field, index) =>
+            parseElement(field, `Field ${index} of "${code}"`, false)
+          ),
+        }
+      : {}),
+    ...(Number.isInteger(maxItems) && (maxItems as number) > 0
+      ? { maxItems: maxItems as number }
+      : {}),
+  }
 }
 
 /**

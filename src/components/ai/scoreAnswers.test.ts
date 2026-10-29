@@ -36,9 +36,37 @@ describe('matches', () => {
     expect(matches(dosage, 'Over 12: every 8 hours')).toBe(false)
   })
 
-  test('never matches a blank expectation or list builder rows', () => {
+  test('never matches a blank expectation', () => {
     expect(matches(null, 'anything')).toBe(false)
-    expect(matches([{ quantity: 10 }], ['10'])).toBe(false)
+  })
+
+  test('matches rows in any order, field by field', () => {
+    const packs: Expectation = [
+      { quantity: 10, unit: 'Tablet' },
+      { quantity: 100, unit: 'Tablet' },
+    ]
+    expect(
+      matches(packs, [
+        { quantity: 100, unit: 'tablet' },
+        { quantity: 10, unit: 'Tablet' },
+      ])
+    ).toBe(true)
+    expect(matches(packs, [{ quantity: 10, unit: 'Tablet' }])).toBe(false)
+    expect(
+      matches(packs, [
+        { quantity: 10, unit: 'Tablet' },
+        { quantity: 10, unit: 'Tablet' },
+      ])
+    ).toBe(false)
+    expect(matches(packs, ['10', '100'])).toBe(false)
+  })
+
+  test('requires every expected field in a row', () => {
+    const site: Expectation = [{ address: { includes: ['Plot 14'] }, country: 'India' }]
+    expect(matches(site, [{ address: 'Plot 14, Vadodara', country: 'India', extra: 'x' }])).toBe(
+      true
+    )
+    expect(matches(site, [{ address: 'Plot 14, Vadodara' }])).toBe(false)
   })
 })
 

@@ -19,8 +19,7 @@ An applicant uploads a document of no particular structure (a typed PDF, a scan,
 
 ## Out of scope for v1
 
-- `listBuilder` (repeating groups); a stretch goal once single-value questions work well.
-- `search` elements (would need the model to call the lookup API).
+- `search` elements (would need the model to call the lookup API), including list builders with a required search field.
 - `fileUpload`, `password` and all informative/internal elements.
 - Restoring or re-running a previous extraction.
 
@@ -50,8 +49,9 @@ interface ExtractionElement {
   isRequired: boolean
   options?: string[] // display labels, for choice elements
   multiSelect?: boolean // dropdownChoice
-  inputFields?: ExtractionElement[] // listBuilder, later
   currentValue?: string | null // the response's `text`, so the model can see what's already answered
+  fields?: ExtractionElement[] // listBuilder: the fields the web-app can fill (none of them lists)
+  maxItems?: number // listBuilder
 }
 ```
 
@@ -62,7 +62,7 @@ interface ExtractionResult {
   answers: Record<
     string, // element code
     {
-      value: string | number | string[] // plain value, shape per the table below
+      value: string | number | string[] | Record<string, string | number | string[]>[] // plain value, shape per the table below
       confidence: number // 0–1
       evidence: string // short quote or location from the document
     }
@@ -87,7 +87,7 @@ Admins bypass RLS, as they do in GraphQL, so they pass the first check for any a
 Then [checkTemplateElements.ts](checkTemplateElements.ts) requires that:
 
 - **The application's form uses AI document fill:** its template contains an `aiDocumentFill` element, otherwise 404 (the web-app shows this as not available). The template designer's opt-in therefore also decides which public forms can use it.
-- **Every element sent is one of that form's questions,** with the same `pluginCode`, otherwise 400, so the endpoint only answers questions the form actually has.
+- **Every element sent is one of that form's questions,** with the same `pluginCode`, and a list's fields are among its `inputFields` with the same plugin, otherwise 400, so the endpoint only answers questions the form actually has.
 
 ### Element type mapping
 
@@ -98,9 +98,10 @@ Then [checkTemplateElements.ts](checkTemplateElements.ts) requires that:
 | `datePicker` | `text` | `string`, ISO date (`YYYY-MM-DD`) |
 | `dropdownChoice`, `radioChoice` | `selectedOptions` (exactly one) | `string`, the option label (`string[]` if `multiSelect`) |
 | `checkbox` | `selectedOptions` | `string[]` of the ticked option labels, in option order |
+| `listBuilder` | `rows`: per item, a list of field answers (`code`, `text`, `selectedOptions`) | one object per item, each field's value by code, typed as above |
 | anything else | not asked; returned in `skipped` | — |
 
-Answers that fail these checks (not an option, unparseable number, invalid date, empty) are dropped, as is any answer to a code that wasn't asked. If the model answers a question twice, the more confident answer is kept.
+Answers that fail these checks (not an option, unparseable number, invalid date, empty) are dropped, as is any answer to a code that wasn't asked. If the model answers a question twice, the more confident answer is kept. In a list, each field is checked the same way: a row keeps its usable fields, and rows left empty, or beyond `maxItems`, are dropped. A list is only asked if all its fields are supported; `rows` is only in the output schema when there's a list to answer, so other forms' requests are unchanged.
 
 ### Prompt principles
 
@@ -214,6 +215,8 @@ A form often reveals questions from earlier answers (MDR1's product details appe
   - `describe(evaluatedParameters)` gives what the question needs beyond its label (a choice element's option labels, `multiSelect`), or undefined when the element can't be filled as configured: options that can't all be shown as text, or a date picker set up for a range.
   - `fromPlainValue(value, evaluatedParameters, { locale, t }) → response` builds the value the plugin itself would save, including `text`, or undefined when the answer doesn't fit the element (not one of its options, outside its limits). The locale and the plugin's own strings are passed in because some plugins format with them.
   - The plugins' formatting helpers live in a `helpers.ts` beside their `ApplicationView`, shared by both.
+  - **Lists:** `getFields(evaluatedParameters)` gives a list's fields (the list builder's `inputFields`). The definitions builder evaluates each field's parameters (e.g. a country drop-down's options) and describes it with its own plugin's `aiFill`, leaving out hidden fields. A list is only sent if every required field (required unless `isRequired` is `false`, as in the list builder) can be filled; MDR1's `Generics`, whose ingredient is a search, isn't. The list's `fromPlainValue` gets its fields as `fill` functions in the context, which convert a field's answer with its own plugin, and builds the list builder's response: `list` (each item's fields as `{ value, isValid }`, unanswered fields empty as in a new item), and `text` and `data` with the list builder's own helpers. `fromPlainValue` may be async, as `data` can be an evaluator expression.
+  - A list's proposal replaces the whole list, ticked only if the list is empty, as for any answered question.
 - **Answers are converted when they arrive**, before the review, so the review shows each answer as its element will, and answers that don't fit are left out.
 - **One GraphQL request with an aliased `updateApplicationResponse` per answer**, plus one for each `getValues` value that changes (see Hidden questions) and one for the element's own fill record, so Apollo updates its cache once and the structure rebuilds once. Each answer saves `isValid` as null and its question's evaluated parameters, as the wrapper does; nothing on the server reads `is_valid`, and the client revalidates (below) and again on submit.
 - **Remount the page's elements after the write.** The structure updates on its own (any response write flows through the Apollo cache into `useGetApplicationStructure`), but plugins copy `currentResponse` into local state on mount and don't re-read it. Without a remount, the current page shows old values, and a text field that loses focus saves its stale value over the new answer. The element waits until the rebuilt structure has the saved texts (remounting straight after the mutation returns would show the old values), then requests a revalidation and calls the context's `remountElements`, which changes the key of `PageElements` (or the Template Builder's page). The modal stays open until then.

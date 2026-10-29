@@ -6,6 +6,12 @@ const templateElements: TemplateElementRow[] = [
   { code: 'fill', pluginCode: 'aiDocumentFill', category: 'QUESTION' },
   { code: 'name', pluginCode: 'shortText', category: 'QUESTION' },
   { code: 'colour', pluginCode: 'radioChoice', category: 'QUESTION' },
+  {
+    code: 'sites',
+    pluginCode: 'listBuilder',
+    category: 'QUESTION',
+    inputFields: [{ code: 'address', elementTypePluginCode: 'longText' }],
+  },
 ]
 
 const name: ExtractionElement = { code: 'name', pluginCode: 'shortText', title: 'Name' }
@@ -43,6 +49,23 @@ describe('validateTemplateElements', () => {
   test('rejects a code sent with a different plugin', () => {
     const disguised: ExtractionElement = { ...colour, pluginCode: 'shortText' }
     expect(statusOf(() => validateTemplateElements(templateElements, [disguised]))).toBe(400)
+  })
+
+  test("checks a list's fields against its inputFields", () => {
+    const list = (fields: ExtractionElement[]): ExtractionElement => ({
+      code: 'sites',
+      pluginCode: 'listBuilder',
+      title: 'Sites',
+      fields,
+    })
+    const address = { code: 'address', pluginCode: 'longText', title: 'Address' }
+    expect(() => validateTemplateElements(templateElements, [list([address])])).not.toThrow()
+    const disguised = { ...address, pluginCode: 'shortText' }
+    expect(() => validateTemplateElements(templateElements, [list([disguised])])).toThrow(
+      /sites\.address/
+    )
+    const other = { code: 'other', pluginCode: 'longText', title: 'Other' }
+    expect(statusOf(() => validateTemplateElements(templateElements, [list([other])]))).toBe(400)
   })
 
   test('rejects an element that isn’t a question', () => {

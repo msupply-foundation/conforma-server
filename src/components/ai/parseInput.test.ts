@@ -28,12 +28,45 @@ describe('parseElements', () => {
     ])
   })
 
+  test("keeps a list's fields and maxItems", () => {
+    const [list] = parseElements(
+      JSON.stringify([
+        {
+          code: 'sites',
+          pluginCode: 'listBuilder',
+          title: 'Sites',
+          maxItems: 2,
+          fields: [{ code: 'address', pluginCode: 'longText', title: 'Address', extra: 1 }],
+        },
+      ])
+    )
+    expect(list).toEqual({
+      code: 'sites',
+      pluginCode: 'listBuilder',
+      title: 'Sites',
+      maxItems: 2,
+      fields: [{ code: 'address', pluginCode: 'longText', title: 'Address' }],
+    })
+  })
+
   test.each([
     [undefined, 'Missing "elements"'],
     ['not json', 'not valid JSON'],
     ['[]', 'non-empty array'],
     ['[{"code": "x", "title": "X"}]', 'needs a string code, pluginCode and title'],
     ['[{"code": "x", "pluginCode": "radioChoice", "title": "X", "options": [1]}]', 'options'],
+    ['[{"code": "x", "pluginCode": "listBuilder", "title": "X", "fields": []}]', 'fields'],
+    [
+      JSON.stringify([
+        {
+          code: 'x',
+          pluginCode: 'listBuilder',
+          title: 'X',
+          fields: [{ code: 'y', pluginCode: 'listBuilder', title: 'Y', fields: [{}] }],
+        },
+      ]),
+      'not nested',
+    ],
   ])('rejects %s', (json, message) => {
     expect(() => parseElements(json)).toThrow(message)
   })
@@ -44,7 +77,11 @@ describe('detectMediaType', () => {
 
   test.each([
     ['PDF', Buffer.from('%PDF-1.7\n...'), 'application/pdf'],
-    ['PDF after other bytes', Buffer.concat([Buffer.alloc(20), Buffer.from('%PDF-1.4')]), 'application/pdf'],
+    [
+      'PDF after other bytes',
+      Buffer.concat([Buffer.alloc(20), Buffer.from('%PDF-1.4')]),
+      'application/pdf',
+    ],
     ['JPEG', bytes(0xff, 0xd8, 0xff, 0xe0, 0, 0), 'image/jpeg'],
     ['PNG', bytes(0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0), 'image/png'],
     ['GIF', Buffer.from('GIF89a...'), 'image/gif'],

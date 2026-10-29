@@ -71,6 +71,60 @@ describe('checkAnswers', () => {
     expect(answers.count.confidence).toBe(0)
   })
 
+  describe('lists', () => {
+    const sites: ExtractionElement = {
+      code: 'sites',
+      pluginCode: 'listBuilder',
+      title: 'Sites',
+      maxItems: 2,
+      fields: [
+        { code: 'address', pluginCode: 'longText', title: 'Address' },
+        { code: 'staff', pluginCode: 'number', title: 'Staff' },
+        { code: 'colour', pluginCode: 'radioChoice', title: 'Colour', options: ['Red', 'Blue'] },
+      ],
+    }
+    const field = (code: string, text: string, selectedOptions: string[] = []) => ({
+      code,
+      text,
+      selectedOptions,
+    })
+    const listAnswer = (rows: unknown) => ({ ...answer('sites', ''), rows })
+
+    test("keeps each row's usable fields", () => {
+      const answers = checkAnswers([sites], {
+        answers: [
+          listAnswer([
+            [field('address', 'Plot 14'), field('staff', '120'), field('colour', '', ['Blue'])],
+            [field('address', 'Plot 15'), field('staff', 'many'), field('other', 'x')],
+          ]),
+        ],
+      })
+      expect(answers.sites.value).toEqual([
+        { address: 'Plot 14', staff: 120, colour: 'Blue' },
+        { address: 'Plot 15' },
+      ])
+    })
+
+    test('drops empty rows and rows beyond maxItems', () => {
+      const answers = checkAnswers([sites], {
+        answers: [
+          listAnswer([
+            [field('address', '  ')],
+            [field('address', 'A')],
+            [field('address', 'B')],
+            [field('address', 'C')],
+          ]),
+        ],
+      })
+      expect(answers.sites.value).toEqual([{ address: 'A' }, { address: 'B' }])
+    })
+
+    test('drops a list with no usable rows', () => {
+      expect(checkAnswers([sites], { answers: [listAnswer([[field('staff', 'x')]])] })).toEqual({})
+      expect(checkAnswers([sites], { answers: [listAnswer('x')] })).toEqual({})
+    })
+  })
+
   test('returns nothing for output without an answers array', () => {
     expect(checkAnswers(elements, null)).toEqual({})
     expect(checkAnswers(elements, { answers: 'x' })).toEqual({})

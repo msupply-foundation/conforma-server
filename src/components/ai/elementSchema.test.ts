@@ -8,6 +8,12 @@ const colour: ExtractionElement = {
   title: 'Colour',
   options: ['Red', 'Blue'],
 }
+const sites: ExtractionElement = {
+  code: 'sites',
+  pluginCode: 'listBuilder',
+  title: 'Sites',
+  fields: [{ code: 'address', pluginCode: 'longText', title: 'Address' }, colour],
+}
 
 describe('splitSupported', () => {
   test('skips unsupported plugins and choice elements without options', () => {
@@ -16,6 +22,15 @@ describe('splitSupported', () => {
     const { supported, skipped } = splitSupported([name, upload, noOptions, colour])
     expect(supported.map(({ code }) => code)).toEqual(['name', 'colour'])
     expect(skipped).toEqual(['upload', 'empty'])
+  })
+
+  test('supports a list only if all its fields are supported', () => {
+    const upload: ExtractionElement = { code: 'upload', pluginCode: 'fileUpload', title: 'File' }
+    const withUpload = { ...sites, code: 'withUpload', fields: [...sites.fields!, upload] }
+    const noFields = { ...sites, code: 'noFields', fields: undefined }
+    const { supported, skipped } = splitSupported([sites, withUpload, noFields])
+    expect(supported.map(({ code }) => code)).toEqual(['sites'])
+    expect(skipped).toEqual(['withUpload', 'noFields'])
   })
 })
 
@@ -37,6 +52,13 @@ describe('buildOutputSchema', () => {
   test("doesn't grow with the options", () => {
     const manyOptions = { ...colour, options: Array.from({ length: 50 }, (_, i) => `Option ${i}`) }
     expect(JSON.stringify(buildOutputSchema([name, manyOptions]))).toEqual(JSON.stringify(schema))
+  })
+
+  test('has rows, limited to the fields asked, only when there are lists', () => {
+    expect(item.properties.rows).toBeUndefined()
+    const listItem = (buildOutputSchema([name, sites]) as any).properties.answers.items
+    expect(listItem.required).toContain('rows')
+    expect(listItem.properties.rows.items.items.properties.code.enum).toEqual(['address', 'colour'])
   })
 
   test('rejects duplicate codes', () => {

@@ -14,9 +14,16 @@ export interface ExtractionElement {
   multiSelect?: boolean
   // The response's `text`, if the question is already answered
   currentValue?: string | null
+  // listBuilder only: the questions of each item (none of them lists), and
+  // the most items the list takes
+  fields?: ExtractionElement[]
+  maxItems?: number
 }
 
-export type ExtractionValue = string | number | string[]
+// A list item's answers, keyed by field code
+export type ExtractionRow = Record<string, string | number | string[]>
+
+export type ExtractionValue = string | number | string[] | ExtractionRow[]
 
 export interface ExtractionAnswer {
   value: ExtractionValue

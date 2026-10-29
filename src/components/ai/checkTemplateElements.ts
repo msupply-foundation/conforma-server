@@ -10,13 +10,24 @@ export interface TemplateElementRow {
   code: string
   pluginCode: string | null
   category: string | null
+  // A listBuilder's fields, as in its parameters
+  inputFields?: unknown
 }
+
+// A list's field codes and plugins, from its `inputFields` parameter
+const getFieldPlugins = (inputFields: unknown) =>
+  new Map(
+    (Array.isArray(inputFields) ? inputFields : []).map((field) => [
+      field?.code,
+      field?.elementTypePluginCode,
+    ])
+  )
 
 /**
  * Checks the template opts in to AI document fill and that every element sent
- * is one of its questions, with the same plugin, so the endpoint only answers
- * questions the application's form actually has. Throws an ApiError
- * otherwise.
+ * is one of its questions, with the same plugin (and a list's fields are its
+ * fields), so the endpoint only answers questions the application's form
+ * actually has. Throws an ApiError otherwise.
  */
 export const validateTemplateElements = (
   templateElements: TemplateElementRow[],
@@ -27,21 +38,28 @@ export const validateTemplateElements = (
   if (!templateElements.some(({ pluginCode }) => pluginCode === AI_FILL_PLUGIN_CODE))
     throw new ApiError("This application's form doesn't use AI document fill", 404)
 
-  const questionPlugins = new Map(
+  const questions = new Map(
     templateElements
       .filter(({ category }) => category === 'QUESTION')
-      .map(({ code, pluginCode }) => [code, pluginCode])
+      .map((element) => [element.code, element])
   )
-  const unknown = elements
-    .filter(({ code, pluginCode }) => questionPlugins.get(code) !== pluginCode)
-    .map(({ code }) => code)
+  const unknown = elements.flatMap(({ code, pluginCode, fields }) => {
+    const question = questions.get(code)
+    if (question?.pluginCode !== pluginCode) return [code]
+    if (!fields) return []
+    const fieldPlugins = getFieldPlugins(question.inputFields)
+    return fields
+      .filter((field) => fieldPlugins.get(field.code) !== field.pluginCode)
+      .map((field) => `${code}.${field.code}`)
+  })
   if (unknown.length > 0)
     throw new ApiError(`Not questions of this application's form: ${unknown.join(', ')}`, 400)
 }
 
 export const checkTemplateElements = async (templateId: number, elements: ExtractionElement[]) => {
   const { rows } = await databaseConnect.query({
-    text: `SELECT e.code, e.element_type_plugin_code AS "pluginCode", e.category
+    text: `SELECT e.code, e.element_type_plugin_code AS "pluginCode", e.category,
+        e.parameters->'inputFields' AS "inputFields"
       FROM template_element e JOIN template_section s ON s.id = e.section_id
       WHERE s.template_id = $1`,
     values: [templateId],

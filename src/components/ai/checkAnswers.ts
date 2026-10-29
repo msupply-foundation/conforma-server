@@ -1,6 +1,6 @@
-import { isChoiceElement, isMultipleChoice } from './elementSchema'
+import { isChoiceElement, isListElement, isMultipleChoice } from './elementSchema'
 import { isRecord } from './parseInput'
-import { ExtractionAnswer, ExtractionElement, ExtractionValue } from './types'
+import { ExtractionAnswer, ExtractionElement, ExtractionRow, ExtractionValue } from './types'
 
 const isIsoDate = (value: string) => {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
@@ -14,6 +14,8 @@ const checkValue = (
   element: ExtractionElement,
   answer: Record<string, unknown>
 ): ExtractionValue | undefined => {
+  if (isListElement(element)) return checkRows(element, answer.rows)
+
   if (isChoiceElement(element)) {
     const chosen = Array.isArray(answer.selectedOptions) ? answer.selectedOptions : []
     // In option order, ignoring anything that isn't an option
@@ -35,6 +37,26 @@ const checkValue = (
     default:
       return text
   }
+}
+
+// Each row keeps the fields that are this list's and usable (the first
+// answer to a field wins); empty rows are dropped, and rows beyond maxItems
+const checkRows = (list: ExtractionElement, rows: unknown): ExtractionRow[] | undefined => {
+  const fieldsByCode = new Map((list.fields ?? []).map((field) => [field.code, field]))
+  const checked: ExtractionRow[] = []
+  for (const row of Array.isArray(rows) ? rows : []) {
+    const values: ExtractionRow = {}
+    for (const item of Array.isArray(row) ? row : []) {
+      if (!isRecord(item) || typeof item.code !== 'string' || item.code in values) continue
+      const field = fieldsByCode.get(item.code)
+      const value = field && checkValue(field, item)
+      // Fields aren't lists, so their values are never rows
+      if (value !== undefined) values[item.code] = value as ExtractionRow[string]
+    }
+    if (Object.keys(values).length > 0) checked.push(values)
+  }
+  const limited = list.maxItems ? checked.slice(0, list.maxItems) : checked
+  return limited.length > 0 ? limited : undefined
 }
 
 /**

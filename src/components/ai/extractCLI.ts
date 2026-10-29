@@ -6,7 +6,7 @@ import { extractAnswers } from './extractAnswers'
 import { isChoiceElement } from './elementSchema'
 import { detectMediaType } from './parseInput'
 import { Expectation, Score, scoreAnswers } from './scoreAnswers'
-import { ExtractionEffort, ExtractionElement, ExtractionResult } from './types'
+import { ExtractionEffort, ExtractionElement, ExtractionResult, ExtractionValue } from './types'
 
 /*
 Runs AI document extraction without the web-app. See AI_DOCUMENT_FILL_SPEC.md.
@@ -182,6 +182,13 @@ const runElements = async () => {
 const truncate = (text: string, length: number) =>
   text.length > length ? text.slice(0, length - 1) + '…' : text
 
+// A list's rows each go on their own line
+const formatAnswer = (value: ExtractionValue) => {
+  if (!Array.isArray(value)) return truncate(String(value), 100)
+  if (value.every((item) => typeof item === 'string')) return truncate(value.join('; '), 100)
+  return value.map((row) => `\n       - ${truncate(JSON.stringify(row), 100)}`).join('')
+}
+
 const printResult = (elements: ExtractionElement[], result: ExtractionResult) => {
   const { answers, skipped, usage } = result
   console.log('')
@@ -192,9 +199,8 @@ const printResult = (elements: ExtractionElement[], result: ExtractionResult) =>
       console.log(`  -  ${element.code}: not found`)
       continue
     }
-    const value = Array.isArray(answer.value) ? answer.value.join('; ') : String(answer.value)
     console.log(
-      `  ✓  ${element.code} (${answer.confidence.toFixed(2)}): ${truncate(value, 100)}`
+      `  ✓  ${element.code} (${answer.confidence.toFixed(2)}): ${formatAnswer(answer.value)}`
     )
     if (answer.evidence) console.log(`       evidence: ${truncate(answer.evidence, 100)}`)
   }
@@ -254,7 +260,6 @@ const VERDICT_LABELS = {
   missed: '- missed  ',
   invented: '! invented',
   blank: '✓ blank   ',
-  unscorable: '? rows    ',
 }
 
 const printScore = ({ scored, notSupported, notSent, unexpected }: Score) => {
@@ -263,7 +268,7 @@ const printScore = ({ scored, notSupported, notSent, unexpected }: Score) => {
     let detail = ''
     if (verdict === 'wrong') detail = `: ${formatValue(value)}, expected ${formatValue(expected)}`
     if (verdict === 'missed') detail = `: expected ${formatValue(expected)}`
-    if (verdict === 'invented' || verdict === 'unscorable') detail = `: ${formatValue(value)}`
+    if (verdict === 'invented') detail = `: ${formatValue(value)}`
     console.log(`  ${VERDICT_LABELS[verdict]}  ${code}${detail}`)
   }
 
@@ -276,7 +281,8 @@ const printScore = ({ scored, notSupported, notSent, unexpected }: Score) => {
   )
   if (notSupported.length > 0) console.log(`Expected but not supported: ${notSupported.join(', ')}`)
   if (notSent.length > 0) console.log(`Expected but not sent: ${notSent.join(', ')}`)
-  if (unexpected.length > 0) console.log(`Answered, with no expected answer: ${unexpected.join(', ')}`)
+  if (unexpected.length > 0)
+    console.log(`Answered, with no expected answer: ${unexpected.join(', ')}`)
 }
 
 const runScore = async () => {
