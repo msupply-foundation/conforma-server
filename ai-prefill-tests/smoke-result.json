@@ -1,0 +1,102 @@
+{
+  "answers": {
+    "manName": {
+      "value": "Northwind Pharmaceuticals Pty Ltd",
+      "confidence": 0.9,
+      "evidence": "NORTHWIND PHARMACEUTICALS PTY LTD ... Northwind Pharmaceuticals is the manufacturer and licence holder of this product."
+    },
+    "isManufacturer": {
+      "value": "Yes",
+      "confidence": 0.6,
+      "evidence": "Northwind Pharmaceuticals is the manufacturer and licence holder of this product."
+    },
+    "countrySelect": {
+      "value": "Australia",
+      "confidence": 0.9,
+      "evidence": "It is registered in Australia (ARTG 123456)."
+    },
+    "RegID": {
+      "value": "ARTG 123456",
+      "confidence": 0.8,
+      "evidence": "It is registered in Australia (ARTG 123456)."
+    },
+    "brandName": {
+      "value": "Paracool 500",
+      "confidence": 0.95,
+      "evidence": "Brand name: Paracool 500"
+    },
+    "dosageFormGeneral": {
+      "value": "Film-coated tablet",
+      "confidence": 0.95,
+      "evidence": "Dosage form: Film-coated tablet"
+    },
+    "containerType": {
+      "value": "blister of 10, carton of 100",
+      "confidence": 0.5,
+      "evidence": "Pack sizes: blister of 10, carton of 100"
+    },
+    "storageConditions": {
+      "value": "Store below 30°C, protect from moisture",
+      "confidence": 0.95,
+      "evidence": "Storage: Store below 30°C, protect from moisture"
+    },
+    "shelfLife": {
+      "value": "36 months from date of manufacture",
+      "confidence": 0.95,
+      "evidence": "Shelf life: 36 months from date of manufacture"
+    },
+    "recDosage": {
+      "value": "1-2 tablets every 4-6 hours, max 8 tablets a day.",
+      "confidence": 0.95,
+      "evidence": "Recommended dosage: 1-2 tablets every 4-6 hours, max 8 tablets a day."
+    },
+    "indications": {
+      "value": "relief of mild to moderate pain and fever.",
+      "confidence": 0.95,
+      "evidence": "Indications: relief of mild to moderate pain and fever."
+    },
+    "regAuthName": {
+      "value": "Therapeutic Goods Administration",
+      "confidence": 0.85,
+      "evidence": "Regulator: Therapeutic Goods Administration, info@tga.example.org"
+    },
+    "regAuthEmail": {
+      "value": "info@tga.example.org",
+      "confidence": 0.85,
+      "evidence": "Regulator: Therapeutic Goods Administration, info@tga.example.org"
+    }
+  },
+  "skipped": [
+    "orgData",
+    "manufacturerAuth",
+    "manufacturers",
+    "mSupplyItemLookup",
+    "mSupplyItem",
+    "prodSelect",
+    "Generics",
+    "countrySelectAggregate",
+    "trademarkEvidence",
+    "productSpecDoc",
+    "packSizes",
+    "packSizesFiji",
+    "atcCode",
+    "prodInfoLeafleet",
+    "PIL",
+    "noApprovedCountry",
+    "regCertificate",
+    "whoCpp",
+    "gmpCert",
+    "bioequivalence",
+    "stabilityStudy",
+    "proofOfPaymentApplicant",
+    "mSupplyItemReviewer",
+    "proofOfPaymentReviewer-COPY",
+    "meetingNotes"
+  ],
+  "usage": {
+    "model": "claude-opus-5-5",
+    "inputTokens": 4573,
+    "outputTokens": 1332,
+    "durationMs": 13181
+  }
+}

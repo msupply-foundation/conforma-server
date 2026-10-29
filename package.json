@@ -74,10 +74,12 @@
     "archive": "ts-node ./src/components/files/archive.ts --archive",
     "staleApplications": "ts-node ./src/components/other/staleApplicationCleanup.ts --staleApplications",
     "update-reviewer-stats": "ts-node ./src/components/database/updateReviewerStats.ts --update-reviewer-stats",
+    "ai_prefill": "ts-node ./src/components/ai/prefillCLI.ts",
     "validateTypst": "ts-node ./utils/validateTypstBundles.ts",
     "listFonts": "typst fonts --ignore-system-fonts --font-path fonts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.3.0",
     "@fastify/cors": "^9.0.1",
     "@fastify/multipart": "^8.3.0",
     "@fastify/static": "^7.0.4",
