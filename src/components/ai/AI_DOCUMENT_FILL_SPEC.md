@@ -156,8 +156,9 @@ Each call logs one line to the server console: user, application serial, model, 
 
 - **A CLI** ([extractCLI.ts](extractCLI.ts)) that runs the extraction without the web-app. Test files go in `ai-extraction-tests/` at the repo root, which is committed: the repo is public, so it holds only fictional or non-sensitive documents.
   - `yarn ai_extract elements <templateCode>` writes the template's questions as element definitions. Static parameters only: dynamic labels fall back to the element title, and choice elements with dynamic options are left out (edit the file to add them).
-  - `yarn ai_extract run <document>... --elements <file> [--model …] [--effort …] [--instructions …] [--out …]` prints each answer with its confidence and evidence, then the token usage, an estimated cost and the time taken.
-- **Fixtures**: a folder of non-sensitive sample documents, each with its `elements.json` and the expected answers. Score per field (correct / wrong / missed / invented) and compare models and effort levels on accuracy, cost and time.
+  - `yarn ai_extract run <document>... --elements <file> [--model …] [--effort …] [--instructions …] [--expect …] [--out …]` prints each answer with its confidence and evidence, then the token usage, an estimated cost and the time taken.
+  - `--expect <expected.json>` also scores the answers against a fixture ([scoreAnswers.ts](scoreAnswers.ts)): each expected question is correct, wrong, missed, invented or correctly left blank, and expected questions that weren't sent or aren't supported are listed. `yarn ai_extract score <result> --elements … --expect …` scores a saved result without calling the model.
+- **Fixtures**: a folder per scenario of fictional documents, with the `elements.json` the web-app sends and the expected answers, for comparing models, effort levels and changes on accuracy, cost and time. [ai-extraction-tests/medicine-registration/](../../../ai-extraction-tests/medicine-registration/) is a fictional medicine registration on MDR1: five documents (typed PDFs, a scan, a photo of the carton, a scanned letter) generated from HTML, and an inventory of every question and what it needs to be filled.
 - **Unit tests** for schema building and output checking.
 
 ## Phase 2: web-app
@@ -209,6 +210,10 @@ Saved only when the applicant applies answers. As a response it survives reloads
 - No field can have an unsaved edit when the answers are written: the field lost focus, and saved, when the applicant opened the file picker, and the modal blocks the form from then on.
 
 No GraphQL schema change is needed, so no codegen in either repo.
+
+### TO-DO
+
+- **Never fill declarations.** A declaration (e.g. MDR1's "I agree" checkbox) is the applicant's own statement, so the fill shouldn't offer to answer it, even though a checkbox is a supported type. Today only `scope` keeps it out, which relies on every template designer remembering to. Options: never send checkboxes with `preventNonResponse` (how declarations are usually set up), or an explicit list of excluded codes on the element.
 
 ## Data governance
 

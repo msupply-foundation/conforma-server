@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Carton</title>
+<style>
+  html, body { margin: 0; }
+  /* A table top, lit from the upper left */
+  body { width: 1600px; height: 1200px; overflow: hidden; background: radial-gradient(ellipse at 30% 20%, #c9b79b 0%, #a48b68 55%, #6f5a40 100%); perspective: 1800px; perspective-origin: 50% 30%; font-family: Helvetica, Arial, sans-serif; }
+  /* A 760 × 420 × 200 box, seen from above and to the right */
+  .box { position: absolute; left: 380px; top: 400px; width: 760px; height: 420px; transform-style: preserve-3d; transform: rotateX(-26deg) rotateY(-30deg) rotateZ(-3deg); }
+  .face { position: absolute; box-sizing: border-box; border: 1px solid #b5b5b5; color: #222; }
+  .front { width: 760px; height: 420px; transform: translateZ(100px); background: linear-gradient(135deg, #ffffff 0%, #f1f4f8 70%, #e2e7ee 100%); padding: 30px 38px; }
+  .top { width: 760px; height: 200px; top: 110px; transform: rotateX(90deg) translateZ(210px); background: linear-gradient(180deg, #fbfcfd, #eef1f5); padding: 22px 40px; font-size: 21px; line-height: 1.45; }
+  .end { width: 200px; height: 420px; left: 280px; transform: rotateY(90deg) translateZ(380px); background: linear-gradient(90deg, #d6dce4, #c2c9d3); padding: 18px 14px; font-size: 15px; line-height: 1.4; }
+  .band { position: absolute; left: 0; top: 0; bottom: 0; width: 26px; background: #c8102e; }
+  .brand { font-size: 74px; font-weight: 800; color: #0b3c7d; letter-spacing: -1px; margin-left: 14px; }
+  .brand span { color: #c8102e; }
+  .generic { font-size: 26px; margin: 6px 0 0 16px; }
+  .count { position: absolute; right: 38px; bottom: 34px; text-align: right; font-size: 30px; font-weight: bold; color: #0b3c7d; }
+  .count small { display: block; font-size: 20px; font-weight: normal; color: #333; }
+  .route { position: absolute; left: 54px; bottom: 38px; font-size: 20px; }
+  .specimen { color: #b00; font-weight: bold; }
+  .shadow { position: absolute; left: 420px; top: 760px; width: 860px; height: 150px; background: rgba(40, 25, 10, 0.5); filter: blur(30px); border-radius: 50%; transform: rotate(-6deg); }
+</style>
+</head>
+<body>
+<div class="shadow"></div>
+<div class="box">
+  <div class="face top">
+    <b>Kestamol 500</b> · Paracetamol Tablets BP 500 mg · 100 film-coated tablets<br>
+    Store below 30 °C. Protect from light and moisture.<br>
+    Keep out of reach of children.<br>
+    <span class="specimen">SPECIMEN – fictional test pack</span>
+  </div>
+  <div class="face front">
+    <div class="band"></div>
+    <div class="brand">Kestamol<span> 500</span></div>
+    <div class="generic">Paracetamol Tablets BP 500 mg</div>
+    <div class="generic" style="font-size: 20px; color: #555;">Film-coated tablets</div>
+    <div class="route">For oral use</div>
+    <div class="count">100 tablets<small>10 strips × 10 tablets</small></div>
+  </div>
+  <div class="face end">
+    Each film-coated tablet contains Paracetamol BP 500 mg.<br><br>
+    Manufactured by:<br><b>Kestrel Pharmaceuticals Pvt. Ltd.</b><br>
+    Plot 14, Phase II Industrial Estate, Vadodara 390010, India<br><br>
+    Mfg. Lic. No.: G/28/1475<br>
+    Batch: KT2503<br>
+    Mfg.: 03/2025<br>
+    Exp.: 02/2028<br><br>
+    <span class="specimen">SPECIMEN</span>
+  </div>
+</div>
+</body>
+</html>

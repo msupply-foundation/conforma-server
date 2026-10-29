@@ -5,6 +5,7 @@ import { Client } from 'pg'
 import { extractAnswers } from './extractAnswers'
 import { isChoiceElement } from './elementSchema'
 import { detectMediaType } from './parseInput'
+import { Expectation, Score, scoreAnswers } from './scoreAnswers'
 import { ExtractionEffort, ExtractionElement, ExtractionResult } from './types'
 
 /*
@@ -20,10 +21,16 @@ Runs AI document extraction without the web-app. See AI_DOCUMENT_FILL_SPEC.md.
   yarn ai_extract run <document>... --elements <file> [options]
       Sends the documents and questions to the model and prints the answers.
 
+  yarn ai_extract score <result file> --elements <file> --expect <file>
+      Scores a result written by "run --out" against a fixture's expected
+      answers, without calling the model again.
+
 Options for "run":
   --model <id>           default claude-opus-5-5
   --effort <level>       low | medium (default) | high | xhigh | max
   --instructions <text>  extra guidance, as a template designer would give
+  --expect <file>        also score the answers against a fixture's
+                         expected.json (see ai-extraction-tests/)
   --out <file>           also write the full result as JSON
 */
 
@@ -41,12 +48,13 @@ const usage = () => {
   console.log(`
   yarn ai_extract elements <templateCode> [--out <file>]
   yarn ai_extract run <document>... --elements <file> [--model <id>]
-      [--effort <level>] [--instructions <text>] [--out <file>]
+      [--effort <level>] [--instructions <text>] [--expect <file>] [--out <file>]
+  yarn ai_extract score <result file> --elements <file> --expect <file>
 `)
   process.exit(1)
 }
 
-const OPTIONS_WITH_VALUES = ['out', 'elements', 'model', 'effort', 'instructions']
+const OPTIONS_WITH_VALUES = ['out', 'elements', 'model', 'effort', 'instructions', 'expect']
 
 const getOption = (name: string): string | undefined => {
   const index = process.argv.indexOf(`--${name}`)
@@ -67,6 +75,8 @@ const getPositionalArgs = () => {
       !arg.startsWith('--') && !OPTIONS_WITH_VALUES.includes(args[index - 1]?.replace(/^--/, ''))
   )
 }
+
+const readJson = (file: string) => JSON.parse(fs.readFileSync(file, 'utf8'))
 
 const writeJson = (file: string, data: unknown) => {
   fs.mkdirSync(path.dirname(file), { recursive: true })
@@ -206,7 +216,10 @@ const printResult = (elements: ExtractionElement[], result: ExtractionResult) =>
 const runExtraction = async () => {
   const files = getPositionalArgs()
   const elementsFile = getOption('elements')
+  const expectFile = getOption('expect')
   if (files.length === 0 || !elementsFile) usage()
+  // Read before the paid call, so a bad path fails first
+  const expected = expectFile ? readExpected(expectFile) : undefined
 
   const documents = files.map((file) => {
     const data = fs.readFileSync(file)
@@ -214,7 +227,7 @@ const runExtraction = async () => {
     if (!mediaType) throw new Error(`Not a PDF, JPEG, PNG, GIF or WebP file: ${file}`)
     return { name: path.basename(file), mediaType, data }
   })
-  const elements: ExtractionElement[] = JSON.parse(fs.readFileSync(elementsFile as string, 'utf8'))
+  const elements: ExtractionElement[] = readJson(elementsFile as string)
 
   console.log(`Reading ${documents.length} document(s) for ${elements.length} questions...`)
   const result = await extractAnswers(documents, elements, {
@@ -224,13 +237,63 @@ const runExtraction = async () => {
   })
 
   printResult(elements, result)
+  if (expected) printScore(scoreAnswers(elements, result, expected))
   const out = getOption('out')
   if (out) writeJson(out, result)
+}
+
+// --- score ---
+
+const readExpected = (file: string): Record<string, Expectation> => readJson(file).answers
+
+const formatValue = (value: unknown) => truncate(JSON.stringify(value), 80)
+
+const VERDICT_LABELS = {
+  correct: '✓ correct ',
+  wrong: '✗ wrong   ',
+  missed: '- missed  ',
+  invented: '! invented',
+  blank: '✓ blank   ',
+  unscorable: '? rows    ',
+}
+
+const printScore = ({ scored, notSupported, notSent, unexpected }: Score) => {
+  console.log('\nScore against expected answers:')
+  for (const { code, verdict, expected, value } of scored) {
+    let detail = ''
+    if (verdict === 'wrong') detail = `: ${formatValue(value)}, expected ${formatValue(expected)}`
+    if (verdict === 'missed') detail = `: expected ${formatValue(expected)}`
+    if (verdict === 'invented' || verdict === 'unscorable') detail = `: ${formatValue(value)}`
+    console.log(`  ${VERDICT_LABELS[verdict]}  ${code}${detail}`)
+  }
+
+  const count = (verdict: string) => scored.filter((item) => item.verdict === verdict).length
+  const right = count('correct') + count('blank')
+  console.log(
+    `\n${right} of ${scored.length} right (${count('correct')} answered, ` +
+      `${count('blank')} left blank as expected); ${count('wrong')} wrong, ` +
+      `${count('missed')} missed, ${count('invented')} invented`
+  )
+  if (notSupported.length > 0) console.log(`Expected but not supported: ${notSupported.join(', ')}`)
+  if (notSent.length > 0) console.log(`Expected but not sent: ${notSent.join(', ')}`)
+  if (unexpected.length > 0) console.log(`Answered, with no expected answer: ${unexpected.join(', ')}`)
+}
+
+const runScore = async () => {
+  const [resultFile] = getPositionalArgs()
+  const elementsFile = getOption('elements')
+  const expectFile = getOption('expect')
+  if (!resultFile || !elementsFile || !expectFile) usage()
+
+  const elements: ExtractionElement[] = readJson(elementsFile as string)
+  const result: ExtractionResult = readJson(resultFile)
+  printScore(scoreAnswers(elements, result, readExpected(expectFile as string)))
 }
 
 const commands: Record<string, () => Promise<void>> = {
   elements: runElements,
   run: runExtraction,
+  score: runScore,
 }
 
 const command = commands[process.argv[2]]

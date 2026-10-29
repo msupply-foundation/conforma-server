@@ -1,0 +1,85 @@
+{
+  "template": "MDR1",
+  "documents": [
+    "documents/1-cpp.pdf",
+    "documents/2-smpc.pdf",
+    "documents/3-gmp-certificate.jpg",
+    "documents/4-carton.jpg",
+    "documents/5-authorisation-letter.pdf"
+  ],
+  "answers": {
+    "manName": "Kestrel Pharmaceuticals Pvt. Ltd.",
+    "isManufacturer": "No",
+    "countrySelect": "Other",
+    "countriesOfRegistration": ["India", "Sri Lanka"],
+    "RegID": "NMLO/MA/2019/04417",
+    "brandName": { "anyOf": ["Kestamol 500", "Kestamol"] },
+    "dosageForm": "Tablet",
+    "pharmacopeia": "BP (British Pharmacopeia)",
+    "productDescription": {
+      "includes": ["white", "capsule", "film-coated", "17.5", "7.3", "K500", ["score", "scored"]]
+    },
+    "exipients": {
+      "includes": [
+        "maize starch",
+        ["pregelatinised starch", "pregelatinized starch"],
+        "povidone",
+        "stearic acid",
+        "magnesium stearate",
+        "hypromellose",
+        "titanium dioxide",
+        "macrogol"
+      ]
+    },
+    "containerType": {
+      "includes": ["PVC", ["aluminium", "aluminum"], "blister", "carton"]
+    },
+    "storageConditions": { "includes": ["30", "light", "moisture"] },
+    "shelfLife": { "anyOf": ["3 years", "36 months"] },
+    "legalClass": null,
+    "routeAdministration": "Oral",
+    "recDosage": {
+      "includes": [
+        "12",
+        ["4 to 6 hours", "4-6 hours", "4–6 hours"],
+        ["8 tablets", "4 g"],
+        ["6 to 11", "6-11", "6–11"],
+        ["4 tablets", "2 g"],
+        ["under 6", "below 6", "younger than 6"]
+      ]
+    },
+    "indications": { "includes": ["pain", "fever", "headache"] },
+    "productAuthInCountryMan": "Yes",
+    "otherCountrySelect": ["India", "Sri Lanka"],
+    "advanceSample": null,
+    "regAuthName": "National Medicines Licensing Office",
+    "regAuthAddress": { "includes": ["Block C", "Sector 10", "Gandhinagar", "382010"] },
+    "regAuthPhone": "+91 79 0000 4410",
+    "regAuthEmail": "licensing@nmlo.example",
+    "Declaration-COPY": null,
+    "atcCode": { "includes": ["N02BE01"] },
+    "manufacturers": [
+      {
+        "address": { "includes": ["Plot 14", "Phase II", "Vadodara", "390010"] },
+        "country": "India",
+        "manSiteActivity": { "includes": ["manufactur", "packaging", ["quality control", "testing"]] },
+        "phoneNum": "+91 265 000 1414",
+        "email": "regulatory@kestrel-pharma.example"
+      }
+    ],
+    "Generics": [{ "ingredient": "paracetamol", "quantity": 500, "unit": "mg" }],
+    "packSizesFiji": [
+      { "LBQuantity": 10, "LBUnit": "Tablet" },
+      { "LBQuantity": 100, "LBUnit": "Tablet" }
+    ]
+  },
+  "notes": {
+    "isManufacturer": "Only answerable if the model is told the applicant is Moana Pharma Distributors Ltd",
+    "RegID": "The first selected country's registration. Not the CPP number (CPP/NMLO/2025/2291), the GMP certificate number (GMP/KP/2024/118), the manufacturing licence on the carton (G/28/1475) or the Sri Lankan number (SL/REG/2022/0815)",
+    "legalClass": "Tonga's classification isn't in any document",
+    "advanceSample": "Not in any document",
+    "Declaration-COPY": "The applicant's own declaration: never filled",
+    "atcCode": "A search element: the answer's shape depends on how searches are supported",
+    "manufacturers": "List builders: the answers' shape depends on how list builders are supported"
+  }
+}
