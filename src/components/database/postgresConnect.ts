@@ -268,6 +268,29 @@ class PostgresDB {
     }
   }
 
+  // Runs a read-only query as `graphile_user` with the given JWT claims, so
+  // row-level security applies exactly as it does to a GraphQL request
+  // carrying the same claims. Any changes the query makes are rolled back.
+  public queryAsUser = async (
+    claims: Record<string, string | number | boolean>,
+    expression: { text: string; values?: any[] }
+  ): Promise<QueryResult> => {
+    const client = await this.pool.connect()
+    try {
+      await client.query('BEGIN')
+      await client.query('SET LOCAL ROLE graphile_user')
+      await client.query({
+        text: `SELECT set_config('jwt.claims.' || key, value, true)
+          FROM unnest($1::text[], $2::text[]) AS claim(key, value)`,
+        values: [Object.keys(claims), Object.values(claims).map(String)],
+      })
+      return await client.query(expression)
+    } finally {
+      await client.query('ROLLBACK').catch(() => {})
+      client.release()
+    }
+  }
+
   public end = () => {
     this.pool.end()
   }

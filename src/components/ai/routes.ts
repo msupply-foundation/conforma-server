@@ -1,6 +1,7 @@
 import { FastifyReply } from 'fastify'
 import config from '../../config'
 import { ApiError, returnApiError } from '../../ApiError'
+import { checkApplicationAccess } from './checkApplicationAccess'
 import { extractAnswers } from './extractAnswers'
 import { detectMediaType, parseElements } from './parseInput'
 import { PrefillDocument, PrefillResult } from './types'
@@ -51,11 +52,11 @@ const readRequest = async (request: any) => {
   return { documents, fields }
 }
 
-const logUsage = (request: any, applicationSerial: string | undefined, result: PrefillResult) => {
+const logUsage = (request: any, applicationSerial: string, result: PrefillResult) => {
   const { answers, skipped, usage } = result
   const answered = Object.keys(answers).length
   console.log(
-    `AI prefill: user ${request.auth?.userId}, application ${applicationSerial ?? '-'}, ` +
+    `AI prefill: user ${request.auth?.userId}, application ${applicationSerial}, ` +
       `${usage.model}, ${usage.inputTokens} + ${usage.outputTokens} tokens, ` +
       `${answered} answered (${skipped.length} not supported), ` +
       `${(usage.durationMs / 1000).toFixed(1)}s`
@@ -64,15 +65,17 @@ const logUsage = (request: any, applicationSerial: string | undefined, result: P
 
 /**
  * Reads the uploaded documents and answers as many of the given elements'
- * questions as it can. Doesn't read or write application data: the web-app
- * saves the answers through GraphQL, so permissions and validation apply as
- * for any edit. See DOCUMENT_PREFILL_SPEC.md.
+ * questions as it can, for an application the caller can edit. Doesn't change
+ * application data: the web-app saves the answers through GraphQL, so
+ * permissions and validation apply as for any edit. See
+ * DOCUMENT_PREFILL_SPEC.md.
  */
 export const routeAiPrefill = async (request: any, reply: FastifyReply) => {
   try {
     if (!isAiPrefillAvailable()) throw new ApiError('AI prefill is not enabled', 404)
 
     const { documents, fields } = await readRequest(request)
+    const applicationSerial = await checkApplicationAccess(request.auth, fields.applicationSerial)
     const elements = parseElements(fields.elements)
 
     const result = await extractAnswers(documents, elements, {
@@ -81,7 +84,7 @@ export const routeAiPrefill = async (request: any, reply: FastifyReply) => {
       instructions: fields.instructions,
     })
 
-    logUsage(request, fields.applicationSerial, result)
+    logUsage(request, applicationSerial, result)
     return reply.send(result)
   } catch (err) {
     // Other @fastify/multipart errors carry their own status code

@@ -10,7 +10,7 @@ An applicant uploads a document of no particular structure (a typed PDF, a scan,
 
 - **A single model call, not MCP or an agent.** The server sends the document plus a description of the form and gets structured answers back. The model has no tools and no access to Conforma data. MCP is for letting an LLM client call into a system; that may suit later features (an assistant over the user's own data, template-building help) but not this one.
 - **The client sends the element definitions.** The web-app already holds each element's evaluated parameters (including dynamic option lists), visibility and current value. Trusting the client here is safe because the output is only suggestions for the applicant's own draft.
-- **The endpoint is stateless with respect to applications.** It neither reads nor writes application data. The web-app writes the answers through the normal GraphQL mutation, so RLS and validation apply as for any user edit. This also means the endpoint needs no application-level permission check.
+- **The endpoint doesn't change application data.** The web-app writes the answers through the normal GraphQL mutation, so RLS and validation apply as for any user edit. The endpoint still checks that the caller can edit the application it's prefilling (see Access below): the data isn't at risk, but each call costs money, and anyone can get a valid token as the public `nonRegistered` user.
 - **The document goes to the model as-is.** Claude reads PDFs natively (each page as text plus a page image), so scans, tables, layout and handwriting work without an OCR step.
 - **Structured outputs with one generic answer schema**, so the response always parses. The model returns a list of answers (`code`, `evidence`, `text`, `selectedOptions`, `confidence`) for only the questions the documents answer, with `code` limited to the questions asked. A schema with a property per question (and an enum of options for each choice) would constrain the answers more tightly, but the API rejects it as too large a grammar even for a 24-question form, and structured outputs allow only 16 nullable properties per request. Types and options are checked on the server instead.
 - **The server returns plain values; the web-app converts them** to each plugin's response shape. Each plugin owns its shape (`{ text }`, `{ text, date }`, `{ optionIndex, text, selection }`, …) and its display formatting.
@@ -35,7 +35,7 @@ Multipart request:
 | --- | --- |
 | `file` | One or more documents. PDF, JPEG, PNG, WebP or GIF. |
 | `elements` | JSON array of element definitions (below). |
-| `applicationSerial` | For logging only. |
+| `applicationSerial` | Required. The application being prefilled; see Access. |
 | `instructions` | Optional extra guidance from the plugin's parameters, e.g. "the document is a GMP certificate". |
 
 Element definition, as sent by the client:
@@ -73,6 +73,15 @@ interface PrefillResult {
 Codes with no answer are left out of `answers`. The response also has `skipped`: the codes of elements that can't be prefilled (unsupported type, or a choice element without options).
 
 The element definitions are validated and only the fields above are kept, so nothing else reaches the prompt. Errors come back as `{ message }` with a 4xx status for bad input (missing or invalid `elements`, unsupported file, too many or too large files) and 5xx for AI service problems.
+
+### Access
+
+Besides the valid token every `/api/*` route needs, [checkApplicationAccess.ts](checkApplicationAccess.ts) requires that:
+
+- **The caller is the application's applicant**, by the same RLS rules GraphQL applies. The lookup runs as `graphile_user` with the caller's JWT claims (`queryAsUser` in [postgresConnect.ts](../database/postgresConnect.ts)), keeping only the user claims and the caller's APPLY policy claims ([applicantClaims.ts](applicantClaims.ts)), so a reviewer or viewer of the application doesn't qualify. That covers all three APPLY policies: own applications, the organisation's applications, and public `nonRegistered` applicants matched by `sessionId`. An application that fails this is reported as not found (404), so the endpoint doesn't reveal which serials exist.
+- **The application is editable:** status DRAFT or CHANGES_REQUIRED, otherwise 409.
+
+Admins bypass RLS, as they do in GraphQL, so they pass the first check for any application.
 
 ### Element type mapping
 
@@ -130,7 +139,12 @@ Structured outputs guarantee the shape, but the server still:
 
 ### Logging and cost
 
-Each call logs one line to the server console: user, application serial, model, input/output tokens, number answered, number not supported, and duration. That gives real cost figures and is the basis for any later per-user rate limit or budget. There is no rate limit yet: any logged-in user can call the endpoint as often as they like.
+Each call logs one line to the server console: user, application serial, model, input/output tokens, number answered, number not supported, and duration. That gives real cost figures and is the basis for the rate limits in the to-do list below.
+
+### TO-DO
+
+- **Only templates that use the feature.** Require the application's template to contain the prefill element (the template designer's opt-in), which also decides which public forms can use it. Reject element codes that aren't in that template, so the endpoint can't be used to ask arbitrary questions. Optionally take each question's title from the template rather than the client, keeping only evaluated options from the client. Waiting on the web-app's prefill element (phase 2).
+- **Rate limits.** Per user per day (per `sessionId` for `nonRegistered` users), plus a global daily cap, so a runaway client or an abuser can't drain the API account. Reject with 429.
 
 ### Testing (the purpose of phase 1)
 
@@ -143,7 +157,7 @@ Each call logs one line to the server console: user, application serial, model, 
 ## Phase 2: web-app (summary)
 
 - **A new element plugin** (name TBD, e.g. `documentPrefill`) with the upload control. Parameters: which sections or element codes to fill, extra `instructions`, and whether to overwrite existing answers (default: fill blanks only).
-- It builds the element definitions from the full structure: visible, editable, supported types, evaluated parameters, current value.
+- It builds the element definitions from the full structure (visible, editable, supported types, evaluated parameters, current value) and sends them with the application's serial, which the endpoint requires.
 - **`fromPlainValue(value, evaluatedParameters) → ResponseFull`** on each supported plugin, registered in `pluginProvider.tsx` beside `config` rather than inside the lazy-loaded component, because most target elements aren't mounted (they're on other pages). The result must include `text`.
 - **One GraphQL request with an aliased `updateApplicationResponse` per answer**, so Apollo updates its cache once and the structure rebuilds once. `isValid` is left null and revalidation requested; `evaluatedParameters` saved as the wrapper does.
 - **Remount the current page after the write.** The structure updates on its own (any response write flows through the Apollo cache into `useGetApplicationStructure`), but plugins copy `currentResponse` into local state on mount and don't re-read it. Without a remount, the current page shows old values, and a text field that loses focus saves its stale value over the AI answer. Bump a counter in the element keys in `PageElements.tsx` once the rebuilt structure contains the new values (not straight after the mutation returns, or the elements remount with the old values).
@@ -164,6 +178,5 @@ Many deployments are regulators handling applicants' documents, and some are on-
 - Consent wording, and whether a deployment needs an admin-level agreement before enabling.
 - Should the uploaded document be kept, e.g. saved as the prefill element's own response?
 - Is the "AI-filled" marker persisted (inside the response `value`) or kept as UI state only?
-- Per-user rate limits or a cost budget.
 - Large templates: split by section and run calls in parallel if one schema becomes too large.
 - What the prefill element saves as its own response (file reference, timestamp, nothing).

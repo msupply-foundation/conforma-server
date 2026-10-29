@@ -16,6 +16,8 @@ class DBConnect {
 
   public query = PostgresDB.query
 
+  public queryAsUser = PostgresDB.queryAsUser
+
   public end = PostgresDB.end
 
   public getRecord = PostgresDB.getRecord
